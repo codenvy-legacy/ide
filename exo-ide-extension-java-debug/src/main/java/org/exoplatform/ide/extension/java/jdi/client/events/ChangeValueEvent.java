@@ -48,6 +48,10 @@ public class ChangeValueEvent extends GwtEvent<ChangeValueHandler>
     */
    private Variable var;
 
+   /**
+    * @param debuggerInfo connected debugger
+    * @param var variable
+    */
    public ChangeValueEvent(DebuggerInfo debuggerInfo, Variable var)
    {
       this.debuggerInfo = debuggerInfo;

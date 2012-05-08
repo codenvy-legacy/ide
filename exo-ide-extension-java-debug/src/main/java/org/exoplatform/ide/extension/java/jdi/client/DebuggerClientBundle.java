@@ -97,6 +97,12 @@ public interface DebuggerClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/java/jdi/images/variable_Disabled.png")
    ImageResource variableDisabled();
 
+   @Source("org/exoplatform/ide/extension/java/jdi/images/evaluate.png")
+   ImageResource evaluate();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/evaluate_Disabled.png")
+   ImageResource evaluateDisabled();
+
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.png")
    ImageResource breakpoint();
 

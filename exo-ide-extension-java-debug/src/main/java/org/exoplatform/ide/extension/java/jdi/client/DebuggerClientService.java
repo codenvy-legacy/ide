@@ -27,6 +27,8 @@ import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
@@ -128,7 +130,7 @@ public class DebuggerClientService
       AutoBean<UpdateVariableRequest> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.updateVariableRequest(request);
       String json = AutoBeanCodex.encode(autoBean).getPayload();
       AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/value/set/" + id).data(json)
-         .header("Content-Type", "application/json").loader(new EmptyLoader()).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).loader(new EmptyLoader()).send(callback);
    }
 
    public void stepInto(String id, AsyncRequestCallback<String> callback) throws RequestException
@@ -156,6 +158,14 @@ public class DebuggerClientService
    {
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/breakpoints/delete_all/" + id).loader(new EmptyLoader())
          .send(callback);
+   }
+
+   public void evaluateExpression(String id, String expression, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
+   {
+      AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/expression/" + id).data(expression)
+         .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENTTYPE, MimeType.TEXT_PLAIN)
+         .loader(new EmptyLoader()).send(callback);
    }
 
 }

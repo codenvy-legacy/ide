@@ -40,6 +40,9 @@
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
                      <c:ImageButton ui:field="changeValueButton" width="22px" buttonId="changeValueButton" title="{locale.changeValue}" imageResource="{resource.variable}" disabledImageResource="{resource.variableDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
+                  <c:ToolbarItem rightDocked="false" paddingRight="2">
+                     <c:ImageButton ui:field="evaluateExpressionButton" width="22px" buttonId="evaluateExpressionButton" title="{locale.evaluateExpression}" imageResource="{resource.evaluate}" disabledImageResource="{resource.evaluateDisabled}"></c:ImageButton>
+                  </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="true" paddingRight="2">
                      <c:Label ui:field="vmName" width="280px" wordWrap="false" title="{locale.vmName}"></c:Label>
                   </c:ToolbarItem>

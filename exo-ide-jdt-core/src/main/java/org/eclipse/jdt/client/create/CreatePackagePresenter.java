@@ -47,6 +47,8 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 /**
@@ -111,6 +113,9 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
          if (item instanceof FolderModel)
             parentFolder = (FolderModel)item;
          else
+            if(item instanceof ProjectModel)
+               parentFolder = new FolderModel((Folder)item);
+            else
             parentFolder = ((FileModel)item).getParent();
       }
       else

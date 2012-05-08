@@ -71,8 +71,13 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
 
+   public static NameEnvironment NAME_ENVIRONMENT;
+
+   private static JavaCodeController instance;
+   
    public JavaCodeController()
    {
+      instance = this;
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
@@ -82,6 +87,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    }
 
+   public static JavaCodeController get()
+   {
+      return instance;
+   }
+   
    /** @return */
    private CompilationUnit parseFile()
    {
@@ -92,7 +102,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(activeFile.getName().substring(0, activeFile.getName().lastIndexOf('.')));
       parser.setResolveBindings(true);
-      parser.setNameEnvironment(new NameEnvironment(activeFile.getProject().getId()));
+      parser.setNameEnvironment(NAME_ENVIRONMENT);
       ASTNode ast = parser.createAST(null);
       CompilationUnit unit = (CompilationUnit)ast;
       return unit;
@@ -107,6 +117,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
          activeFile = event.getFile();
+         NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
          if (event.getEditor() instanceof CodeMirror)
          {
             editor = (CodeMirror)event.getEditor();
@@ -283,5 +294,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       startJob(activeFile);
       timer.cancel();
       timer.schedule(2000);
+   }
+   
+   public FileModel getActiveFile()
+   {
+      return activeFile;
    }
 }

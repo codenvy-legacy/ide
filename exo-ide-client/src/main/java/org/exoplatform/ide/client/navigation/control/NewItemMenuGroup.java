@@ -25,16 +25,6 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Created by The eXo Platform SAS .
@@ -43,24 +33,12 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler,
-   ProjectClosedHandler, ViewVisibilityChangedHandler
+public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    public static final String ID = "File/New";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
-
-   /**
-    * Current workspace's href.
-    */
-   private VirtualFileSystemInfo vfsInfo = null;
-
-   private boolean isProjectOpened = false;
-
-   private boolean isBrowserPanelVisible;
-
-   private boolean isProjectExplorerVisible;
 
    /**
     * 
@@ -80,11 +58,7 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-
-      updateState();
+      setEnabled(true);
    }
 
    /**
@@ -93,76 +67,13 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
-      updateState();
-   }
-
-   /**
-    * Update control state.
-    */
-   private void updateState()
-   {
-      if (vfsInfo == null)
+      if (event.getVfsInfo() != null)
+      {
+         setVisible(true);
+      }
+      else
       {
          setVisible(false);
-         return;
       }
-
-      if (!isProjectOpened && isProjectExplorerVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      setVisible(true);
-      setEnabled(true);
    }
-
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      isProjectOpened = false;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      isProjectOpened = true;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      View view = event.getView();
-
-      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
-      {
-         isBrowserPanelVisible = view.isViewVisible();
-
-         if (view instanceof ProjectExplorerDisplay)
-         {
-            isProjectExplorerVisible = view.isViewVisible();
-         }
-      }
-
-      updateState();
-   }
-
 }

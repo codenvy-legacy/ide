@@ -4,7 +4,9 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -63,7 +65,6 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-git-server</artifactId>
-         <version>${project.version}</version>
          <type>war</type>
       </dependency>
       <dependency>
@@ -155,6 +156,10 @@
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-commons</artifactId>
             </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -169,6 +174,10 @@
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -188,9 +197,23 @@
          </exclusions>
       </dependency>
 
-       <dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
-           <artifactId>exo-ide-extension-java-debug</artifactId>
+         <artifactId>exo-ide-extension-java-debug</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <dependency>
@@ -295,8 +318,8 @@
                <artifactId>exo-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -327,6 +350,34 @@
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>exo-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -373,6 +424,10 @@
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-commons</artifactId>
             </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -384,7 +439,7 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-maven</artifactId>
-          <exclusions>
+         <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-ui</artifactId>
@@ -394,7 +449,7 @@
                <artifactId>exo-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
-      </dependency> 
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -426,6 +481,10 @@
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>exo-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -966,10 +1025,14 @@
                         <war destfile="${project.build.directory}/tomcat-ide/webapps/IDE.war" needxmlfile="false">
                            <fileset dir="${project.build.directory}/packager-conf/unwar" />
                         </war>
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war"
+                           overwrite="true" />
                      </tasks>
                   </configuration>
                   <goals>
@@ -1041,8 +1104,10 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-demo/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
+                                 overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>
@@ -1092,11 +1157,17 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/exo-jcr-config.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/web.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/web.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-configuration.xml" overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/exo-jcr-config.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/web.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/web.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-codeassist-configuration.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/WEB-INF/classes/conf/ide-configuration.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/ide-configuration.xml"
+                                 overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-selenium/Application.html" tofile="${project.build.directory}/packager-conf/unwar/Application.html"
+                                 overwrite="true" />
                               <copy todir="${project.build.directory}/tomcat-ide/conf" overwrite="true">
                                  <fileset dir="${basedir}/src/main/resources/tomcat/selenium/conf" />
                               </copy>

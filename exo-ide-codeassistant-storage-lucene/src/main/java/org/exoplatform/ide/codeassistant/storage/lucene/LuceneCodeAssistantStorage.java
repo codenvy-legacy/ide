@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class LuceneCodeAssistantStorage implements CodeAssistantStorage
 {
-   private final int DEFAULT_RESULT_LIMIT = 100;
+   private final int DEFAULT_RESULT_LIMIT = 200;
 
    private static final Logger LOG = LoggerFactory.getLogger(LuceneCodeAssistantStorage.class);
 

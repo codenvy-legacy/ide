@@ -1,15 +1,22 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 /**
- * Interface to represent the messages contained in resource bundle:
- * 	/home/vetal/eXo/eXoProjects/ide/trunk/exo-ide-extension-java-debug/src/main/resources/org/exoplatform/ide/extension/java/jdi/client/DebugLocalizationConstant.properties'.
+ * Interface to represent the messages contained in resource bundle: DebugLocalizationConstant.properties'.
  */
 public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
 
-   @DefaultMessage("Project/Debug")
-   @Key("control.buildProject.id")
-   String launchDebuggerControlId();
+   @DefaultMessage("Run/Debug")
+   @Key("control.launchDebuggerControlId")
+   String debugAppControlId();
+
+   @DefaultMessage("Run/Run")
+   @Key("control.runAppControlId")
+   String runAppControlId();
+
+   @DefaultMessage("Run/Stop")
+   @Key("control.stopAppControlId")
+   String stopAppControlId();
 
    /**
     * Translated "BreakPoints".
@@ -26,7 +33,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     * @return translated "Cancel"
     */
    @DefaultMessage("Cancel")
-   @Key("cancelButton")
+   @Key("closeButton")
    String cancelButton();
 
    /**
@@ -170,6 +177,10 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("changeValue")
    String changeValue();
 
+   @DefaultMessage("Evaluate Expression")
+   @Key("evaluateExpression")
+   String evaluateExpression();
+
    @DefaultMessage("Application <b>{0}</b> started")
    @Key("appStarted")
    String applicationStarted(String name);
@@ -200,13 +211,13 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    String changeValueViewTitle();
 
    /**
-    * Translated "Change variable value".
+    * Translated "Enter an expression".
     * 
-    * @return translated "Change variable value"
+    * @return translated "Enter an expression"
     */
    @DefaultMessage("Enter an expression:")
    @Key("view.changeValue.expressionField.title")
-   String expressionFieldTitle();
+   String changeValueViewExpressionFieldTitle();
 
    /**
     * Translated "Change".
@@ -215,7 +226,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     */
    @DefaultMessage("Change")
    @Key("view.changeValue.changeButton.title")
-   String changeButtonTitle();
+   String changeValueViewChangeButtonTitle();
 
    /**
     * Translated "Cancel".
@@ -224,6 +235,55 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     */
    @DefaultMessage("Cancel")
    @Key("view.changeValue.cancelButton.title")
-   String cancelButtonTitle();
+   String changeValueViewCancelButtonTitle();
+
+   /*************************************************************************
+    * Evaluate expression view
+    *************************************************************************/
+
+   /**
+    * Translated "Evaluate expression".
+    * 
+    * @return translated "Evaluate expression"
+    */
+   @DefaultMessage("Evaluate expression")
+   @Key("view.evaluateExpression.title")
+   String evaluateExpressionViewTitle();
+
+   /**
+    * Translated "Enter an expression".
+    * 
+    * @return translated "Enter an expression"
+    */
+   @DefaultMessage("Enter an expression:")
+   @Key("view.evaluateExpression.expressionField.title")
+   String evaluateExpressionViewExpressionFieldTitle();
+
+   /**
+    * Translated "Result".
+    * 
+    * @return translated "Result"
+    */
+   @DefaultMessage("Result:")
+   @Key("view.evaluateExpression.resultField.title")
+   String evaluateExpressionViewResultFieldTitle();
+
+   /**
+    * Translated "Evaluate".
+    * 
+    * @return translated "Evaluate"
+    */
+   @DefaultMessage("Evaluate")
+   @Key("view.evaluateExpression.evaluateButton.title")
+   String evaluateExpressionViewEvaluateButtonTitle();
+
+   /**
+    * Translated "Close".
+    * 
+    * @return translated "Close"
+    */
+   @DefaultMessage("Close")
+   @Key("view.evaluateExpression.closeButton.title")
+   String evaluateExpressionViewCloseButtonTitle();
 
 }

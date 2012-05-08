@@ -236,7 +236,7 @@ public class ASTParser
       this.sourcepaths = null;
       this.sourcepathsEncodings = null;
       Map options = JavaCore.getOptions();
-      options.remove(JavaCore.COMPILER_TASK_TAGS); // no need to parse task tags
+//      options.remove(JavaCore.COMPILER_TASK_TAGS); // no need to parse task tags
       this.compilerOptions = options;
    }
 
@@ -351,7 +351,7 @@ public class ASTParser
          // copy client's options so as to not do any side effect on them
          options = new HashMap(options);
       }
-      options.remove(JavaCore.COMPILER_TASK_TAGS); // no need to parse task tags
+//      options.remove(JavaCore.COMPILER_TASK_TAGS); // no need to parse task tags
       this.compilerOptions = options;
    }
 

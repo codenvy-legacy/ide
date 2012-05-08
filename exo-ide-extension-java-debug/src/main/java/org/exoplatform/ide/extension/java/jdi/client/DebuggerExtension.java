@@ -22,6 +22,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueI
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
 import org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter;
+import org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -59,6 +60,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
 
       DebuggerPresenter debuggerPresenter = new DebuggerPresenter(breakpointsManager);
       new ChangeValuePresenter();
+      new EvaluateExpressionPresenter();
 
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);

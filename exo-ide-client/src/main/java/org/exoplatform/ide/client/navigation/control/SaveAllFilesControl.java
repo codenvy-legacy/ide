@@ -36,15 +36,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.SaveAllFilesEvent;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -60,7 +51,7 @@ import java.util.Map;
 @RolesAllowed({"administrators", "developers"})
 public class SaveAllFilesControl extends SimpleControl implements IDEControl, EditorFileContentChangedHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, VfsChangedHandler,
-   FileSavedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
+   FileSavedHandler
 {
 
    public static final String ID = "File/Save All";
@@ -72,13 +63,7 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
    /**
     * Current workspace's href.
     */
-   private VirtualFileSystemInfo vfsInfo = null;
-
-   private boolean isProjectOpened = false;
-
-   private boolean isBrowserPanelVisible;
-
-   private boolean isProjectExplorerVisible;
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
@@ -104,9 +89,6 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -119,19 +101,6 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
          setVisible(false);
          return;
       }
-
-      if (!isProjectOpened && isProjectExplorerVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
       setVisible(true);
 
       boolean enable = false;
@@ -179,47 +148,6 @@ public class SaveAllFilesControl extends SimpleControl implements IDEControl, Ed
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      isProjectOpened = false;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      isProjectOpened = true;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      View view = event.getView();
-
-      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
-      {
-         isBrowserPanelVisible = view.isViewVisible();
-
-         if (view instanceof ProjectExplorerDisplay)
-         {
-            isProjectExplorerVisible = view.isViewVisible();
-         }
-      }
-
       updateState();
    }
 

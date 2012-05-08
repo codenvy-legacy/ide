@@ -1097,7 +1097,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
    {
-      if (display != null)
+      if (display != null && openedProject != null)
       {
          foldersToRefresh.clear();
          foldersToRefresh.add(openedProject);

@@ -11,9 +11,16 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.JavaCodeController;
+import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.NamingConventions;
+import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.ArrayType;
 import org.eclipse.jdt.client.core.dom.CastExpression;
 import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
@@ -25,21 +32,40 @@ import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
 import org.eclipse.jdt.client.core.dom.NumberLiteral;
 import org.eclipse.jdt.client.core.dom.ParameterizedType;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.client.core.dom.StringLiteral;
 import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.client.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeParameter;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
+import org.eclipse.jdt.client.internal.corext.util.Strings;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.runtime.IStatus;
+import org.eclipse.jdt.client.runtime.JavaUIStatus;
+import org.eclipse.jdt.client.runtime.Status;
+import org.eclipse.jdt.client.templates.CodeTemplateContext;
+import org.eclipse.jdt.client.templates.CodeTemplateContextType;
+import org.eclipse.jdt.client.templates.api.Template;
+import org.eclipse.jdt.client.templates.api.TemplateBuffer;
+import org.eclipse.jdt.client.templates.api.TemplateException;
+import org.eclipse.jdt.client.templates.api.TemplateVariable;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -48,15 +74,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-//import org.eclipse.jdt.ui.CodeStyleConfiguration;
-//import org.eclipse.jdt.ui.PreferenceConstants;
-
-//import org.eclipse.jdt.client.internal.ui.JavaPlugin;
-//import org.eclipse.jdt.internal.ui.JavaUIStatus;
-//import org.eclipse.jdt.internal.ui.javaeditor.ASTProvider;
-//import org.eclipse.jdt.internal.ui.text.correction.ASTResolving;
-//import org.eclipse.jdt.internal.ui.viewsupport.ProjectTemplateStore;
 
 public class StubUtility
 {
@@ -84,24 +101,23 @@ public class StubUtility
    public static String getMethodBodyContent(boolean isConstructor, String destTypeName, String methodName,
       String bodyStatement, String lineDelimiter) throws CoreException
    {
-      // TODO
-      // String templateName =
-      // isConstructor ? CodeTemplateContextType.CONSTRUCTORSTUB_ID : CodeTemplateContextType.METHODSTUB_ID;
-      // Template template = getCodeTemplate(templateName, project);
-      // if (template == null)
-      // {
-      return bodyStatement;
-      // }
-      // CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-      // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-      // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
-      // context.setVariable(CodeTemplateContextType.BODY_STATEMENT, bodyStatement);
-      // String str = evaluateTemplate(context, template, new String[]{CodeTemplateContextType.BODY_STATEMENT});
-      // if (str == null && !Strings.containsOnlyWhitespaces(bodyStatement))
-      // {
-      // return bodyStatement;
-      // }
-      // return str;
+      String templateName =
+         isConstructor ? CodeTemplateContextType.CONSTRUCTORSTUB_ID : CodeTemplateContextType.METHODSTUB_ID;
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return bodyStatement;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
+      context.setVariable(CodeTemplateContextType.BODY_STATEMENT, bodyStatement);
+      String str = evaluateTemplate(context, template, new String[]{CodeTemplateContextType.BODY_STATEMENT});
+      if (str == null && !Strings.containsOnlyWhitespaces(bodyStatement))
+      {
+         return bodyStatement;
+      }
+      return str;
    }
 
    //
@@ -142,6 +158,47 @@ public class StubUtility
    //
    // return evaluateTemplate(context, template);
    // }
+
+   public static String getCatchBodyContent(String exceptionType, String variableName, ASTNode locationInAST,
+      String lineDelimiter) throws CoreException
+   {
+      String enclosingType = ""; //$NON-NLS-1$
+      String enclosingMethod = ""; //$NON-NLS-1$
+
+      if (locationInAST != null)
+      {
+         MethodDeclaration parentMethod = ASTResolving.findParentMethodDeclaration(locationInAST);
+         if (parentMethod != null)
+         {
+            enclosingMethod = parentMethod.getName().getIdentifier();
+            locationInAST = parentMethod;
+         }
+         ASTNode parentType = ASTResolving.findParentType(locationInAST);
+         if (parentType instanceof AbstractTypeDeclaration)
+         {
+            enclosingType = ((AbstractTypeDeclaration)parentType).getName().getIdentifier();
+         }
+      }
+      return getCatchBodyContent(exceptionType, variableName, enclosingType, enclosingMethod, lineDelimiter);
+   }
+
+   public static String getCatchBodyContent(String exceptionType, String variableName, String enclosingType,
+      String enclosingMethod, String lineDelimiter) throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID);
+      if (template == null)
+      {
+         return null;
+      }
+
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
+      context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
+      context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
+      return evaluateTemplate(context, template);
+   }
+
    //
    // public static String getCatchBodyContent(ICompilationUnit cu, String exceptionType, String variableName, ASTNode
    // locationInAST, String lineDelimiter) throws CoreException {
@@ -228,67 +285,85 @@ public class StubUtility
    // return evaluateTemplate(context, template);
    // }
    //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit, String, String[], String)
-   // */
-   // public static String getTypeComment(ICompilationUnit cu, String typeQualifiedName, String[] typeParameterNames, String
-   // lineDelim) throws CoreException {
-   // Template template= getCodeTemplate(CodeTemplateContextType.TYPECOMMENT_ID, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelim);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
-   // context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
-   //
-   // TemplateBuffer buffer;
-   // try {
-   // buffer= context.evaluate(template);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // } catch (TemplateException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // }
-   // String str= buffer.getString();
-   // if (Strings.containsOnlyWhitespaces(str)) {
-   // return null;
-   // }
-   //
-   // TemplateVariable position= findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
-   // if (position == null) {
-   // return str;
-   // }
-   //
-   // IDocument document= new Document(str);
-   // int[] tagOffsets= position.getOffsets();
-   // for (int i= tagOffsets.length - 1; i >= 0; i--) { // from last to first
-   // try {
-   // insertTag(document, tagOffsets[i], position.getLength(), EMPTY, EMPTY, null, typeParameterNames, false, lineDelim);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
-   // }
-   // }
-   // return document.get();
-   // }
-   //
-   // /*
-   // * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
-   // */
-   // public static String[] getParameterTypeNamesForSeeTag(IMethodBinding binding) {
-   // ITypeBinding[] typeBindings= binding.getParameterTypes();
-   // String[] result= new String[typeBindings.length];
-   // for (int i= 0; i < result.length; i++) {
-   // ITypeBinding curr= typeBindings[i];
-   // if (curr.isTypeVariable()) {
-   // curr= curr.getErasure(); // in Javadoc only use type variable erasure
-   // }
-   // curr= curr.getTypeDeclaration(); // no parameterized types
-   // result[i]= curr.getQualifiedName();
-   // }
-   // return result;
-   // }
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit, String, String[], String)
+   */
+   public static String getTypeComment(String typeQualifiedName, String[] typeParameterNames, String lineDelim)
+      throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.TYPECOMMENT_ID);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelim);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
+      context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
+
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      String str = buffer.getString();
+      if (Strings.containsOnlyWhitespaces(str))
+      {
+         return null;
+      }
+
+      TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+      if (position == null)
+      {
+         return str;
+      }
+
+      IDocument document = new Document(str);
+      int[] tagOffsets = position.getOffsets();
+      for (int i = tagOffsets.length - 1; i >= 0; i--)
+      { // from last to first
+         try
+         {
+            insertTag(document, tagOffsets[i], position.getLength(), EMPTY, EMPTY, null, typeParameterNames, false,
+               lineDelim);
+         }
+         catch (BadLocationException e)
+         {
+            throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
+         }
+      }
+      return document.get();
+   }
+
+   /*
+   * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
+   */
+   public static String[] getParameterTypeNamesForSeeTag(IMethodBinding binding)
+   {
+      ITypeBinding[] typeBindings = binding.getParameterTypes();
+      String[] result = new String[typeBindings.length];
+      for (int i = 0; i < result.length; i++)
+      {
+         ITypeBinding curr = typeBindings[i];
+         if (curr.isTypeVariable())
+         {
+            curr = curr.getErasure(); // in Javadoc only use type variable erasure
+         }
+         curr = curr.getTypeDeclaration(); // no parameterized types
+         result[i] = curr.getQualifiedName();
+      }
+      return result;
+   }
+
    //
    // /*
    // * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
@@ -313,31 +388,27 @@ public class StubUtility
    // return paramTypeNames;
    // }
    //
-   // private static String getSeeTag(String declaringClassQualifiedName, String methodName, String[]
-   // parameterTypesQualifiedNames) {
-   // StringBuffer buf= new StringBuffer();
-   //      buf.append("@see "); //$NON-NLS-1$
-   // buf.append(declaringClassQualifiedName);
-   // buf.append('#');
-   // buf.append(methodName);
-   // buf.append('(');
-   // for (int i= 0; i < parameterTypesQualifiedNames.length; i++) {
-   // if (i > 0) {
-   //            buf.append(", "); //$NON-NLS-1$
-   // }
-   // buf.append(parameterTypesQualifiedNames[i]);
-   // }
-   // buf.append(')');
-   // return buf.toString();
-   // }
-   //
-   // public static String[] getTypeParameterNames(ITypeParameter[] typeParameters) {
-   // String[] typeParametersNames= new String[typeParameters.length];
-   // for (int i= 0; i < typeParameters.length; i++) {
-   // typeParametersNames[i]= typeParameters[i].getElementName();
-   // }
-   // return typeParametersNames;
-   // }
+   private static String getSeeTag(String declaringClassQualifiedName, String methodName,
+      String[] parameterTypesQualifiedNames)
+   {
+      StringBuffer buf = new StringBuffer();
+      buf.append("@see "); //$NON-NLS-1$
+      buf.append(declaringClassQualifiedName);
+      buf.append('#');
+      buf.append(methodName);
+      buf.append('(');
+      for (int i = 0; i < parameterTypesQualifiedNames.length; i++)
+      {
+         if (i > 0)
+         {
+            buf.append(", "); //$NON-NLS-1$
+         }
+         buf.append(parameterTypesQualifiedNames[i]);
+      }
+      buf.append(')');
+      return buf.toString();
+   }
+
    //
    // /**
    // * Don't use this method directly, use CodeGeneration.
@@ -371,128 +442,271 @@ public class StubUtility
    // return evaluateTemplate(context, template);
    // }
    //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit, String, String, String[], String[], String,
-   // String[], IMethod, String)
-   // */
-   // public static String getMethodComment(ICompilationUnit cu, String typeName, String methodName, String[] paramNames, String[]
-   // excTypeSig, String retTypeSig, String[] typeParameterNames,
-   // IMethod target, boolean delegate, String lineDelimiter) throws CoreException {
-   // String templateName= CodeTemplateContextType.METHODCOMMENT_ID;
-   // if (retTypeSig == null) {
-   // templateName= CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
-   // } else if (target != null) {
-   // if (delegate)
-   // templateName= CodeTemplateContextType.DELEGATECOMMENT_ID;
-   // else
-   // templateName= CodeTemplateContextType.OVERRIDECOMMENT_ID;
-   // }
-   // Template template= getCodeTemplate(templateName, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-   //
-   // if (retTypeSig != null) {
-   // context.setVariable(CodeTemplateContextType.RETURN_TYPE, Signature.toString(retTypeSig));
-   // }
-   // if (target != null) {
-   // String targetTypeName= target.getDeclaringType().getFullyQualifiedName('.');
-   // String[] targetParamTypeNames= getParameterTypeNamesForSeeTag(target);
-   // if (delegate)
-   // context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG, getSeeTag(targetTypeName, methodName, targetParamTypeNames));
-   // else
-   // context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG, getSeeTag(targetTypeName, methodName,
-   // targetParamTypeNames));
-   // }
-   // TemplateBuffer buffer;
-   // try {
-   // buffer= context.evaluate(template);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // } catch (TemplateException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // }
-   // if (buffer == null) {
-   // return null;
-   // }
-   //
-   // String str= buffer.getString();
-   // if (Strings.containsOnlyWhitespaces(str)) {
-   // return null;
-   // }
-   // TemplateVariable position= findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
-   // if (position == null) {
-   // return str;
-   // }
-   //
-   // IDocument document= new Document(str);
-   // String[] exceptionNames= new String[excTypeSig.length];
-   // for (int i= 0; i < excTypeSig.length; i++) {
-   // exceptionNames[i]= Signature.toString(excTypeSig[i]);
-   // }
-   // String returnType= retTypeSig != null ? Signature.toString(retTypeSig) : null;
-   // int[] tagOffsets= position.getOffsets();
-   // for (int i= tagOffsets.length - 1; i >= 0; i--) { // from last to first
-   // try {
-   // insertTag(document, tagOffsets[i], position.getLength(), paramNames, exceptionNames, returnType, typeParameterNames, false,
-   // lineDelimiter);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
-   // }
-   // }
-   // return document.get();
-   // }
-   //
-   // // remove lines for empty variables
-   // private static String fixEmptyVariables(TemplateBuffer buffer, String[] variables) throws MalformedTreeException,
-   // BadLocationException {
-   // IDocument doc= new Document(buffer.getString());
-   // int nLines= doc.getNumberOfLines();
-   // MultiTextEdit edit= new MultiTextEdit();
-   // HashSet<Integer> removedLines= new HashSet<Integer>();
-   // for (int i= 0; i < variables.length; i++) {
-   // TemplateVariable position= findVariable(buffer, variables[i]); // look if Javadoc tags have to be added
-   // if (position == null || position.getLength() > 0) {
-   // continue;
-   // }
-   // int[] offsets= position.getOffsets();
-   // for (int k= 0; k < offsets.length; k++) {
-   // int line= doc.getLineOfOffset(offsets[k]);
-   // IRegion lineInfo= doc.getLineInformation(line);
-   // int offset= lineInfo.getOffset();
-   // String str= doc.get(offset, lineInfo.getLength());
-   // if (Strings.containsOnlyWhitespaces(str) && nLines > line + 1 && removedLines.add(new Integer(line))) {
-   // int nextStart= doc.getLineOffset(line + 1);
-   // edit.addChild(new DeleteEdit(offset, nextStart - offset));
-   // }
-   // }
-   // }
-   // edit.apply(doc, 0);
-   // return doc.get();
-   // }
-   //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // */
-   // public static String getFieldComment(ICompilationUnit cu, String typeName, String fieldName, String lineDelimiter) throws
-   // CoreException {
-   // Template template= getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
-   //
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit, String, String, String[], String[], String,
+   String[], IMethod, String)
+   */
+   public static String getMethodComment(String typeName, String methodName, String[] paramNames, String[] excTypeSig,
+      String retTypeSig, String[] typeParameterNames, boolean delegate, String lineDelimiter) throws CoreException
+   {
+      String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
+      if (retTypeSig == null)
+      {
+         templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
+      }
+      //TODO
+      //      else if (target != null)
+      //      {
+      //         if (delegate)
+      //            templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
+      //         else
+      //            templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
+      //      }
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+
+      if (retTypeSig != null)
+      {
+         context.setVariable(CodeTemplateContextType.RETURN_TYPE, Signature.toString(retTypeSig));
+      }
+      //TODO
+      //      if (target != null)
+      //      {
+      //         String targetTypeName = target.getDeclaringType().getFullyQualifiedName('.');
+      //         String[] targetParamTypeNames = getParameterTypeNamesForSeeTag(target);
+      //         if (delegate)
+      //            context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
+      //               getSeeTag(targetTypeName, methodName, targetParamTypeNames));
+      //         else
+      //            context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
+      //               getSeeTag(targetTypeName, methodName, targetParamTypeNames));
+      //      }
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      if (buffer == null)
+      {
+         return null;
+      }
+
+      String str = buffer.getString();
+      if (Strings.containsOnlyWhitespaces(str))
+      {
+         return null;
+      }
+      TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+      if (position == null)
+      {
+         return str;
+      }
+
+      IDocument document = new Document(str);
+      String[] exceptionNames = new String[excTypeSig.length];
+      for (int i = 0; i < excTypeSig.length; i++)
+      {
+         exceptionNames[i] = Signature.toString(excTypeSig[i]);
+      }
+      String returnType = retTypeSig != null ? Signature.toString(retTypeSig) : null;
+      int[] tagOffsets = position.getOffsets();
+      for (int i = tagOffsets.length - 1; i >= 0; i--)
+      { // from last to first
+         try
+         {
+            insertTag(document, tagOffsets[i], position.getLength(), paramNames, exceptionNames, returnType,
+               typeParameterNames, false, lineDelimiter);
+         }
+         catch (BadLocationException e)
+         {
+            throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
+         }
+      }
+      return document.get();
+   }
+
+   // remove lines for empty variables
+   private static String fixEmptyVariables(TemplateBuffer buffer, String[] variables) throws MalformedTreeException,
+      BadLocationException
+   {
+      IDocument doc = new Document(buffer.getString());
+      int nLines = doc.getNumberOfLines();
+      MultiTextEdit edit = new MultiTextEdit();
+      HashSet<Integer> removedLines = new HashSet<Integer>();
+      for (int i = 0; i < variables.length; i++)
+      {
+         TemplateVariable position = findVariable(buffer, variables[i]); // look if Javadoc tags have to be added
+         if (position == null || position.getLength() > 0)
+         {
+            continue;
+         }
+         int[] offsets = position.getOffsets();
+         for (int k = 0; k < offsets.length; k++)
+         {
+            int line = doc.getLineOfOffset(offsets[k]);
+            IRegion lineInfo = doc.getLineInformation(line);
+            int offset = lineInfo.getOffset();
+            String str = doc.get(offset, lineInfo.getLength());
+            if (Strings.containsOnlyWhitespaces(str) && nLines > line + 1 && removedLines.add(new Integer(line)))
+            {
+               int nextStart = doc.getLineOffset(line + 1);
+               edit.addChild(new DeleteEdit(offset, nextStart - offset));
+            }
+         }
+      }
+      edit.apply(doc, 0);
+      return doc.get();
+   }
+
+   /*
+    * Don't use this method directly, use CodeGeneration.
+    * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit, String, MethodDeclaration, boolean, String, String[], String)
+    */
+   public static String getMethodComment(String typeName, MethodDeclaration decl, boolean isDeprecated,
+      String targetName, String targetMethodDeclaringTypeName, String[] targetMethodParameterTypeNames,
+      boolean delegate, String lineDelimiter) throws CoreException
+   {
+      boolean needsTarget = targetMethodDeclaringTypeName != null && targetMethodParameterTypeNames != null;
+      String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
+      if (decl.isConstructor())
+      {
+         templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
+      }
+      else if (needsTarget)
+      {
+         if (delegate)
+            templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
+         else
+            templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
+      }
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
+      if (!decl.isConstructor())
+      {
+         context.setVariable(CodeTemplateContextType.RETURN_TYPE, ASTNodes.asString(getReturnType(decl)));
+      }
+      if (needsTarget)
+      {
+         if (delegate)
+            context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
+               getSeeTag(targetMethodDeclaringTypeName, targetName, targetMethodParameterTypeNames));
+         else
+            context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
+               getSeeTag(targetMethodDeclaringTypeName, targetName, targetMethodParameterTypeNames));
+      }
+
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      if (buffer == null)
+         return null;
+      String str = buffer.getString();
+      if (Strings.containsOnlyWhitespaces(str))
+      {
+         return null;
+      }
+      TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+      if (position == null)
+      {
+         return str;
+      }
+
+      IDocument textBuffer = new Document(str);
+      List<TypeParameter> typeParams = decl.typeParameters();
+      //TODO
+      //shouldGenerateMethodTypeParameterTags(cu.getJavaProject()) ? decl.typeParameters() : Collections.emptyList();
+      String[] typeParamNames = new String[typeParams.size()];
+      for (int i = 0; i < typeParamNames.length; i++)
+      {
+         TypeParameter elem = typeParams.get(i);
+         typeParamNames[i] = elem.getName().getIdentifier();
+      }
+      List<SingleVariableDeclaration> params = decl.parameters();
+      String[] paramNames = new String[params.size()];
+      for (int i = 0; i < paramNames.length; i++)
+      {
+         SingleVariableDeclaration elem = params.get(i);
+         paramNames[i] = elem.getName().getIdentifier();
+      }
+      List<Name> exceptions = decl.thrownExceptions();
+      String[] exceptionNames = new String[exceptions.size()];
+      for (int i = 0; i < exceptionNames.length; i++)
+      {
+         exceptionNames[i] = ASTNodes.getSimpleNameIdentifier(exceptions.get(i));
+      }
+
+      String returnType = null;
+      if (!decl.isConstructor())
+      {
+         returnType = ASTNodes.asString(getReturnType(decl));
+      }
+      int[] tagOffsets = position.getOffsets();
+      for (int i = tagOffsets.length - 1; i >= 0; i--)
+      { // from last to first
+         try
+         {
+            insertTag(textBuffer, tagOffsets[i], position.getLength(), paramNames, exceptionNames, returnType,
+               typeParamNames, isDeprecated, lineDelimiter);
+         }
+         catch (BadLocationException e)
+         {
+            throw new CoreException(JavaUIStatus.createError(IStatus.ERROR, e));
+         }
+      }
+      return textBuffer.get();
+   }
+
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   */
+   public static String getFieldComment(String typeName, String fieldName, String lineDelimiter) throws CoreException
+   {
+      Template template = getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+
+      return evaluateTemplate(context, template);
+   }
+
    //
    // /*
    // * Don't use this method directly, use CodeGeneration.
@@ -542,43 +756,57 @@ public class StubUtility
    // return evaluateTemplate(context, template);
    // }
    //
-   // private static String evaluateTemplate(CodeTemplateContext context, Template template) throws CoreException {
-   // TemplateBuffer buffer;
-   // try {
-   // buffer= context.evaluate(template);
-   // } catch (BadLocationException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // } catch (TemplateException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // }
-   // if (buffer == null)
-   // return null;
-   // String str= buffer.getString();
-   // if (Strings.containsOnlyWhitespaces(str)) {
-   // return null;
-   // }
-   // return str;
-   // }
-   //
-   // private static String evaluateTemplate(CodeTemplateContext context, Template template, String[] fullLineVariables) throws
-   // CoreException {
-   // TemplateBuffer buffer;
-   // try {
-   // buffer= context.evaluate(template);
-   // if (buffer == null)
-   // return null;
-   // String str= fixEmptyVariables(buffer, fullLineVariables);
-   // if (Strings.containsOnlyWhitespaces(str)) {
-   // return null;
-   // }
-   // return str;
-   // } catch (BadLocationException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // } catch (TemplateException e) {
-   // throw new CoreException(Status.CANCEL_STATUS);
-   // }
-   // }
-   //
+   private static String evaluateTemplate(CodeTemplateContext context, Template template) throws CoreException
+   {
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      if (buffer == null)
+         return null;
+      String str = buffer.getString();
+      if (Strings.containsOnlyWhitespaces(str))
+      {
+         return null;
+      }
+      return str;
+   }
+
+   private static String evaluateTemplate(CodeTemplateContext context, Template template, String[] fullLineVariables)
+      throws CoreException
+   {
+      TemplateBuffer buffer;
+      try
+      {
+         buffer = context.evaluate(template);
+         if (buffer == null)
+            return null;
+         String str = fixEmptyVariables(buffer, fullLineVariables);
+         if (Strings.containsOnlyWhitespaces(str))
+         {
+            return null;
+         }
+         return str;
+      }
+      catch (BadLocationException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+      catch (TemplateException e)
+      {
+         throw new CoreException(Status.CANCEL_STATUS);
+      }
+   }
+
    //
    // /*
    // * Don't use this method directly, use CodeGeneration.
@@ -673,6 +901,120 @@ public class StubUtility
    // return textBuffer.get();
    // }
    //
+   public static boolean shouldGenerateMethodTypeParameterTags()
+   {
+      //TODO
+      return JavaCore.ENABLED.equals(JavaCore
+         .getOption(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS));
+   }
+
+   /**
+   * @param decl the method declaration
+   * @return the return type
+   * @deprecated Deprecated to avoid deprecated warnings
+   */
+   private static ASTNode getReturnType(MethodDeclaration decl)
+   {
+      // used from API, can't eliminate
+      return decl.getAST().apiLevel() == AST.JLS2 ? decl.getReturnType() : decl.getReturnType2();
+   }
+
+   private static TemplateVariable findVariable(TemplateBuffer buffer, String variable)
+   {
+      TemplateVariable[] positions = buffer.getVariables();
+      for (int i = 0; i < positions.length; i++)
+      {
+         TemplateVariable curr = positions[i];
+         if (variable.equals(curr.getType()))
+         {
+            return curr;
+         }
+      }
+      return null;
+   }
+
+   private static void insertTag(IDocument textBuffer, int offset, int length, String[] paramNames,
+      String[] exceptionNames, String returnType, String[] typeParameterNames, boolean isDeprecated,
+      String lineDelimiter) throws BadLocationException
+   {
+      IRegion region = textBuffer.getLineInformationOfOffset(offset);
+      if (region == null)
+      {
+         return;
+      }
+      String lineStart = textBuffer.get(region.getOffset(), offset - region.getOffset());
+
+      StringBuffer buf = new StringBuffer();
+      for (int i = 0; i < typeParameterNames.length; i++)
+      {
+         if (buf.length() > 0)
+         {
+            buf.append(lineDelimiter).append(lineStart);
+         }
+         buf.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
+      }
+      for (int i = 0; i < paramNames.length; i++)
+      {
+         if (buf.length() > 0)
+         {
+            buf.append(lineDelimiter).append(lineStart);
+         }
+         buf.append("@param ").append(paramNames[i]); //$NON-NLS-1$
+      }
+      if (returnType != null && !returnType.equals("void")) { //$NON-NLS-1$
+         if (buf.length() > 0)
+         {
+            buf.append(lineDelimiter).append(lineStart);
+         }
+         buf.append("@return"); //$NON-NLS-1$
+      }
+      if (exceptionNames != null)
+      {
+         for (int i = 0; i < exceptionNames.length; i++)
+         {
+            if (buf.length() > 0)
+            {
+               buf.append(lineDelimiter).append(lineStart);
+            }
+            buf.append("@throws ").append(exceptionNames[i]); //$NON-NLS-1$
+         }
+      }
+      if (isDeprecated)
+      {
+         if (buf.length() > 0)
+         {
+            buf.append(lineDelimiter).append(lineStart);
+         }
+         buf.append("@deprecated"); //$NON-NLS-1$
+      }
+      if (buf.length() == 0 && isAllCommentWhitespace(lineStart))
+      {
+         int prevLine = textBuffer.getLineOfOffset(offset) - 1;
+         if (prevLine > 0)
+         {
+            IRegion prevRegion = textBuffer.getLineInformation(prevLine);
+            int prevLineEnd = prevRegion.getOffset() + prevRegion.getLength();
+            // clear full line
+            textBuffer.replace(prevLineEnd, offset + length - prevLineEnd, ""); //$NON-NLS-1$
+            return;
+         }
+      }
+      textBuffer.replace(offset, length, buf.toString());
+   }
+
+   private static boolean isAllCommentWhitespace(String lineStart)
+   {
+      for (int i = 0; i < lineStart.length(); i++)
+      {
+         char ch = lineStart.charAt(i);
+         if (!CharOperation.isWhitespace(ch) && ch != '*')
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+
    // public static boolean shouldGenerateMethodTypeParameterTags(IJavaProject project) {
    // return JavaCore.ENABLED.equals(project.getOption(JavaCore.COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS, true));
    // }
@@ -1238,42 +1580,44 @@ public class StubUtility
    // return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, type.getJavaProject(), type.getElementName(), 0, new
    // ExcludedCollection(excluded), true);
    // }
-   //
-   // public static String[] getArgumentNameSuggestions(IJavaProject project, Type type, String[] excluded) {
-   // return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, project, type, new ExcludedCollection(excluded), true);
-   // }
+
+   public static String[] getArgumentNameSuggestions(Type type, String[] excluded)
+   {
+      return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, type, new ExcludedCollection(excluded), true);
+   }
+
    //
    // public static String[] getArgumentNameSuggestions(IJavaProject project, ITypeBinding binding, String[] excluded) {
    // return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, project, binding, null, new ExcludedCollection(excluded));
    // }
    //
-   // public static String[] getArgumentNameSuggestions(IJavaProject project, String baseName, int dimensions, String[] excluded)
-   // {
-   // return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
-   //
-   // public static String[] getFieldNameSuggestions(IType type, int fieldModifiers, String[] excluded) {
-   // return getFieldNameSuggestions(type.getJavaProject(), type.getElementName(), 0, fieldModifiers, excluded);
-   // }
-   //
-   // public static String[] getFieldNameSuggestions(IJavaProject project, String baseName, int dimensions, int modifiers,
-   // String[] excluded) {
-   // if (Flags.isFinal(modifiers) && Flags.isStatic(modifiers)) {
-   // return getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // } else if (Flags.isStatic(modifiers)) {
-   // return getVariableNameSuggestions(NamingConventions.VK_STATIC_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
-   // return getVariableNameSuggestions(NamingConventions.VK_INSTANCE_FIELD, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
-   //
-   // public static String[] getLocalNameSuggestions(IJavaProject project, String baseName, int dimensions, String[] excluded) {
-   // return getVariableNameSuggestions(NamingConventions.VK_LOCAL, project, baseName, dimensions, new
-   // ExcludedCollection(excluded), true);
-   // }
+   public static String[] getArgumentNameSuggestions(String baseName, int dimensions, String[] excluded)
+   {
+      return getVariableNameSuggestions(NamingConventions.VK_PARAMETER, baseName, dimensions, new ExcludedCollection(
+         excluded), true);
+   }
+
+   public static String[] getFieldNameSuggestions(String baseName, int dimensions, int modifiers, String[] excluded)
+   {
+      if (Flags.isFinal(modifiers) && Flags.isStatic(modifiers))
+      {
+         return getVariableNameSuggestions(NamingConventions.VK_STATIC_FINAL_FIELD, baseName, dimensions,
+            new ExcludedCollection(excluded), true);
+      }
+      else if (Flags.isStatic(modifiers))
+      {
+         return getVariableNameSuggestions(NamingConventions.VK_STATIC_FIELD, baseName, dimensions,
+            new ExcludedCollection(excluded), true);
+      }
+      return getVariableNameSuggestions(NamingConventions.VK_INSTANCE_FIELD, baseName, dimensions,
+         new ExcludedCollection(excluded), true);
+   }
+
+   public static String[] getLocalNameSuggestions(String baseName, int dimensions, String[] excluded)
+   {
+      return getVariableNameSuggestions(NamingConventions.VK_LOCAL, baseName, dimensions, new ExcludedCollection(
+         excluded), true);
+   }
 
    public static String suggestArgumentName(String baseName, String[] excluded)
    {
@@ -1475,7 +1819,74 @@ public class StubUtility
       }
    }
 
+   public static boolean hasFieldName(String name)
+   {
+      //TODO 
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_FIELD_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_FIELD_SUFFIXES, true);
+      //      String staticPrefixes = project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_PREFIXES, true);
+      //      String staticSuffixes = project.getOption(JavaCore.CODEASSIST_STATIC_FIELD_SUFFIXES, true);
+      //
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name) || hasPrefixOrSuffix(staticPrefixes, staticSuffixes, name);
+      return false;
+   }
+
+   public static boolean hasParameterName(String name)
+   {
+      //TODO
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_ARGUMENT_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_ARGUMENT_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
+   public static boolean hasLocalVariableName(String name)
+   {
+      //TODO
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_LOCAL_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_LOCAL_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
+   public static boolean hasConstantName(String name)
+   {
+      //TODO
+      if (Character.isUpperCase(name.charAt(0)))
+         return true;
+      //      String prefixes = project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_PREFIXES, true);
+      //      String suffixes = project.getOption(JavaCore.CODEASSIST_STATIC_FINAL_FIELD_SUFFIXES, true);
+      //      return hasPrefixOrSuffix(prefixes, suffixes, name);
+      return false;
+   }
+
    //
+   //   private static boolean hasPrefixOrSuffix(String prefixes, String suffixes, String name)
+   //   {
+   //      final String listSeparartor = ","; //$NON-NLS-1$
+   //
+   //      StringTokenizer tok = new StringTokenizer(prefixes, listSeparartor);
+   //      while (tok.hasMoreTokens())
+   //      {
+   //         String curr = tok.nextToken();
+   //         if (name.startsWith(curr))
+   //         {
+   //            return true;
+   //         }
+   //      }
+   //
+   //      tok = new StringTokenizer(suffixes, listSeparartor);
+   //      while (tok.hasMoreTokens())
+   //      {
+   //         String curr = tok.nextToken();
+   //         if (name.endsWith(curr))
+   //         {
+   //            return true;
+   //         }
+   //      }
+   //      return false;
+   //   }
+
    // public static boolean hasFieldName(IJavaProject project, String name) {
    // String prefixes= project.getOption(JavaCore.CODEASSIST_FIELD_PREFIXES, true);
    // String suffixes= project.getOption(JavaCore.CODEASSIST_FIELD_SUFFIXES, true);
@@ -1534,19 +1945,29 @@ public class StubUtility
    // public static boolean useThisForFieldAccess(IJavaProject project) {
    // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
    // }
+
+   public static boolean useIsForBooleanGetters()
+   {
+      //TODO
+      return true;
+      //      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_IS_FOR_GETTERS, project))
+      //         .booleanValue();
+   }
+
    //
-   // public static boolean useIsForBooleanGetters(IJavaProject project) {
-   // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_IS_FOR_GETTERS,
-   // project)).booleanValue();
-   // }
-   //
-   // public static String getExceptionVariableName(IJavaProject project) {
-   // return PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_EXCEPTION_VAR_NAME, project);
-   // }
-   //
-   // public static boolean doAddComments(IJavaProject project) {
-   // return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
-   // }
+   public static String getExceptionVariableName()
+   {
+      return "e"; //PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_EXCEPTION_VAR_NAME, project);
+   }
+
+   public static boolean doAddComments()
+   {
+      //TODO
+      return true;
+      //      return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project))
+      //         .booleanValue();
+   }
+
    //
    // /**
    // * Only to be used by tests
@@ -1563,19 +1984,22 @@ public class StubUtility
    // data.setTemplate(copy);
    // }
    //
-   // private static Template getCodeTemplate(String id, IJavaProject project) {
-   // if (project == null)
-   // return JavaPlugin.getDefault().getCodeTemplateStore().findTemplateById(id);
-   // ProjectTemplateStore projectStore= new ProjectTemplateStore(project.getProject());
-   // try {
-   // projectStore.load();
-   // } catch (IOException e) {
-   // JavaPlugin.log(e);
-   // }
-   // return projectStore.findTemplateById(id);
-   // }
-   //
-   //
+   private static Template getCodeTemplate(String id)
+   {
+      //      if (project == null)
+      return JdtExtension.get().getTemplateStore().findTemplateById(id);
+      //      ProjectTemplateStore projectStore = new ProjectTemplateStore(project.getProject());
+      //      try
+      //      {
+      //         projectStore.load();
+      //      }
+      //      catch (IOException e)
+      //      {
+      //         JavaPlugin.log(e);
+      //      }
+      //      return projectStore.findTemplateById(id);
+   }
+
    // public static ImportRewrite createImportRewrite(ICompilationUnit cu, boolean restoreExistingImports) throws
    // JavaModelException {
    // return CodeStyleConfiguration.createImportRewrite(cu, restoreExistingImports);

@@ -42,7 +42,7 @@ public class RunDebuggerView extends ViewImpl implements ReLaunchDebuggerPresent
    }
 
    /**
-    * @see org.exoplatform.ide.extension.ReLaunchDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.ReLaunchDebuggerPresenter.client.create.CreateApplicationPresenter.Display#getCloseButton()
     */
    @Override
    public HasClickHandlers getCancelButton()

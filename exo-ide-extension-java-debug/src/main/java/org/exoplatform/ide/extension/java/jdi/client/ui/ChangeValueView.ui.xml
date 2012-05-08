@@ -30,18 +30,18 @@
 	<f:Border margin="15" borderColor="transparent">
 		<f:layer>
 			<g:FlowPanel width="100%" height="55%" addStyleNames="{style.spacing}">
-				<g:Label text="{locale.expressionFieldTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
+				<g:Label text="{locale.changeValueViewExpressionFieldTitle}" addStyleNames="{style.label}" width="100%"></g:Label>
 				<f:TextAreaInput ui:field="expressionField" width="100%" height="100%"></f:TextAreaInput>
 			</g:FlowPanel>
 		</f:layer>
 		<f:layer height="22px" bottom="0">
 			<g:FlowPanel width="190px" styleName="{style.center}">
 				<f:ImageButton ui:field="changeButton" width="90"
-					height="22" text="{locale.changeButtonTitle}" imageResource="{resource.okButton}"
+					height="22" text="{locale.changeValueViewChangeButtonTitle}" imageResource="{resource.okButton}"
 					disabledImageResource="{resource.okButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
 				<g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
 				<f:ImageButton ui:field="cancelButton" width="90"
-					height="22" text="{locale.cancelButtonTitle}" imageResource="{resource.cancelButton}"
+					height="22" text="{locale.changeValueViewCancelButtonTitle}" imageResource="{resource.cancelButton}"
 					disabledImageResource="{resource.cancelButtonDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
 			</g:FlowPanel>
 		</f:layer>

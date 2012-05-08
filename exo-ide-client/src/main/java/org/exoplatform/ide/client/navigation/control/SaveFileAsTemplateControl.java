@@ -27,15 +27,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -48,25 +39,19 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileAsTemplateControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
+   VfsChangedHandler
 {
 
    public static final String ID = "File/Save As Template...";
 
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.saveFileAsTemplateControl();
 
-   private FileModel activeFile = null;
+   private FileModel activeFile;
 
    /**
     * Current workspace's href.
     */
-   private VirtualFileSystemInfo vfsInfo = null;
-
-   private boolean isProjectOpened = false;
-
-   private boolean isBrowserPanelVisible;
-
-   private boolean isProjectExplorerVisible;
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * 
@@ -88,9 +73,6 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -103,19 +85,6 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
          setVisible(false);
          return;
       }
-
-      if (!isProjectOpened && isProjectExplorerVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
-      if (!isBrowserPanelVisible)
-      {
-         setVisible(false);
-         return;
-      }
-
       setVisible(true);
 
       setEnabled(activeFile != null);
@@ -138,47 +107,6 @@ public class SaveFileAsTemplateControl extends SimpleControl implements IDEContr
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      isProjectOpened = false;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      isProjectOpened = true;
-      updateState();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      View view = event.getView();
-
-      if (view instanceof NavigatorDisplay || view instanceof ProjectExplorerDisplay)
-      {
-         isBrowserPanelVisible = view.isViewVisible();
-
-         if (view instanceof ProjectExplorerDisplay)
-         {
-            isProjectExplorerVisible = view.isViewVisible();
-         }
-      }
-
       updateState();
    }
 

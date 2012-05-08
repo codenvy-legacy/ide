@@ -47,7 +47,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
  * Presenter for change value view.
- * The view must implement {@link ChangeValuePresenter.Display} interface.
+ * The view must implement {@link ChangeValuePresenter.Display} interface and pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ChangeValuePresenter.java Apr 28, 2012 9:47:01 AM azatsarynnyy $
@@ -249,4 +249,5 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
          display = null;
       }
    }
+
 }
