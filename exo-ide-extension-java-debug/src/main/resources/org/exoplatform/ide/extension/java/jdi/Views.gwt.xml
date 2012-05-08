@@ -23,4 +23,7 @@
    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValueView">
       <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display" />
    </replace-with>
+   <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionView">
+      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display" />
+   </replace-with>
 </module>

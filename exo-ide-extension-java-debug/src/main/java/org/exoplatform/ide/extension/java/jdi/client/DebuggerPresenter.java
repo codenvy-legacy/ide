@@ -55,6 +55,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEve
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
@@ -134,6 +135,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
       HasClickHandlers getChangeValueButton();
 
+      HasClickHandlers getEvaluateExpressionButton();
+
       Variable getSelectedVariable();
 
       List<Variable> getVariables();
@@ -155,6 +158,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       void setStepReturnButton(boolean isEnable);
 
       void setChangeValueButtonEnable(boolean isEnable);
+
+      void setEvaluateExpressionButtonEnable(boolean isEnable);
    }
 
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
@@ -231,6 +236,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          public void onClick(ClickEvent event)
          {
             IDE.fireEvent(new ChangeValueEvent(debuggerInfo, display.getSelectedVariable()));
+         }
+      });
+
+      display.getEvaluateExpressionButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new EvaluateExpressionEvent(debuggerInfo));
          }
       });
 
@@ -435,6 +449,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       display.setStepIntoButton(false);
       display.setStepOverButton(false);
       display.setStepReturnButton(false);
+      display.setEvaluateExpressionButtonEnable(false);
    }
 
    private void enabelButtons()
@@ -443,6 +458,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       display.setStepIntoButton(true);
       display.setStepOverButton(true);
       display.setStepReturnButton(true);
+      display.setEvaluateExpressionButtonEnable(true);
    }
 
    /**
@@ -828,9 +844,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
+      if (activeFile == null)
+      {
+         return;
+      }
+
       String path = event.getFile().getPath();
-      if (currentBreakPoint.getFilePath().equals(path))
+      if (currentBreakPoint != null && currentBreakPoint.getFilePath().equals(path))
+      {
          breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+      }
    }
 
    private void resetStates()

@@ -25,52 +25,47 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
-import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionHandler;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
- * Presenter for change value view.
- * The view must implement {@link ChangeValuePresenter.Display} interface and pointed in Views.gwt.xml file.
+ * Presenter for evaluate expression view.
+ * The view must implement {@link EvaluateExpressionPresenter.Display} interface and pointed in Views.gwt.xml file.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ChangeValuePresenter.java Apr 28, 2012 9:47:01 AM azatsarynnyy $
+ * @version $Id: EvaluateExpressionPresenter.java May 7, 2012 13:29:01 PM azatsarynnyy $
  *
  */
-public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandler
+public class EvaluateExpressionPresenter implements EvaluateExpressionHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView
    {
       /**
-       * Get change button handler.
+       * Get evaluate button handler.
        * 
        * @return {@link HasClickHandlers}
        */
-      HasClickHandlers getChangeButton();
+      HasClickHandlers getEvaluateButton();
 
       /**
-       * Get cancel button handler.
+       * Get close button handler.
        * 
        * @return {@link HasClickHandlers}
        */
-      HasClickHandlers getCancelButton();
+      HasClickHandlers getCloseButton();
 
       /**
        * Get expression field value.
@@ -80,11 +75,18 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
       HasValue<String> getExpression();
 
       /**
-       * Change the enable state of the change button.
+       * Set result field value.
+       * 
+       * @param value result field value
+       */
+      void setResult(String value);
+
+      /**
+       * Change the enable state of the evalaute button.
        * 
        * @param enable enabled or not
        */
-      void enableChangeButton(boolean enable);
+      void enableEvaluateButton(boolean enable);
 
       /**
        * Give focus to expression field.
@@ -98,18 +100,13 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
    private Display display;
 
    /**
-    * Variable whose value need to change.
-    */
-   private Variable variable;
-
-   /**
     * Connected debugger information.
     */
    private DebuggerInfo debuggerInfo;
 
-   public ChangeValuePresenter()
+   public EvaluateExpressionPresenter()
    {
-      IDE.addHandler(ChangeValueEvent.TYPE, this);
+      IDE.addHandler(EvaluateExpressionEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -118,17 +115,17 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
     */
    public void bindDisplay()
    {
-      display.getChangeButton().addClickHandler(new ClickHandler()
+      display.getEvaluateButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            doChangeValue();
+            doEvaluateExpression();
          }
       });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.getCloseButton().addClickHandler(new ClickHandler()
       {
 
          @Override
@@ -144,18 +141,17 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
          public void onValueChange(ValueChangeEvent<String> event)
          {
             boolean isExpressionFieldNotEmpty = (event.getValue() != null && !event.getValue().trim().isEmpty());
-            display.enableChangeButton(isExpressionFieldNotEmpty);
+            display.enableEvaluateButton(isExpressionFieldNotEmpty);
          }
       });
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler#onChangeValue(org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent)
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionHandler#onEvaluateExpression(org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent)
     */
    @Override
-   public void onChangeValue(ChangeValueEvent event)
+   public void onEvaluateExpression(EvaluateExpressionEvent event)
    {
-      variable = event.getVariable();
       debuggerInfo = event.getDebuggerInfo();
 
       if (display == null)
@@ -165,76 +161,43 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
 
          IDE.getInstance().openView(display.asView());
 
-         display.enableChangeButton(false);
+         display.enableEvaluateButton(false);
          display.focusInExpressionField();
       }
    }
 
    /**
-    * Changes the variable value.
+    * Evaluate expression.
     */
-   private void doChangeValue()
+   private void doEvaluateExpression()
    {
-      UpdateVariableRequest request =
-         new UpdateVariableRequestImpl(variable.getVariablePath(), display.getExpression().getValue());
+      display.enableEvaluateButton(false);
+
       try
       {
-         DebuggerClientService.getInstance().setValue(debuggerInfo.getId(), request, new AsyncRequestCallback<String>()
-         {
-
-            @Override
-            protected void onSuccess(String result)
+         DebuggerClientService.getInstance().evaluateExpression(debuggerInfo.getId(),
+            display.getExpression().getValue(),
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
-               updateVariableValueInList();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
-      }
-
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Updates variable value in variables panel.
-    */
-   private void updateVariableValueInList()
-   {
-      AutoBean<Value> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(Value.class);
-      AutoBeanUnmarshaller<Value> unmarshaller = new AutoBeanUnmarshaller<Value>(autoBean);
-      try
-      {
-         DebuggerClientService.getInstance().getValue(debuggerInfo.getId(), variable,
-            new AsyncRequestCallback<Value>(unmarshaller)
-            {
-
                @Override
-               protected void onSuccess(Value result)
+               protected void onSuccess(StringBuilder result)
                {
-                  if (result != null)
-                  {
-                     IDE.fireEvent(new UpdateVariableValueInTreeEvent(variable, result));
-                  }
+                  display.setResult(result.toString());
+                  display.enableEvaluateButton(true);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+                  display.setResult(exception.getMessage());
+                  display.enableEvaluateButton(true);
                }
             });
       }
       catch (RequestException e)
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+         display.enableEvaluateButton(true);
       }
    }
 
@@ -247,6 +210,38 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
       if (event.getView() instanceof Display)
       {
          display = null;
+      }
+   }
+
+   /**
+    * Deserializer for response's body.
+    */
+   private class StringUnmarshaller implements Unmarshallable<StringBuilder>
+   {
+
+      protected StringBuilder builder;
+
+      /**
+       * @param callback
+       */
+      public StringUnmarshaller(StringBuilder builder)
+      {
+         this.builder = builder;
+      }
+
+      /**
+       * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+       */
+      @Override
+      public void unmarshal(Response response)
+      {
+         builder.append(response.getText());
+      }
+
+      @Override
+      public StringBuilder getPayload()
+      {
+         return builder;
       }
    }
 

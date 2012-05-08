@@ -91,6 +91,9 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    ImageButton changeValueButton;
 
    @UiField
+   ImageButton evaluateExpressionButton;
+
+   @UiField
    Label vmName;
 
    CellList<BreakPoint> breakpointsContainer;
@@ -205,6 +208,12 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    }
 
    @Override
+   public HasClickHandlers getEvaluateExpressionButton()
+   {
+      return evaluateExpressionButton;
+   }
+
+   @Override
    public void setVariables(List<Variable> variables)
    {
       buildVariablesTreePanel(variables);
@@ -256,6 +265,12 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    public void setChangeValueButtonEnable(boolean isEnable)
    {
       changeValueButton.setEnabled(isEnable);
+   }
+
+   @Override
+   public void setEvaluateExpressionButtonEnable(boolean isEnable)
+   {
+      evaluateExpressionButton.setEnabled(isEnable);
    }
 
    public TabPanel getVariablesPanel()

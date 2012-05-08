@@ -21,22 +21,19 @@ package org.exoplatform.ide.extension.java.jdi.client.events;
 import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
-import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
- * Event occurs when user tries to change variable value.
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: ChangeValueEvent.java Apr 28, 2012 10:05:37 AM azatsarynnyy $
+ * @version $Id: EvaluateExpressionEvent.java May 7, 2012 12:25:37 PM azatsarynnyy $
  *
  */
-public class ChangeValueEvent extends GwtEvent<ChangeValueHandler>
+public class EvaluateExpressionEvent extends GwtEvent<EvaluateExpressionHandler>
 {
 
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<ChangeValueHandler> TYPE = new GwtEvent.Type<ChangeValueHandler>();
+   public static final GwtEvent.Type<EvaluateExpressionHandler> TYPE = new GwtEvent.Type<EvaluateExpressionHandler>();
 
    /**
     * Connected debugger information.
@@ -44,25 +41,18 @@ public class ChangeValueEvent extends GwtEvent<ChangeValueHandler>
    private DebuggerInfo debuggerInfo;
 
    /**
-    * Variable whose value need to change.
-    */
-   private Variable var;
-
-   /**
     * @param debuggerInfo connected debugger
-    * @param var variable
     */
-   public ChangeValueEvent(DebuggerInfo debuggerInfo, Variable var)
+   public EvaluateExpressionEvent(DebuggerInfo debuggerInfo)
    {
       this.debuggerInfo = debuggerInfo;
-      this.var = var;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ChangeValueHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<EvaluateExpressionHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -71,9 +61,9 @@ public class ChangeValueEvent extends GwtEvent<ChangeValueHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ChangeValueHandler handler)
+   protected void dispatch(EvaluateExpressionHandler handler)
    {
-      handler.onChangeValue(this);
+      handler.onEvaluateExpression(this);
    }
 
    /**
@@ -84,16 +74,6 @@ public class ChangeValueEvent extends GwtEvent<ChangeValueHandler>
    public DebuggerInfo getDebuggerInfo()
    {
       return debuggerInfo;
-   }
-
-   /**
-    * Get the variable whose value need to change.
-    * 
-    * @return variable
-    */
-   public Variable getVariable()
-   {
-      return var;
    }
 
 }
