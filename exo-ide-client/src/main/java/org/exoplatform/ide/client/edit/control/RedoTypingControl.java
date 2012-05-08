@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.editor.api.Editor;
 
 /**
  * Created by The eXo Platform SAS .
@@ -112,7 +113,7 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
    @Override
    public void onShowContextMenu(ShowContextMenuEvent event)
    {
-      boolean showInContextMenu = "editor".equals(event.getViewPart());
+      boolean showInContextMenu = (event.getObject() instanceof Editor);
       setShowInContextMenu(showInContextMenu && isEditorPanelActive);
    }
 

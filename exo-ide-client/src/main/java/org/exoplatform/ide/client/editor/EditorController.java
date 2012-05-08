@@ -857,7 +857,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    @Override
    public void onEditorContextMenu(EditorContextMenuEvent event)
    {
-      IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), "editor"));
+      IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), getEditorFromView(activeFile.getId())));
    }
 
    /**
