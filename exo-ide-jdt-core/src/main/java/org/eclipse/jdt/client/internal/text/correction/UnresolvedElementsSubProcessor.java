@@ -71,6 +71,7 @@ import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.AddArgumentCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.AddImportCorrectionProposal;
+import org.eclipse.jdt.client.internal.text.correction.proposals.AddTypeParameterProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CastCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeMethodSignatureProposal.ChangeDescription;
@@ -242,7 +243,7 @@ public class UnresolvedElementsSubProcessor
          //         }
 
          int relevance = Character.isUpperCase(ASTNodes.getSimpleNameIdentifier(node).charAt(0)) ? 5 : -2;
-         addSimilarTypeProposals(context.getDocument(), typeKind, node, relevance + 1, proposals);
+         addSimilarTypeProposals(context.getDocument(), context.getASTRoot(), typeKind, node, relevance + 1, proposals);
 
          typeKind &= ~SimilarElementsRequestor.ANNOTATIONS;
          addNewTypeProposals(node, typeKind, relevance, proposals);
@@ -641,7 +642,6 @@ public class UnresolvedElementsSubProcessor
    public static void getTypeProposals(IInvocationContext context, IProblemLocation problem,
       Collection<ICommandAccess> proposals) throws CoreException
    {
-
       ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
       if (selectedNode == null)
       {
@@ -682,7 +682,7 @@ public class UnresolvedElementsSubProcessor
       }
 
       // change to similar type proposals
-      addSimilarTypeProposals(context.getDocument(), kind, node, 3, proposals);
+      addSimilarTypeProposals(context.getDocument(), context.getASTRoot(), kind, node, 3, proposals);
 
       while (node.getParent() instanceof QualifiedName)
       {
@@ -703,11 +703,10 @@ public class UnresolvedElementsSubProcessor
       //         .addProjectSetupFixProposal(context, problem, node.getFullyQualifiedName(), proposals);
    }
 
-   private static void addSimilarTypeProposals(IDocument document, int kind, Name node, int relevance,
+   private static void addSimilarTypeProposals(IDocument document, CompilationUnit compilationUnit, int kind, Name node, int relevance,
       Collection<ICommandAccess> proposals) throws CoreException
    {
-      SimilarElement[] elements = SimilarElementsRequestor.findSimilarElement(node, kind);
-
+      SimilarElement[] elements = SimilarElementsRequestor.findSimilarElement(document, compilationUnit, node, kind);
       // try to resolve type in context -> highest severity
       String resolvedTypeName = null;
       ITypeBinding binding = ASTResolving.guessBindingForTypeReference(node);
@@ -887,135 +886,135 @@ public class UnresolvedElementsSubProcessor
    public static void addNewTypeProposals(Name refNode, int kind, int relevance, Collection<ICommandAccess> proposals)
    {
       System.out.println("UnresolvedElementsSubProcessor.addNewTypeProposals()");
-      //TODO
-      //      Name node = refNode;
-      //      do
-      //      {
-      //         String typeName = ASTNodes.getSimpleNameIdentifier(node);
-      //         Name qualifier = null;
-      //         // only propose to create types for qualifiers when the name starts with upper case
-      //         boolean isPossibleName = isLikelyTypeName(typeName) || node == refNode;
-      //         if (isPossibleName)
-      //         {
-      //            IPackageFragment enclosingPackage = null;
-      //            IType enclosingType = null;
-      //            if (node.isSimpleName())
-      //            {
-      //               enclosingPackage = (IPackageFragment)cu.getParent();
-      //               // don't suggest member type, user can select it in wizard
-      //            }
-      //            else
-      //            {
-      //               Name qualifierName = ((QualifiedName)node).getQualifier();
-      //               IBinding binding = qualifierName.resolveBinding();
-      //               if (binding != null && binding.isRecovered())
-      //               {
-      //                  binding = null;
-      //               }
-      //               if (binding instanceof ITypeBinding)
-      //               {
-      //                  enclosingType = (IType)binding.getJavaElement();
-      //               }
-      //               else if (binding instanceof IPackageBinding)
-      //               {
-      //                  qualifier = qualifierName;
-      //                  enclosingPackage = (IPackageFragment)binding.getJavaElement();
-      //               }
-      //               else
-      //               {
-      //                  IJavaElement[] res = cu.codeSelect(qualifierName.getStartPosition(), qualifierName.getLength());
-      //                  if (res != null && res.length > 0 && res[0] instanceof IType)
-      //                  {
-      //                     enclosingType = (IType)res[0];
-      //                  }
-      //                  else
-      //                  {
-      //                     qualifier = qualifierName;
-      //                     enclosingPackage =
-      //                        JavaModelUtil.getPackageFragmentRoot(cu).getPackageFragment(
-      //                           ASTResolving.getFullName(qualifierName));
-      //                  }
-      //               }
-      //            }
-      //            int rel = relevance;
-      //            if (enclosingPackage != null && isLikelyPackageName(enclosingPackage.getElementName()))
-      //            {
-      //               rel += 3;
-      //            }
-      //
-      //            if (enclosingPackage != null
-      //               && !enclosingPackage.getCompilationUnit(typeName + JavaModelUtil.DEFAULT_CU_SUFFIX).exists()
-      //               || enclosingType != null && !enclosingType.isReadOnly() && !enclosingType.getType(typeName).exists())
-      //            { // new member type
-      //               IJavaElement enclosing = enclosingPackage != null ? (IJavaElement)enclosingPackage : enclosingType;
-      //
-      //               if ((kind & SimilarElementsRequestor.CLASSES) != 0)
-      //               {
-      //                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_CLASS, enclosing,
-      //                     rel + 3));
-      //               }
-      //               if ((kind & SimilarElementsRequestor.INTERFACES) != 0)
-      //               {
-      //                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_INTERFACE, enclosing,
-      //                     rel + 2));
-      //               }
-      //               if ((kind & SimilarElementsRequestor.ENUMS) != 0)
-      //               {
-      //                  proposals
-      //                     .add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_ENUM, enclosing, rel));
-      //               }
-      //               if ((kind & SimilarElementsRequestor.ANNOTATIONS) != 0)
-      //               {
-      //                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_ANNOTATION,
-      //                     enclosing, rel + 1));
-      //               }
-      //            }
-      //         }
-      //         node = qualifier;
-      //      }
-      //      while (node != null);
-      //
-      //      // type parameter proposals
-      //      if (refNode.isSimpleName() && (kind & SimilarElementsRequestor.VARIABLES) != 0)
-      //      {
-      //         CompilationUnit root = (CompilationUnit)refNode.getRoot();
-      //         String name = ((SimpleName)refNode).getIdentifier();
-      //         BodyDeclaration declaration = ASTResolving.findParentBodyDeclaration(refNode);
-      //         int baseRel = relevance;
-      //         if (isLikelyTypeParameterName(name))
-      //         {
-      //            baseRel += 8;
-      //         }
-      //         while (declaration != null)
-      //         {
-      //            IBinding binding = null;
-      //            int rel = baseRel;
-      //            if (declaration instanceof MethodDeclaration)
-      //            {
-      //               binding = ((MethodDeclaration)declaration).resolveBinding();
-      //               if (isLikelyMethodTypeParameterName(name))
-      //                  rel += 2;
-      //            }
-      //            else if (declaration instanceof TypeDeclaration)
-      //            {
-      //               binding = ((TypeDeclaration)declaration).resolveBinding();
-      //               rel++;
-      //            }
-      //            if (binding != null)
-      //            {
-      //               AddTypeParameterProposal proposal = new AddTypeParameterProposal(cu, binding, root, name, null, rel);
-      //               proposals.add(proposal);
-      //            }
-      //            if (!Modifier.isStatic(declaration.getModifiers()))
-      //            {
-      //               declaration = ASTResolving.findParentBodyDeclaration(declaration.getParent());
-      //            }
-      //            else
-      //            {
-      //               declaration = null;
-      //            }
-      //         }
-      //      }
+      //      TODO
+//      Name node = refNode;
+//      do
+//      {
+//         String typeName = ASTNodes.getSimpleNameIdentifier(node);
+//         Name qualifier = null;
+//         // only propose to create types for qualifiers when the name starts with upper case
+//         boolean isPossibleName = isLikelyTypeName(typeName) || node == refNode;
+//         if (isPossibleName)
+//         {
+//            IPackageFragment enclosingPackage = null;
+//            IType enclosingType = null;
+//            if (node.isSimpleName())
+//            {
+//               enclosingPackage = (IPackageFragment)cu.getParent();
+//               // don't suggest member type, user can select it in wizard
+//            }
+//            else
+//            {
+//               Name qualifierName = ((QualifiedName)node).getQualifier();
+//               IBinding binding = qualifierName.resolveBinding();
+//               if (binding != null && binding.isRecovered())
+//               {
+//                  binding = null;
+//               }
+//               if (binding instanceof ITypeBinding)
+//               {
+//                  enclosingType = (IType)binding.getJavaElement();
+//               }
+//               else if (binding instanceof IPackageBinding)
+//               {
+//                  qualifier = qualifierName;
+//                  enclosingPackage = (IPackageFragment)binding.getJavaElement();
+//               }
+//               else
+//               {
+//                  IJavaElement[] res = cu.codeSelect(qualifierName.getStartPosition(), qualifierName.getLength());
+//                  if (res != null && res.length > 0 && res[0] instanceof IType)
+//                  {
+//                     enclosingType = (IType)res[0];
+//                  }
+//                  else
+//                  {
+//                     qualifier = qualifierName;
+//                     enclosingPackage =
+//                        JavaModelUtil.getPackageFragmentRoot(cu).getPackageFragment(
+//                           ASTResolving.getFullName(qualifierName));
+//                  }
+//               }
+//            }
+//            int rel = relevance;
+//            if (enclosingPackage != null && isLikelyPackageName(enclosingPackage.getElementName()))
+//            {
+//               rel += 3;
+//            }
+//
+//            if (enclosingPackage != null
+//               && !enclosingPackage.getCompilationUnit(typeName + JavaModelUtil.DEFAULT_CU_SUFFIX).exists()
+//               || enclosingType != null && !enclosingType.isReadOnly() && !enclosingType.getType(typeName).exists())
+//            { // new member type
+//               IJavaElement enclosing = enclosingPackage != null ? (IJavaElement)enclosingPackage : enclosingType;
+//
+//               if ((kind & SimilarElementsRequestor.CLASSES) != 0)
+//               {
+//                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_CLASS, enclosing,
+//                     rel + 3));
+//               }
+//               if ((kind & SimilarElementsRequestor.INTERFACES) != 0)
+//               {
+//                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_INTERFACE, enclosing,
+//                     rel + 2));
+//               }
+//               if ((kind & SimilarElementsRequestor.ENUMS) != 0)
+//               {
+//                  proposals
+//                     .add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_ENUM, enclosing, rel));
+//               }
+//               if ((kind & SimilarElementsRequestor.ANNOTATIONS) != 0)
+//               {
+//                  proposals.add(new NewCUUsingWizardProposal(cu, node, NewCUUsingWizardProposal.K_ANNOTATION,
+//                     enclosing, rel + 1));
+//               }
+//            }
+//         }
+//         node = qualifier;
+//      }
+//      while (node != null);
+//
+//      // type parameter proposals
+//      if (refNode.isSimpleName() && (kind & SimilarElementsRequestor.VARIABLES) != 0)
+//      {
+//         CompilationUnit root = (CompilationUnit)refNode.getRoot();
+//         String name = ((SimpleName)refNode).getIdentifier();
+//         BodyDeclaration declaration = ASTResolving.findParentBodyDeclaration(refNode);
+//         int baseRel = relevance;
+//         if (isLikelyTypeParameterName(name))
+//         {
+//            baseRel += 8;
+//         }
+//         while (declaration != null)
+//         {
+//            IBinding binding = null;
+//            int rel = baseRel;
+//            if (declaration instanceof MethodDeclaration)
+//            {
+//               binding = ((MethodDeclaration)declaration).resolveBinding();
+//               if (isLikelyMethodTypeParameterName(name))
+//                  rel += 2;
+//            }
+//            else if (declaration instanceof TypeDeclaration)
+//            {
+//               binding = ((TypeDeclaration)declaration).resolveBinding();
+//               rel++;
+//            }
+//            if (binding != null)
+//            {
+//               AddTypeParameterProposal proposal = new AddTypeParameterProposal(cu, binding, root, name, null, rel);
+//               proposals.add(proposal);
+//            }
+//            if (!Modifier.isStatic(declaration.getModifiers()))
+//            {
+//               declaration = ASTResolving.findParentBodyDeclaration(declaration.getParent());
+//            }
+//            else
+//            {
+//               declaration = null;
+//            }
+//         }
+//      }
    }
 
    public static void getMethodProposals(IInvocationContext context, IProblemLocation problem,
@@ -1135,55 +1134,55 @@ public class UnresolvedElementsSubProcessor
          ITypeBinding senderDeclBinding = binding.getTypeDeclaration();
 
          //TODO load class file
-//         ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, senderDeclBinding);
-//         if (targetCU != null)
-//         {
-            String label;
-            Image image;
-            ITypeBinding[] parameterTypes = getParameterTypes(arguments);
-            if (parameterTypes != null)
-            {
-               String sig = ASTResolving.getMethodSignature(methodName, parameterTypes, false);
+         //         ICompilationUnit targetCU = ASTResolving.findCompilationUnitForBinding(cu, astRoot, senderDeclBinding);
+         //         if (targetCU != null)
+         //         {
+         String label;
+         Image image;
+         ITypeBinding[] parameterTypes = getParameterTypes(arguments);
+         if (parameterTypes != null)
+         {
+            String sig = ASTResolving.getMethodSignature(methodName, parameterTypes, false);
 
-               if (ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
+            if (ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
+            {
+               if (nodeParentType == senderDeclBinding)
                {
-                  if (nodeParentType == senderDeclBinding)
-                  {
-                     label = CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_description(sig);
-                     image = new Image(JdtClientBundle.INSTANCE.privateMethod());
-                  }
-                  else
+                  label = CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_description(sig);
+                  image = new Image(JdtClientBundle.INSTANCE.privateMethod());
+               }
+               else
+               {
+                  label =
+                     CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
+                        senderDeclBinding.getName());
+                  image = new Image(JdtClientBundle.INSTANCE.publicMethod());
+               }
+               proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding, 5,
+                  document, image));
+            }
+            if (senderDeclBinding.isNested() && sender == null
+               && Bindings.findMethodInHierarchy(senderDeclBinding, methodName, (ITypeBinding[])null) == null)
+            { // no covering method
+               ASTNode anonymDecl = astRoot.findDeclaringNode(senderDeclBinding);
+               if (anonymDecl != null)
+               {
+                  senderDeclBinding = Bindings.getBindingOfParentType(anonymDecl.getParent());
+                  if (!senderDeclBinding.isAnonymous()
+                     && ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
                   {
                      label =
-                        CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
-                           senderDeclBinding.getName());
-                     image = new Image(JdtClientBundle.INSTANCE.publicMethod());
-                  }
-                  proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding, 5,
-                     document, image));
-               }
-               if (senderDeclBinding.isNested() && sender == null
-                  && Bindings.findMethodInHierarchy(senderDeclBinding, methodName, (ITypeBinding[])null) == null)
-               { // no covering method
-                  ASTNode anonymDecl = astRoot.findDeclaringNode(senderDeclBinding);
-                  if (anonymDecl != null)
-                  {
-                     senderDeclBinding = Bindings.getBindingOfParentType(anonymDecl.getParent());
-                     if (!senderDeclBinding.isAnonymous()
-                        && ASTResolving.isUseableTypeInContext(parameterTypes, senderDeclBinding, false))
-                     {
-                        label =
 
-                           CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(
-                              sig, ASTResolving.getTypeSignature(senderDeclBinding));
-                        image = new Image(JdtClientBundle.INSTANCE.protectedMethod());
-                        proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments,
-                           senderDeclBinding, 5, document, image));
-                     }
+                        CorrectionMessages.INSTANCE.UnresolvedElementsSubProcessor_createmethod_other_description(sig,
+                           ASTResolving.getTypeSignature(senderDeclBinding));
+                     image = new Image(JdtClientBundle.INSTANCE.protectedMethod());
+                     proposals.add(new NewMethodCorrectionProposal(label, invocationNode, arguments, senderDeclBinding,
+                        5, document, image));
                   }
                }
             }
-//         }
+         }
+         //         }
       }
    }
 

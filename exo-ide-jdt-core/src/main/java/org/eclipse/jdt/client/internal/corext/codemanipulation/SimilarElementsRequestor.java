@@ -10,16 +10,22 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.JavaCodeController;
+import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.CompletionRequestor;
 import org.eclipse.jdt.client.core.Flags;
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Javadoc;
 import org.eclipse.jdt.client.core.dom.Name;
+import org.eclipse.jdt.client.core.dom.QualifiedName;
+import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.text.correction.NameMatcher;
-import org.eclipse.jdt.client.core.dom.QualifiedName;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.HashSet;
 
@@ -54,7 +60,8 @@ public class SimilarElementsRequestor extends CompletionRequestor
 
    private HashSet<SimilarElement> fResult;
 
-   public static SimilarElement[] findSimilarElement(Name name, int kind)
+   public static SimilarElement[] findSimilarElement(IDocument document,
+      org.eclipse.jdt.client.core.dom.CompilationUnit compilationUnit, Name name, int kind)
    {
       int pos = name.getStartPosition();
       int nArguments = -1;
@@ -71,6 +78,8 @@ public class SimilarElementsRequestor extends CompletionRequestor
          else
          {
             pos = name.getStartPosition() + 1; // first letter must be included, other
+            if (name.getLength() >= 2)
+               pos++;
          }
          Javadoc javadoc = (Javadoc)ASTNodes.getParent(name, ASTNode.JAVADOC);
          if (javadoc != null)
@@ -97,7 +106,7 @@ public class SimilarElementsRequestor extends CompletionRequestor
          requestor.setIgnored(CompletionProposal.VARIABLE_DECLARATION, true);
          requestor.setIgnored(CompletionProposal.POTENTIAL_METHOD_DECLARATION, true);
          requestor.setIgnored(CompletionProposal.METHOD_NAME_REFERENCE, true);
-         return requestor.process(pos);
+         return requestor.process(pos, document, compilationUnit);
       }
       finally
       {
@@ -161,11 +170,16 @@ public class SimilarElementsRequestor extends CompletionRequestor
       fResult.add(elem);
    }
 
-   private SimilarElement[] process(int pos)
+   private SimilarElement[] process(int pos, IDocument document,
+      org.eclipse.jdt.client.core.dom.CompilationUnit compilationUnit)
    {
       try
       {
-         //         cu.codeComplete(pos, this);
+
+         CompletionEngine e =
+            new CompletionEngine(JavaCodeController.NAME_ENVIRONMENT, this, JavaCore.getOptions(),
+               new NullProgressMonitor());
+         e.complete(new CompilationUnit(document.get().toCharArray(), "", "UTF-8"), pos, 0);
          processKeywords();
          return fResult.toArray(new SimilarElement[fResult.size()]);
       }
@@ -226,23 +240,24 @@ public class SimilarElementsRequestor extends CompletionRequestor
       return CLASSES;
    }
 
-   //   private void addType(char[] typeNameSig, int flags, int relevance)
-   //   {
-   //      int kind = getKind(flags, typeNameSig);
-   //      if (!isKind(kind))
-   //      {
-   //         return;
-   //      }
-   //      String fullName = new String(Signature.toCharArray(Signature.getTypeErasure(typeNameSig)));
-   //      if (TypeFilter.isFiltered(fullName))
-   //      {
-   //         return;
-   //      }
-   //      if (NameMatcher.isSimilarName(fName, Signature.getSimpleName(fullName)))
-   //      {
-   //         addResult(new SimilarElement(kind, fullName, relevance));
-   //      }
-   //   }
+   private void addType(char[] typeNameSig, int flags, int relevance)
+   {
+      int kind = getKind(flags, typeNameSig);
+      if (!isKind(kind))
+      {
+         return;
+      }
+      String fullName = new String(Signature.toCharArray(Signature.getTypeErasure(typeNameSig)));
+      //TODO
+      //      if (TypeFilter.isFiltered(fullName))
+      //      {
+      //         return;
+      //      }
+      if (NameMatcher.isSimilarName(fName, Signature.getSimpleName(fullName)))
+      {
+         addResult(new SimilarElement(kind, fullName, relevance));
+      }
+   }
 
    /* (non-Javadoc)
     * @see org.eclipse.jdt.core.CompletionRequestor#accept(org.eclipse.jdt.core.CompletionProposal)
@@ -250,10 +265,9 @@ public class SimilarElementsRequestor extends CompletionRequestor
    @Override
    public void accept(CompletionProposal proposal)
    {
-      //TODO
-      //      if (proposal.getKind() == CompletionProposal.TYPE_REF)
-      //      {
-      //         addType(proposal.getSignature(), proposal.getFlags(), proposal.getRelevance());
-      //      }
+      if (proposal.getKind() == CompletionProposal.TYPE_REF)
+      {
+         addType(proposal.getSignature(), proposal.getFlags(), proposal.getRelevance());
+      }
    }
 }
