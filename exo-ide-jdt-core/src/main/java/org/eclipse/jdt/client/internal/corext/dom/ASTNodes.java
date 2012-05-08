@@ -41,6 +41,7 @@ import org.eclipse.jdt.client.core.dom.IVariableBinding;
 import org.eclipse.jdt.client.core.dom.IfStatement;
 import org.eclipse.jdt.client.core.dom.InfixExpression;
 import org.eclipse.jdt.client.core.dom.Message;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.Name;
@@ -60,6 +61,7 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
+import org.eclipse.jdt.client.ui.MembersOrderPreferenceCache;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.Document;
@@ -478,46 +480,56 @@ public class ASTNodes
          || locationInParent == DoStatement.BODY_PROPERTY;
    }
 
-   //   /**
-   //    * Returns the type to which an inlined variable initializer should be cast, or
-   //    * <code>null</code> if no cast is necessary.
-   //    * 
-   //    * @param initializer the initializer expression of the variable to inline
-   //    * @param reference the reference to the variable (which is to be inlined)
-   //    * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
-   //    * @since 3.6
-   //    */
-   //   public static ITypeBinding getExplicitCast(Expression initializer, Expression reference) {
-   //      ITypeBinding initializerType= initializer.resolveTypeBinding();
-   //      ITypeBinding referenceType= reference.resolveTypeBinding();
-   //      if (initializerType == null || referenceType == null)
-   //         return null;
-   //      
-   //      if (initializerType.isPrimitive() && referenceType.isPrimitive() && ! referenceType.isEqualTo(initializerType)) {
-   //         return referenceType;
-   //         
-   //      } else if (initializerType.isPrimitive() && ! referenceType.isPrimitive()) { // initializer is autoboxed
-   //         ITypeBinding unboxedReferenceType= Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
-   //         if (!unboxedReferenceType.isEqualTo(initializerType))
-   //            return unboxedReferenceType;
-   //         else if (needsExplicitBoxing(reference))
-   //            return referenceType;
-   //         
-   //      } else if (! initializerType.isPrimitive() && referenceType.isPrimitive()) { // initializer is autounboxed
-   //         ITypeBinding unboxedInitializerType= Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
-   //         if (!unboxedInitializerType.isEqualTo(referenceType))
-   //            return referenceType;
-   //         
-   //      } else if (initializerType.isRawType() && referenceType.isParameterizedType()) {
-   //         return referenceType; // don't lose the unchecked conversion
-   //         
-   //      } else if (! TypeRules.canAssign(initializerType, referenceType)) {
-   //         if (!Bindings.containsTypeVariables(referenceType))
-   //            return referenceType;
-   //      }
-   //      
-   //      return null;
-   //   }
+   /**
+    * Returns the type to which an inlined variable initializer should be cast, or
+    * <code>null</code> if no cast is necessary.
+    * 
+    * @param initializer the initializer expression of the variable to inline
+    * @param reference the reference to the variable (which is to be inlined)
+    * @return a type binding to which the initializer should be cast, or <code>null</code> iff no cast is necessary
+    * @since 3.6
+    */
+   public static ITypeBinding getExplicitCast(Expression initializer, Expression reference)
+   {
+      ITypeBinding initializerType = initializer.resolveTypeBinding();
+      ITypeBinding referenceType = reference.resolveTypeBinding();
+      if (initializerType == null || referenceType == null)
+         return null;
+
+      if (initializerType.isPrimitive() && referenceType.isPrimitive() && !referenceType.isEqualTo(initializerType))
+      {
+         return referenceType;
+
+      }
+      else if (initializerType.isPrimitive() && !referenceType.isPrimitive())
+      { // initializer is autoboxed
+         ITypeBinding unboxedReferenceType = Bindings.getUnboxedTypeBinding(referenceType, reference.getAST());
+         if (!unboxedReferenceType.isEqualTo(initializerType))
+            return unboxedReferenceType;
+         else if (needsExplicitBoxing(reference))
+            return referenceType;
+
+      }
+      else if (!initializerType.isPrimitive() && referenceType.isPrimitive())
+      { // initializer is autounboxed
+         ITypeBinding unboxedInitializerType = Bindings.getUnboxedTypeBinding(initializerType, reference.getAST());
+         if (!unboxedInitializerType.isEqualTo(referenceType))
+            return referenceType;
+
+      }
+      else if (initializerType.isRawType() && referenceType.isParameterizedType())
+      {
+         return referenceType; // don't lose the unchecked conversion
+
+      }
+      else if (!TypeRules.canAssign(initializerType, referenceType))
+      {
+         if (!Bindings.containsTypeVariables(referenceType))
+            return referenceType;
+      }
+
+      return null;
+   }
 
    /**
     * Returns whether an expression at the given location needs explicit boxing.
@@ -824,82 +836,99 @@ public class ASTNodes
       }
    }
 
-   //   private static int getOrderPreference(BodyDeclaration member, MembersOrderPreferenceCache store) {
-   //      int memberType= member.getNodeType();
-   //      int modifiers= member.getModifiers();
-   //
-   //      switch (memberType) {
-   //         case ASTNode.TYPE_DECLARATION:
-   //         case ASTNode.ENUM_DECLARATION :
-   //         case ASTNode.ANNOTATION_TYPE_DECLARATION :
-   //            return store.getCategoryIndex(MembersOrderPreferenceCache.TYPE_INDEX) * 2;
-   //         case ASTNode.FIELD_DECLARATION:
-   //            if (Modifier.isStatic(modifiers)) {
-   //               int index= store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX) * 2;
-   //               if (Modifier.isFinal(modifiers)) {
-   //                  return index; // first final static, then static
-   //               }
-   //               return index + 1;
-   //            }
-   //            return store.getCategoryIndex(MembersOrderPreferenceCache.FIELDS_INDEX) * 2;
-   //         case ASTNode.INITIALIZER:
-   //            if (Modifier.isStatic(modifiers)) {
-   //               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_INIT_INDEX) * 2;
-   //            }
-   //            return store.getCategoryIndex(MembersOrderPreferenceCache.INIT_INDEX) * 2;
-   //         case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION:
-   //            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
-   //         case ASTNode.METHOD_DECLARATION:
-   //            if (Modifier.isStatic(modifiers)) {
-   //               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_METHODS_INDEX) * 2;
-   //            }
-   //            if (((MethodDeclaration) member).isConstructor()) {
-   //               return store.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX) * 2;
-   //            }
-   //            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
-   //         default:
-   //            return 100;
-   //      }
-   //   }
-   //
-   //   /**
-   //    * Computes the insertion index to be used to add the given member to the
-   //    * the list <code>container</code>.
-   //    * @param member the member to add
-   //    * @param container a list containing objects of type <code>BodyDeclaration</code>
-   //    * @return the insertion index to be used
-   //    */
-   //   public static int getInsertionIndex(BodyDeclaration member, List<? extends BodyDeclaration> container) {
-   //      int containerSize= container.size();
-   //
-   //      MembersOrderPreferenceCache orderStore= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
-   //
-   //      int orderIndex= getOrderPreference(member, orderStore);
-   //
-   //      int insertPos= containerSize;
-   //      int insertPosOrderIndex= -1;
-   //
-   //      for (int i= containerSize - 1; i >= 0; i--) {
-   //         int currOrderIndex= getOrderPreference(container.get(i), orderStore);
-   //         if (orderIndex == currOrderIndex) {
-   //            if (insertPosOrderIndex != orderIndex) { // no perfect match yet
-   //               insertPos= i + 1; // after a same kind
-   //               insertPosOrderIndex= orderIndex; // perfect match
-   //            }
-   //         } else if (insertPosOrderIndex != orderIndex) { // not yet a perfect match
-   //            if (currOrderIndex < orderIndex) { // we are bigger
-   //               if (insertPosOrderIndex == -1) {
-   //                  insertPos= i + 1; // after
-   //                  insertPosOrderIndex= currOrderIndex;
-   //               }
-   //            } else {
-   //               insertPos= i; // before
-   //               insertPosOrderIndex= currOrderIndex;
-   //            }
-   //         }
-   //      }
-   //      return insertPos;
-   //   }
+   private static int getOrderPreference(BodyDeclaration member, MembersOrderPreferenceCache store)
+   {
+      int memberType = member.getNodeType();
+      int modifiers = member.getModifiers();
+
+      switch (memberType)
+      {
+         case ASTNode.TYPE_DECLARATION :
+         case ASTNode.ENUM_DECLARATION :
+         case ASTNode.ANNOTATION_TYPE_DECLARATION :
+            return store.getCategoryIndex(MembersOrderPreferenceCache.TYPE_INDEX) * 2;
+         case ASTNode.FIELD_DECLARATION :
+            if (Modifier.isStatic(modifiers))
+            {
+               int index = store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX) * 2;
+               if (Modifier.isFinal(modifiers))
+               {
+                  return index; // first final static, then static
+               }
+               return index + 1;
+            }
+            return store.getCategoryIndex(MembersOrderPreferenceCache.FIELDS_INDEX) * 2;
+         case ASTNode.INITIALIZER :
+            if (Modifier.isStatic(modifiers))
+            {
+               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_INIT_INDEX) * 2;
+            }
+            return store.getCategoryIndex(MembersOrderPreferenceCache.INIT_INDEX) * 2;
+         case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION :
+            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
+         case ASTNode.METHOD_DECLARATION :
+            if (Modifier.isStatic(modifiers))
+            {
+               return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_METHODS_INDEX) * 2;
+            }
+            if (((MethodDeclaration)member).isConstructor())
+            {
+               return store.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX) * 2;
+            }
+            return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
+         default :
+            return 100;
+      }
+   }
+
+   /**
+    * Computes the insertion index to be used to add the given member to the
+    * the list <code>container</code>.
+    * @param member the member to add
+    * @param container a list containing objects of type <code>BodyDeclaration</code>
+    * @return the insertion index to be used
+    */
+   public static int getInsertionIndex(BodyDeclaration member, List<? extends BodyDeclaration> container)
+   {
+      int containerSize = container.size();
+
+      MembersOrderPreferenceCache orderStore = MembersOrderPreferenceCache.get();
+
+      int orderIndex = getOrderPreference(member, orderStore);
+
+      int insertPos = containerSize;
+      int insertPosOrderIndex = -1;
+
+      for (int i = containerSize - 1; i >= 0; i--)
+      {
+         int currOrderIndex = getOrderPreference(container.get(i), orderStore);
+         if (orderIndex == currOrderIndex)
+         {
+            if (insertPosOrderIndex != orderIndex)
+            { // no perfect match yet
+               insertPos = i + 1; // after a same kind
+               insertPosOrderIndex = orderIndex; // perfect match
+            }
+         }
+         else if (insertPosOrderIndex != orderIndex)
+         { // not yet a perfect match
+            if (currOrderIndex < orderIndex)
+            { // we are bigger
+               if (insertPosOrderIndex == -1)
+               {
+                  insertPos = i + 1; // after
+                  insertPosOrderIndex = currOrderIndex;
+               }
+            }
+            else
+            {
+               insertPos = i; // before
+               insertPosOrderIndex = currOrderIndex;
+            }
+         }
+      }
+      return insertPos;
+   }
 
    public static SimpleName getLeftMostSimpleName(Name name)
    {

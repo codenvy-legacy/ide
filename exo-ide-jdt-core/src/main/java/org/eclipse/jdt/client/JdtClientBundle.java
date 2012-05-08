@@ -51,4 +51,52 @@ public interface JdtClientBundle extends ClientBundle
    @Source("org/eclipse/jdt/images/controls/format_Disabled.png")
    ImageResource formatterProfilesDisabled();
 
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/correction_change.gif")
+   ImageResource correction_change();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/field_public_obj.gif")
+   ImageResource field_public();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/local.png")
+   ImageResource local_var();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/private-field.png")
+   ImageResource privateField();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/correction_cast.gif")
+   ImageResource correction_cast();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/public-method.png")
+   ImageResource publicMethod();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/packd_obj.gif")
+   ImageResource packd_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/delete_obj.gif")
+   ImageResource delete_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/correction_delete_import.gif")
+   ImageResource correction_delete_import();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/private-method.png")
+   ImageResource privateMethod();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/remove_correction.gif")
+   ImageResource remove_correction();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/jexception_obj.gif")
+   ImageResource exceptionProp();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/javadoc.gif")
+   ImageResource javadoc();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/add_obj.gif")
+   ImageResource add_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/imp_obj.gif")
+   ImageResource imp_obj();
+
+   @Source("org/eclipse/jdt/client/internal/text/correction/proposals/protected-method.png")
+   ImageResource protectedMethod();
+
 }

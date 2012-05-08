@@ -47,19 +47,31 @@ public class TemplateStore
    {
       @Source("templates.js")
       TextResource templatesText();
+
+      @Source("codeTemplates.js")
+      TextResource codeTemplatesText();
    }
 
    private static Template[] templates;
+
+   private static Template[] codeTemplates;
+
+   /**
+    * 
+    */
+   public TemplateStore()
+   {
+      if (templates == null)
+      {
+         parseTemplates();
+      }
+   }
 
    /**
     * @return
     */
    public Template[] getTemplates()
    {
-      if (templates == null)
-      {
-         parseTemplates();
-      }
       return templates;
    }
 
@@ -72,7 +84,20 @@ public class TemplateStore
       JSONObject jsonObject = JSONParser.parseLenient(templatesText.templatesText().getText()).isObject();
       JSONArray templatesJson = jsonObject.get("templates").isArray();
       templates = new Template[templatesJson.size()];
-      String name, description, contextTypeId, pattern = null;
+      fillTemplates(templatesJson, templates);
+
+      jsonObject = JSONParser.parseLenient(templatesText.codeTemplatesText().getText()).isObject();
+      templatesJson = jsonObject.get("templates").isArray();
+      codeTemplates = new Template[templatesJson.size()];
+      fillTemplates(templatesJson, codeTemplates);
+   }
+
+   /**
+    * @param templatesJson
+    */
+   private void fillTemplates(JSONArray templatesJson, Template[] templates)
+   {
+      String name, description, contextTypeId, pattern, id = null;
       boolean isAutoInsertable = false;
       for (int i = 0; i < templatesJson.size(); i++)
       {
@@ -82,9 +107,9 @@ public class TemplateStore
          contextTypeId = tem.get("context").isString().stringValue();
          pattern = tem.get("text").isString().stringValue();
          isAutoInsertable = tem.get("autoinsert").isBoolean().booleanValue();
-         templates[i] = new Template(name, description, contextTypeId, pattern, isAutoInsertable);
+         id = tem.get("id").isString().stringValue();
+         templates[i] = new Template(id, name, description, contextTypeId, pattern, isAutoInsertable);
       }
-
    }
 
    /**
@@ -94,11 +119,6 @@ public class TemplateStore
    public Template[] getTemplates(String contextTypeId)
    {
       List<Template> temList = new ArrayList<Template>();
-      if (templates == null)
-      {
-         parseTemplates();
-      }
-
       for (Template t : templates)
       {
          if (t.getContextTypeId().equals(contextTypeId))
@@ -106,6 +126,20 @@ public class TemplateStore
       }
 
       return temList.toArray(new Template[temList.size()]);
+   }
+
+   /**
+    * @param id
+    * @return
+    */
+   public Template findTemplateById(String id)
+   {
+      for (Template t : codeTemplates)
+      {
+         if (t.getId().equals(id))
+            return t;
+      }
+      return null;
    }
 
 }

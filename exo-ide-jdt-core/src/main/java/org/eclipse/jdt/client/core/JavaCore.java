@@ -91,6 +91,8 @@ import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -168,6 +170,108 @@ public final class JavaCore
    public static final String COMPILER_CODEGEN_INLINE_JSR_BYTECODE = PLUGIN_ID + ".compiler.codegen.inlineJsrBytecode"; //$NON-NLS-1$
 
    /**
+    * Compiler option ID: Reporting Unnecessary Type Check.
+    * <p>When enabled, the compiler will issue an error or a warning when a cast or an <code>instanceof</code> operation
+    *    is unnecessary.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNNECESSARY_TYPE_CHECK = PLUGIN_ID + ".compiler.problem.unnecessaryTypeCheck"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Consider Reference in Doc Comment for Unused Parameter Check.
+    * <p>When enabled, the compiler will consider doc comment references to parameters (i.e. <code>@param</code> clauses) for the unused
+    *    parameter check. Thus, documented parameters will be considered as mandated as per doc contract.
+    * <p>The severity of the unused parameter problem is controlled with option {@link #COMPILER_PB_UNUSED_PARAMETER}.
+    * <p>Note: this option has no effect until the doc comment support is enabled according to the
+    *    option {@link #COMPILER_DOC_COMMENT_SUPPORT}.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedParameterIncludeDocCommentReference"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "enabled", "disabled" }</code></dd>
+    * <dt>Default:</dt><dd><code>"enabled"</code></dd>
+    * </dl>
+    * @since 3.3
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE = PLUGIN_ID
+      + ".compiler.problem.unusedParameterIncludeDocCommentReference"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Consider Reference in Doc Comment for Unused Declared Thrown Exception Check.
+    * <p>When enabled, the compiler will consider doc comment references to
+    *    exceptions (i.e. <code>@throws</code> clauses) for the unused
+    *    declared thrown exception check. Thus, documented exceptions will be
+    *    considered as mandated as per doc contract.
+    * <p>The severity of the unused declared thrown exception problem is controlled with option {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION}.
+    * <p>Note: this option has no effect until the doc comment support is enabled according to the
+    *    option {@link #COMPILER_DOC_COMMENT_SUPPORT}.
+    * <p>This diagnostic is further tuned by options
+    *    {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_EXEMPT_EXCEPTION_AND_THROWABLE}
+    *    and {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_WHEN_OVERRIDING}.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionIncludeDocCommentReference"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "enabled", "disabled" }</code></dd>
+    * <dt>Default:</dt><dd><code>"enabled"</code></dd>
+    * </dl>
+    * @since 3.4
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE = PLUGIN_ID
+      + ".compiler.problem.unusedDeclaredThrownExceptionIncludeDocCommentReference"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Missing Javadoc Tags for Method Type Parameters.
+    * <p>Specify whether a missing <code>@param</code> for a type parameter in a method declaration should be reported.
+    *    When enabled, the compiler will issue a missing Javadoc tag error or warning for a type parameter without a 
+    *    corresponding <code>@param</code> tag.</p>
+    * <p>This option only has an effect if the compiler compliance is 1.5 or greater.</p>
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.missingJavadocTagsMethodTypeParameters"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "enabled", "disabled" }</code></dd>
+    * <dt>Default:</dt><dd><code>"disabled"</code></dd>
+    * </dl>
+    * @since 3.7
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_MISSING_JAVADOC_TAGS_METHOD_TYPE_PARAMETERS = PLUGIN_ID
+      + ".compiler.problem.missingJavadocTagsMethodTypeParameters"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Non-Static Reference to a Static Member.
+    * <p>When enabled, the compiler will issue an error or a warning whenever a static field
+    *    or method is accessed with an expression receiver. A reference to a static member should
+    *    be qualified with a type name.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.staticAccessReceiver"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 2.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_STATIC_ACCESS_RECEIVER = PLUGIN_ID + ".compiler.problem.staticAccessReceiver"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Indirect Reference to a Static Member.
+    * <p>When enabled, the compiler will issue an error or a warning whenever a static field
+    *    or method is accessed in an indirect way. A reference to a static member should
+    *    preferably be qualified with its declaring type name.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.indirectStaticAccess"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_INDIRECT_STATIC_ACCESS = PLUGIN_ID + ".compiler.problem.indirectStaticAccess"; //$NON-NLS-1$
+
+   /**
     * Compiler option ID: Javadoc Comment Support.
     * <p>
     * When this support is disabled, the compiler will ignore all javadoc problems options settings and will not report any
@@ -224,6 +328,47 @@ public final class JavaCore
     * @category CompilerOptionID
     */
    public static final String COMPILER_PB_ENUM_IDENTIFIER = PLUGIN_ID + ".compiler.problem.enumIdentifier"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unused Private Members.
+    * <p>When enabled, the compiler will issue an error or a warning whenever a private
+    *    method or field is declared but never used within the same unit.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedPrivateMember"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 2.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_PRIVATE_MEMBER = PLUGIN_ID + ".compiler.problem.unusedPrivateMember"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unused Import.
+    * <p>When enabled, the compiler will issue an error or a warning for unused import
+    *    reference.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedImport"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 2.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_IMPORT = PLUGIN_ID + ".compiler.problem.unusedImport";
+
+   /**
+    * Compiler option ID: Reporting Unused Local.
+    * <p>When enabled, the compiler will issue an error or a warning for unused local
+    *    variables (that is, variables never read from).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedLocal"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_LOCAL = PLUGIN_ID + ".compiler.problem.unusedLocal";
 
    /**
     * Compiler option ID: Setting Source Compatibility Mode.
@@ -594,6 +739,26 @@ public final class JavaCore
    public static String getOption(String key)
    {
       return getOptions().get(key);
+   }
+
+   /**
+    * Returns the option that can be used to configure the severity of the
+    * compiler problem identified by <code>problemID</code> if any,
+    * <code>null</code> otherwise. Non-null return values are taken from the
+    * constants defined by this class whose names start with
+    * <code>COMPILER_PB</code> and for which the possible values of the
+    * option are defined by <code>{ "error", "warning", "ignore" }</code>. A
+    * null return value means that the provided problem ID is unknown or that
+    * it matches a problem whose severity cannot be configured.
+    * @param problemID one of the problem IDs defined by {@link IProblem}
+    * @return the option that can be used to configure the severity of the
+    *         compiler problem identified by <code>problemID</code> if any,
+    *         <code>null</code> otherwise
+    * @since 3.4
+    */
+   public static String getOptionForConfigurableSeverity(int problemID)
+   {
+      return CompilerOptions.optionKeyFromIrritant(ProblemReporter.getIrritant(problemID));
    }
 
    /**

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates;
 
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
 
@@ -26,11 +27,9 @@ public class ExceptionVariableNameResolver extends TemplateVariableResolver
    {
       if (context instanceof JavaContext)
       {
-         // TODO
-         // JavaContext jc= (JavaContext) context;
-         // IJavaProject javaProject= jc.getJavaProject();
-         // String exceptionVariableName= StubUtility.getExceptionVariableName();
-         // return StubUtility.getLocalNameSuggestions(jc.getJavaProject(), exceptionVariableName, 0, jc.computeExcludes());
+         JavaContext jc = (JavaContext)context;
+         String exceptionVariableName = StubUtility.getExceptionVariableName();
+         return StubUtility.getLocalNameSuggestions(exceptionVariableName, 0, jc.computeExcludes());
       }
       return new String[0];
    }

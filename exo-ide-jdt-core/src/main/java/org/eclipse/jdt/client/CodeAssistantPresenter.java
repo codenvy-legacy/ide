@@ -22,9 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.IsWidget;
 
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalCollector;
@@ -32,6 +30,7 @@ import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalC
 import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
+import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -59,7 +58,6 @@ import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.keys.KeyHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -80,26 +78,6 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    ProposalSelectedHandler, EditorHotKeyPressedHandler
 {
 
-   public interface Display extends IsWidget
-   {
-
-      void moveSelectionUp();
-
-      void moveSelectionDown();
-
-      void proposalSelected();
-
-      void cancelCodeAssistant();
-
-      void setNewProposals(IJavaCompletionProposal[] proposals);
-
-   }
-
-   /**
-    * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
-    * @version $Id: 2:09:49 PM 34360 2009-07-22 23:58:59Z evgen $
-    * 
-    */
    private static final class ProgressMonitor implements IProgressMonitor
    {
       private final static int TIMEOUT = 60000; // ms
@@ -158,7 +136,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    private HandlerRegistration keyHandler;
 
-   private Display display;
+   private AssistDisplay display;
 
    /**
     * 
@@ -396,7 +374,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
-   public void onTokenSelected(IJavaCompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {

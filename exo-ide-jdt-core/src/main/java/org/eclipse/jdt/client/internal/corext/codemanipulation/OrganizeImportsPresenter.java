@@ -380,6 +380,8 @@ public class OrganizeImportsPresenter implements UpdateOutlineHandler, OrganizeI
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
+      if(event.getFile() == null)
+         return;
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
          editor = event.getEditor();
