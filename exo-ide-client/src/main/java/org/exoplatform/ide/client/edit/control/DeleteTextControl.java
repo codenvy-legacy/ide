@@ -51,6 +51,7 @@ public class DeleteTextControl extends SimpleControl implements IDEControl, Show
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.delete(), IDEImageBundle.INSTANCE.deleteDisabled());
+      setShowInMenu(false);
       setEvent(new EditorDeleteTextEvent());
    }
 

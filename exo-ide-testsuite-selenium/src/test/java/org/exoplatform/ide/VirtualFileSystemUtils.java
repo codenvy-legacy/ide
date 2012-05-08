@@ -48,7 +48,6 @@ import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -351,7 +350,6 @@ public class VirtualFileSystemUtils
       HttpURLConnection connection = null;
       try
       {
-
          Map<String, Link> folderLiks = createFolder(projectName);
          Link href = folderLiks.get(Link.REL_IMPORT);
          if (href == null)
@@ -426,6 +424,34 @@ public class VirtualFileSystemUtils
          }
       }
       return null;
+   }
+
+   public static void createFolder(Link link, String name) throws IOException
+   {
+      HttpURLConnection connection = null;
+      try
+      {
+         String href = URLDecoder.decode(link.getHref(), "UTF-8").replace("[name]", name);
+         URL url = new URL(href);
+         connection = Utils.getConnection(url);
+         connection.setRequestMethod("POST");
+         JsonParser parser = new JsonParser();
+         parser.parse(connection.getInputStream());
+         connection.getInputStream().close();
+      }
+      catch (JsonException e)
+      {
+      }
+      catch (SecurityException e)
+      {
+      }
+      finally
+      {
+         if (connection != null)
+         {
+            connection.disconnect();
+         }
+      }
    }
 
    /**

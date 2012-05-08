@@ -43,6 +43,8 @@ import java.util.List;
  */
 public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
 {
+   private final String ID = "eXoIDEContextMenu";
+
    /**
     * Instance of context menu.
     */
@@ -92,12 +94,17 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
          if (control instanceof SimpleControl && ((SimpleControl)control).isShowInContextMenu())
          {
             PopupMenuItem popupMenuItem = new PopupMenuItem(control.getIcon(), ((SimpleControl)control).getTitle());
+            if (control.hasDelimiterBefore())
+            {
+               contextMenuItems.add(new PopupMenuItem(null));
+            }
             contextMenuItems.add(popupMenuItem);
             new MenuItemControl(IDE.eventBus(), popupMenuItem, (SimpleControl)control);
          }
       }
 
       popupMenu = new PopupMenu(contextMenuItems, lockLayer, this);
+      popupMenu.getElement().setId(ID);
       lockLayer.add(popupMenu);
 
       popupMenu.getElement().getStyle().setTop(y, Unit.PX);

@@ -21,7 +21,6 @@ package org.exoplatform.ide.core;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.exoplatform.ide.IDE;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
@@ -29,11 +28,10 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import javax.xml.bind.ParseConversionEvent;
 
 /**
  * 
@@ -149,8 +147,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Select tab the code editor
-    * with the specified name 
+    * Select tab the code editor with the specified name
+    * 
     * @param fileName
     * @throws Exception
     */
@@ -166,9 +164,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * click on save as button and
-    * type in save as field new name
-    * of the file
+    * click on save as button and type in save as field new name of the file
+    * 
     * @param tabIndex
     * @param name
     * @throws Exception
@@ -198,8 +195,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * click on close label
-    * on tab wit file name
+    * click on close label on tab wit file name
+    * 
     * @param tabTitle
     * @throws Exception
     */
@@ -212,9 +209,8 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Closes file
-    * with num tabinfex 
-    * start with 0
+    * Closes file with num tabinfex start with 0
+    * 
     * @param tabIndex
     */
    public void closeFile(int tabIndex) throws Exception
@@ -226,8 +222,9 @@ public class Editor extends AbstractTestModule
       waitActiveFileChanged(activeFile);
    }
 
-   /** Close file
-    * with name on tab
+   /**
+    * Close file with name on tab
+    * 
     * @param fileName
     * @throws Exception
     */
@@ -350,7 +347,8 @@ public class Editor extends AbstractTestModule
 
    /**
     * waiting while switch between ckeditor on codeeditor
-    *  @param numCodeEditor
+    * 
+    * @param numCodeEditor
     */
    public void waitSwitchOnCodeEditor()
    {
@@ -721,11 +719,12 @@ public class Editor extends AbstractTestModule
     * 
     * @param tabIndex begins from 0
     */
-   public void selectIFrameWithEditor(int tabIndex) throws Exception
+   public WebElement selectIFrameWithEditor(int tabIndex) throws Exception
    {
       String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
       WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
       driver().switchTo().frame(editorFrame);
+      return editorFrame;
    }
 
    /**
@@ -743,6 +742,7 @@ public class Editor extends AbstractTestModule
 
    /**
     * Get text from tab number "tabIndex" from editor
+    * 
     * @param tabIndex begins from 0
     */
    public String getTextFromCodeEditor(int tabIndex) throws Exception
@@ -877,8 +877,6 @@ public class Editor extends AbstractTestModule
       });
    }
 
-   
-
    /**
     * Check is file in tabIndex tab opened with Code Editor.
     * 
@@ -979,4 +977,17 @@ public class Editor extends AbstractTestModule
       }
    }
 
+   /**
+    * Open editor's context menu
+    * 
+    * @param editorIndex
+    * @throws Exception
+    */
+   public void openContextMenu(int editorIndex) throws Exception
+   {
+      selectIFrameWithEditor(0);
+   //   editorCodemirr.sendKeys(Keys.chord(Keys.SHIFT, Keys.F10));
+      new Actions(driver()).contextClick(editorCodemirr).perform();
+      IDE().selectMainFrame();
+   }
 }
