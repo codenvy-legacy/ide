@@ -184,7 +184,15 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    public void setProjectsListGridVisible(boolean visible)
    {
       projectsListGrid.setVisible(visible);
-      projectNotOpenedPanel.setVisible(!visible);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setProjectNotOpenedPanelVisible(boolean)
+    */
+   @Override
+   public void setProjectNotOpenedPanelVisible(boolean visible)
+   {
+      projectNotOpenedPanel.setVisible(visible);
    }
 
    /**

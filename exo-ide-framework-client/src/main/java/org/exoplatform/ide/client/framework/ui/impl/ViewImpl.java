@@ -380,10 +380,7 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
       switch (DOM.eventGetType(event))
       {
          case Event.ONMOUSEDOWN :
-            if (event.getButton() == Event.BUTTON_LEFT)
-            {
-               onMouseDown();
-            }
+            onMouseDown();
             break;
       }
 

@@ -18,6 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.ui;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.i18n.client.HasDirection.Direction;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.cellview.client.CellTree;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
+
 import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
@@ -33,18 +46,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 import java.util.Collections;
 import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.i18n.client.HasDirection.Direction;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -63,7 +64,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    }
 
    @UiField
-   TabPanel variabelsPanel;
+   TabPanel variablesPanel;
 
    @UiField
    TabPanel breakPointsPanel;
@@ -87,6 +88,9 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    ImageButton stepReturnButton;
 
    @UiField
+   ImageButton changeValueButton;
+
+   @UiField
    Label vmName;
 
    CellList<BreakPoint> breakpointsContainer;
@@ -95,10 +99,17 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
    private DebuggerInfo debuggerInfo;
 
+   private SingleSelectionModel<Variable> selectionModel;
+
+   private Variable selectedVariable;
+
+   FrameTreeViewModel frameTreeViewModel;
+
    public DebuggerView(DebuggerInfo debuggerInfo)
    {
 
-      super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug(), new Image(DebuggerClientBundle.INSTANCE.debugApp()));
+      super(ID, ViewType.OPERATION, DebuggerExtension.LOCALIZATION_CONSTANT.debug(), new Image(
+         DebuggerClientBundle.INSTANCE.debugApp()));
       add(uiBinder.createAndBindUi(this));
       this.debuggerInfo = debuggerInfo;
       setCanBeClosed(false);
@@ -107,7 +118,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setHeight("100%");
       breakpointsContainer.setWidth("100%");
 
-      buildVariebelsTreePanel(Collections.<Variable>emptyList());
+      buildVariablesTreePanel(Collections.<Variable> emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
          DebuggerExtension.LOCALIZATION_CONSTANT.breakPoints(), breakpointsContainer, false);
       breakPointsPanel.setWidth("100%");
@@ -117,21 +128,32 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       vmName.setDirectionEstimator(true);
    }
 
-   private void buildVariebelsTreePanel(List<Variable> variables)
+   private void buildVariablesTreePanel(List<Variable> variables)
    {
-      variabelsPanel.removeTab("variabletabid");
-      SingleSelectionModel<Variable> selectionModel = new SingleSelectionModel<Variable>();
-      FrameTreeViewModel frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
+      variablesPanel.removeTab("variabletabid");
+      selectionModel = new SingleSelectionModel<Variable>();
+
+      setChangeValueButtonEnable(false);
+      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+      {
+         public void onSelectionChange(SelectionChangeEvent event)
+         {
+            selectedVariable = selectionModel.getSelectedObject();
+            setChangeValueButtonEnable(selectedVariable != null);
+         }
+      });
+
+      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
       CellTree frameTree = new CellTree(frameTreeViewModel, null, res);
       ScrollPanel scrollPanel = new ScrollPanel();
-      if (variables.size()>0)
+      if (variables.size() > 0)
       {
          frameTree = new CellTree(frameTreeViewModel, null, res);
          frameTreeViewModel.getDataProvider().setList(variables);
          scrollPanel.add(frameTree);
       }
-      variabelsPanel.addTab("variabletabid", new Image(DebuggerClientBundle.INSTANCE.variable()),
-         DebuggerExtension.LOCALIZATION_CONSTANT.variabels(), scrollPanel, false);
+      variablesPanel.addTab("variabletabid", new Image(DebuggerClientBundle.INSTANCE.variable()),
+         DebuggerExtension.LOCALIZATION_CONSTANT.variables(), scrollPanel, false);
    }
 
    @Override
@@ -177,45 +199,74 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    }
 
    @Override
-   public void setVariebels(List<Variable> variables)
+   public HasClickHandlers getChangeValueButton()
    {
-      buildVariebelsTreePanel(variables);
+      return changeValueButton;
    }
 
    @Override
-   public void setEnabelResumeButton(boolean isEnabel)
+   public void setVariables(List<Variable> variables)
    {
-      resumeButton.setEnabled(isEnabel);
+      buildVariablesTreePanel(variables);
    }
 
    @Override
-   public void setRemoveAllBreakpointsButton(boolean isEnabel)
+   public List<Variable> getVariables()
    {
-      removeAllBreakpointsButton.setEnabled(isEnabel);
+      return frameTreeViewModel.getDataProvider().getList();
    }
 
    @Override
-   public void setDisconnectButton(boolean isEnabel)
+   public void setEnableResumeButton(boolean isEnable)
    {
-      disconnectButton.setEnabled(isEnabel);
+      resumeButton.setEnabled(isEnable);
    }
 
    @Override
-   public void setStepIntoButton(boolean isEnabel)
+   public void setRemoveAllBreakpointsButton(boolean isEnable)
    {
-      stepIntoButton.setEnabled(isEnabel);
+      removeAllBreakpointsButton.setEnabled(isEnable);
    }
 
    @Override
-   public void setStepOverButton(boolean isEnabel)
+   public void setDisconnectButton(boolean isEnable)
    {
-      stepOverButton.setEnabled(isEnabel);
+      disconnectButton.setEnabled(isEnable);
    }
 
    @Override
-   public void setStepReturnButton(boolean isEnabel)
+   public void setStepIntoButton(boolean isEnable)
    {
-      stepReturnButton.setEnabled(isEnabel);
+      stepIntoButton.setEnabled(isEnable);
+   }
+
+   @Override
+   public void setStepOverButton(boolean isEnable)
+   {
+      stepOverButton.setEnabled(isEnable);
+   }
+
+   @Override
+   public void setStepReturnButton(boolean isEnable)
+   {
+      stepReturnButton.setEnabled(isEnable);
+   }
+
+   @Override
+   public void setChangeValueButtonEnable(boolean isEnable)
+   {
+      changeValueButton.setEnabled(isEnable);
+   }
+
+   public TabPanel getVariablesPanel()
+   {
+      return variablesPanel;
+   }
+
+   @Override
+   public Variable getSelectedVariable()
+   {
+      return selectedVariable;
    }
 
 }

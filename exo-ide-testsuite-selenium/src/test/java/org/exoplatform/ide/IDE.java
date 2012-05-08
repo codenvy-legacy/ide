@@ -74,6 +74,7 @@ import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.exoplatform.ide.core.CodeAssistantJava;
+import org.exoplatform.ide.core.PopupDialogsBrowser;;
 
 /**
  * 
@@ -202,7 +203,9 @@ public class IDE
    
    public ErrorMarks ERROR_MARKS;
    
-   public CodeAssistantJava CODE_ASSISTANT_JAVA; 
+   public CodeAssistantJava CODE_ASSISTANT_JAVA;
+   
+   public PopupDialogsBrowser POPUP;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -261,6 +264,7 @@ public class IDE
       CK_EDITOR = PageFactory.initElements(driver, CkEditor.class);
       ERROR_MARKS = PageFactory.initElements(driver, ErrorMarks.class);
       CODE_ASSISTANT_JAVA = PageFactory.initElements(driver, CodeAssistantJava.class);
+      POPUP = PageFactory.initElements(driver, PopupDialogsBrowser.class);
    }
 
    public Selenium getSelenium()

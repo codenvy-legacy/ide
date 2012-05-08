@@ -93,7 +93,7 @@ public class CodeOutLineBaseOperationTest extends BaseTest
 
       //check, than cursor go to line
       assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
-      
+
       //IDE.EDITOR.deleteLinesInEditor(0, 7);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
 
@@ -111,8 +111,8 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       assertTrue(IDE.OUTLINE.isItemSelected(1));
 
       IDE.GOTOLINE.goToLine(27);
+      IDE.OUTLINE.waitItemAtPosition("groovy code", 14);
       assertEquals("27 : 1", IDE.STATUSBAR.getCursorPosition());
-
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("div", IDE.OUTLINE.getItemLabel(13));

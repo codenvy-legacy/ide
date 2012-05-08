@@ -1,5 +1,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -16,10 +18,10 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEve
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
-
-import com.google.gwt.core.client.GWT;
+import org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -56,6 +58,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
          new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
 
       DebuggerPresenter debuggerPresenter = new DebuggerPresenter(breakpointsManager);
+      new ChangeValuePresenter();
 
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);
@@ -65,7 +68,8 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.addHandler(DebugAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(StopAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(AppStopedEvent.TYPE, debuggerPresenter);
-      
+      IDE.addHandler(UpdateVariableValueInTreeEvent.TYPE, debuggerPresenter);
+
       IDE.addHandler(ProjectClosedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(ProjectOpenedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, debuggerPresenter);

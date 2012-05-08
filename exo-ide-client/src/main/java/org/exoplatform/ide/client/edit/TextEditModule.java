@@ -21,10 +21,12 @@ package org.exoplatform.ide.client.edit;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.edit.control.AddBlockCommentControl;
 import org.exoplatform.ide.client.edit.control.DeleteCurrentLineControl;
+import org.exoplatform.ide.client.edit.control.DeleteTextControl;
 import org.exoplatform.ide.client.edit.control.FormatSourceControl;
 import org.exoplatform.ide.client.edit.control.LockUnlockFileControl;
 import org.exoplatform.ide.client.edit.control.RedoTypingControl;
 import org.exoplatform.ide.client.edit.control.RemoveBlockCommentControl;
+import org.exoplatform.ide.client.edit.control.SelectAllTextControl;
 import org.exoplatform.ide.client.edit.control.ShowLineNumbersControl;
 import org.exoplatform.ide.client.edit.control.ToggleCommentControl;
 import org.exoplatform.ide.client.edit.control.UndoTypingControl;
@@ -57,6 +59,12 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new UndoTypingControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new RedoTypingControl(), Docking.TOOLBAR);
       IDE.getInstance().addControl(new FormatSourceControl(), Docking.TOOLBAR);
+
+     /* IDE.getInstance().addControl(new CutTextControl());
+      IDE.getInstance().addControl(new CopyTextControl());
+      IDE.getInstance().addControl(new PasteTextControl());*/
+      IDE.getInstance().addControl(new DeleteTextControl());
+      IDE.getInstance().addControl(new SelectAllTextControl());
       IDE.getInstance().addControl(new AddBlockCommentControl());
       IDE.getInstance().addControl(new RemoveBlockCommentControl());
       IDE.getInstance().addControl(new ToggleCommentControl());
@@ -78,7 +86,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       new CloseAllFilesEventHandler();
       new CodeFormatterManager(IDE.eventBus());
       new CodeCommentsManager();
-      
+
       new SwitchingEditorCommandHandler();
    }
 

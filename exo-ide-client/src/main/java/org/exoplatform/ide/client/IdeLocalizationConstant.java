@@ -221,6 +221,21 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.undoTyping")
    String undoTypingControl();
 
+   @Key("control.selectAll")
+   String selectAllControl();
+
+   @Key("control.cutText")
+   String cutTextControl();
+
+   @Key("control.copyText")
+   String copyTextControl();
+
+   @Key("control.pasteText")
+   String pasteTextControl();
+
+   @Key("control.deleteText")
+   String deleteTextControl();
+
    @Key("control.showLineNumbers.show")
    String showLineNumbersShowControl();
 
