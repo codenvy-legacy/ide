@@ -215,16 +215,8 @@ public class OutlineTreeHelper extends BaseTest
       {
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
-
-         //checkItemPresent(outlineItem.getId());
-         //         if (outlineItem.getFileLineNumber() > 30)
-         //         {
-         //            break;
-         //         }
-         //         else
-         //         {
          checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
-         //         }
+         
       }
 
       // test outline item from file
@@ -312,10 +304,9 @@ public class OutlineTreeHelper extends BaseTest
    {
 
       IDE.GOTOLINE.goToLine(fileLineNumber);
-
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber,
-         IDE.OUTLINE.isItemSelected(itemRowNumber));
+      IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
 
    /**

@@ -44,6 +44,15 @@ public class PopupDialogsBrowser extends AbstractTestModule
    {
       driver().switchTo().alert().dismiss();
    }
+   
+   /**
+    * get text from Alert
+    */
+   public String getTextFromAlert()
+   {
+      return driver().switchTo().alert().getText();
+   }
+   
 
    /**
     * Wait pop up browser window 
