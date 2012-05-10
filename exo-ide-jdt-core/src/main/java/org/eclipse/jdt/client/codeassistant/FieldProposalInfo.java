@@ -39,6 +39,8 @@ public final class FieldProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
+      if(fProposal.getDeclarationSignature() == null)
+         return null;
       return docContext + Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23"
          + new String(fProposal.getName()) + "&projectid=" + projectId + "&vfsid="
          + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=false";
