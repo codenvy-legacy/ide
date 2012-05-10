@@ -35,11 +35,13 @@ import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerPresenter;
+import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointSelectedEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
@@ -102,7 +104,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
    private DebuggerInfo debuggerInfo;
 
-   private SingleSelectionModel<Variable> selectionModel;
+   private SingleSelectionModel<Variable> variablesTreeSelectionModel;
 
    private Variable selectedVariable;
 
@@ -121,6 +123,16 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setHeight("100%");
       breakpointsContainer.setWidth("100%");
 
+      final SingleSelectionModel<BreakPoint> breakPointSelectionModel = new SingleSelectionModel<BreakPoint>();
+      breakpointsContainer.setSelectionModel(breakPointSelectionModel);
+      breakPointSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+      {
+         public void onSelectionChange(SelectionChangeEvent event)
+         {
+            IDE.fireEvent(new BreakPointSelectedEvent(breakPointSelectionModel.getSelectedObject()));
+         }
+      });
+
       buildVariablesTreePanel(Collections.<Variable> emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
          DebuggerExtension.LOCALIZATION_CONSTANT.breakPoints(), breakpointsContainer, false);
@@ -134,19 +146,19 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    private void buildVariablesTreePanel(List<Variable> variables)
    {
       variablesPanel.removeTab("variabletabid");
-      selectionModel = new SingleSelectionModel<Variable>();
+      variablesTreeSelectionModel = new SingleSelectionModel<Variable>();
 
       setChangeValueButtonEnable(false);
-      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+      variablesTreeSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {
          public void onSelectionChange(SelectionChangeEvent event)
          {
-            selectedVariable = selectionModel.getSelectedObject();
+            selectedVariable = variablesTreeSelectionModel.getSelectedObject();
             setChangeValueButtonEnable(selectedVariable != null);
          }
       });
 
-      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
+      frameTreeViewModel = new FrameTreeViewModel(variablesTreeSelectionModel, debuggerInfo);
       CellTree frameTree = new CellTree(frameTreeViewModel, null, res);
       ScrollPanel scrollPanel = new ScrollPanel();
       if (variables.size() > 0)
