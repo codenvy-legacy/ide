@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.jenkins.client.control;
+package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
-import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.ShowBreakpointPropertiesEvent;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
- * 
- */
-public class BuildControl extends SimpleControl implements IDEControl
+public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl
 {
+   //public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
+   public static final String ID = "Run/Breakpoint Properties";
 
-   /**
-    * @param id
-    */
-   public BuildControl()
+   private static final String TITLE = "Breakpoint Properties";
+
+   private static final String PROMPT = "Breakpoint Properties";
+
+   public ShowBreakpointPropertiesControl()
    {
-      super(JenkinsExtension.MESSAGES.buildJavaAppId());
-      setTitle(JenkinsExtension.MESSAGES.buildJavaAppTitle());
-      setPrompt(JenkinsExtension.MESSAGES.buildJavaAppPrompt());
-      setImages(JenkinsExtension.RESOURCES.build(), JenkinsExtension.RESOURCES.build_Disabled());
-      setEvent(new BuildApplicationEvent());
-      setGroupName(GroupNames.RUNDEBUG);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(PROMPT);
+      setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
+      setEvent(new ShowBreakpointPropertiesEvent());
    }
 
    /**
@@ -52,7 +47,6 @@ public class BuildControl extends SimpleControl implements IDEControl
    public void initialize()
    {
       setVisible(true);
-      // TODO enable only if Java project selected
       setEnabled(true);
    }
 

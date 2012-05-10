@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.RunMenuGroups;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -56,6 +57,7 @@ public class UndeployGroovySandboxCommand extends SimpleControl implements IDECo
       setPrompt("Undeploy REST Service from Sandbox");
       setIcon(Images.Controls.UNDEPLOY_SANDBOX);
       setEvent(new UndeployGroovyScriptSandboxEvent());
+      setGroupName(RunMenuGroups.DEPLOY);
    }
 
    /**

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.operation.createfolder;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -68,7 +69,8 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
-      setVisible(true);
+      setGroupName(GroupNames.NEW_COLLECTION);
+      updateEnabling();
    }
 
    /**

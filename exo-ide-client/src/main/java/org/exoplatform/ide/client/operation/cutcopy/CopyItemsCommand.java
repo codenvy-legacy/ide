@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.operation.cutcopy;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -70,6 +71,7 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.copy(), IDEImageBundle.INSTANCE.copyDisabled());
       setEvent(new CopyItemsEvent());
+      setGroupName(GroupNames.CUT_COPY);
    }
 
    /**

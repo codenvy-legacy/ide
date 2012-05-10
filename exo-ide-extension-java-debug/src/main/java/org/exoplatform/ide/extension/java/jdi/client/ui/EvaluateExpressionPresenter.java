@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
+import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.EvaluateExpressionHandler;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
@@ -189,7 +190,8 @@ public class EvaluateExpressionPresenter implements EvaluateExpressionHandler, V
                @Override
                protected void onFailure(Throwable exception)
                {
-                  display.setResult(exception.getMessage());
+                  String errorMessage = DebuggerExtension.LOCALIZATION_CONSTANT.evaluateExpressionFailed(exception.getMessage());
+                  display.setResult(errorMessage);
                   display.enableEvaluateButton(true);
                }
             });

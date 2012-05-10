@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -49,6 +50,7 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       setPrompt(PROMPT);
       setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
       setEvent(new RunAppEvent());
+      setGroupName(GroupNames.RUNDEBUG);
    }
 
    /**

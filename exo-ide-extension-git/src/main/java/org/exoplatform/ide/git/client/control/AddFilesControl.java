@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.add.AddFilesEvent;
@@ -39,5 +40,6 @@ public class AddFilesControl extends GitControl
       setEvent(new AddFilesEvent());
       setImages(GitClientBundle.INSTANCE.addToIndex(), GitClientBundle.INSTANCE.addToIndexDisabled());
       setDelimiterBefore(true);
+      setGroupName(GroupNames.COMMANDS);
    }
 }

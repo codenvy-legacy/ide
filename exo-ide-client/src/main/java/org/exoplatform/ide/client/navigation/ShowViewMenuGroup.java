@@ -16,31 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
 
+package org.exoplatform.ide.client.navigation;
+
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.init.InitRepositoryEvent;
+import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
- * Control for initializing the repository.
  * 
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 23, 2011 5:36:00 PM anya $
+ * Created by The eXo Platform SAS .
  * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class InitRepositoryControl extends GitControl
+@RolesAllowed({"administrators", "developers"})
+public class ShowViewMenuGroup extends SimpleControl implements IDEControl
 {
-   public InitRepositoryControl()
+
+   public static final String ID = "Window/Show View";
+
+   public static final String TITLE = "Show View";
+
+   public ShowViewMenuGroup()
    {
-      super(GitExtension.MESSAGES.initControlId());
-      setTitle(GitExtension.MESSAGES.initControlTitle());
-      setPrompt(GitExtension.MESSAGES.initControlPrompt());
-      setEvent(new InitRepositoryEvent());
-      setImages(GitClientBundle.INSTANCE.initRepo(), GitClientBundle.INSTANCE.initRepoDisabled());
-      setVisible(true);
-      setEnableState(EnableState.BEFORE_INIT);
-      setGroupName(GroupNames.ACTIONS);
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(TITLE);
+      setGroupName(GroupNames.ADDITIONS);
    }
+
+   @Override
+   public void initialize()
+   {
+      setVisible(true);
+      setEnabled(true);
+   }
+
 }

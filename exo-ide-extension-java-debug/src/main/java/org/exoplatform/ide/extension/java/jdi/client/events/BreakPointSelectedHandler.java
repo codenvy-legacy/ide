@@ -16,25 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.client.framework.control.GroupNames;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.GitExtension;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
+ * Handler for {@link BreakPointSelectedEvent} event.
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: BreakPointSelectedHandler.java May 8, 2012 3:27:16 PM azatsarynnyy $
+ *
  */
-public class RemoteControl extends GitControl
+public interface BreakPointSelectedHandler extends EventHandler
 {
-   public RemoteControl()
-   {
-      super(GitExtension.MESSAGES.remoteControlId());
-      setTitle(GitExtension.MESSAGES.remoteControlTitle());
-      setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
-      setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+   void onSelectBreakPoint(BreakPointSelectedEvent event);
 }

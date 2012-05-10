@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.merge.MergeEvent;
@@ -38,5 +39,6 @@ public class MergeControl extends GitControl
       setPrompt(GitExtension.MESSAGES.mergeControlPrompt());
       setEvent(new MergeEvent());
       setImages(GitClientBundle.INSTANCE.merge(), GitClientBundle.INSTANCE.mergeDisabled());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

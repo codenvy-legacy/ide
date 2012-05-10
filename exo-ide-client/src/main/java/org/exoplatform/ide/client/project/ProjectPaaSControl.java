@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.project;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, FolderRefreshedHandler
 {
+   
    public static final String ID = "Project/PaaS";
 
    private static final String TITLE = "PaaS";
@@ -50,6 +52,7 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.paas(), IDEImageBundle.INSTANCE.paasDisabled());
+      setGroupName(GroupNames.PAAS);
    }
 
    /**

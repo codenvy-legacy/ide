@@ -19,11 +19,15 @@
 
 package org.exoplatform.ide.editor.php.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -32,10 +36,6 @@ import org.exoplatform.ide.editor.php.client.codeassistant.PhpCodeAssistant;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpParser;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 
 /**
  * 
@@ -65,7 +65,7 @@ public class PhpEditorExtension extends Extension implements InitializeServicesH
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New PHP File", "PHP File", "Create PHP File", PhpClientBundle.INSTANCE.php(),
-            PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP));
+            PhpClientBundle.INSTANCE.phpDisabled(), MimeType.APPLICATION_PHP).setGroupName(GroupNames.NEW_SCRIPT));
 
       PhpClientBundle.INSTANCE.css().ensureInjected();
    }

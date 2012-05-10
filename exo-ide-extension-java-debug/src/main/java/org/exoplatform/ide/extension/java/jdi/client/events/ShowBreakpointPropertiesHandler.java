@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,25 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
+package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.client.framework.control.GroupNames;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.GitExtension;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
+ * Handler for {@link ShowBreakpointPropertiesEvent} event.
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: ShowBreakpointPropertiesHandler.java May 8, 2012 13:00:25 PM azatsarynnyy $
+ *
  */
-public class RemoteControl extends GitControl
+public interface ShowBreakpointPropertiesHandler extends EventHandler
 {
-   public RemoteControl()
-   {
-      super(GitExtension.MESSAGES.remoteControlId());
-      setTitle(GitExtension.MESSAGES.remoteControlTitle());
-      setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
-      setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+   /**
+    * @param event {@link ShowBreakpointPropertiesEvent}
+    */
+   void onShowBreakpointProperties(ShowBreakpointPropertiesEvent e);
 }

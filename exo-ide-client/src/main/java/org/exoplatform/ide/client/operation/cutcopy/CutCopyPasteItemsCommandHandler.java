@@ -68,8 +68,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
 
    private Folder folderToPaste;
 
-   private int numItemToCut;
-
    /**
     * Uses for storing items to need copy
     */
@@ -146,7 +144,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
          folderToPaste = getFolderToPaste();
          folderFromPaste = getPathFromPaste(itemsToCopy.get(0));
          copyNextItem();
-         numItemToCut = 0;
          return;
       }
 
@@ -154,7 +151,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       {
          folderToPaste = getFolderToPaste();
          folderFromPaste = getPathFromPaste(itemsToCut.get(0));
-         numItemToCut = itemsToCut.size();
          cutNextItem();
       }
    }

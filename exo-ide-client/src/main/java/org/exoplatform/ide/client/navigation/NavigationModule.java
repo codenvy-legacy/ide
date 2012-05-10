@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.download.DownloadHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
 import org.exoplatform.ide.client.navigation.control.NewItemMenuGroup;
@@ -83,7 +84,7 @@ public class NavigationModule implements InitializeServicesHandler
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New TEXT", IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextTitle(),
-            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true));
+            IDE.IDE_LOCALIZATION_CONSTANT.controlNewTextPrompt(), Images.FileTypes.TXT, MimeType.TEXT_PLAIN, true).setGroupName(GroupNames.NEW_FILE));
 
       // TODO: need rework according with VFS
       // IDE.getInstance().addControl(new ViewVersionHistoryControl(), Docking.TOOLBAR_RIGHT);
@@ -97,7 +98,6 @@ public class NavigationModule implements InitializeServicesHandler
 
       new UploadFilePresenter();
       new UploadZipPresenter();
-
       new OpenLocalFilePresenter();
       new OpenFileByPathPresenter();
       new OpenFileByURLPresenter();
@@ -105,20 +105,17 @@ public class NavigationModule implements InitializeServicesHandler
       new DownloadHandler();
 
       new SaveFileCommandHandler();
-
       new SaveFileAsCommandHandler();
-
       new SaveAllFilesCommandHandler();
-
       new SaveAsTemplatePresenter();
 
       new CutCopyPasteItemsCommandHandler();
 
+      new DeleteItemsPresenter();
+
       IDE.getInstance().addControl(new RenameItemControl());
       new RenameFilePresenter();
       new RenameFolderPresenter();
-
-      new DeleteItemsPresenter();
 
       new SearchFilesPresenter();
 
@@ -139,6 +136,9 @@ public class NavigationModule implements InitializeServicesHandler
       new OpenFileCommandHandler();
       new FileClosedHandler();
 
+      IDE.getInstance().addControl(new ShowViewMenuGroup());
+      IDE.getInstance().addControl(new NavigationMenuGroup());
+      
       new NavigatorPresenter();
       new ProgressPresenter();
       new ShellLinkUpdater();

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
@@ -43,6 +44,7 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
       setPrompt(PROMPT);
       setImages(DebuggerClientBundle.INSTANCE.stopApp(), DebuggerClientBundle.INSTANCE.stopAppDisabled());
       setEvent(new StopAppEvent());
+      setGroupName(GroupNames.RUNDEBUG);
    }
 
    /**
