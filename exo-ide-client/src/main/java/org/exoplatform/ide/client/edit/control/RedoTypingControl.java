@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.EditorView;

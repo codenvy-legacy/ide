@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlEvent;
@@ -39,5 +40,6 @@ public class ShowProjectGitReadOnlyUrl extends GitControl
       setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(),
          GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
       setEvent(new ShowProjectGitReadOnlyUrlEvent());
+      setGroupName(GroupNames.PROPERTIES);
    }
 }

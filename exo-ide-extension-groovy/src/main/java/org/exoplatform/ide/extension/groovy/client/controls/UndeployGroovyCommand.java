@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.RunMenuGroups;
 import org.exoplatform.ide.extension.groovy.client.event.UndeployGroovyScriptEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -56,6 +57,7 @@ public class UndeployGroovyCommand extends SimpleControl implements IDEControl, 
       setPrompt("Undeploy REST Service");
       setIcon(Images.Controls.UNDEPLOY);
       setEvent(new UndeployGroovyScriptEvent());
+      setGroupName(RunMenuGroups.DEPLOY);
    }
 
    /**

@@ -16,25 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.control;
 
-import org.exoplatform.ide.client.framework.control.GroupNames;
-import org.exoplatform.ide.git.client.GitClientBundle;
-import org.exoplatform.ide.git.client.GitExtension;
+package org.exoplatform.ide.extension.groovy.client;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
  * 
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class RemoteControl extends GitControl
+
+public interface RunMenuGroups
 {
-   public RemoteControl()
-   {
-      super(GitExtension.MESSAGES.remoteControlId());
-      setTitle(GitExtension.MESSAGES.remoteControlTitle());
-      setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
-      setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
-      setGroupName(GroupNames.COMMANDS);
-   }
+   
+   static final String AUTOLOAD = "Groovy Autoload";
+   
+   static final String DEPLOY = "Deploy Groovy";
+   
+   static final String RUN = "Run Groovy";
+
 }

@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.javascript.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -54,7 +55,7 @@ public class JavaScriptEditorExtension extends Extension
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Java Script", MESSAGES.controlNewJavascriptTitle(), MESSAGES
-            .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT));
+            .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT).setGroupName(GroupNames.NEW_FILE));
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
       IDE.getInstance().addEditor(

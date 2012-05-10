@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.operation.cutcopy;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -71,6 +72,7 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
       setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.cut(), IDEImageBundle.INSTANCE.cutDisabled());
       setEvent(new CutItemsEvent());
+      setGroupName(GroupNames.CUT_COPY);
    }
 
    /**

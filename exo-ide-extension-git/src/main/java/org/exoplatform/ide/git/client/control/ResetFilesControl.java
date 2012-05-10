@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.reset.ResetFilesEvent;
@@ -38,5 +39,6 @@ public class ResetFilesControl extends GitControl
       setPrompt(GitExtension.MESSAGES.resetFilesControlPrompt());
       setImages(GitClientBundle.INSTANCE.reset(), GitClientBundle.INSTANCE.resetDisabled());
       setEvent(new ResetFilesEvent());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

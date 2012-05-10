@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -61,6 +62,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.openLocalFile(), IDEImageBundle.INSTANCE.openLocalFileDisabled());
       setEvent(new OpenLocalFileEvent());
+      setGroupName(GroupNames.UPLOAD);
    }
 
    /**

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
@@ -39,5 +40,6 @@ public class CloneRepositoryControl extends GitControl
       setImages(GitClientBundle.INSTANCE.cloneRepo(), GitClientBundle.INSTANCE.cloneRepoDisabled());
       setEvent(new CloneRepositoryEvent());
       setEnableState(EnableState.BEFORE_INIT);
+      setGroupName(GroupNames.ACTIONS);
    }
 }
