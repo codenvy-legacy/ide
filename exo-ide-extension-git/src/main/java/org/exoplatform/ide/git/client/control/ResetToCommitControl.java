@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.reset.ResetToCommitEvent;
@@ -38,5 +39,6 @@ public class ResetToCommitControl extends GitControl
       setPrompt(GitExtension.MESSAGES.resetToCommitControlPrompt());
       setEvent(new ResetToCommitEvent());
       setImages(GitClientBundle.INSTANCE.revert(), GitClientBundle.INSTANCE.revertDisabled());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

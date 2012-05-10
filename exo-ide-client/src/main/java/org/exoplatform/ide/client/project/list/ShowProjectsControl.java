@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.project.list;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -57,6 +58,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
       setImages(IDEImageBundle.INSTANCE.projectOpened(), IDEImageBundle.INSTANCE.projectOpenedDisabled());
       setEvent(new ShowProjectsEvent());
       // setDelimiterBefore(true);
+      setGroupName(GroupNames.ACTIONS);
    }
 
    /**

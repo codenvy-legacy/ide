@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.navigation.control;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 
 /**
@@ -45,6 +46,7 @@ public class CreateFileFromTemplateControl extends NewFileControl
          .createFromTemplateDisabled(), new CreateFileFromTemplateEvent());
       setDelimiterBefore(true);
       setHotKey("Ctrl+N");
+      setGroupName(GroupNames.IMPORT);
    }
 
 }

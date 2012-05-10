@@ -22,6 +22,7 @@ package org.exoplatform.ide.client.project;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
@@ -59,6 +60,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.projectClosed(), IDEImageBundle.INSTANCE.projectClosedDisabled());
       setEvent(new CloseProjectEvent());
+      setGroupName(GroupNames.ACTIONS);
    }
 
    /**

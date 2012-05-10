@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.operation.uploadzip;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -65,6 +66,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.upload(), IDEImageBundle.INSTANCE.uploadDisabled());
       setEvent(new UploadZipEvent());
+      setGroupName(GroupNames.UPLOAD);
    }
 
    /**

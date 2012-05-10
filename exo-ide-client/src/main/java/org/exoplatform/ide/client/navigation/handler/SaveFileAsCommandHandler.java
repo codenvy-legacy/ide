@@ -52,7 +52,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -70,8 +69,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private FileModel activeFile;
-
-   private Map<String, String> lockTokens;
 
    private static final String PREFIX = IDE.NAVIGATION_CONSTANT.saveFileAsNewFileNamePrefix();
 
@@ -224,33 +221,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       }
    }
 
-   // private void saveFileProperties(FileModel file, String lockToken)
-   // {
-   // VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-   // {
-   // @Override
-   // protected void onSuccess(Item result)
-   // {
-   // getProperties(result);
-   // }
-   // });
-   // }
-
-   // private void getProperties(Item item)
-   // {
-   // VirtualFileSystem.getInstance().getProperties(item, new ItemPropertiesCallback()
-   // {
-   // @Override
-   // protected void onSuccess(Item result)
-   // {
-   // File savedFile = (File)result;
-   // savedFile.setNewFile(false);
-   // savedFile.setContentChanged(false);
-   //
-   // }
-   // });
-   // }
-
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
@@ -270,8 +240,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.CommitEvent;
@@ -38,5 +39,6 @@ public class CommitControl extends GitControl
       setPrompt(GitExtension.MESSAGES.commitControlPrompt());
       setEvent(new CommitEvent());
       setImages(GitClientBundle.INSTANCE.commit(), GitClientBundle.INSTANCE.commitDisabled());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

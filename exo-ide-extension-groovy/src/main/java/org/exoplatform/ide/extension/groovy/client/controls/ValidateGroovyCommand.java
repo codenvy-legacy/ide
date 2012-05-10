@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.RunMenuGroups;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 
 /**
@@ -49,6 +50,7 @@ public class ValidateGroovyCommand extends SimpleControl implements IDEControl, 
       // setImages(GroovyPluginImageBundle.INSTANCE.validateGroovy(), GroovyPluginImageBundle.INSTANCE.validateGroovyDisabled());
       setEvent(new ValidateGroovyScriptEvent());
       setDelimiterBefore(true);
+      setGroupName(RunMenuGroups.DEPLOY);
    }
 
    /**

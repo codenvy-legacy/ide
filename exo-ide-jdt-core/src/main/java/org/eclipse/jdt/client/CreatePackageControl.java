@@ -19,6 +19,7 @@
 package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.event.CreatePackageEvent;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.control.JavaControl;
@@ -43,6 +44,7 @@ public class CreatePackageControl extends JavaControl
       setPrompt(JavaEditorExtension.MESSAGES.controlPackagePrompt());
       setImages(JavaClientBundle.INSTANCE.packageItem(), JavaClientBundle.INSTANCE.packageDisabled());
       setEvent(new CreatePackageEvent());
+      setGroupName(GroupNames.NEW_COLLECTION);
    }
 
 }

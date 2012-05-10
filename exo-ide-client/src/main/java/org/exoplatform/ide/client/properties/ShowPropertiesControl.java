@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -59,6 +60,7 @@ public class ShowPropertiesControl extends SimpleControl implements IDEControl, 
       setPrompt(PROMPT_SHOW);
       setImages(IDEImageBundle.INSTANCE.properties(), IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowPropertiesEvent(true));
+      setGroupName(GroupNames.PROPERTIES);
    }
 
    /**
