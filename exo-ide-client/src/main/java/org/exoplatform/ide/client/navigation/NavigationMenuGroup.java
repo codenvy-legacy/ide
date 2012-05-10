@@ -17,16 +17,15 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.project.create.empty;
+package org.exoplatform.ide.client.navigation;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 
 /**
  * 
@@ -35,50 +34,39 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 @RolesAllowed({"administrators", "developers"})
-public class NewProjectMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
+public class NavigationMenuGroup extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
 
-   public static final String ID = "Project/New";
+   public static final String ID = "Window/Navigation";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
+   public static final String TITLE = "Navigation";
 
-   /**
-    * 
-    */
-   public NewProjectMenuGroup()
+   public NavigationMenuGroup()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
-      setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
-      setEnabled(true);
-      setGroupName(GroupNames.NEW_PROJECT);
+      setGroupName(GroupNames.NAVIGATION);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
    @Override
    public void initialize()
    {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      setVisible(true);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
    @Override
-   public void onVfsChanged(VfsChangedEvent event)
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
+      if (event.getFile() != null)
       {
-         setVisible(true);
+         setEnabled(true);
       }
       else
       {
-         setVisible(false);
+         setEnabled(false);
       }
    }
 

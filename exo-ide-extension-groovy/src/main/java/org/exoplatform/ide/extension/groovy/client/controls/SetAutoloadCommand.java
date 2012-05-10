@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.RunMenuGroups;
 import org.exoplatform.ide.extension.groovy.client.event.SetAutoloadEvent;
 import org.exoplatform.ide.extension.groovy.client.util.GroovyPropertyUtil;
 import org.exoplatform.ide.vfs.client.event.ItemPropertiesSavedEvent;
@@ -63,6 +64,7 @@ public class SetAutoloadCommand extends SimpleControl implements IDEControl, Edi
       setIcon(Images.Controls.SET_AUTOLOAD);
       // setImages(GroovyPluginImageBundle.INSTANCE.setAutoLoad(), GroovyPluginImageBundle.INSTANCE.setAutoLoadDisabled());
       setEvent(new SetAutoloadEvent(false));
+      setGroupName(RunMenuGroups.AUTOLOAD);
    }
 
    /**

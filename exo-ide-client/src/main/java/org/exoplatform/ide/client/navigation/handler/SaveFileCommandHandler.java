@@ -54,9 +54,6 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
 
    private FileModel activeFile;
 
-   // TODO
-   // private Map<String, String> lockTokens;
-
    public SaveFileCommandHandler()
    {
       IDE.getInstance().addControl(new SaveFileControl(), Docking.TOOLBAR);
@@ -102,22 +99,7 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
          }
          return;
       }
-      else
-      {
-         // TODO
-         // if (file.isPropertiesChanged())
-         // {
-         // VirtualFileSystem.getInstance().saveProperties(file, lockToken, new ItemPropertiesCallback()
-         // {
-         // @Override
-         // protected void onSuccess(Item result)
-         // {
-         // eventBus.fireEvent(new FileSavedEvent((FileModel)result, null));
-         // }
-         // });
-         // return;
-         // }
-      }
+
       IDE.fireEvent(new FileSavedEvent(file, null));
    }
 
@@ -162,8 +144,6 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
       {
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
-      // TODO
-      // lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

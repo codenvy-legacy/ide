@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.jenkins.client.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
@@ -41,6 +42,7 @@ public class BuildControl extends SimpleControl implements IDEControl
       setPrompt(JenkinsExtension.MESSAGES.buildJavaAppPrompt());
       setImages(JenkinsExtension.RESOURCES.build(), JenkinsExtension.RESOURCES.build_Disabled());
       setEvent(new BuildApplicationEvent());
+      setGroupName(GroupNames.RUNDEBUG);
    }
 
    /**

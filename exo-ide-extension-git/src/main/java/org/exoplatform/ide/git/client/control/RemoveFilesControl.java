@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remove.RemoveFilesEvent;
@@ -38,5 +39,6 @@ public class RemoveFilesControl extends GitControl
       setPrompt(GitExtension.MESSAGES.removeControlPrompt());
       setImages(GitClientBundle.INSTANCE.removeFiles(), GitClientBundle.INSTANCE.removeFilesDisabled());
       setEvent(new RemoveFilesEvent());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

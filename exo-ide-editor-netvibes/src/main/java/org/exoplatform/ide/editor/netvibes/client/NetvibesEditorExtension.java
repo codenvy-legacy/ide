@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.netvibes.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -62,7 +63,7 @@ public class NetvibesEditorExtension extends Extension
             
       IDE.getInstance().addEditor(producer);
       IDE.getInstance().addControl(new NewItemControl("File/New/New Netvibes Widget", "Netvibes Widget",
-         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET));
+         "Create Netvibes Widget file", Images.UWA_WIGET, MimeType.UWA_WIDGET).setGroupName(GroupNames.NEW_FILE));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.UWA_WIDGET, new HtmlOutlineItemCreator());
    }

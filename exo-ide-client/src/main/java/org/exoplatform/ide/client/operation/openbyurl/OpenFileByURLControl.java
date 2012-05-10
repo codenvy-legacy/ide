@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -60,6 +61,7 @@ public class OpenFileByURLControl extends SimpleControl implements IDEControl, V
       setPrompt(IDE.IDE_LOCALIZATION_CONSTANT.openFileByURLControlPrompt());
       setImages(IDEImageBundle.INSTANCE.url(), IDEImageBundle.INSTANCE.urlDisabled());
       setEvent(new OpenFileByURLEvent());
+      setGroupName(GroupNames.UPLOAD);
    }
 
    /**

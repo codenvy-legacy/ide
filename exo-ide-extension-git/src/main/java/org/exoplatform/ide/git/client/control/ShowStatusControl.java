@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent;
@@ -38,5 +39,6 @@ public class ShowStatusControl extends GitControl
       setPrompt(GitExtension.MESSAGES.statusControlPrompt());
       setEvent(new ShowWorkTreeStatusEvent());
       setImages(GitClientBundle.INSTANCE.status(), GitClientBundle.INSTANCE.statusDisabled());
+      setGroupName(GroupNames.INFORMATION);
    }
 }

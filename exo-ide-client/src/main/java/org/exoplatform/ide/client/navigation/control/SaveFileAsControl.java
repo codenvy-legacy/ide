@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.navigation.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -71,6 +72,7 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.saveAs(), IDEImageBundle.INSTANCE.saveAsDisabled());
       setEvent(new SaveFileAsEvent(SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
+      setGroupName(GroupNames.SAVE);
    }
 
    /**

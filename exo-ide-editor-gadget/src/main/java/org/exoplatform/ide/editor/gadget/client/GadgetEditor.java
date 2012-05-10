@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.gadget.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -69,7 +70,7 @@ public class GadgetEditor extends Extension
       IDE.getInstance().addEditor(producer);
 
       IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
-         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET));
+         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroupName(GroupNames.NEW_FILE));
       
       IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
    }
