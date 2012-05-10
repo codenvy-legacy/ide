@@ -26,4 +26,7 @@
    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionView">
       <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display" />
    </replace-with>
+   <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesView">
+      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display" />
+   </replace-with>
 </module>

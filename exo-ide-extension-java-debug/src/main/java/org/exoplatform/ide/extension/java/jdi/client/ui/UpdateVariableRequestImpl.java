@@ -41,24 +41,40 @@ public class UpdateVariableRequestImpl implements UpdateVariableRequest
       this.expression = expression;
    }
 
+   public UpdateVariableRequestImpl()
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getVariablePath()
+    */
    @Override
    public VariablePath getVariablePath()
    {
       return variablePath;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setVariablePath(org.exoplatform.ide.extension.java.jdi.shared.VariablePath)
+    */
    @Override
    public void setVariablePath(VariablePath variablePath)
    {
       this.variablePath = variablePath;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getExpression()
+    */
    @Override
    public String getExpression()
    {
       return expression;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setExpression(java.lang.String)
+    */
    @Override
    public void setExpression(String expression)
    {

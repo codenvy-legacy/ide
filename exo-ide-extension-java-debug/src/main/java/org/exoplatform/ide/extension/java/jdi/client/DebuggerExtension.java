@@ -21,6 +21,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
+import org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter;
 import org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter;
 import org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter;
 
@@ -45,7 +46,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.getInstance().addControl(new DebugAppControl());
       IDE.getInstance().addControl(new RunAppControl());
       IDE.getInstance().addControl(new StopAppControl());
-
+      IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());
    }
 
    @Override
@@ -61,6 +62,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       DebuggerPresenter debuggerPresenter = new DebuggerPresenter(breakpointsManager);
       new ChangeValuePresenter();
       new EvaluateExpressionPresenter();
+      new BreakpointPropertiesPresenter();
 
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);

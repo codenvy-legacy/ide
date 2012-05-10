@@ -286,4 +286,48 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("view.evaluateExpression.closeButton.title")
    String evaluateExpressionViewCloseButtonTitle();
 
+   @DefaultMessage("Error: Failed to evaluate expression.\r\nReason: {0}")
+   @Key("evaluateExpressionFailed")
+   String evaluateExpressionFailed(String reason);
+
+   /*************************************************************************
+    * Breakpoint properties view
+    *************************************************************************/
+
+   /**
+    * Translated "Breakpoint properties".
+    * 
+    * @return translated "Breakpoint properties"
+    */
+   @DefaultMessage("Breakpoint properties")
+   @Key("view.breakpointProperties.title")
+   String breakpointPropertiesViewTitle();
+
+   /**
+    * Translated "Condition".
+    * 
+    * @return translated "Condition"
+    */
+   @DefaultMessage("Condition:")
+   @Key("view.breakpointProperties.conditionField.title")
+   String breakpointPropertiesViewConditionFieldTitle();
+
+   /**
+    * Translated "OK".
+    * 
+    * @return translated "OK"
+    */
+   @DefaultMessage("OK")
+   @Key("view.breakpointProperties.OKButton.title")
+   String breakpointPropertiesViewOKButtonTitle();
+
+   /**
+    * Translated "Cancel".
+    * 
+    * @return translated "Cancel"
+    */
+   @DefaultMessage("Cancel")
+   @Key("view.breakpointProperties.cancelButton.title")
+   String breakpointPropertiesViewCancelButtonTitle();
+
 }
