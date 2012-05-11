@@ -25,6 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -33,7 +37,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler
+public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public static final String ID = "File/New *";
@@ -57,6 +61,8 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    /**
@@ -73,6 +79,19 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
       {
          setVisible(false);
       }
+   }
+   
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+     setEnabled(false);
+   }
+   
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      if (event.getProject() != null)
+        setEnabled(true);
    }
 
 }
