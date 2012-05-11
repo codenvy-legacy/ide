@@ -239,6 +239,8 @@ public interface MenuCommands
 
       public static final String REST_SERVICES = "REST Services Discovery";
 
+      public static final String SHOW_KEYBOARD_SHORTCUTS = "Show Keyboard Shortcuts...";
+
       String AVAILABLE_DEPENDENCIES = "Show Available Dependencies...";
    }
 
