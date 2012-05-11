@@ -188,6 +188,24 @@ public interface IdePreferencesLocalizationConstant extends Constants
    String customizeHotkeysListGridPopup();
 
    /*
+    * ShowHotKeysView
+    */
+   @Key("showHotKeys.title")
+   String showHotKeysTitle();
+
+   /*
+    * ShowHotKeyItemListGrid
+    */
+   @Key("showHotKeys.listGrid.command")
+   String showHotKeysListGridCommand();
+
+   @Key("showHotKeys.listGrid.shortcut")
+   String showHotKeysListGridShortcut();
+
+   @Key("showHotKeys.listGrid.popup")
+   String showHotKeysListGridPopup();
+
+   /*
     * ReservedHotKeys
     */
    @Key("reservedHotkeys.autocomplete")

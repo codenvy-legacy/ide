@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,28 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.miscellaneous;
+package org.exoplatform.ide.client.hotkeys.show;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: $
+ * Handler for {@link ShowHotKeysEvent} event.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: ShowHotKeysHandler.java May 10, 2012 10:30:59 AM azatsarynnyy $
  *
  */
-@RunWith(Suite.class)
-@SuiteClasses({CursorPositionStatusBarTest.class, 
-               DialogAboutTest.class, CustomizeToolbarTest.class, 
-               CookiesTest.class,
-               HotkeysFormTest.class,
-               HotkeysCustomizationTest.class,
-               HotkeysInCodeMirrorTest.class,
-               HotkeysInFCKEditorTest.class,
-               RestServicesDiscoveryTest.class,
-               ShowKeyboardShortcutsTest.class})
-public class MiscellaneousTestSuite
+public interface ShowHotKeysHandler extends EventHandler
 {
-
+   void onShowHotKeys(ShowHotKeysEvent event);
 }
