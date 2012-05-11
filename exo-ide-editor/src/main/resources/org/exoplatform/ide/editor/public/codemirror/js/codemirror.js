@@ -59,6 +59,7 @@ var CodeMirror = (function(){
     firstLineNumber: 1,
     onLineNumberClick: null,
     onLineNumberDoubleClick: null,
+    onLineNumberContextMenu: null,
     indentUnit: 2,
     domain: null,
     noScriptCaching: false
@@ -337,6 +338,15 @@ var CodeMirror = (function(){
     	     if (!isNaN(num)) handler(num, div);
            }
       }
+      
+      nums.oncontextmenu= function(e){
+   	   var handler = self.options.onLineNumberContextMenu;
+   	   if (handler) {
+   	     var div = (e || event).target || (e || event).srcElement;
+   	     var num = div == nums ? NaN : Number(div.innerHTML);
+   	     if (!isNaN(num)) handler(num, e, div);
+   	   }
+     }
 
       function sizeBar() {
         if (frame.offsetWidth == 0) return;

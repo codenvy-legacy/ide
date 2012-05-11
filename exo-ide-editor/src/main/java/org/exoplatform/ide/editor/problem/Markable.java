@@ -30,6 +30,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * @version $
  */
 
+/**
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: May 8, 2012 4:45:51 PM anya $
+ * 
+ */
 public interface Markable
 {
 
@@ -39,8 +44,7 @@ public interface Markable
     * @param problem
     */
    void markProblem(Problem problem);
-   
-   
+
    /**
     * Remove problem
     * 
@@ -69,4 +73,11 @@ public interface Markable
     */
    HandlerRegistration addLineNumberDoubleClickHandler(LineNumberDoubleClickHandler handler);
 
+   /**
+    * Adds handler for {@link LineNumberContextMenuEvent} event.
+    * 
+    * @param handler handler for {@link LineNumberContextMenuEvent}
+    * @return {@link HandlerRegistration}
+    */
+   HandlerRegistration addLineNumberContextMenuHandler(LineNumberContextMenuHandler handler);
 }

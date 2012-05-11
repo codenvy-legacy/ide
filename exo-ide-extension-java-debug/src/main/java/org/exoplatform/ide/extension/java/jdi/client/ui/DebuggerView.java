@@ -124,6 +124,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setWidth("100%");
 
       final SingleSelectionModel<BreakPoint> breakPointSelectionModel = new SingleSelectionModel<BreakPoint>();
+      
       breakpointsContainer.setSelectionModel(breakPointSelectionModel);
       breakPointSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {

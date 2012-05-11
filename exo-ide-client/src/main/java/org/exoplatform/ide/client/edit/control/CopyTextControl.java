@@ -73,7 +73,6 @@ public class CopyTextControl extends SimpleControl implements IDEControl, ShowCo
    public void onShowContextMenu(ShowContextMenuEvent event)
    {
       boolean showInContextMenu = (event.getObject() instanceof Editor);
-      System.out.println("CopyTextControl.onShowContextMenu()" + showInContextMenu);
       setShowInContextMenu(showInContextMenu && isEditorPanelActive);
    }
 

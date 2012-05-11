@@ -26,12 +26,16 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.problem.Markable;
@@ -59,7 +63,8 @@ import java.util.Set;
  * 
  */
 public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
-   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler
+   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler,
+   LineNumberContextMenuHandler
 {
 
    private HandlerManager eventBus;
@@ -75,12 +80,14 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
    private FileModel file;
 
    private Map<String, Set<EditorBreakPoint>> breakPoints;
-   
+
    private Map<String, FileModel> fileWithBreakPoints;
 
    private final FqnResolverFactory resolverFactory;
 
-   private HandlerRegistration handlerRegistration;
+   private HandlerRegistration lineNumberDobleClickHandler;
+
+   private HandlerRegistration lineNumberContextMenuHandler;
 
    /**
     * @param eventBus
@@ -98,9 +105,8 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
+      eventBus.addHandler(LineNumberContextMenuEvent.TYPE, this);
    }
-   
-   
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
@@ -115,10 +121,10 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       {
          if (event.getEditor() instanceof Markable)
          {
-            if (handlerRegistration != null)
-               handlerRegistration.removeHandler();
+            if (lineNumberDobleClickHandler != null)
+               lineNumberDobleClickHandler.removeHandler();
             markable = (Markable)event.getEditor();
-            handlerRegistration = markable.addLineNumberDoubleClickHandler(this);
+            lineNumberDobleClickHandler = markable.addLineNumberDoubleClickHandler(this);
             file = event.getFile();
             if (debuggerInfo == null)
             {
@@ -142,25 +148,24 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       if (!breakPoints.containsKey(file.getId()))
          breakPoints.put(file.getId(), new HashSet<EditorBreakPoint>());
       breakPoints.get(file.getId()).add(problem);
-      
+
       fileWithBreakPoints.put(resolverFactory.getResolver(file.getMimeType()).resolveFqn(file), file);
-      
+
       eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
-   
-   
+
    public void markCurrentBreakPoint(Problem problem)
    {
-      if(problem != null)
+      if (problem != null)
          markable.markProblem(problem);
    }
-   
+
    public void unmarkCurrentBreakPoint(Problem problem)
    {
-      if(problem != null)
+      if (problem != null)
          markable.unmarkProblem(problem);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler#onLineNumberDoubleClick(org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent)
     */
@@ -331,7 +336,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
          }
       }
    }
-   
+
    public Map<String, FileModel> getFileWithBreakPoints()
    {
       return fileWithBreakPoints;
@@ -347,6 +352,22 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
             markable.unmarkProblem(p);
          }
          breakPoints.get(file.getId()).clear();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler#onLineNumberContextMenu(org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent)
+    */
+   @Override
+   public void onLineNumberContextMenu(LineNumberContextMenuEvent event)
+   {
+      if (debuggerInfo == null)
+         return;
+
+      EditorBreakPoint breakPoint = isBreakpointExist(event.getLineNumber());
+      if (breakPoint != null)
+      {
+         IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), breakPoint));
       }
    }
 
