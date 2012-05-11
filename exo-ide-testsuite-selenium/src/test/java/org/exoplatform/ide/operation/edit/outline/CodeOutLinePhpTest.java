@@ -79,6 +79,7 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
    {
       //step 1 open projecr and php file, run outline
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PERSPECTIVE.fullMaximizeBrowser();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
@@ -86,6 +87,7 @@ public class CodeOutLinePhpTest extends CodeAssistantBaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
+      
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();

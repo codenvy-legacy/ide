@@ -284,10 +284,10 @@ public class OutlineTreeHelper extends BaseTest
       throws Exception
    {
       System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<line_number_first_cycle:" + itemRowNumber);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD*5);
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD*5);
       assertEquals("Verify if is selected a line in editor", fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());
    }
 
