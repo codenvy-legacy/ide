@@ -20,9 +20,10 @@ package org.exoplatform.ide;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public interface MenuCommands
 {
@@ -204,6 +205,10 @@ public interface MenuCommands
       public static final String SHOW_LINE_NUMBERS = "Show Line Numbers";
 
       public static final String FORMAT = "Format";
+
+      public static final String SELECT_ALL = "Select All";
+
+      public static final String DELETE = "Delete";
 
       public static final String GO_TO_LINE = "Go to Line...";
 

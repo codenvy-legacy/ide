@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.java.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.client.event.CreateJavaClassEvent;
 
@@ -36,5 +37,6 @@ public class NewJavaClassControl extends JavaControl
       setNormalImage(JavaClientBundle.INSTANCE.newClassWizz());
       setDisabledImage(JavaClientBundle.INSTANCE.newClassWizzDisabled());
       setEvent(new CreateJavaClassEvent());
+      setGroupName(GroupNames.NEW_SCRIPT);
    }
 }

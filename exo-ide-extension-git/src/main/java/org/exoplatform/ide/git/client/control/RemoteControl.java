@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 
@@ -34,5 +35,6 @@ public class RemoteControl extends GitControl
       setTitle(GitExtension.MESSAGES.remoteControlTitle());
       setPrompt(GitExtension.MESSAGES.remoteControlPrompt());
       setImages(GitClientBundle.INSTANCE.remote(), GitClientBundle.INSTANCE.remoteDisabled());
+      setGroupName(GroupNames.COMMANDS);
    }
 }

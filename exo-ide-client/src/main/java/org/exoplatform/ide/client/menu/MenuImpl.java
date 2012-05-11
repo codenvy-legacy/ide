@@ -25,10 +25,11 @@ import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,60 +41,154 @@ import java.util.Set;
 public class MenuImpl extends MenuBar implements Menu
 {
 
-   @Override
-   public void refresh(List<Control> commands)
-   {
-      Map<SimpleControl, MenuItem> createdMenuItems = new HashMap<SimpleControl, MenuItem>();
+   public static String[] items = {"File", "Project", "Edit", "View", "Run", "Git", "PaaS", "Window", "Help"};
 
-      for (Control command : commands)
+   private HashMap<String, List<SimpleControl>> controlsMap = new LinkedHashMap<String, List<SimpleControl>>();
+
+   private boolean topItemsCreated = false;
+
+   private void ensureTopMenuItemsCreates()
+   {
+      if (topItemsCreated)
       {
-         if (!(command instanceof SimpleControl))
+         return;
+      }
+
+      for (String item : items)
+      {
+         addItem(item);
+      }
+
+      topItemsCreated = true;
+   }
+
+   @Override
+   public void refresh(List<Control> allControls)
+   {
+      ensureTopMenuItemsCreates();
+
+      /*
+       * filter controls
+       */
+      List<SimpleControl> controls = new ArrayList<SimpleControl>();
+      for (Control control : allControls)
+      {
+         if (control instanceof SimpleControl)
+         {
+            controls.add((SimpleControl)control);
+         }
+      }
+
+      /*
+       * group controls and cut groupped from list of controls 
+       */
+      List<SimpleControl> cutList = new ArrayList<SimpleControl>();
+      Map<String, List<SimpleControl>> groups = new LinkedHashMap<String, List<SimpleControl>>();
+
+      for (SimpleControl control : controls)
+      {
+         String groupName;
+         if (control.getGroupName() != null && !control.getGroupName().isEmpty())
+         {
+            groupName = control.getGroupName();
+         }
+         else
+         {
+            groupName = "";
+         }
+
+         List<SimpleControl> groupList = groups.get(groupName);
+         if (groupList == null)
+         {
+            groupList = new ArrayList<SimpleControl>();
+            groups.put(groupName, groupList);
+         }
+
+         groupList.add(control);
+         cutList.add(control);
+      }
+
+      controls.removeAll(cutList);
+
+      /*
+       * 
+       */
+      for (String groupName : groups.keySet())
+      {
+         if (groupName.isEmpty())
          {
             continue;
          }
 
-         SimpleControl control = (SimpleControl)command;
-         MenuItem createdItem = add(null, control, 0);
-         createdMenuItems.put(control, createdItem);
+         List<SimpleControl> groupped = groups.get(groupName);
+         for (SimpleControl control : groupped)
+         {
+            if (groupped.indexOf(control) == 0)
+            {
+               add(null, control, 0, true);
+            }
+
+            MenuItem menuItem = add(null, control, 0, false);
+            new MenuItemControl(IDE.eventBus(), menuItem, control);
+
+            if (groupped.indexOf(control) == groupped.size() - 1)
+            {
+               add(null, control, 0, true);
+            }
+         }
       }
 
-      Set<SimpleControl> controls = createdMenuItems.keySet();
-      for (SimpleControl control : controls)
+      // fill controls for group ""
+      List<SimpleControl> groupped = groups.get("");
+      if (groupped != null)
       {
-         MenuItem menuItem = createdMenuItems.get(control);
-         new MenuItemControl(IDE.eventBus(), menuItem, control);
-      }
+         for (SimpleControl control : groupped)
+         {
+            if (groupped.indexOf(control) == 0)
+            {
+               add(null, control, 0, true);
+            }
 
+            //            addGroupped(control, isFirst);
+            MenuItem menuItem = add(null, control, 0, false);
+            new MenuItemControl(IDE.eventBus(), menuItem, control);
+
+            if (groupped.indexOf(control) == groupped.size() - 1)
+            {
+               add(null, control, 0, true);
+            }
+         }
+      }
    }
 
-   private MenuItem add(MenuItem parent, SimpleControl control, int depth)
+   private MenuItem add(MenuItem parent, SimpleControl control, int depth, boolean delimiter)
    {
       String[] path = control.getId().split("/");
+      
+      if (depth == path.length - 1 && delimiter && parent != null)
+      {
+         return parent.addItem(null);
+      }
 
       MenuItem item = getItemByTitle(parent, path[depth]);
+
       if (item == null)
       {
          if (depth == 0)
          {
             item = addItem(path[0]);
          }
-         else
-         {
-            if (depth == path.length - 1)
+         else {
+            if (!delimiter)
             {
-               if (control.hasDelimiterBefore())
-               {
-                  parent.addItem(null);
-               }
-            }
-
-            item = parent.addItem(path[depth]);
+               item = parent.addItem(path[depth]);
+            }            
          }
       }
 
       if (depth < path.length - 1)
       {
-         return add(item, control, depth + 1);
+         return add(item, control, depth + 1, delimiter);
       }
       else
       {

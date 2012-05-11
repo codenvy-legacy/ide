@@ -27,6 +27,7 @@ import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Build;
 import org.exoplatform.ide.core.Button;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.ContextMenu;
 import org.exoplatform.ide.core.CustomizeHotkeys;
 import org.exoplatform.ide.core.CustomizeToolbar;
 import org.exoplatform.ide.core.Delete;
@@ -74,7 +75,9 @@ import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.exoplatform.ide.core.CodeAssistantJava;
-import org.exoplatform.ide.core.PopupDialogsBrowser;;
+import org.exoplatform.ide.core.PopupDialogsBrowser;
+
+;
 
 /**
  * 
@@ -196,16 +199,18 @@ public class IDE
    public OpenFileByPath OPEN_FILE_BY_PATH;
 
    public WelcomePage WELCOME_PAGE;
-   
+
    public CkEditor CK_EDITOR;
 
    public Build BUILD;
-   
+
    public ErrorMarks ERROR_MARKS;
-   
+
    public CodeAssistantJava CODE_ASSISTANT_JAVA;
-   
+
    public PopupDialogsBrowser POPUP;
+
+   public ContextMenu CONTEXT_MENU;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -221,6 +226,7 @@ public class IDE
       BUILD = PageFactory.initElements(driver, Build.class);
       BUTTON = PageFactory.initElements(driver, Button.class);
       CODEASSISTANT = PageFactory.initElements(driver, CodeAssistant.class);
+      CONTEXT_MENU = PageFactory.initElements(driver, ContextMenu.class);
       DELETE = PageFactory.initElements(driver, Delete.class);
       DEPLOY_NODE_TYPE = PageFactory.initElements(driver, DeployNodeType.class);
       EDITOR = PageFactory.initElements(driver, Editor.class);

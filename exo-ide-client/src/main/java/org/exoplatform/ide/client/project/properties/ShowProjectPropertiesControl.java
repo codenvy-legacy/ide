@@ -20,6 +20,7 @@
 package org.exoplatform.ide.client.project.properties;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -53,6 +54,7 @@ public class ShowProjectPropertiesControl extends SimpleControl implements IDECo
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.projectProperties(), IDEImageBundle.INSTANCE.projectPropertiesDisabled());
       setEvent(new ShowProjectPropertiesEvent());
+      setGroupName(GroupNames.PROPERTIES);
    }
 
    @Override

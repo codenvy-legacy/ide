@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.client.control;
 
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.delete.DeleteRepositoryEvent;
@@ -40,6 +41,7 @@ public class DeleteRepositoryControl extends GitControl
       setImages(GitClientBundle.INSTANCE.deleteRepo(), GitClientBundle.INSTANCE.deleteRepoDisabled());
       setEvent(new DeleteRepositoryEvent());
       setVisible(true);
+      setGroupName(GroupNames.ACTIONS);
    }
 
 }

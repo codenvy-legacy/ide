@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
@@ -53,6 +54,7 @@ public class NewProjectMenuGroup extends SimpleControl implements IDEControl, Vf
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setEnabled(true);
+      setGroupName(GroupNames.NEW_PROJECT);
    }
 
    /**

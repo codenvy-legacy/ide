@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.EditorView;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
@@ -52,6 +53,8 @@ public class SelectAllTextControl extends SimpleControl implements IDEControl, S
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setImages(IDEImageBundle.INSTANCE.selectAll(), IDEImageBundle.INSTANCE.selectAllDisabled());
+      setShowInMenu(false);
       setEvent(new EditorSelectAllEvent());
    }
 

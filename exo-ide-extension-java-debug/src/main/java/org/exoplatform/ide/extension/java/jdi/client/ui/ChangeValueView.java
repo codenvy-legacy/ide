@@ -116,12 +116,12 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#enableChangeButton(boolean)
+    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#setChangeButtonEnable(boolean)
     */
    @Override
-   public void enableChangeButton(boolean enable)
+   public void setChangeButtonEnable(boolean isEnable)
    {
-      changeButton.setEnabled(enable);
+      changeButton.setEnabled(isEnable);
    }
 
 }

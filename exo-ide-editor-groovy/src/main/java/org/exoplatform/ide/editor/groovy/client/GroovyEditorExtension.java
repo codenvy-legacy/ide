@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -89,10 +90,10 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New REST Service", "REST Service", "Create REST Service", Images.REST_SERVICE,
-            MimeType.GROOVY_SERVICE).setDelimiterBefore(true));
+            MimeType.GROOVY_SERVICE).setDelimiterBefore(true).setGroupName(GroupNames.NEW_SCRIPT));
 
       IDE.getInstance().addControl(
-         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY));
+         new NewItemControl("File/New/New POGO", "POGO", "Create POGO", Images.GROOVY, MimeType.APPLICATION_GROOVY).setGroupName(GroupNames.NEW_SCRIPT));
    }
 
    /**

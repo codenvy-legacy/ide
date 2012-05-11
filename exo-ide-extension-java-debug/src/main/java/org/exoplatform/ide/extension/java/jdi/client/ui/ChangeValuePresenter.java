@@ -82,9 +82,9 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
       /**
        * Change the enable state of the change button.
        * 
-       * @param enable enabled or not
+       * @param isEnable enabled or not
        */
-      void enableChangeButton(boolean enable);
+      void setChangeButtonEnable(boolean isEnable);
 
       /**
        * Give focus to expression field.
@@ -144,7 +144,7 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
          public void onValueChange(ValueChangeEvent<String> event)
          {
             boolean isExpressionFieldNotEmpty = (event.getValue() != null && !event.getValue().trim().isEmpty());
-            display.enableChangeButton(isExpressionFieldNotEmpty);
+            display.setChangeButtonEnable(isExpressionFieldNotEmpty);
          }
       });
    }
@@ -165,7 +165,7 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
 
          IDE.getInstance().openView(display.asView());
 
-         display.enableChangeButton(false);
+         display.setChangeButtonEnable(false);
          display.focusInExpressionField();
       }
    }

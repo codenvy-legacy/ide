@@ -219,6 +219,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
                      new CreateNewFileEvent(control.getMimeType()));
 
             }
+            command.setGroupName(control.getGroupName());
          }
          command.setDelimiterBefore(control.hasDelimiterBefore());
 

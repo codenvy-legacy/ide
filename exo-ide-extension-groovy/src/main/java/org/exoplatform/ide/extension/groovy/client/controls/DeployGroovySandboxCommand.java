@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.extension.groovy.client.Images;
+import org.exoplatform.ide.extension.groovy.client.RunMenuGroups;
 import org.exoplatform.ide.extension.groovy.client.event.DeployGroovyScriptSandboxEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
@@ -56,6 +57,7 @@ public class DeployGroovySandboxCommand extends SimpleControl implements IDECont
       setPrompt("Deploy REST Service to Sandbox");
       setIcon(Images.Controls.DEPLOY_SANDBOX);
       setEvent(new DeployGroovyScriptSandboxEvent());
+      setGroupName(RunMenuGroups.DEPLOY);
    }
 
    /**

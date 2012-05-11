@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -76,7 +77,7 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New JSP File", "JSP", "Create JSP", JSPClientBundle.INSTANCE.jspFile(),
-            JSPClientBundle.INSTANCE.jspFileDisabled(), MimeType.APPLICATION_JSP));
+            JSPClientBundle.INSTANCE.jspFileDisabled(), MimeType.APPLICATION_JSP).setGroupName(GroupNames.NEW_SCRIPT));
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVA, new JspOutlineItemCreator());
    }
 

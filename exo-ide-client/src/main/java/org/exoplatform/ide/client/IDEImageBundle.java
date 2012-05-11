@@ -58,22 +58,22 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("bundled-images/yes-disabled.png")
    ImageResource yesDisabled();
-   
+
    @Source("bundled-images/hide.png")
    ImageResource hide();
 
    @Source("bundled-images/hide-disabled.png")
    ImageResource hideDisabled();
-   
+
    @Source("bundled-images/link-with-editor.png")
    ImageResource linkWithEditor();
-   
+
    @Source("bundled-images/link-with-editor-disabled.png")
    ImageResource linkWithEditorDisabled();
-   
+
    @Source("bundled-images/resource-open.png")
    ImageResource openResource();
-   
+
    @Source("bundled-images/resource-open-disabled.png")
    ImageResource openResourceDisabled();
 
@@ -187,6 +187,12 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/edit/redo_Disabled.png")
    ImageResource redoDisabled();
+
+   @Source("../public/images/bundled/edit/select_all.png")
+   ImageResource selectAll();
+
+   @Source("../public/images/bundled/edit/select_all_Disabled.png")
+   ImageResource selectAllDisabled();
 
    @Source("../public/images/bundled/edit/format.png")
    ImageResource format();
@@ -410,10 +416,10 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/outline/outline_Disabled.png")
    ImageResource outlineDisabled();
-   
+
    @Source("bundled-images/loader.gif")
    ImageResource loader();
-   
+
    /*
     * OUTPUT
     */
@@ -464,7 +470,7 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("../public/images/bundled/view/show_hidden_files.png")
    ImageResource showHiddenFiles();
-   
+
    /*
     * VERSIONING
     */

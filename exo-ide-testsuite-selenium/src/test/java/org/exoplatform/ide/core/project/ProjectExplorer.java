@@ -32,8 +32,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:  Nov 4, 2011 10:38:30 AM anya $
- *
+ * @version $Id: Nov 4, 2011 10:38:30 AM anya $
+ * 
  */
 public class ProjectExplorer extends AbstractTestModule
 {
@@ -102,8 +102,9 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * Generate item id 
-    * @param path item's name 
+    * Generate item id
+    * 
+    * @param path item's name
     * @return id of item
     */
    public String getItemId(String path) throws Exception
@@ -190,7 +191,19 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * Open item (make double click) in Project explorer tree. 
+    * Select item in project explorer view by right mouse click.
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void selectItemByRightClick(String path) throws Exception
+   {
+      WebElement item = driver().findElement(By.id(getItemId(path)));
+      new Actions(driver()).contextClick(item).perform();
+   }
+
+   /**
+    * Open item (make double click) in Project explorer tree.
     * 
     * @param path item's path
     * @throws Exception
@@ -275,6 +288,7 @@ public class ProjectExplorer extends AbstractTestModule
 
    /**
     * click on tab with name of the project
+    * 
     * @param nameProject
     */
    public void selectProjectTab(String nameProject)
@@ -311,6 +325,14 @@ public class ProjectExplorer extends AbstractTestModule
    {
       WebElement projectRow = driver().findElement(By.xpath(String.format(Locators.PROJECT_ROW_LOCATOR, name)));
       projectRow.click();
+   }
+
+   /**
+    * Open context menu.
+    */
+   public void openContextMenu()
+   {
+      new Actions(driver()).contextClick(view);
    }
 
 }
