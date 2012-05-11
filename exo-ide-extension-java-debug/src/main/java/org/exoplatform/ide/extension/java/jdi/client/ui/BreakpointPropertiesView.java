@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 
 /**
@@ -80,7 +81,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#getOKButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getOKButton()
     */
    @Override
    public HasClickHandlers getOKButton()
@@ -89,7 +90,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -98,7 +99,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#getCondition()
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#getCondition()
     */
    @Override
    public HasValue<String> getCondition()
@@ -107,7 +108,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#focusInConditionField()
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#focusInConditionField()
     */
    @Override
    public void focusInConditionField()
@@ -116,7 +117,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#setCondition(java.lang.String)
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setCondition(java.lang.String)
     */
    @Override
    public void setCondition(String expression)
@@ -125,7 +126,7 @@ public class BreakpointPropertiesView extends ViewImpl implements BreakpointProp
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display#setOkButtonEnable(boolean)
+    * @see org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display#setOkButtonEnable(boolean)
     */
    @Override
    public void setOkButtonEnable(boolean isEnable)

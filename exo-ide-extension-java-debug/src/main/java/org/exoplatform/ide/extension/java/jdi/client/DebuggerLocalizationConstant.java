@@ -18,6 +18,18 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("control.stopAppControlId")
    String stopAppControlId();
 
+   @DefaultMessage("Run/Breakpoint Properties")
+   @Key("control.showBreakpointProperties.id")
+   String showBreakpointPropertiesControlId();
+
+   @DefaultMessage("Breakpoint Properties")
+   @Key("control.showBreakpointProperties.title")
+   String showBreakpointPropertiesControlTitle();
+
+   @DefaultMessage("Breakpoint Properties")
+   @Key("control.showBreakpointProperties.prompt")
+   String showBreakpointPropertiesControlPrompt();
+
    /**
     * Translated "BreakPoints".
     * 

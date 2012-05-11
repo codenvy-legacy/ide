@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+
 /**
+ * Event occurs when user tries to show breakpoint properties.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ShowBreakpointPropertiesEvent.java May 8, 2012 13:00:37 PM azatsarynnyy $
  * 
@@ -35,8 +37,14 @@ public class ShowBreakpointPropertiesEvent extends GwtEvent<ShowBreakpointProper
    public static final GwtEvent.Type<ShowBreakpointPropertiesHandler> TYPE =
       new GwtEvent.Type<ShowBreakpointPropertiesHandler>();
 
+   /**
+    * Current breakpoint.
+    */
    private BreakPoint breakPoint;
 
+   /**
+    * @param breakPoint current breakpoint
+    */
    public ShowBreakpointPropertiesEvent(BreakPoint breakPoint)
    {
       this.breakPoint = breakPoint;
@@ -61,7 +69,7 @@ public class ShowBreakpointPropertiesEvent extends GwtEvent<ShowBreakpointProper
    }
 
    /**
-    * @return the breakPoint
+    * @return the breakpoint
     */
    public BreakPoint getBreakPoint()
    {

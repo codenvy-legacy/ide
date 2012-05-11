@@ -23,16 +23,37 @@ import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowBreakpointPropertiesEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
-public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler
+/**
+ * Control for show breakpoint properties.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: ShowBreakpointPropertiesControl.java May 11, 2012 12:44:25 PM azatsarynnyy $
+ *
+ */
+public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
+   DebuggerConnectedHandler, DebuggerDisconnectedHandler
 {
-   public static final String ID = "Run/Breakpoint Properties";
+   /**
+    * Control's identifier.
+    */
+   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlId();
 
-   private static final String TITLE = "Breakpoint Properties";
+   /**
+    * Control's title.
+    */
+   private static final String TITLE = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlTitle();
 
-   private static final String PROMPT = "Breakpoint Properties";
+   /**
+    * Control's prompt.
+    */
+   private static final String PROMPT = DebuggerExtension.LOCALIZATION_CONSTANT.showBreakpointPropertiesControlPrompt();
 
    public ShowBreakpointPropertiesControl()
    {
@@ -50,8 +71,10 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
    public void initialize()
    {
       IDE.addHandler(ShowContextMenuEvent.TYPE, this);
-      setVisible(true);
-      setEnabled(true);
+      IDE.addHandler(DebuggerConnectedEvent.TYPE, this);
+      IDE.addHandler(DebuggerDisconnectedEvent.TYPE, this);
+
+      setVisible(false);
    }
 
    /**
@@ -74,6 +97,25 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
       {
          setShowInContextMenu(false);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent)
+    */
+   @Override
+   public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
+   {
+      setVisible(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler#onDebuggerConnected(org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent)
+    */
+   @Override
+   public void onDebuggerConnected(DebuggerConnectedEvent event)
+   {
+      setVisible(true);
+      setEnabled(true);
    }
 
 }

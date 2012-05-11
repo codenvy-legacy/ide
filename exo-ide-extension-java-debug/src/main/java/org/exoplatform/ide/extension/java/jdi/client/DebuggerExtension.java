@@ -21,9 +21,6 @@ import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
-import org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter;
-import org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter;
-import org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

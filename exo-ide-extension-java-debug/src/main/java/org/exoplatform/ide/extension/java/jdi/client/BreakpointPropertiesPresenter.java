@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.ui;
+package org.exoplatform.ide.extension.java.jdi.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,7 +34,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
@@ -159,6 +158,11 @@ public class BreakpointPropertiesPresenter implements ShowBreakpointPropertiesHa
     */
    private void setCondition()
    {
+      if (currentBreakPoint == null)
+      {
+         return;
+      }
+
       currentBreakPoint.setCondition(display.getCondition().getValue());
 
       // delete breakpoint and add this with condition
@@ -259,7 +263,10 @@ public class BreakpointPropertiesPresenter implements ShowBreakpointPropertiesHa
     */
    private void loadProperties()
    {
-      display.setCondition(currentBreakPoint.getCondition());
+      if (currentBreakPoint != null)
+      {
+         display.setCondition(currentBreakPoint.getCondition());
+      }
    }
 
    /**
