@@ -27,13 +27,19 @@ import com.google.gwt.resources.client.ImageResource;
  * @version $Id: Apr 3, 2012 3:03:35 PM anya $
  * 
  */
-public interface MavenClientBundle extends ClientBundle
+public interface BuilderClientBundle extends ClientBundle
 {
-   MavenClientBundle INSTANCE = GWT.<MavenClientBundle> create(MavenClientBundle.class);
+   BuilderClientBundle INSTANCE = GWT.<BuilderClientBundle> create(BuilderClientBundle.class);
 
    @Source("org/exoplatform/ide/extension/maven/images/controls/build.png")
    ImageResource build();
    
    @Source("org/exoplatform/ide/extension/maven/images/controls/build_Disabled.png")
    ImageResource buildDisabled();
+
+   @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput.png")
+   ImageResource clearOutput();
+
+   @Source("org/exoplatform/ide/extension/maven/images/controls/clearOutput_Disabled.png")
+   ImageResource clearOutputDisabled();
 }
