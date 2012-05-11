@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.editor.api.Editor;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -72,7 +73,7 @@ public class DeleteTextControl extends SimpleControl implements IDEControl, Show
    @Override
    public void onShowContextMenu(ShowContextMenuEvent event)
    {
-      boolean showInContextMenu = "editor".equals(event.getViewPart());
+      boolean showInContextMenu = (event.getObject() instanceof Editor);
       setShowInContextMenu(showInContextMenu && isEditorPanelActive);
    }
 

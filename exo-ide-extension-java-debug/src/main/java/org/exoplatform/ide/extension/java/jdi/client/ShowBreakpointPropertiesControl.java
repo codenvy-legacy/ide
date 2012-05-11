@@ -19,12 +19,15 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
+import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowBreakpointPropertiesEvent;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
-public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl
+public class ShowBreakpointPropertiesControl extends SimpleControl implements IDEControl, ShowContextMenuHandler
 {
-   //public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
    public static final String ID = "Run/Breakpoint Properties";
 
    private static final String TITLE = "Breakpoint Properties";
@@ -36,8 +39,8 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
-      setEvent(new ShowBreakpointPropertiesEvent());
+      setImages(DebuggerClientBundle.INSTANCE.breakpointProperties(),
+         DebuggerClientBundle.INSTANCE.breakpointPropertiesDisabled());
    }
 
    /**
@@ -46,8 +49,31 @@ public class ShowBreakpointPropertiesControl extends SimpleControl implements ID
    @Override
    public void initialize()
    {
+      IDE.addHandler(ShowContextMenuEvent.TYPE, this);
       setVisible(true);
       setEnabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler#onShowContextMenu(org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent)
+    */
+   @Override
+   public void onShowContextMenu(ShowContextMenuEvent event)
+   {
+      if (event.getObject() instanceof EditorBreakPoint)
+      {
+         setShowInContextMenu(true);
+         setEvent(new ShowBreakpointPropertiesEvent(((EditorBreakPoint)event.getObject()).getBreakPoint()));
+      }
+      else if (event.getObject() instanceof BreakPoint)
+      {
+         setShowInContextMenu(true);
+         setEvent(new ShowBreakpointPropertiesEvent((BreakPoint)event.getObject()));
+      }
+      else
+      {
+         setShowInContextMenu(false);
+      }
    }
 
 }

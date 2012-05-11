@@ -16,56 +16,52 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.contextmenu;
+package org.exoplatform.ide.editor.problem;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to view context menu.
+ * Event occurs, when user makes right mouse click on line number.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Apr 23, 2012 11:30:45 AM anya $
+ * @version $Id: May 8, 2012 4:35:31 PM anya $
  * 
  */
-public class ShowContextMenuEvent extends GwtEvent<ShowContextMenuHandler>
+public class LineNumberContextMenuEvent extends GwtEvent<LineNumberContextMenuHandler>
 {
    /**
     * Type, used to register the event.
     */
-   public static final GwtEvent.Type<ShowContextMenuHandler> TYPE = new GwtEvent.Type<ShowContextMenuHandler>();
+   public static final GwtEvent.Type<LineNumberContextMenuHandler> TYPE =
+      new GwtEvent.Type<LineNumberContextMenuHandler>();
 
    /**
-    * X coordinate of the context menu.
+    * Number of the line, where right mouse click was called.
     */
-   private int x;
+   private int lineNumber;
 
    /**
-    * Y coordinate of the context menu.
+    * Context menu coordinates.
     */
-   private int y;
+   private int x, y;
 
    /**
-    * Object, on which context menu was called.
+    * @param lineNumber number of the line, where right mouse click was called
+    * @param x left corner position of the context menu
+    * @param y top corner position of the context menu
     */
-   private Object object;
-
-   /**
-    * @param x coordinate of the context menu
-    * @param y coordinate of the context menu
-    * @param object object, on which context menu was called
-    */
-   public ShowContextMenuEvent(int x, int y, Object object)
+   public LineNumberContextMenuEvent(int lineNumber, int x, int y)
    {
+      this.lineNumber = lineNumber;
       this.x = x;
       this.y = y;
-      this.object = object;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowContextMenuHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<LineNumberContextMenuHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -74,13 +70,21 @@ public class ShowContextMenuEvent extends GwtEvent<ShowContextMenuHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ShowContextMenuHandler handler)
+   protected void dispatch(LineNumberContextMenuHandler handler)
    {
-      handler.onShowContextMenu(this);
+      handler.onLineNumberContextMenu(this);
    }
 
    /**
-    * @return the x
+    * @return the lineNumber
+    */
+   public int getLineNumber()
+   {
+      return lineNumber;
+   }
+
+   /**
+    * @return the x left corner position of the context menu
     */
    public int getX()
    {
@@ -88,15 +92,10 @@ public class ShowContextMenuEvent extends GwtEvent<ShowContextMenuHandler>
    }
 
    /**
-    * @return the y
+    * @return the y top corner position of the context menu
     */
    public int getY()
    {
       return y;
-   }
-
-   public Object getObject()
-   {
-      return object;
    }
 }
