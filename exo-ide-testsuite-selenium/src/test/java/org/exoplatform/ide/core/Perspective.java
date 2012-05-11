@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.TestConstants;
+import org.jboss.netty.util.Timeout;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -54,7 +58,7 @@ public class Perspective extends AbstractTestModule
       String PANEL_LOCATOR = "//div[id='%s']";
 
       String VIEW_LOCATOR = "//div[@view-id='%s']";
-      
+
       String EXPLORE_TABS_LOCATOR = "//div[@class='gwt-TabLayoutPanelTabs']//td[@class='tabTitleText' and text()='%s']";
 
       String ACTIVE_VIEW_ATTRIBUTE = "is-active";
@@ -189,14 +193,25 @@ public class Perspective extends AbstractTestModule
    {
       return driver().findElement(By.cssSelector(String.format(Locators.CLOSE_BUTTON_SELECTOR, viewTitle)));
    }
-   
+
    /**
     * select tabs between project explorer and other tabs
     * for example: between search and project panel
     * @param tabName
     */
-   public void selectTabsOnExplorer (String tabName) {
+   public void selectTabsOnExplorer(String tabName)
+   {
       WebElement tab = driver().findElement(By.xpath(String.format(Locators.EXPLORE_TABS_LOCATOR, tabName)));
       tab.click();
-    }
+   }
+
+   /**
+    * send  F11 for full maximize browser window
+    * @throws InterruptedException 
+    */
+   public void fullMaximizeBrowser() throws InterruptedException
+   {
+      new Actions(driver()).sendKeys(Keys.F11).build().perform();
+   }
+
 }
