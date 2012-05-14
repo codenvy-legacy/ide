@@ -167,4 +167,23 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    {
       projectNameField.setEnabled(enabled);
    }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#focusInNameField()
+    */
+   @Override
+   public void focusInNameField()
+   {
+      projectNameField.focus();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#selectAllTextInNameField()
+    */
+   @Override
+   public void selectAllTextInNameField()
+   {
+      projectNameField.selectAll();
+   }
+
 }

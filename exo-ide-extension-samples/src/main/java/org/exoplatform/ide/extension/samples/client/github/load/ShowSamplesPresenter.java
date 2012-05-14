@@ -74,6 +74,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
       HasValue<String> getProjectNameField();
 
       void enableNextButton(boolean enable);
+
+      /**
+       * Give focus to name field.
+       */
+      void focusInNameField();
    }
 
    private static SamplesLocalizationConstant lb = SamplesExtension.LOCALIZATION_CONSTANT;
@@ -186,6 +191,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   }
                   display.getSamplesListGrid().setValue(projectDataList);
                   display.enableNextButton(false);
+                  display.focusInNameField();
                }
 
                @Override
