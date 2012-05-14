@@ -152,6 +152,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                      @Override
                      protected void onSuccess(String result)
                      {
+                        loggedIn = false;
                         doLogin(email, password);
                      }
 
@@ -189,6 +190,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
                      @Override
                      protected void onSuccess(String result)
                      {
+                        loggedIn = false;
                         doLogin(demoLogin, demoPassword);
                      }
 
