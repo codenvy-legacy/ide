@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.EditorView;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -36,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
  * @version $Id: May 3, 2012 12:35:53 PM anya $
  * 
  */
+@RolesAllowed({"administrators", "developers"})
 public class PasteTextControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
    ViewActivatedHandler, EditorActiveFileChangedHandler
 {

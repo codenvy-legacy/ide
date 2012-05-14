@@ -641,10 +641,10 @@ public class CKEditor extends Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getLineContent(int)
+    * @see org.exoplatform.ide.editor.api.Editor#getLineText(int)
     */
    @Override
-   public String getLineContent(int line)
+   public String getLineText(int line)
    {
       return null;
    }
@@ -678,10 +678,10 @@ public class CKEditor extends Editor
    @Override
    public native void selectAll()
    /*-{
-   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-   if (editor != null) {
-   editor.execCommand("SelectAll");
-   }
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+      if (editor != null) {
+         editor.execCommand("SelectAll");
+      }
    }-*/;
 
    /**
@@ -690,10 +690,10 @@ public class CKEditor extends Editor
    @Override
    public native void cut()
    /*-{
-   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-   if (editor != null) {
-   editor.execCommand("cut");
-   }
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+      if (editor != null) {
+         editor.execCommand("cut");
+      }
    }-*/;
 
    /**
@@ -702,10 +702,10 @@ public class CKEditor extends Editor
    @Override
    public native void copy()
    /*-{
-   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-   if (editor != null) {
-   editor.execCommand("copy");
-   }
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+      if (editor != null) {
+         editor.execCommand("copy");
+      }
    }-*/;
 
    /**
@@ -714,10 +714,10 @@ public class CKEditor extends Editor
    @Override
    public native void paste()
    /*-{
-   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-   if (editor != null) {
-   editor.execCommand("paste");
-   }
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+      if (editor != null) {
+         editor.execCommand("paste");
+      }
    }-*/;
 
    /**
@@ -726,9 +726,26 @@ public class CKEditor extends Editor
    @Override
    public native void delete()
    /*-{
-   var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-   if (editor != null) {
-   editor.execCommand("delete");
-   }
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
+      if (editor != null) {
+         editor.execCommand("delete");
+      }
    }-*/;
+
+   @Override
+   public void setLineText(int line, String text)
+   {
+   }
+
+   @Override
+   public int getNumberOfLines()
+   {
+      return 0;
+   }
+
+   @Override
+   public void selectRange(int startLine, int startChar, int endLine, int endChar)
+   {
+   }
+   
 }

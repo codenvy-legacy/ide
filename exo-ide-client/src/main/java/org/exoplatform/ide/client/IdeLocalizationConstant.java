@@ -235,6 +235,12 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.deleteText")
    String deleteTextControl();
+   
+   @Key("control.moveLineUp")
+   String moveLineUpControl();
+   
+   @Key("control.moveLineDown")
+   String moveLineDownControl();
 
    @Key("control.showLineNumbers.show")
    String showLineNumbersShowControl();

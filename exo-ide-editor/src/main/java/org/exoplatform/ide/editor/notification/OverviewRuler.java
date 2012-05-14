@@ -84,7 +84,7 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       if (!(problem.isError() || problem.isWarning()))
          return;
 
-      int lastLineNumber = codeMirror.getLastLineNumber();
+      int lastLineNumber = codeMirror.getNumberOfLines();
       int problemY = (100 * problem.getLineNumber()) / lastLineNumber;
 
       Mark mark = new Mark(message, getStyleName(problem), problem.getLineNumber());
