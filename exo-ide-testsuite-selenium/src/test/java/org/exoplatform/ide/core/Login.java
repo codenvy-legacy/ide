@@ -36,24 +36,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Login extends AbstractTestModule
 {
 
-   private static final String CLOUD_LOGOUT_IDE = "logoutButton";
-   
-   private static final String CLOUD_LOGIN_IDE = "loginButton";
-
-   private static final String CLOUD_LOGOUT = "loginButton";
-   
    private static final String USERNAME = "j_username";
 
-   private static final String PASSWORD = "j_password";
-
-   private static final String LOGIN_BUTTON = "//node()[@id='loginButton']";
-
-   private static final String LOGOUT_LOCATOR = "//node()[@id='logoutButton']";
-
-   
-   
-   @FindBy(xpath = LOGOUT_LOCATOR)
-   private WebElement logout;
+   private static final String PASSWORD = "j_password";   
 
    @FindBy(name = USERNAME)
    private WebElement name;
@@ -61,24 +46,31 @@ public class Login extends AbstractTestModule
    @FindBy(name = PASSWORD)
    private WebElement password;
 
-   @FindBy(xpath = LOGIN_BUTTON)
-   private WebElement login;
+   private WebElement loginButton;
+   
+   private WebElement logoutButton;
 
-   @FindBy(id = CLOUD_LOGIN_IDE)
-   private WebElement cloudLoginButton;
-
-   @FindBy(id = CLOUD_LOGOUT_IDE)
-   private WebElement cloudIdeLogOut;
+   @FindBy(linkText = "IDE")
+   private WebElement cloudIdeAdditionMenu;
    
    public void logout()
    {
-      logout.click();
+    if (!logoutButton.isDisplayed())
+    {
+       openCloudIdeAdditionMenu();   
+    }
+       
+      logoutButton.click();
    }
 
-   
-   public void logoutCloudIde()
-   {
-      cloudIdeLogOut.click();
+   /**
+    * Open IDE addition menu where "Logout" is sub-menu item
+    */
+   private void openCloudIdeAdditionMenu() {
+      if (cloudIdeAdditionMenu != null)
+      {
+         cloudIdeAdditionMenu.click();
+      }
    }
    
    /**
@@ -90,7 +82,7 @@ public class Login extends AbstractTestModule
    {
       IDE().INPUT.typeToElement(name, userName, true);
       IDE().INPUT.typeToElement(this.password, password, true);
-      login.click();
+      login();
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
@@ -122,22 +114,7 @@ public class Login extends AbstractTestModule
     */
    public void waitTenantLoginPage()
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return name != null && name.isDisplayed() && password != null && password.isDisplayed()
-                  && cloudLoginButton != null && cloudLoginButton.isDisplayed();
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      waitStandaloneLoginPage();
    }
    
    
@@ -155,7 +132,7 @@ public class Login extends AbstractTestModule
             try
             {
                return name != null && name.isDisplayed() && password != null && password.isDisplayed()
-                  && cloudLoginButton != null && cloudLoginButton.isDisplayed();
+                  && loginButton != null && loginButton.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -167,32 +144,30 @@ public class Login extends AbstractTestModule
    
 
    /**
-    * click on button Login on cloud page
+    * click on button Login
     */
-   public void loginInCloud()
+   public void login()
    {
-      cloudLoginButton.click();
+      loginButton.click();
 
    }
 
    /**
     * login as invite user on cloud page
+    * @throws Exception 
     */
-   public void loginAsUser()
+   public void loginAsUser() throws Exception
    {
-      name.sendKeys(BaseTest.NOT_ROOT_USER_NAME);
-      password.sendKeys(BaseTest.NOT_ROOT_USER_PASSWORD);
-      loginInCloud();
+      standaloneLogin(BaseTest.NOT_ROOT_USER_NAME, BaseTest.NOT_ROOT_USER_PASSWORD);
    }
 
    /**
     * login as root user on cloud page
+    * @throws Exception 
     */
-   public void loginAsRoot()
+   public void loginAsRoot() throws Exception
    {
-      login.sendKeys(BaseTest.USER_NAME);
-      password.sendKeys(BaseTest.USER_PASSWORD);
-      loginInCloud();
+      standaloneLogin(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
    }
 
 }

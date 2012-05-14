@@ -96,7 +96,7 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
       checkAllUnlockStateButtons();
-      IDE.LOGIN.logoutCloudIde();
+      IDE.LOGIN.logout();
 
       //step 3 login as invite user, open an check lock project 
       IDE.LOGIN.waitTenantLoginPage();
