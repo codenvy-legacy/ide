@@ -22,6 +22,7 @@ import com.google.gwt.i18n.client.Messages;
 
 /**
  * Localization constants.
+ * Interface to represent the constants contained in resource bundle: 'BuilderLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderLocalizationConstant.java Feb 21, 2012 3:06:29 PM azatsarynnyy $
@@ -30,7 +31,7 @@ import com.google.gwt.i18n.client.Messages;
 public interface BuilderLocalizationConstant extends Messages
 {
    /*
-    * Controls.
+    * Controls
     */
    @Key("control.buildProject.id")
    String buildProjectControlId();
@@ -42,7 +43,7 @@ public interface BuilderLocalizationConstant extends Messages
    String buildProjectControlPrompt();
 
    /*
-    * Messages.
+    * Messages
     */
    @Key("messages.buildInProgress")
    String buildInProgress(String project);
@@ -53,8 +54,11 @@ public interface BuilderLocalizationConstant extends Messages
    @Key("messages.buildFailed")
    String buildFailed();
 
+   @Key("messages.selectedItemsFail")
+   String selectedItemsFail();
+
    /*
-    * BuildProjectView.
+    * BuildProjectView
     */
    @Key("buildProject.id")
    String buildProjectId();
@@ -62,7 +66,12 @@ public interface BuilderLocalizationConstant extends Messages
    @Key("buildProject.title")
    String buildProjectTitle();
 
-   // ----InitRequestHandler
+   @Key("buildProject.outputClear")
+   String outputClear();
+
+   /*
+    * InitRequestHandler
+    */
    @Key("build.started")
    String buildStarted(String project);
 

@@ -520,6 +520,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/window/hotkeys_Disabled.png")
    ImageResource customizeHotKeysDisabled();
 
+   @Source("../public/images/bundled/window/showHotkeys.png")
+   ImageResource showHotKeys();
+
+   @Source("../public/images/bundled/window/showHotkeys_Disabled.png")
+   ImageResource showHotKeysDisabled();
+
    @Source("../public/images/bundled/window/workspace.png")
    ImageResource workspace();
 

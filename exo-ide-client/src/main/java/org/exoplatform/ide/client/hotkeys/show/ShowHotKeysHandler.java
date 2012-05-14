@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.events;
+package org.exoplatform.ide.client.hotkeys.show;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link BreakPointSelectedEvent} event.
+ * Handler for {@link ShowHotKeysEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BreakPointSelectedHandler.java May 8, 2012 3:27:16 PM azatsarynnyy $
+ * @version $Id: ShowHotKeysHandler.java May 10, 2012 10:30:59 AM azatsarynnyy $
  *
  */
-public interface BreakPointSelectedHandler extends EventHandler
+public interface ShowHotKeysHandler extends EventHandler
 {
-   void onSelectBreakPoint(BreakPointSelectedEvent event);
+   void onShowHotKeys(ShowHotKeysEvent event);
 }

@@ -40,6 +40,6 @@ public class ShowProjectGitReadOnlyUrl extends GitControl
       setImages(GitClientBundle.INSTANCE.projectReadOnlyGitUrl(),
          GitClientBundle.INSTANCE.projectReadOnlyGitUrlDisabled());
       setEvent(new ShowProjectGitReadOnlyUrlEvent());
-      setGroupName(GroupNames.PROPERTIES);
+      setGroupName(GroupNames.INFORMATION);
    }
 }

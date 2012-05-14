@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.maven.client.build;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -29,10 +31,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.component.ToolbarItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
-import org.exoplatform.ide.extension.maven.client.MavenClientBundle;
 
 /**
  * View for build project by maven builder.
@@ -53,6 +58,8 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
     */
    private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectTitle();
 
+   private static final String CLEAR_OUTPUT = BuilderExtension.LOCALIZATION_CONSTANT.outputClear();
+
    private static final int HEIGHT = 450;
 
    private static final int WIDTH = 250;
@@ -63,6 +70,14 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
    private boolean animationEnabled = false;
 
    private int animationCharIndex = 1;
+
+   /**
+    * Button for clear output panel.
+    */
+   private IconButton clearOutputButton;
+
+   @UiField
+   Toolbar toolbar;
 
    /**
     * Panel for output messages.
@@ -81,25 +96,51 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
 
    public BuildProjectView()
    {
-      super(ID, ViewType.OPERATION, TITLE, new Image(MavenClientBundle.INSTANCE.build()), WIDTH, HEIGHT);
+      super(ID, ViewType.OPERATION, TITLE, new Image(BuilderClientBundle.INSTANCE.build()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+
+      Image normalIcon = new Image(BuilderClientBundle.INSTANCE.clearOutput());
+      Image disabledIcon = new Image(BuilderClientBundle.INSTANCE.clearOutputDisabled());
+
+      clearOutputButton = new IconButton(normalIcon, disabledIcon);
+      clearOutputButton.setTitle(CLEAR_OUTPUT);
+      clearOutputButton.setEnabled(true);
+
+      ToolbarItem toolbarItem = toolbar.addItem(clearOutputButton, true);
+      toolbarItem.getElement().getStyle().setPaddingTop(2, Unit.PX);
+      toolbarItem.getElement().getStyle().setPaddingRight(2, Unit.PX);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#showMessageInOutput(java.lang.String)
+    */
    @Override
-   public final native void output(String text) /*-{
-                                                var pre = $doc.getElementById('ide.builder.buildOutput');
-                                                if (pre == null || pre == undefined) {
-                                                return;
-                                                }
-                                                
-                                                var curText = pre.textContent;
-                                                if (curText != null && curText != undefined && curText != "") {
-                                                pre.innerHTML += "\r\n";      
-                                                }
-                                                pre.innerHTML += text;
-                                                
-                                                this.@org.exoplatform.ide.extension.maven.client.build.BuildProjectView::scrollToBottom()();
-                                                }-*/;
+   public final native void showMessageInOutput(String text) /*-{
+                                                             var pre = $doc.getElementById('ide.builder.buildOutput');
+                                                             if (pre == null || pre == undefined) {
+                                                             return;
+                                                             }
+                                                             
+                                                             var curText = pre.textContent;
+                                                             if (curText != null && curText != undefined && curText != "") {
+                                                             pre.innerHTML += "\r\n";      
+                                                             }
+                                                             pre.innerHTML += text;
+                                                             
+                                                             this.@org.exoplatform.ide.extension.maven.client.build.BuildProjectView::scrollToBottom()();
+                                                             }-*/;
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#clearOutput()
+    */
+   @Override
+   public final native void clearOutput() /*-{
+                                          var pre = $doc.getElementById('ide.builder.buildOutput');
+                                          if (pre == null || pre == undefined) {
+                                          return;
+                                          }
+                                          pre.textContent = ""; 
+                                          }-*/;
 
    /**
     * Scrolling to bottom of buildOutputPanel.
@@ -110,6 +151,9 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
       DOM.setElementPropertyInt(buildOutputPanel.getElement(), "scrollTop", scrollHeight);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#startAnimation()
+    */
    @Override
    public void startAnimation()
    {
@@ -123,6 +167,9 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
       animationTimer.scheduleRepeating(150);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#stopAnimation()
+    */
    @Override
    public void stopAnimation()
    {
@@ -179,4 +226,23 @@ public class BuildProjectView extends ViewImpl implements BuildProjectPresenter.
          }
       }
    };
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#getClearOutputButton()
+    */
+   @Override
+   public HasClickHandlers getClearOutputButton()
+   {
+      return clearOutputButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter.Display#setClearOutputButtonEnabled(boolean)
+    */
+   @Override
+   public void setClearOutputButtonEnabled(boolean isEnabled)
+   {
+      clearOutputButton.setEnabled(isEnabled);
+   }
+
 }

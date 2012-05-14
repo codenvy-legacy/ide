@@ -22,8 +22,11 @@
       }
    </ui:style>
 
-   <c:Border margin="3" borderColor="transparent">
-      <c:layer>
+   <c:Border margin="1" borderColor="transparent">
+      <c:layer top="0" height="28px">
+         <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
+      </c:layer>
+      <c:layer top="28px" bottom="0">
          <g:HTMLPanel ui:field="buildOutputPanel" styleName="{style.htmlstyle}">
             <div style="position:relative; width:100%;">
                <pre id="ide.builder.buildOutput" class="{style.outtext}"></pre>

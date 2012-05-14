@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
-import org.exoplatform.ide.extension.maven.client.MavenClientBundle;
+import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 
 /**
@@ -50,7 +50,7 @@ public class BuildProjectControl extends SimpleControl implements IDEControl, Pr
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(MavenClientBundle.INSTANCE.build(), MavenClientBundle.INSTANCE.buildDisabled());
+      setImages(BuilderClientBundle.INSTANCE.build(), BuilderClientBundle.INSTANCE.buildDisabled());
       setEvent(new BuildProjectEvent());
    }
 

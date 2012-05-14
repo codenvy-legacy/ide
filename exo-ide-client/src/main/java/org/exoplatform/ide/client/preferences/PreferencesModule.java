@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
+import org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter;
 import org.exoplatform.ide.client.operation.autocompletion.AutocompletionHandler;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
@@ -89,6 +90,11 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
        * Hot Keys customizing.
        */
       new CustomizeHotKeysPresenter();
+
+      /*
+       * Show keyboard shortcuts.
+       */
+      new ShowHotKeysPresenter();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)

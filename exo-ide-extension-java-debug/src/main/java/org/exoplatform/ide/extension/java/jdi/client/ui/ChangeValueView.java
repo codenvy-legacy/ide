@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 
 /**
@@ -80,7 +81,7 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#getChangeButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getChangeButton()
     */
    @Override
    public HasClickHandlers getChangeButton()
@@ -89,7 +90,7 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -98,7 +99,7 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#getExpression()
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#getExpression()
     */
    @Override
    public HasValue<String> getExpression()
@@ -107,7 +108,7 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#focusInExpressionField()
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#focusInExpressionField()
     */
    @Override
    public void focusInExpressionField()
@@ -116,7 +117,7 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display#setChangeButtonEnable(boolean)
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setChangeButtonEnable(boolean)
     */
    @Override
    public void setChangeButtonEnable(boolean isEnable)

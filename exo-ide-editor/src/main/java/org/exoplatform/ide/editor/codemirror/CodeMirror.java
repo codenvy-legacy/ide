@@ -56,6 +56,8 @@ import org.exoplatform.ide.editor.keys.KeyHandler;
 import org.exoplatform.ide.editor.keys.KeyManager;
 import org.exoplatform.ide.editor.notification.Notification;
 import org.exoplatform.ide.editor.notification.OverviewRuler;
+import org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
 import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.problem.Markable;
@@ -229,6 +231,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onLineNumberDoubleClick(I)(lineNumber);
 		}
 
+		var onLineNumberContextMenu = function(lineNumber, e) {
+			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onLineNumberContextMenu(ILcom/google/gwt/dom/client/NativeEvent;)(lineNumber, e);
+		}
+
 		var initCallback = function() {
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onInitialized()();
 
@@ -265,6 +271,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			onCursorActivity : cursorActivity,
 			onLineNumberClick : onLineNumberClick,
 			onLineNumberDoubleClick : onLineNumberDoubleClick,
+			onLineNumberContextMenu : onLineNumberContextMenu,
 			onLoad : initCallback,
 			autoMatchParens : true,
 
@@ -299,6 +306,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       fireEvent(new LineNumberDoubleClickEvent(lineNumber));
       if (activeNotification != null)
          activeNotification.update();
+   }
+
+   private void onLineNumberContextMenu(int lineNumber, NativeEvent event)
+   {
+      event.stopPropagation();
+      event.preventDefault();
+      eventBus.fireEvent(new LineNumberContextMenuEvent(lineNumber, event.getClientX(), event.getClientY()));
    }
 
    private void onInitialized()
@@ -1834,14 +1848,19 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		var frame = editor.frame;
-		try {
-			if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
-				frame.contentWindow.document.execCommand(command, false, null);
-			} else {
-				frame.contentDocument.execCommand(command, false, null);
-			}
-		} catch (e) {
-			alert(e.message);
+		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
+			frame.contentWindow.document.execCommand(command, false, null);
+		} else {
+			frame.contentDocument.execCommand(command, false, null);
 		}
    }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.problem.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addLineNumberContextMenuHandler(LineNumberContextMenuHandler handler)
+   {
+      return addHandler(handler, LineNumberContextMenuEvent.TYPE);
+   }
 }

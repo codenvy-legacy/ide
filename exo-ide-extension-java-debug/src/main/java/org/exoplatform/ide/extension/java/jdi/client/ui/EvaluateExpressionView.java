@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
+import org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter;
 
 /**
  * View for evaluate expression.
@@ -87,7 +88,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#getEvaluateButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#getEvaluateButton()
     */
    @Override
    public HasClickHandlers getEvaluateButton()
@@ -96,7 +97,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#getCloseButton()
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#getCloseButton()
     */
    @Override
    public HasClickHandlers getCloseButton()
@@ -105,7 +106,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#getExpression()
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#getExpression()
     */
    @Override
    public HasValue<String> getExpression()
@@ -114,7 +115,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#setResult(java.lang.String)
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#setResult(java.lang.String)
     */
    @Override
    public void setResult(String value)
@@ -123,7 +124,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#focusInExpressionField()
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#focusInExpressionField()
     */
    @Override
    public void focusInExpressionField()
@@ -132,7 +133,7 @@ public class EvaluateExpressionView extends ViewImpl implements EvaluateExpressi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display#enableEvaluateButton(boolean)
+    * @see org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display#enableEvaluateButton(boolean)
     */
    @Override
    public void enableEvaluateButton(boolean enable)

@@ -19,10 +19,12 @@
 package org.exoplatform.ide.client.operation.createfolder;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -34,6 +36,7 @@ import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class CreateFolderControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, VfsChangedHandler
 {
 
    private boolean browserPanelSelected = true;
@@ -60,6 +63,11 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
+    * Current workspace's href.
+    */
+   private VirtualFileSystemInfo vfsInfo;
+
+   /**
     * 
     */
    public CreateFolderControl()
@@ -70,7 +78,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       setImages(IDEImageBundle.INSTANCE.newFolder(), IDEImageBundle.INSTANCE.newFolderDisabled());
       setEvent(new CreateFolderEvent());
       setGroupName(GroupNames.NEW_COLLECTION);
-      updateEnabling();
+      updateState();
    }
 
    /**
@@ -82,13 +90,21 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
       // IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
     * 
     */
-   private void updateEnabling()
+   private void updateState()
    {
+      if (vfsInfo == null)
+      {
+         setVisible(false);
+         return;
+      }
+      setVisible(true);
+
       if (!browserPanelSelected)
       {
          setEnabled(false);
@@ -126,7 +142,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          browserPanelSelected = false;
       }
 
-      updateEnabling();
+      updateState();
    }
 
    @Override
@@ -141,7 +157,17 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          browserPanelSelected = false;
       }
 
-      updateEnabling();
+      updateState();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsInfo = event.getVfsInfo();
+      updateState();
    }
 
 }

@@ -105,6 +105,12 @@ public interface DebuggerClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.png")
    ImageResource breakpoint();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint_properties.png")
+   ImageResource breakpointProperties();
+   
+   @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint_properties_Disabled.png")
+   ImageResource breakpointPropertiesDisabled();
 
    @Source("org/exoplatform/ide/extension/java/jdi/images/remove_all_breakpoints.gif")
    ImageResource removeAllBreakpointsButton();

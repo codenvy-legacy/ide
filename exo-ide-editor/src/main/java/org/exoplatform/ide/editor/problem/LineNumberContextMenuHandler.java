@@ -16,24 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client;
+package org.exoplatform.ide.editor.problem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link LineNumberContextMenuEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Apr 3, 2012 3:03:35 PM anya $
+ * @version $Id: May 8, 2012 4:35:57 PM anya $
  * 
  */
-public interface MavenClientBundle extends ClientBundle
+public interface LineNumberContextMenuHandler extends EventHandler
 {
-   MavenClientBundle INSTANCE = GWT.<MavenClientBundle> create(MavenClientBundle.class);
-
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build.png")
-   ImageResource build();
-   
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build_Disabled.png")
-   ImageResource buildDisabled();
+   /**
+    * Perform actions on line number right mouse click.
+    * 
+    * @param event
+    */
+   void onLineNumberContextMenu(LineNumberContextMenuEvent event);
 }

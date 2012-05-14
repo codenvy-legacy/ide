@@ -54,6 +54,8 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
@@ -102,7 +104,7 @@ import java.util.List;
 public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHandler, ViewVisibilityChangedHandler,
    ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler, ViewClosedHandler,
    AddItemTreeIconHandler, RemoveItemTreeIconHandler, ViewActivatedHandler, ShowNavigatorHandler, VfsChangedHandler,
-   ShowHideHiddenFilesHandler
+   ShowHideHiddenFilesHandler, ProjectCreatedHandler
 {
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
@@ -136,6 +138,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
       IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new ShowNavigatorControl());
+      IDE.addHandler(ProjectCreatedEvent.TYPE, this);
    }
 
    @Override
@@ -669,6 +672,20 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
     */
    @Override
    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      if (display != null)
+      {
+         foldersToRefresh.clear();
+         foldersToRefresh.add(rootFolder);
+         refreshNextFolder();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectCreatedHandler#onProjectCreated(org.exoplatform.ide.client.framework.project.ProjectCreatedEvent)
+    */
+   @Override
+   public void onProjectCreated(ProjectCreatedEvent event)
    {
       if (display != null)
       {

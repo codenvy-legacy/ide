@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.ui;
+package org.exoplatform.ide.extension.java.jdi.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,8 +35,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
-import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;

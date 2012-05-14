@@ -102,6 +102,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
 
       void focusInNameField();
 
+      void selectAllText();
    }
 
    private static final String CANT_CHANGE_MIME_TYPE_TO_OPENED_FILE = IDE.ERRORS_CONSTANT
@@ -136,6 +137,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
       display.enableRenameButton(false);
 
       display.getItemNameField().setValue(selectedItems.get(0).getName());
+      display.selectAllText();
       display.getItemNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          public void onValueChange(ValueChangeEvent<String> event)

@@ -36,7 +36,7 @@ public class Build extends AbstractTestModule
    {
       String BUILDING_PROJECT = "Building project";
 
-      String BUILD_SUCCESS = "Project was successfully builded.";
+      String BUILD_SUCCESS = "Project successfully built.";
 
       String BUILD_FAILED = "Building of project failed. See details in Build project view.";
 
@@ -50,6 +50,8 @@ public class Build extends AbstractTestModule
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String OUTPUT_PANEL_ID = "ide.builder.buildOutput";
+
+      String CLEAR_BUTTON_SELECTOR = "div[view-id='" + VIEW_ID + "'] div[title='Clear Output']>img";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -57,6 +59,9 @@ public class Build extends AbstractTestModule
 
    @FindBy(id = Locators.OUTPUT_PANEL_ID)
    private WebElement outputPanel;
+
+   @FindBy(css = Locators.CLEAR_BUTTON_SELECTOR)
+   private WebElement clearButton;
 
    /**
     * Wait build project view opened.
@@ -123,4 +128,13 @@ public class Build extends AbstractTestModule
    {
       return outputPanel.getText();
    }
+
+   /**
+    * Click clear output button.
+    */
+   public void clickClearButton() throws Exception
+   {
+      clearButton.click();
+   }
+
 }

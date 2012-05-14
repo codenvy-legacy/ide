@@ -143,12 +143,12 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       if (type.equals(SaveFileAsEvent.SaveDialogType.YES_CANCEL))
       {
          org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE,
-            SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, fileNameEnteredCallback);
+            SAVE_AS_DIALOG_ENTER_NEW_NAME, newFileName, 400, true, fileNameEnteredCallback);
       }
       else
       {
          org.exoplatform.ide.client.dialogs.AskForValueDialog.getInstance().ask(SAVE_AS_DIALOG_TITLE,
-            SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, fileNameEnteredCallback, noButtonSelectedCallback);
+            SAVE_AS_DIALOG_DO_YOU_WANT_TO_SAVE, newFileName, 400, true, fileNameEnteredCallback, noButtonSelectedCallback);
       }
    }
 
