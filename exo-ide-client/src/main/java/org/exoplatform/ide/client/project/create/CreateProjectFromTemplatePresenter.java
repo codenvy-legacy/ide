@@ -154,6 +154,16 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
        * @param enabled
        */
       void setNameFieldEnabled(boolean enabled);
+
+      /**
+       * Give focus to name field.
+       */
+      void focusInNameField();
+
+      /**
+       * Selects all of the text in name field.
+       */
+      void selectAllTextInNameField();
    }
 
    // private FolderModel baseFolder;
@@ -647,6 +657,8 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
       }
 
       display.setNameFieldEnabled(true);
+      display.focusInNameField();
+      display.selectAllTextInNameField();
       display.setCreateButtonEnabled(true);
       if (selectedTemplates.get(0).isDefault())
       {

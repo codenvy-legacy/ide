@@ -218,4 +218,23 @@ public class CreateProjectFromTemplateForm extends ViewImpl implements
    {
       templateListGrid.selectLastItem();
    }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#focusInNameField()
+    */
+   @Override
+   public void focusInNameField()
+   {
+      nameField.focus();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#selectAllTextInNameField()
+    */
+   @Override
+   public void selectAllTextInNameField()
+   {
+      nameField.selectAll();
+   }
+
 }

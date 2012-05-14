@@ -121,6 +121,7 @@ public class AskForValueView extends ViewImpl implements org.exoplatform.ide.cli
       super.onAttach();
 
       textField.focus();
+      textField.selectAll();
    }
 
 }
