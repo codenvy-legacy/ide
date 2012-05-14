@@ -36,7 +36,7 @@ public class Build extends AbstractTestModule
    {
       String BUILDING_PROJECT = "Building project";
 
-      String BUILD_SUCCESS = "Project was successfully builded.";
+      String BUILD_SUCCESS = "Project successfully built.";
 
       String BUILD_FAILED = "Building of project failed. See details in Build project view.";
 
