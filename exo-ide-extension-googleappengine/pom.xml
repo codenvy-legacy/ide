@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <parent>
+      <groupId>org.exoplatform.ide</groupId>
+      <artifactId>exo-ide-parent</artifactId>
+      <version>1.2.0-M8-SNAPSHOT</version>
+   </parent>
+   <artifactId>exo-ide-extension-googleappengine</artifactId>
+   <version>1.2.0-M8-SNAPSHOT</version>
+   <name>eXo IDE :: Extension :: GoogleAppengine</name>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>exo.kernel.container</artifactId>
+         <exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>xstream</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.security.core</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.appengine</groupId>
+         <artifactId>appengine-java-sdk</artifactId>
+         <type>zip</type>
+         <version>1.6.5</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.appengine</groupId>
+         <artifactId>appengine-tools-sdk</artifactId>
+         <version>1.6.5</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-integration-exo</artifactId>
+         <version>1.0.4</version>
+         <scope>provided</scope>
+      </dependency>
+   </dependencies>
+</project>
