@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -83,6 +84,28 @@ public class ProgressBar extends AbstractTestModule
             }
          });
    }
+   
+   
+   
+   public void waitProgressBarControlClose()
+   {
+      new WebDriverWait(driver(), 45).until(new ExpectedCondition<Boolean>()
+         {
+            @Override
+            public Boolean apply(WebDriver input)
+            {
+               try
+               {
+                  return !(input.findElement(By.xpath(PROGRESS_BAR_CONTROL)).isDisplayed());
+               }
+               catch (NoSuchElementException e)
+               {
+                  return true;
+               }
+            }
+         });
+   }
+   
    
    public String getViewText()
    {
