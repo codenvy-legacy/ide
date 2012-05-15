@@ -106,7 +106,7 @@ public class NetvibesCodeAssistant extends HtmlCodeAssistant implements Comparat
          this.posX = cursorOffsetX;
          this.posY = cursorOffsetY;
          cursorPositionY = editor.getCursorRow();
-         lineContent = editor.getLineContent(cursorPositionY);
+         lineContent = editor.getLineText(cursorPositionY);
          cursorPositionX = editor.getCursorCol();
          this.tokenFromParser = tokenFromParser;
          this.currentToken = currentToken;

@@ -287,6 +287,11 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
 
       for (Control command : controls)
       {
+         if (command.getIcon() == null && command.getNormalImage() == null)
+         {
+            continue;
+         }
+         
          if (command instanceof SimpleControl)
          {
             if (((SimpleControl)command).getEvent() != null)

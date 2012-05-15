@@ -99,7 +99,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
       try
       {
          currentLineNumber = editor.getCursorRow();
-         String lineContent = editor.getLineContent(currentLineNumber);
+         String lineContent = editor.getLineText(currentLineNumber);
          if (lineContent == null)
          {
             beforeToken = "";

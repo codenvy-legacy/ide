@@ -156,11 +156,11 @@ public class HtmlCodeAssistant extends CodeAssistant implements TokenWidgetFacto
 
          if (htmlTokens.size() == 0)
          {
-            getTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
+            getTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
             return;
          }
 
-         autocompletion(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
+         autocompletion(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
       }
       catch (Exception e)
       {

@@ -467,7 +467,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
             break;
 
          case KeyCodes.KEY_RIGHT :
-            if (editor.getCursorCol() + 1 > editor.getLineContent(editor.getCursorRow()).length())
+            if (editor.getCursorCol() + 1 > editor.getLineText(editor.getCursorRow()).length())
                display.cancelCodeAssistant();
             else
                generateNewProposals();

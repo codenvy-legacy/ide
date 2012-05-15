@@ -68,6 +68,8 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       IDE.getInstance().addControl(new AddBlockCommentControl());
       IDE.getInstance().addControl(new RemoveBlockCommentControl());
       IDE.getInstance().addControl(new ToggleCommentControl());
+      
+      new MoveLineUpDownManager();
 
       new FindTextPresenter();
 

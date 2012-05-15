@@ -136,6 +136,7 @@ public class RenameClosedFileTest extends BaseTest
 
       IDE.RENAME.rename(null, UNKNOWN_MIME_TYPE);
 
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + ORIG_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + ORIG_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + ORIG_FILE_NAME);
       String textFromEditor = IDE.EDITOR.getTextFromCodeEditor(0);
@@ -148,7 +149,7 @@ public class RenameClosedFileTest extends BaseTest
       IDE.EDITOR.closeFile(1);
    }
 
-   @Test
+  @Test
    public void testRenameAndChangeMimeType() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
