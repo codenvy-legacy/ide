@@ -120,6 +120,8 @@ public class ToggleCommentTest extends BaseTest
    public void toggleCommentWithNoCommentLine() throws Exception
    {
       driver.navigate().refresh();
+      IDE.POPUP.waitOpened();
+      IDE.POPUP.acceptAlert();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
