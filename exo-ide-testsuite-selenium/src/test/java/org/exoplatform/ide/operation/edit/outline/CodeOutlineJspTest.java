@@ -24,6 +24,8 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.fest.assertions.AssertExtension;
+import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -92,6 +94,8 @@ public class CodeOutlineJspTest extends BaseTest
       IDE.OUTLINE.waitOutlineTreeVisible();
 
       checkTreeCorrectlyCreated();
+      checkClickOnTreeElements();
+      checkClickOnCodeEditorElements();
 
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
@@ -99,28 +103,62 @@ public class CodeOutlineJspTest extends BaseTest
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      // create initial outline tree map
-      OutlineTreeHelper.init();
-
-      // check is tree created correctly      
-      outlineTreeHelper.checkOutlineTree();
-
-      // expand outline tree
+      //expand all tree (move cursor in code editor top-down)
       outlineTreeHelper.expandOutlineTree();
 
-      outlineTreeHelper.addOutlineItem("html", 1, TokenType.TAG);
-      outlineTreeHelper.addOutlineItem("head", 2, TokenType.TAG);
-      outlineTreeHelper.addOutlineItem("script", 8, TokenType.TAG);
-      outlineTreeHelper.addOutlineItem("a", 9, TokenType.VARIABLE);
-      outlineTreeHelper.addOutlineItem("body", 12, TokenType.TAG);
-      outlineTreeHelper.addOutlineItem("java code", 13, TokenType.JSP_TAG);
-      outlineTreeHelper.addOutlineItem("curentState", 14, TokenType.PROPERTY);
-      outlineTreeHelper.addOutlineItem("identity", 17, TokenType.PROPERTY);
-      outlineTreeHelper.addOutlineItem("i", 18, TokenType.PROPERTY);
-      outlineTreeHelper.addOutlineItem("a", 23, TokenType.PROPERTY);
-
       // check is tree created correctly
-      outlineTreeHelper.checkOutlineTree();
+      assertEquals("html", IDE.OUTLINE.getItemLabel(1));
+      assertEquals("head", IDE.OUTLINE.getItemLabel(2));
+      assertEquals("java code", IDE.OUTLINE.getItemLabel(3));
+      assertEquals("script", IDE.OUTLINE.getItemLabel(4));
+      assertEquals("a : String", IDE.OUTLINE.getItemLabel(5));
+      assertEquals("body", IDE.OUTLINE.getItemLabel(6));
+      assertEquals("java code", IDE.OUTLINE.getItemLabel(7));
+      assertEquals("curentState", IDE.OUTLINE.getItemLabel(8));
+      assertEquals("identity", IDE.OUTLINE.getItemLabel(9));
+      assertEquals("i", IDE.OUTLINE.getItemLabel(10));
+      assertEquals("a", IDE.OUTLINE.getItemLabel(11));
+
+   }
+
+   private void checkClickOnTreeElements() throws Exception
+   {
+      //check variable a
+      // click on 5 row need for reparse tree
+      IDE.OUTLINE.selectRow(5);
+      IDE.OUTLINE.selectRow(11);
+      assertEquals("23 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      //check javascript variable a
+      IDE.OUTLINE.selectRow(5);
+      assertEquals("9 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      //check tag head
+      IDE.OUTLINE.selectRow(2);
+      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+
+      //check javascript javacode
+      IDE.OUTLINE.selectRow(7);
+      assertEquals("13 : 1", IDE.STATUSBAR.getCursorPosition());
+
+   }
+
+   private void checkClickOnCodeEditorElements() throws Exception
+   {
+      // check highlight tag body 
+      IDE.GOTOLINE.goToLine(12);
+      IDE.STATUSBAR.waitCursorPositionAt("12 : 1");
+      IDE.OUTLINE.isItemSelected(6);
+
+      //check highlight tag java code
+      IDE.GOTOLINE.goToLine(4);
+      IDE.STATUSBAR.waitCursorPositionAt("4 : 1");
+      IDE.OUTLINE.isItemSelected(3);
+
+      //check highlight tag java code
+      IDE.GOTOLINE.goToLine(23);
+      IDE.STATUSBAR.waitCursorPositionAt("23 : 1");
+      IDE.OUTLINE.isItemSelected(11);
    }
 
 }

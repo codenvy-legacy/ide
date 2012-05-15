@@ -72,6 +72,8 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       HasKeyPressHandlers getFolderNameFiledKeyPressed();
 
       void setFocusInNameField();
+
+      void selectFolderName();
    }
 
    private static final String NEW_FOLDER_NAME = IDE.IDE_LOCALIZATION_CONSTANT.newFolderName();
@@ -181,6 +183,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
          public void execute()
          {
             display.setFocusInNameField();
+            display.selectFolderName();
          }
       });
    }

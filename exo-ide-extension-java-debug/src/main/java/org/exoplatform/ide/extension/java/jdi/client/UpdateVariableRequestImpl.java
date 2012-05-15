@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.ui;
+package org.exoplatform.ide.extension.java.jdi.client;
 
 import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
@@ -41,24 +41,40 @@ public class UpdateVariableRequestImpl implements UpdateVariableRequest
       this.expression = expression;
    }
 
+   public UpdateVariableRequestImpl()
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getVariablePath()
+    */
    @Override
    public VariablePath getVariablePath()
    {
       return variablePath;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setVariablePath(org.exoplatform.ide.extension.java.jdi.shared.VariablePath)
+    */
    @Override
    public void setVariablePath(VariablePath variablePath)
    {
       this.variablePath = variablePath;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#getExpression()
+    */
    @Override
    public String getExpression()
    {
       return expression;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest#setExpression(java.lang.String)
+    */
    @Override
    public void setExpression(String expression)
    {

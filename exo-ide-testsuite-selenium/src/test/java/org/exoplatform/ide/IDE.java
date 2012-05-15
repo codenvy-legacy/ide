@@ -26,13 +26,16 @@ import org.exoplatform.ide.core.AskForValueDialog;
 import org.exoplatform.ide.core.AvailableDependencies;
 import org.exoplatform.ide.core.Build;
 import org.exoplatform.ide.core.Button;
+import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.CodeAssistant;
+import org.exoplatform.ide.core.CodeAssistantJava;
 import org.exoplatform.ide.core.ContextMenu;
 import org.exoplatform.ide.core.CustomizeHotkeys;
 import org.exoplatform.ide.core.CustomizeToolbar;
 import org.exoplatform.ide.core.Delete;
 import org.exoplatform.ide.core.DeployNodeType;
 import org.exoplatform.ide.core.Editor;
+import org.exoplatform.ide.core.ErrorMarks;
 import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
 import org.exoplatform.ide.core.GetURL;
@@ -50,6 +53,7 @@ import org.exoplatform.ide.core.OpenFileByURL;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
 import org.exoplatform.ide.core.Perspective;
+import org.exoplatform.ide.core.PopupDialogsBrowser;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.PreviewNodeType;
 import org.exoplatform.ide.core.ProgressBar;
@@ -62,6 +66,7 @@ import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
 import org.exoplatform.ide.core.SearchResult;
 import org.exoplatform.ide.core.SelectWorkspace;
+import org.exoplatform.ide.core.ShowKeyboardShortcuts;
 import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
@@ -69,13 +74,9 @@ import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.WelcomePage;
-import org.exoplatform.ide.core.ErrorMarks;
-import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.exoplatform.ide.core.CodeAssistantJava;
-import org.exoplatform.ide.core.PopupDialogsBrowser;
 
 ;
 
@@ -194,6 +195,8 @@ public class IDE
 
    public CustomizeHotkeys CUSTOMIZE_HOTKEYS;
 
+   public ShowKeyboardShortcuts SHOW_KEYBOARD_SHORTCUTS;
+
    public OpenFileByURL OPEN_FILE_BY_URL;
 
    public OpenFileByPath OPEN_FILE_BY_PATH;
@@ -265,6 +268,7 @@ public class IDE
       REST_SERVICE_DISCOVERY = PageFactory.initElements(driver, RESTServiceDiscovery.class);
       PROGRESS_BAR = PageFactory.initElements(driver, ProgressBar.class);
       CUSTOMIZE_HOTKEYS = PageFactory.initElements(driver, CustomizeHotkeys.class);
+      SHOW_KEYBOARD_SHORTCUTS = PageFactory.initElements(driver, ShowKeyboardShortcuts.class);
       UPLOAD = PageFactory.initElements(driver, Upload.class);
       WELCOME_PAGE = PageFactory.initElements(driver, WelcomePage.class);
       CK_EDITOR = PageFactory.initElements(driver, CkEditor.class);

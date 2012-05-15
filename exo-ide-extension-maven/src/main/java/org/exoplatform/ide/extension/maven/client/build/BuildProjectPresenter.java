@@ -19,6 +19,9 @@
 package org.exoplatform.ide.extension.maven.client.build;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
@@ -48,7 +51,6 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
-import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -68,11 +70,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 {
    public interface Display extends IsView
    {
-      void output(String text);
+      HasClickHandlers getClearOutputButton();
+
+      void showMessageInOutput(String text);
 
       void startAnimation();
 
       void stopAnimation();
+
+      void clearOutput();
+
+      void setClearOutputButtonEnabled(boolean isEnabled);
    }
 
    private Display display;
@@ -151,6 +159,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          return;
       }
 
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+
       project = event.getProject();
       if (project == null && makeSelectionCheck())
       {
@@ -179,7 +193,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onSuccess(StringBuilder result)
                {
                   buildID = result.substring(result.lastIndexOf("/") + 1);
-                  buildInProgress = true;
+                  setBuildInProgress(true);
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
@@ -190,14 +204,24 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onFailure(Throwable exception)
                {
                   statusHandler.requestError(projectId, exception);
+                  setBuildInProgress(false);
+                  display.stopAnimation();
                   IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
                }
             });
       }
       catch (RequestException e)
       {
+         setBuildInProgress(false);
+         display.stopAnimation();
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
       }
+   }
+
+   private void setBuildInProgress(boolean buildInProgress)
+   {
+      this.buildInProgress = buildInProgress;
+      display.setClearOutputButtonEnabled(!buildInProgress);
    }
 
    /**
@@ -232,7 +256,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
                protected void onFailure(Throwable exception)
                {
-                  buildInProgress = false;
+                  setBuildInProgress(false);
+                  display.stopAnimation();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                };
 
@@ -240,7 +265,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          }
          catch (RequestException e)
          {
-            buildInProgress = false;
+            setBuildInProgress(false);
+            display.stopAnimation();
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
@@ -305,7 +331,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
-      buildInProgress = false;
+      setBuildInProgress(false);
       previousStatus = buildStatus.getStatus();
 
       StringBuilder message =
@@ -365,10 +391,25 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
+         bindDisplay();
          closed = false;
       }
 
-      display.output(message);
+      display.showMessageInOutput(message);
+   }
+
+   /**
+    * Bind display (view) with presenter.
+    */
+   public void bindDisplay()
+   {
+      display.getClearOutputButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            display.clearOutput();
+         }
+      });
    }
 
    /**
@@ -401,23 +442,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       this.vfs = event.getVfsInfo();
    }
 
-   protected boolean makeSelectionCheck()
+   private boolean makeSelectionCheck()
    {
       if (selectedItems == null || selectedItems.size() <= 0)
       {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
+         Dialogs.getInstance().showInfo(BuilderExtension.LOCALIZATION_CONSTANT.selectedItemsFail());
          return false;
       }
 
       if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
       {
          Dialogs.getInstance().showInfo("Project is not selected.");
-         return false;
-      }
-
-      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
          return false;
       }
 

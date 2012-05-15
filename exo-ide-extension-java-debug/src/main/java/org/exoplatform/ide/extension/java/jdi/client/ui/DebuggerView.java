@@ -102,7 +102,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
    private DebuggerInfo debuggerInfo;
 
-   private SingleSelectionModel<Variable> selectionModel;
+   private SingleSelectionModel<Variable> variablesTreeSelectionModel;
 
    private Variable selectedVariable;
 
@@ -134,19 +134,19 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    private void buildVariablesTreePanel(List<Variable> variables)
    {
       variablesPanel.removeTab("variabletabid");
-      selectionModel = new SingleSelectionModel<Variable>();
+      variablesTreeSelectionModel = new SingleSelectionModel<Variable>();
 
       setChangeValueButtonEnable(false);
-      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+      variablesTreeSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {
          public void onSelectionChange(SelectionChangeEvent event)
          {
-            selectedVariable = selectionModel.getSelectedObject();
+            selectedVariable = variablesTreeSelectionModel.getSelectedObject();
             setChangeValueButtonEnable(selectedVariable != null);
          }
       });
 
-      frameTreeViewModel = new FrameTreeViewModel(selectionModel, debuggerInfo);
+      frameTreeViewModel = new FrameTreeViewModel(variablesTreeSelectionModel, debuggerInfo);
       CellTree frameTree = new CellTree(frameTreeViewModel, null, res);
       ScrollPanel scrollPanel = new ScrollPanel();
       if (variables.size() > 0)

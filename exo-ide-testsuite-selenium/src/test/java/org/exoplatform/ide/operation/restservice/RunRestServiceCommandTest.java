@@ -127,7 +127,7 @@ public class RunRestServiceCommandTest extends BaseTest
       assertFalse(IDE.REST_SERVICE.isFormOpened());
    }
 
-   @Test
+  @Test
    public void testRunGroovyServiceWithNonValidFile() throws Exception
    {
       driver.navigate().refresh();
@@ -160,12 +160,15 @@ public class RunRestServiceCommandTest extends BaseTest
 
       assertEquals("[INFO] " + NON_VALID_FILE_NAME + " validated successfully.", IDE.OUTPUT.getOutputMessage(2));
       assertFalse(IDE.REST_SERVICE.isFormOpened());
+
    }
 
    @Test
    public void testRunGroovyServiceWithChangedFile() throws Exception
    {
       driver.navigate().refresh();
+      IDE.POPUP.waitOpened();
+      IDE.POPUP.acceptAlert();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.OPEN.openProject(PROJECT);
@@ -198,6 +201,7 @@ public class RunRestServiceCommandTest extends BaseTest
          IDE.OUTPUT.getOutputMessage(1));
       assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_FOR_CHANGE_CONTENT_NAME + " deployed successfully.",
          IDE.OUTPUT.getOutputMessage(2));
+      
 
    }
 

@@ -18,6 +18,18 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("control.stopAppControlId")
    String stopAppControlId();
 
+   @DefaultMessage("Run/Breakpoint Properties")
+   @Key("control.showBreakpointProperties.id")
+   String showBreakpointPropertiesControlId();
+
+   @DefaultMessage("Breakpoint Properties")
+   @Key("control.showBreakpointProperties.title")
+   String showBreakpointPropertiesControlTitle();
+
+   @DefaultMessage("Breakpoint Properties")
+   @Key("control.showBreakpointProperties.prompt")
+   String showBreakpointPropertiesControlPrompt();
+
    /**
     * Translated "BreakPoints".
     * 
@@ -181,11 +193,11 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("evaluateExpression")
    String evaluateExpression();
 
-   @DefaultMessage("Application <b>{0}</b> started")
+   @DefaultMessage("Application <b>{0}</b> started.")
    @Key("appStarted")
    String applicationStarted(String name);
 
-   @DefaultMessage("Application <b>{0}</b> stoped")
+   @DefaultMessage("Application <b>{0}</b> stopped.")
    @Key("appStoped")
    String applicationStoped(String name);
 
@@ -285,5 +297,49 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Close")
    @Key("view.evaluateExpression.closeButton.title")
    String evaluateExpressionViewCloseButtonTitle();
+
+   @DefaultMessage("Error: Failed to evaluate expression.\r\nReason: {0}")
+   @Key("evaluateExpressionFailed")
+   String evaluateExpressionFailed(String reason);
+
+   /*************************************************************************
+    * Breakpoint properties view
+    *************************************************************************/
+
+   /**
+    * Translated "Breakpoint properties".
+    * 
+    * @return translated "Breakpoint properties"
+    */
+   @DefaultMessage("Breakpoint properties")
+   @Key("view.breakpointProperties.title")
+   String breakpointPropertiesViewTitle();
+
+   /**
+    * Translated "Condition".
+    * 
+    * @return translated "Condition"
+    */
+   @DefaultMessage("Condition:")
+   @Key("view.breakpointProperties.conditionField.title")
+   String breakpointPropertiesViewConditionFieldTitle();
+
+   /**
+    * Translated "OK".
+    * 
+    * @return translated "OK"
+    */
+   @DefaultMessage("OK")
+   @Key("view.breakpointProperties.OKButton.title")
+   String breakpointPropertiesViewOKButtonTitle();
+
+   /**
+    * Translated "Cancel".
+    * 
+    * @return translated "Cancel"
+    */
+   @DefaultMessage("Cancel")
+   @Key("view.breakpointProperties.cancelButton.title")
+   String breakpointPropertiesViewCancelButtonTitle();
 
 }

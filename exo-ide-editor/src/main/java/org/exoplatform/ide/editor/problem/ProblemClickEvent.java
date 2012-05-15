@@ -46,7 +46,7 @@ public class ProblemClickEvent extends GwtEvent<ProblemClickHandler>
    /**
     * Creates new instance of ProblemClickEvent
     * 
-    * @param problems aray of problems
+    * @param problems array of problems
     */
    public ProblemClickEvent(Problem[] problems)
    {

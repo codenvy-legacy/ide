@@ -251,6 +251,12 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.customizeHotkeys")
    String customizeHotkeysControl();
 
+   @Key("control.showHotKeys.id")
+   String showHotKeysIdControl();
+
+   @Key("control.showHotKeys.title")
+   String showHotKeysTitleControl();
+
    @Key("control.copyItems.title")
    String copyItemsTitleControl();
 
