@@ -173,6 +173,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
    public void testGoToErrorIfFileIsDeleted() throws Exception
    {
       driver.navigate().refresh();
+      IDE.POPUP.waitOpened();
+      IDE.POPUP.acceptAlert();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -212,6 +214,8 @@ public class GoToErrorInRestServiceTest extends BaseTest
     public void testGoToErrorAfterChangingFile() throws Exception
     {
        driver.navigate().refresh();
+       IDE.POPUP.waitOpened();
+       IDE.POPUP.acceptAlert();
        IDE.LOADER.waitClosed();
        IDE.PROJECT.EXPLORER.waitOpened();
        IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
