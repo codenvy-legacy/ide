@@ -235,6 +235,12 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.deleteText")
    String deleteTextControl();
+   
+   @Key("control.moveLineUp")
+   String moveLineUpControl();
+   
+   @Key("control.moveLineDown")
+   String moveLineDownControl();
 
    @Key("control.showLineNumbers.show")
    String showLineNumbersShowControl();
@@ -244,6 +250,12 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.customizeHotkeys")
    String customizeHotkeysControl();
+
+   @Key("control.showHotKeys.id")
+   String showHotKeysIdControl();
+
+   @Key("control.showHotKeys.title")
+   String showHotKeysTitleControl();
 
    @Key("control.copyItems.title")
    String copyItemsTitleControl();

@@ -87,7 +87,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       this.posY = cursorOffsetY;
       try
       {
-         parseTokenLine(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
+         parseTokenLine(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
 
          if (defaultTokens == null)
          {

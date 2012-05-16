@@ -16,45 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.events;
+package org.exoplatform.ide.client.hotkeys.show;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
-
 /**
- * Event occurs when user tries to select breakpoint in breakpoints list.
+ * Event occurs when user tries to show keyboard shortcuts.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BreakPointSelectedEvent.java May 8, 2012 3:23:07 PM azatsarynnyy $
+ * @version $Id: ShowHotKeysEvent.java May 10, 2012 10:33:10 AM azatsarynnyy $
  *
  */
-public class BreakPointSelectedEvent extends GwtEvent<BreakPointSelectedHandler>
+public class ShowHotKeysEvent extends GwtEvent<ShowHotKeysHandler>
 {
-
-   /**
-    * Selected breakpoint.
-    */
-   private BreakPoint breakPoint;
-
-   /**
-    * @param breakPoint selected breakpoint
-    */
-   public BreakPointSelectedEvent(BreakPoint breakPoint)
-   {
-      this.breakPoint = breakPoint;
-   }
 
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<BreakPointSelectedHandler> TYPE = new GwtEvent.Type<BreakPointSelectedHandler>();
+   public static final GwtEvent.Type<ShowHotKeysHandler> TYPE =
+      new GwtEvent.Type<ShowHotKeysHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BreakPointSelectedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowHotKeysHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -63,19 +49,9 @@ public class BreakPointSelectedEvent extends GwtEvent<BreakPointSelectedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(BreakPointSelectedHandler handler)
+   protected void dispatch(ShowHotKeysHandler handler)
    {
-      handler.onSelectBreakPoint(this);
-   }
-
-   /**
-    * Returns the selected breakpoint.
-    * 
-    * @return
-    */
-   public BreakPoint getBreakPoint()
-   {
-      return breakPoint;
+      handler.onShowHotKeys(this);
    }
 
 }

@@ -176,4 +176,14 @@ public class RenameFileView extends ViewImpl implements RenameFilePresenter.Disp
    {
       nameField.focus();
    }
+
+   /**
+    * @see org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display#selectAllText()
+    */
+   @Override
+   public void selectAllText()
+   {
+      nameField.selectAll();
+   }
+
 }

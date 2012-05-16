@@ -473,7 +473,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
             break;
 
          case KeyCodes.KEY_RIGHT :
-            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineContent(currentEditor.getCursorRow()).length())
+            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineText(currentEditor.getCursorRow()).length())
                display.cancelCodeAssistant();
             else
                generateNewProposals();

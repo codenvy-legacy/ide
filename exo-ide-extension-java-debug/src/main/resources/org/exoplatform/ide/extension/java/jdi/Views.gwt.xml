@@ -21,12 +21,12 @@
 <module>
    <inherits name='com.google.gwt.user.User' />
    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValueView">
-      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.ChangeValuePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display" />
    </replace-with>
    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionView">
-      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.EvaluateExpressionPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.EvaluateExpressionPresenter.Display" />
    </replace-with>
    <replace-with class="org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesView">
-      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.ui.BreakpointPropertiesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.java.jdi.client.BreakpointPropertiesPresenter.Display" />
    </replace-with>
 </module>

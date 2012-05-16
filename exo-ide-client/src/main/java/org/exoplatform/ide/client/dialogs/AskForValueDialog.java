@@ -83,8 +83,8 @@ public class AskForValueDialog implements ViewClosedHandler
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
-      ValueDiscardCallback discardCallback)
+   public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText,
+      ValueCallback callback, ValueDiscardCallback discardCallback)
    {
       if (display != null)
       {
@@ -171,9 +171,20 @@ public class AskForValueDialog implements ViewClosedHandler
       }
    }
 
+   public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback,
+      ValueDiscardCallback discardCallback)
+   {
+      ask(title, prompt, defaultValue, dialogWidth, false, callback, discardCallback);
+   }
+
+   public void ask(String title, String prompt, String defaultValue, int dialogWidth, boolean selectAllText, ValueCallback callback)
+   {
+      ask(title, prompt, defaultValue, dialogWidth, selectAllText, callback, null);
+   }
+
    public void ask(String title, String prompt, String defaultValue, int dialogWidth, ValueCallback callback)
    {
-      ask(title, prompt, defaultValue, dialogWidth, callback, null);
+      ask(title, prompt, defaultValue, dialogWidth, false, callback, null);
    }
 
    @Override

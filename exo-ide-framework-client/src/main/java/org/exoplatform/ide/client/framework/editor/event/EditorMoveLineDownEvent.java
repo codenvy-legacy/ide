@@ -16,24 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client;
+package org.exoplatform.ide.client.framework.editor.event;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Apr 3, 2012 3:03:35 PM anya $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  * 
  */
-public interface MavenClientBundle extends ClientBundle
+public class EditorMoveLineDownEvent extends GwtEvent<EditorMoveLineDownHandler>
 {
-   MavenClientBundle INSTANCE = GWT.<MavenClientBundle> create(MavenClientBundle.class);
 
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build.png")
-   ImageResource build();
-   
-   @Source("org/exoplatform/ide/extension/maven/images/controls/build_Disabled.png")
-   ImageResource buildDisabled();
+   public static final GwtEvent.Type<EditorMoveLineDownHandler> TYPE = new GwtEvent.Type<EditorMoveLineDownHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<EditorMoveLineDownHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(EditorMoveLineDownHandler handler)
+   {
+      handler.onEditorMoveLineDown(this);
+   }
+
 }

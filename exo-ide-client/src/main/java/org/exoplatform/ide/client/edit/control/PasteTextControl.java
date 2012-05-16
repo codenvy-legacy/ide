@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.editor.EditorView;
+import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
@@ -30,12 +31,14 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.editor.api.Editor;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 3, 2012 12:35:53 PM anya $
  * 
  */
+@RolesAllowed({"administrators", "developers"})
 public class PasteTextControl extends SimpleControl implements IDEControl, ShowContextMenuHandler,
    ViewActivatedHandler, EditorActiveFileChangedHandler
 {
@@ -71,7 +74,7 @@ public class PasteTextControl extends SimpleControl implements IDEControl, ShowC
    @Override
    public void onShowContextMenu(ShowContextMenuEvent event)
    {
-      boolean showInContextMenu = "editor".equals(event.getViewPart());
+      boolean showInContextMenu = (event.getObject() instanceof Editor);
       setShowInContextMenu(showInContextMenu && isEditorPanelActive);
    }
 

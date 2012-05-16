@@ -212,13 +212,28 @@ public abstract class Editor extends AbsolutePanel
    public abstract void insertImportStatement(String fqn);
 
    /**
-    * Get content of the line.
+    * Get text of specified line
     * 
-    * @param line number of line. <b>Must be larger 0 and less the file line count</b>
+    * @param line line number. <b>Must be larger 0 and less the file line count</b>
     * @return String content of line
     */
-   public abstract String getLineContent(int line);
-
+   public abstract String getLineText(int line);
+   
+   /**
+    * Sets new text at specified line
+    * 
+    * @param line line number
+    * @param text new text
+    */
+   public abstract void setLineText(int line, String text);
+   
+   /**
+    * Returns the number of lines in document
+    * 
+    * @return number of lines in document
+    */
+   public abstract int getNumberOfLines();
+   
    /**
     * Get the range of the selection.
     * 
@@ -226,6 +241,16 @@ public abstract class Editor extends AbsolutePanel
     */
    public abstract SelectionRange getSelectionRange();
 
+   /**
+    * Selects specified range
+    * 
+    * @param startLine start line
+    * @param startChar start character
+    * @param endLine end line
+    * @param endChar end character
+    */
+   public abstract void selectRange(int startLine, int startChar, int endLine, int endChar);
+   
    /**
     * Select all text in editor.
     */

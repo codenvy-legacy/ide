@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
@@ -90,6 +91,11 @@ public class BuildSuccessedTest extends BaseTest
 
       // Wait until building is finished.
       Thread.sleep(10000);
+
+      // check clear output button
+      IDE.BUILD.clickClearButton();
+      String emptyMessage = IDE.BUILD.getOutputMessage();
+      assertEquals("", emptyMessage);
 
       // Close Build project view because Output view is not visible
       selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");

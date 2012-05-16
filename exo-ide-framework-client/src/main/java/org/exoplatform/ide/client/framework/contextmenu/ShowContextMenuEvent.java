@@ -45,20 +45,20 @@ public class ShowContextMenuEvent extends GwtEvent<ShowContextMenuHandler>
    private int y;
 
    /**
-    * Name of the view's part, on which context menu was called.
+    * Object, on which context menu was called.
     */
-   private String viewPart;
+   private Object object;
 
    /**
     * @param x coordinate of the context menu
     * @param y coordinate of the context menu
-    * @param viewPart name of the view's part, on which context menu was called
+    * @param object object, on which context menu was called
     */
-   public ShowContextMenuEvent(int x, int y, String viewPart)
+   public ShowContextMenuEvent(int x, int y, Object object)
    {
       this.x = x;
       this.y = y;
-      this.viewPart = viewPart;
+      this.object = object;
    }
 
    /**
@@ -95,11 +95,8 @@ public class ShowContextMenuEvent extends GwtEvent<ShowContextMenuHandler>
       return y;
    }
 
-   /**
-    * @return {@link String} name of the view's part, on which context menu was called
-    */
-   public String getViewPart()
+   public Object getObject()
    {
-      return viewPart;
+      return object;
    }
 }

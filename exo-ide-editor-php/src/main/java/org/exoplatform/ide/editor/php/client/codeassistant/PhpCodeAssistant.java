@@ -123,7 +123,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
                   JSONValue parseLenient = JSONParser.parseLenient(resource.getText());
                   JSONTokenParser parser = new JSONTokenParser();
                   keyWords = parser.getTokens(parseLenient.isArray());
-                  doAutocomplete(editor.getLineContent(currentLine), editor.getCursorCol(), tokenList, currentToken);
+                  doAutocomplete(editor.getLineText(currentLine), editor.getCursorCol(), tokenList, currentToken);
                }
 
                @Override
@@ -139,7 +139,7 @@ public class PhpCodeAssistant extends CodeAssistant implements Comparator<Token>
          }
          return;
       }
-      doAutocomplete(editor.getLineContent(currentLine), editor.getCursorCol(), tokenList, currentToken);
+      doAutocomplete(editor.getLineText(currentLine), editor.getCursorCol(), tokenList, currentToken);
    }
 
    /**

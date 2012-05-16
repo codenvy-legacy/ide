@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.events;
+package org.exoplatform.ide.editor.problem;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link BreakPointSelectedEvent} event.
+ * Handler for {@link LineNumberContextMenuEvent} event.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BreakPointSelectedHandler.java May 8, 2012 3:27:16 PM azatsarynnyy $
- *
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: May 8, 2012 4:35:57 PM anya $
+ * 
  */
-public interface BreakPointSelectedHandler extends EventHandler
+public interface LineNumberContextMenuHandler extends EventHandler
 {
-   void onSelectBreakPoint(BreakPointSelectedEvent event);
+   /**
+    * Perform actions on line number right mouse click.
+    * 
+    * @param event
+    */
+   void onLineNumberContextMenu(LineNumberContextMenuEvent event);
 }

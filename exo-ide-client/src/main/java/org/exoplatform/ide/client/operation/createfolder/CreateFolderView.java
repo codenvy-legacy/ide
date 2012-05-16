@@ -121,4 +121,13 @@ public class CreateFolderView extends ViewImpl implements CreateFolderPresenter.
       folderNameField.focus();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display#selectFolderName()
+    */
+   @Override
+   public void selectFolderName()
+   {
+      folderNameField.selectAll();
+   }
+
 }

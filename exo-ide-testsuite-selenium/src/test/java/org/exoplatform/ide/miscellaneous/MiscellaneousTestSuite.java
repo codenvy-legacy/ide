@@ -35,7 +35,8 @@ import org.junit.runners.Suite.SuiteClasses;
                HotkeysCustomizationTest.class,
                HotkeysInCodeMirrorTest.class,
                HotkeysInFCKEditorTest.class,
-               RestServicesDiscoveryTest.class})
+               RestServicesDiscoveryTest.class,
+               ShowKeyboardShortcutsTest.class})
 public class MiscellaneousTestSuite
 {
 

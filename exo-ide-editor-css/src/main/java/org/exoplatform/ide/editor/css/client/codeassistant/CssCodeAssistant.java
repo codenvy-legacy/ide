@@ -85,7 +85,7 @@ public class CssCodeAssistant extends CodeAssistant
                   JSONTokenParser parser = new JSONTokenParser();
                   JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
                   cssProperty = parser.getTokens(tokenArray);
-                  fillTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
+                  fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
                }
 
                @Override
@@ -96,7 +96,7 @@ public class CssCodeAssistant extends CodeAssistant
             });
             return;
          }
-         fillTokens(editor.getLineContent(editor.getCursorRow()), editor.getCursorCol());
+         fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
       }
       catch (Exception e)
       {

@@ -134,4 +134,14 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
    {
       return loadProjectName;
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter.Display#focusInNameField()
+    */
+   @Override
+   public void focusInNameField()
+   {
+      loadProjectName.focus();
+   }
+
 }

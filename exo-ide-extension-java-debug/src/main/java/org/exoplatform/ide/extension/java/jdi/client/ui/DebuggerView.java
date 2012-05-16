@@ -35,13 +35,11 @@ import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientBundle;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerExtension;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerPresenter;
-import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointSelectedEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
@@ -122,16 +120,6 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer = new CellList<BreakPoint>(breakpointCell);
       breakpointsContainer.setHeight("100%");
       breakpointsContainer.setWidth("100%");
-
-      final SingleSelectionModel<BreakPoint> breakPointSelectionModel = new SingleSelectionModel<BreakPoint>();
-      breakpointsContainer.setSelectionModel(breakPointSelectionModel);
-      breakPointSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
-      {
-         public void onSelectionChange(SelectionChangeEvent event)
-         {
-            IDE.fireEvent(new BreakPointSelectedEvent(breakPointSelectionModel.getSelectedObject()));
-         }
-      });
 
       buildVariablesTreePanel(Collections.<Variable> emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
