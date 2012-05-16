@@ -58,23 +58,11 @@ public class ProjectsListGrid extends ListGrid<ProjectModel>
          }
       };
 
-      Column<ProjectModel, String> typeColumn = new Column<ProjectModel, String>(new TextCell())
-      {
-         @Override
-         public String getValue(ProjectModel object)
-         {
-            return object.getProjectType();
-         }
-      };
-
-      nameColumn.setCellStyleNames("default-cursor");
-      typeColumn.setCellStyleNames("default-cursor");
-
-      getCellTable().addColumn(iconColumn, "");
+      getCellTable().addColumn(iconColumn);
       getCellTable().setColumnWidth(iconColumn, "20px");
 
-      getCellTable().addColumn(nameColumn, "Project name");
-      getCellTable().addColumn(typeColumn, "Type");
+      nameColumn.setCellStyleNames("default-cursor");
+      getCellTable().addColumn(nameColumn);
    }
 
 }
