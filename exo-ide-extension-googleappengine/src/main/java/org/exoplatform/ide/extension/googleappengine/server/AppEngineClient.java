@@ -30,11 +30,11 @@ import com.google.appengine.tools.util.ClientCookieManager;
 import com.google.apphosting.utils.config.BackendsXml;
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
 
 import java.io.BufferedReader;
@@ -48,7 +48,6 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,10 +245,24 @@ public class AppEngineClient
 
    public void update(VirtualFileSystem vfs,
                       String projectId,
+                      URL binaries,
                       String email,
                       String password) throws IOException, VirtualFileSystemException
    {
-      AppAdmin admin = createApplicationAdmin(vfs, projectId, email, password);
+      AppAdmin admin;
+      if (binaries != null)
+      {
+         // If binaries provided use it. In this case Java project expected.
+         admin = createApplicationAdmin(
+            new JavaApplication(Application.readApplication(getApplicationBinaries(binaries).getPath())),
+            email,
+            password
+         );
+      }
+      else
+      {
+         admin = createApplicationAdmin(vfs, projectId, email, password);
+      }
       try
       {
          admin.update(DUMMY_UPDATE_LISTENER);
@@ -260,22 +273,9 @@ public class AppEngineClient
       }
    }
 
-   public void uploadBinaries(VirtualFileSystem vfs,
-                              String projectId,
-                              URL binaries) throws VirtualFileSystemException, IOException
-   {
-      java.io.File previousBuild = readBinariesDir((Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER));
-      if (previousBuild != null)
-      {
-         Application.recursiveDelete(previousBuild);
-      }
-      java.io.File appDir = getApplicationBinaries(binaries);
-      writeBinariesDir(vfs, projectId, appDir);
-   }
-
    private java.io.File getApplicationBinaries(URL url) throws IOException
    {
-      java.io.File tempFile = java.io.File.createTempFile("appengine", null);
+      java.io.File tempFile = java.io.File.createTempFile("ide-appengine", null);
       URLConnection conn = null;
       String protocol = url.getProtocol().toLowerCase();
       try
@@ -477,10 +477,15 @@ public class AppEngineClient
    private AppAdmin createApplicationAdmin(VirtualFileSystem vfs,
                                            String projectId,
                                            String email,
+                                           String password) throws IOException, VirtualFileSystemException
+   {
+      return createApplicationAdmin(createApplication(vfs, projectId), email, password);
+   }
+
+   private AppAdmin createApplicationAdmin(GenericApplication application,
+                                           String email,
                                            final String password) throws IOException, VirtualFileSystemException
    {
-      GenericApplication application = createApplication(vfs, projectId);
-
       ConnectOptions options = new ConnectOptions();
       options.setUserId(email == null ? "" : email);
       options.setPasswordPrompt(new PasswordPrompt()
@@ -510,18 +515,20 @@ public class AppEngineClient
    private GenericApplication createApplication(VirtualFileSystem vfs, String projectId)
       throws VirtualFileSystemException, IOException
    {
-      Project project = (Project)vfs.getItem(projectId, PropertyFilter.valueOf("app-engine-binaries"));
+      Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
       ProjectType type = getApplicationType(vfs, project);
       switch (type)
       {
          case JAVA:
-            java.io.File binariesDir = readBinariesDir(project);
-            if (binariesDir != null)
-            {
-               return Application.readApplication(binariesDir.getAbsolutePath());
-            }
-            throw new RuntimeException("Application binaries not found. It is necessary to build project first. ");
+         {
+            Folder webApp = (Folder)vfs.getItemByPath(project.createPath("src/main/webapp"), null,
+               PropertyFilter.NONE_FILTER);
+            java.io.File appDir = Utils.createTempDir(null);
+            Utils.unzip(vfs.exportZip(webApp.getId()).getStream(), appDir);
+            return new JavaApplication(Application.readApplication(appDir.getAbsolutePath()));
+         }
          case PYTHON:
+         {
             java.io.File appDir = Utils.createTempDir(null);
             Utils.unzip(vfs.exportZip(projectId).getStream(), appDir);
             java.io.File projectFile = new java.io.File(appDir, ".project");
@@ -530,6 +537,7 @@ public class AppEngineClient
                projectFile.delete();
             }
             return new PythonApplication(appDir);
+         }
          default:
             throw new RuntimeException("Unsupported type of application " + type);
       }
@@ -596,29 +604,6 @@ public class AppEngineClient
          }
       }
       throw new RuntimeException("Unable determine type of application. ");
-   }
-
-   private java.io.File readBinariesDir(Project project)
-   {
-      String binariesPath = (String)project.getPropertyValue("app-engine-binaries");
-      if (binariesPath != null)
-      {
-         java.io.File binariesDir = new java.io.File(binariesPath);
-         if (binariesDir.exists())
-         {
-            return binariesDir;
-         }
-      }
-      return null;
-   }
-
-   private void writeBinariesDir(VirtualFileSystem vfs, String projectId, java.io.File binariesDir)
-      throws VirtualFileSystemException
-   {
-      ConvertibleProperty p = new ConvertibleProperty("app-engine-binaries", binariesDir.getAbsolutePath());
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(p);
-      vfs.updateItem(projectId, properties, null);
    }
 
    /* ============================================================================= */

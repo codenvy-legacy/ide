@@ -217,34 +217,23 @@ public class AppEngineService
 
    @POST
    @Path("update")
-   public void uploadBinaries(@QueryParam("vfsid") String vfsId,
-                              @QueryParam("projectid") String projectId,
-                              @QueryParam("bin") URL bin) throws Exception
-   {
-      client.uploadBinaries(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
-         projectId,
-         bin
-      );
-   }
-
-   @POST
-   @Path("update")
    @Consumes(MediaType.APPLICATION_JSON)
    public void update(@QueryParam("vfsid") String vfsId,
                       @QueryParam("projectid") String projectId,
+                      @QueryParam("bin") URL bin,
                       Map<String, String> credentials) throws Exception
    {
       client.update(
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
          projectId,
+         bin,
          credentials.get("email"),
          credentials.get("password")
       );
    }
 
    @POST
-   @Path("backends/update")
+   @Path("backends/update_all")
    @Consumes(MediaType.APPLICATION_JSON)
    public void updateAllBackends(@QueryParam("vfsid") String vfsId,
                                  @QueryParam("projectid") String projectId,
@@ -270,6 +259,23 @@ public class AppEngineService
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
          projectId,
          backendName,
+         credentials.get("email"),
+         credentials.get("password")
+      );
+   }
+
+   @POST
+   @Path("backends/update")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void updateBackends(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("backends_name") List<String> backendNames,
+                             Map<String, String> credentials) throws Exception
+   {
+      client.updateBackends(
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         projectId,
+         backendNames,
          credentials.get("email"),
          credentials.get("password")
       );
