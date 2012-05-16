@@ -114,7 +114,10 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       if (problemClickHandler != null)
+      {
          problemClickHandler.removeHandler();
+         problemClickHandler = null;
+      }
       if (event.getFile() == null)
          return;
 
