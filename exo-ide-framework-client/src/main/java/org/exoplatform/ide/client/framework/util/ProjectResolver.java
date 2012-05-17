@@ -85,10 +85,10 @@ public class ProjectResolver
       {
          types.put(RAILS, IconImageBundle.INSTANCE.rubyProject());
          types.put(SPRING, IconImageBundle.INSTANCE.springProject());
-         types.put(EXO_APP, IconImageBundle.INSTANCE.defaultProject());
-         types.put(STATIC_WEB, IconImageBundle.INSTANCE.defaultProject());
+         types.put(EXO_APP, IconImageBundle.INSTANCE.exoProject());
+         types.put(STATIC_WEB, IconImageBundle.INSTANCE.jsProject());
          types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
-         types.put(PHP, IconImageBundle.INSTANCE.defaultProject());
+         types.put(PHP, IconImageBundle.INSTANCE.phpProject());
          types.put(UNDEFINED, IconImageBundle.INSTANCE.defaultProject());
       }
 
@@ -131,6 +131,6 @@ public class ProjectResolver
          return types.get(type);
       }
       else
-         return types.get(EXO_APP);
+         return types.get(UNDEFINED);
    }
 }
