@@ -24,7 +24,12 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 
+import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration;
+import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
@@ -33,8 +38,10 @@ import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.PackageDeclaration;
 import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.Type;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 import java.util.Iterator;
@@ -270,6 +277,103 @@ public class CreateWidgetVisitor extends ASTVisitor
          html.appendHtmlConstant(getTypeElement(node.getType().toString()));
       }
 
+      return true;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration)
+    */
+   @Override
+   public boolean visit(AnnotationTypeDeclaration node)
+   {
+      html = new SafeHtmlBuilder();
+      int modifiers = node.getModifiers();
+      html.appendHtmlConstant(getMainImage(JavaClientBundle.INSTANCE.annotationItem()).toString());
+      html.appendHtmlConstant(getModifiersContainer(modifiers));
+
+      Image modifImage = null;
+
+      // Get the access modifier icon:
+      if (Modifier.isPrivate(modifiers))
+      {
+         modifImage = new Image(JavaClientBundle.INSTANCE.classPrivateItem());
+      }
+      else if (Modifier.isProtected(modifiers))
+      {
+         modifImage = new Image(JavaClientBundle.INSTANCE.classProtectedItem());
+      }
+      else if (Modifier.isPublic(modifiers))
+      {
+      }
+      else
+      {
+         modifImage = new Image(JavaClientBundle.INSTANCE.classDefaultItem());
+      }
+
+      if (modifImage != null)
+      {
+         // TODO
+         DOM.setStyleAttribute(modifImage.getElement(), "position", "absolute");
+         DOM.setStyleAttribute(modifImage.getElement(), "marginLeft", "-10px");
+         DOM.setStyleAttribute(modifImage.getElement(), "marginTop", "10px");
+         modifImage.getElement().setAttribute("border", "0");
+         html.appendHtmlConstant(modifImage.toString());
+      }
+
+      html.appendHtmlConstant(getTitleElement(node.getName().getIdentifier()).getString());
+      return true;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration)
+    */
+   @Override
+   public boolean visit(AnnotationTypeMemberDeclaration node)
+   {
+      html = new SafeHtmlBuilder();
+      html.appendHtmlConstant(getMainImage(JavaClientBundle.INSTANCE.publicMethod()).toString());
+      // Add all modifiers container:
+      html.appendHtmlConstant(getModifiersContainer(node.getModifiers(), false));
+
+      // Method title consists of method's name and the list of its parameters:
+      String method = node.getName().getFullyQualifiedName();
+      method += "()";
+      html.appendHtmlConstant(getTitleElement(method).getString());
+
+      // Append method's return type:
+      html.appendHtmlConstant(getTypeElement(node.getType().toString()));
+
+      // TODO Auto-generated method stub
+      return super.visit(node);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration)
+    */
+   @Override
+   public boolean visit(AnonymousClassDeclaration node)
+   {
+      html = new SafeHtmlBuilder();
+      html.appendHtmlConstant(getMainImage(JavaClientBundle.INSTANCE.classItem()).toString());
+      html.appendHtmlConstant(getModifiersContainer(Modifier.NONE));
+
+      String name = "";
+      ASTNode parent = node.getParent();
+      if (parent instanceof ClassInstanceCreation)
+      {
+         Type type = ((ClassInstanceCreation)parent).getType();
+         name = ASTNodes.getTypeName(type);
+      }
+
+      Image modifImage = new Image(JavaClientBundle.INSTANCE.classDefaultItem());
+
+      DOM.setStyleAttribute(modifImage.getElement(), "position", "absolute");
+      DOM.setStyleAttribute(modifImage.getElement(), "marginLeft", "-10px");
+      DOM.setStyleAttribute(modifImage.getElement(), "marginTop", "10px");
+      modifImage.getElement().setAttribute("border", "0");
+      html.appendHtmlConstant(modifImage.toString());
+
+      html.appendHtmlConstant(getTitleElement("new " + name + "() {...}").getString());
       return true;
    }
 

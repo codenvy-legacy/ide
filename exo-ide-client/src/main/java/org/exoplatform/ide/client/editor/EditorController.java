@@ -233,7 +233,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    {
       try
       {
-         editorsViews.get(activeFile.getId()).activate();
+         if(openedFiles.get(activeFile.getId()) != null)
+         {
+            editorsViews.get(activeFile.getId()).activate();
+         }
       }
       catch (Exception e)
       {

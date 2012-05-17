@@ -48,6 +48,7 @@ public class CustomizeToolbarTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
       }
       catch (IOException e)
       {
