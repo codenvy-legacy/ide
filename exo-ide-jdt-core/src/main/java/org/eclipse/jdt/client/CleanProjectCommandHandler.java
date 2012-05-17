@@ -47,6 +47,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler
    {
       TypeInfoStorage.get().clear();
       IDE.fireEvent(new ParseActiveFileEvent());
+      NameEnvironment.clearFQNBlackList();
    }
 
 }
