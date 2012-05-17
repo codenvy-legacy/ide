@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -32,10 +30,11 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -64,11 +63,13 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
    private static final class WindowCloseHandlerImpl implements ClosingHandler
    {
-      public native void onWindowClosing(ClosingEvent event) /*-{
+      public native void onWindowClosing(ClosingEvent event)
+      /*-{
          $doc.onkeydown = null; 
       }-*/;
 
-      private native void init() /*-{
+      private native void init()
+      /*-{
          $doc.onkeydown = function(ev)
          { 
             var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
@@ -79,7 +80,9 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
    private HotKeyPressedListener hotKeyPressedListener;
 
-   private Map<String, String> hotKeys;
+   //private Map<String, String> hotKeys;
+
+   private Map<String, String> hotKeyMap;
 
    private Map<String, Control<?>> controlsMap = new LinkedHashMap<String, Control<?>>();
 
@@ -102,8 +105,8 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       Window.addWindowClosingHandler(closeListener);
       closeListener.init();
 
-      hotKeys = applicationSettings.getValueAsMap("hotkeys");
-      if (hotKeys == null)
+      hotKeyMap = applicationSettings.getValueAsMap("hotkeys");
+      if (hotKeyMap == null)
       {
          initDefaultHotKeys();
       }
@@ -134,14 +137,13 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          simpleControl.setHotKey(null);
       }
 
-      // Sets new HotKeys
-
-      Iterator<String> keyIter = hotKeys.keySet().iterator();
-      while (keyIter.hasNext())
+      /*
+       * Set new hotkeys
+       */
+      for (String key : hotKeyMap.keySet())
       {
-         String key = keyIter.next();
-         String controlId = hotKeys.get(key);
-         Control control = controlsMap.get(controlId);
+         String value = hotKeyMap.get(key);
+         Control control = controlsMap.get(value);
          if (control == null || !(control instanceof SimpleControl))
          {
             continue;
@@ -154,15 +156,15 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
    private void initDefaultHotKeys()
    {
-      hotKeys = new LinkedHashMap<String, String>();
-      applicationSettings.setValue("hotkeys", hotKeys, Store.SERVER);
+      hotKeyMap = new LinkedHashMap<String, String>();
+      applicationSettings.setValue("hotkeys", hotKeyMap, Store.SERVER);
 
       for (Control<?> control : controlsMap.values())
       {
          if (control instanceof SimpleControl && ((SimpleControl)control).getHotKey() != null
             && !((SimpleControl)control).getHotKey().isEmpty())
          {
-            hotKeys.put(((SimpleControl)control).getHotKey(), ((SimpleControl)control).getId());
+            hotKeyMap.put(((SimpleControl)control).getHotKey(), ((SimpleControl)control).getId());
          }
       }
    }
@@ -183,7 +185,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       boolean ctrl = event.getCtrlKey();
       boolean alt = event.getAltKey();
       boolean shift = event.getShiftKey();
-      
+
       if (hotKeyPressedListener != null)
       {
          hotKeyPressedListener.onHotKeyPressed(ctrl, alt, shift, keyCode);
@@ -205,8 +207,8 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          if (!ctrl && !alt)
          {
             return false;
-         }         
-      }      
+         }
+      }
 
       if (keyCode == 16 || keyCode == 17 || keyCode == 18 || keyCode == 224)
       {
@@ -253,9 +255,9 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       }
 
       // search associated command
-      if (hotKeys.containsKey(shortcut))
+      if (hotKeyMap.containsKey(shortcut))
       {
-         String controlId = hotKeys.get(shortcut);
+         String controlId = hotKeyMap.get(shortcut);
          Control control = controlsMap.get(controlId);
          if (control instanceof SimpleControl)
          {
@@ -273,10 +275,23 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       return false;
    }
 
-   public void setHotKeys(Map<String, String> hotKeys)
+   public void setHotKeys(Map<String, String> newHotKeys)
    {
-      hotKeys.clear();
-      hotKeys.putAll(hotKeys);
+      Map<String, String> temp = new LinkedHashMap<String, String>();
+      temp.putAll(newHotKeys);
+
+      if (hotKeyMap == null)
+      {
+         hotKeyMap = new LinkedHashMap<String, String>();
+         applicationSettings.setValue("hotkeys", hotKeyMap, Store.SERVER);
+      }
+      else
+      {
+         hotKeyMap.clear();
+      }
+
+      hotKeyMap.putAll(temp);
+      storeHotKeysToControls();
    }
 
 }
