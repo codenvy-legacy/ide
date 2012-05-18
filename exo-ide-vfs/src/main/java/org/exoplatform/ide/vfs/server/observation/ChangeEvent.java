@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -96,6 +97,22 @@ public class ChangeEvent
                       List<Property> properties,
                       List<AccessControlEntry> acl)
    {
+      if (vfs == null)
+      {
+         throw new IllegalArgumentException("Virtual File System may not be null. ");
+      }
+      if (itemId == null)
+      {
+         throw new IllegalArgumentException("Item ID may not be null. ");
+      }
+      if (itemPath == null)
+      {
+         throw new IllegalArgumentException("Item path may not be null. ");
+      }
+      if (type == null)
+      {
+         throw new IllegalArgumentException("Change type may not be null. ");
+      }
       this.vfs = vfs;
       this.itemId = itemId;
       this.itemPath = itemPath;
@@ -138,5 +155,24 @@ public class ChangeEvent
    public List<AccessControlEntry> getACL()
    {
       return acl;
+   }
+
+   @Override
+   public String toString()
+   {
+      String vfsID = null;
+      try
+      {
+         vfsID = vfs.getInfo().getId();
+      }
+      catch (VirtualFileSystemException ignored)
+      {
+      }
+      return "ChangeEvent{" +
+         "vfs='" + vfsID + + '\''+
+         ", itemId='" + itemId + '\'' +
+         ", itemPath='" + itemPath + '\'' +
+         ", type=" + type +
+         '}';
    }
 }
