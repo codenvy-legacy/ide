@@ -26,6 +26,8 @@ import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.editor.runtime.Assert;
 
 import java.util.ArrayList;
@@ -1121,18 +1123,8 @@ public class Util
    /* Add a log entry */
    public static void log(Throwable e, String message)
    {
-      // TODO use logger
-      // Throwable nestedException;
-      // if (e instanceof JavaModelException
-      // && (nestedException = ((JavaModelException)e).getException()) != null) {
-      // e = nestedException;
-      // }
-      // log(new Status(
-      // IStatus.ERROR,
-      // JavaCore.PLUGIN_ID,
-      // IStatus.ERROR,
-      // message,
-      // e));
+      e.printStackTrace();
+      IDE.fireEvent(new OutputEvent(message, org.exoplatform.ide.client.framework.output.event.OutputMessage.Type.ERROR));
    }
 
    /** Returns the length of the common prefix between s1 and s2. */

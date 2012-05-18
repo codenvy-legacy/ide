@@ -48,7 +48,6 @@ import org.exoplatform.ide.client.model.settings.SettingsService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +113,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
    private Display display;
 
-   private List<HotKeyItem> hotKeys = new ArrayList<HotKeyItem>();
+   private List<HotKeyItem> hotKeys;
 
    private HotKeyItem selectedItem;
 
@@ -262,6 +261,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
+//      if (hotKeys == null)
+//      {
+//         hotKeys = applicationSettings.getValueAsMap("hotkeys");
+//         hotKeys keys.clear();
+//      }
+      
       hotKeys = new ArrayList<HotKeyItem>();
       for (String groupName : groups.keySet())
       {
@@ -533,7 +538,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                protected void onSuccess(ApplicationSettings result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  HotKeyManager.getInstance().setHotKeys(keys);
+                  HotKeyManager.getInstance().setHotKeys(keys);                     
                }
 
                @Override

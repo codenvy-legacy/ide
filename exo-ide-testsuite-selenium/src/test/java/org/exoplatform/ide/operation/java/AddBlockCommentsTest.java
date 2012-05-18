@@ -78,9 +78,10 @@ public class AddBlockCommentsTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-
+      IDE.WELCOME_PAGE.close();
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
       IDE.EDITOR.moveCursorDown(0, 28);
       IDE.EDITOR.moveCursorRight(0, 6);
@@ -99,6 +100,7 @@ public class AddBlockCommentsTest extends BaseTest
       String content = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(content.contains("/*numbers.add(1);"));
       assertTrue(content.contains("numbers.add(6);*/"));
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
    @Test

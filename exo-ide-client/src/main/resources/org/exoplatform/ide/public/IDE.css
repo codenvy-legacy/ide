@@ -20,7 +20,10 @@ body {
 {
 	cursor: default;
 }
-
+.gwt-PopupPanelGlass {
+    background-color: #000000;
+    opacity: 0.05;
+}
 .gwt-TextBox:FOCUS
 {
 	border-color: #5678AC #AFC6E2 #C0D7EC;

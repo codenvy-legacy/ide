@@ -16,38 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client;
+package org.eclipse.jdt.client.event;
 
-import org.eclipse.jdt.client.event.CleanProjectEvent;
-import org.eclipse.jdt.client.event.CleanProjectHandler;
-import org.eclipse.jdt.client.event.ParseActiveFileEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
+ * @version $Id:
  *
  */
-public class CleanProjectCommandHandler implements CleanProjectHandler
+public class ShowQuickOutlineEvent extends GwtEvent<ShowQuickOutlineHandler>
 {
 
+   public static final GwtEvent.Type<ShowQuickOutlineHandler> TYPE = new Type<ShowQuickOutlineHandler>();
+
    /**
-    * 
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public CleanProjectCommandHandler()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowQuickOutlineHandler> getAssociatedType()
    {
-      IDE.addHandler(CleanProjectEvent.TYPE, this);
+      return TYPE;
    }
 
    /**
-    * @see org.eclipse.jdt.client.event.CleanProjectHandler#onCleanProject(org.eclipse.jdt.client.event.CleanProjectEvent)
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   public void onCleanProject(CleanProjectEvent event)
+   protected void dispatch(ShowQuickOutlineHandler handler)
    {
-      TypeInfoStorage.get().clear();
-      IDE.fireEvent(new ParseActiveFileEvent());
-      NameEnvironment.clearFQNBlackList();
+      handler.onShowQuickOutline(this);
    }
 
 }

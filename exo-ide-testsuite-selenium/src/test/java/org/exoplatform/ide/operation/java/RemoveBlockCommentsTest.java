@@ -99,6 +99,8 @@ public class RemoveBlockCommentsTest extends BaseTest
       String content = IDE.EDITOR.getTextFromCodeEditor(0);
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+
    }
 
    @Test
@@ -130,6 +132,7 @@ public class RemoveBlockCommentsTest extends BaseTest
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    @Test
@@ -161,8 +164,9 @@ public class RemoveBlockCommentsTest extends BaseTest
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
-   
+
    @Test
    public void removeBlockCommentByEndSelection() throws Exception
    {
@@ -192,6 +196,7 @@ public class RemoveBlockCommentsTest extends BaseTest
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
-   
+
 }
