@@ -70,6 +70,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -196,6 +198,11 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
    protected List<ProjectTemplate> selectedTemplates;
 
    private boolean isTemplatesMigrated = false;
+
+   /**
+    * Comparator for sorting project templates.
+    */
+   private static final Comparator<ProjectTemplate> PROJECT_TEMPLATE_COMPARATOR = new ProjectTemplateComparator();
 
    public CreateProjectFromTemplatePresenter()
    {
@@ -540,6 +547,7 @@ public class CreateProjectFromTemplatePresenter implements CreateNewProjectHandl
                protected void onSuccess(List<ProjectTemplate> result)
                {
                   projectTemplates = result;
+                  Collections.sort(projectTemplates, PROJECT_TEMPLATE_COMPARATOR);
                   display.getTemplateListGrid().setValue(projectTemplates);
                   if (projectTemplates != null && projectTemplates.size() > 0)
                   {

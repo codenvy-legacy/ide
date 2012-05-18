@@ -51,6 +51,15 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/groovy-project.png")
    ImageResource groovyProject();
 
+   @Source("org/exoplatform/ide/client/bundled-images/projects/exo.png")
+   ImageResource exoProject();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/php.png")
+   ImageResource phpProject();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/js.png")
+   ImageResource jsProject();
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
 

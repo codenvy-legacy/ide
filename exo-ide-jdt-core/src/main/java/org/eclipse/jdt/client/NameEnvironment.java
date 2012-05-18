@@ -52,7 +52,9 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation of {@link INameEnvironment} interface, use JavaCodeAssistantService for receiving data and SessionStorage for
@@ -65,6 +67,8 @@ public class NameEnvironment implements INameEnvironment
 {
 
    private String projectId;
+
+   private static Set<String> blackSet = new HashSet<String>();
 
    static
    {
@@ -116,6 +120,11 @@ public class NameEnvironment implements INameEnvironment
             IDE.fireEvent(new ExceptionThrownEvent(exception));
          }
       });
+   }
+
+   public static void clearFQNBlackList()
+   {
+      blackSet.clear();
    }
 
    /**
@@ -181,6 +190,10 @@ public class NameEnvironment implements INameEnvironment
                {
                   TypeInfoStorage.get().putType(fqn, jsonTypeInfoUnmarshaller.typeInfo.toString());
                }
+               else
+               {
+                  blackSet.add(fqn);
+               }
             }
 
             @Override
@@ -214,7 +227,8 @@ public class NameEnvironment implements INameEnvironment
       }
       if (projectId != null)
       {
-         loadTypeInfo(key, projectId);
+         if (!blackSet.contains(key))
+            loadTypeInfo(key, projectId);
       }
       return null;
    }
@@ -497,6 +511,5 @@ public class NameEnvironment implements INameEnvironment
       {
          return null;
       }
-
    }
 }
