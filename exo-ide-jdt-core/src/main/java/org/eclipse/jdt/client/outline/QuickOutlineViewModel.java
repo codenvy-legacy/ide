@@ -164,60 +164,7 @@ public class QuickOutlineViewModel implements TreeViewModel
                list.addAll((List<ASTNode>)property);
             else
             {
-               t.accept(new ASTVisitor()
-               {
-                  /**
-                   * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration)
-                   */
-                  @Override
-                  public boolean visit(EnumDeclaration node)
-                  {
-                     list.add(node);
-                     return false;
-                  }
-
-                  /**
-                   * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.FieldDeclaration)
-                   */
-                  @Override
-                  public boolean visit(FieldDeclaration node)
-                  {
-                     list.add(node);
-                     return false;
-                  }
-
-                  /**
-                   * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.MethodDeclaration)
-                   */
-                  @Override
-                  public boolean visit(MethodDeclaration node)
-                  {
-                     list.add(node);
-                     return false;
-                  }
-
-                  /**
-                   * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
-                   */
-                  @Override
-                  public boolean visit(TypeDeclaration node)
-                  {
-                     if (node.equals(t))
-                        return true;
-                     list.add(node);
-                     return false;
-                  }
-
-                  /**
-                   * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration)
-                   */
-                  @Override
-                  public boolean visit(AnnotationTypeDeclaration node)
-                  {
-                     list.add(node);
-                     return false;
-                  }
-               });
+               t.accept(new TypeChildrenVisitor(list, t));
             }
          }
          else if (value instanceof EnumDeclaration)
@@ -323,6 +270,10 @@ public class QuickOutlineViewModel implements TreeViewModel
          else if (node instanceof AnonymousClassDeclaration)
          {
             createWidgetVisitor.visit((AnonymousClassDeclaration)node);
+         }
+         else if (node instanceof VariableDeclarationFragment)
+         {
+            createWidgetVisitor.visit((VariableDeclarationFragment)node);
          }
 
          buf.append(createWidgetVisitor.getHTML().toSafeHtml());
@@ -464,8 +415,6 @@ public class QuickOutlineViewModel implements TreeViewModel
       }
       if (!rootDataProvider.compilationUnit.types().isEmpty())
       {
-         //         for (Object o : rootDataProvider.compilationUnit.types())
-         //         {
          AbstractTypeDeclaration type = (AbstractTypeDeclaration)rootDataProvider.compilationUnit.types().get(0);
          if (match(type.getName().getFullyQualifiedName()))
             list.add(type);
@@ -479,7 +428,6 @@ public class QuickOutlineViewModel implements TreeViewModel
                list.add(type);
             }
          }
-         //         }
       }
       rootDataProvider.updateRowData(0, list);
    }

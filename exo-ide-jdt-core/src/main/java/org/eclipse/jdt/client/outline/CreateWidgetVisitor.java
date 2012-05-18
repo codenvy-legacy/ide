@@ -25,7 +25,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.ASTVisitor;
 import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
@@ -53,7 +52,7 @@ import java.util.Iterator;
  * @version $Id: Feb 7, 2012 12:10:16 PM anya $
  * 
  */
-public class CreateWidgetVisitor extends ASTVisitor
+public class CreateWidgetVisitor
 {
    /**
     * HTML code of the widget.
@@ -63,7 +62,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.PackageDeclaration)
     */
-   @Override
    public boolean visit(PackageDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -75,7 +73,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.TypeDeclaration)
     */
-   @Override
    public boolean visit(TypeDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -125,7 +122,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumDeclaration)
     */
-   @Override
    public boolean visit(EnumDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -169,7 +165,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.ImportDeclaration)
     */
-   @Override
    public boolean visit(ImportDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -193,7 +188,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.MethodDeclaration)
     */
-   @Override
    public boolean visit(MethodDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -240,7 +234,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.FieldDeclaration)
     */
-   @Override
    public boolean visit(FieldDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -280,10 +273,45 @@ public class CreateWidgetVisitor extends ASTVisitor
       return true;
    }
 
+   public void visit(VariableDeclarationFragment node)
+   {
+      html = new SafeHtmlBuilder();
+      if (node.getParent() instanceof FieldDeclaration)
+      {
+         FieldDeclaration parent = (FieldDeclaration)node.getParent();
+         int modifiers = parent.getModifiers();
+         Image image = null;
+
+         // Get the access modifier icon:
+         if (Modifier.isPrivate(modifiers))
+         {
+            image = getMainImage(JavaClientBundle.INSTANCE.privateField());
+         }
+         else if (Modifier.isProtected(modifiers))
+         {
+            image = getMainImage(JavaClientBundle.INSTANCE.protectedField());
+         }
+         else if (Modifier.isPublic(modifiers))
+         {
+            image = getMainImage(JavaClientBundle.INSTANCE.publicField());
+         }
+         else
+         {
+            image = getMainImage(JavaClientBundle.INSTANCE.defaultField());
+         }
+
+         html.appendHtmlConstant(image.toString());
+         // Add all modifiers container:
+         html.appendHtmlConstant(getModifiersContainer(modifiers));
+
+         html.appendHtmlConstant(getTitleElement(node.getName().getIdentifier()).getString());
+         html.appendHtmlConstant(getTypeElement(parent.getType().toString()));
+      }
+   }
+
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration)
     */
-   @Override
    public boolean visit(AnnotationTypeDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -327,7 +355,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration)
     */
-   @Override
    public boolean visit(AnnotationTypeMemberDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -343,14 +370,12 @@ public class CreateWidgetVisitor extends ASTVisitor
       // Append method's return type:
       html.appendHtmlConstant(getTypeElement(node.getType().toString()));
 
-      // TODO Auto-generated method stub
-      return super.visit(node);
+      return false;
    }
 
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration)
     */
-   @Override
    public boolean visit(AnonymousClassDeclaration node)
    {
       html = new SafeHtmlBuilder();
@@ -380,7 +405,6 @@ public class CreateWidgetVisitor extends ASTVisitor
    /**
     * @see org.eclipse.jdt.client.core.dom.ASTVisitor#visit(org.eclipse.jdt.client.core.dom.EnumConstantDeclaration)
     */
-   @Override
    public boolean visit(EnumConstantDeclaration node)
    {
       html = new SafeHtmlBuilder();
