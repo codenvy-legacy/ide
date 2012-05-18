@@ -18,16 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -62,7 +52,18 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Presenter for creating application on CloudFoundry.
@@ -117,6 +118,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       void setSelectedIndexForTypeSelectItem(int index);
 
       void focusInUrlField();
+      
+      void enableAutodetectTypeCheckItem(boolean enable);
 
       /**
        * Set the list of servers to ServerSelectField.
@@ -227,8 +230,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                final String[] frameworkArray = getApplicationTypes(frameworks);
                display.setTypeValues(frameworkArray);
                display.setSelectedIndexForTypeSelectItem(0);
-               Framework framework = findFrameworkByName(frameworkArray[0]);
-               display.getMemoryField().setValue(String.valueOf(framework.getMemory()));
+               getFrameworks(display.getServerField().getValue());
             }
          }
       });
@@ -286,6 +288,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             if (!display.getUrlCheckItem().getValue())
             {
                updateUrlField();
+               display.enableAutodetectTypeCheckItem(true);
             }
          }
       });
@@ -425,14 +428,14 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
    }
 
-   private void getFrameworks()
+   private void getFrameworks(final String server)
    {
       LoggedInHandler getFrameworksLoggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
          {
-            getFrameworks();
+            getFrameworks(server);
          }
       };
 
@@ -445,9 +448,22 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                @Override
                protected void onSuccess(List<Framework> result)
                {
-                  openView(result);
+                  if (!result.isEmpty())
+                  {
+                     frameworks = result;
+                     String[] fw = new String[result.size()];
+                     int i = 0;
+                     for (Framework framework : result)
+                     {
+                        fw[i++] = framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName();
+                     }
+                     display.setTypeValues(fw);
+                     Framework framework = findFrameworkByName(fw[0]);
+                     display.getMemoryField().setValue(String.valueOf(framework.getMemory()));
+                  }
+
                }
-            });
+            }, server);
       }
       catch (RequestException e)
       {
@@ -538,7 +554,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       List<String> frameworkNames = new ArrayList<String>();
       for (Framework framework : frameworks)
       {
-         frameworkNames.add(framework.getDisplayName());
+         frameworkNames.add(framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName());
       }
 
       return frameworkNames.toArray(new String[frameworkNames.size()]);
@@ -554,7 +570,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    {
       for (Framework framework : frameworks)
       {
-         if (frameworkName.equals(framework.getDisplayName()))
+         String name = framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName();
+         if (frameworkName.equals(name))
          {
             return framework;
          }
@@ -696,7 +713,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                         isMavenProject = true;
                      }
                   }
-                  getFrameworks();
+                  openView(Collections.<Framework> emptyList());
                }
 
                @Override
@@ -736,6 +753,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      String[] servers = result.toArray(new String[result.size()]);
                      display.setServerValues(servers);
                      display.getServerField().setValue(servers[0]);
+                     getFrameworks(servers[0]);
                   }
                   display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
                   updateUrlField();

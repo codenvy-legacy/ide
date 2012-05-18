@@ -54,7 +54,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback) throws RequestException;
+   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server) throws RequestException;
 
    /**
     * Create application on CloudFoundry.

@@ -74,6 +74,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -127,6 +132,27 @@ public class Cloudfoundry
    public Cloudfoundry(CloudfoundryAuthenticator authenticator)
    {
       this.authenticator = authenticator;
+   // Create a trust manager that does not validate certificate chains
+      TrustManager[] trustAllCerts = new TrustManager[]{
+          new X509TrustManager() {
+              public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                  return null;
+              }
+              public void checkClientTrusted(
+                  java.security.cert.X509Certificate[] certs, String authType) {
+              }
+              public void checkServerTrusted(
+                  java.security.cert.X509Certificate[] certs, String authType) {
+              }
+          }
+      };
+      // Install the all-trusting trust manager
+      try {
+          SSLContext sc = SSLContext.getInstance("SSL");
+          sc.init(null, trustAllCerts, new java.security.SecureRandom());
+          HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+      } catch (Exception e) {
+      }
    }
 
    public void setTarget(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
@@ -2559,4 +2585,5 @@ public class Cloudfoundry
          throw new ParsingResponseException(e.getMessage(), e);
       }
    }
+   
 }
