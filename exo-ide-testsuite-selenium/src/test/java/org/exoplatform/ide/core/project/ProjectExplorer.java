@@ -22,6 +22,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.core.AbstractTestModule;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -212,8 +213,8 @@ public class ProjectExplorer extends AbstractTestModule
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
-      new Actions(driver()).doubleClick(item).build().perform();
-   }
+      item.sendKeys(Keys.ARROW_RIGHT);
+    }
 
    /**
     * Is item present in project explorer tree.
