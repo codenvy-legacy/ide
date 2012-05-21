@@ -1,0 +1,42 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
+   <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
+   <ui:style>
+      .center {
+      	display: block;
+      	margin-left: auto;
+      	margin-right: auto;
+      }
+      
+      .left-float {
+      	float: left;
+      }
+      
+      .label {
+      	margin-top: 5px;
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	float: left;
+      	color: #D21A1A;
+      }
+   </ui:style>
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer top="0" bottom="30">
+         <g:FlowPanel>
+            <g:Label text="{locale.emailFieldTitle}"></g:Label>
+            <f:TextInput ui:field="emailField" height="22px" width="100%"></f:TextInput>
+            <g:Label text="{locale.passwordFieldTitle}"></g:Label>
+            <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"></f:PasswordTextInput>
+            <f:Label ui:field="loginResult" styleName="{style.label}"></f:Label>
+         </g:FlowPanel>
+      </f:layer>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
+</ui:UiBinder> 
