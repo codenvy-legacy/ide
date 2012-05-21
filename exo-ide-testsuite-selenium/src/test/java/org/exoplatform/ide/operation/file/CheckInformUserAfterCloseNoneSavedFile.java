@@ -97,7 +97,6 @@ public class CheckInformUserAfterCloseNoneSavedFile extends BaseTest
       //step two, try closed not saved file, check inform in pop up window
       IDE.driver().close();
       IDE.POPUP.waitOpened();
-     
       //in chrome and firefox browsers pop up messages is different
       if (IDE_SETTINGS.getString("selenium.browser.commad").equals("CHROME"))
       {

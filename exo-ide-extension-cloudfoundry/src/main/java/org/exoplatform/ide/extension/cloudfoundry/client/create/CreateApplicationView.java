@@ -317,5 +317,12 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    {
       serverField.setValueMap(servers);
    }
+   
+   @Override
+   public void enableAutodetectTypeCheckItem(boolean enable)
+   {
+      if (changeTypeField.getValue() != enable)
+         changeTypeField.setValue(enable, true);
+   }
 
 }

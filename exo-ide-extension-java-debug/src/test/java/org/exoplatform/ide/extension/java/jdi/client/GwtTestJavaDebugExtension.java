@@ -1,9 +1,7 @@
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;

@@ -229,10 +229,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getFrameworks()
     */
    @Override
-   public void getFrameworks(AsyncRequestCallback<List<Framework>> callback) throws RequestException
+   public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server) throws RequestException
    {
-      final String url = restServiceContext + FRAMEWORKS;
-
+      String url = restServiceContext + FRAMEWORKS;
+      url += (server != null) ? "?server=" + server : "";
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }

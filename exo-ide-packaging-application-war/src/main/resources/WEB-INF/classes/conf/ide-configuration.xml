@@ -382,7 +382,7 @@
       <init-params>
          <value-param>
             <name>cloudfoundry-target</name>
-            <value>http://api.javarun.exoplatform.com</value>
+            <value>http://api.javarun2.exoplatform.com</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-user</name>

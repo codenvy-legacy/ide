@@ -518,7 +518,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onFailure(Throwable exception)
                   {
                      cancel();
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                     IDE.getInstance().closeView(display.asView().getId());
+                     if (runningApp !=  null)
+                        IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
                });
          }

@@ -25,6 +25,9 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration;
+import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.client.core.dom.EnumDeclaration;
 import org.eclipse.jdt.client.core.dom.FieldDeclaration;
@@ -32,6 +35,7 @@ import org.eclipse.jdt.client.core.dom.ImportDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.PackageDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,10 +111,6 @@ public class OutlineTreeViewModel implements TreeViewModel
          {
             createWidgetVisitor.visit((MethodDeclaration)node);
          }
-         else if (node instanceof FieldDeclaration)
-         {
-            createWidgetVisitor.visit((FieldDeclaration)node);
-         }
          else if (node instanceof EnumDeclaration)
          {
             createWidgetVisitor.visit((EnumDeclaration)node);
@@ -118,6 +118,26 @@ public class OutlineTreeViewModel implements TreeViewModel
          else if (node instanceof EnumConstantDeclaration)
          {
             createWidgetVisitor.visit((EnumConstantDeclaration)node);
+         }
+         else if (node instanceof AnnotationTypeDeclaration)
+         {
+            createWidgetVisitor.visit((AnnotationTypeDeclaration)node);
+         }
+         else if (node instanceof AnnotationTypeMemberDeclaration)
+         {
+            createWidgetVisitor.visit((AnnotationTypeMemberDeclaration)node);
+         }
+         else if (node instanceof AnonymousClassDeclaration)
+         {
+            createWidgetVisitor.visit((AnonymousClassDeclaration)node);
+         }
+         else if (node instanceof VariableDeclarationFragment)
+         {
+            createWidgetVisitor.visit((VariableDeclarationFragment)node);
+         }
+         else if (node instanceof FieldDeclaration)
+         {
+            createWidgetVisitor.visit((FieldDeclaration)node);
          }
 
          buf.append(createWidgetVisitor.getHTML().toSafeHtml());
@@ -128,11 +148,6 @@ public class OutlineTreeViewModel implements TreeViewModel
     * Tree data provider.
     */
    private ListDataProvider<Object> dataProvider = new ListDataProvider<Object>();
-
-   /**
-    * Visitor for collecting child nodes.
-    */
-   private GetChildrenVisitor getChildrenVisitor = new GetChildrenVisitor();
 
    private SingleSelectionModel<Object> selectionModel;
 
@@ -195,18 +210,29 @@ public class OutlineTreeViewModel implements TreeViewModel
     */
    protected List<Object> getChildren(ASTNode parent)
    {
+      List<ASTNode> list = new ArrayList<ASTNode>();
       if (parent instanceof TypeDeclaration)
       {
-         getChildrenVisitor.visit((TypeDeclaration)parent);
-         return getChildrenVisitor.getNodes();
+         TypeDeclaration t = (TypeDeclaration)parent;
+         t.accept(new TypeChildrenVisitor(list, t));
       }
       else if (parent instanceof EnumDeclaration)
       {
-         getChildrenVisitor.visit((EnumDeclaration)parent);
-         return getChildrenVisitor.getNodes();
+         EnumDeclaration e = (EnumDeclaration)parent;
+         list.addAll(e.enumConstants());
+         list.addAll(e.bodyDeclarations());
       }
-
-      return new ArrayList<Object>();
+      else if (parent instanceof AnnotationTypeDeclaration)
+      {
+         AnnotationTypeDeclaration a = (AnnotationTypeDeclaration)parent;
+         list.addAll(a.bodyDeclarations());
+      }
+      else if (parent instanceof AnonymousClassDeclaration)
+      {
+         AnonymousClassDeclaration ann = (AnonymousClassDeclaration)parent;
+         list.addAll(ann.bodyDeclarations());
+      }
+      return new ArrayList<Object>(list);
    }
 
    public ListDataProvider<Object> getDataProvider()
