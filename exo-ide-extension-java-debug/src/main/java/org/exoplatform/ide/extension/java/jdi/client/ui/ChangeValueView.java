@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextAreaInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -59,6 +60,9 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
 
    @UiField
    ImageButton cancelButton;
+
+   @UiField
+   Label expressionFieldLabel;
 
    @UiField
    TextAreaInput expressionField;
@@ -108,6 +112,15 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    }
 
    /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpression(java.lang.String)
+    */
+   @Override
+   public void setExpression(String expression)
+   {
+      expressionField.setValue(expression);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#focusInExpressionField()
     */
    @Override
@@ -123,6 +136,25 @@ public class ChangeValueView extends ViewImpl implements ChangeValuePresenter.Di
    public void setChangeButtonEnable(boolean isEnable)
    {
       changeButton.setEnabled(isEnable);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#selectAllText()
+    */
+   @Override
+   public void selectAllText()
+   {
+      expressionField.selectAll();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.ChangeValuePresenter.Display#setExpressionFieldTitle(java.lang.String)
+    */
+   @Override
+   public void setExpressionFieldTitle(String title)
+   {
+      expressionFieldLabel.setIsHTML(true);
+      expressionFieldLabel.setValue(title);
    }
 
 }

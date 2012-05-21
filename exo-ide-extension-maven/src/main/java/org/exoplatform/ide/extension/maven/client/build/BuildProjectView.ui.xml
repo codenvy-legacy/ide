@@ -22,7 +22,7 @@
       }
    </ui:style>
 
-   <c:Border margin="1" borderColor="transparent">
+   <c:Border margin="1">
       <c:layer top="0" height="28px">
          <c:Toolbar height="28px" ui:field="toolbar"></c:Toolbar>
       </c:layer>
