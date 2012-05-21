@@ -74,7 +74,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -900,10 +899,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onUpdateVariableValueInTree(UpdateVariableValueInTreeEvent event)
    {
       Variable variable = event.getVariable();
-      Value value = event.getValue();
+      String value = event.getValue();
 
       List<Variable> list = display.getVariables();
-      variable.setValue(value.getValue());
+      variable.setValue(value);
       int index = list.lastIndexOf(variable);
       list.set(index, variable);
       display.setVariables(list);

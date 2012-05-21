@@ -227,9 +227,9 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
     * 
     * @return translated "Enter an expression"
     */
-   @DefaultMessage("Enter an expression:")
+   @DefaultMessage("Enter a new value for <b>{0}</b>:")
    @Key("view.changeValue.expressionField.title")
-   String changeValueViewExpressionFieldTitle();
+   String changeValueViewExpressionFieldTitle(String varName);
 
    /**
     * Translated "Change".

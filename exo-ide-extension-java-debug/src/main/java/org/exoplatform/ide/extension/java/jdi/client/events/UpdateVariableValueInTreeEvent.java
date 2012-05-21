@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.java.jdi.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
@@ -34,7 +33,8 @@ public class UpdateVariableValueInTreeEvent extends GwtEvent<UpdateVariableValue
    /**
     * Type used to register this event.
     */
-   public static final GwtEvent.Type<UpdateVariableValueInTreeHandler> TYPE = new GwtEvent.Type<UpdateVariableValueInTreeHandler>();
+   public static final GwtEvent.Type<UpdateVariableValueInTreeHandler> TYPE =
+      new GwtEvent.Type<UpdateVariableValueInTreeHandler>();
 
    /**
     * Variable whose value need to update.
@@ -44,9 +44,9 @@ public class UpdateVariableValueInTreeEvent extends GwtEvent<UpdateVariableValue
    /**
     * New variables value.
     */
-   private Value value;
+   private String value;
 
-   public UpdateVariableValueInTreeEvent(Variable variable, Value value)
+   public UpdateVariableValueInTreeEvent(Variable variable, String value)
    {
       this.variable = variable;
       this.value = value;
@@ -85,7 +85,7 @@ public class UpdateVariableValueInTreeEvent extends GwtEvent<UpdateVariableValue
     * 
     * @return value
     */
-   public Value getValue()
+   public String getValue()
    {
       return value;
    }

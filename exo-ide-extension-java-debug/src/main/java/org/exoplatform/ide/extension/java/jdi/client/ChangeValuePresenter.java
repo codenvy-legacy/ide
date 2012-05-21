@@ -26,11 +26,9 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -40,7 +38,6 @@ import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
-import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 
 /**
@@ -78,6 +75,13 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
       HasValue<String> getExpression();
 
       /**
+       * Set expression field value.
+       * 
+       * @param expression expression
+       */
+      void setExpression(String expression);
+
+      /**
        * Change the enable state of the change button.
        * 
        * @param isEnable enabled or not
@@ -88,6 +92,18 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
        * Give focus to expression field.
        */
       void focusInExpressionField();
+
+      /**
+       * Select all text in expression field.
+       */
+      void selectAllText();
+
+      /**
+       * Set title for expression field.
+       * 
+       * @param title new title for expression field
+       */
+      void setExpressionFieldTitle(String title);
    }
 
    /**
@@ -163,8 +179,12 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
 
          IDE.getInstance().openView(display.asView());
 
-         display.setChangeButtonEnable(false);
+         display.setExpressionFieldTitle(DebuggerExtension.LOCALIZATION_CONSTANT
+            .changeValueViewExpressionFieldTitle(variable.getName()));
+         display.setExpression(variable.getValue());
          display.focusInExpressionField();
+         display.selectAllText();
+         display.setChangeButtonEnable(false);
       }
    }
 
@@ -173,8 +193,8 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
     */
    private void doChangeValue()
    {
-      UpdateVariableRequest request =
-         new UpdateVariableRequestImpl(variable.getVariablePath(), display.getExpression().getValue());
+      final String newValue = display.getExpression().getValue();
+      UpdateVariableRequest request = new UpdateVariableRequestImpl(variable.getVariablePath(), newValue);
       try
       {
          DebuggerClientService.getInstance().setValue(debuggerInfo.getId(), request, new AsyncRequestCallback<String>()
@@ -183,7 +203,7 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
             @Override
             protected void onSuccess(String result)
             {
-               updateVariableValueInList();
+               IDE.fireEvent(new UpdateVariableValueInTreeEvent(variable, newValue));
             }
 
             @Override
@@ -199,41 +219,6 @@ public class ChangeValuePresenter implements ChangeValueHandler, ViewClosedHandl
       }
 
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Updates variable value in variables panel.
-    */
-   private void updateVariableValueInList()
-   {
-      AutoBean<Value> autoBean = DebuggerExtension.AUTO_BEAN_FACTORY.create(Value.class);
-      AutoBeanUnmarshaller<Value> unmarshaller = new AutoBeanUnmarshaller<Value>(autoBean);
-      try
-      {
-         DebuggerClientService.getInstance().getValue(debuggerInfo.getId(), variable,
-            new AsyncRequestCallback<Value>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(Value result)
-               {
-                  if (result != null)
-                  {
-                     IDE.fireEvent(new UpdateVariableValueInTreeEvent(variable, result));
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
-      }
    }
 
    /**

@@ -335,8 +335,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       previousStatus = buildStatus.getStatus();
 
       StringBuilder message =
-         new StringBuilder("Building project <b>").append(project.getPath().substring(1))
-            .append("</b> has been finished.\r\nResult: ").append(buildStatus.getStatus());
+         new StringBuilder("Finished building project <b>").append(project.getPath().substring(1))
+            .append("</b>.\r\nResult: ").append(buildStatus.getStatus());
 
       if (buildStatus.getStatus() == Status.SUCCESSFUL)
       {
@@ -344,8 +344,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          statusHandler.requestFinished(projectId);
 
-         message.append("\r\nYou can download result of build by <a href=\"").append(buildStatus.getDownloadUrl())
-            .append("\">this link</a>");
+         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
+            .append("\">here</a>");
       }
       else if (buildStatus.getStatus() == Status.FAILED)
       {
