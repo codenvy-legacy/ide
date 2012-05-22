@@ -32,7 +32,7 @@ import org.junit.runners.Suite.SuiteClasses;
    CodeOutLineGroovyTemplateTest.class, CodeOutLineHtmlTest.class, CodeOutlineJavaScriptTest.class,
    CodeOutlineXmlTest.class, CodeOutLineGroovyTest.class, CodeOutLineRESTServiceTest.class,
    OutlineWithSeveralOpenedFilesTest.class, CodeOutLineRubyTest.class, CodeOutLineJavaTest.class,
-   CodeOutLineNetvibesTest.class, CodeOutlineJspTest.class, OutlineClosingTest.class,
+   CodeOutlineJspTest.class, OutlineClosingTest.class,
    OutlineWithOtherTabsInPanelTest.class, ShowOutlineButtonTest.class, CodeOutLinePhpTest.class, 
    CodeOutLineChromatticTest.class})
 public class CodeOutlineTestSuite

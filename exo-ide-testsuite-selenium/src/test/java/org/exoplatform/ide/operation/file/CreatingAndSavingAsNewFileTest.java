@@ -63,8 +63,6 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
 
    private static final String CHROMATTIC_FILE_NAME = "TestChromatticDataObject.groovy";
 
-   private static final String NETVIBES_FILE_NAME = "TestNetvibes.html";
-
    @AfterClass
    public static void tearDown()
    {
@@ -109,7 +107,6 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       createFileAndSaveAs(MenuCommands.New.GROOVY_TEMPLATE_FILE, "gtmpl", GROOVY_TEMPLATE_FILE_NANE);
       createFileAndSaveAs(MenuCommands.New.GROOVY_SCRIPT_FILE, "groovy", GROOVY_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.CHROMATTIC, "cmtc", CHROMATTIC_FILE_NAME);
-      createFileAndSaveAs(MenuCommands.New.NETVIBES_WIDGET, "html", NETVIBES_FILE_NAME);
    }
 
    private void createFileAndSaveAs(String menuTitle, String fileExtention, String fileName)

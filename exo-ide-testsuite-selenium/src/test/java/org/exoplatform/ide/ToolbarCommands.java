@@ -101,8 +101,6 @@ public interface ToolbarCommands
 
       String DEPLOY_SANDBOX = "Deploy REST Service to Sandbox";
 
-      String DEPLOY_UWA_WIDGET = "Deploy UWA widget to Ecosystem";
-
       String UNDEPLOY_SANDBOX = "Undeploy REST Service from Sandbox";
 
       String SET_AUTOLOAD = "Set REST Service Autoload";

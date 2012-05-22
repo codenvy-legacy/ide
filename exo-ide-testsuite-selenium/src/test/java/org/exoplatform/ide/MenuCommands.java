@@ -48,8 +48,6 @@ public interface MenuCommands
 
       String GROOVY_SCRIPT_FILE = "POGO";
 
-      String NETVIBES_WIDGET = "Netvibes Widget";
-
       String GROOVY_TEMPLATE_FILE = "Template";
 
       String FILE_FROM_TEMPLATE = "File From Template...";
@@ -85,8 +83,6 @@ public interface MenuCommands
       public static final String DEPLOY_REST_SERVICE = "Deploy";
 
       public static final String DEPLOY_SANDBOX = "Deploy to Sandbox";
-
-      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
 
       public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
 

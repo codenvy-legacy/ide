@@ -270,11 +270,6 @@
             <version>${project.version}</version>
          </dependency>
 
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-netvibes</artifactId>
-            <version>${project.version}</version>
-         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -397,12 +392,6 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-framework-client</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-netvibes</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -779,7 +768,7 @@
       <module>exo-ide-editor-groovy</module>
       <module>exo-ide-editor-gtmpl</module>
       <module>exo-ide-editor-chromattic</module>
-      <module>exo-ide-editor-netvibes</module>
+      <!-- module>exo-ide-editor-netvibes</module IDE-1663 -->
       <module>exo-ide-editor-java</module>
       <module>exo-ide-editor-jsp</module>
       <module>exo-ide-editor-ruby</module>
@@ -793,7 +782,7 @@
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-debug</module>
-      <module>exo-ide-extension-netvibes</module>
+      <!--module>exo-ide-extension-netvibes</module IDE-1663 --> 
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>

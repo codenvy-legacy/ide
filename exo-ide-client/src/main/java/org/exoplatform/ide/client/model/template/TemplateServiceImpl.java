@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.model.template.marshal.FileTemplateMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateListMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.ProjectTemplateMarshaller;
 import org.exoplatform.ide.client.model.template.marshal.TemplateMarshaller;
-import org.exoplatform.ide.client.samples.NetvibesSamples;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -80,32 +79,6 @@ public class TemplateServiceImpl extends TemplateService
 
       public static final String GROOVY_TEMPLATE_DESCRIPTION = IDE.TEMPLATE_CONSTANT
          .templateGroovyTemplateDescription();
-
-      public static final String NETVIBES_WIDGET = IDE.TEMPLATE_CONSTANT.templateNetvibesWidgetName();
-
-      public static final String NETVIBES_WIDGET_DESCRIPTION = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetDescription();
-
-      public static final String NETVIBES_WIDGET_FLASH = IDE.TEMPLATE_CONSTANT.templateNetvibesWidgetFlashName();
-
-      public static final String NETVIBES_WIDGET_FLASH_DESCRIPTION = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetFlashDescription();
-
-      public static final String NETVIBES_WIDGET_CHART = IDE.TEMPLATE_CONSTANT.templateNetvibesWidgetChartName();
-
-      public static final String NETVIBES_WIDGET_CHART_DESCRIPTION = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetChartDescription();
-
-      public static final String NETVIBES_WIDGET_TABVIEW = IDE.TEMPLATE_CONSTANT.templateNetvibesWidgetTabViewName();
-
-      public static final String NETVIBES_WIDGET_TABVIEW_DESCRIPTION = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetTabViewDescription();
-
-      public static final String NETVIBES_WIDGET_SAMPLE_BLOG_POST = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetSampleBlogPostName();
-
-      public static final String NETVIBES_WIDGET_SAMPLE_BLOG_POST_DESCRIPTION = IDE.TEMPLATE_CONSTANT
-         .templateNetvibesWidgetSampleBlogPostDescription();
 
    }
 
@@ -309,25 +282,6 @@ public class TemplateServiceImpl extends TemplateService
          .add(new FileTemplate(MimeType.GROOVY_TEMPLATE, DefaultFileTemplates.GROOVY_TEMPLATE,
             DefaultFileTemplates.GROOVY_TEMPLATE_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.GROOVY_TEMPLATE),
             true));
-
-      fileTemplates.add(new FileTemplate(MimeType.UWA_WIDGET, DefaultFileTemplates.NETVIBES_WIDGET,
-         DefaultFileTemplates.NETVIBES_WIDGET_DESCRIPTION, FileTemplates.getTemplateFor(MimeType.UWA_WIDGET), true));
-
-      fileTemplates.add(new FileTemplate(MimeType.UWA_WIDGET, DefaultFileTemplates.NETVIBES_WIDGET_FLASH,
-         DefaultFileTemplates.NETVIBES_WIDGET_FLASH_DESCRIPTION, NetvibesSamples.INSTANCE.getSampleFlashWidgetSource()
-            .getText(), true));
-
-      fileTemplates.add(new FileTemplate(MimeType.UWA_WIDGET, DefaultFileTemplates.NETVIBES_WIDGET_CHART,
-         DefaultFileTemplates.NETVIBES_WIDGET_CHART_DESCRIPTION, NetvibesSamples.INSTANCE.getSampleChartWidgetSource()
-            .getText(), true));
-
-      fileTemplates.add(new FileTemplate(MimeType.UWA_WIDGET, DefaultFileTemplates.NETVIBES_WIDGET_TABVIEW,
-         DefaultFileTemplates.NETVIBES_WIDGET_TABVIEW_DESCRIPTION, NetvibesSamples.INSTANCE
-            .getSampleTabbedWidgetSource().getText(), true));
-
-      fileTemplates.add(new FileTemplate(MimeType.UWA_WIDGET, DefaultFileTemplates.NETVIBES_WIDGET_SAMPLE_BLOG_POST,
-         DefaultFileTemplates.NETVIBES_WIDGET_SAMPLE_BLOG_POST_DESCRIPTION, NetvibesSamples.INSTANCE
-            .getSampleBlogPostWidgetSource().getText(), true));
 
       return fileTemplates;
    }

@@ -43,9 +43,6 @@ public interface BaseSamples extends ClientBundle
    @Source("base/html.html")
    TextResource getHtml();
 
-   @Source("base/netvibse.html")
-   TextResource getNetvibse();
-
    @Source("base/rest-service.grs")
    TextResource getRestService();
 

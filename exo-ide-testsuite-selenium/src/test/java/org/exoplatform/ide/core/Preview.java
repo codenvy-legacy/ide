@@ -42,7 +42,7 @@ public class Preview extends AbstractTestModule
 
    private static final String HTML_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
 
-   // XXX: only for groovy template and netvibes preview
+   // XXX: only for groovy template and google gadgets preview
    private static final String PREVIEW_FRAME_ID = "eXo-IDE-preview-frame";
 
    private static final String PREVIEW_HTML_FRAME_ID = "//iframe[@class='gwt-Frame']";

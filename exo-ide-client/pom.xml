@@ -228,11 +228,6 @@
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-editor-netvibes</artifactId>
-            </dependency>
-
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-editor-ruby</artifactId>
             </dependency>
 
@@ -269,11 +264,6 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-jenkins</artifactId>
-            </dependency>
-
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-netvibes</artifactId>
             </dependency>
 
             <dependency>

@@ -366,7 +366,7 @@ public class CustomizeToolbar extends AbstractTestModule
             "Open File By Path...", "Open by URL...", "Download File...", "Download Zipped Folder...", "Save",
             "Save As...", "Save All", "Save As Template...", "Delete...", "Rename...", "Search...",
             "Refresh Selected Folder", "File / New", "Create Folder...", "New TEXT", "New OpenSocial Gadget",
-            "New Netvibes Widget", "New XML", "New Java Script", "New HTML", "New CSS", "New REST Service", "New POGO",
+            "New XML", "New Java Script", "New HTML", "New CSS", "New REST Service", "New POGO",
             "New Template", "New Data Object", "New Package", "New Java Class", "New JSP File", "New Ruby File",
             "New PHP File", "Create File From Template...", "Project / New", "Create Project...", "Create Project...",
             "Import a Sample Project...", "Import from GitHub...", "Project", "Open...", "Close", "Properties...",
