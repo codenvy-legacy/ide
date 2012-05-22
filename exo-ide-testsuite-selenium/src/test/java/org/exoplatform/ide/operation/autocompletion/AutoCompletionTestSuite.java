@@ -44,7 +44,6 @@ import org.junit.runners.Suite.SuiteClasses;
                AutoCompletionJavaScriptDuplicationTest.class,// 
                AutoCompletionJavaScriptTest.class, //
                AutoCompletionXMLTest.class,//
-               AutocompleteNetvibesJsTest.class,//
                GroovyObjectCompletionTest.class,//
                GroovyClassMethodsCompletionTest.class,//
                GroovyClassNameCompletionTest.class, //
@@ -54,7 +53,6 @@ import org.junit.runners.Suite.SuiteClasses;
                ImportStatementInsertionTest.class,//
                GroovyProjectAutocompletionTest.class,//
                ChrommaticImportAssistantTest.class, //
-               NetvibesApiAutocompletionTest.class, //
                AutoCompleteJspTest.class,
                JavaCodeAssistantTest.class})
 public class AutoCompletionTestSuite

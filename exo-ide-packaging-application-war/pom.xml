@@ -58,10 +58,6 @@
          <artifactId>exo-ide-editor-chromattic</artifactId>
       </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-netvibes</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -106,11 +102,6 @@
           <groupId>org.exoplatform.ide</groupId>
           <artifactId>exo-ide-extension-java-debug</artifactId>
        </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-netvibes</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

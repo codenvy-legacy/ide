@@ -116,8 +116,6 @@ public interface Images
 
       public static final String FOLDER = IMAGE_URL + "filetype/folder_closed.png";
 
-      public static final String UWA_WIDGET = IMAGE_URL + "filetype/uwa-widget.png";
-
       public static final String JSON = IMAGE_URL + "filetype/json.png";
 
       // TODO add appropriate icon

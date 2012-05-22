@@ -76,54 +76,11 @@
       <mime-type>text/html</mime-type>
    </template>
    <template>
-      <name>netvibes.html</name>
-      <description>Netvibes Widget Skeleton</description>
-      <type>file</type>
-      <src>base/netvibes.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
-   </template>
-   <template>
       <name>rest-service.grs</name>
       <description>Sample of Groovy REST service</description>
       <type>file</type>
       <src>base/rest-service.grs</src>
       <mime-type>application/x-jaxrs+groovy</mime-type>
       <jcr-content-node-type>exo:groovyResourceContainer</jcr-content-node-type>
-   </template>
-   <!-- netvibes file templates -->
-   <template>
-      <name>SampleBlogPostWidget.html</name>
-      <description>Netvibes Sample Blog Post Widget</description>
-      <type>file</type>
-      <src>netvibes/SampleBlogPostWidget.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
-   </template>
-   <template>
-      <name>SampleChartWidget.html</name>
-      <description>Netvibes Widget Chart</description>
-      <type>file</type>
-      <src>netvibes/SampleChartWidget.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
-   </template>
-   <template>
-      <name>SampleFlashWidget.html</name>
-      <description>Netvibes Widget Flash</description>
-      <type>file</type>
-      <src>netvibes/SampleFlashWidget.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
-   </template>
-   <template>
-      <name>SampleTabbedWidget.html</name>
-      <description>Netvibes Widget Tabview</description>
-      <type>file</type>
-      <src>netvibes/SampleTabbedWidget.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
-   </template>
-   <template>
-      <name>SampleW3CWidget.html</name>
-      <description>Netvibes Widget W3C</description>
-      <type>file</type>
-      <src>netvibes/SampleW3CWidget.html</src>
-      <mime-type>application/x-uwa-widget</mime-type>
    </template>
 </templates>

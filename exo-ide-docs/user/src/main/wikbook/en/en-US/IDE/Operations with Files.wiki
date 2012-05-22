@@ -130,7 +130,6 @@ The following table is the list of MIME types registered in the eXo IDE.
 | *Google Gadget* | application/x-google-gadget | .xml | Code Editor |
 | *JavaScript* | text/javascript; application/javascript; application/x-javascript | .js | Code Editor |
 | *CSS* | text/css | .css | Code Editor |
-| *Netvibes Widget* | application/x-uwa-widget | .html | Code Editor |
 | *Data Object* | application/x-chromattic+groovy | .groovy | Code Editor |
 | *<unrecognized>* | binary/octet-stream | | |
 
