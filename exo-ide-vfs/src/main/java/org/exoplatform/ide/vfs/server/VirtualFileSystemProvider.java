@@ -19,10 +19,11 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 
 /**
  * Produce instance of VirtualFileSystem.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -30,10 +31,14 @@ public interface VirtualFileSystemProvider
 {
    /**
     * Create instance of VirtualFileSystem.
-    * 
-    * @param requestContext request context
+    *
+    * @param requestContext
+    *    request context
+    * @param listeners
+    *    listeners VirtualFileSystem may notify listeners about changes of its items
     * @return instance of VirtualFileSystem
     * @throws VirtualFileSystemException
     */
-   VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException;
+   VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
+      throws VirtualFileSystemException;
 }

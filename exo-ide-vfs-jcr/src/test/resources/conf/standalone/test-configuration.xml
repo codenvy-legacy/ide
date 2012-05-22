@@ -30,6 +30,10 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>

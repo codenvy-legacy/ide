@@ -116,7 +116,7 @@ public class HerokuService
    public Map<String, String> appsCreate(@QueryParam("remote") String remote) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Map<String, String> application =
          heroku.createApplication(appName, remote,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
@@ -134,7 +134,7 @@ public class HerokuService
    @POST
    public void appsDestroy() throws HerokuException, IOException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       heroku.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
 
@@ -154,7 +154,7 @@ public class HerokuService
    public Map<String, String> appsInfo(@QueryParam("raw") boolean inRawFormat) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.applicationInfo(appName, inRawFormat,
          (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -174,7 +174,7 @@ public class HerokuService
    public Map<String, String> appsRename(@QueryParam("newname") String newname) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Map<String, String> application =
          heroku.renameApplication(appName, newname,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
@@ -197,7 +197,7 @@ public class HerokuService
    public List<Stack> appsStack() throws HerokuException, IOException, ParsingResponseException,
       LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku
          .getStacks(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
    }
@@ -208,7 +208,7 @@ public class HerokuService
    public byte[] stackMigrate(@QueryParam("stack") String stack) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.stackMigrate(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null, stack);
    }
@@ -219,7 +219,7 @@ public class HerokuService
    public byte[] logs(@QueryParam("num") int logLines) throws HerokuException, IOException, ParsingResponseException,
       LocalPathResolveException, VirtualFileSystemException, Exception
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.logs(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
          logLines);
    }
@@ -231,7 +231,7 @@ public class HerokuService
    public StreamingOutput run(final String command) throws HerokuException, IOException, ParsingResponseException,
       LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       final HttpChunkReader chunkReader =
          heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, command);
       return new StreamingOutput()

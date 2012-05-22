@@ -74,7 +74,7 @@ public abstract class BaseTest
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       assertNotNull(virtualFileSystemRegistry);
 
-      virtualFileSystem = virtualFileSystemRegistry.getProvider(vfs_id).newInstance(null);
+      virtualFileSystem = virtualFileSystemRegistry.getProvider(vfs_id).newInstance(null, null);
 
       testRoot =
          virtualFileSystem.createFolder(virtualFileSystem.getInfo().getRoot().getId(), getClass().getSimpleName());

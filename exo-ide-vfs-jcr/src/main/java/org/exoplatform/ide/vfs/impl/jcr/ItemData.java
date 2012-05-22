@@ -787,7 +787,7 @@ abstract class ItemData
          destinationPath += destinationPath.equals("/") ? getName() : ("/" + getName());
          Session session = node.getSession();
          session.getWorkspace().copy(itemPath, destinationPath);
-         return fromNode((Node)session.getItem(destinationPath), destinationPath);
+         return fromNode((Node)session.getItem(destinationPath), rootNodePath);
       }
       catch (ItemExistsException e)
       {

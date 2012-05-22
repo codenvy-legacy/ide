@@ -26,6 +26,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
@@ -51,13 +52,25 @@ public final class JcrFileSystemInitializer implements Startable
    private final RepositoryService repositoryService;
    private final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    private final VirtualFileSystemRegistry vfsRegistry;
+   private final EventListenerList listeners;
    /** Configurations of JCR workspaces for which need have access via VFS. */
    private final List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
 
-   public JcrFileSystemInitializer(InitParams initParams, RepositoryService repositoryService,
-                                   MediaType2NodeTypeResolver itemType2NodeTypeResolver, VirtualFileSystemRegistry vfsRegistry)
+   public JcrFileSystemInitializer(InitParams initParams,
+                                   RepositoryService repositoryService,
+                                   MediaType2NodeTypeResolver itemType2NodeTypeResolver,
+                                   VirtualFileSystemRegistry vfsRegistry,
+                                   EventListenerList listeners)
    {
-      this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry);
+      this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry, listeners);
+   }
+
+   public JcrFileSystemInitializer(InitParams initParams,
+                                   RepositoryService repositoryService,
+                                   MediaType2NodeTypeResolver itemType2NodeTypeResolver,
+                                   VirtualFileSystemRegistry vfsRegistry)
+   {
+      this(repositoryService, itemType2NodeTypeResolver, getConfigurations(initParams), vfsRegistry, null);
    }
 
    /**
@@ -142,27 +155,38 @@ public final class JcrFileSystemInitializer implements Startable
 
    public JcrFileSystemInitializer(InitParams initParams,
                                    RepositoryService repositoryService,
+                                   VirtualFileSystemRegistry vfsRegistry,
+                                   EventListenerList listeners)
+   {
+      this(initParams, repositoryService, new MediaType2NodeTypeResolver(), vfsRegistry, listeners);
+   }
+
+   public JcrFileSystemInitializer(InitParams initParams,
+                                   RepositoryService repositoryService,
                                    VirtualFileSystemRegistry vfsRegistry)
    {
-      this(initParams, repositoryService, new MediaType2NodeTypeResolver(), vfsRegistry);
+      this(initParams, repositoryService, vfsRegistry, null);
    }
 
    /* ================================================================== */
 
    public JcrFileSystemInitializer(RepositoryService repositoryService,
                                    Collection<JcrFileSystemConfiguration> configurations,
-                                   VirtualFileSystemRegistry vfsRegistry)
+                                   VirtualFileSystemRegistry vfsRegistry,
+                                   EventListenerList listeners)
    {
-      this(repositoryService, new MediaType2NodeTypeResolver(), configurations, vfsRegistry);
+      this(repositoryService, new MediaType2NodeTypeResolver(), configurations, vfsRegistry, listeners);
    }
 
    public JcrFileSystemInitializer(RepositoryService repositoryService,
                                    MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
                                    Collection<JcrFileSystemConfiguration> configurations,
-                                   VirtualFileSystemRegistry vfsRegistry)
+                                   VirtualFileSystemRegistry vfsRegistry,
+                                   EventListenerList listeners)
    {
       this.repositoryService = repositoryService;
       this.vfsRegistry = vfsRegistry;
+      this.listeners = listeners;
       if (mediaType2NodeTypeResolver == null)
       {
          throw new NullPointerException("MediaType2NodeTypeResolver may not be null. ");
@@ -178,7 +202,7 @@ public final class JcrFileSystemInitializer implements Startable
    @Override
    public void start()
    {
-      URLHandlerFactorySetup.setup(vfsRegistry);
+      URLHandlerFactorySetup.setup(vfsRegistry, listeners);
       initializeProviders();
    }
 
@@ -237,7 +261,8 @@ public final class JcrFileSystemInitializer implements Startable
       }
 
       @Override
-      public VirtualFileSystem newInstance(RequestContext requestContext) throws VirtualFileSystemException
+      public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
+         throws VirtualFileSystemException
       {
          ManageableRepository repository;
          String ws = workspace;
@@ -253,8 +278,13 @@ public final class JcrFileSystemInitializer implements Startable
          {
             throw new VirtualFileSystemException(re.getMessage(), re);
          }
-         return new JcrFileSystem(repository, ws, rootNodePath, id, mediaType2NodeTypeResolver, requestContext != null
-            ? requestContext.getUriInfo().getBaseUri() : URI.create(""));
+         return new JcrFileSystem(repository,
+            ws,
+            rootNodePath,
+            id,
+            mediaType2NodeTypeResolver,
+            requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
+            listeners);
       }
    }
 }

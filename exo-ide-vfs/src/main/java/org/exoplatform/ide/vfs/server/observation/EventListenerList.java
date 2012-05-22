@@ -67,7 +67,7 @@ public class EventListenerList
     *    addEventListener(ChangeEventFilter.createAndFilter(
     *       new VfsIDFilter("my-vfs"), // from "my-vfs" only
     *       new TypeFilter(ChangeEvent.ChangeType.CONTENT_UPDATED), // only update of content
-    *       new MimeTypeFilter("application/xml") // media type application/xml
+    *       new MimeTypeFilter("application/xml"), // media type application/xml
     *       new PathFilter("^(.&#042/)?web\\.xml")), // any web.xml files
     *       listener
     *    );

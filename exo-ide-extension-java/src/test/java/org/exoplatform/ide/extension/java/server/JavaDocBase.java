@@ -57,7 +57,7 @@ public abstract class JavaDocBase extends Base
    public static void init() throws VirtualFileSystemException, IOException, InterruptedException
    {
       vfsRegistry = (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
-      vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null);
+      vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, null);
       try
       {
          project =

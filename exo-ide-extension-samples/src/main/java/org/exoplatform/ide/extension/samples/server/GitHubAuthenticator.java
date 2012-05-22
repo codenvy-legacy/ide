@@ -113,7 +113,7 @@ public class GitHubAuthenticator
     */
    public GitHubCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/github/github-credentials";
       ContentStream content = null;
@@ -154,7 +154,7 @@ public class GitHubAuthenticator
     */
    public void writeCredentials(Credentials credentials) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder gitHub = getConfigParent(vfs);
       try
       {
@@ -184,7 +184,7 @@ public class GitHubAuthenticator
     */
    public void removeCredentials() throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/github/github-credentials";
       Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);

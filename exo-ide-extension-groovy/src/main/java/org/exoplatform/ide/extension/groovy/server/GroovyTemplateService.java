@@ -106,7 +106,7 @@ public class GroovyTemplateService
       if (id == null || id.isEmpty())
          throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, null);
       return vfs.getContent(id).getStream();
    }
 }

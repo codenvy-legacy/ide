@@ -90,7 +90,7 @@ public class GroovyScriptService
                        @QueryParam("projectid") String projectId //
    ) throws VirtualFileSystemException, JsonException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Class<?> toDeploy = compile(vfs, projectId, fileId);
       restfulComponents.registerComponentImplementation(GroovyComponentKey.make(vfs.getInfo().getId(), fileId), toDeploy);
    }
@@ -110,7 +110,7 @@ public class GroovyScriptService
                          @QueryParam("vfsid") String vfsId //
    ) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (null == restfulComponents.unregisterComponent(GroovyComponentKey.make(vfs.getInfo().getId(), fileId)))
       {
          throw new WebApplicationException( //
@@ -145,7 +145,7 @@ public class GroovyScriptService
                                 @QueryParam("projectid") String projectId //
    ) throws VirtualFileSystemException, JsonException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       GroovyComponentKey key = GroovyComponentKey.make(vfs.getInfo().getId(), fileId);
       final String userId = ConversationState.getCurrent().getIdentity().getUserId();
       final long expired = System.currentTimeMillis() + RESOURCE_LIVE_TIME;
@@ -170,7 +170,7 @@ public class GroovyScriptService
                                     @QueryParam("vfsid") String vfsId //
    ) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       ComponentAdapter component = restfulComponents.getComponentAdapter(GroovyComponentKey.make(vfs.getInfo().getId(), fileId));
       if (null == component)
       {
@@ -214,7 +214,7 @@ public class GroovyScriptService
                          InputStream inputStream //
    ) throws VirtualFileSystemException, JsonException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       compile(vfs, projectId, inputStream, name);
    }
 

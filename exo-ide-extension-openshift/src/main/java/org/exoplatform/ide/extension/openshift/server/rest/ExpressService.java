@@ -101,7 +101,7 @@ public class ExpressService
    public AppInfo createApplication(@QueryParam("type") String type) throws ExpressException, IOException,
       ParsingResponseException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       AppInfo application =
          express.createApplication(appName, type,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
@@ -130,7 +130,7 @@ public class ExpressService
    public AppInfo applicationInfo() throws ExpressException, IOException, ParsingResponseException,
       VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return express.applicationInfo(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
    }
@@ -140,7 +140,7 @@ public class ExpressService
    public void destroyApplication() throws ExpressException, IOException, ParsingResponseException,
       VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       express.destroyApplication(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId))
          : null);
 
