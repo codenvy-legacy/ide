@@ -53,6 +53,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.js");
       javaScriptTest();
+     
    }
 
    @Test
@@ -172,6 +173,7 @@ public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.checkElementNotPresent("privateFunc2OfTopFunc()");
 
       IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 
 }
