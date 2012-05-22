@@ -38,6 +38,31 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("login.button")
    String loginButton();
 
+   @Key("ready.button")
+   String readyButton();
+
+   /* Create application */
+   @Key("create.application.control.title")
+   String createApplicationControlTitle();
+
+   @Key("create.application.control.prompt")
+   String createApplicationControlPrompt();
+
+   @Key("create.application.view.title")
+   String createApplicationViewTitle();
+
+   @Key("create.application.instruction")
+   String createApplicationInstruction();
+
+   @Key("create.application.logged.note")
+   String createApplicationLoggedNote();
+
+   @Key("create.application.deploy.field")
+   String createApplicationDeployField();
+
+   @Key("create.application.cannot.deploy")
+   String createApplicationCannotDeploy();
+
    /* Deploy application */
    @Key("deploy.application.control.title")
    String deployApplicationControlTitle();
@@ -47,13 +72,23 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("deploy.application.success")
    String deployApplicationSuccess(String project);
-   
+
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);
-   
+
    @Key("deploy.application.finished")
    String deployApplicationFinished(String projectName);
-   
+
+   /* Rollback update */
+   @Key("rollback.update.control.title")
+   String rollbackUpdateControlTitle();
+
+   @Key("rollback.update.control.prompt")
+   String rollbackUpdateControlPrompt();
+
+   @Key("rollback.update.success")
+   String rollbackUpdateSuccess();
+
    /* Log in */
    @Key("login.view.title")
    String loginViewTitle();

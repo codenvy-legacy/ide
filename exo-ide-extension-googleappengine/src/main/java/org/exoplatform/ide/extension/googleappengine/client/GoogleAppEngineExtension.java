@@ -24,8 +24,10 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -49,9 +51,11 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new GoogleAppEngineControl());
-     
+
+      new CreateApplicationPresenter();
       new DeployApplicationPresenter();
       new LoginPresenter();
+      new RollbackUpdatePresenter();
    }
 
    /**
