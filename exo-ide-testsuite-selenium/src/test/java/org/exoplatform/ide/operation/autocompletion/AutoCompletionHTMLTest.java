@@ -90,6 +90,7 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
       assertTrue(IDE.CODEASSISTANT.isElementPresent("acronym"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("a"));
       IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    private void htmlTest() throws Exception
@@ -122,6 +123,7 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    private void googleGadgetTest() throws Exception
@@ -157,5 +159,6 @@ public class AutoCompletionHTMLTest extends CodeAssistantBaseTest
 
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("<p class=\"\"></p>"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 }
