@@ -229,7 +229,7 @@ public class ShellConfigurationService
    {
       try
       {
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
          String user = ConversationState.getCurrent().getIdentity().getUserId();
          String userSettingsPath = config + user + "/settings";
          checkUserConfigNode(vfs, userSettingsPath);
@@ -286,7 +286,7 @@ public class ShellConfigurationService
       {
          String user = ConversationState.getCurrent().getIdentity().getUserId();
          String tokenPath = config + user + "/settings/userSettings";
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
 
          ContentStream contentStream = null;
          try

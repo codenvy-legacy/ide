@@ -180,7 +180,7 @@ public class HerokuAuthenticator
 
    public HerokuCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/heroku/heroku-credentials";
       ContentStream content = null;
@@ -214,7 +214,7 @@ public class HerokuAuthenticator
 
    public void writeCredentials(HerokuCredentials credentials) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder heroku = getConfigParent(vfs);
       try
       {
@@ -239,7 +239,7 @@ public class HerokuAuthenticator
 
    public void removeCredentials() throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/heroku/heroku-credentials";
       Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);
@@ -251,7 +251,7 @@ public class HerokuAuthenticator
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String herokuPath = config + user + "/heroku";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Folder heroku = null;
+      Folder heroku;
       try
       {
          Item item = vfs.getItemByPath(herokuPath, null, PropertyFilter.NONE_FILTER);

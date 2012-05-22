@@ -82,7 +82,7 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected TypeInfo getClassByFqnFromProject(String fqn, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       try
       {
          GroovyClassPath groovyClassPath = GroovyClassPathHelper.getGroovyClassPath(projectId, vfs);
@@ -118,7 +118,7 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected List<ShortTypeInfo> getTypesByNamePrefixFromProject(String className, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
 
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
       try
@@ -170,7 +170,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       throws VirtualFileSystemException, CodeAssistantException
    {
       List<ShortTypeInfo> classNames = null;
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
       if (item.getItemType() != ItemType.FILE)
          throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
@@ -33,15 +35,36 @@ public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandle
 
    private final VirtualFileSystemRegistry registry;
 
+   private final EventListenerList listeners;
+
    /**
-    * @param delegate factory which we should ask to create URLStreamHandler if current factory does not support
-    * requested protocol.
-    * @param registry set of all available virtual file systems
+    * @param delegate
+    *    factory which we should ask to create URLStreamHandler if current factory does not support
+    *    requested protocol.
+    * @param registry
+    *    set of all available virtual file systems
+    * @param listeners
+    *    EventListenerList
     */
-   public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry)
+   public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate,
+                                             VirtualFileSystemRegistry registry,
+                                             EventListenerList listeners)
    {
       this.delegate = delegate;
       this.registry = registry;
+      this.listeners = listeners;
+   }
+
+   /**
+    * @param delegate
+    *    factory which we should ask to create URLStreamHandler if current factory does not support
+    *    requested protocol.
+    * @param registry
+    *    set of all available virtual file systems
+    */
+   public VirtualFileSystemURLHandlerFactory(URLStreamHandlerFactory delegate, VirtualFileSystemRegistry registry)
+   {
+      this(delegate, registry, null);
    }
 
    /** @see java.net.URLStreamHandlerFactory#createURLStreamHandler(java.lang.String) */
@@ -50,7 +73,7 @@ public final class VirtualFileSystemURLHandlerFactory implements URLStreamHandle
    {
       if ("ide+vfs".equals(protocol))
       {
-         return new VirtualFileSystemResourceHandler(registry);
+         return new VirtualFileSystemResourceHandler(registry, listeners);
       }
       else if (delegate != null)
       {

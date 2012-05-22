@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -48,6 +49,8 @@ public final class VirtualFileSystemURLConnection extends URLConnection
 
    private final VirtualFileSystemRegistry registry;
 
+   private final EventListenerList listeners;
+
    private VirtualFileSystem vfs;
 
    private Item item;
@@ -56,10 +59,13 @@ public final class VirtualFileSystemURLConnection extends URLConnection
     * @param url the URL
     * @param registry virtual file system registry
     */
-   public VirtualFileSystemURLConnection(URL url, VirtualFileSystemRegistry registry)
+   public VirtualFileSystemURLConnection(URL url,
+                                         VirtualFileSystemRegistry registry,
+                                         EventListenerList listeners)
    {
       super(check(url)); // Be sure URL is correct.
       this.registry = registry;
+      this.listeners = listeners;
    }
 
    private static URL check(URL url)
@@ -81,7 +87,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
          (path == null || "/".equals(path)) ? null : (path.startsWith("/")) ? path.substring(1) : path;
       try
       {
-         vfs = registry.getProvider(vfsId).newInstance(null);
+         vfs = registry.getProvider(vfsId).newInstance(null, listeners);
          final String itemIdentifier = theUri.getFragment();
          item = (itemIdentifier.startsWith("/")) //
             ? vfs.getItemByPath(itemIdentifier, null, PropertyFilter.NONE_FILTER) //
