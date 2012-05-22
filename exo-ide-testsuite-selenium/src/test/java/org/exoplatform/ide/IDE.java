@@ -77,8 +77,9 @@ import org.exoplatform.ide.core.WelcomePage;
 import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.exoplatform.ide.debug.DebugChangeVariable;
+import org.exoplatform.ide.core.Debuger;
 
-;
 
 /**
  * 
@@ -214,6 +215,8 @@ public class IDE
    public PopupDialogsBrowser POPUP;
 
    public ContextMenu CONTEXT_MENU;
+  
+   public Debuger DEBUGER;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -275,6 +278,7 @@ public class IDE
       ERROR_MARKS = PageFactory.initElements(driver, ErrorMarks.class);
       CODE_ASSISTANT_JAVA = PageFactory.initElements(driver, CodeAssistantJava.class);
       POPUP = PageFactory.initElements(driver, PopupDialogsBrowser.class);
+      DEBUGER = PageFactory.initElements(driver, Debuger.class);
    }
 
    public Selenium getSelenium()
