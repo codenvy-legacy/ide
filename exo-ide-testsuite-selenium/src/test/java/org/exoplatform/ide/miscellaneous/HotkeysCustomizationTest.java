@@ -149,8 +149,6 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent(3);
    }
 
-   //  }
-
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
