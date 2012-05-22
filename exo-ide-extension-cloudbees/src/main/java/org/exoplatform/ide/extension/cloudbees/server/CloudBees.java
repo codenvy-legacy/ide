@@ -416,7 +416,7 @@ public class CloudBees
 
    private CloudBeesCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
       ContentStream content = null;
@@ -458,7 +458,7 @@ public class CloudBees
 
    private void writeCredentials(CloudBeesCredentials credentials) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder cloudBees = getConfigParent(vfs);
       try
       {
@@ -483,7 +483,7 @@ public class CloudBees
 
    private void removeCredentials() throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
       Item credentialsFile = vfs.getItemByPath(keyPath, null, PropertyFilter.NONE_FILTER);

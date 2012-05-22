@@ -79,7 +79,7 @@ public class JenkinsService
       @QueryParam("vfsid") String vfsId, @Context UriInfo uriInfo) throws IOException, JenkinsException,
       VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       String git = gitUrlResolver.resolve(uriInfo, vfs, projectId);
       jenkins.createJob(name, git, user, email, vfs, projectId);
       String buildUrl = uriInfo.getBaseUriBuilder().path(getClass(), "build").build(name).toString();
@@ -94,7 +94,7 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      jenkins.build(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+      jenkins.build(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
    }
 
    @Path("job/status")
@@ -105,7 +105,7 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      return jenkins.jobStatus(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      return jenkins.jobStatus(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId);
    }
 
@@ -117,7 +117,7 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      return jenkins.consoleOutput(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      return jenkins.consoleOutput(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId);
    }
 
@@ -128,6 +128,6 @@ public class JenkinsService
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      jenkins.deleteJob(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+      jenkins.deleteJob(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
    }
 }

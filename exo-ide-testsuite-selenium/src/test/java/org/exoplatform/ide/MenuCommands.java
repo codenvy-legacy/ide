@@ -109,6 +109,13 @@ public interface MenuCommands
       public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
 
       public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
+
+      public static final String DEBUG_APPLICATION = "Debug Application";
+
+      public static final String RUN_APPLICATION = "Run Application";
+
+      public static final String STOP_APPLICATION = "STOP Application";
+
    }
 
    public interface View

@@ -213,8 +213,8 @@ public class ProjectExplorer extends AbstractTestModule
    {
       WebElement item = driver().findElement(By.id(getItemId(path)));
       item.click();
-      item.sendKeys(Keys.ARROW_RIGHT);
-    }
+      new Actions(driver()).doubleClick(item).build().perform();
+   }
 
    /**
     * Is item present in project explorer tree.
@@ -253,6 +253,19 @@ public class ProjectExplorer extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   /**
+    * Press right arrow for expand item
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void expandItem(String path) throws Exception
+   {
+      WebElement item = driver().findElement(By.id(getItemId(path)));
+      item.click();
+      item.sendKeys(Keys.ARROW_RIGHT);
    }
 
    /**

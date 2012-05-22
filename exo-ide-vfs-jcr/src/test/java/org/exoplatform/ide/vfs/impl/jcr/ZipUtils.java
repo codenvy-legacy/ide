@@ -26,7 +26,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -80,7 +82,26 @@ class ZipUtils
       zip.close();
       return unzipRoot;
    }
-   
+
+   static Set<String> getFileList(InputStream in) throws IOException
+   {
+      ZipInputStream zip = new ZipInputStream(in);
+      ZipEntry zipEntry;
+      Set<String> result = new HashSet<String>();
+      while ((zipEntry = zip.getNextEntry()) != null)
+      {
+         String zipEntryName = zipEntry.getName();
+         if (zipEntryName.endsWith("/"))
+         {
+            zipEntryName = zipEntryName.substring(0, zipEntryName.length() - 1);
+         }
+         result.add(zipEntryName);
+         zip.closeEntry();
+      }
+      zip.close();
+      return result;
+   }
+
    static class TreeWalker
    {
       private final File fsTree;

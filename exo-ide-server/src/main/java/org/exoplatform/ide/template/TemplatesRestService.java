@@ -345,7 +345,7 @@ public class TemplatesRestService
          context = contextResolver.getContext(RequestContext.class);
       }
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, null);
       Folder projectFolder = vfs.createFolder(parentId, name);
       InputStream templateStream =
          Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
@@ -638,7 +638,7 @@ public class TemplatesRestService
    {
       try
       {
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
          checkConfigNode(vfs);
 
          String id = "";
@@ -714,7 +714,7 @@ public class TemplatesRestService
       try
       {
          String tokenPath = config + "/" + templateType;
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
 
          ContentStream contentStream = null;
          try

@@ -103,8 +103,7 @@ public class CloudfoundryAuthenticator
 
    /**
     * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
-    * should be used by {@link #authenticate(HttpURLConnection)} instead of username/password for any request to
-    * cloudfoundry service.
+    * should be used instead of username/password for any request to cloudfoundry service.
     * 
     * @param target location of Cloud Foundry REST API, e.g. http://api.cloudfoundry.com
     * @param email email address that used when signup to cloudfoundry.com
@@ -195,7 +194,7 @@ public class CloudfoundryAuthenticator
 
    public String readTarget() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_target";
       String target = FilesHelper.readFile(vfs, path);
@@ -208,7 +207,7 @@ public class CloudfoundryAuthenticator
 
    public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_token";
       String str = FilesHelper.readFile(vfs, path);
@@ -235,13 +234,13 @@ public class CloudfoundryAuthenticator
 
    public void writeTarget(String target) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       writeFile(vfs, getConfigParent(vfs), "vmc_target", target);
    }
 
    public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Writer w = new JsonHelper.FastStrWriter();
       credentials.writeTo(w);
       writeFile(vfs, getConfigParent(vfs), "vmc_token", w.toString());

@@ -86,7 +86,7 @@ public class RestDataObjectService
          throw new IllegalArgumentException("Id of groovy source item may not be null.  ");
       }
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, null);
       GroovyClassPath classPath = null;
       if (null != projectId)
       {

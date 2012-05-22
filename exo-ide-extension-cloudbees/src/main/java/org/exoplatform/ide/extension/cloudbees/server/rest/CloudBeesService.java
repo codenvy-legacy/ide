@@ -91,7 +91,7 @@ public class CloudBeesService
    ) throws Exception
    {
       return cloudbees.createApplication(appId, message,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
    }
 
    @Path("apps/update")
@@ -104,7 +104,7 @@ public class CloudBeesService
    ) throws Exception
    {
       return cloudbees.updateApplication(appId, message,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
    }
 
    @Path("apps/info")
@@ -112,7 +112,7 @@ public class CloudBeesService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> applicationInfo() throws Exception
    {
-      return cloudbees.applicationInfo(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      return cloudbees.applicationInfo(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId);
    }
 
@@ -120,7 +120,7 @@ public class CloudBeesService
    @POST
    public void deleteApplication() throws Exception
    {
-      cloudbees.deleteApplication(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      cloudbees.deleteApplication(appId, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId);
    }
 

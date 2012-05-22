@@ -116,7 +116,7 @@ public class CloudfoundryService
       @QueryParam("projectid") String projectId //
    ) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-      return cloudfoundry.applicationInfo(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      return cloudfoundry.applicationInfo(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
    }
 
@@ -143,7 +143,7 @@ public class CloudfoundryService
          debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
       }
       return cloudfoundry.createApplication(server, app, framework, url, instances, memory, noStart, debugMode,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId, war);
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
    }
 
    @Path("apps/start")
@@ -163,7 +163,7 @@ public class CloudfoundryService
          debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
       }
       return cloudfoundry.startApplication(server, app, debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId)
-         .newInstance(null) : null, projectId);
+         .newInstance(null, null) : null, projectId);
    }
 
    @Path("apps/stop")
@@ -176,7 +176,7 @@ public class CloudfoundryService
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       cloudfoundry.stopApplication(server, app,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
    }
 
    @Path("apps/restart")
@@ -196,7 +196,7 @@ public class CloudfoundryService
          debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
       }
       return cloudfoundry.restartApplication(server, app,
-         debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         debugMode, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId);
    }
 
@@ -224,7 +224,7 @@ public class CloudfoundryService
       @QueryParam("war") URL war //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.updateApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      cloudfoundry.updateApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, war);
    }
 
@@ -238,7 +238,7 @@ public class CloudfoundryService
       @QueryParam("url") String url //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.mapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      cloudfoundry.mapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, url);
    }
 
@@ -252,7 +252,7 @@ public class CloudfoundryService
       @QueryParam("url") String url //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.unmapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      cloudfoundry.unmapUrl(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, url);
    }
 
@@ -266,7 +266,7 @@ public class CloudfoundryService
       @QueryParam("mem") int mem //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.mem(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId,
+      cloudfoundry.mem(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          mem);
    }
 
@@ -280,7 +280,7 @@ public class CloudfoundryService
       @QueryParam("expr") String expression //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.instances(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      cloudfoundry.instances(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, expression);
    }
 
@@ -294,7 +294,7 @@ public class CloudfoundryService
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       return cloudfoundry.applicationInstances(server, app,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
    }
 
    @Path("apps/env/add")
@@ -308,7 +308,7 @@ public class CloudfoundryService
       @QueryParam("val") String value //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.environmentAdd(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+      cloudfoundry.environmentAdd(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, key, value);
    }
 
@@ -322,7 +322,7 @@ public class CloudfoundryService
       @QueryParam("key") String key //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.environmentDelete(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      cloudfoundry.environmentDelete(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, key);
    }
 
@@ -336,7 +336,7 @@ public class CloudfoundryService
       @QueryParam("delete-services") boolean deleteServices //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.deleteApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      cloudfoundry.deleteApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId, deleteServices);
    }
 
@@ -351,7 +351,7 @@ public class CloudfoundryService
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       return cloudfoundry.applicationStats(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
-         .newInstance(null) : null, projectId);
+         .newInstance(null, null) : null, projectId);
    }
 
    @Path("apps")
@@ -385,7 +385,7 @@ public class CloudfoundryService
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       return cloudfoundry.createService(server, service, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId)
-         .newInstance(null) : null, projectId);
+         .newInstance(null, null) : null, projectId);
    }
 
    @Path("services/delete/{name}")
@@ -408,7 +408,7 @@ public class CloudfoundryService
       @QueryParam("projectid") String projectId //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.bindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      cloudfoundry.bindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
    }
 
@@ -422,7 +422,7 @@ public class CloudfoundryService
       @QueryParam("projectid") String projectId //
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
-      cloudfoundry.unbindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
+      cloudfoundry.unbindService(server, name, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null)
          : null, projectId);
    }
 
@@ -442,7 +442,7 @@ public class CloudfoundryService
    ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       cloudfoundry.validateAction(server, action, app, framework, url, instances, memory, nostart, vfsId != null
-         ? vfsRegistry.getProvider(vfsId).newInstance(null) : null, projectId);
+         ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
    }
 
    @Path("target")

@@ -87,7 +87,7 @@ public class FileTemplateTest extends BaseTest
 
       VirtualFileSystemRegistry vfsRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
-      vfs = vfsRegistry.getProvider("ws2").newInstance(null);
+      vfs = vfsRegistry.getProvider("ws2").newInstance(null, null);
    }
 
    @Test
