@@ -26,8 +26,10 @@ import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 
 /**
@@ -113,6 +115,36 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
       {
          // TODO Auto-generated method stub
 
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findTypes(char[], boolean, boolean, int, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
+       */
+      public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
+         final ISearchRequestor requestor, IProgressMonitor monitor)
+      {
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findPackages(char[], org.eclipse.jdt.client.internal.codeassist.ISearchRequestor)
+       */
+      public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
+      {
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findConstructorDeclarations(char[], boolean, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor, org.eclipse.jdt.client.runtime.IProgressMonitor)
+       */
+      public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor,
+         IProgressMonitor monitor)
+      {
+      }
+
+      /**
+       * @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#findExactTypes(char[], boolean, int, org.eclipse.jdt.client.internal.codeassist.ISearchRequestor)
+       */
+      public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
+      {
       }
 
    }

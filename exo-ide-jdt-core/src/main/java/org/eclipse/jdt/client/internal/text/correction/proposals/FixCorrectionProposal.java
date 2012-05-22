@@ -12,11 +12,10 @@ package org.eclipse.jdt.client.internal.text.correction.proposals;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.internal.corext.fix.ICleanUp;
+import org.eclipse.jdt.client.internal.corext.fix.ICleanUpFix;
 import org.eclipse.jdt.client.internal.corext.fix.IMultiFix;
 import org.eclipse.jdt.client.internal.corext.fix.IProposableFix;
 import org.eclipse.jdt.client.internal.corext.refactoring.code.CompilationUnitChange;

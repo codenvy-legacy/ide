@@ -55,6 +55,7 @@ import org.eclipse.jdt.client.runtime.JavaUIStatus;
 import org.eclipse.jdt.client.runtime.Status;
 import org.eclipse.jdt.client.templates.CodeTemplateContext;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
+import org.eclipse.jdt.client.templates.TemplateStore;
 import org.eclipse.jdt.client.templates.api.Template;
 import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateException;
@@ -1968,22 +1969,24 @@ public class StubUtility
       //         .booleanValue();
    }
 
-   //
-   // /**
-   // * Only to be used by tests
-   // *
-   // * @param templateId the template id
-   // * @param pattern the new pattern
-   // * @param project not used
-   // */
-   // public static void setCodeTemplate(String templateId, String pattern, IJavaProject project) {
-   // TemplateStore codeTemplateStore= JavaPlugin.getDefault().getCodeTemplateStore();
-   // TemplatePersistenceData data= codeTemplateStore.getTemplateData(templateId);
-   // Template orig= data.getTemplate();
-   // Template copy= new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
-   // data.setTemplate(copy);
-   // }
-   //
+   /**
+   * Only to be used by tests
+   *
+   * @param templateId the template id
+   * @param pattern the new pattern
+   * @param project not used
+   */
+   public static void setCodeTemplate(String templateId, String pattern)
+   {
+      TemplateStore codeTemplateStore = JdtExtension.get().getTemplateStore();
+      Template orig = codeTemplateStore.findTemplateById(templateId);
+      orig.setPattern(pattern);
+//      TemplatePersistenceData data = codeTemplateStore.getTemplateData(templateId);
+//      Template orig = data.getTemplate();
+//      Template copy = new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
+//      data.setTemplate(copy);
+   }
+
    private static Template getCodeTemplate(String id)
    {
       //      if (project == null)
@@ -2034,6 +2037,15 @@ public class StubUtility
          rewrite.setUseContextToFilterImplicitImports(true);
       }
       return rewrite;
+   }
+
+   /**
+    * @return
+    */
+   public static boolean useThisForFieldAccess()
+   {
+      //TODO
+      return false;
    }
 
 }

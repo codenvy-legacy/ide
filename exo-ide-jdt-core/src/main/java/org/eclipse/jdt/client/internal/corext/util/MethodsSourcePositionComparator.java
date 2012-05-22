@@ -11,12 +11,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.util;
 
-import java.util.Comparator;
-
-import org.eclipse.jdt.client.core.ISourceRange;
-import org.eclipse.jdt.client.core.SourceRange;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
+
+import java.util.Comparator;
 
 /**
  * A comparator which sorts methods (IMethodBinding) of a type passed as constructor argument,
@@ -126,17 +124,17 @@ public class MethodsSourcePositionComparator implements Comparator<IMethodBindin
       //			IMethod firstMethod= (IMethod)firstMethodBinding.getJavaElement();
       //			IMethod secondMethod= (IMethod)secondMethodBinding.getJavaElement();
       //TODO
-      //			if (firstMethod == null || secondMethod == null) {
-      //				return 0;
-      //			}
-      //			ISourceRange firstSourceRange= firstMethod.getSourceRange();
-      //			ISourceRange secondSourceRange= secondMethod.getSourceRange();
-      //
-      //			if (!SourceRange.isAvailable(firstSourceRange) || !SourceRange.isAvailable(secondSourceRange)) {
-      //				return firstMethod.getElementName().compareTo(secondMethod.getElementName());
-      //			} else {
-      //				return firstSourceRange.getOffset() - secondSourceRange.getOffset();
-      //			}
-      return 0;
+//      			if (firstMethod == null || secondMethod == null) {
+//      				return 0;
+//      			}
+//      			ISourceRange firstSourceRange= firstMethodBinding.SourceRange();
+//      			ISourceRange secondSourceRange= secondMethod.getSourceRange();
+//      
+//      			if (!SourceRange.isAvailable(firstSourceRange) || !SourceRange.isAvailable(secondSourceRange)) {
+      				return firstMethodBinding.getName().compareTo(secondMethodBinding.getName());
+//      			} else {
+//      				return firstSourceRange.getOffset() - secondSourceRange.getOffset();
+//      			}
+//      return 0;
    }
 }

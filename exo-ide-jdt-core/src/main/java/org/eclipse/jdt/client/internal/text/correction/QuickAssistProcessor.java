@@ -2759,7 +2759,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor
    private static boolean getMakeVariableDeclarationFinalProposals(IInvocationContext context,
       Collection<ICommandAccess> resultingCollections)
    {
-      //TODO
+      //TODO final 
       //      SelectionAnalyzer analyzer =
       //         new SelectionAnalyzer(Selection.createFromStartLength(context.getSelectionOffset(),
       //            context.getSelectionLength()), false);

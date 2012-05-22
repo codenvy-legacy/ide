@@ -116,12 +116,19 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
 
    }
+   
+   /**
+    * 
+    */
+   public JdtExtension()
+   {
+      instance = this;
+   }
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
    @Override
    public void initialize()
    {
-      instance = this;
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);

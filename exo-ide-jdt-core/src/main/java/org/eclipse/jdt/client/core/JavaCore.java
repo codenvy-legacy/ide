@@ -145,6 +145,19 @@ public final class JavaCore
    public static final String COMPILER_CODEGEN_TARGET_PLATFORM = PLUGIN_ID + ".compiler.codegen.targetPlatform"; //$NON-NLS-1$
 
    /**
+    * Compiler option ID: Reporting Unused Parameter.
+    * <p>When enabled, the compiler will issue an error or a warning for unused method
+    *    parameters (that is, parameters never read from).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedParameter"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_PARAMETER = PLUGIN_ID + ".compiler.problem.unusedParameter"; //$NON-NLS-1$
+
+   /**
     * Compiler option ID: Inline JSR Bytecode Instruction.
     * <p>
     * When enabled, the compiler will no longer generate JSR instructions, but rather inline corresponding subroutine code
@@ -495,6 +508,216 @@ public final class JavaCore
     */
    public static final String CODEASSIST_CAMEL_CASE_MATCH = PLUGIN_ID + ".codeComplete.camelCaseMatch"; //$NON-NLS-1$
 
+   /**
+    * Compiler option ID: Reporting Empty Statements and Unnecessary Semicolons.
+    * <p>When enabled, the compiler will issue an error or a warning if an empty statement or a
+    *    unnecessary semicolon is encountered.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.emptyStatement"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_EMPTY_STATEMENT = PLUGIN_ID + ".compiler.problem.emptyStatement"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unused Declared Thrown Exception.
+    * <p>When enabled, the compiler will issue an error or a warning when a
+    *    method or a constructor is declaring a checked exception as thrown,
+    *    but its body actually raises neither that exception, nor any other
+    *    exception extending it.
+    * <p>This diagnostic is further tuned by options
+    *    {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE},
+    *    {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_EXEMPT_EXCEPTION_AND_THROWABLE},
+    *    and {@link #COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_WHEN_OVERRIDING}.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownException"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION = PLUGIN_ID
+      + ".compiler.problem.unusedDeclaredThrownException"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unqualified Access to Field.
+    * <p>When enabled, the compiler will issue an error or a warning when a field is access without any qualification.
+    *    In order to improve code readability, it should be qualified, e.g. <code>'x'</code> should rather be written <code>'this.x'</code>.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unqualifiedFieldAccess"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNQUALIFIED_FIELD_ACCESS = PLUGIN_ID
+      + ".compiler.problem.unqualifiedFieldAccess"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Field Declaration Hiding another Variable.
+    * <p>When enabled, the compiler will issue an error or a warning whenever a field
+    *    declaration is hiding some field or local variable (either locally, inherited or defined in enclosing type).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.fieldHiding"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_FIELD_HIDING = PLUGIN_ID + ".compiler.problem.fieldHiding"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Local Variable Declaration Hiding another Variable.
+    * <p>When enabled, the compiler will issue an error or a warning whenever a local variable
+    *    declaration is hiding some field or local variable (either locally, inherited or defined in enclosing type).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.localVariableHiding"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_LOCAL_VARIABLE_HIDING = PLUGIN_ID + ".compiler.problem.localVariableHiding"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unnecessary Else.
+    * <p>When enabled, the compiler will issue an error or a warning when a statement is unnecessarily
+    *    nested within an <code>else</code> clause (in situation where then clause is not completing normally).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unnecessaryElse"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.0
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNNECESSARY_ELSE = PLUGIN_ID + ".compiler.problem.unnecessaryElse"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Dead Code.
+    * <p>When enabled, the compiler will issue an error or a warning if some non fatal dead code is detected. For instance, <code>if (false) foo();</code>
+    * is not reported as truly unreachable code by the Java Language Specification. If this diagnostic is enabled, then the invocation of <code>foo()</code> is
+    * going to be signaled as being dead code.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.deadCode"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 3.5
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_DEAD_CODE = PLUGIN_ID + ".compiler.problem.deadCode"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Allocation of an Unused Object.
+    * <p>When enabled, the compiler will issue an error or a warning if an object is allocated but never used,
+    * neither by holding a reference nor by invoking one of the object's methods.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.unusedObjectAllocation"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.6
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNUSED_OBJECT_ALLOCATION = PLUGIN_ID
+      + ".compiler.problem.unusedObjectAllocation"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Unchecked Type Operation.
+    * <p>When enabled, the compiler will issue an error or a warning whenever an operation involves generic types, and potentially
+    *    invalidates type safety since involving raw types (e.g. invoking <code>#foo(X&lt;String&gt;)</code> with arguments <code>(X)</code>).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.uncheckedTypeOperation"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 3.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_UNCHECKED_TYPE_OPERATION = PLUGIN_ID
+      + ".compiler.problem.uncheckedTypeOperation"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Raw Type Reference.
+    * <p>When enabled, the compiler will issue an error or a warning when detecting references to raw types. Raw types are
+    *    discouraged, and are intended to help interfacing with legacy code. In the future, the language specification may
+    *    reject raw references to generic types.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.rawTypeReference"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 3.2
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_RAW_TYPE_REFERENCE = PLUGIN_ID + ".compiler.problem.rawTypeReference"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Switch Fall-Through Case.
+    * <p>When enabled, the compiler will issue an error or a warning if a case may be
+    *    entered by falling through previous case. Empty cases are allowed.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.fallthroughCase"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.2
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_FALLTHROUGH_CASE = PLUGIN_ID + ".compiler.problem.fallthroughCase"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Type Declaration Hiding another Type.
+    * <p>When enabled, the compiler will issue an error or a warning in situations where a type parameter
+    *    declaration is hiding some type, when a nested type is hiding some type parameter, or when
+    *    a nested type is hiding another nested type defined in same unit.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.typeParameterHiding"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 3.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_TYPE_PARAMETER_HIDING = PLUGIN_ID + ".compiler.problem.typeParameterHiding"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Reporting Incomplete Enum Switch.
+    * <p>When enabled, the compiler will issue an error or a warning whenever
+    *    an enum constant has no corresponding case label in an enum switch
+    *    statement.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.incompleteEnumSwitch"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_INCOMPLETE_ENUM_SWITCH = PLUGIN_ID + ".compiler.problem.incompleteEnumSwitch"; //$NON-NLS-1$
+
+   /**
+    * Compiler option ID: Determining Effect of <code>@SuppressWarnings</code>.
+    * <p>When enabled, the <code>@SuppressWarnings</code> annotation can be used to suppress some compiler warnings.
+    * <p>When disabled, all <code>@SupressWarnings</code> annotations are ignored; i.e., warnings are reported.
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.suppressWarnings"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "enabled", "disabled" }</code></dd>
+    * <dt>Default:</dt><dd><code>"enabled"</code></dd>
+    * </dl>
+    * @since 3.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_SUPPRESS_WARNINGS = PLUGIN_ID + ".compiler.problem.suppressWarnings"; //$NON-NLS-1$
+
    // end configurable option IDs }
    // Begin configurable option values {
    /**
@@ -613,6 +836,13 @@ public final class JavaCore
    public static final String TAB = "tab"; //$NON-NLS-1$
 
    /**
+    * Configurable option value: {@value}.
+    * @since 2.0
+    * @category OptionValue
+    */
+   public static final String DISABLED = "disabled"; //$NON-NLS-1$
+
+   /**
     * Configurable option value: {@value} .
     * 
     * @since 2.0
@@ -662,6 +892,7 @@ public final class JavaCore
          .put(
             DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE,
             JavaCore.DO_NOT_INSERT);
+      defaultOptions.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
    }
 
    /**

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist.impl;
 
-import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.CompilationResult;
 import org.eclipse.jdt.client.internal.compiler.ast.ASTNode;
@@ -23,6 +22,7 @@ import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryType;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.ISourceType;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.ITypeRequestor;
@@ -48,7 +48,7 @@ public abstract class Engine implements ITypeRequestor
 
    protected CompilationUnitScope unitScope;
 
-   public NameEnvironment nameEnvironment;
+   public INameEnvironment nameEnvironment;
 
    public AssistOptions options;
 

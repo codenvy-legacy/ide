@@ -197,4 +197,20 @@ public class JavaCorrectionProcessor
       return fixProcessor.hasCorrections(annot.getProblemId());
    }
 
+   /**
+    * @param context
+    * @return
+    * @throws CoreException 
+    */
+   public static boolean hasAssists(IInvocationContext context) throws CoreException
+   {
+      for (IQuickAssistProcessor curr : assistProcessors)
+      {
+         if(curr.hasAssists(context))
+          return true;
+      }
+      
+      return false;
+   }
+
 }

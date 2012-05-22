@@ -13,11 +13,6 @@ package org.eclipse.jdt.client.internal.text.correction.proposals;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.core.NamingConventions;
 import org.eclipse.jdt.client.core.compiler.ITerminalSymbols;
@@ -48,18 +43,21 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
-
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
-import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.jdt.client.internal.corext.dom.TokenScanner;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.IDocument;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Proposals for 'Assign to variable' quick assist
@@ -269,7 +267,7 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal
       assignment.setRightHandSide((Expression)rewrite.createCopyTarget(expression));
 
       //TODO
-      boolean needsThis = true;//StubUtility.useThisForFieldAccess(getCompilationUnit().getJavaProject());
+      boolean needsThis = StubUtility.useThisForFieldAccess();
       if (isParamToField)
       {
          needsThis |= varName.equals(((SimpleName)expression).getIdentifier());

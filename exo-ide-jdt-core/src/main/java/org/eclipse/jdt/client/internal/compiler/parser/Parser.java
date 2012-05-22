@@ -397,6 +397,10 @@ public class Parser implements ParserBasicInformation, TerminalTokens, OperatorI
    private static String[] parseJsonArray(String json)
    {
       JSONValue value = JSONParser.parseLenient(json);
+      if(value.isObject() != null)
+      {
+         value = value.isObject().get("rsc").isArray();
+      }
       if (value.isArray() == null)
          throw new IllegalArgumentException("'json' parameter must represent a JSON array");
       JSONArray array = value.isArray();
