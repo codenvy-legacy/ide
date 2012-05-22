@@ -255,8 +255,6 @@ public class ProjectExplorer extends AbstractTestModule
       }
    }
 
-   
-   
    /**
     * Press right arrow for expand item
     * 
@@ -269,9 +267,7 @@ public class ProjectExplorer extends AbstractTestModule
       item.click();
       item.sendKeys(Keys.ARROW_RIGHT);
    }
-   
-   
-   
+
    /**
     * Click open/close(+/-) button of the pointed item.
     * 
