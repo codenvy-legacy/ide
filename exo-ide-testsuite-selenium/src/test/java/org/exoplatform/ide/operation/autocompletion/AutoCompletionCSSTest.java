@@ -86,5 +86,6 @@ public class AutoCompletionCSSTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.typeToInput("\n");
       String text = IDE.EDITOR.getTextFromCodeEditor(0);
       assertTrue(text.contains("list-style-type"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 }
