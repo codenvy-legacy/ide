@@ -1334,7 +1334,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       int offset = buf.indexOf(begin);
       int length = buf.indexOf(end) + end.length() - offset;
-      AssistContext context = getCorrectionContext(cu, offset, length);
+      AssistContext context = getCorrectionContext(cu, offset, length, "E");
       ArrayList<?> proposals = collectCorrections(cu, astRoot, 2, context);
       assertNumberOfProposals(proposals, 2);
       assertCorrectLabels(proposals);

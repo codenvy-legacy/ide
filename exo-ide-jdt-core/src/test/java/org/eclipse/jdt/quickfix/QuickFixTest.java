@@ -28,7 +28,6 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.text.correction.AssistContext;
 import org.eclipse.jdt.client.internal.text.correction.ICommandAccess;
 import org.eclipse.jdt.client.internal.text.correction.JavaCorrectionProcessor;
@@ -62,9 +61,10 @@ public abstract class QuickFixTest extends GwtTestWithMockito
       return "org.eclipse.jdt.IdeJdt";
    }
 
-   public static AssistContext getCorrectionContext(IDocument document, int offset, int length)
+   public static AssistContext getCorrectionContext(IDocument document, int offset, int length, String name)
    {
       AssistContext context = new AssistContext(document, offset, length);
+      context.setASTRoot(getASTRoot(document, name));
       return context;
    }
 
@@ -375,6 +375,18 @@ public abstract class QuickFixTest extends GwtTestWithMockito
          if (!JavaCorrectionProcessor.hasCorrections(problem))
          {
             Assert.assertTrue("Problem type not marked with light bulb: " + problem, false);
+         }
+      }
+   }
+
+   protected static void assertNoErrors(IInvocationContext context)
+   {
+      IProblem[] problems = context.getASTRoot().getProblems();
+      for (int i = 0; i < problems.length; i++)
+      {
+         if (problems[i].isError())
+         {
+            Assert.assertTrue("source has error: " + problems[i].getMessage(), false);
          }
       }
    }

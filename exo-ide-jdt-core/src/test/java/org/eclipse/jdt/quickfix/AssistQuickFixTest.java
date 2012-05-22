@@ -82,7 +82,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("getClass()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -134,7 +134,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("goo().iterator()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -259,7 +259,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("Math");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -376,7 +376,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("getClass()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -430,7 +430,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("goo().iterator()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -494,7 +494,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("new MyLayout().indent;");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       int numberOfProposals = 5;
@@ -587,7 +587,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String string = "fField[0];";
       int offset = buf.toString().indexOf(string);
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, string.length());
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, string.length(), "E");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -632,7 +632,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("System.getProperties()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -688,7 +688,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("System.getProperties()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -749,7 +749,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("System.getProperties()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -811,7 +811,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("new java.util.Timer()");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -854,7 +854,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String selection = "count";
       int offset = buf.toString().indexOf(selection);
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, selection.length());
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, selection.length(),"E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1194,7 +1194,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "goo().toArray();";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1253,7 +1253,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "(IOException e)";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1312,7 +1312,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "(IOException e)";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -1381,7 +1381,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "for";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1417,7 +1417,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "do";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1454,7 +1454,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "while";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1492,7 +1492,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "if";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1554,7 +1554,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "try";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1592,7 +1592,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "};";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1627,7 +1627,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "}//comment";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1660,7 +1660,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "Math.abs(9+ 8)";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       buf = new StringBuffer();
@@ -1686,7 +1686,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1718,7 +1718,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1750,7 +1750,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "i[]";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1778,7 +1778,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1809,7 +1809,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1840,7 +1840,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1871,7 +1871,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}");
 
       String str = "=";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -1904,7 +1904,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "var[]";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -1935,7 +1935,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "var = ";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -1966,7 +1966,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "var[]";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -2003,7 +2003,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "message;";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -2046,7 +2046,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "message =";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -2085,7 +2085,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2103,7 +2103,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2135,7 +2135,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "s.equals(\"a\")";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length());
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length(), "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2152,7 +2152,7 @@ public class AssistQuickFixTest extends QuickFixTest
       assertExpectedExistInProposals(proposals, new String[]{buf.toString()});
 
       str = "\"a\".equals(s)";
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2183,7 +2183,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length());
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length(), "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2203,7 +2203,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length());
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), str.length(), "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2239,7 +2239,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2261,7 +2261,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2298,7 +2298,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2319,7 +2319,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2357,7 +2357,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2380,7 +2380,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2415,7 +2415,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2433,7 +2433,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2466,7 +2466,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 2);
@@ -2487,7 +2487,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 2);
@@ -2520,7 +2520,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2538,7 +2538,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2568,7 +2568,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2590,13 +2590,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2618,13 +2618,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2646,13 +2646,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2677,13 +2677,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2705,13 +2705,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2734,13 +2734,13 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "E().equals";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2758,7 +2758,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2776,13 +2776,13 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals(o)";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
       assertCorrectLabels(proposals);
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().lastIndexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 0);
@@ -2801,7 +2801,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2820,7 +2820,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2852,7 +2852,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2871,7 +2871,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2902,7 +2902,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2920,7 +2920,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2950,7 +2950,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2968,7 +2968,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -2998,7 +2998,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "equals";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -3016,7 +3016,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
       assertEqualString(preview, buf.toString());
 
-      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       proposals = collectAssists(context, FILTER_EQ);
 
       assertNumberOfProposals(proposals, 1);
@@ -3050,7 +3050,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "{{";
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str) + str.length(), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -3235,7 +3235,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, true);
 
       assertNumberOfProposals(proposals, 3);
@@ -3292,7 +3292,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "else";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -3344,7 +3344,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -3394,7 +3394,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3456,7 +3456,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "else";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3523,7 +3523,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "else if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3604,7 +3604,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "else if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3679,7 +3679,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3735,7 +3735,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "if (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 4);
@@ -3810,7 +3810,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "{\n            ;";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -3872,7 +3872,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String str = "/* comment*/";
       int indexOf = buf.toString().indexOf(str) + str.length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), indexOf, 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), indexOf, 0, "E");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -3910,7 +3910,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = " (false) {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 4);
@@ -3993,7 +3993,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = " (true) {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4034,7 +4034,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = " (false) {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4078,7 +4078,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = " (true) {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 3);
@@ -4156,7 +4156,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = " (true) {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4195,7 +4195,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "while (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -4236,7 +4236,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "for (";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -4277,7 +4277,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       String str = "do {";
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(str), 0, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -4318,7 +4318,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -4349,7 +4349,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4367,7 +4367,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("i=");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4388,7 +4388,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("int i= 0");
       int length = "int i= 0".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4421,7 +4421,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("int i");
       int length = "int i".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4452,7 +4452,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4474,7 +4474,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("private int i= 0");
       int length = "private int i= 0".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4496,7 +4496,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4518,7 +4518,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4540,7 +4540,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4560,7 +4560,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4582,7 +4582,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("int i= 1");
       int length = "int i= 1".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4618,7 +4618,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("j= i + 1");
       int length = "j= i + 1".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -4655,7 +4655,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("h= j + 1");
       int length = "h= j + 1".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 2);
@@ -4696,7 +4696,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset1 = buf.toString().indexOf("public");
       int offset2 = buf.toString().lastIndexOf("}");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset1, offset2 - offset1, "E");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -4734,7 +4734,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("int i= 0");
       int length = "int i= 0".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4752,7 +4752,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("i=");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4770,7 +4770,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("E");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4789,7 +4789,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       int offset = buf.toString().indexOf("foo");
       int length = "foo".length();
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, length, "E");
       List proposals = collectAssists(context, false);
 
       assertProposalDoesNotExist(proposals, CHANGE_MODIFIER_TO_FINAL);
@@ -4807,7 +4807,7 @@ public class AssistQuickFixTest extends QuickFixTest
 
       String selection = "public void foo(Integer i)";
       int offset = buf.toString().indexOf(selection);
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, selection.length());
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, selection.length(), "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4839,7 +4839,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       int offset = buf.toString().indexOf("Runnable");
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), offset, 1, "E");
       List proposals = collectAssists(context, false);
 
       assertNumberOfProposals(proposals, 1);
@@ -4935,7 +4935,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -4969,7 +4969,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5002,7 +5002,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCommandIdDoesNotExist(proposals, QuickAssistProcessor.CONVERT_TO_STRING_BUFFER_ID);
@@ -5019,7 +5019,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCommandIdDoesNotExist(proposals, QuickAssistProcessor.CONVERT_TO_STRING_BUFFER_ID);
@@ -5035,7 +5035,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCommandIdDoesNotExist(proposals, QuickAssistProcessor.CONVERT_TO_STRING_BUFFER_ID);
@@ -5054,7 +5054,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("strX ="), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5088,7 +5088,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5121,7 +5121,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\"+\""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5152,7 +5152,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 5"), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 5"), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5182,7 +5182,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 5"), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 5"), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5214,7 +5214,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + \"\" + \""), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + \"\" + \""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5233,7 +5233,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 1 + \""), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + 1 + \""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5266,7 +5266,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + o1 + \""), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + o1 + \""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5299,7 +5299,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + o1 + \""), 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("\" + o1 + \""), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5330,7 +5330,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(" + "), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf(" + "), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5385,7 +5385,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("switch"), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("switch"), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5437,7 +5437,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       AssistContext context =
-         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("break;") + 7, 0);
+         getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("break;") + 7, 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5488,7 +5488,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("case"), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("case"), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
@@ -5541,7 +5541,7 @@ public class AssistQuickFixTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
 
-      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("default"), 0);
+      AssistContext context = getCorrectionContext(new Document(buf.toString()), buf.toString().indexOf("default"), 0, "A");
       List proposals = collectAssists(context, false);
 
       assertCorrectLabels(proposals);
