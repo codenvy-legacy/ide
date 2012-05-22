@@ -125,7 +125,6 @@ import org.exoplatform.ide.editor.text.edits.TextEdit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -916,7 +915,7 @@ public class LocalCorrectionsSubProcessor
       }
 
       //TODO
-      //      LinkedNamesAssistProposal proposal = new LinkedNamesAssistProposal(name, context, nameNode, valueSuggestion);
+//            LinkedNamesAssistProposal proposal = new LinkedNamesAssistProposal(name, context, nameNode, valueSuggestion);
       //      proposals.add(proposal);
    }
 

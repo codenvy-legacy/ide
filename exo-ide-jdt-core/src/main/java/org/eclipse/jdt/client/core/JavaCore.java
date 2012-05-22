@@ -629,6 +629,20 @@ public final class JavaCore
     */
    public static final String COMPILER_PB_UNUSED_OBJECT_ALLOCATION = PLUGIN_ID
       + ".compiler.problem.unusedObjectAllocation"; //$NON-NLS-1$
+   
+   /**
+    * Compiler option ID: Reporting Missing HashCode Method.
+    * <p>When enabled, the compiler will issue an error or a warning if a type
+    * overrides Object.equals(Object) but does not override hashCode().
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.missingHashCodeMethod"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"ignore"</code></dd>
+    * </dl>
+    * @since 3.5
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_MISSING_HASHCODE_METHOD = PLUGIN_ID + ".compiler.problem.missingHashCodeMethod"; //$NON-NLS-1$
 
    /**
     * Compiler option ID: Reporting Unchecked Type Operation.
@@ -893,6 +907,8 @@ public final class JavaCore
             DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_ANGLE_BRACKET_IN_PARAMETERIZED_TYPE_REFERENCE,
             JavaCore.DO_NOT_INSERT);
       defaultOptions.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+      defaultOptions.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+      defaultOptions.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
    }
 
    /**

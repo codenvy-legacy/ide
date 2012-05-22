@@ -99,6 +99,9 @@
                <excludes>
                   <exclude>**/*Gwt*</exclude>
                </excludes>
+               <includes>
+                 <include>**/*Test.java</include>
+               </includes>
             </configuration>
          </plugin>
          <plugin>

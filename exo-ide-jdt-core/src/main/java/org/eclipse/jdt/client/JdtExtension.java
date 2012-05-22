@@ -98,11 +98,11 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private UserInfo userInfo;
 
-   private static HashMap<String, String> options = new HashMap<String, String>();
+   private HashMap<String, String> options = new HashMap<String, String>();
 
    private FormatterProfilePresenter formatterProfileManager;
 
-   static
+   private void initOptions()
    {
       options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
       options.put(JavaCore.CORE_ENCODING, "UTF-8");
@@ -114,6 +114,9 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
       options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
       options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
+      options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+      options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+      options.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
 
    }
    
@@ -123,6 +126,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    public JdtExtension()
    {
       instance = this;
+      initOptions();
    }
 
    /** @see org.exoplatform.ide.client.framework.module.Extension#initialize() */
