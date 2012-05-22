@@ -26,6 +26,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import java.io.IOException;
 
@@ -69,10 +70,6 @@ public class HotkeysCustomizationTest extends BaseTest
       }
    }
 
-  
-   
-   
-   
    /**
     * IDE-156:HotKeys customization
     * ----- 1-2 ------------
@@ -108,7 +105,7 @@ public class HotkeysCustomizationTest extends BaseTest
    public void testHotkeysInSeveralTabs() throws Exception
    {
       driver.navigate().refresh();
-           
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
@@ -140,44 +137,19 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       IDE.SAVE_AS_TEMPLATE.clickCancelButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
+      IDE.EDITOR.selectTab(2);
+      //this workaround for problem with select iframes in coseeditor 
+      new Actions(driver).sendKeys(Keys.CONTROL + "h").build().perform();
+       // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
+      //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
+      //refresh browser and fix issue IDE-1392
+      IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
+      IDE.selectMainFrame();
+      IDE.EDITOR.closeTabIgnoringChanges(3);
+      IDE.EDITOR.waitTabNotPresent(3);
+   }
 
-//      //A temporary solution for problem switching between tabs in FF 4.0 and higher
-//      if ("CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad"))
-//         || "FIREFOX_CHROME".equals(IDE_SETTINGS.getString("selenium.browser.commad")))
-//      {
-//         IDE.EDITOR.closeTabIgnoringChanges(2);
-//         IDE.EDITOR.closeTabIgnoringChanges(1);
-//         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-//      }
-//      else
-//      {
-         IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "h");
-         // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
-         //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
-         //refresh browser and fix issue IDE-1392
-         IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
-         IDE.selectMainFrame();
-         IDE.EDITOR.selectTab(2);
-         IDE.EDITOR.closeTabIgnoringChanges(3);
-         IDE.EDITOR.waitTabNotPresent(3);
-
-         //repeat all actions in gadget tab
-         IDE.EDITOR.selectTab(2);
-         IDE.EDITOR.typeTextIntoEditor(2, Keys.ALT.toString() + "n");
-         IDE.SAVE_AS_TEMPLATE.waitOpened();
-         IDE.SAVE_AS_TEMPLATE.clickCancelButton();
-         IDE.SAVE_AS_TEMPLATE.waitClosed();
-         IDE.EDITOR.typeTextIntoEditor(2, Keys.CONTROL.toString() + "h");
-         IDE.EDITOR.waitTabPresent(3);
-         IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
-         IDE.EDITOR.closeTabIgnoringChanges(3);
-         IDE.EDITOR.waitTabNotPresent(3);
-
-         IDE.EDITOR.closeTabIgnoringChanges(2);
-         IDE.EDITOR.closeTabIgnoringChanges(1);
-         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      }
- //  }
+   //  }
 
    @Test
    public void testHotkeysAfterRefresh() throws Exception
