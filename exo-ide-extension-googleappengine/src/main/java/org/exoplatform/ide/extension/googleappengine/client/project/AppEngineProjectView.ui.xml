@@ -10,7 +10,7 @@
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
-      <f:layer top="0" bottom="30">
+      <f:layer top="0" bottom="37">
          <t:TabPanel ui:field="applicationTabPanel"></t:TabPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">

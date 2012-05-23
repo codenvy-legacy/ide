@@ -110,9 +110,24 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("manage.application.crons.tab")
    String manageApplicationCronsTab();
 
+   @Key("manage.application.general.tab")
+   String manageApplicationGeneralTab();
+   
    @Key("manage.application.indexes")
    String manageApplicationIndexes();
+   
+   @Key("manage.application.application")
+   String manageApplicationApplication();
+   
+   @Key("manage.application.pagespeed")
+   String manageApplicationPagespeed();
+   
+   @Key("manage.application.queues")
+   String manageApplicationQueues();
 
+   @Key("manage.application.dos")
+   String manageApplicationDos();
+   
    /* Rollback update */
    @Key("rollback.update.control.title")
    String rollbackUpdateControlTitle();
