@@ -1,15 +1,10 @@
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
-import com.google.gwt.user.client.ui.Button;
-
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -17,12 +12,19 @@ import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
 public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPresenter.Display
 {
    private static final String ID = "ideAppEngineProjectView";
 
-   private static final String TITLE = "";
+   private static final String GENERAL_TAB_ID = "ideAppEngineProjectViewGeneralTab";
+
+   private static final String CRONS_TAB_ID = "ideAppEngineProjectViewCronsTab";
+
+   private static final String BACKENDS_TAB_ID = "ideAppEngineProjectViewBackendsTab";
+
+   private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationViewTitle();
 
    private static final int WIDTH = 600;
 
@@ -35,26 +37,9 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
 
    private MainTabPain mainTabPain;
 
-   // @UiField
-   Button rollbackApplicationButton;
+   private CronTabPane cronTabPane;
 
-   // @UiField
-   Button getLogsButton;
-
-   // @UiField
-   Button updateDosButton;
-
-   // @UiField
-   Button updateIndexesButton;
-
-   // @UiField
-   Button vacuumIndexesButton;
-
-   // @UiField
-   Button updatePageSpeedButton;
-
-   // @UiField
-   Button updateQueuesButton;
+   private BackendsTabPane backendsTabPane;
 
    @UiField
    TabPanel applicationTabPanel;
@@ -69,7 +54,16 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
       add(uiBinder.createAndBindUi(this));
 
       mainTabPain = new MainTabPain();
-      applicationTabPanel.addTab("mainTab", null, "Application", mainTabPain, false);
+      applicationTabPanel.addTab(GENERAL_TAB_ID, null,
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationGeneralTab(), mainTabPain, false);
+
+      cronTabPane = new CronTabPane();
+      applicationTabPanel.addTab(CRONS_TAB_ID, null,
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);
+
+      backendsTabPane = new BackendsTabPane();
+      applicationTabPanel.addTab(BACKENDS_TAB_ID, null,
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
    }
 
    /**
@@ -137,7 +131,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getLogsButton()
    {
-      return getLogsButton;
+      return mainTabPain.getGetLogsButton();
    }
 
    /**
@@ -155,7 +149,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getRollbackButton()
    {
-      return rollbackApplicationButton;
+      return mainTabPain.getRollbackApplicationButton();
    }
 
    /**
@@ -174,7 +168,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateDosButton()
    {
-      return updateDosButton;
+      return mainTabPain.getUpdateDosButton();
    }
 
    /**
@@ -183,7 +177,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateIndexesButton()
    {
-      return updateIndexesButton;
+      return mainTabPain.getUpdateIndexesButton();
    }
 
    /**
@@ -192,7 +186,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getVacuumIndexesButton()
    {
-      return vacuumIndexesButton;
+      return mainTabPain.getVacuumIndexesButton();
    }
 
    /**
@@ -201,7 +195,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdatePageSpeedButton()
    {
-      return updatePageSpeedButton;
+      return mainTabPain.getUpdatePageSpeedButton();
    }
 
    /**
@@ -210,7 +204,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateQueuesButton()
    {
-      return updateQueuesButton;
+      return mainTabPain.getUpdateQueuesButton();
    }
 
 }

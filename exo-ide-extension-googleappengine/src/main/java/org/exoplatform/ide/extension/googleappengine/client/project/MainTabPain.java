@@ -43,14 +43,94 @@ public class MainTabPain extends Composite
 
    @UiField
    Button updateApplicationButton;
+   
+   @UiField
+   Button rollbackApplicationButton;
+
+   @UiField
+   Button getLogsButton;
+
+   @UiField
+   Button updateDosButton;
+
+   @UiField
+   Button updateIndexesButton;
+
+   @UiField
+   Button vacuumIndexesButton;
+
+   @UiField
+   Button updatePageSpeedButton;
+
+   @UiField
+   Button updateQueuesButton;
 
    public MainTabPain()
    {
       initWidget(uiBinder.createAndBindUi(this));
    }
 
+   /**
+    * @return the updateApplicationButton
+    */
    public Button getUpdateApplicationButton()
    {
       return updateApplicationButton;
+   }
+
+   /**
+    * @return the rollbackApplicationButton
+    */
+   public Button getRollbackApplicationButton()
+   {
+      return rollbackApplicationButton;
+   }
+
+   /**
+    * @return the getLogsButton
+    */
+   public Button getGetLogsButton()
+   {
+      return getLogsButton;
+   }
+
+   /**
+    * @return the updateDosButton
+    */
+   public Button getUpdateDosButton()
+   {
+      return updateDosButton;
+   }
+
+   /**
+    * @return the updateIndexesButton
+    */
+   public Button getUpdateIndexesButton()
+   {
+      return updateIndexesButton;
+   }
+
+   /**
+    * @return the vacuumIndexesButton
+    */
+   public Button getVacuumIndexesButton()
+   {
+      return vacuumIndexesButton;
+   }
+
+   /**
+    * @return the updatePageSpeedButton
+    */
+   public Button getUpdatePageSpeedButton()
+   {
+      return updatePageSpeedButton;
+   }
+
+   /**
+    * @return the updateQueuesButton
+    */
+   public Button getUpdateQueuesButton()
+   {
+      return updateQueuesButton;
    }
 }
