@@ -800,6 +800,7 @@
       <module>exo-ide-extension-ruby</module>
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
+      <module>exo-ide-extension-googleappengine</module>
 
       <module>exo-ide-docs</module>
 

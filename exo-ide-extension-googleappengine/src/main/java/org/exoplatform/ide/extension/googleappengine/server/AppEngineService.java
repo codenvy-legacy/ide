@@ -57,7 +57,7 @@ public class AppEngineService
                                 Map<String, String> credentials) throws Exception
    {
       client.configureBackend(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendName,
          credentials.get("email"),
@@ -74,7 +74,7 @@ public class AppEngineService
                                    Map<String, String> credentials) throws Exception
    {
       return client.cronInfo(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -90,7 +90,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       client.deleteBackend(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendName,
          credentials.get("email"),
@@ -106,7 +106,7 @@ public class AppEngineService
                                               Map<String, String> credentials) throws Exception
    {
       return client.getResourceLimits(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -122,7 +122,7 @@ public class AppEngineService
                                                Map<String, String> credentials) throws Exception
    {
       return client.listBackends(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -140,7 +140,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       return client.requestLogs(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          numDays,
          logSeverity,
@@ -157,7 +157,7 @@ public class AppEngineService
                         Map<String, String> credentials) throws Exception
    {
       client.rollback(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -173,7 +173,7 @@ public class AppEngineService
                                Map<String, String> credentials) throws Exception
    {
       client.rollbackBackend(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendName,
          credentials.get("email"),
@@ -189,7 +189,7 @@ public class AppEngineService
                                    Map<String, String> credentials) throws Exception
    {
       client.rollbackAllBackends(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -206,7 +206,7 @@ public class AppEngineService
                                Map<String, String> credentials) throws Exception
    {
       client.setBackendState(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendName,
          backendState,
@@ -224,7 +224,7 @@ public class AppEngineService
                       Map<String, String> credentials) throws Exception
    {
       client.update(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          bin,
          credentials.get("email"),
@@ -240,7 +240,7 @@ public class AppEngineService
                                  Map<String, String> credentials) throws Exception
    {
       client.updateAllBackends(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -256,7 +256,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       client.updateBackend(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendName,
          credentials.get("email"),
@@ -273,7 +273,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       client.updateBackends(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          backendNames,
          credentials.get("email"),
@@ -289,7 +289,7 @@ public class AppEngineService
                           Map<String, String> credentials) throws Exception
    {
       client.updateCron(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -304,7 +304,7 @@ public class AppEngineService
                          Map<String, String> credentials) throws Exception
    {
       client.updateDos(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -319,7 +319,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       client.updateIndexes(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -334,7 +334,7 @@ public class AppEngineService
                                Map<String, String> credentials) throws Exception
    {
       client.updatePagespeed(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -349,7 +349,7 @@ public class AppEngineService
                             Map<String, String> credentials) throws Exception
    {
       client.updateQueues(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
@@ -364,7 +364,7 @@ public class AppEngineService
                              Map<String, String> credentials) throws Exception
    {
       client.vacuumIndexes(
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null) : null,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          credentials.get("email"),
          credentials.get("password")
