@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
+import static org.junit.Assert.*;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -19,10 +20,12 @@ import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingRevertTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingRevertTest extends ASTRewritingTest
 {
 
+   @Test
    public void testRemoveInserted() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -71,6 +74,7 @@ public class ASTRewritingRevertTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testReplaceInserted() throws Exception
    {
       StringBuffer buf = new StringBuffer();

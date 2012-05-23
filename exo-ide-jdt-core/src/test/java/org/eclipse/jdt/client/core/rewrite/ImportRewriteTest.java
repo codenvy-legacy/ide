@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import org.eclipse.jdt.client.core.BaseTestGwt;
+import org.eclipse.jdt.client.core.BaseTest;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -19,23 +19,26 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.quickfix.StringAsserts;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ImportRewriteTestGwt extends BaseTestGwt
+public class ImportRewriteTest extends BaseTest
 {
 
    private HashMap<String, String> options;
 
-   protected void gwtSetUp() throws Exception
+   @Before
+   public void gwtSetUp() throws Exception
    {
-      super.gwtSetUp();
 
       //      IJavaProject proj = createJavaProject("P", new String[]{"src"}, new String[]{"JCL_LIB"}, "bin");
       options = JavaCore.getOptions();
@@ -54,6 +57,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       //      waitUntilIndexesReady();
    }
 
+   @Test
    public void testAddImports1() throws Exception
    {
 
@@ -102,6 +106,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImportsNoEmptyLines() throws Exception
    {
       options.put(DefaultCodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_IMPORT_GROUPS, String.valueOf(0));
@@ -136,6 +141,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImportsMoreEmptyLines() throws Exception
    {
 
@@ -176,6 +182,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImports2() throws Exception
    {
 
@@ -210,6 +217,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImports3() throws Exception
    {
 
@@ -241,6 +249,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImports4() throws Exception
    {
       options.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON, JavaCore.INSERT);
@@ -364,6 +373,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
    //      assertEqualString(cu.getSource(), buf.toString());
    //   }
    //
+   @Test
    public void testAddImportsWithGroupsOfUnmatched1() throws Exception
    {
 
@@ -404,6 +414,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddImportsWithGroupsOfUnmatched2() throws Exception
    {
 
@@ -444,6 +455,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testRemoveImports1() throws Exception
    {
 
@@ -483,6 +495,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testRemoveImports2() throws Exception
    {
 
@@ -840,6 +853,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
    //      assertEqualString(cu.getSource(), buf.toString());
    //   }
    //
+   @Test
    public void testAddStaticImports1() throws Exception
    {
 
@@ -875,6 +889,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddStaticImports2() throws Exception
    {
 
@@ -912,6 +927,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
+   @Test
    public void testAddStaticImports3() throws Exception
    {
 
@@ -958,158 +974,7 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
-   //
-   //   private void createClassStub(String pack, String typeName, String typeKind) throws JavaModelException
-   //   {
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment(pack, false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package ").append(pack).append(";\n");
-   //      buf.append("public ").append(typeKind).append(" ").append(typeName).append(" {\n");
-   //      buf.append("}\n");
-   //      String content = buf.toString();
-   //
-   //      String name = typeName;
-   //      int idx = typeName.indexOf('<');
-   //      if (idx != -1)
-   //      {
-   //         name = typeName.substring(0, idx);
-   //      }
-   //      pack1.createCompilationUnit(name + ".java", content, false, null);
-   //   }
-   //
-   //      public void testImportStructureWithSignatures() throws Exception
-   //      {
-   //         createClassStub("java.io", "IOException", "class");
-   //         createClassStub("java.net", "URL", "class");
-   //         createClassStub("java.util", "List<E>", "interface");
-   //         createClassStub("java.net", "SocketAddress", "class");
-   //   
-   //         IPackageFragment pack1 = this.sourceFolder.createPackageFragment("test1", false, null);
-   //         StringBuffer buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("import java.util.*;\n");
-   //         buf.append("import java.net.*;\n");
-   //         buf.append("import java.io.*;\n");
-   //         buf.append("public class A {\n");
-   //         buf.append("    public void foo() {\n");
-   //         buf.append("        IOException s;\n");
-   //         buf.append("        URL[][] t;\n");
-   //         buf.append("        List<SocketAddress> x;\n");
-   //         buf.append("    }\n");
-   //         buf.append("}\n");
-   //         String content = buf.toString();
-   //         ICompilationUnit cu1 = pack1.createCompilationUnit("A.java", content, false, null);
-   //   
-   //         buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("public class B {\n");
-   //         buf.append("}\n");
-   //         String content2 = buf.toString();
-   //         ICompilationUnit cu2 = pack1.createCompilationUnit("B.java", content2, false, null);
-   //   
-   //         String[] order = new String[]{"java.util", "java.io", "java.net"};
-   //         int threshold = 99;
-   //         AST ast = AST.newAST(AST.JLS3);
-   //         ImportRewrite importsRewrite = newImportsRewrite(cu2, order, threshold, threshold, true);
-   //         {
-   //            IJavaElement[] elements = cu1.codeSelect(content.indexOf("IOException"), "IOException".length());
-   //            assertEquals(1, elements.length);
-   //            String key = ((IType)elements[0]).getKey();
-   //            String signature = new BindingKey(key).toSignature();
-   //   
-   //            importsRewrite.addImportFromSignature(signature, ast);
-   //         }
-   //         {
-   //            IJavaElement[] elements = cu1.codeSelect(content.indexOf("URL"), "URL".length());
-   //            assertEquals(1, elements.length);
-   //            String key = ((IType)elements[0]).getKey();
-   //            String signature = new BindingKey(key).toSignature();
-   //   
-   //            importsRewrite.addImportFromSignature(signature, ast);
-   //         }
-   //         {
-   //            IJavaElement[] elements = cu1.codeSelect(content.indexOf("List"), "List".length());
-   //            assertEquals(1, elements.length);
-   //            String key = ((IType)elements[0]).getKey();
-   //            String signature = new BindingKey(key).toSignature();
-   //   
-   //            importsRewrite.addImportFromSignature(signature, ast);
-   //         }
-   //         apply(importsRewrite);
-   //   
-   //         buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("\n");
-   //         buf.append("import java.util.List;\n");
-   //         buf.append("\n");
-   //         buf.append("import java.io.IOException;\n");
-   //         buf.append("\n");
-   //         buf.append("import java.net.SocketAddress;\n");
-   //         buf.append("import java.net.URL;\n");
-   //         buf.append("\n");
-   //         buf.append("public class B {\n");
-   //         buf.append("}\n");
-   //   
-   //         assertEqualStringIgnoreDelim(cu2.getSource(), buf.toString());
-   //      }
-   //   
-   //      public void testImportStructureWithSignatures2() throws Exception
-   //      {
-   //         createClassStub("java.util", "Map<S, T>", "interface");
-   //         createClassStub("java.util", "Set<S>", "interface");
-   //         createClassStub("java.net", "SocketAddress", "class");
-   //         createClassStub("java.net", "ServerSocket", "class");
-   //   
-   //         IPackageFragment pack1 = this.sourceFolder.createPackageFragment("test1", false, null);
-   //         StringBuffer buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("import java.util.*;\n");
-   //         buf.append("import java.net.*;\n");
-   //         buf.append("import java.io.*;\n");
-   //         buf.append("public class A {\n");
-   //         buf.append("    public void foo() {\n");
-   //         buf.append("        Map<?, ? extends Set<? super ServerSocket>> z;\n");
-   //         buf.append("    }\n");
-   //         buf.append("}\n");
-   //         String content = buf.toString();
-   //         ICompilationUnit cu1 = pack1.createCompilationUnit("A.java", content, false, null);
-   //   
-   //         buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("public class B {\n");
-   //         buf.append("}\n");
-   //         String content2 = buf.toString();
-   //         ICompilationUnit cu2 = pack1.createCompilationUnit("B.java", content2, false, null);
-   //   
-   //         String[] order = new String[]{"java.util", "java.io", "java.net"};
-   //         int threshold = 99;
-   //         AST ast = AST.newAST(AST.JLS3);
-   //         ImportRewrite importsRewrite = newImportsRewrite(cu2, order, threshold, threshold, true);
-   //         {
-   //            IJavaElement[] elements = cu1.codeSelect(content.indexOf("Map"), "Map".length());
-   //            assertEquals(1, elements.length);
-   //            String key = ((IType)elements[0]).getKey();
-   //            String signature = new BindingKey(key).toSignature();
-   //   
-   //            importsRewrite.addImportFromSignature(signature, ast);
-   //         }
-   //   
-   //         apply(importsRewrite);
-   //   
-   //         buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("\n");
-   //         buf.append("import java.util.Map;\n");
-   //         buf.append("import java.util.Set;\n");
-   //         buf.append("\n");
-   //         buf.append("import java.net.ServerSocket;\n");
-   //         buf.append("\n");
-   //         buf.append("public class B {\n");
-   //         buf.append("}\n");
-   //   
-   //         assertEqualStringIgnoreDelim(cu2.getSource(), buf.toString());
-   //      }
-   //   
+   @Test
    public void testAddedRemovedImportsAPI() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1168,269 +1033,45 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       assertEqualString(d.get(), buf.toString());
    }
 
-   //
-   //   public void testPackageInfo() throws Exception
-   //   {
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("\npackage pack1;");
-   //
-   //      ICompilationUnit cu = pack1.createCompilationUnit("package-info.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"#", "java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 99, 99, true);
-   //      imports.addImport("foo.Bar");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("\npackage pack1;\n");
-   //      buf.append("import foo.Bar;\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
-   //
-   //   public void testBug252379() throws CoreException, BackingStoreException, MalformedTreeException,
-   //      BadLocationException
-   //   {
-   //
-   //      ICompilationUnit[] units = new ICompilationUnit[3];
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("bug", false, null);
-   //
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package bug;\n");
-   //      buf.append("\n");
-   //      buf.append("enum CaseType {\n");
-   //      buf.append("\tone;\n");
-   //      buf.append("\tstatic CaseType[] all(){return null;}\n");
-   //      buf.append("}\n");
-   //
-   //      units[0] = pack1.createCompilationUnit("CaseType.java", buf.toString(), false, null);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package bug;\n");
-   //      buf.append("enum ShareLevel{all})\n");
-   //
-   //      units[1] = pack1.createCompilationUnit("ShareLevel.java", buf.toString(), false, null);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package bug;\n");
-   //      buf.append("class Bug {\n");
-   //      buf.append("public ShareLevel createControl() {\n");
-   //      buf.append("for (CaseType cat : all())\n");
-   //      buf.append("cat.hashCode();\n");
-   //      buf.append("ShareLevel temp = all;\n");
-   //      buf.append("return temp;\n");
-   //      buf.append("};\n");
-   //      buf.append("}\n");
-   //      units[2] = pack1.createCompilationUnit("Bug.java", buf.toString(), false, null);
-   //
-   //      ImportRewrite imports = newImportsRewrite(units[2], new String[]{}, 99, 99, false);
-   //      imports.addStaticImport("bug.CaseType", "all", false);
-   //      imports.addStaticImport("bug.ShareLevel", "all", true);
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package bug;\n\n");
-   //      buf.append("import static bug.CaseType.all;\n");
-   //      buf.append("import static bug.ShareLevel.all;\n\n");
-   //      buf.append("class Bug {\n");
-   //      buf.append("public ShareLevel createControl() {\n");
-   //      buf.append("for (CaseType cat : all())\n");
-   //      buf.append("cat.hashCode();\n");
-   //      buf.append("ShareLevel temp = all;\n");
-   //      buf.append("return temp;\n");
-   //      buf.append("};\n");
-   //      buf.append("}\n");
-   //      assertEqualString(units[2].getSource(), buf.toString());
-   //   }
-   //
-   //   public void testAddImports_bug24804() throws Exception
-   //   {
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.lang.String;\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System;\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu = pack1.createCompilationUnit("C.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 99, 99, false);
-   //      imports.addImport("java.io.Exception");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.io.Exception;\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
-   //
-   //   public void testAddImports_bug24804_2() throws Exception
-   //   {
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.lang.AssertionError;//test\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System;\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu = pack1.createCompilationUnit("C.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 99, 99, true);
-   //      imports.addImport("java.io.Exception");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.io.Exception;\n");
-   //      buf.append("import java.lang.AssertionError;//test\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System;\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
-   //
-   //   public void testAddImports_bug24804_3() throws Exception
-   //   {
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.lang.String;//test\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System;\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu = pack1.createCompilationUnit("C.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 99, 99, false);
-   //      imports.addImport("java.io.Exception");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.io.Exception;\n");
-   //      buf.append("//test\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
-   //
-   //   public void testAddImports_bug24804_4() throws Exception
-   //   {
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.lang.AssertionError;//test\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System; /** comment3 */\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu = pack1.createCompilationUnit("C.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 99, 99, false);
-   //      imports.addImport("java.io.Exception");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.io.Exception;\n");
-   //      buf.append("//test\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("/** comment3 */\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
-   //
-   //   public void testAddImports_bug24804_5() throws Exception
-   //   {
-   //
-   //      IPackageFragment pack1 = this.sourceFolder.createPackageFragment("pack1", false, null);
-   //      StringBuffer buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.lang.AssertionError; //test\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("import java.lang.System;\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu = pack1.createCompilationUnit("C.java", buf.toString(), false, null);
-   //
-   //      String[] order = new String[]{"java"};
-   //
-   //      ImportRewrite imports = newImportsRewrite(cu, order, 1, 1, false);
-   //      imports.addImport("java.io.Exception");
-   //
-   //      apply(imports);
-   //
-   //      buf = new StringBuffer();
-   //      buf.append("package pack1;\n");
-   //      buf.append("\n");
-   //      buf.append("import java.io.*;\n");
-   //      buf.append("//test\n");
-   //      buf.append("/** comment2 */\n");
-   //      buf.append("/** comment */\n");
-   //      buf.append("\n");
-   //      buf.append("public class C {\n");
-   //      buf.append("}\n");
-   //      assertEqualString(cu.getSource(), buf.toString());
-   //   }
+   
+   @Test
+   public void testAddImports_bug24804_5() throws Exception
+   {
+
+      StringBuffer buf = new StringBuffer();
+      buf.append("package pack1;\n");
+      buf.append("\n");
+      buf.append("import java.lang.AssertionError; //test\n");
+      buf.append("\n");
+      buf.append("/** comment2 */\n");
+      buf.append("\n");
+      buf.append("/** comment */\n");
+      buf.append("import java.lang.System;\n");
+      buf.append("\n");
+      buf.append("public class C {\n");
+      buf.append("}\n");
+
+      String[] order = new String[]{"java"};
+      IDocument d = new Document(buf.toString());
+      CompilationUnit cu = createCompilationUnit(d, "C");
+
+      ImportRewrite imports = newImportsRewrite(d, cu, order, 1, 1, false);
+      imports.addImport("java.io.Exception");
+
+      apply(imports);
+
+      buf = new StringBuffer();
+      buf.append("package pack1;\n");
+      buf.append("\n");
+      buf.append("import java.io.*;\n");
+      buf.append("//test\n");
+      buf.append("/** comment2 */\n");
+      buf.append("/** comment */\n");
+      buf.append("\n");
+      buf.append("public class C {\n");
+      buf.append("}\n");
+      assertEqualString(d.get(), buf.toString());
+   }
 
    /**
     * @param d
@@ -1472,16 +1113,6 @@ public class ImportRewriteTestGwt extends BaseTestGwt
       StringAsserts.assertEqualStringIgnoreDelim(actual, expected);
    }
 
-   //   private ImportRewrite newImportsRewrite(CompilationUnit cu, String[] order, int normalThreshold,
-   //      int staticThreshold, boolean restoreExistingImports) throws CoreException
-   //   {
-   //      ImportRewrite rewrite = ImportRewrite.create(String.valueOf(cu.getContents(),cu, restoreExistingImports);
-   //      rewrite.setImportOrder(order);
-   //      rewrite.setOnDemandImportThreshold(normalThreshold);
-   //      rewrite.setStaticOnDemandImportThreshold(staticThreshold);
-   //      return rewrite;
-   //   }
-
    protected ImportRewrite newImportsRewrite(IDocument document, CompilationUnit cu, String[] order,
       int normalThreshold, int staticThreshold, boolean restoreExistingImports)
    {
@@ -1499,7 +1130,6 @@ public class ImportRewriteTestGwt extends BaseTestGwt
 
       IDocument document = rewrite.getDocument();
       edit.apply(document);
-      //      compilationUnit.getBuffer().setContents(document.get());
    }
 
 }

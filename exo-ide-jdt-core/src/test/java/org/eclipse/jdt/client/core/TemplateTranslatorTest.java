@@ -14,6 +14,9 @@ import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,18 +25,14 @@ import java.util.List;
 /**
  * @since 3.3
  */
-public class TemplateTranslatorTestGwt extends BaseTestGwt
+public class TemplateTranslatorTest extends BaseTest
 {
 
    private TemplateTranslator fTranslator;
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp()
-    */
-   @Override
-   protected void gwtSetUp() throws Exception
+   @Before
+   public void gwtSetUp() throws Exception
    {
-      super.gwtSetUp();
       fTranslator = new TemplateTranslator();
    }
 
@@ -49,6 +48,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       }
    }
 
+   @Test
    public void testEmptyTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("");
@@ -57,7 +57,8 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals(0, vars.length);
       assertEquals("", buffer.getString());
    }
-
+   
+   @Test
    public void testNoVarTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo bar");
@@ -67,6 +68,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("foo bar", buffer.getString());
    }
 
+   @Test
    public void testSimpleTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var} bar");
@@ -85,6 +87,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("var", vars[0].getType());
    }
 
+   @Test
    public void testMultiTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var} bar ${var} end");
@@ -103,7 +106,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals(vars[0].getDefaultValue(), vars[0].getValues()[0]);
       assertEquals("var", vars[0].getType());
    }
-
+   @Test
    public void testIllegalSyntax1() throws Exception
    {
       ensureFailure("foo ${var");
@@ -120,17 +123,17 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       {
       }
    }
-
+   @Test
    public void testIllegalSyntax2() throws Exception
    {
       ensureFailure("foo $");
    }
-
+   @Test
    public void testIllegalSyntax3() throws Exception
    {
       ensureFailure("foo ${] } bar");
    }
-
+   @Test
    public void testDollar() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo $$ bar");
@@ -139,7 +142,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals(0, vars.length);
       assertEquals("foo $ bar", buffer.getString());
    }
-
+   @Test
    public void testEmptyVariable() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${} bar");
@@ -159,7 +162,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
    }
 
    /* 3.3 typed template variables */
-
+   @Test
    public void testTypedTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var:type} bar");
@@ -177,7 +180,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("type", vars[0].getType());
       assertEquals(vars[0].getDefaultValue(), vars[0].getValues()[0]);
    }
-
+   @Test
    public void testParameterizedTypeTemplate() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var:type(param)} bar");
@@ -196,7 +199,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("type", vars[0].getType());
       assertEquals(Collections.singletonList("param"), vars[0].getVariableType().getParams());
    }
-
+   @Test
    public void testMultiParameterizedTypeTemplate1() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var:type(param)} bar ${var:type(param)} end");
@@ -216,7 +219,7 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("type", vars[0].getType());
       assertEquals(Collections.singletonList("param"), vars[0].getVariableType().getParams());
    }
-
+   @Test
    public void testMultiParameterizedTypeTemplate2() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${var:type(param)} bar ${var} end");
@@ -236,13 +239,13 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
       assertEquals("type", vars[0].getType());
       assertEquals(Collections.singletonList("param"), vars[0].getVariableType().getParams());
    }
-
+   @Test
    public void testIllegallyParameterizedTypeTemplate() throws Exception
    {
       ensureFailure("foo ${var:type(param)} bar ${var:type(other)} end");
       ensureFailure("foo ${var:type(param)} bar ${var:type} end");
    }
-
+   @Test
    public void testParameterizedTypeTemplateWithWhitespace() throws Exception
    {
       TemplateBuffer buffer = fTranslator.translate("foo ${ var : type ( param1 , param2 , param3 ) } bar");
@@ -312,22 +315,22 @@ public class TemplateTranslatorTestGwt extends BaseTestGwt
    //      params.add("a parameter '3");
    //      assertEquals(params, vars[0].getVariableType().getParams());
    //   }
-
+   @Test
    public void testIllegalSyntax4() throws Exception
    {
       ensureFailure("foo ${var:} bar");
    }
-
+   @Test
    public void testIllegalSyntax5() throws Exception
    {
       ensureFailure("foo ${var:type(} bar");
    }
-
+   @Test
    public void testIllegalSyntax6() throws Exception
    {
       ensureFailure("foo ${var:type(] )} bar");
    }
-
+   @Test
    public void testIllegalSyntax7() throws Exception
    {
       ensureFailure("foo ${var:type((} bar");

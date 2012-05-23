@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import org.eclipse.jdt.client.core.BaseTestGwt;
+import org.eclipse.jdt.client.core.BaseTest;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTParser;
@@ -29,50 +29,30 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.emul.FileSystem;
+import org.eclipse.jdt.quickfix.StringAsserts;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.junit.Before;
 
 import java.util.HashMap;
 import java.util.List;
 
-/**
-  */
-public class ASTRewritingTestGwt extends BaseTestGwt
+public abstract class ASTRewritingTest extends BaseTest
 {
    /** @deprecated using deprecated code */
    private static final int AST_INTERNAL_JLS2 = AST.JLS2;
 
-   //   public static Test suite() {
-   //      TestSuite suite= new TestSuite(ASTRewritingTest.class.getName());
-   //      suite.addTest(ASTRewritingExpressionsTest.allTests());
-   //      suite.addTest(ASTRewritingInsertBoundTest.allTests());
-   //      suite.addTest(ASTRewritingMethodDeclTest.allTests());
-   //      suite.addTest(ASTRewritingMoveCodeTest.allTests());
-   //      suite.addTest(ASTRewritingStatementsTest.allTests());
-   //      suite.addTest(ASTRewritingTrackingTest.allTests());
-   //      suite.addTest(ASTRewritingJavadocTest.allTests());
-   //      suite.addTest(ASTRewritingTypeDeclTest.allTests());
-   //      suite.addTest(ASTRewritingGroupNodeTest.allTests());
-   //      suite.addTest(ASTRewritingRevertTest.allTests());
-   //      suite.addTest(SourceModifierTest.allTests());
-   //      suite.addTest(ImportRewriteTest.allTests());
-   //      suite.addTest(LineCommentOffsetsTest.allTests());
-   //      suite.addTest(ASTRewritingWithStatementsRecoveryTest.allTests());
-   //      suite.addTest(ASTRewritePropertyTest.allTests());
-   //      suite.addTest(ASTRewritingPackageDeclTest.allTests());
-   //      return suite;
-   //   }
 
-   public ASTRewritingTestGwt()
+   public ASTRewritingTest()
    {
       //      super(name);
    }
 
    /** @see com.google.gwt.junit.client.GWTTestCase#gwtSetUp() */
-   @Override
-   protected void gwtSetUp() throws Exception
+   @Before
+   public void gwtSetUp() throws Exception
    {
-      super.gwtSetUp();
       HashMap<String, String> options = new HashMap<String, String>();
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
@@ -144,6 +124,7 @@ public class ASTRewritingTestGwt extends BaseTestGwt
       parser.setResolveBindings(resolveBindings);
       parser.setStatementsRecovery(statementsRecovery);
       parser.setCompilerOptions(JavaCore.getOptions());
+      parser.setNameEnvironment(new FileSystem(new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
       return (CompilationUnit)parser.createAST(null);
    }
 

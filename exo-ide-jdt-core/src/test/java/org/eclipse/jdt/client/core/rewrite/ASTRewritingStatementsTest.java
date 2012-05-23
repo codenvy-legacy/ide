@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
+import static org.junit.Assert.*;
 import java.util.List;
 
 import org.eclipse.jdt.client.core.dom.*;
@@ -18,10 +19,13 @@ import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.junit.Ignore;
+import org.junit.Test;
 
-public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingStatementsTest extends ASTRewritingTest
 {
 
+   @Test
    public void testInsert1() throws Exception
    {
       /* foo(): append a return statement */
@@ -66,6 +70,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testInsert2() throws Exception
    {
       /* insert a statement before */
@@ -119,6 +124,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testInsert3() throws Exception
    {
       // add after comment
@@ -176,6 +182,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testRemove1() throws Exception
    {
       /* foo():  remove if... */
@@ -217,6 +224,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testRemove2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -265,6 +273,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testRemove3() throws Exception
    {
       // delete
@@ -306,6 +315,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement01() throws Exception
    {
@@ -348,6 +358,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement02() throws Exception
    {
@@ -389,6 +400,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement03() throws Exception
    {
@@ -430,6 +442,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement04() throws Exception
    {
@@ -469,6 +482,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement05() throws Exception
    {
@@ -512,6 +526,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement06() throws Exception
    {
@@ -555,6 +570,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement07() throws Exception
    {
@@ -599,6 +615,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement08() throws Exception
    {
@@ -642,6 +659,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement09() throws Exception
    {
@@ -686,6 +704,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement10() throws Exception
    {
@@ -734,6 +753,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement11() throws Exception
    {
@@ -783,6 +803,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
    public void testRemoveStatement12() throws Exception
    {
@@ -830,6 +851,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testReplace1() throws Exception
    {
       /* foo(): if.. -> return; */
@@ -873,6 +895,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testReplace2() throws Exception
    {
       /* goo(): new Integer(3) -> 'null' */
@@ -924,6 +947,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testBreakStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -990,6 +1014,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testConstructorInvocation() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1060,6 +1085,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testConstructorInvocation2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1122,6 +1148,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testContinueStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1189,6 +1216,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testDoStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1247,6 +1275,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testDoStatement1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1369,6 +1398,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testDoStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1434,6 +1464,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testExpressionStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1485,6 +1516,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testForStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1643,6 +1675,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testForStatement1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1761,6 +1794,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testForStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1836,6 +1870,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testIfStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1914,6 +1949,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2001,6 +2037,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2116,6 +2153,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2207,6 +2245,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2327,6 +2366,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement5() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2456,6 +2496,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement6() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2533,6 +2574,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatement_bug48988() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2594,6 +2636,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatementReplaceElse1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2696,6 +2739,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatementReplaceElse2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2828,6 +2872,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatementReplaceElse3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2973,6 +3018,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatementReplaceElse4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3124,6 +3170,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testIfStatementReplaceElse5() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3186,6 +3233,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testLabeledStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3242,6 +3290,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testReturnStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3332,6 +3381,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testReturnStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3414,6 +3464,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testAssertStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3488,6 +3539,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
+   @Ignore
    public void testSwitchStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3617,6 +3670,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
+   @Ignore
    public void testSwitchStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3745,6 +3800,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
+   @Ignore
    public void testSwitchStatement3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3811,6 +3868,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Insert a statement before an unchanged statement (and preceded by an unchanged statement)
     */
+   @Test
+   @Ignore
    public void testSwitchStatement5() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3873,6 +3932,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Insert a statement after an unchanged statement (and preceded by an unchanged statement)
     */
+   @Test
+   @Ignore
    public void testSwitchStatement6() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3935,6 +3996,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Replace a statement preceded by an unchanged statement)
     */
+   @Test
    public void testSwitchStatement7() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -3999,6 +4061,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Remove a statement preceded by an unchanged statement)
     */
+   @Test
    public void testSwitchStatement8() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4057,6 +4120,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Remove a statement followed by an inserted statement)
     */
+   @Test
    public void testSwitchStatement9() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4122,6 +4186,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=246627
     * Remove a statement preceded by an inserted statement)
     */
+   @Test
+   @Ignore
    public void testSwitchStatement10() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4181,6 +4247,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
+   @Test
    public void testSwitchStatement11() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4233,6 +4300,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=276938
+   @Test
    public void testSwitchStatement12() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4283,6 +4351,8 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=290730
+   @Test
+   @Ignore
    public void testSwitchStatement13() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4329,6 +4399,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testSynchronizedStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4387,6 +4458,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTryStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4512,6 +4584,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTryStatement2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4565,6 +4638,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTryStatement3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4619,6 +4693,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTryStatement4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4665,6 +4740,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTryStatementWithResources() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4755,6 +4831,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTryStatementWithResources2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4807,6 +4884,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    /**
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=351170
     */
+   @Test
    public void testTryStatementWithResources3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4874,6 +4952,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    /**
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=351170
     */
+   @Test
    public void testTryStatementWithResources4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -4945,6 +5024,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
    /**
     * https://bugs.eclipse.org/bugs/show_bug.cgi?id=351170
     */
+   @Test
    public void testTryStatementWithResources5() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -5013,6 +5093,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testVariableDeclarationStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -5100,6 +5181,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testWhileStatement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -5158,6 +5240,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testWhileStatement1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -5276,6 +5359,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testInsertCode() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -5332,6 +5416,7 @@ public class ASTRewritingStatementsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testInsertComment() throws Exception
    {
       StringBuffer buf = new StringBuffer();

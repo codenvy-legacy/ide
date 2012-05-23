@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -34,6 +33,8 @@ import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Iterator;
 
@@ -42,7 +43,7 @@ import java.util.Iterator;
  * 
  * @since 3.4
  */
-public class TemplateContributionTestGwt extends BaseTestGwt
+public class TemplateContributionTest extends BaseTest
 {
 
    private ContextTypeRegistry fCodeTemplateContextTypeRegistry;
@@ -66,7 +67,7 @@ public class TemplateContributionTestGwt extends BaseTestGwt
             TemplateVariable variable = variables[j];
             if (!variable.getType().equals(variable.getName()))
             {
-               assertTrue(
+               Assert.assertTrue(
                   "No resolver found for variable '" + variable.getType() + "' in template '" + template.getName()
                      + "'\n\n" + template.getPattern(), canHandle(context, variable));
             }
@@ -134,6 +135,7 @@ public class TemplateContributionTestGwt extends BaseTestGwt
       return fCodeTemplateContextTypeRegistry;
    }
 
+   @Test
    public void testJavaContribution() throws Exception
    {
       checkContribution(JavaContextType.ID_ALL, JavaContextType.ID_ALL);
@@ -144,6 +146,7 @@ public class TemplateContributionTestGwt extends BaseTestGwt
       //      checkContribution(JavaContextType.ID_STATEMENTS, JavaContextType.ID_STATEMENTS);
    }
 
+   @Test
    public void testJavaDocContribution() throws Exception
    {
       checkContribution(JavaDocContextType.ID, JavaDocContextType.ID);

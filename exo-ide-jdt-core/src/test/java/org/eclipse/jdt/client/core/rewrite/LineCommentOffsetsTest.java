@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
+import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.List;
 
@@ -18,13 +19,15 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.LineCommentEndOffsets;
+import org.junit.Test;
 
 /**
  *
  */
-public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
+public class LineCommentOffsetsTest extends ASTRewritingTest
 {
 
+   @Test
    public void testEmptyLineComments() throws Exception
    {
 
@@ -38,6 +41,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertFalse(res);
    }
 
+   @Test
    public void testRemove() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -95,6 +99,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertFalse(offsets.isEndOfLineComment(p4));
    }
 
+   @Test
    public void testLineCommentEndOffsets() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -150,6 +155,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEquals(4, count);
    }
 
+   @Test
    public void testLineCommentEndOffsetsMixedLineDelimiter() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -201,6 +207,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEquals(4, count);
    }
 
+   @Test
    public void testCommentInLists() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -234,6 +241,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCommentInType() throws Exception
    {
 
@@ -268,6 +276,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug103340() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -302,6 +311,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug95839() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -347,6 +357,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug114418() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -398,6 +409,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug128818() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -440,6 +452,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug128422() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -484,6 +497,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug128422b() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -540,6 +554,7 @@ public class LineCommentOffsetsTestGwt extends ASTRewritingTestGwt
       return ast.newExpressionStatement(inv);
    }
 
+   @Test
    public void testCommentAtEnd() throws Exception
    {
       StringBuffer buf = new StringBuffer();

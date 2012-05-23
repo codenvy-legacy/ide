@@ -18,10 +18,11 @@ import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ITrackedNodePosition;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingTrackingTest extends ASTRewritingTest
 {
-
+   @Test
    public void testNamesWithDelete() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -91,6 +92,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
       }
    }
 
+   @Test
    public void testNamesWithInsert() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -162,6 +164,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testNamesWithReplace() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -240,6 +243,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
       assertCorrectTracking(names, positions, expected);
    }
 
+   @Test
    public void testNamesWithMove1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -316,6 +320,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testNamesWithMove2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -385,6 +390,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
       assertCorrectTracking(names, positions, expected);
    }
 
+   @Test
    public void testNamesWithMove3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -442,6 +448,7 @@ public class ASTRewritingTrackingTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testNamesWithPlaceholder() throws Exception
    {
       StringBuffer buf = new StringBuffer();

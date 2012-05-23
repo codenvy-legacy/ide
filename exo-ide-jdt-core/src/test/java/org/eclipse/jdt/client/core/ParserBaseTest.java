@@ -31,13 +31,14 @@ import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
+import org.junit.Before;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 12, 2012 3:23:29 PM evgen $
  * 
  */
-public abstract class ParserBaseTestGwt extends BaseTestGwt
+public abstract class ParserBaseTest extends BaseTest
 {
 
    protected CompilationUnit unit;
@@ -50,14 +51,8 @@ public abstract class ParserBaseTestGwt extends BaseTestGwt
       TextResource resource();
    }
 
-   /**
-    * 
-    */
-   public ParserBaseTestGwt()
-   {
-      super();
-   }
 
+   @Before
    public void gwtSetUp()
    {
       Resources rs = GWT.create(Resources.class);

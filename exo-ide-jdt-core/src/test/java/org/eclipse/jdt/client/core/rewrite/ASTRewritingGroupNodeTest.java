@@ -22,10 +22,12 @@ import org.eclipse.jdt.client.core.dom.ReturnStatement;
 import org.eclipse.jdt.client.core.dom.Statement;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.junit.Test;
 
-public class ASTRewritingGroupNodeTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingGroupNodeTest extends ASTRewritingTest
 {
 
+   @Test
    public void testCollapsedTargetNodes() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -74,6 +76,7 @@ public class ASTRewritingGroupNodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, expected);
    }
 
+   @Test
    public void testCollapsedTargetNodes2() throws Exception
    {
       StringBuffer buf = new StringBuffer();

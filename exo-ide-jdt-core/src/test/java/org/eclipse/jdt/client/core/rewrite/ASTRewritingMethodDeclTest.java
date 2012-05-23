@@ -10,29 +10,59 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import org.eclipse.jdt.client.core.BaseTestGwt;
-//import org.eclipse.jdt.core.ICompilationUnit;
-//import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.core.dom.*;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.AnnotationTypeMemberDeclaration;
+import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.EnumConstantDeclaration;
+import org.eclipse.jdt.client.core.dom.EnumDeclaration;
+import org.eclipse.jdt.client.core.dom.ExpressionStatement;
+import org.eclipse.jdt.client.core.dom.FieldDeclaration;
+import org.eclipse.jdt.client.core.dom.Initializer;
+import org.eclipse.jdt.client.core.dom.Javadoc;
+import org.eclipse.jdt.client.core.dom.MarkerAnnotation;
+import org.eclipse.jdt.client.core.dom.MemberValuePair;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodInvocation;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.Name;
+import org.eclipse.jdt.client.core.dom.NormalAnnotation;
+import org.eclipse.jdt.client.core.dom.PrimitiveType;
+import org.eclipse.jdt.client.core.dom.SimpleName;
+import org.eclipse.jdt.client.core.dom.SingleMemberAnnotation;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.TagElement;
+import org.eclipse.jdt.client.core.dom.TextElement;
+import org.eclipse.jdt.client.core.dom.TryStatement;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.TypeParameter;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationExpression;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
-import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+public class ASTRewritingMethodDeclTest extends ASTRewritingTest
 {
 
    /** @deprecated using deprecated code */
+   @Test
    public void testMethodDeclChanges() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -148,6 +178,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMethodTypeParameterAdds() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -206,6 +237,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMethodTypeParameterRemoves() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -263,6 +295,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMethodReturnTypeChanges() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -369,6 +402,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodReturnTypeChanges2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -473,6 +507,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodReturnTypeChangesAST3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -588,6 +623,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodReturnTypeChanges2AST3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -688,6 +724,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListRemoves() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -799,6 +836,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListRemoves2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -838,55 +876,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
-   //   //https://bugs.eclipse.org/bugs/show_bug.cgi?id=331111
-   //   public void _testListRemoves3() throws Exception
-   //   {
-   //      Map options = this.project1.getOptions(true);
-   //      Map newOptions = this.project1.getOptions(true);
-   //      try
-   //      {
-   //         newOptions.put(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION,
-   //            JavaCore.INSERT);
-   //         newOptions.put(
-   //            DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION,
-   //            JavaCore.INSERT);
-   //         newOptions.put(
-   //            DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION,
-   //            JavaCore.DO_NOT_INSERT);
-   //         this.project1.setOptions(newOptions);
-   //         IPackageFragment pack1 = this.sourceFolder.createPackageFragment("test1", false, null);
-   //         StringBuffer buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("public class E {\n");
-   //         buf.append("    public void foo( String s ) {}\n");
-   //         buf.append("}\n");
-   //         ICompilationUnit cu = pack1.createCompilationUnit("E.java", buf.toString(), false, null);
-   //
-   //         CompilationUnit astRoot = createAST(cu);
-   //         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
-   //         TypeDeclaration type = (TypeDeclaration)astRoot.types().get(0);
-   //
-   //         { // delete param, insert new
-   //            MethodDeclaration methodDecl = (MethodDeclaration)type.bodyDeclarations().get(0);
-   //            List parameters = methodDecl.parameters();
-   //            rewrite.remove((ASTNode)parameters.get(0), null);
-   //         }
-   //         String preview = evaluateRewrite(cu, rewrite);
-   //
-   //         buf = new StringBuffer();
-   //         buf.append("package test1;\n");
-   //         buf.append("public class E {\n");
-   //         buf.append("    public void foo() {}\n");
-   //         buf.append("}\n");
-   //
-   //         assertEqualString(preview, buf.toString());
-   //      }
-   //      finally
-   //      {
-   //         this.project1.setOptions(options);
-   //      }
-   //   }
-   //
+   @Test
    public void testListInserts() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1083,6 +1073,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListInsert() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1133,6 +1124,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListCombinations() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1245,6 +1237,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListCombination() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1297,6 +1290,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testListCombination2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1356,6 +1350,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodBody() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1432,6 +1427,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodDeclarationExtraDimensions() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1531,6 +1527,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testModifiersAST3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1653,6 +1650,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testModifiersAST3WithAnnotations() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1719,6 +1717,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testModifiersAST3WithAnnotations2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1778,6 +1777,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testFieldDeclaration() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1858,6 +1858,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testInitializer() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1918,6 +1919,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodDeclarationParamShuffel() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1962,6 +1964,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodDeclarationParamShuffel1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2001,6 +2004,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodDeclaration_bug24916() throws Exception
    {
 
@@ -2035,6 +2039,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodComments1() throws Exception
    {
 
@@ -2084,6 +2089,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodComments2() throws Exception
    {
 
@@ -2142,6 +2148,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodComments3() throws Exception
    {
 
@@ -2194,6 +2201,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMethodComments4() throws Exception
    {
 
@@ -2261,58 +2269,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
-   //
-   //   /** @deprecated using deprecated code */
-   //   public void testInsertFieldAfter() throws Exception {
-   //
-   //      IPackageFragment pack1= this.sourceFolder.createPackageFragment("test1", false, null);
-   //      StringBuffer buf= new StringBuffer();
-   //      buf.append("package test1;\n");
-   //
-   //      buf.append("public class DD {\n");
-   //      buf.append("    private int fCount1;\n");
-   //      buf.append("\n");
-   //      buf.append("    /*\n");
-   //      buf.append("     *\n");
-   //      buf.append("     */\n");
-   //      buf.append("    private void foo1(){\n");
-   //      buf.append("    }\n");
-   //      buf.append("}\n");
-   //      ICompilationUnit cu= pack1.createCompilationUnit("DD.java", buf.toString(), false, null);
-   //
-   //      CompilationUnit astRoot= createAST(cu);
-   //      AST ast= astRoot.getAST();
-   //      ASTRewrite rewrite= ASTRewrite.create(astRoot.getAST());
-   //      TypeDeclaration type= findTypeDeclaration(astRoot, "DD");
-   //      {
-   //         VariableDeclarationFragment frag= ast.newVariableDeclarationFragment();
-   //         frag.setName(ast.newSimpleName("fColor"));
-   //         FieldDeclaration newField= ast.newFieldDeclaration(frag);
-   //         newField.setType(ast.newPrimitiveType(PrimitiveType.CHAR));
-   //         newField.setModifiers(Modifier.PRIVATE);
-   //
-   //         rewrite.getListRewrite(type, TypeDeclaration.BODY_DECLARATIONS_PROPERTY).insertAt(newField, 1, null);
-   //      }
-   //
-   //      String preview= evaluateRewrite(cu, rewrite);
-   //
-   //      buf= new StringBuffer();
-   //      buf.append("package test1;\n");
-   //
-   //      buf.append("public class DD {\n");
-   //      buf.append("    private int fCount1;\n");
-   //      buf.append("    private char fColor;\n");
-   //      buf.append("\n");
-   //      buf.append("    /*\n");
-   //      buf.append("     *\n");
-   //      buf.append("     */\n");
-   //      buf.append("    private void foo1(){\n");
-   //      buf.append("    }\n");
-   //      buf.append("}\n");
-   //      assertEqualString(preview, buf.toString());
-   //   }
-   //
-   //
+   @Test
    public void testVarArgs() throws Exception
    {
 
@@ -2356,6 +2313,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testAnnotationTypeMember() throws Exception
    {
 
@@ -2405,6 +2363,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumConstantDeclaration1() throws Exception
    {
 
@@ -2452,6 +2411,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumConstantDeclaration2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2617,6 +2577,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumConstantDeclaration_bug114119() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2647,6 +2608,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMethodDeclChangesBug77538() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2699,6 +2661,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertFalse("Invalid extended length for " + body, astRoot.getExtendedLength(body) < 0);
    }
 
+   @Test
    public void testAnnotations() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -2791,6 +2754,7 @@ public class ASTRewritingMethodDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testParameterAnnotations() throws Exception
    {
       StringBuffer buf = new StringBuffer();

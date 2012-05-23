@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
+import static org.junit.Assert.*;
 import java.util.List;
-
-import junit.framework.Test;
 
 import org.eclipse.jdt.client.core.JavaCore;
 
@@ -21,11 +20,13 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingTypeDeclTest extends ASTRewritingTest
 {
 
    /** @deprecated using deprecated code */
+   @Test
    public void testTypeDeclChanges() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -140,6 +141,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=308754
+   @Test
    public void testTypeDeclarationChange() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -167,6 +169,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=308754
+   @Test
    public void testTypeDeclarationChange2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -193,6 +196,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTypeDeclChanges2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -304,6 +308,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
    }
 
    /** @deprecated using deprecated code */
+   @Test
    public void testTypeDeclRemoves() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -406,6 +411,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeDeclInserts() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -521,6 +527,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeDeclInsertFields1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -585,6 +592,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeParameters() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -631,6 +639,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testBug22161() throws Exception
    {
       //   System.out.println(getClass().getName()+"::" + getName() +" disabled (bug 22161)");
@@ -662,6 +671,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testAnonymousClassDeclaration() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -754,6 +764,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testImportDeclaration() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -830,6 +841,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testPackageDeclaration() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -863,6 +875,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testCompilationUnit() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -892,6 +905,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testCompilationUnit2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -925,6 +939,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
    }
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=262517
+   @Test
    public void testSingleMemberAnnotation1() throws Exception
    {
       String previousValue = null;
@@ -981,6 +996,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       }
    }
 
+   @Test
    public void testSingleVariableDeclaration() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1043,6 +1059,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testVariableDeclarationFragment() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1125,6 +1142,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeDeclSpacingMethods1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1170,6 +1188,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeDeclSpacingMethods2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1218,6 +1237,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTypeDeclSpacingFields() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1269,6 +1289,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testEnumDeclaration() throws Exception
    {
       // test the creation of an enum declaration
@@ -1324,6 +1345,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration1() throws Exception
    {
       // test the creation of an enum declaration
@@ -1360,6 +1382,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration2() throws Exception
    {
 
@@ -1405,6 +1428,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration3() throws Exception
    {
 
@@ -1450,6 +1474,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration4() throws Exception
    {
 
@@ -1482,6 +1507,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration5() throws Exception
    {
 
@@ -1525,6 +1551,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration6() throws Exception
    {
       // test the creation of an enum declaration
@@ -1555,6 +1582,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testEnumDeclaration7() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1586,6 +1614,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testAnnotationTypeDeclaration1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1636,6 +1665,7 @@ public class ASTRewritingTypeDeclTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testWildcardType() throws Exception
    {
       StringBuffer buf = new StringBuffer();

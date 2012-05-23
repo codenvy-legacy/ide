@@ -18,20 +18,20 @@
  */
 package org.eclipse.jdt.client.core;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import com.googlecode.gwt.test.GwtTest;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
-public abstract class BaseTestGwt extends GWTTestCase
+public abstract class BaseTest extends GwtTest
 {
 
    /**
     * 
     */
-   public BaseTestGwt()
+   public BaseTest()
    {
       super();
    }

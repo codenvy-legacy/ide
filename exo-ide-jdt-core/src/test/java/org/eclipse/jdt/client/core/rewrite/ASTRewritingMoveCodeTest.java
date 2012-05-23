@@ -10,19 +10,40 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import java.util.List;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.eclipse.jdt.client.core.dom.*;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.CastExpression;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.ExpressionStatement;
+import org.eclipse.jdt.client.core.dom.ForStatement;
+import org.eclipse.jdt.client.core.dom.IfStatement;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodInvocation;
+import org.eclipse.jdt.client.core.dom.ParenthesizedExpression;
+import org.eclipse.jdt.client.core.dom.PrefixExpression;
+import org.eclipse.jdt.client.core.dom.ReturnStatement;
+import org.eclipse.jdt.client.core.dom.Statement;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
+import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
+import java.util.List;
+
+public class ASTRewritingMoveCodeTest extends ASTRewritingTest
 {
 
+   @Test
    public void testMove() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -60,6 +81,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveDeclSameLevelCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -171,6 +193,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveDeclSameLevel() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -277,6 +300,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveDeclDifferentLevelCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -398,6 +422,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveDeclDifferentLevel() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -515,6 +540,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveStatementsCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -616,6 +642,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveStatements() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -703,6 +730,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testCopyFromDeleted() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -758,6 +786,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testChangesInMoveCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -828,6 +857,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testChangesInMove() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -898,6 +928,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSwapCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -952,6 +983,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSwap() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1006,6 +1038,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMultipleCopiesOfSameNode() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1059,6 +1092,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testCopyMultipleNodes() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1114,6 +1148,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCopyMultipleNodes0() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1179,6 +1214,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCopyMultipleNodes1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1247,6 +1283,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCopyMultipleNodes2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1297,6 +1334,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCopyMultipleNodes3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1360,6 +1398,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testCopyMultipleNodes4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1425,6 +1464,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMultipleCopiesOfSameNodeAndMove() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1481,6 +1521,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveMultipleNodes() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1534,6 +1575,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMoveMultipleNodes2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1595,6 +1637,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMoveMultipleNodes3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1654,6 +1697,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMoveMultipleNodes4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1704,6 +1748,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       }
    }
 
+   @Test
    public void testReplaceMoveMultiple() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1753,6 +1798,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMoveForStatementToForBlockCD() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1801,6 +1847,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveForStatementToForBlock() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1849,6 +1896,7 @@ public class ASTRewritingMoveCodeTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testNestedCopies() throws Exception
    {
       StringBuffer buf = new StringBuffer();

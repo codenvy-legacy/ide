@@ -14,13 +14,15 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.SourceModifier;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
 import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
+import org.junit.Test;
 
 /**
  *
  */
-public class SourceModifierTestGwt extends ASTRewritingTestGwt
+public class SourceModifierTest extends ASTRewritingTest
 {
 
+   @Test
    public void testRemoveIndents() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -74,6 +76,7 @@ public class SourceModifierTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, expected);
    }
 
+   @Test
    public void testAddIndents() throws Exception
    {
       StringBuffer buf = new StringBuffer();

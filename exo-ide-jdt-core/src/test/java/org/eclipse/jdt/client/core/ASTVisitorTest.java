@@ -21,29 +21,31 @@ package org.eclipse.jdt.client.core;
 import org.eclipse.jdt.client.core.dom.ASTVisitor;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 4, 2012 2:50:05 PM evgen $
  * 
  */
-public class ASTVisitorTestGwt extends ParserBaseTestGwt
+public class ASTVisitorTest extends ParserBaseTest
 {
-
+   @Test
    public void testTypeDeclarationVisitor() throws Exception
    {
       TypeDeclarationVisitor visitor = new TypeDeclarationVisitor();
       unit.accept(visitor);
-      assertEquals(2, visitor.typeCount);
+      Assert.assertEquals(2, visitor.typeCount);
 
    }
-
+   @Test
    public void testMethodDeclarationVisitor() throws Exception
    {
       MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
       TypeDeclaration type = (TypeDeclaration)unit.types().get(0);
       type.getTypes()[0].accept(visitor);
-      assertEquals(19, visitor.methodCount);
+      Assert.assertEquals(19, visitor.methodCount);
    }
 
    private static class MethodDeclarationVisitor extends ASTVisitor

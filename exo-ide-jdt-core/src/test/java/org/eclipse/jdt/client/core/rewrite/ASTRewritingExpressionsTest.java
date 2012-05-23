@@ -10,16 +10,32 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.core.rewrite;
 
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
-import org.eclipse.jdt.client.core.dom.*;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.Block;
+import org.eclipse.jdt.client.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.ExpressionStatement;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodInvocation;
+import org.eclipse.jdt.client.core.dom.SimpleType;
+import org.eclipse.jdt.client.core.dom.SuperConstructorInvocation;
+import org.eclipse.jdt.client.core.dom.SuperMethodInvocation;
+import org.eclipse.jdt.client.core.dom.Type;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingExpressionsTestGwt extends ASTRewritingTestGwt
+import java.util.List;
+
+public class ASTRewritingExpressionsTest extends ASTRewritingTest
 {
 
+   @Test
    public void testClassInstanceCreation2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -94,6 +110,7 @@ public class ASTRewritingExpressionsTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testMethodInvocation2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -143,6 +160,7 @@ public class ASTRewritingExpressionsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSuperConstructorInvocation2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -196,6 +214,7 @@ public class ASTRewritingExpressionsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSuperConstructorInvocation4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -251,6 +270,7 @@ public class ASTRewritingExpressionsTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSuperMethodInvocation2() throws Exception
    {
       StringBuffer buf = new StringBuffer();

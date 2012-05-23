@@ -11,15 +11,17 @@
 package org.eclipse.jdt.client.core.rewrite;
 
 import java.util.List;
+import static org.junit.Assert.*;
 
 import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Test;
 
-public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
+public class ASTRewritingJavadocTest extends ASTRewritingTest
 {
-
+   @Test
    public void testParamName() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -44,11 +46,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement tagElement = (TagElement)tags.get(0);
-         List fragments = tagElement.fragments();
+         List<ASTNode> fragments = tagElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          SimpleName name = (SimpleName)fragments.get(0);
@@ -70,6 +72,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testSeeTag1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -94,11 +97,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement tagElement = (TagElement)tags.get(0);
-         List fragments = tagElement.fragments();
+         List<ASTNode> fragments = tagElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          SimpleName name = (SimpleName)fragments.get(0);
@@ -121,6 +124,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSeeTag2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -145,11 +149,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement tagElement = (TagElement)tags.get(0);
-         List fragments = tagElement.fragments();
+         List<ASTNode> fragments = tagElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          MemberRef ref = (MemberRef)fragments.get(0);
@@ -172,6 +176,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSeeTag3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -196,11 +201,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement tagElement = (TagElement)tags.get(0);
-         List fragments = tagElement.fragments();
+         List<ASTNode> fragments = tagElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          MemberRef ref = (MemberRef)fragments.get(0);
@@ -223,6 +228,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSeeTagParamInsert1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -247,11 +253,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement tagElement = (TagElement)tags.get(0);
-         List fragments = tagElement.fragments();
+         List<ASTNode> fragments = tagElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          MethodRef ref = (MethodRef)fragments.get(0);
@@ -277,6 +283,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testSeeTagParamInsert2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -301,11 +308,11 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement topElement = (TagElement)tags.get(0);
-         List fragments = topElement.fragments();
+         List<ASTNode> fragments = topElement.fragments();
          assertTrue("Has fragments", !fragments.isEmpty());
 
          TagElement tagElement = (TagElement)fragments.get(0);
@@ -335,6 +342,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagInsert1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -359,7 +367,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement newTag = ast.newTagElement();
@@ -389,6 +397,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagInsert2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -413,7 +422,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement newTag = ast.newTagElement();
@@ -443,6 +452,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagInsert3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -466,7 +476,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 0);
 
          TagElement newTag = ast.newTagElement();
@@ -508,6 +518,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTagInsert4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -532,12 +543,12 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          TagElement newTag = ast.newTagElement();
          newTag.setTagName("@throws");
-         List fragments = newTag.fragments();
+         List<ASTNode> fragments = newTag.fragments();
          fragments.add(ast.newSimpleName("Exception"));
          TextElement element1 = ast.newTextElement();
          element1.setText("Description line 1\n * Description line 2");
@@ -564,6 +575,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagRemove1() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -587,7 +599,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 1);
 
          rewrite.remove((ASTNode)tags.get(0), null);
@@ -608,6 +620,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagRemove2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -632,7 +645,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 2);
 
          rewrite.remove((ASTNode)tags.get(0), null);
@@ -654,6 +667,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testTagRemove3() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -679,7 +693,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 2);
 
          rewrite.remove((ASTNode)tags.get(1), null);
@@ -700,6 +714,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTagRemove4() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -723,6 +738,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
       assertEqualString(preview, buf.toString());
    }
 
+   @Test
    public void testTagRemoveInsert() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -748,7 +764,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          MethodDeclaration methodDecl = findMethodDeclaration(type, "gee");
 
          Javadoc javadoc = methodDecl.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          assertTrue("Has one tag", tags.size() == 2);
 
          ListRewrite listRewrite = rewrite.getListRewrite(javadoc, Javadoc.TAGS_PROPERTY);
@@ -782,6 +798,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testAddJavadoc() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -831,6 +848,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testAddJavadoc2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -878,6 +896,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testRemoveJavadoc() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -915,6 +934,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testRemoveJavadoc2() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -947,6 +967,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testMoveTags() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -972,7 +993,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          TypeDeclaration type = findTypeDeclaration(astRoot, "E");
          Initializer initializer = (Initializer)type.bodyDeclarations().get(0);
          Javadoc javadoc = initializer.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          ASTNode node1 = (ASTNode)tags.get(0);
          ASTNode placeholder1 = rewrite.createMoveTarget(node1);
          ASTNode node2 = (ASTNode)tags.get(1);
@@ -1001,6 +1022,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
 
    }
 
+   @Test
    public void testChangeTagElement() throws Exception
    {
       StringBuffer buf = new StringBuffer();
@@ -1025,7 +1047,7 @@ public class ASTRewritingJavadocTestGwt extends ASTRewritingTestGwt
          TypeDeclaration type = findTypeDeclaration(astRoot, "E");
          Initializer initializer = (Initializer)type.bodyDeclarations().get(0);
          Javadoc javadoc = initializer.getJavadoc();
-         List tags = javadoc.tags();
+         List<TagElement> tags = javadoc.tags();
          TagElement elem1 = (TagElement)tags.get(0);
          rewrite.set(elem1, TagElement.TAG_NAME_PROPERTY, "@param", null);
 

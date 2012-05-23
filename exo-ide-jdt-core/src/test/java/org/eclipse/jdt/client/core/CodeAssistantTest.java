@@ -18,10 +18,16 @@
  */
 package org.eclipse.jdt.client.core;
 
-import org.eclipse.jdt.client.NameEnvironment;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
+import org.eclipse.jdt.emul.FileSystem;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +37,35 @@ import java.util.List;
  * @version ${Id}: Jan 16, 2012 3:35:16 PM evgen $
  * 
  */
-public class CodeAssistantTestGwt extends ParserBaseTestGwt
+public class CodeAssistantTest extends ParserBaseTest
 {
 
+   private CARequestor requestor;
+
+   private CompletionEngine e;
+
+   @Before
+   public void init()
+   {
+      requestor = new CARequestor();
+      e = new CompletionEngine(new FileSystem(new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"), requestor, JavaCore.getOptions(), null);
+
+   }
+
+   @Test
    public void testCodeAssistantOnInnerInterface()
    {
-      CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new NameEnvironment(null), requestor, JavaCore.getOptions(), null);
-
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 452, 19), 0);
       assertEquals(2, requestor.proposals.size());
    }
 
+   @Test
    public void testLocalVariables()
    {
-      CARequestor requestor = new CARequestor();
-      CompletionEngine e = new CompletionEngine(new NameEnvironment(null), requestor, JavaCore.getOptions(), null);
       e.complete(new CompilationUnit(javaFiles, "CreateJavaClassPresenter", "UTF-8"),
          getCompletionPosition(javaFiles, 481, 7), 0);
-      for (CompletionProposal p : requestor.proposals)
-      {
-         System.out.println(p.getCompletion());
-      }
-      assertEquals(38, requestor.proposals.size());
+      assertTrue(requestor.proposals.size() > 30);
    }
 
    private static class CARequestor extends CompletionRequestor

@@ -18,15 +18,21 @@
  */
 package org.eclipse.jdt.client.core;
 
+import static org.junit.Assert.fail;
+
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:02:58 AM 34360 2009-07-22 23:58:59Z evgen $
  *
  */
-public class CharOperationGwtTest extends BaseTestGwt
+@Ignore
+public class CharOperationTest extends BaseTest
 {
+   @Test
    public void testJavaIdentifierPart()
    {
       String s = "for";
@@ -36,7 +42,7 @@ public class CharOperationGwtTest extends BaseTestGwt
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-
+   @Test
    public void testJavaIdentifierPartUnicode()
    {
       String s = "змінна";
@@ -46,7 +52,7 @@ public class CharOperationGwtTest extends BaseTestGwt
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-
+   @Test
    public void testNotJavaIdentifierPart()
    {
       String s = "@#%*";
@@ -56,7 +62,7 @@ public class CharOperationGwtTest extends BaseTestGwt
             fail("Char '" + c + "' not valid Java identifier part");
       }
    }
-
+   @Test
    public void testJavaIdentifierStart()
    {
       String s = "_$Ab";
@@ -66,7 +72,7 @@ public class CharOperationGwtTest extends BaseTestGwt
             fail("Char '" + c + "' is valid Java identifier part");
       }
    }
-
+   @Test
    public void testNotJavaIdentifierStart()
    {
       String s = "123@#&";

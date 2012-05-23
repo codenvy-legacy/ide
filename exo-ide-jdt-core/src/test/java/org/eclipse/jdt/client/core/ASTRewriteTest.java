@@ -31,15 +31,18 @@ import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 import org.exoplatform.ide.editor.text.edits.UndoEdit;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 12:52:10 PM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
-public class ASTRewriteTestGwt extends ParserBaseTestGwt
+public class ASTRewriteTest extends ParserBaseTest
 {
 
+   @Test
    public void testRewrite()
    {
 
@@ -69,7 +72,7 @@ public class ASTRewriteTestGwt extends ParserBaseTestGwt
       {
          e.printStackTrace();
       }
-      assertTrue("import java.util.List;\nimport java.util.Set;\nclass X {}\n".equals(document.get()));
+      Assert.assertTrue("import java.util.List;\nimport java.util.Set;\nclass X {}\n".equals(document.get()));
       // tdLocation.getStartPosition() and tdLocation.getLength()
       // are new source range for &quot;class X {}&quot; in document.get()
    }
