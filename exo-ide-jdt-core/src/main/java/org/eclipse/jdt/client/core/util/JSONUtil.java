@@ -34,10 +34,24 @@ public class JSONUtil
     */
    public static long[] parseJsonAsLongArray(String json)
    {
-      JSONValue value = JSONParser.parseLenient(json);
+      JSONValue value = parse(json);
       if (value.isArray() == null)
          throw new IllegalArgumentException("'json' parameter must represent a JSON array");
       return jsonArrayToLongArray(value.isArray());
+   }
+
+   /**
+    * @param json
+    * @return
+    */
+   private static JSONValue parse(String json)
+   {
+      JSONValue value = JSONParser.parseLenient(json);
+      if(value.isObject() != null)
+      {
+         value = value.isObject().get("rsc").isArray();
+      }
+      return value;
    }
 
    /**
@@ -56,7 +70,7 @@ public class JSONUtil
 
    public static byte[] parseArrayToByteArray(String json)
    {
-      JSONValue value = JSONParser.parseLenient(json);
+      JSONValue value = parse(json);
       if (value.isArray() == null)
          throw new IllegalArgumentException("'json' parameter must represent a JSON array");
       return jsonArrayToByteArray(value.isArray());
@@ -74,7 +88,7 @@ public class JSONUtil
 
    public static char[] parseArrayToCharArray(String json)
    {
-      JSONValue value = JSONParser.parseLenient(json);
+      JSONValue value = parse(json);
       if (value.isArray() == null)
          throw new IllegalArgumentException("'json' parameter must represent a JSON array");
       return jsonArrayToCharArray(value.isArray());

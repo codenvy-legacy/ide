@@ -269,6 +269,7 @@ public class TypeMismatchSubProcessor
 
       CompilationUnit astRoot = context.getASTRoot();
 
+      boolean isThisCu = false;
       ITypeBinding declaringType = null;
       IBinding callerBindingDecl = callerBinding;
       if (callerBinding instanceof IVariableBinding)
@@ -281,7 +282,7 @@ public class TypeMismatchSubProcessor
          }
          if (!variableBinding.isField())
          {
-            //            targetCu = cu;
+            isThisCu = true;
          }
          else
          {
@@ -316,14 +317,15 @@ public class TypeMismatchSubProcessor
 
       if (declaringType != null && declaringType.isFromSource())
       {
+         //TODO load class file
          //         targetCu = ASTResolving.findCompilationUnitForBinding(cu, astRoot, declaringType);
+         isThisCu = true;
       }
-      //TODO load class file
-      //      if (ASTResolving.isUseableTypeInContext(castTypeBinding, callerBindingDecl, false))
-      //      {
-      //         proposals.add(new TypeChangeCorrectionProposal(callerBindingDecl, astRoot, castTypeBinding, isAssignedNode,
-      //            relevance, context.getDocument()));
-      //      }
+            if (isThisCu && ASTResolving.isUseableTypeInContext(castTypeBinding, callerBindingDecl, false))
+            {
+               proposals.add(new TypeChangeCorrectionProposal(callerBindingDecl, astRoot, castTypeBinding, isAssignedNode,
+                  relevance, context.getDocument()));
+            }
 
       // add interface to resulting type
       if (!isAssignedNode)

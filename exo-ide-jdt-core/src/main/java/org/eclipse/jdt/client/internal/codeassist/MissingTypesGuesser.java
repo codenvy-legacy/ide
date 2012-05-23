@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
@@ -24,6 +23,7 @@ import org.eclipse.jdt.client.internal.compiler.ast.SingleTypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.TypeReference;
 import org.eclipse.jdt.client.internal.compiler.ast.Wildcard;
 import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
@@ -182,7 +182,7 @@ public class MissingTypesGuesser extends ASTVisitor
 
    private CompletionEngine.CompletionProblemFactory problemFactory;
 
-   private NameEnvironment nameEnvironment;
+   private INameEnvironment nameEnvironment;
 
    private HashMap substituedTypes;
 

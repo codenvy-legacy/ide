@@ -262,6 +262,7 @@ public class NameEnvironment implements INameEnvironment
     * 
     * The constructors found are passed to one of the following methods: ISearchRequestor.acceptConstructor(...)
     */
+   @Override
    public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor,
       IProgressMonitor monitor)
    {
@@ -347,6 +348,7 @@ public class NameEnvironment implements INameEnvironment
     * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
     * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
     */
+   @Override
    public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
    {
       String url =
@@ -380,6 +382,7 @@ public class NameEnvironment implements INameEnvironment
     * 
     * This method can not be used to find member types... member types are found relative to their enclosing type.
     */
+   @Override
    public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
       final ISearchRequestor requestor, IProgressMonitor monitor)
    {
@@ -460,6 +463,7 @@ public class NameEnvironment implements INameEnvironment
     * @param type
     * @param storage
     */
+   @Override
    public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
    {
       // TODO Auto-generated method stub

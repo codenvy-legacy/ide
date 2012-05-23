@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.env;
 
+import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
+import org.eclipse.jdt.client.runtime.IProgressMonitor;
+
 /**
  * The name environment provides a callback API that the compiler can use to look up types, compilation units, and packages in the
  * current environment. The name environment is passed to the compiler on creation.
@@ -59,5 +62,37 @@ public interface INameEnvironment
     * when it is a good time to clean it up.
     */
    void cleanup();
+
+   /**
+    * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
+    * 
+    * Find the top-level types that are defined in the current environment and whose name starts with the given prefix. The prefix
+    * is a qualified name separated by periods or a simple name (ex. java.util.V or V).
+    * 
+    * The types found are passed to one of the following methods (if additional information is known about the types):
+    * ISearchRequestor.acceptType(char[][] packageName, char[] typeName) ISearchRequestor.acceptClass(char[][] packageName, char[]
+    * typeName, int modifiers) ISearchRequestor.acceptInterface(char[][] packageName, char[] typeName, int modifiers)
+    * 
+    * This method can not be used to find member types... member types are found relative to their enclosing type.
+    */
+   void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor, final ISearchRequestor requestor, IProgressMonitor monitor);
+
+   /**
+    * Find the packages that start with the given prefix. A valid prefix is a qualified name separated by periods (ex. java.util).
+    * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
+    */
+   void findPackages(char[] qualifiedName, ISearchRequestor requestor);
+
+   /**
+    * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
+    * 
+    * Find constructor declarations that are defined in the current environment and whose name starts with the given prefix. The
+    * prefix is a qualified name separated by periods or a simple name (ex. java.util.V or V).
+    * 
+    * The constructors found are passed to one of the following methods: ISearchRequestor.acceptConstructor(...)
+    */
+   void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, final ISearchRequestor requestor, IProgressMonitor monitor);
+
+   void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage);
 
 }

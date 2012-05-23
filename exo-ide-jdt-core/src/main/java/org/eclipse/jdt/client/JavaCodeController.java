@@ -33,6 +33,7 @@ import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ParseActiveFileEvent;
 import org.eclipse.jdt.client.event.ParseActiveFileHandler;
+import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -71,10 +72,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
 
-   public static NameEnvironment NAME_ENVIRONMENT;
+   public static INameEnvironment NAME_ENVIRONMENT;
 
    private static JavaCodeController instance;
-   
+
    public JavaCodeController()
    {
       instance = this;
@@ -91,7 +92,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    {
       return instance;
    }
-   
+
    /** @return */
    private CompilationUnit parseFile()
    {
@@ -295,9 +296,14 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       timer.cancel();
       timer.schedule(2000);
    }
-   
+
    public FileModel getActiveFile()
    {
       return activeFile;
+   }
+
+   public INameEnvironment getNameEnvironment()
+   {
+      return NAME_ENVIRONMENT;
    }
 }

@@ -173,6 +173,14 @@ public class Template
    {
       return fIsAutoInsertable;
    }
+   
+   /**
+    * @param fPattern the fPattern to set
+    */
+   public void setPattern(String fPattern)
+   {
+      this.fPattern = fPattern;
+   }
 
    /**
     * Template id

@@ -17,6 +17,7 @@ import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.CorrectionEngine;
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Annotation;
@@ -75,12 +76,16 @@ public class SuppressWarningsSubProcessor
    public static void addSuppressWarningsProposals(IInvocationContext context, IProblemLocation problem,
       Collection<ICommandAccess> proposals)
    {
-      //		if (problem.isError() && ! JavaCore.ENABLED.equals(context.getCompilationUnit().getJavaProject().getOption(JavaCore.COMPILER_PB_SUPPRESS_OPTIONAL_ERRORS, true))) {
-      //			return;
-      //		}
-      //		if (JavaCore.DISABLED.equals(context.getCompilationUnit().getJavaProject().getOption(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS, true))) {
-      //			return;
-      //		}
+      //      if (problem.isError()
+      //         && !JavaCore.ENABLED.equals(context.getCompilationUnit().getJavaProject()
+      //            .getOption(JavaCore.COMPILER_PB_SUPPRESS_OPTIONAL_ERRORS, true)))
+      //      {
+      //         return;
+      //      }
+      if (JavaCore.DISABLED.equals(JavaCore.getOption(JavaCore.COMPILER_PB_SUPPRESS_WARNINGS)))
+      {
+         return;
+      }
 
       String warningToken = CorrectionEngine.getWarningToken(problem.getProblemId());
       if (warningToken == null)

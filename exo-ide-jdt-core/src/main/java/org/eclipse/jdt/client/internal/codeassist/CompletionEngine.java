@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.codeassist;
 
-import org.eclipse.jdt.client.NameEnvironment;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionFlags;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -834,7 +833,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
     * 
     * @param settings java.util.Map set of options used to configure the code assist engine.
     */
-   public CompletionEngine(NameEnvironment nameEnvironment, CompletionRequestor requestor, Map settings,
+   public CompletionEngine(INameEnvironment nameEnvironment, CompletionRequestor requestor, Map settings,
    // IJavaProject javaProject,
       IProgressMonitor monitor)
    {

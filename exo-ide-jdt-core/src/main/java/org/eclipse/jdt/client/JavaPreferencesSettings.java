@@ -17,6 +17,7 @@ public class JavaPreferencesSettings
 
    public static CodeGenerationSettings getCodeGenerationSettings()
    {
+      //TODO create PreferenceConstants service 
       CodeGenerationSettings res = new CodeGenerationSettings();
       res.createComments = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
       res.useKeywordThis = true; //Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
