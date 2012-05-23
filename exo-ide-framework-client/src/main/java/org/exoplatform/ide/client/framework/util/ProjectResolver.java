@@ -61,6 +61,10 @@ public class ProjectResolver
     * Servlet and JSP API based project
     */
    public static final String SERVLET_JSP = "Servlet/JSP";
+   
+   public static final String APP_ENGINE_JAVA = "App Engine Java";
+   
+   public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
    static
    {
@@ -71,6 +75,7 @@ public class ProjectResolver
          types.put(EXO_APP, IconImageBundle.INSTANCE.defaultProject());
          types.put(STATIC_WEB, IconImageBundle.INSTANCE.defaultProject());
          types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
+         types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.javaProject());
       }
    }
 

@@ -41,6 +41,27 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("ready.button")
    String readyButton();
 
+   @Key("close.button")
+   String closeButton();
+
+   @Key("configure.button")
+   String configureButton();
+
+   @Key("delete.button")
+   String deleteButton();
+
+   @Key("update.button")
+   String updateButton();
+
+   @Key("rollback.button")
+   String rollbackButton();
+
+   @Key("logs.button")
+   String logsButton();
+
+   @Key("vacuum.button")
+   String vacuumButton();
+
    /* Create application */
    @Key("create.application.control.title")
    String createApplicationControlTitle();
@@ -78,6 +99,19 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("deploy.application.finished")
    String deployApplicationFinished(String projectName);
+
+   /* Manage Application */
+   @Key("manage.application.view.title")
+   String manageApplicationViewTitle();
+
+   @Key("manage.application.backends.tab")
+   String manageApplicationBackendsTab();
+
+   @Key("manage.application.crons.tab")
+   String manageApplicationCronsTab();
+
+   @Key("manage.application.indexes")
+   String manageApplicationIndexes();
 
    /* Rollback update */
    @Key("rollback.update.control.title")

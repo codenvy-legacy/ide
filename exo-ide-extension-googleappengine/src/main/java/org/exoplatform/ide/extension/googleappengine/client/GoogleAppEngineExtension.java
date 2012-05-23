@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
 
 /**
@@ -52,6 +53,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
       IDE.getInstance().addControl(new GoogleAppEngineControl());
 
+      new AppEngineProjectPresenter();
       new CreateApplicationPresenter();
       new DeployApplicationPresenter();
       new LoginPresenter();

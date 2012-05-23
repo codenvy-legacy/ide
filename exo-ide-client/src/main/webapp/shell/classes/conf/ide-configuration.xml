@@ -262,6 +262,18 @@
    </component>
 
    <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore</type>
+   </component>
+
+   <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
 
@@ -317,7 +329,7 @@
       </init-params>
    </component>
 
-  <component>
+   <component>
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
       <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
       <init-params>
