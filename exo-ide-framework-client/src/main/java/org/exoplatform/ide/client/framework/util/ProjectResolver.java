@@ -80,7 +80,7 @@ public class ProjectResolver
    public static final String UNDEFINED = "Undefined";
 
    public static final String APP_ENGINE_JAVA = "App Engine Java";
-   
+
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
    static
