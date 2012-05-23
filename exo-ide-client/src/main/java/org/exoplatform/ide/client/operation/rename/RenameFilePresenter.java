@@ -254,7 +254,7 @@ public class RenameFilePresenter implements RenameItemHander, ApplicationSetting
    }
 
    /**
-    * Mote item.
+    * Move item.
     * 
     * @param file - the file to rename (with old properties: href and name)
     * @param newName - the new name of file
