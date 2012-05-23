@@ -67,6 +67,7 @@ public class ProjectResolver
    /**
     * Servlet and JSP API based project
     */
+<<<<<<< HEAD
    public static final String SERVLET_JSP = "Java Web";
 
    /**
@@ -79,6 +80,12 @@ public class ProjectResolver
     */
    public static final String UNDEFINED = "Undefined";
 
+   public static final String SERVLET_JSP = "Servlet/JSP";
+   
+   public static final String APP_ENGINE_JAVA = "App Engine Java";
+   
+   public static final String APP_ENGINE_PYTHON = "App Engine Python";
+
    static
    {
       if (IconImageBundle.INSTANCE != null)
@@ -90,6 +97,7 @@ public class ProjectResolver
          types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
          types.put(PHP, IconImageBundle.INSTANCE.phpProject());
          types.put(UNDEFINED, IconImageBundle.INSTANCE.defaultProject());
+         types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.javaProject());
       }
 
       sortedTypes.add(UNDEFINED);
@@ -99,6 +107,7 @@ public class ProjectResolver
       sortedTypes.add(PHP);
       sortedTypes.add(RAILS);
       sortedTypes.add(SPRING);
+      sortedTypes.add(APP_ENGINE_JAVA);
    }
 
    public static Set<String> getProjectsTypes()
