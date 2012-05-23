@@ -123,7 +123,7 @@ public class SshKeyProvider
     */
    public void addPrivateKey(String host, byte[] key) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder sshKeys = getKeysParent(vfs);
       final String privateKeyName = host + ".key";
       final String privateKeyPath = sshKeys.createPath(privateKeyName);
@@ -148,7 +148,7 @@ public class SshKeyProvider
     */
    public SshKey getPrivateKey(String host) throws IOException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       final String privateKeyName = host + ".key";
       Folder sshKeys = getKeysParent(vfs);
       return readKey(vfs, sshKeys, privateKeyName, true);
@@ -165,7 +165,7 @@ public class SshKeyProvider
     */
    public SshKey getPublicKey(String host) throws IOException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       final String privateKeyName = host + ".pub";
       Folder sshKeys = getKeysParent(vfs);
       return readKey(vfs, sshKeys, privateKeyName, true);
@@ -249,7 +249,7 @@ public class SshKeyProvider
       }
       keyPair.setPassphrase(passphrase);
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder sshKeys = getKeysParent(vfs);
       
       final String privateKeyName = host + ".key";
@@ -305,7 +305,7 @@ public class SshKeyProvider
     */
    public void removeKeys(String host) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder sshKeys = getKeysParent(vfs);
       String[] remove = new String[]{sshKeys.createPath(host + ".key"), sshKeys.createPath(host + ".pub")};
       for (int i = 0; i < remove.length; i++)
@@ -329,7 +329,7 @@ public class SshKeyProvider
     */
    public Set<String> getAll() throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder sshKeys = getKeysParent(vfs);
       List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
       if (allKeys.size() > 0)

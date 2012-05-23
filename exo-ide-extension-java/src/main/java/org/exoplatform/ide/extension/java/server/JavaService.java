@@ -65,7 +65,7 @@ public class JavaService
    public List<JavaProject> getProjects(@QueryParam("vfsId") String vfsId, @Context UriInfo uriInfo)
       throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
          throw new VirtualFileSystemException("Virtual file system not initialized");
@@ -100,7 +100,7 @@ public class JavaService
    public List<RootPackage> getRootPackages(@QueryParam("vfsId") String vfsId,
       @QueryParam("projectId") String projectId, @Context UriInfo uriInfo) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
          throw new VirtualFileSystemException("Virtual file system not initialized");
@@ -204,7 +204,7 @@ public class JavaService
    public List<Package> getPackages(@QueryParam("vfsId") String vfsId, @QueryParam("projectId") String projectId,
       @QueryParam("source") String source, @Context UriInfo uriInfo) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
          throw new VirtualFileSystemException("Virtual file system not initialized");
@@ -294,7 +294,7 @@ public class JavaService
       @QueryParam("packageName") String packageName, @QueryParam("packageSource") String packageSource,
       @Context UriInfo uriInfo) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
          throw new VirtualFileSystemException("Virtual file system not initialized");

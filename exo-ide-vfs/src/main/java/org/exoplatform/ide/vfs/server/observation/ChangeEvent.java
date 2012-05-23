@@ -20,11 +20,6 @@ package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.Property;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -67,35 +62,12 @@ public class ChangeEvent
    private final String itemPath;
    private final String mimeType;
    private final ChangeType type;
-   private final List<Property> properties;
-   private final List<AccessControlEntry> acl;
 
    public ChangeEvent(VirtualFileSystem vfs,
                       String itemId,
                       String itemPath,
                       String mimeType,
                       ChangeType type)
-   {
-      this(vfs, itemId, itemPath, mimeType, type, Collections.<Property>emptyList());
-   }
-
-   public ChangeEvent(VirtualFileSystem vfs,
-                      String itemId,
-                      String itemPath,
-                      String mimeType,
-                      ChangeType type,
-                      List<Property> properties)
-   {
-      this(vfs, itemId, itemPath, mimeType, type, properties, Collections.<AccessControlEntry>emptyList());
-   }
-
-   public ChangeEvent(VirtualFileSystem vfs,
-                      String itemId,
-                      String itemPath,
-                      String mimeType,
-                      ChangeType type,
-                      List<Property> properties,
-                      List<AccessControlEntry> acl)
    {
       if (vfs == null)
       {
@@ -118,8 +90,6 @@ public class ChangeEvent
       this.itemPath = itemPath;
       this.mimeType = mimeType;
       this.type = type;
-      this.properties = properties;
-      this.acl = acl;
    }
 
    public VirtualFileSystem getVirtualFileSystem()
@@ -147,16 +117,6 @@ public class ChangeEvent
       return type;
    }
 
-   public List<Property> getProperties()
-   {
-      return properties;
-   }
-
-   public List<AccessControlEntry> getACL()
-   {
-      return acl;
-   }
-
    @Override
    public String toString()
    {
@@ -169,7 +129,7 @@ public class ChangeEvent
       {
       }
       return "ChangeEvent{" +
-         "vfs='" + vfsID + + '\''+
+         "vfs='" + vfsID + '\''+
          ", itemId='" + itemId + '\'' +
          ", itemPath='" + itemPath + '\'' +
          ", type=" + type +

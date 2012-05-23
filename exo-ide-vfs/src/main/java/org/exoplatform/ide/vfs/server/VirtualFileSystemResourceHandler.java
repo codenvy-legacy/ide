@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.server;
 
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -32,17 +34,20 @@ import java.net.URLStreamHandler;
 public final class VirtualFileSystemResourceHandler extends URLStreamHandler
 {
    private final VirtualFileSystemRegistry registry;
+   private final EventListenerList listeners;
 
    /** @param registry virtual file system registry */
-   public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry)
+   public VirtualFileSystemResourceHandler(VirtualFileSystemRegistry registry,
+                                           EventListenerList listeners)
    {
       this.registry = registry;
+      this.listeners = listeners;
    }
 
    /** @see java.net.URLStreamHandler#openConnection(java.net.URL) */
    @Override
    protected URLConnection openConnection(URL url) throws IOException
    {
-      return new VirtualFileSystemURLConnection(url, registry);
+      return new VirtualFileSystemURLConnection(url, registry, listeners);
    }
 }

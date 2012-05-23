@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -41,7 +42,7 @@ public class URLHandlerFactorySetup
 {
    private static final Log LOG = ExoLogger.getExoLogger(URLHandlerFactorySetup.class);
 
-   public synchronized static void setup(VirtualFileSystemRegistry registry)
+   public synchronized static void setup(VirtualFileSystemRegistry registry, EventListenerList listeners)
    {
       try
       {
@@ -69,7 +70,8 @@ public class URLHandlerFactorySetup
             }
 
             //
-            URLStreamHandlerFactory vfsURLFactory = new VirtualFileSystemURLHandlerFactory(currentFactory, registry);
+            URLStreamHandlerFactory vfsURLFactory = new VirtualFileSystemURLHandlerFactory(currentFactory,
+               registry, listeners);
             factoryField.set(null, vfsURLFactory);
          }
          catch (SecurityException se)

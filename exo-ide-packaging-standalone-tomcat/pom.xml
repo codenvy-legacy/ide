@@ -40,6 +40,12 @@
          <version>${project.version}</version>
          <type>war</type>
       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-maven</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-shell</artifactId>
@@ -219,21 +225,6 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-jenkins</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-netvibes</artifactId>
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
@@ -1032,6 +1023,8 @@
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war"
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war"
+                           overwrite="true" />
+                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
                            overwrite="true" />
                      </tasks>
                   </configuration>

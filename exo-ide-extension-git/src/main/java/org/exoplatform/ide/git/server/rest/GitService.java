@@ -536,7 +536,7 @@ public class GitService
    @GET
    public String readOnlyGitUrl(@Context UriInfo uriInfo) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return gitUrlResolver.resolve(uriInfo, vfs, projectId);
    }
 
@@ -549,7 +549,7 @@ public class GitService
       {
          gituser = new GitUser(user.getIdentity().getUserId());
       }
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
          throw new VirtualFileSystemException(

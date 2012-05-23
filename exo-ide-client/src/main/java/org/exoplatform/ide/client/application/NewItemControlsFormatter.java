@@ -52,7 +52,6 @@ public class NewItemControlsFormatter implements ControlsFormatter
 
       controlIdsOrder.add("File/New/New TEXT");
       controlIdsOrder.add("File/New/New OpenSocial Gadget");
-      controlIdsOrder.add("File/New/New Netvibes Widget");
       controlIdsOrder.add("File/New/New XML");
       controlIdsOrder.add("File/New/New Java Script");
       controlIdsOrder.add("File/New/New HTML");

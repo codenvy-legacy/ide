@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -47,6 +48,9 @@ public class VirtualFileSystemFactory
    @Inject
    private VirtualFileSystemRegistry registry;
 
+   @Inject
+   private EventListenerList listeners;
+
    @Context
    private Providers providers;
 
@@ -54,7 +58,7 @@ public class VirtualFileSystemFactory
    public VirtualFileSystem getFileSystem(@PathParam("vfsId") String vfsId) throws VirtualFileSystemException
    {
       VirtualFileSystemProvider provider = registry.getProvider(vfsId);
-      return provider.newInstance(getContext());
+      return provider.newInstance(getContext(), listeners);
    }
 
    @GET
@@ -66,7 +70,7 @@ public class VirtualFileSystemFactory
       RequestContext context = getContext();
       for (VirtualFileSystemProvider p : vfsProviders)
       {
-         VirtualFileSystem fs = p.newInstance(context);
+         VirtualFileSystem fs = p.newInstance(context, listeners);
          result.add(fs.getInfo());
       }
       return result;

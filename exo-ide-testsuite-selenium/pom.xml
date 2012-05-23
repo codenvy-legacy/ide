@@ -155,6 +155,7 @@
 										<exclude>**/*RestoreVersionTest</exclude>
 										<exclude>**/*NavigateVersionsTest</exclude>
 										<exclude>**/*BaseTest.java</exclude>
+										<exclude>**/*DebugChangeVariable.java</exclude>
 									</excludes>
 								</configuration>
 							</execution>

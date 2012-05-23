@@ -71,6 +71,7 @@ public abstract class JcrFileSystemTest extends TestCase
    protected Session session;
    protected Node testRoot;
    protected ResourceLauncher launcher;
+   protected StandaloneContainer container;
 
    /**
     * @see junit.framework.TestCase#setUp()
@@ -82,7 +83,7 @@ public abstract class JcrFileSystemTest extends TestCase
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
       String conf = getClass().getResource("/conf/standalone/test-configuration.xml").toString();
       StandaloneContainer.setConfigurationURL(conf);
-      StandaloneContainer container = StandaloneContainer.getInstance();
+      container = StandaloneContainer.getInstance();
 
       String loginConf = getClass().getResource("/login.conf").toString();
       if (System.getProperty("java.security.auth.login.config") == null)

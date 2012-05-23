@@ -41,15 +41,17 @@ import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -137,13 +139,19 @@ public class JcrFileSystem implements VirtualFileSystem
    protected final String workspaceName;
    protected final MediaType2NodeTypeResolver mediaType2NodeTypeResolver;
    protected final URI baseUri;
+   protected final EventListenerList listeners;
    private final String rootNodePath;
 
    private VirtualFileSystemInfo vfsInfo;
    private final String vfsID;
 
-   public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String vfsID,
-                        MediaType2NodeTypeResolver mediaType2NodeTypeResolver, URI baseUri)
+   public JcrFileSystem(Repository repository,
+                        String workspaceName,
+                        String rootNodePath,
+                        String vfsID,
+                        MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
+                        URI baseUri,
+                        EventListenerList listeners)
    {
       this.repository = repository;
       this.workspaceName = workspaceName;
@@ -155,12 +163,26 @@ public class JcrFileSystem implements VirtualFileSystem
       this.vfsID = vfsID;
       this.mediaType2NodeTypeResolver = mediaType2NodeTypeResolver;
       this.baseUri = baseUri;
+      this.listeners = listeners;
    }
 
-   public JcrFileSystem(Repository repository, String workspaceName, String rootNodePath, String id,
-                        MediaType2NodeTypeResolver itemType2NodeTypeResolver)
+   public JcrFileSystem(Repository repository,
+                        String workspaceName,
+                        String rootNodePath,
+                        String vfsID,
+                        MediaType2NodeTypeResolver mediaType2NodeTypeResolver,
+                        URI baseUri)
    {
-      this(repository, workspaceName, rootNodePath, id, itemType2NodeTypeResolver, URI.create(""));
+      this(repository, workspaceName, rootNodePath, vfsID, mediaType2NodeTypeResolver, baseUri, null);
+   }
+
+   public JcrFileSystem(Repository repository,
+                        String workspaceName,
+                        String rootNodePath,
+                        String vfsID,
+                        MediaType2NodeTypeResolver mediaType2NodeTypeResolver)
+   {
+      this(repository, workspaceName, rootNodePath, vfsID, mediaType2NodeTypeResolver, URI.create(""));
    }
 
    /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#copy(java.lang.String, java.lang.String) */
@@ -186,7 +208,14 @@ public class JcrFileSystem implements VirtualFileSystem
                + "Project cannot contains another project.");
          }
          ItemData newObject = object.copyTo((FolderData)parent);
-         return fromItemData(newObject, PropertyFilter.ALL_FILTER);
+         Item copy = fromItemData(newObject, PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            copy.getId(), //
+            copy.getPath(), //
+            copy.getMimeType(), //
+            ChangeEvent.ChangeType.CREATED)
+         );
+         return copy;
       }
       finally
       {
@@ -195,7 +224,7 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFile(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFile(String, String,
     *      javax.ws.rs.core.MediaType, java.io.InputStream)
     */
    @Path("file/{parentId}")
@@ -223,7 +252,14 @@ public class JcrFileSystem implements VirtualFileSystem
             mediaType2NodeTypeResolver.getFileMixins(mediaType), //
             null, //
             content);
-         return (File)fromItemData(newFile, PropertyFilter.ALL_FILTER);
+         File file = (File)fromItemData(newFile, PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            file.getId(), //
+            file.getPath(), //
+            file.getMimeType(), //
+            ChangeEvent.ChangeType.CREATED)
+         );
+         return file;
       }
       finally
       {
@@ -231,7 +267,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(java.lang.String, java.lang.String) */
+   /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(String, String) */
    @Path("folder/{parentId}")
    @Override
    public Folder createFolder(@PathParam("parentId") String parentId, //
@@ -251,7 +287,14 @@ public class JcrFileSystem implements VirtualFileSystem
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins((String)null), //
             null);
-         return (Folder)fromItemData(newFolder, PropertyFilter.ALL_FILTER);
+         Folder folder = (Folder)fromItemData(newFolder, PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            folder.getId(), //
+            folder.getPath(), //
+            folder.getMimeType(), //
+            ChangeEvent.ChangeType.CREATED) //
+         );
+         return folder;
       }
       finally
       {
@@ -260,8 +303,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createProject(java.lang.String, java.lang.String,
-    *      java.lang.String, java.util.List)
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createProject(String, String,
+    *      String, java.util.List)
     */
    @Path("project/{parentId}")
    @Consumes(MediaType.APPLICATION_JSON)
@@ -301,7 +344,14 @@ public class JcrFileSystem implements VirtualFileSystem
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins(Project.PROJECT_MIME_TYPE), //
             properties);
-         return (Project)fromItemData(newProject, PropertyFilter.ALL_FILTER);
+         Project project = (Project)fromItemData(newProject, PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            project.getId(), //
+            project.getPath(), //
+            project.getMimeType(), //
+            ChangeEvent.ChangeType.CREATED)
+         );
+         return project;
       }
       finally
       {
@@ -320,7 +370,16 @@ public class JcrFileSystem implements VirtualFileSystem
       Session session = session();
       try
       {
-         getItemData(session, id).delete(lockToken);
+         ItemData data = getItemData(session, id);
+         String path = data.getPath();
+         MediaType mediaType = data.getMediaType();
+         data.delete(lockToken);
+         notifyListeners(new ChangeEvent(this, //
+            id, //
+            path, //
+            mediaType != null ? mediaType.toString() : null, //
+            ChangeEvent.ChangeType.DELETED)
+         );
       }
       finally
       {
@@ -717,12 +776,12 @@ public class JcrFileSystem implements VirtualFileSystem
       Session session = session();
       try
       {
-         ItemData itemData = getItemData(session, id);
-         if (ItemType.FILE != itemData.getType())
+         ItemData data = getItemData(session, id);
+         if (ItemType.FILE != data.getType())
          {
             throw new InvalidArgumentException("Locking allowed for Files only. ");
          }
-         return new LockTokenBean(((FileData)itemData).lock());
+         return new LockTokenBean(((FileData)data).lock());
       }
       finally
       {
@@ -754,7 +813,14 @@ public class JcrFileSystem implements VirtualFileSystem
                "Project cannot be moved to another one. ");
          }
          String movedId = object.moveTo((FolderData)parent, lockToken);
-         return fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
+         Item moved = fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            moved.getId(), //
+            moved.getPath(), //
+            moved.getMimeType(), //
+            ChangeEvent.ChangeType.MOVED)
+         );
+         return moved;
       }
       finally
       {
@@ -792,7 +858,14 @@ public class JcrFileSystem implements VirtualFileSystem
                   : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
          }
          String renamedId = data.rename(newname, newMediaType, lockToken, addMixinTypes, removeMixinTypes);
-         return fromItemData(getItemData(session, renamedId), PropertyFilter.ALL_FILTER);
+         Item renamed = fromItemData(getItemData(session, renamedId), PropertyFilter.ALL_FILTER);
+         notifyListeners(new ChangeEvent(this, //
+            renamed.getId(), //
+            renamed.getPath(), //
+            renamed.getMimeType(), //
+            ChangeEvent.ChangeType.RENAMED)
+         );
+         return renamed;
       }
       finally
       {
@@ -1033,12 +1106,12 @@ public class JcrFileSystem implements VirtualFileSystem
       Session session = session();
       try
       {
-         ItemData itemData = getItemData(session, id);
-         if (itemData.getType() != ItemType.FILE)
+         ItemData data = getItemData(session, id);
+         if (data.getType() != ItemType.FILE)
          {
             throw new LockException("Object is not locked. "); // Folder can't be locked.
          }
-         ((FileData)itemData).unlock(lockToken);
+         ((FileData)data).unlock(lockToken);
       }
       finally
       {
@@ -1062,7 +1135,16 @@ public class JcrFileSystem implements VirtualFileSystem
       Session session = session();
       try
       {
-         getItemData(session, id).updateACL(acl, override, lockToken);
+         ItemData data = getItemData(session, id);
+         data.updateACL(acl, override, lockToken);
+         MediaType mediaType = data.getMediaType();
+         notifyListeners(new ChangeEvent(this, //
+            data.getId(), //
+            data.getPath(), //
+            mediaType != null ? mediaType.toString() : null, //
+            ChangeEvent.ChangeType.ACL_UPDATED)
+         );
+
       }
       finally
       {
@@ -1089,6 +1171,13 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Object " + data.getName() + " is not file. ");
          }
          ((FileData)data).setContent(newContent, mediaType, lockToken);
+         mediaType = data.getMediaType();
+         notifyListeners(new ChangeEvent(this, //
+            data.getId(), //
+            data.getPath(), //
+            mediaType != null ? mediaType.toString() : null, //
+            ChangeEvent.ChangeType.CONTENT_UPDATED)
+         );
       }
       finally
       {
@@ -1137,6 +1226,14 @@ public class JcrFileSystem implements VirtualFileSystem
                }
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
+            data = getItemData(session, id);
+            MediaType mediaType = data.getMediaType();
+            notifyListeners(new ChangeEvent(this, //
+               data.getId(), //
+               data.getPath(), //
+               mediaType != null ? mediaType.toString() : null, //
+               ChangeEvent.ChangeType.PROPERTIES_UPDATED)
+            );
          }
       }
       finally
@@ -1213,7 +1310,7 @@ public class JcrFileSystem implements VirtualFileSystem
                   }
                   else
                   {
-                     zipOut.putNextEntry(new ZipEntry(zipEntryName + "/"));
+                     zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
                      q.add((FolderData)current);
                   }
                   zipOut.closeEntry();
@@ -1308,7 +1405,7 @@ public class JcrFileSystem implements VirtualFileSystem
             String zipEntryName = zipEntry.getName();
             String[] segments = zipEntryName.split("/");
             FolderData current = parentFolder;
-            for (int i = 0; i < segments.length - 1; i++)
+            for (int i = 0, l = segments.length - 1; i < l; i++)
             {
                ItemData child = current.getChild(segments[i]);
                if (child == null)
@@ -1317,6 +1414,13 @@ public class JcrFileSystem implements VirtualFileSystem
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
+                  MediaType mediaType = child.getMediaType();
+                  notifyListeners(new ChangeEvent(this, //
+                     child.getId(), //
+                     child.getPath(), //
+                     mediaType != null ? mediaType.toString() : null, //
+                     ChangeEvent.ChangeType.CREATED)
+                  );
                }
                current = (FolderData)child;
             }
@@ -1326,10 +1430,17 @@ public class JcrFileSystem implements VirtualFileSystem
             {
                if (!current.hasChild(name))
                {
-                  current.createFolder(name, //
+                  ItemData child = current.createFolder(name, //
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
+                  MediaType mediaType = child.getMediaType();
+                  notifyListeners(new ChangeEvent(this, //
+                     child.getId(), //
+                     child.getPath(), //
+                     mediaType != null ? mediaType.toString() : null, //
+                     ChangeEvent.ChangeType.CREATED)
+                  );
                }
             }
             else if (".project".equals(name))
@@ -1341,6 +1452,12 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
+               notifyListeners(new ChangeEvent(this, //
+                  current.getId(), //
+                  current.getPath(), //
+                  mediaType != null ? mediaType.toString() : null, //
+                  ChangeEvent.ChangeType.RENAMED)
+               );
                List<ConvertibleProperty> properties;
                try
                {
@@ -1354,25 +1471,46 @@ public class JcrFileSystem implements VirtualFileSystem
                {
                   throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
                }
-               current.updateProperties(properties, null, null, null);
+               if (properties.size() > 0)
+               {
+                  current.updateProperties(properties, null, null, null);
+                  notifyListeners(new ChangeEvent(this, //
+                     current.getId(), //
+                     current.getPath(), //
+                     mediaType != null ? mediaType.toString() : null, //
+                     ChangeEvent.ChangeType.PROPERTIES_UPDATED)
+                  );
+               }
             }
             else
             {
-               final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
                ItemData child = current.getChild(name);
                if (child != null && overwrite && ItemType.FILE == child.getType())
                {
                   ((FileData)child).setContent(noCloseZip, child.getMediaType(), null);
+                  notifyListeners(new ChangeEvent(this, //
+                     child.getId(), //
+                     child.getPath(), //
+                     child.getMediaType().toString(), //
+                     ChangeEvent.ChangeType.CONTENT_UPDATED)
+                  );
                }
                else
                {
-                  current.createFile(name, //
+                  final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
+                  child = current.createFile(name, //
                      mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
                      mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
                      mediaType, //
                      mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                      null, //
                      noCloseZip);
+                  notifyListeners(new ChangeEvent(this, //
+                     child.getId(), //
+                     child.getPath(), //
+                     child.getMediaType().toString(), //
+                     ChangeEvent.ChangeType.CREATED)
+                  );
                }
             }
             zip.closeEntry();
@@ -1420,9 +1558,11 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * Spool content of zip in memory or in file.
     *
-    * @param src source zip
+    * @param src
+    *    source zip
     * @return spool zip
-    * @throws IOException if any i/o error occur
+    * @throws IOException
+    *    if any i/o error occur
     */
    private ZipContent spoolZipStream(InputStream src) throws IOException
    {
@@ -1656,13 +1796,19 @@ public class JcrFileSystem implements VirtualFileSystem
          FolderData folder = (FolderData)parentData;
          if (!folder.hasChild(name))
          {
-            folder.createFile(name, //
+            FileData file = folder.createFile(name, //
                mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
                mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
                mediaType, //
                mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                null, //
                content);
+            notifyListeners(new ChangeEvent(this, //
+               file.getId(), //
+               file.getPath(), //
+               file.getMediaType().toString(), //
+               ChangeEvent.ChangeType.CREATED)
+            );
          }
          else if (overwrite)
          {
@@ -1674,6 +1820,12 @@ public class JcrFileSystem implements VirtualFileSystem
                   "Unable upload file. Item with the same name exists but it is not a file. ");
             }
             ((FileData)file).setContent(content, mediaType, null);
+            notifyListeners(new ChangeEvent(this, //
+               file.getId(), //
+               file.getPath(), //
+               file.getMediaType().toString(), //
+               ChangeEvent.ChangeType.CONTENT_UPDATED)
+            );
          }
          else
          {
@@ -1768,8 +1920,10 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * Get JCR path from Virtual File System path.
     *
-    * @param userID the current user identifier
-    * @param vfsPath Virtual File System path
+    * @param userID
+    *    the current user identifier
+    * @param vfsPath
+    *    Virtual File System path
     * @return JCR path
     */
    protected final String getJcrPath(String userID, String vfsPath)
@@ -2010,7 +2164,7 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          if (!path.startsWith("/"))
          {
-            path = "/" + path;
+            path = '/' + path;
          }
          String jcrPath = getJcrPath(session.getUserID(), path);
          javax.jcr.Item jcrItem = session.getItem(jcrPath);
@@ -2046,6 +2200,14 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
+   private void notifyListeners(ChangeEvent event) throws VirtualFileSystemException
+   {
+      if (listeners != null)
+      {
+         listeners.notifyListeners(event);
+      }
+   }
+
    private boolean compareMediaTypeIgnoreParameters(MediaType a, MediaType b)
    {
       if (a == null && b == null)
@@ -2059,7 +2221,8 @@ public class JcrFileSystem implements VirtualFileSystem
    /**
     * Throws WebApplicationException that contains error message in HTML format.
     *
-    * @param e exception
+    * @param e
+    *    exception
     */
    private void sendErrorAsHTML(Exception e)
    {

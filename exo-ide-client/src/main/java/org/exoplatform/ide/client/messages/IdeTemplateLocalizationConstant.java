@@ -157,36 +157,6 @@ public interface IdeTemplateLocalizationConstant extends Constants
    @Key("template.groovyTemplate.description")
    String templateGroovyTemplateDescription();
 
-   @Key("template.netvibesWidget.name")
-   String templateNetvibesWidgetName();
-
-   @Key("template.netvibesWidget.description")
-   String templateNetvibesWidgetDescription();
-
-   @Key("template.netvibesWidgetFlash.name")
-   String templateNetvibesWidgetFlashName();
-
-   @Key("template.netvibesWidgetFlash.description")
-   String templateNetvibesWidgetFlashDescription();
-
-   @Key("template.netvibesWidgetChart.name")
-   String templateNetvibesWidgetChartName();
-
-   @Key("template.netvibesWidgetChart.description")
-   String templateNetvibesWidgetChartDescription();
-
-   @Key("template.netvibesWidgetTabView.name")
-   String templateNetvibesWidgetTabViewName();
-
-   @Key("template.netvibesWidgetTabView.description")
-   String templateNetvibesWidgetTabViewDescription();
-
-   @Key("template.netvibesWidgetSampleBlogPost.name")
-   String templateNetvibesWidgetSampleBlogPostName();
-
-   @Key("template.netvibesWidgetSampleBlogPost.description")
-   String templateNetvibesWidgetSampleBlogPostDescription();
-
    /*
     * CreateProjectTemplatePresenter
     */

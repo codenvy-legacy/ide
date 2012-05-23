@@ -21,6 +21,7 @@ package org.exoplatform.ide.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -73,6 +74,8 @@ import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**

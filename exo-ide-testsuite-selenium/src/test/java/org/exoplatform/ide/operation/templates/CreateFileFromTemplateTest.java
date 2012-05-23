@@ -63,8 +63,6 @@ public class CreateFileFromTemplateTest extends BaseTest
 
    private static final String OPENSOCIAL_GADGET_FILE_NAME = "Test Gadget File.xml";
 
-   private static final String NETVIBES_WIDGET = "Netvibes Widget";
-
    @BeforeClass
    public static void setUp() throws Exception
    {
@@ -161,21 +159,6 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.EDITOR.selectTab(2);
       IDE.EDITOR.saveAs(2, "Untitled file 1.html");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/Untitled file 1.html");
-
-      /*
-       * 5. Create new Netvibes widget from template:
-       */
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-      IDE.TEMPLATES.waitOpened();
-      IDE.TEMPLATES.selectTemplate(NETVIBES_WIDGET);
-      IDE.TEMPLATES.clickCreateButton();
-      IDE.TEMPLATES.waitClosed();
-      IDE.EDITOR.waitTabPresent(4);
-
-      /*
-       * Check, new file opened with name "Untitled file 3.html"
-       */
-      assertEquals("Untitled file 3.html *", IDE.EDITOR.getTabTitle(4));
 
       /*
        * Close saved file

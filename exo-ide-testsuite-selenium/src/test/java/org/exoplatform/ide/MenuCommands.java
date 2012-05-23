@@ -48,8 +48,6 @@ public interface MenuCommands
 
       String GROOVY_SCRIPT_FILE = "POGO";
 
-      String NETVIBES_WIDGET = "Netvibes Widget";
-
       String GROOVY_TEMPLATE_FILE = "Template";
 
       String FILE_FROM_TEMPLATE = "File From Template...";
@@ -86,8 +84,6 @@ public interface MenuCommands
 
       public static final String DEPLOY_SANDBOX = "Deploy to Sandbox";
 
-      public static final String DEPLOY_UWA_WIDGET = "Deploy UWA widget";
-
       public static final String UNDEPLOY_SANDBOX = "Undeploy from Sandbox";
 
       public static final String SET_AUTOLOAD = "Set Autoload";
@@ -113,6 +109,13 @@ public interface MenuCommands
       public static final String DEPLOY_GADGET = "Deploy Gadget to GateIn";
 
       public static final String UNDEPLOY_GADGET = "UnDeploy Gadget from GateIn";
+
+      public static final String DEBUG_APPLICATION = "Debug Application";
+
+      public static final String RUN_APPLICATION = "Run Application";
+
+      public static final String STOP_APPLICATION = "STOP Application";
+
    }
 
    public interface View

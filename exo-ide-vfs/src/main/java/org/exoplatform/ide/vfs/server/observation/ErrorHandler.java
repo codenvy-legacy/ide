@@ -18,14 +18,16 @@
  */
 package org.exoplatform.ide.vfs.server.observation;
 
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+
 /**
  * Handler for errors occurred when process events. Implementation of this interface may be passed to
- * EventListenerList.
+ * EventListenerList. Some implementations may re-throw received error.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface ErrorHandler
 {
-   void onError(ChangeEvent event, Throwable error);
+   void onError(ChangeEvent event, Throwable error) throws VirtualFileSystemException;
 }

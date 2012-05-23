@@ -12,7 +12,7 @@ IDE uses notion of _Virtual File System_ which wraps the physical location you a
 The _Content Panel_ consists of two horizontal panels:
 
 * The _Editor Panel_ shows files in several file tabs with their content.
-* The _Operation Panel_ may contain several tabs with the list of file properties, REST Service, Google Gadget or Netvibes Widget output messages, HTML, Google Gadget, ECM Template or Netvibes Widget files preview. To view these tabs, just use special buttons at the right part of the toolbar, or select *View* or *Run* from the top menu.
+* The _Operation Panel_ may contain several tabs with the list of file properties, REST Service, Google Gadget output messages, HTML, Google Gadget, ECM Template files preview. To view these tabs, just use special buttons at the right part of the toolbar, or select *View* or *Run* from the top menu.
 
 The panels are divided by Resize Bars, so all panels are resizable.
 

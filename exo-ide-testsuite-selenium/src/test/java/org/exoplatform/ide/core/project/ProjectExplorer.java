@@ -22,6 +22,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.core.AbstractTestModule;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -252,6 +253,19 @@ public class ProjectExplorer extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   /**
+    * Press right arrow for expand item
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void expandItem(String path) throws Exception
+   {
+      WebElement item = driver().findElement(By.id(getItemId(path)));
+      item.click();
+      item.sendKeys(Keys.ARROW_RIGHT);
    }
 
    /**

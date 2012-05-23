@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://trololo.cloud-ide.com/" />
+<title>HerokuWithoutWizzardFromZipSamples</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<!--Open login page-->
+<tr>
+	<td>open</td>
+	<td>site/index.html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userId</td>
+	<td>exo</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>userPassword</td>
+	<td>exo</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=loginButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=loginButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body//div[@view-id=&quot;WelcomeViewId&quot;]</td>
+	<td></td>
+</tr>
+<!--Create Spring  app-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Project']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=nobr</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='menu-lock-layer-id']/div[3]/table/tbody/tr/td[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr/td[2]/div/span/nobr[contains(.,'Spring')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[7]/div/table/tbody/tr[2]/td[2]/div/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div/div/table/tbody/tr/td[2]/div/span/nobr[contains(.,'Spring')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//td[@class='dialogMiddleCenter']//input[@class=&quot;gwt-TextBox&quot;]</td>
+	<td>javascript{Math.floor(Math.random()*13341) + &quot;-MySpringPrj-&quot; + Math.floor(Math.random()*1441)}</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='ideCreateNewProjectNextButton']/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Next')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=ideWizardDeploymentNextButtonId</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=ideWizardDeploymentNextButtonId</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='ide-Tree-label' and text()='src']</td>
+	<td></td>
+</tr>
+<!--Start debug app-->
+<tr>
+	<td>mouseDown</td>
+	<td>//*[.='Run']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//table[@class='exo-popupMenuTable']//td/nobr[text()='Debug Application']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//table[@class='exo-popupMenuTable']//td/nobr[text()='Debug Application']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>10000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[@class='tabTitleText' and text()='Debug']</td>
+	<td></td>
+</tr>
+<!--Open Java class-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/div/div/table/tbody/tr/td/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/table/tbody/tr/td[2]/div[contains(.,'Greeting')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDown</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/table/tbody/tr/td[2]/div[contains(.,'Greeting')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div/div/div/div/div/div/div/table/tbody/tr/td[2]/div[contains(.,'Greeting')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>15000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[2]/span[@title=&quot;GreetingController.java&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForNotVisible</td>
+	<td>//html/body/div[5]/div[2]/div/div[4]/div/div[3]/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Initialize Java')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/div/div/div/div[20]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/div/div/div/div[25]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>20000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/div/div/div/div[@title=&quot;Breakpoint&quot;]</td>
+	<td></td>
+</tr>
+<!--Select OutPut Tab-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Output')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div[2]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Output')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='ideOutputContent']//a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div[2]/table/tbody/tr/td/font/a</td>
+	<td></td>
+</tr>
+<!--Open Debug Tab-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Debug')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[2]/table/tr/td/div/div[3]/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Debug')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Variables')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Variables')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[2]/div/div[2]/table/tr/td/div/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td[contains(.,'Break')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/div/div/div/div[@title='Multiple markers at this line&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;Breakpoint&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;BreakPoint&lt;br&gt;']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/div/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/div/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[8]/div/div[3]/div/div[3]/div/div[2]/div/div[2]/div/div/div[3]/div/div/div/div/div[@title='Multiple markers at this line&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;Breakpoint&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;-&amp;nbsp;BreakPoint&lt;br&gt;' and contains(.,'25')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div/div[3]/div[contains(.,'response')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div/div[3]/div[contains(.,'response')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/table/tbody/tr/td[2]/table/tbody/tr/td/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/table/tbody/tr/td[2]/table/tbody/tr/td/div/img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//html/body/div[5]/div[2]/div/div[5]/div/div/div[6]/div/div[3]/div/div[4]/div/div[2]/div/div[2]/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div/div[3]/div[contains(.,'response')]</td>
+	<td></td>
+</tr>
+<!--Evaluation-test-->
+<tr>
+	<td>windowFocus</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@view-id='ideDebuggerView']//div[@class='exoToolbarPanel']/div[8]//tbody</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@view-id='ideDebuggerView']//div[@class='exoToolbarPanel']/div[8]//tbody</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//textarea[@name='ideEvaluateExpressionViewExpressionField']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//textarea[@name='ideEvaluateExpressionViewExpressionField']</td>
+	<td>33*(50+50)-(15+15)</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>ideEvaluateExpressionViewEvaluateButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//textarea[@name='ideEvaluateExpressionViewResultField']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>//textarea[@name='ideEvaluateExpressionViewResultField']</td>
+	<td>3270</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='ideEvaluateExpressionView-window']//img</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//textarea[@name='ideEvaluateExpressionViewResultField']</td>
+	<td></td>
+</tr>
+<!--Change value-->
+<tr>
+	<td>click</td>
+	<td>//span[text()='userName']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@view-id='ideDebuggerView']//div[@class='exoToolbarPanel']/div[7]//tbody</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@view-id='ideDebuggerView']//div[@class='exoToolbarPanel']/div[7]//tbody</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>name=ideChangeVariableValueViewExpressionField</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=ideChangeVariableValueViewExpressionField</td>
+	<td>userName=&quot;exo&quot;</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=ideChangeVariableValueViewChangeButton</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>name=ideChangeVariableValueViewExpressionField</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

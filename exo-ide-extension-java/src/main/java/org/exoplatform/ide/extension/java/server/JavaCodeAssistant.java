@@ -76,7 +76,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    private JavaDocBuilderVfs parseProject(String projectId, String vfsId) throws VirtualFileSystemException,
       ItemNotFoundException, PermissionDeniedException, CodeAssistantException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
 
       Project project = getProject(projectId, vfs);
 
@@ -282,7 +282,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       throws VirtualFileSystemException, CodeAssistantException
    {
       List<ShortTypeInfo> classNames = null;
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(fileId, PropertyFilter.ALL_FILTER);
       if (item.getItemType() != ItemType.FILE)
          throw new InvalidArgumentException("Unable find Classes. Item " + item.getName() + " is not a file. ");
@@ -380,7 +380,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    protected List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId)
       throws VirtualFileSystemException, CodeAssistantException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
 
       Project project = getProject(projectId, vfs);
       Folder sourceFolder = getSourceFolder(vfs, project);
