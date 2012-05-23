@@ -553,6 +553,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
       Item item = event.getItem();
+      onRefreshBrowser(new RefreshBrowserEvent());
       if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;

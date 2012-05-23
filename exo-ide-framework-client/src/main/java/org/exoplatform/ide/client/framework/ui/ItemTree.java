@@ -343,7 +343,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    {
       String title = "";
 
-      if (locktokens == null || locktokens.isEmpty())
+      if (locktokens == null)
       {
          return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
       }
