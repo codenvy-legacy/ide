@@ -67,7 +67,7 @@ public class ProjectResolver
    /**
     * Servlet and JSP API based project
     */
-   public static final String SERVLET_JSP = "JSP";
+   public static final String SERVLET_JSP = "Java Web";
 
    /**
     * PHP Project
