@@ -67,7 +67,6 @@ public class ProjectResolver
    /**
     * Servlet and JSP API based project
     */
-<<<<<<< HEAD
    public static final String SERVLET_JSP = "Java Web";
 
    /**
@@ -80,10 +79,8 @@ public class ProjectResolver
     */
    public static final String UNDEFINED = "Undefined";
 
-   public static final String SERVLET_JSP = "Servlet/JSP";
-   
    public static final String APP_ENGINE_JAVA = "App Engine Java";
-   
+
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
    static
