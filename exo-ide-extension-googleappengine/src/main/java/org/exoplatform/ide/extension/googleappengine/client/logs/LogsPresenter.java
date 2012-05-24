@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
@@ -119,6 +120,10 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
             IDE.getInstance().openView(display.asView());
             display.setSeverities(severities);
             display.getDaysField().setValue("1");
+         }
+         else
+         {
+            ((View)display).setViewVisible();
          }
          getLogs(null, null, null);
       }

@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
+import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
 
 /**
@@ -125,20 +126,16 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             showLogs();
          }
       });
-      
-      display.getUpdateIndexesButton().addClickHandler(new ClickHandler()
+
+      display.getUpdatePageSpeedButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
-            updateIndexes();
+            updatePageSpeed();
          }
       });
-   }
-
-   protected void updateIndexes()
-   {
    }
 
    /**
@@ -181,5 +178,10 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    {
       IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new ShowLogsEvent());
+   }
+
+   public void updatePageSpeed()
+   {
+      IDE.fireEvent(new UpdatePageSpeedEvent());
    }
 }
