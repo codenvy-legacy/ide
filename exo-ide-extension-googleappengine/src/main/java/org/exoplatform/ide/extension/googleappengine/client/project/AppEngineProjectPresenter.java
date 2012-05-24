@@ -125,6 +125,20 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             showLogs();
          }
       });
+      
+      display.getUpdateIndexesButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateIndexes();
+         }
+      });
+   }
+
+   protected void updateIndexes()
+   {
    }
 
    /**

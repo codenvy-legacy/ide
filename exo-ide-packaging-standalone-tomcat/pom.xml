@@ -4,9 +4,7 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -40,7 +38,7 @@
          <version>${project.version}</version>
          <type>war</type>
       </dependency>
-       <dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-maven</artifactId>
          <version>${project.version}</version>
@@ -646,6 +644,12 @@
          <type>zip</type>
       </dependency>
 
+      <dependency>
+         <groupId>com.google.appengine</groupId>
+         <artifactId>appengine-java-sdk</artifactId>
+         <type>zip</type>
+      </dependency>
+
    </dependencies>
 
    <build>
@@ -664,6 +668,26 @@
                      <includeTypes>war</includeTypes>
                      <stripVersion>false</stripVersion>
                      <outputDirectory>${project.build.directory}/packager-conf/war</outputDirectory>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>copy-appengine-zip</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <!-- includeTypes>zip</includeTypes -->
+                     <stripVersion>true</stripVersion>
+                     <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-java-sdk</artifactId>
+                           <version>${appengine.version}</version>
+                           <type>zip</type>
+                        </artifactItem>
+                     </artifactItems>
                   </configuration>
                </execution>
                <execution>
@@ -1024,8 +1048,10 @@
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war"
                            overwrite="true" />
-                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
                            overwrite="true" />
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide"/>
+                        <move  file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
                      </tasks>
                   </configuration>
                   <goals>
