@@ -75,15 +75,18 @@
    <component>
       <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
    </component>
-      <component>
-         <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-         <init-params>
-            <value-param>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+      <init-params>
+         <value-param>
             <name>build-server-base-url</name>
-        <value>http://172.10.19.206:8080/builder</value>
-        </value-param>
+            <value>http://localhost:8080/builder</value>
+         </value-param>
       </init-params>
    </component>
+   
+    
    
    <component>
       <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
@@ -167,6 +170,18 @@
 
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
+   </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore</type>
    </component>
 
    <component>
@@ -359,16 +374,6 @@
    
    <component>
       <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
-      <init-params>
-         <value-param>
-            <name>build-server-base-url</name>
-            <value>http://localhost:8080/builder</value>
-         </value-param>
-      </init-params>
    </component>
 
    <component>

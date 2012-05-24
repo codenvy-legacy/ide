@@ -31,7 +31,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int HEIGHT = 550;
 
-   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/";
+  // private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com";
+   
+   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp?redirect_url=http://www.google.com?foo=bar";
 
    private static CreateApplicationViewUiBinder uiBinder = GWT.create(CreateApplicationViewUiBinder.class);
 

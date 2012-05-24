@@ -103,6 +103,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       HasValue<Boolean> getIsStartAfterCreationCheckItem();
 
+      void setIsStartAfterCreationCheckItem(boolean start);
+
       void enableCreateButton(boolean enable);
 
       void focusInNameField();
@@ -589,6 +591,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.getInstance().openView(display.asView());
          display.focusInNameField();
          getServers();
+         // Application will be started after creation (IDE-1618)
+         display.setIsStartAfterCreationCheckItem(true);
       }
       else
       {

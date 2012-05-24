@@ -37,13 +37,11 @@
          <groupId>com.google.appengine</groupId>
          <artifactId>appengine-java-sdk</artifactId>
          <type>zip</type>
-         <version>1.6.5</version>
       </dependency>
 
       <dependency>
          <groupId>com.google.appengine</groupId>
          <artifactId>appengine-tools-sdk</artifactId>
-         <version>1.6.5</version>
          <scope>provided</scope>
       </dependency>
 

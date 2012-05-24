@@ -69,7 +69,7 @@ public abstract class GoogleAppEngineClientService
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
    public abstract void requestLogs(String vfsId, String projectId, int numDays, String logSeverity, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<String> callback) throws RequestException;
+      String password, GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
    public abstract void rollback(String vfsId, String projectId, String email, String password,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;

@@ -16,28 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.model;
+package org.exoplatform.ide.extension.googleappengine.client.queues;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to update queues.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 4:40:20 PM anya $
+ * @version $Id: May 24, 2012 4:59:34 PM anya $
  * 
  */
-public interface CronEntry
+public class UpdateQueuesEvent extends GwtEvent<UpdateQueuesHandler>
 {
-   public String getDescription();
+   /**
+    * Type used to register the event.
+    */
+   public static final GwtEvent.Type<UpdateQueuesHandler> TYPE = new GwtEvent.Type<UpdateQueuesHandler>();
 
-   public String getSchedule();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UpdateQueuesHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
-   public String getTimezone();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(UpdateQueuesHandler handler)
+   {
+      handler.onUpdateQueues(this);
+   }
 
-   public String getUrl();
-
-   public void setDescription(String description);
-
-   public void setSchedule(String schedule);
-
-   public void setTimezone(String timezone);
-
-   public void setUrl(String url);
 }

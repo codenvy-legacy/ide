@@ -16,28 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.model;
+package org.exoplatform.ide.extension.googleappengine.client.logs;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 4:40:20 PM anya $
+ * Handler for {@link ShowLogsEvent} event.
  * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id:  May 24, 2012 11:20:51 AM anya $
+ *
  */
-public interface CronEntry
+public interface ShowLogsHandler extends EventHandler
 {
-   public String getDescription();
-
-   public String getSchedule();
-
-   public String getTimezone();
-
-   public String getUrl();
-
-   public void setDescription(String description);
-
-   public void setSchedule(String schedule);
-
-   public void setTimezone(String timezone);
-
-   public void setUrl(String url);
+   /**
+    * Perform actions, when user tries to view application logs.
+    * 
+    * @param event
+    */
+   void onShowLogs(ShowLogsEvent event);
 }
