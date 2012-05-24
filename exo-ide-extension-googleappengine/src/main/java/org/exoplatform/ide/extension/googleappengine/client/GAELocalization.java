@@ -112,22 +112,22 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("manage.application.general.tab")
    String manageApplicationGeneralTab();
-   
+
    @Key("manage.application.indexes")
    String manageApplicationIndexes();
-   
+
    @Key("manage.application.application")
    String manageApplicationApplication();
-   
+
    @Key("manage.application.pagespeed")
    String manageApplicationPagespeed();
-   
+
    @Key("manage.application.queues")
    String manageApplicationQueues();
 
    @Key("manage.application.dos")
    String manageApplicationDos();
-   
+
    /* Rollback update */
    @Key("rollback.update.control.title")
    String rollbackUpdateControlTitle();
@@ -150,4 +150,21 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("login.failed.message")
    String loginFailedMessage();
+   
+   /*Logs*/
+   @Key("logs.view.title")
+   String logsViewTitle();
+   
+   @Key("num.days.field.title")
+   String numDaysFieldTitle();
+   
+   @Key("logs.severity.field.title")
+   String logsSeverityFieldTitle();
+   
+   @Key("get.logs.button")
+   String getLogsButton();
+
+   /* Error */
+   @Key("not.app.engine.project")
+   String notAppEngineProjectError();
 }

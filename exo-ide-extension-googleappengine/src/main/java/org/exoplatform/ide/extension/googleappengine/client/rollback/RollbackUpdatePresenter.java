@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.client.rollback;
 
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -67,7 +68,7 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
       }
    }
 
-   public void rollback(String email, String password, LoggedInHandler loggedInHandler)
+   public void rollback(String email, String password, final LoggedInHandler loggedInHandler)
    {
       try
       {
@@ -78,6 +79,10 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
                @Override
                protected void onSuccess(Object result)
                {
+                  if (loggedInHandler != null)
+                  {
+                     loggedInHandler.onLoggedIn();
+                  }
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.rollbackUpdateSuccess(),
                      Type.INFO));
                }
@@ -85,7 +90,7 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
       }
       catch (RequestException e)
       {
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 }

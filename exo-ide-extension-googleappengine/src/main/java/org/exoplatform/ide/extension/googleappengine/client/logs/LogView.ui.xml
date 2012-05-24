@@ -1,0 +1,49 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
+   <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
+
+   <ui:style>
+      .content {
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      	font-style: normal;
+      	font-weight: normal;
+      	color: #000077;
+      }
+      
+      .logLines {
+      	float: left;
+      }
+      
+      .label {
+      	padding: 2px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-size: 11px;
+      }
+      
+      .space {
+      	margin-right: 10px;
+      }
+   </ui:style>
+
+   <c:Border margin="1" borderColor="transparent">
+      <c:layer top="0" height="28px">
+         <c:Toolbar height="28px" ui:field="toolbar" itemsTopPadding="1">
+            <g:HorizontalPanel styleName="{style.logLines}" spacing="0" verticalAlignment="middle" height="28px">
+               <c:Label value="{locale.numDaysFieldTitle}" height="18px" isHTML="true" styleName="{style.label}"></c:Label>
+               <c:TextInput ui:field="numDaysField" height="20px" width="40px" addStyleNames="{style.space}"></c:TextInput>
+               <c:Label value="{locale.logsSeverityFieldTitle}" height="18px" isHTML="true" styleName="{style.label}"></c:Label>
+               <c:SelectItem ui:field="severityField" height="20px" width="140px" addStyleNames="{style.space}"></c:SelectItem>
+               <c:ImageButton ui:field="getLogsButton" height="20px" width="60px" text="{locale.getLogsButton}"></c:ImageButton>
+            </g:HorizontalPanel>
+         </c:Toolbar>
+      </c:layer>
+      <c:layer top="30" bottom="0">
+         <g:ScrollPanel ui:field="scrollPanel">
+            <g:HTML>
+               <pre ui:field="content" class='{style.content}'></pre>
+            </g:HTML>
+         </g:ScrollPanel>
+      </c:layer>
+   </c:Border>
+</ui:UiBinder> 

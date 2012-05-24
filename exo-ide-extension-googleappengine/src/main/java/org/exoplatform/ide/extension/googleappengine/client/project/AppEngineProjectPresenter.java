@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
 
 /**
@@ -114,6 +115,16 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             rollbackApplicationUpdate();
          }
       });
+
+      display.getLogsButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            showLogs();
+         }
+      });
    }
 
    /**
@@ -150,5 +161,11 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    public void rollbackApplicationUpdate()
    {
       IDE.fireEvent(new RollbackUpdateEvent());
+   }
+
+   public void showLogs()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+      IDE.fireEvent(new ShowLogsEvent());
    }
 }

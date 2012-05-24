@@ -204,7 +204,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     */
    @Override
    public void requestLogs(String vfsId, String projectId, int numDays, String logSeverity, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<String> callback) throws RequestException
+      String password, GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = restServiceContext + LOGS;
 
@@ -212,7 +212,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&num_days=")
          .append(numDays).append("&log_severity=").append(logSeverity);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
 
