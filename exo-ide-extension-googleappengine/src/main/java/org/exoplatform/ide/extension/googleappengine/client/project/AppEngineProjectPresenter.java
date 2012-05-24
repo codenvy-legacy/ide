@@ -25,14 +25,19 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:14:40 PM anya $
  * 
  */
-public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implements ManageAppEngineProjectHandler
+public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implements ManageAppEngineProjectHandler,
+   ViewClosedHandler
 {
 
    interface Display extends IsView
@@ -75,6 +80,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       IDE.getInstance().addControl(new AppEngineProjectControl());
 
       IDE.addHandler(ManageAppEngineProjectEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -86,6 +92,26 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          public void onClick(ClickEvent event)
          {
             IDE.getInstance().closeView(display.asView().getId());
+         }
+      });
+
+      display.getUpdateButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateApplication();
+         }
+      });
+
+      display.getRollbackButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            rollbackApplicationUpdate();
          }
       });
    }
@@ -102,5 +128,27 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   public void updateApplication()
+   {
+      IDE.fireEvent(new DeployApplicationEvent());
+   }
+
+   public void rollbackApplicationUpdate()
+   {
+      IDE.fireEvent(new RollbackUpdateEvent());
    }
 }
