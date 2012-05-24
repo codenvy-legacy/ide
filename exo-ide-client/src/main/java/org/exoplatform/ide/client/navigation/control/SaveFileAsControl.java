@@ -31,6 +31,10 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.event.SaveFileAsEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -46,7 +50,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class SaveFileAsControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler,
-   ItemsSelectedHandler, VfsChangedHandler
+   ItemsSelectedHandler, VfsChangedHandler, ViewVisibilityChangedHandler
 {
 
    private static final String ID = "File/Save As...";
@@ -61,6 +65,8 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private FileModel activeFile;
+
+   private boolean browserPanelSelected = true;
 
    /**
     * 
@@ -84,6 +90,7 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -98,7 +105,7 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
       }
       setVisible(true);
 
-      if (selectedItems.size() == 1 && activeFile != null)
+      if (browserPanelSelected && selectedItems.size() == 1 && activeFile != null)
       {
          setEnabled(true);
       }
@@ -137,6 +144,19 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
       vfsInfo = event.getVfsInfo();
       updateState();
       setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         browserPanelSelected = event.getView().isViewVisible();
+         updateState();
+      }
    }
 
 }

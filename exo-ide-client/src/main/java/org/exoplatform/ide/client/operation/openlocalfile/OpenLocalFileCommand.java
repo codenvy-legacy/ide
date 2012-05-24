@@ -31,6 +31,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -41,7 +45,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class OpenLocalFileCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
+public class OpenLocalFileCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
+   ViewVisibilityChangedHandler
 {
 
    private final static String ID = "File/Open Local File...";
@@ -51,6 +56,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
    private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+
+   private boolean browserPanelSelected = true;
 
    /**
     * 
@@ -73,6 +80,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+
       setVisible(true);
       setEnabled(false);
    }
@@ -82,7 +91,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
     */
    private void updateEnabling()
    {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null && browserPanelSelected && selectedItems.size() > 0);
    }
 
    /**
@@ -103,6 +112,19 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
    {
       selectedItems = event.getSelectedItems();
       updateEnabling();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         browserPanelSelected = event.getView().isViewVisible();
+         updateEnabling();
+      }
    }
 
 }
