@@ -73,6 +73,7 @@ public class ProjectsListGridTest extends BaseTest
    public void projectsListTest() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.LOADER.waitClosed();
       assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
       int countOfProjects = IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid();
 
@@ -98,7 +99,7 @@ public class ProjectsListGridTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
-      assertEquals(countOfProjects-1, IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid());
+      assertEquals(countOfProjects - 1, IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid());
    }
 
 }
