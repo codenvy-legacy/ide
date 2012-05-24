@@ -230,6 +230,42 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/edit/lock_file_Disabled.png")
    ImageResource lockUnlockFileDisabled();
 
+   @Source("../public/images/bundled/edit/autocomplete.png")
+   ImageResource autocomplete();
+
+   @Source("../public/images/bundled/edit/autocomplete_Disabled.png")
+   ImageResource autocompleteDisabled();
+
+   @Source("../public/images/bundled/edit/lineup.png")
+   ImageResource lineUp();
+
+   @Source("../public/images/bundled/edit/lineup_Disabled.png")
+   ImageResource lineUpDisabled();
+
+   @Source("../public/images/bundled/edit/linedown.png")
+   ImageResource lineDown();
+
+   @Source("../public/images/bundled/edit/linedown_Disabled.png")
+   ImageResource lineDownDisabled();
+
+   @Source("../public/images/bundled/edit/toggle_comment.png")
+   ImageResource toggleComment();
+
+   @Source("../public/images/bundled/edit/toggle_comment_Disabled.png")
+   ImageResource toggleCommentDisabled();
+
+   @Source("../public/images/bundled/edit/add_block_comment.png")
+   ImageResource addBlockComment();
+
+   @Source("../public/images/bundled/edit/add_block_comment_Disabled.png")
+   ImageResource addBlockCommentDisabled();
+
+   @Source("../public/images/bundled/edit/remove_block_comment.png")
+   ImageResource removeBlockComment();
+
+   @Source("../public/images/bundled/edit/remove_block_comment_Disabled.png")
+   ImageResource removeBlockCommentDisabled();
+
    /*
     * FILE
     */

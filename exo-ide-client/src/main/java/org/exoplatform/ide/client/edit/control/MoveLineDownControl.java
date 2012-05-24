@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorMoveLineDownEvent;
 
@@ -42,6 +43,7 @@ public class MoveLineDownControl extends SimpleControl implements IDEControl
       setPrompt(TITLE);
       setEvent(new EditorMoveLineDownEvent());
       setHotKey("Alt+Down");
+      setImages(IDEImageBundle.INSTANCE.lineDown(), IDEImageBundle.INSTANCE.lineDownDisabled());
    }
 
    @Override

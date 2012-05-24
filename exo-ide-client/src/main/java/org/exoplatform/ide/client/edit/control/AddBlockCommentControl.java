@@ -20,6 +20,7 @@ package org.exoplatform.ide.client.edit.control;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -48,6 +49,7 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
       setVisible(false);
       setEnabled(true);
       setHotKey("Ctrl+Shift+/");
+      setImages(IDEImageBundle.INSTANCE.addBlockComment(), IDEImageBundle.INSTANCE.addBlockCommentDisabled());
    }
 
    /**

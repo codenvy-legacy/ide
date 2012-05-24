@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.operation.autocompletion;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
@@ -51,6 +52,7 @@ public class OpenAutocompleteControl extends SimpleControl implements IDEControl
 
       setIgnoreDisable(true);
       setEvent(new AutocompleteCalledEvent());
+      setImages(IDEImageBundle.INSTANCE.autocomplete(), IDEImageBundle.INSTANCE.autocompleteDisabled());
    }
 
    @Override

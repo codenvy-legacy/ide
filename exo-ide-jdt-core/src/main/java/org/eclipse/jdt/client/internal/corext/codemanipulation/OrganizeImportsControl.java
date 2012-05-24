@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.event.OrganizeImportsEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -44,6 +45,7 @@ public class OrganizeImportsControl extends SimpleControl implements IDEControl,
       setPrompt("Organize Imports");
       setEvent(new OrganizeImportsEvent());
       setHotKey("Ctrl+Shift+O");
+      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
    }
 
    /**

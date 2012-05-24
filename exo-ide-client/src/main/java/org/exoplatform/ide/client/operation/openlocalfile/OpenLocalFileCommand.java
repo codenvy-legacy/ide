@@ -18,27 +18,21 @@
  */
 package org.exoplatform.ide.client.operation.openlocalfile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -47,8 +41,7 @@ import java.util.List;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class OpenLocalFileCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler,
-   ViewActivatedHandler
+public class OpenLocalFileCommand extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
 {
 
    private final static String ID = "File/Open Local File...";
@@ -59,10 +52,8 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private boolean navigatorSelected;
-
    /**
-    * Creates a new instance of this control.
+    * 
     */
    public OpenLocalFileCommand()
    {
@@ -82,8 +73,6 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-
       setVisible(true);
       setEnabled(false);
    }
@@ -93,7 +82,7 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
     */
    private void updateEnabling()
    {
-      setEnabled(vfsInfo != null && navigatorSelected && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null && selectedItems.size() > 0);
    }
 
    /**
@@ -113,21 +102,6 @@ public class OpenLocalFileCommand extends SimpleControl implements IDEControl, V
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-      updateEnabling();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
-
-      navigatorSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
-            || activeView instanceof ProjectExplorerPresenter.Display;
-
       updateEnabling();
    }
 

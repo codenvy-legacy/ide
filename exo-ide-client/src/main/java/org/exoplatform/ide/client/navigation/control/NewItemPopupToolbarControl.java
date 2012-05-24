@@ -25,16 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS.
@@ -43,14 +37,13 @@ import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, ViewActivatedHandler
+public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public static final String ID = "File/New *";
 
    /**
-    * Creates new instance of this control.
+    * 
     */
    public NewItemPopupToolbarControl()
    {
@@ -70,7 +63,6 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -88,41 +80,18 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
          setVisible(false);
       }
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
+   
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      setEnabled(false);
+     setEnabled(false);
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
+   
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       if (event.getProject() != null)
-      {
-         setEnabled(true);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
-
-      boolean navigatorSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
-            || activeView instanceof ProjectExplorerPresenter.Display;
-
-      setEnabled(navigatorSelected);
+        setEnabled(true);
    }
 
 }
