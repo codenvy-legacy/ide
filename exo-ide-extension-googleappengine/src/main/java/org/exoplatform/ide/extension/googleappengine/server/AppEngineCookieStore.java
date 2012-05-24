@@ -94,7 +94,7 @@ public class AppEngineCookieStore
 
    public ClientCookieManager readCookies(String email) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/app_engine/cookies";
       InputStream in = null;
@@ -128,7 +128,7 @@ public class AppEngineCookieStore
    public void saveCookies(String email, ClientCookieManager cookies) throws VirtualFileSystemException, IOException
    {
       LoginInfo loginInfo = new LoginInfo(email, cookies);
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder parent = getConfigParent(vfs);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       new ObjectOutputStream(out).writeObject(loginInfo);
