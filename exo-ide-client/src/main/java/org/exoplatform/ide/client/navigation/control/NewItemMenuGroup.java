@@ -26,12 +26,6 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,7 +34,7 @@ import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler, ViewActivatedHandler
+public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    public static final String ID = "File/New";
@@ -48,7 +42,7 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.newMenu();
 
    /**
-    * Creates new instance of this control.
+    * 
     */
    public NewItemMenuGroup()
    {
@@ -66,8 +60,6 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
-
       setEnabled(true);
    }
 
@@ -85,20 +77,5 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
       {
          setVisible(false);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
-
-      boolean navigatorSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
-            || activeView instanceof ProjectExplorerPresenter.Display;
-
-      setEnabled(navigatorSelected);
    }
 }
