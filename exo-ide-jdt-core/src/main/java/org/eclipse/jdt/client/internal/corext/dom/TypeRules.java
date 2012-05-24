@@ -16,6 +16,8 @@ package org.eclipse.jdt.client.internal.corext.dom;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
+import org.eclipse.jdt.client.internal.corext.refactoring.types.TType;
+import org.eclipse.jdt.client.internal.corext.refactoring.types.TypeEnvironment;
 
 /**
  * Helper class to check if objects are assignable to each other.
@@ -28,17 +30,14 @@ public class TypeRules
     * 
     * @param typeToAssign The binding of the type to assign
     * @param definedType The type of the object that is assigned
-    * @return <code>true</code> iff definedType = typeToAssign is a valid assignment
+    * @return <code>true</code> if definedType = typeToAssign is a valid assignment
     */
    public static boolean canAssign(ITypeBinding typeToAssign, ITypeBinding definedType)
    {
-      //FIXME
-//      typeToAssign.is
-//            TypeEnvironment typeEnvironment = new TypeEnvironment(false, true);
-//            TType defined = typeEnvironment.create(definedType);
-//            TType toAssign = typeEnvironment.create(typeToAssign);
-//            return toAssign.canAssignTo(defined);
-      return false;
+      TypeEnvironment typeEnvironment = new TypeEnvironment(false, true);
+      TType defined = typeEnvironment.create(definedType);
+      TType toAssign = typeEnvironment.create(typeToAssign);
+      return toAssign.canAssignTo(defined);
    }
 
    public static boolean isArrayCompatible(ITypeBinding definedType)

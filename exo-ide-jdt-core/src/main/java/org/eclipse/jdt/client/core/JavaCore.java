@@ -156,6 +156,20 @@ public final class JavaCore
     * @category CompilerOptionID
     */
    public static final String COMPILER_PB_UNUSED_PARAMETER = PLUGIN_ID + ".compiler.problem.unusedParameter"; //$NON-NLS-1$
+   
+   /**
+    * Compiler option ID: Reporting Assignment with no Effect.
+    * <p>When enabled, the compiler will issue an error or a warning whenever an assignment
+    *    has no effect (e.g <code>'x = x'</code>).
+    * <dl>
+    * <dt>Option id:</dt><dd><code>"org.eclipse.jdt.core.compiler.problem.noEffectAssignment"</code></dd>
+    * <dt>Possible values:</dt><dd><code>{ "error", "warning", "ignore" }</code></dd>
+    * <dt>Default:</dt><dd><code>"warning"</code></dd>
+    * </dl>
+    * @since 2.1
+    * @category CompilerOptionID
+    */
+   public static final String COMPILER_PB_NO_EFFECT_ASSIGNMENT = PLUGIN_ID + ".compiler.problem.noEffectAssignment"; //$NON-NLS-1$
 
    /**
     * Compiler option ID: Inline JSR Bytecode Instruction.

@@ -2068,18 +2068,18 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor
 
       //      if (!JavaModelUtil.is50OrHigher(project))
       //      {
-      ITypeBinding thenBinding = thenExpression.resolveTypeBinding();
-      ITypeBinding elseBinding = elseExpression.resolveTypeBinding();
-      if (thenBinding != null && elseBinding != null && exprBinding != null
-         && !elseBinding.isAssignmentCompatible(thenBinding))
-      {
-         CastExpression castException = ast.newCastExpression();
-         ImportRewrite importRewrite = proposal.createImportRewrite(context.getASTRoot());
-         ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(node, importRewrite);
-         castException.setType(importRewrite.addImport(exprBinding, ast, importRewriteContext));
-         castException.setExpression(elseCopy);
-         elseCopy = castException;
-      }
+//      ITypeBinding thenBinding = thenExpression.resolveTypeBinding();
+//      ITypeBinding elseBinding = elseExpression.resolveTypeBinding();
+//      if (thenBinding != null && elseBinding != null && exprBinding != null
+//         && !elseBinding.isAssignmentCompatible(thenBinding))
+//      {
+//         CastExpression castException = ast.newCastExpression();
+//         ImportRewrite importRewrite = proposal.createImportRewrite(context.getASTRoot());
+//         ImportRewriteContext importRewriteContext = new ContextSensitiveImportRewriteContext(node, importRewrite);
+//         castException.setType(importRewrite.addImport(exprBinding, ast, importRewriteContext));
+//         castException.setExpression(elseCopy);
+//         elseCopy = castException;
+//      }
       //TODO Java 7
       //      }
       //      else if (JavaModelUtil.is17OrHigher(project))

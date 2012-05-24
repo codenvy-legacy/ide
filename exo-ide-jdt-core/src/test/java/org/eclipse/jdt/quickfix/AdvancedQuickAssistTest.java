@@ -3083,7 +3083,6 @@ public class AdvancedQuickAssistTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testReplaceReturnIfWithCondition() throws Exception
    {
 
@@ -3116,12 +3115,11 @@ public class AdvancedQuickAssistTest extends QuickFixTest
       buf.append("    }\n");
       buf.append("}\n");
       String expected1 = buf.toString();
-
+      
       assertExpectedExistInProposals(proposals, new String[]{expected1});
    }
 
    @Test
-   @Ignore
    public void testReplaceAssignIfWithCondition1() throws Exception
    {
 
