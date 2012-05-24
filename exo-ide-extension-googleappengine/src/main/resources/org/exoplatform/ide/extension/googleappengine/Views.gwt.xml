@@ -28,8 +28,12 @@
    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectView">
       <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.googleappengine.client.logs.LogView">
+      <when-type-is class="org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter.Display" />
    </replace-with>
 </module>
