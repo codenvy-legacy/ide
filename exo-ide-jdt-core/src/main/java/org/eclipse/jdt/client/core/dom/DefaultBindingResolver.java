@@ -72,7 +72,7 @@ import java.util.Map;
  * DefaultBindingResolver instance.
  * </p>
  */
-class DefaultBindingResolver extends BindingResolver
+public class DefaultBindingResolver extends BindingResolver
 {
 
    /* Holds on binding tables that can be shared by several ASTs. */
@@ -89,7 +89,7 @@ class DefaultBindingResolver extends BindingResolver
        */
       Map compilerBindingsToASTBindings;
 
-      BindingTables()
+      public BindingTables()
       {
          this.compilerBindingsToASTBindings = new HashMap();
          this.bindingKeysToBindings = new HashMap();
@@ -138,7 +138,7 @@ class DefaultBindingResolver extends BindingResolver
       this.fromJavaProject = fromJavaProject;
    }
 
-   DefaultBindingResolver(LookupEnvironment lookupEnvironment, BindingTables bindingTables,
+   public DefaultBindingResolver(LookupEnvironment lookupEnvironment, BindingTables bindingTables,
       boolean isRecoveringBindings, boolean fromJavaProject)
    {
       this.newAstToOldAst = new HashMap();
@@ -333,7 +333,7 @@ class DefaultBindingResolver extends BindingResolver
    }
 
    /* Method declared on BindingResolver. */
-   synchronized ITypeBinding getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding referenceBinding)
+   public ITypeBinding getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding referenceBinding)
    {
       if (referenceBinding == null)
       {
