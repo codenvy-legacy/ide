@@ -46,6 +46,7 @@ public class QuickFixControl extends SimpleControl implements IDEControl, Editor
       setPrompt("Quick Fix");
       setHotKey("Ctrl+1");
       setEvent(new ShowQuickFixEvent());
+      setImages(JdtClientBundle.INSTANCE.quickFix(), JdtClientBundle.INSTANCE.quickFixDisabled());
    }
 
    /**
