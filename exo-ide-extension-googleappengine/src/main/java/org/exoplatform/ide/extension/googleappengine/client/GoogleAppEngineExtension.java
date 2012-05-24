@@ -28,6 +28,7 @@ import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplica
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
 
@@ -59,8 +60,9 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new DeployApplicationPresenter();
       new LoginPresenter();
       new RollbackUpdatePresenter();
-      
+
       new LogsPresenter();
+      new PageSpeedHandler();
    }
 
    /**

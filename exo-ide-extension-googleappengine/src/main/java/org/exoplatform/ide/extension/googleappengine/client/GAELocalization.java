@@ -150,21 +150,31 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("login.failed.message")
    String loginFailedMessage();
-   
-   /*Logs*/
+
+   /* Logs */
    @Key("logs.view.title")
    String logsViewTitle();
-   
+
    @Key("num.days.field.title")
    String numDaysFieldTitle();
-   
+
    @Key("logs.severity.field.title")
    String logsSeverityFieldTitle();
-   
+
    @Key("get.logs.button")
    String getLogsButton();
 
    /* Error */
    @Key("not.app.engine.project")
    String notAppEngineProjectError();
+
+   /* Messages */
+   @Key("update.pagespeed.successfully")
+   String updatePageSpeedSuccessfully();
+
+   @Key("update.queues.successfully")
+   String updateQueuesSuccessfully();
+
+   @Key("update.dos.successfully")
+   String updateDosSuccessfully();
 }

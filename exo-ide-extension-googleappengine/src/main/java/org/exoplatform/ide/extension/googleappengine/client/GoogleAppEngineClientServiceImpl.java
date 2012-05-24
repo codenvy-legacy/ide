@@ -385,7 +385,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
@@ -403,7 +403,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
@@ -421,7 +421,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
@@ -439,7 +439,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
@@ -457,7 +457,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
-      AsyncRequest.build(RequestBuilder.POST, url + params, true).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
          .data(getCredentialsData(email, password)).header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
