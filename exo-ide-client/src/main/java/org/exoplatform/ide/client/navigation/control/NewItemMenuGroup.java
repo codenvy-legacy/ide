@@ -26,6 +26,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -34,7 +38,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler
+public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ViewVisibilityChangedHandler
 {
 
    public static final String ID = "File/New";
@@ -60,6 +65,8 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+
       setEnabled(true);
    }
 
@@ -78,4 +85,17 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
          setVisible(false);
       }
    }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         setEnabled(event.getView().isViewVisible());
+      }
+   }
+
 }

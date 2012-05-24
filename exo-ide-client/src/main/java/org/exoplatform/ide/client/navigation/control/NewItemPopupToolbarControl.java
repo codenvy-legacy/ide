@@ -25,10 +25,14 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,7 +41,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEControl, VfsChangedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler, ViewVisibilityChangedHandler
 {
 
    public static final String ID = "File/New *";
@@ -63,6 +68,7 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    /**
@@ -80,18 +86,30 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
          setVisible(false);
       }
    }
-   
+
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-     setEnabled(false);
+      setEnabled(false);
    }
-   
+
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       if (event.getProject() != null)
-        setEnabled(true);
+         setEnabled(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         setEnabled(event.getView().isViewVisible());
+      }
    }
 
 }
