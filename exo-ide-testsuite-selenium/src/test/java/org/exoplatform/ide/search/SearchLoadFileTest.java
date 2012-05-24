@@ -18,26 +18,22 @@
  */
 package org.exoplatform.ide.search;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Map;
-
-import javax.validation.constraints.AssertFalse;
-import javax.validation.constraints.AssertTrue;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -105,7 +101,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
 
       chekButtonState();
-      
+
       //step 2 check GOTO folder and close groovy file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       IDE.EDITOR.waitTabPresent(0);
@@ -124,7 +120,7 @@ public class SearchLoadFileTest extends BaseTest
       IDE.EDITOR.closeFile(0);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + gadgetFileName);
 
       Thread.sleep(3000);
 
@@ -133,15 +129,15 @@ public class SearchLoadFileTest extends BaseTest
    private void chekButtonState() throws Exception
    {
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.DELETE));
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.CUT_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.COPY_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.REFRESH));
-      assertFalse(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.File.SEARCH));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.FORMAT));
-      IDE.MENU.isTopMenuDisabled(MenuCommands.File.FILE);
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.REFRESH));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SEARCH));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.LOCK_FILE));
+      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.FORMAT));
+      IDE.MENU.isTopMenuEnabled(MenuCommands.File.FILE);
    }
 
    @AfterClass

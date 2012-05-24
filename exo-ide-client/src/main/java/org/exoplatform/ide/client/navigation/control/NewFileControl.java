@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,13 +29,15 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 /* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -47,6 +49,8 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
 {
 
    private VirtualFileSystemInfo vfsInfo;
+
+   private boolean browserPanelSelected = true;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -111,7 +115,7 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
          return;
       }
 
-      if (selectedItems.size() == 0)
+      if (!browserPanelSelected || selectedItems.size() == 0)
       {
          setEnabled(false);
          return;
@@ -136,11 +140,11 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      // if (event.getView() instanceof NavigatorPresenter.Display)
-      // {
-      // browserSelected = event.getView().isViewVisible();
-      // updateEnabling();
-      // }
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         browserPanelSelected = event.getView().isViewVisible();
+         updateEnabling();
+      }
    }
 
    /**
