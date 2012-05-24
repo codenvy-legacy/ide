@@ -62,7 +62,7 @@ public abstract class AbstractTypeVariable extends TType
 
    public final TType[] getBounds()
    {
-      return fBounds.clone();
+      return fBounds;
    }
 
    @Override

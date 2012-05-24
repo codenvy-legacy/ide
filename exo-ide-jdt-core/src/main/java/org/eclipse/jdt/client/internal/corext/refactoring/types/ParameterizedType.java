@@ -60,7 +60,7 @@ public final class ParameterizedType extends HierarchyType
 
    public TType[] getTypeArguments()
    {
-      return fTypeArguments.clone();
+      return fTypeArguments;
    }
 
    @Override

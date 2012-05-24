@@ -45,7 +45,7 @@ public final class GenericType extends HierarchyType
 
    public TypeVariable[] getTypeParameters()
    {
-      return fTypeParameters.clone();
+      return fTypeParameters;
    }
 
    @Override
