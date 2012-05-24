@@ -579,11 +579,13 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       oldFileEditorView.setIcon(new Image(ImageUtil.getIcon(newFile)));
       IDE.fireEvent(new EditorActiveFileChangedEvent(newFile, oldFileEditorView.getEditor()));
-      oldFileEditorView.setContent(newFile.getContent());
+      if (newFile.getContent() != null)
+      {
+         oldFileEditorView.setContent(newFile.getContent());
+      }
 
       updateTabTitle(newFile);
       oldFileEditorView.setFile(newFile);
-
    }
 
    /**

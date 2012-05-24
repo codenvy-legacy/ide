@@ -366,6 +366,12 @@
             <artifactId>exo-ide-extension-cloudfoundry</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-googleappengine</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -794,6 +800,7 @@
       <module>exo-ide-extension-ruby</module>
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
+      <module>exo-ide-extension-googleappengine</module>
 
       <module>exo-ide-docs</module>
 

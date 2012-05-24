@@ -18,21 +18,27 @@
  */
 package org.exoplatform.ide.client.operation.openbypath;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
@@ -41,7 +47,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: $
  */
 @RolesAllowed({"administrators", "developers"})
-public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler, ItemsSelectedHandler
+public class OpenFileByPathControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ItemsSelectedHandler, ViewActivatedHandler
 {
 
    private final static String ID = "File/Open File By Path...";
@@ -52,8 +59,10 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
 
    private VirtualFileSystemInfo vfsInfo;
 
+   private boolean navigatorSelected;
+
    /**
-    * 
+    * Creates a new instance of this control.
     */
    public OpenFileByPathControl()
    {
@@ -74,6 +83,7 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -87,11 +97,11 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * 
+    * Updates enabling state of control.
     */
    private void updateEnabling()
    {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0);
+      setEnabled(vfsInfo != null && navigatorSelected && selectedItems.size() > 0);
    }
 
    /**
@@ -101,6 +111,18 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      updateEnabling();
+   }
+
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      View activeView = event.getView();
+
+      navigatorSelected =
+         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
+            || activeView instanceof ProjectExplorerPresenter.Display;
+
       updateEnabling();
    }
 

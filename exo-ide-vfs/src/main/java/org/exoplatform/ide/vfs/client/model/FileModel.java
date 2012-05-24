@@ -161,7 +161,8 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
 
    public boolean isLocked()
    {
-      return lock != null;
+      //IDE-1329
+      return locked; //lock != null;
    }
 
    /**

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,13 +29,19 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 /* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -43,12 +49,14 @@ import com.google.gwt.resources.client.ImageResource;
  */
 @RolesAllowed({"administrators", "developers"})
 public class NewFileControl extends SimpleControl implements IDEControl, ViewVisibilityChangedHandler,
-   VfsChangedHandler, ItemsSelectedHandler
+   VfsChangedHandler, ItemsSelectedHandler, ViewActivatedHandler
 {
 
    private VirtualFileSystemInfo vfsInfo;
 
    private List<Item> selectedItems = new ArrayList<Item>();
+
+   private boolean navigatorSelected;
 
    /**
     * @param id
@@ -95,6 +103,7 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
       setVisible(true);
       updateEnabling();
@@ -105,7 +114,7 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
     */
    protected void updateEnabling()
    {
-      if (vfsInfo == null)
+      if (vfsInfo == null || !navigatorSelected)
       {
          setEnabled(false);
          return;
@@ -150,6 +159,21 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
+      updateEnabling();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      View activeView = event.getView();
+
+      navigatorSelected =
+         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
+            || activeView instanceof ProjectExplorerPresenter.Display;
+
       updateEnabling();
    }
 

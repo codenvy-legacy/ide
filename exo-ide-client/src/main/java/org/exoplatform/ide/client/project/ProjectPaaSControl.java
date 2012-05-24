@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -39,7 +40,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, FolderRefreshedHandler
 {
-   
+
    public static final String ID = "Project/PaaS";
 
    private static final String TITLE = "PaaS";
@@ -99,7 +100,8 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
       return project.getPropertyValue("cloudbees-application") != null
          || project.getPropertyValue("heroku-application") != null
          || project.getPropertyValue("openshift-express-application") != null
-         || project.getPropertyValue("cloudfoundry-application") != null;
+         || project.getPropertyValue("cloudfoundry-application") != null
+         || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType());
    }
 
    /**

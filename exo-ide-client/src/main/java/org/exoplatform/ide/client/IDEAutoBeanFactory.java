@@ -46,7 +46,7 @@ public interface IDEAutoBeanFactory extends AutoBeanFactory
     * 
     * @return an {@link AutoBean} of type {@link LockToken}
     */
-//   AutoBean<LockToken> lockToken();
+   AutoBean<LockToken> lockToken();
 
    /**
     * A factory method for a information about user bean.

@@ -164,7 +164,7 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-vfs-jcr</artifactId>
             </dependency>
-            
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-jdt-core</artifactId>
@@ -255,8 +255,8 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-java</artifactId>
             </dependency>
-            
-             <dependency>
+
+            <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-java-debug</artifactId>
             </dependency>
@@ -330,6 +330,11 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-samples</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-googleappengine</artifactId>
             </dependency>
 
             <dependency>
@@ -568,6 +573,13 @@
                <scope>system</scope>
                <systemPath>${java.home}/../lib/tools.jar</systemPath>
             </dependency-->
+
+            <dependency>
+               <groupId>com.google.appengine</groupId>
+               <artifactId>appengine-tools-sdk</artifactId>
+               <version>1.6.5</version>
+               <scope>provided</scope>
+            </dependency>
          </dependencies>
          <build>
             <plugins>
@@ -575,7 +587,7 @@
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-dependency-plugin</artifactId>
                   <executions>
-                    <execution>
+                     <execution>
                         <id>copy-lucene-autocomplite-index</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -594,8 +606,8 @@
                            <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                      </execution>
-                     </executions>
-                </plugin>
+                  </executions>
+               </plugin>
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-resources-plugin</artifactId>
@@ -650,7 +662,7 @@
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <!-- <port>${gwt.port}</port> -->
-                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git  -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
 

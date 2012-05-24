@@ -808,9 +808,11 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			return;
 		}
 
-		if (text === "") {
-			text = "\n"; // fix error with initial cursor position and size (WBT-324)
-		}
+      if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::CHROME) {
+         if (text === "") {
+            text = "\n"; // fix error with initial cursor position and size (WBT-324)
+         }
+      }
 		editor.setCode(text);
 		editor.focus();
    }-*/;
