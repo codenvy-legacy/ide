@@ -19,21 +19,18 @@
 package org.exoplatform.ide.client.operation.uploadfile;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
@@ -46,15 +43,15 @@ import java.util.List;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class UploadFileControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewActivatedHandler,
-   VfsChangedHandler
+public class UploadFileControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   ViewVisibilityChangedHandler, VfsChangedHandler
 {
 
    private final static String ID = "File/Upload File...";
 
    private final static String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.uploadFileControl();
 
-   private boolean browserPanelSelected;
+   private boolean browserPanelSelected = true;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -79,7 +76,7 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
    public void initialize()
    {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
@@ -132,18 +129,16 @@ public class UploadFileControl extends SimpleControl implements IDEControl, Item
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
     */
    @Override
-   public void onViewActivated(ViewActivatedEvent event)
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      View activeView = event.getView();
-
-      browserPanelSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
-            || activeView instanceof ProjectExplorerPresenter.Display;
-
-      updateEnabling();
+      if (event.getView() instanceof NavigatorDisplay)
+      {
+         browserPanelSelected = event.getView().isViewVisible();
+         updateEnabling();
+      }
    }
 
 }

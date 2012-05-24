@@ -6048,7 +6048,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testRemoveDeadCodeConditional() throws Exception
    {
       HashMap<String, String> options = JdtExtension.get().getOptions();

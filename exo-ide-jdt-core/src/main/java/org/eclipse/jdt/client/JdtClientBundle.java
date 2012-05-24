@@ -51,6 +51,24 @@ public interface JdtClientBundle extends ClientBundle
    @Source("org/eclipse/jdt/images/controls/format_Disabled.png")
    ImageResource formatterProfilesDisabled();
 
+   @Source("org/eclipse/jdt/images/controls/imports.png")
+   ImageResource organizeImports();
+
+   @Source("org/eclipse/jdt/images/controls/imports_Disabled.png")
+   ImageResource organizeImportsDisabled();
+
+   @Source("org/eclipse/jdt/images/controls/quick_fix.png")
+   ImageResource quickFix();
+
+   @Source("org/eclipse/jdt/images/controls/quick_fix_Disabled.png")
+   ImageResource quickFixDisabled();
+
+   @Source("org/eclipse/jdt/images/controls/quick_outline.png")
+   ImageResource quickOutline();
+
+   @Source("org/eclipse/jdt/images/controls/quick_outline_Disabled.png")
+   ImageResource quickOutlineDisabled();
+
    @Source("org/eclipse/jdt/client/internal/text/correction/proposals/correction_change.gif")
    ImageResource correction_change();
 

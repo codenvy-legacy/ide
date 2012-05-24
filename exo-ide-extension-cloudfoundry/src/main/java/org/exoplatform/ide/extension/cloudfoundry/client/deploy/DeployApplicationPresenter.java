@@ -203,7 +203,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, true, vfs.getId(),
+         // Application will be started after creation (IDE-1618)
+         CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, false, vfs.getId(),
             project.getId(), warUrl,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, createAppHandler, null, server)
             {
@@ -212,6 +213,17 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                {
                   warUrl = null;
                   String msg = lb.applicationCreatedSuccessfully(result.getName());
+                  if ("STARTED".equals(result.getState()))
+                  {
+                     if (result.getUris().isEmpty())
+                     {
+                        msg += "<br>" + lb.applicationStartedWithNoUrls();
+                     }
+                     else
+                     {
+                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
+                     }
+                  }
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
@@ -228,6 +240,31 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Returns application URLs as string.
+    * 
+    * @param application {@link CloudFoundryApplication Cloud Foundry application}
+    * @return application URLs
+    */
+   private String getAppUrlsAsString(CloudFoundryApplication application)
+   {
+      String appUris = "";
+      for (String uri : application.getUris())
+      {
+         if (!uri.startsWith("http"))
+         {
+            uri = "http://" + uri;
+         }
+         appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
+      }
+      if (!appUris.isEmpty())
+      {
+         // crop unnecessary symbols
+         appUris = appUris.substring(2);
+      }
+      return appUris;
    }
 
    /**
@@ -353,9 +390,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                         return;
                      }
                   }
-
                   createApplication();
-
                }
 
                @Override

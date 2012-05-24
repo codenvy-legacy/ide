@@ -26,12 +26,6 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -44,8 +38,7 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
-   ViewActivatedHandler
+public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
 
    enum Type {
@@ -66,10 +59,8 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
 
    private boolean downloadZip;
 
-   private boolean navigatorSelected;
-
    /**
-    * Creates new instance of this control.
+    * 
     */
    public DownloadItemControl(boolean downloadZip)
    {
@@ -100,14 +91,12 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    public void initialize()
    {
       setVisible(true);
-
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    private boolean isApplicableFor(Item item)
    {
-      if (downloadZip && navigatorSelected && (item instanceof FolderModel || item instanceof ProjectModel))
+      if (downloadZip && (item instanceof FolderModel || item instanceof ProjectModel))
       {
          return true;
       }
@@ -133,21 +122,6 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
       {
          setEnabled(false);
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
-    */
-   @Override
-   public void onViewActivated(ViewActivatedEvent event)
-   {
-      View activeView = event.getView();
-
-      navigatorSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay
-            || activeView instanceof ProjectExplorerPresenter.Display;
-
-      setEnabled(navigatorSelected);
    }
 
 }

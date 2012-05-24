@@ -18,6 +18,7 @@
  */
 package org.eclipse.jdt.client.outline;
 
+import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.event.ShowQuickOutlineEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -44,6 +45,7 @@ public class ShowQuickOutlineControl extends SimpleControl implements IDEControl
       setPrompt("Show Quick Outline");
       setHotKey("Ctrl+O");
       setEvent(new ShowQuickOutlineEvent());
+      setImages(JdtClientBundle.INSTANCE.quickOutline(), JdtClientBundle.INSTANCE.quickOutlineDisabled());
    }
 
    /**
