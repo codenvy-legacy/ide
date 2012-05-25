@@ -69,6 +69,8 @@ public class VirtualFileSystem
    private VirtualFileSystemInfo info;
 
    private Loader loader;
+   
+   private Loader emptyLoader = new EmptyLoader();
 
    public static VirtualFileSystem getInstance()
    {
@@ -97,7 +99,7 @@ public class VirtualFileSystem
 
       this.workspaceURL = workspaceURL;
       this.info = info;
-      this.loader = (loader == null) ? new EmptyLoader() : loader;
+      this.loader = (loader == null) ? emptyLoader : loader;
    }
 
    /**
@@ -138,9 +140,8 @@ public class VirtualFileSystem
    public void getChildren(Folder folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
       String param = "propertyFilter=" + PropertyFilter.ALL;
-      loader.setMessage("Loading content...");
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
-         .loader(loader).send(callback);
+         .loader(emptyLoader).send(callback);
    }
    
    /**
@@ -151,9 +152,8 @@ public class VirtualFileSystem
    public void getChildren(Folder folder, ItemType itemType, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
       String param = "propertyFilter=" + PropertyFilter.ALL+"& itemType=" + itemType.name();
-      loader.setMessage("Loading content...");
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
-         .loader(loader).send(callback);
+         .loader(emptyLoader).send(callback);
    }
 
    /**
@@ -384,8 +384,7 @@ public class VirtualFileSystem
          path = path.substring(1);
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
-      loader.setMessage("Loading data...");
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
    }
 
    /**
@@ -399,8 +398,7 @@ public class VirtualFileSystem
    {
       String url = info.getUrlTemplates().get((Link.REL_ITEM)).getHref();
       url = URL.decode(url).replace("[id]", id);
-      loader.setMessage("Loading data...");
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
    }
 
    /**

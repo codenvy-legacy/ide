@@ -29,8 +29,6 @@ import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 import org.codehaus.plexus.util.cli.StreamPumper;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -46,9 +44,15 @@ public class MavenInvoker extends DefaultInvoker
    private final Queue<Runnable> postBuildTasks;
 
    private long timeout;
+   private final ResultGetter resultGetter;
 
-   public MavenInvoker()
+   public MavenInvoker(ResultGetter resultGetter)
    {
+      if (resultGetter == null)
+      {
+         throw new IllegalArgumentException("ResultGetter may not be null. ");
+      }
+      this.resultGetter = resultGetter;
       this.preBuildTasks = new LinkedList<Runnable>();
       this.postBuildTasks = new LinkedList<Runnable>();
    }
@@ -109,20 +113,7 @@ public class MavenInvoker extends DefaultInvoker
          postBuildTasks.poll().run();
       }
 
-      File[] result = null;
-      if (0 == exitCode)
-      {
-         final File target = new File(request.getBaseDirectory(), "target");
-         result = target.listFiles(new FilenameFilter()
-         {
-            public boolean accept(File parent, String name)
-            {
-               return name.endsWith(".war");
-            }
-         });
-      }
-
-      return new InvocationResultImpl(exitCode, cle, result);
+      return new InvocationResultImpl(exitCode, cle, request.getBaseDirectory(), resultGetter);
    }
 
    private int executeCommandLine(Commandline cl, StreamConsumer out, StreamConsumer err) throws CommandLineException
@@ -200,7 +191,8 @@ public class MavenInvoker extends DefaultInvoker
     * Add task that should be invoked before start the maven build. All tasks should be added before call method {@link
     * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
     *
-    * @param task the pre build task
+    * @param task
+    *    the pre build task
     * @return this instance
     */
    public MavenInvoker addPreBuildTask(Runnable task)
@@ -213,7 +205,8 @@ public class MavenInvoker extends DefaultInvoker
     * Add task that should be invoked after the maven build. All tasks should be added before call method {@link
     * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
     *
-    * @param task the post build task
+    * @param task
+    *    the post build task
     * @return this instance
     */
    public MavenInvoker addPostBuildTask(Runnable task)
@@ -226,7 +219,8 @@ public class MavenInvoker extends DefaultInvoker
     * Set build timeout in milliseconds.  It should be setup before call method {@link
     * #execute(org.apache.maven.shared.invoker.InvocationRequest)}.
     *
-    * @param timeout the timeout in milliseconds
+    * @param timeout
+    *    the timeout in milliseconds
     * @return this instance
     */
    public MavenInvoker setTimeout(long timeout)
@@ -253,8 +247,10 @@ public class MavenInvoker extends DefaultInvoker
 
    /**
     * Maven build watcher. It controls the time of build and if time if greater than timeout
-    * (see {@link MavenInvoker#setTimeout(long)}) Watcher terminate such build. Watcher should not be used for terminate
-    * tasks that runs separate java processes, e.g. <code>mvn jetty:run</code>. Process that runs Jetty server may not be terminated
+    * (see {@link MavenInvoker#setTimeout(long)}) Watcher terminate such build. Watcher should not be used for
+    * terminate
+    * tasks that runs separate java processes, e.g. <code>mvn jetty:run</code>. Process that runs Jetty server may not
+    * be terminated
     * by this Watcher. Such process must be terminated by correspond command, e.g. <code>mvn jetty:stop</code>
     */
    private static final class Watcher implements Runnable

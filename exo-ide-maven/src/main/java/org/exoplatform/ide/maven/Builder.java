@@ -21,7 +21,6 @@ package org.exoplatform.ide.maven;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -69,7 +68,35 @@ public class Builder
    @Consumes("application/zip")
    public Response build(@Context UriInfo uriInfo, InputStream data) throws IOException
    {
-      MavenBuildTask task = tasks.add(data);
+      MavenBuildTask task = tasks.build(data);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+      return Response
+         .status(202)
+         .location(location)
+         .entity(location.toString())
+         .type(MediaType.TEXT_PLAIN).build();
+   }
+
+   @POST
+   @Path("dependencies/list")
+   @Consumes("application/zip")
+   public Response dependenciesList(@Context UriInfo uriInfo, InputStream data) throws IOException
+   {
+      MavenBuildTask task = tasks.dependenciesList(data);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+      return Response
+         .status(202)
+         .location(location)
+         .entity(location.toString())
+         .type(MediaType.TEXT_PLAIN).build();
+   }
+
+   @POST
+   @Path("dependencies/copy")
+   @Consumes("application/zip")
+   public Response dependenciesCopy(@Context UriInfo uriInfo, InputStream data) throws IOException
+   {
+      MavenBuildTask task = tasks.dependenciesCopy(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
       return Response
          .status(202)
@@ -89,7 +116,7 @@ public class Builder
          {
             try
             {
-               InvocationResultImpl result = task.getResult();
+               InvocationResultImpl result = task.getInvocationResult();
                if (0 == result.getExitCode())
                {
                   return Response
@@ -128,7 +155,7 @@ public class Builder
       // Incorrect task ID.
       throw new WebApplicationException(Response
          .status(404)
-         .entity("Build " + buildID + " not found. ")
+         .entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 
@@ -142,7 +169,7 @@ public class Builder
          // Incorrect task ID.
          throw new WebApplicationException(Response
             .status(404)
-            .entity("Build " + buildID + " not found. ")
+            .entity("Job " + buildID + " not found. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
    }
@@ -159,7 +186,7 @@ public class Builder
       // Incorrect task ID.
       throw new WebApplicationException(Response
          .status(404)
-         .entity("Build " + buildID + " not found. ")
+         .entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 
@@ -174,22 +201,33 @@ public class Builder
          {
             try
             {
-               InvocationResultImpl result = task.getResult();
-               if (0 == result.getExitCode())
+               InvocationResultImpl invocationResult = task.getInvocationResult();
+               if (0 == invocationResult.getExitCode())
                {
-                  File artifact = result.getArtifacts()[0];
-                  return Response.ok(artifact, "application/zip")
-                     .header("Content-Disposition", "attachment; filename=\"" + artifact.getName() + "\"")
-                     .build();
+                  Result result = invocationResult.getResult();
+                  if (result != null)
+                  {
+                     Response.ResponseBuilder builder = Response.ok(result.getStream(), result.getMediaType());
+                     String fileName = result.getFileName();
+                     if (fileName != null)
+                     {
+                        builder.header("Content-Disposition", "attachment; filename=\"" + fileName + '"');
+                     }
+                     return builder.build();
+                  }
                }
 
-               // Build is failed - nothing for download.
+               // Job is failed - nothing for download.
                throw new WebApplicationException(Response
                   .status(404)
-                  .entity("Build failed. There is no artifact for download. ")
+                  .entity("Job failed. There is nothing for download. ")
                   .type(MediaType.TEXT_PLAIN).build());
             }
             catch (MavenInvocationException e)
+            {
+               throw new WebApplicationException(e);
+            }
+            catch (IOException e)
             {
                throw new WebApplicationException(e);
             }
@@ -205,7 +243,7 @@ public class Builder
       // Incorrect task ID.
       throw new WebApplicationException(Response
          .status(404)
-         .entity("Build " + buildID + " not found. ")
+         .entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 }

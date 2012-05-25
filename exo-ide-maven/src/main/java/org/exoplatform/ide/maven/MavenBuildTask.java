@@ -86,9 +86,10 @@ public class MavenBuildTask
     * Get result of maven build.
     *
     * @return result of maven build. <b>NOTE</b> If build is not finished yet this method returns <code>null</code>
-    * @throws MavenInvocationException if maven task cannot be run because to incorrect input parameters
+    * @throws MavenInvocationException
+    *    if maven task cannot be run because to incorrect input parameters
     */
-   public InvocationResultImpl getResult() throws MavenInvocationException
+   public InvocationResultImpl getInvocationResult() throws MavenInvocationException
    {
       if (f.isDone())
       {
@@ -116,7 +117,7 @@ public class MavenBuildTask
          }
          catch (CancellationException ce)
          {
-            throw new MavenInvocationException("Build " + id + " was cancelled. ");
+            throw new MavenInvocationException("Job " + id + " was cancelled. ");
          }
       }
       return null;

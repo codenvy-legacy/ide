@@ -37,12 +37,6 @@ public class BuilderBootstrap implements ServletContextListener
       Map<String, Object> config = new HashMap<String, Object>();
       ServletContext ctx = sce.getServletContext();
 
-      String goals = ctx.getInitParameter(BuildService.BUILDER_MAVEN_GOALS);
-      if (goals != null)
-      {
-         config.put(BuildService.BUILDER_MAVEN_GOALS, goals.split(","));
-      }
-
       config.put(BuildService.BUILDER_REPOSITORY, ctx.getInitParameter(BuildService.BUILDER_REPOSITORY));
 
       config.put(BuildService.BUILDER_TIMEOUT, getNumber(ctx.getInitParameter(BuildService.BUILDER_TIMEOUT)));

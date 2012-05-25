@@ -106,6 +106,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
       eventBus.addHandler(LineNumberContextMenuEvent.TYPE, this);
+      eventBus.addHandler(BreakPointsUpdatedEvent.TYPE, this);
    }
 
    /**
@@ -342,16 +343,22 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       return fileWithBreakPoints;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler#onBreakPointsUpdated(org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent)
+    */
    @Override
    public void onBreakPointsUpdated(BreakPointsUpdatedEvent event)
    {
-      if (breakPoints.containsKey(file.getId()))
+      if (event.getBreakPoints().isEmpty())
       {
-         for (EditorBreakPoint p : breakPoints.get(file.getId()))
+         if (breakPoints.containsKey(file.getId()))
          {
-            markable.unmarkProblem(p);
+            for (EditorBreakPoint p : breakPoints.get(file.getId()))
+            {
+               markable.unmarkProblem(p);
+            }
+            breakPoints.get(file.getId()).clear();
          }
-         breakPoints.get(file.getId()).clear();
       }
    }
 

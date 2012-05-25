@@ -22,6 +22,7 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -31,13 +32,18 @@ public class InvocationResultImpl implements InvocationResult
 {
    private final int exitCode;
    private final CommandLineException cle;
-   private final File[] artifacts;
+   private final File projectDirectory;
+   private final ResultGetter resultGetter;
 
-   public InvocationResultImpl(int exitCode, CommandLineException cle, File... artifacts)
+   public InvocationResultImpl(int exitCode,
+                               CommandLineException cle,
+                               File projectDirectory,
+                               ResultGetter resultGetter)
    {
       this.exitCode = exitCode;
       this.cle = cle;
-      this.artifacts = artifacts;
+      this.projectDirectory = projectDirectory;
+      this.resultGetter = resultGetter;
    }
 
    /** @see org.apache.maven.shared.invoker.InvocationResult#getExitCode() */
@@ -55,12 +61,12 @@ public class InvocationResultImpl implements InvocationResult
    /**
     * Result of maven build.
     *
-    * @return maven build result. Typically array has just one artifact. May be <code>null</code> or empty if build is
-    *         failed. If build is successful (<code>exitCode == 0</code>) then array may not be <code>null</code> or
-    *         empty.
+    * @return maven build result (typically artifact). May be <code>null</code> if build is failed. If build is
+    *         successful (<code>exitCode == 0</code>) then may not be <code>null</code>.
     */
-   public File[] getArtifacts()
+   public Result getResult() throws IOException
    {
-      return artifacts;
+      return 0 == exitCode ? resultGetter.getResult(projectDirectory) : null;
    }
+
 }
