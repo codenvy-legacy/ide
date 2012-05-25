@@ -31,21 +31,34 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
+import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:51:08 PM anya $
  * 
  */
-public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements DeployApplicationHandler
+public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements DeployApplicationHandler,
+   ProjectBuiltHandler
 {
+   private String email;
+
+   private String password;
+
+   private LoggedInHandler loggedInHandler;
+
    private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
    {
 
       @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
+      public void onPerformOperation(String e, String p, LoggedInHandler handler)
       {
-         deployApplication(email, password, loggedInHandler);
+         email = e;
+         password = p;
+         loggedInHandler = handler;
+         buildProject();
       }
    };
 
@@ -64,16 +77,19 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    {
       if (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
       {
-         deployApplication(null, null, null);
+         email = null;
+         password = null;
+         loggedInHandler = null;
+         buildProject();
       }
    }
 
-   public void deployApplication(String email, String password, final LoggedInHandler loggedInHandler)
+   public void deployApplication(String binUrl)
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, null, email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, null, email, password,
+            new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
             {
 
                @Override
@@ -91,6 +107,25 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void buildProject()
+   {
+      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+      IDE.fireEvent(new BuildProjectEvent());
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
+    */
+   @Override
+   public void onProjectBuilt(ProjectBuiltEvent event)
+   {
+      IDE.removeHandler(ProjectBuiltEvent.TYPE, this);
+      if (event.getBuildStatus().getDownloadUrl() != null)
+      {
+         deployApplication(event.getBuildStatus().getDownloadUrl());
       }
    }
 }
