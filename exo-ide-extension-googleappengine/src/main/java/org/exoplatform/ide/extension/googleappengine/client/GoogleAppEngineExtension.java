@@ -26,11 +26,13 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.queues.QueuesHandler;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
 
 /**
@@ -65,6 +67,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new LogsPresenter();
       new PageSpeedHandler();
       new UpdateIndexesHandlerImpl();
+      new QueuesHandler();
+      new DosHandler();
    }
 
    /**

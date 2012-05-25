@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -156,4 +157,11 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link List} of selected projects
     */
    List<ProjectModel> getSelectedProjects();
+   
+   /**
+    * Used for change folder icon(set loader gif animation) while loading folder children's
+    * @param folder to change icon
+    * @param isOpens <code>true</code> if request is send, <code>false</code> if children received
+    */
+   void changeFolderIcon(Folder folder, boolean isOpens);
 }

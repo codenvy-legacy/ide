@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -143,6 +144,8 @@ public class GitClientServiceImpl extends GitClientService
     * Loader to be displayed.
     */
    private Loader loader;
+   
+   private Loader emptyLoader = new EmptyLoader();
 
    /**
     * @param eventBus eventBus
@@ -335,7 +338,7 @@ public class GitClientServiceImpl extends GitClientService
 
       String params = "vfsid=" + vfsId + "&projectid=" + projectid;
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader).data(marshaller.marshal())
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(emptyLoader).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }

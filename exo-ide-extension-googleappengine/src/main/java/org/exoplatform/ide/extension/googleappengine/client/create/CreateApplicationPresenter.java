@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.user.client.ui.HasValue;
 
 import com.google.gwt.core.client.GWT;
@@ -77,6 +79,8 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    }
 
    private Display display;
+   
+   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com";
 
    public CreateApplicationPresenter()
    {
@@ -127,12 +131,13 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      if (display == null)
+      Window.open(GOOGLE_APP_ENGINE_URL, "_blank", null);
+    /*  if (display == null)
       {
          display = GWT.create(Display.class);
          bindDisplay();
          IDE.getInstance().openView(display.asView());
-      }
+      }*/
    }
 
    /**

@@ -165,7 +165,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private ApplicationSettings applicationSettings;
 
    private boolean ideLoadComplete = false;
-
+   
    public TinyProjectExplorerPresenter()
    {
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
@@ -446,9 +446,12 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       final Folder folder = foldersToRefresh.get(0);
+      //remove folder hear to open sever folder simultaneously
+      foldersToRefresh.remove(folder);
       refreshFolderProperties(folder);
       try
       {
+         display.changeFolderIcon(folder, true);
          VirtualFileSystem.getInstance().getChildren(folder,
             new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
@@ -476,6 +479,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private void folderContentReceived(Folder folder, List<Item> result)
    {
+//      loader.hide();
       for (Item i : result)
       {
          if (i instanceof ItemContext)
@@ -498,7 +502,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       IDE.fireEvent(new FolderRefreshedEvent(folder));
-      foldersToRefresh.remove(folder);
 
       // TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
@@ -508,6 +511,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
+      display.changeFolderIcon(folder, false);
       //display.asView().setViewVisible();
 
       refreshNextFolder();
