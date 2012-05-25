@@ -72,20 +72,75 @@ public class BuilderClient
    }
 
    /**
-    * Send request to start new build at remote build server. Build may be started immediately or add in build queue.
+    * Send request to start collect list of dependencies. Process may be started immediately or add in queue.
     *
-    * @param vfs virtual file system
-    * @param projectId identifier of project we want to send for build
+    * @param vfs
+    *    virtual file system
+    * @param projectId
+    *    identifier of project we want to send for collect dependencies
     * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException if build request was rejected by remote build server
-    * @throws VirtualFileSystemException if any error in VFS
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    if build request was rejected by remote build server
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
     */
-   public String build(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException, VirtualFileSystemException
+   public String dependenciesList(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+      VirtualFileSystemException
    {
-      ContentStream zippedProject = vfs.exportZip(projectId);
+      URL url = new URL(baseURL + "/builder/maven/dependencies/list");
+      return run(url, vfs.exportZip(projectId));
+   }
 
+   /**
+    * Send request to start collect project dependencies and add them in zip archive. Process may be started immediately
+    * or add in queue.
+    *
+    * @param vfs
+    *    virtual file system
+    * @param projectId
+    *    identifier of project we want to send for collect dependencies
+    * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    if build request was rejected by remote build server
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
+    */
+   public String dependenciesCopy(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+      VirtualFileSystemException
+   {
+      URL url = new URL(baseURL + "/builder/maven/dependencies/copy");
+      return run(url, vfs.exportZip(projectId));
+   }
+
+   /**
+    * Send request to start new build at remote build server. Build may be started immediately or add in queue.
+    *
+    * @param vfs
+    *    virtual file system
+    * @param projectId
+    *    identifier of project we want to send for build
+    * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    if build request was rejected by remote build server
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
+    */
+   public String build(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+      VirtualFileSystemException
+   {
       URL url = new URL(baseURL + "/builder/maven/build");
+      return run(url, vfs.exportZip(projectId));
+   }
+
+   private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,
+      VirtualFileSystemException
+   {
       HttpURLConnection http = null;
       try
       {
@@ -138,11 +193,14 @@ public class BuilderClient
    /**
     * Check status of build.
     *
-    * @param buildID ID of build need to check
+    * @param buildID
+    *    ID of build need to check
     * @return string that contains description of current status of build in JSON format. Do nothing with such string
     *         just re-send result to client
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     */
    public String status(String buildID) throws IOException, BuilderException
    {
@@ -181,9 +239,12 @@ public class BuilderClient
    /**
     * Cancel build.
     *
-    * @param buildID ID of build to be canceled
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @param buildID
+    *    ID of build to be canceled
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     */
    public void cancel(String buildID) throws IOException, BuilderException
    {
@@ -212,10 +273,13 @@ public class BuilderClient
    /**
     * Read log of build.
     *
-    * @param buildID ID of build
+    * @param buildID
+    *    ID of build
     * @return stream that contains build log
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     */
    public InputStream log(String buildID) throws IOException, BuilderException
    {
@@ -260,8 +324,10 @@ public class BuilderClient
     * Add authentication info to the request. By default do nothing. May be reimplemented for particular authentication
     * scheme.
     *
-    * @param http HTTP connection to add authentication info, e.g. Basic authentication headers.
-    * @throws IOException if any i/o errors occur
+    * @param http
+    *    HTTP connection to add authentication info, e.g. Basic authentication headers.
+    * @throws IOException
+    *    if any i/o errors occur
     */
    protected void authenticate(HttpURLConnection http) throws IOException
    {

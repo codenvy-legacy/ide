@@ -22,14 +22,23 @@ import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -44,6 +53,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.exoplatform.ide.maven.BuildHelper.delete;
 import static org.exoplatform.ide.maven.BuildHelper.makeBuilderFilesFilter;
@@ -61,13 +72,6 @@ public class BuildService
     * Is such parameter is not specified then 'java.io.tmpdir' used.
     */
    public static final String BUILDER_REPOSITORY = "builder.repository";
-
-   /**
-    * Name of configuration parameter that provides maven build goals.
-    *
-    * @see #DEFAULT_BUILDER_MAVEN_GOALS
-    */
-   public static final String BUILDER_MAVEN_GOALS = "builder.maven.goals";
 
    /**
     * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
@@ -111,8 +115,14 @@ public class BuildService
     */
    public static final int DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME = 60;
 
-   /** Default maven build goals 'test package'. */
-   public static final String[] DEFAULT_BUILDER_MAVEN_GOALS = new String[]{"test", "package"};
+   /** Maven build goals 'test package'. */
+   private static final String[] BUILD_GOALS = new String[]{"test", "package"};
+
+   /** Maven list dependencies goals 'dependency:list'. */
+   private static final String[] DEPENDENCIES_LIST_GOALS = new String[]{"dependency:list"};
+
+   /** Maven copy dependencies goals 'dependency:copy-dependencies'. */
+   private static final String[] DEPENDENCIES_COPY_GOALS = new String[]{"dependency:copy-dependencies"};
 
    /** Build task ID generator. */
    private static final AtomicLong idGenerator = new AtomicLong(1);
@@ -132,34 +142,36 @@ public class BuildService
    private final Queue<File> cleanerQueue;
 
    private final File repository;
-   private final String[] goals;
    private final long timeoutMillis;
    private final long cleanBuildResultDelayMillis;
 
    public BuildService(Map<String, Object> config)
    {
       this(
-         (String)getOption(config, BUILDER_REPOSITORY, System.getProperty("java.io.tmpdir")),
-         (String[])getOption(config, BUILDER_MAVEN_GOALS, DEFAULT_BUILDER_MAVEN_GOALS),
-         (Integer)getOption(config, BUILDER_TIMEOUT, DEFAULT_BUILDER_TIMEOUT),
-         (Integer)getOption(config, BUILDER_WORKERS_NUMBER, Runtime.getRuntime().availableProcessors()),
-         (Integer)getOption(config, BUILDER_QUEUE_SIZE, DEFAULT_BUILDER_QUEUE_SIZE),
-         (Integer)getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME)
+         getOption(config, BUILDER_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")),
+         getOption(config, BUILDER_TIMEOUT, Integer.class, DEFAULT_BUILDER_TIMEOUT),
+         getOption(config, BUILDER_WORKERS_NUMBER, Integer.class, Runtime.getRuntime().availableProcessors()),
+         getOption(config, BUILDER_QUEUE_SIZE, Integer.class, DEFAULT_BUILDER_QUEUE_SIZE),
+         getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, Integer.class, DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME)
       );
    }
 
    /**
-    * @param repository the repository for build
-    * @param goals the maven build goals
-    * @param timeout the build timeout in seconds
-    * @param workerNumber the number of build workers
-    * @param buildQueueSize the max size of build queue. If this number reached then all new build request rejected
-    * @param cleanBuildResultDelay the time of keeping the results of build in minutes. After this time result of build
-    * (both artifact and logs) may be removed.
+    * @param repository
+    *    the repository for build
+    *    //    * @param goals the maven build goals
+    * @param timeout
+    *    the build timeout in seconds
+    * @param workerNumber
+    *    the number of build workers
+    * @param buildQueueSize
+    *    the max size of build queue. If this number reached then all new build request rejected
+    * @param cleanBuildResultDelay
+    *    the time of keeping the results of build in minutes. After this time result of build
+    *    (both artifact and logs) may be removed.
     */
    protected BuildService(
       String repository,
-      String[] goals,
       int timeout,
       int workerNumber,
       int buildQueueSize,
@@ -168,10 +180,6 @@ public class BuildService
       if (repository == null || repository.isEmpty())
       {
          throw new IllegalArgumentException("Build repository may not be null or empty string. ");
-      }
-      if (goals == null || goals.length == 0)
-      {
-         throw new IllegalArgumentException("Maven build goals may not be null or empty. ");
       }
       if (workerNumber <= 0)
       {
@@ -187,7 +195,6 @@ public class BuildService
       }
 
       this.repository = new File(repository);
-      this.goals = goals;
       this.timeoutMillis = timeout * 1000; // to milliseconds
       this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
 
@@ -210,12 +217,12 @@ public class BuildService
          new ManyBuildTasksPolicy(new ThreadPoolExecutor.AbortPolicy()));
    }
 
-   private static Object getOption(Map<String, Object> config, String option, Object defaultValue)
+   private static <O> O getOption(Map<String, Object> config, String option, Class<O> type, O defaultValue)
    {
       if (config != null)
       {
          Object value = config.get(option);
-         return value != null ? value : defaultValue;
+         return value != null ? type.cast(value) : defaultValue;
       }
       return defaultValue;
    }
@@ -223,26 +230,108 @@ public class BuildService
    /**
     * Start new build.
     *
-    * @param data the zipped of source code for build
+    * @param data
+    *    the zipped maven project for build
     * @return build task
-    * @throws java.io.IOException if i/o error occur when try to unzip project
+    * @throws java.io.IOException
+    *    if i/o error occur when try to unzip project
     */
-   public MavenBuildTask add(final InputStream data) throws IOException
+   public MavenBuildTask build(InputStream data) throws IOException
    {
+      return addTask(makeProject(data),
+         BUILD_GOALS,
+         null,
+         Collections.<Runnable>emptyList(),
+         Collections.<Runnable>emptyList(),
+         WAR_FILE_GETTER);
+   }
+
+   /**
+    * Get list of dependencies of project in JSON format. It the same as run command:
+    * <pre>
+    *    mvn dependency:list
+    * </pre>
+    *
+    * @param data
+    *    the zipped maven project
+    * @return build task
+    * @throws java.io.IOException
+    *    if i/o error occur when try to unzip project
+    */
+   public MavenBuildTask dependenciesList(InputStream data) throws IOException
+   {
+      File projectDirectory = makeProject(data);
+      Properties properties = new Properties();
+      // Save result in file.
+      properties.put("outputFile", projectDirectory.getAbsolutePath() + "/dependencies.txt");
+      return addTask(projectDirectory,
+         DEPENDENCIES_LIST_GOALS,
+         properties,
+         Collections.<Runnable>emptyList(),
+         Collections.<Runnable>emptyList(),
+         DEPENDENCIES_LIST_GETTER);
+   }
+
+   /**
+    * Get copy of all dependencies of project in zip. It the same as run command:
+    * <pre>
+    *    mvn dependency:copy-dependencies
+    * </pre>
+    *
+    * @param data
+    *    the zipped maven project
+    * @return build task
+    * @throws java.io.IOException
+    *    if i/o error occur when try to unzip project
+    */
+   public MavenBuildTask dependenciesCopy(InputStream data) throws IOException
+   {
+      return addTask(makeProject(data),
+         DEPENDENCIES_COPY_GOALS,
+         null,
+         Collections.<Runnable>emptyList(),
+         Collections.<Runnable>emptyList(),
+         COPY_DEPENDENCIES_GETTER);
+   }
+
+   private File makeProject(InputStream data) throws IOException
+   {
+      File projectDirectory = BuildHelper.makeProjectDirectory(repository);
+      BuildHelper.unzip(data, projectDirectory);
+      return projectDirectory;
+   }
+
+   private MavenBuildTask addTask(File projectDirectory,
+                                  String[] goals,
+                                  Properties properties,
+                                  List<Runnable> preBuildTasks,
+                                  List<Runnable> postBuildTasks,
+                                  ResultGetter resultGetter) throws IOException
+   {
+      final MavenInvoker invoker = new MavenInvoker(resultGetter).setTimeout(timeoutMillis);
+
+      for (Runnable r : preBuildTasks)
+      {
+         invoker.addPreBuildTask(r);
+      }
+
+      for (Runnable r : postBuildTasks)
+      {
+         invoker.addPostBuildTask(r);
+      }
+
       List<String> theGoals = new ArrayList<String>(goals.length);
       Collections.addAll(theGoals, goals);
 
-      File projectDirectory = BuildHelper.makeProjectDirectory(repository);
-      BuildHelper.unzip(data, projectDirectory);
       File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
       TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
-      final MavenInvoker invoker = new MavenInvoker().setTimeout(timeoutMillis);
       final InvocationRequest request = new DefaultInvocationRequest()
          .setBaseDirectory(projectDirectory)
          .setGoals(theGoals)
          .setOutputHandler(taskLogger)
-         .setErrorHandler(taskLogger);
+         .setErrorHandler(taskLogger)
+         .setProperties(properties);
 
       Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
       {
@@ -255,12 +344,12 @@ public class BuildService
 
       final String id = nextTaskID();
       MavenBuildTask task = new MavenBuildTask(id, f, projectDirectory, taskLogger);
-      add(id, task, System.currentTimeMillis() + cleanBuildResultDelayMillis);
+      addInQueue(id, task, System.currentTimeMillis() + cleanBuildResultDelayMillis);
 
       return task;
    }
 
-   private void add(String id, MavenBuildTask task, long expirationTime)
+   private void addInQueue(String id, MavenBuildTask task, long expirationTime)
    {
       CacheElement newElement = new CacheElement(id, task, expirationTime);
       CacheElement prevElement = map.put(id, newElement);
@@ -286,7 +375,8 @@ public class BuildService
    /**
     * Get the build task by ID.
     *
-    * @param id the build ID
+    * @param id
+    *    the build ID
     * @return build task or <code>null</code> if there is no build with specified ID
     */
    public MavenBuildTask get(String id)
@@ -298,7 +388,8 @@ public class BuildService
    /**
     * Cancel build.
     *
-    * @param id the ID of build to cancel
+    * @param id
+    *    the ID of build to cancel
     * @return canceled build task or <code>null</code> if there is no build with specified ID
     */
    public MavenBuildTask cancel(String id)
@@ -339,6 +430,149 @@ public class BuildService
          }
       }
    }
+
+   /* ====================================================== */
+
+   private static final ResultGetter WAR_FILE_GETTER = new WarFileGetter();
+
+   private static class WarFileGetter implements ResultGetter
+   {
+      @Override
+      public Result getResult(File projectDirectory) throws FileNotFoundException
+      {
+         File target = new File(projectDirectory, "target");
+         File[] filtered = target.listFiles(new FilenameFilter()
+         {
+            public boolean accept(File parent, String name)
+            {
+               return name.endsWith(".war");
+            }
+         });
+         if (filtered != null && filtered.length > 0)
+         {
+            return new Result(new FileInputStream(filtered[0]), "application/zip", filtered[0].getName());
+         }
+         return null;
+      }
+   }
+
+   /* ====================================================== */
+
+   private static final Pattern DEPENDENCY_FORMAT = Pattern.compile("^(\\s*)(.+):(.+):(.+):(.+):(.+)$");
+
+   private static final ResultGetter DEPENDENCIES_LIST_GETTER = new DependenciesListGetter();
+
+   private static class DependenciesListGetter implements ResultGetter
+   {
+      @Override
+      public Result getResult(File projectDirectory) throws IOException
+      {
+         File[] filtered = projectDirectory.listFiles(new FilenameFilter()
+         {
+            public boolean accept(File parent, String name)
+            {
+               return "dependencies.txt".equals(name);
+            }
+         });
+         // Re-format in JSON.
+         if (filtered != null && filtered.length > 0)
+         {
+            FileReader r = null;
+            BufferedReader br = null;
+            try
+            {
+               r = new FileReader(filtered[0]);
+               br = new BufferedReader(r);
+               ByteArrayOutputStream bout = new ByteArrayOutputStream();
+               OutputStreamWriter w = new OutputStreamWriter(bout);
+               w.write('[');
+               Matcher m = null;
+               String line;
+               int i = 0;
+               while ((line = br.readLine()) != null)
+               {
+                  m = m == null ? DEPENDENCY_FORMAT.matcher(line) : m.reset(line);
+                  if (m.matches())
+                  {
+                     // Line has format '   asm:asm:jar:3.0:compile'
+                     String groupID = m.group(2);
+                     String artifactID = m.group(3);
+                     String type = m.group(4);
+                     String version = m.group(5);
+
+                     if (i > 0)
+                     {
+                        w.write(',');
+                     }
+
+                     w.write('{');
+
+                     w.write("\"groupID\":\"");
+                     w.write(groupID);
+                     w.write('\"');
+                     w.write(',');
+
+                     w.write("\"artifactID\":\"");
+                     w.write(artifactID);
+                     w.write('\"');
+                     w.write(',');
+
+                     w.write("\"type\":\"");
+                     w.write(type);
+                     w.write('\"');
+                     w.write(',');
+
+                     w.write("\"version\":\"");
+                     w.write(version);
+                     w.write('\"');
+
+                     w.write('}');
+                     i++;
+                  }
+               }
+               w.write(']');
+               w.flush();
+               w.close();
+               return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json");
+            }
+            finally
+            {
+               if (br != null)
+               {
+                  br.close();
+               }
+               if (r != null)
+               {
+                  r.close();
+               }
+            }
+         }
+         return null;
+      }
+   }
+
+   /* ====================================================== */
+
+   private static final ResultGetter COPY_DEPENDENCIES_GETTER = new CopyDependenciesGetter();
+
+   private static class CopyDependenciesGetter implements ResultGetter
+   {
+      @Override
+      public Result getResult(File projectDirectory) throws IOException
+      {
+         File target = new File(projectDirectory, "target");
+         File dependencies = new File(target, "dependency");
+         if (dependencies.exists() && dependencies.isDirectory())
+         {
+            File zip = new File(target, "dependencies.zip");
+            BuildHelper.zip(dependencies, zip);
+            return new Result(new FileInputStream(zip), "application/zip", zip.getName());
+         }
+         return null;
+      }
+   }
+
+   /* ====================================================== */
 
    private class CleanTask implements Runnable
    {

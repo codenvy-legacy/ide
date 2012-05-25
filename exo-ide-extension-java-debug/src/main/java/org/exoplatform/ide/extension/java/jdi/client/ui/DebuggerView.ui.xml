@@ -37,7 +37,7 @@
                         imageResource="{resource.disconnectButton}" disabledImageResource="{resource.disconnectButtonDisabled}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
-                     <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton"
+                     <c:ImageButton ui:field="removeAllBreakpointsButton" width="22px" buttonId="removeAllBreakpointsButton" title="{locale.removeBreakPointsButton}"
                         imageResource="{resource.removeAllBreakpointsButton}"></c:ImageButton>
                   </c:ToolbarItem>
                   <c:ToolbarItem rightDocked="false" paddingRight="2">
