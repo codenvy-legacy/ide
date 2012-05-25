@@ -121,6 +121,7 @@ public class CopyItemsCommand extends SimpleControl implements IDEControl, Items
          || selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
+         setShowInContextMenu(false);
          return;
       }
 
