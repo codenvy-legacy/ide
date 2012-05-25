@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesEvent;
+import org.exoplatform.ide.extension.googleappengine.client.indexes.VacuumIndexesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
@@ -150,6 +151,16 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             updateIndexes();
          }
       });
+      
+      display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            vacuumIndexes();
+         }
+      });
 
       display.getUpdateDosButton().addClickHandler(new ClickHandler()
       {
@@ -171,7 +182,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          }
       });
    }
-
 
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectHandler#onManageAppEngineProject(org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectEvent)
@@ -223,6 +233,11 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    protected void updateIndexes()
    {
       IDE.fireEvent(new UpdateIndexesEvent());
+   }
+   
+   protected void vacuumIndexes()
+   {
+      IDE.fireEvent(new VacuumIndexesEvent());
    }
 
    public void updateQueues()

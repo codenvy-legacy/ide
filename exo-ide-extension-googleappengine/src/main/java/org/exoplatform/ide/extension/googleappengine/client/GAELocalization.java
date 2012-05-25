@@ -181,4 +181,8 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("update.indexes.successfully")
    @DefaultMessage("Application indexes are successfully updated")
    String updateIndexesSuccessfully();
+
+   @Key("vacuum.indexes.successfully")
+   @DefaultMessage("Application indexes are successfully updated")
+   String vacuumIndexesSuccessfully();
 }
