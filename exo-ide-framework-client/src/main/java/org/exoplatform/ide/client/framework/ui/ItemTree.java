@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Grid;
@@ -187,6 +189,8 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    }
 
    private boolean updateValue = false;
+
+   private CellTree.Resources res = GWT.create(CellTree.Resources.class);
 
    public void setUpdateValue(boolean updateValue)
    {
@@ -585,6 +589,27 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    public void setPrefixId(String prefixId)
    {
       this.prefixId = prefixId;
+   }
+
+   /**
+    * @param folder
+    * @param isOpens
+    */
+   public void changeFolderIcon(Folder folder, boolean isOpens)
+   {
+      TreeItem node = getNodeById(folder.getId());
+      if (node == null)
+      {
+         return;
+      }
+      Grid grid = (Grid)node.getWidget();
+      TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+      if(isOpens)
+      {
+         treeIcon.setIcon(res.cellTreeLoading());
+      }
+      else
+         treeIcon.setIcon(getItemIcon(folder));
    }
 
 }

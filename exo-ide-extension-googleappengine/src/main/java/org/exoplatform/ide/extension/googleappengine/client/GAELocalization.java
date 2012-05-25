@@ -171,10 +171,14 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    /* Messages */
    @Key("update.pagespeed.successfully")
    String updatePageSpeedSuccessfully();
-
+   
    @Key("update.queues.successfully")
    String updateQueuesSuccessfully();
 
    @Key("update.dos.successfully")
    String updateDosSuccessfully();
+   
+   @Key("update.indexes.successfully")
+   @DefaultMessage("Application indexes are successfully updated")
+   String updateIndexesSuccessfully();
 }

@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
@@ -139,6 +140,17 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          }
       });
 
+      
+      display.getUpdateIndexesButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateIndexes();
+         }
+      });
+
       display.getUpdateDosButton().addClickHandler(new ClickHandler()
       {
 
@@ -159,6 +171,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          }
       });
    }
+
 
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectHandler#onManageAppEngineProject(org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectEvent)
@@ -206,6 +219,12 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    {
       IDE.fireEvent(new UpdatePageSpeedEvent());
    }
+<<<<<<< HEAD
+   
+   protected void updateIndexes()
+   {
+      IDE.fireEvent(new UpdateIndexesEvent());
+=======
 
    public void updateQueues()
    {
@@ -215,5 +234,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    public void updateDos()
    {
       IDE.fireEvent(new UpdateDosEvent());
+>>>>>>> 2b804dca0ae8283db4907630e6cf06be28ad8cb3
    }
 }

@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -247,6 +248,15 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    public List<ProjectModel> getSelectedProjects()
    {
       return projectsListGrid.getSelectedItems();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#changeFolderIcon(org.exoplatform.ide.vfs.shared.Folder, boolean)
+    */
+   @Override
+   public void changeFolderIcon(Folder folder, boolean isOpens)
+   {
+      treeGrid.changeFolderIcon(folder, isOpens);
    }
 
 }
