@@ -219,12 +219,11 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    {
       IDE.fireEvent(new UpdatePageSpeedEvent());
    }
-<<<<<<< HEAD
    
    protected void updateIndexes()
    {
       IDE.fireEvent(new UpdateIndexesEvent());
-=======
+   }
 
    public void updateQueues()
    {
@@ -234,6 +233,5 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    public void updateDos()
    {
       IDE.fireEvent(new UpdateDosEvent());
->>>>>>> 2b804dca0ae8283db4907630e6cf06be28ad8cb3
    }
 }
