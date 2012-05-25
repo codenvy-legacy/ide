@@ -51,17 +51,23 @@ public class BuilderService
    private VirtualFileSystemRegistry virtualFileSystemRegistry;
 
    /**
-    * Start new build at remote build server. Build may be started immediately or add in build queue. Client should
-    * check location given in response header to current get status of build.
+    * Start new build at remote build server. Job may be started immediately or add in queue. Client should check
+    * location given in response header to current get status of job.
     *
-    * @param vfsId identifier of virtual file system
-    * @param projectId identifier of project we want to send for build
-    * @param uriInfo context info about current request
-    * @return response with status 202 if request for build is accepted. Client get location of resource that it should
-    *         check to see the current status of build.
-    * @throws BuilderException if request for new build was rejected by remote build server
-    * @throws IOException if any i/o errors occur
-    * @throws VirtualFileSystemException if any error in VFS
+    * @param vfsId
+    *    identifier of virtual file system
+    * @param projectId
+    *    identifier of project we want to send for build
+    * @param uriInfo
+    *    context info about current request
+    * @return response with status 202 if request is accepted. Client get location of resource that it should check to
+    *         see the current status.
+    * @throws BuilderException
+    *    if request for new request was rejected by remote server
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
     * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
     */
    @GET
@@ -77,13 +83,81 @@ public class BuilderService
    }
 
    /**
-    * Check current status of previously launched build.
+    * Start new job to get list of dependencies of project. Job may be started immediately or add in queue.
+    * Client
+    * should check location given in response header to current get status of job.
     *
-    * @param buildID ID of build
+    * @param vfsId
+    *    identifier of virtual file system
+    * @param projectId
+    *    identifier of project we want to send for getting list of dependencies
+    * @param uriInfo
+    *    context info about current request
+    * @return response with status 202 if request is accepted. Client get location of resource that it should check to
+    *         see the current status.
+    * @throws BuilderException
+    *    if request for new request was rejected by remote server
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
+    * @see BuilderClient#dependenciesList(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
+    */
+   @GET
+   @Path("dependencies/list")
+   public Response dependenciesList(@QueryParam("projectid") String projectId, //
+                                    @QueryParam("vfsid") String vfsId, //
+                                    @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
+      final String buildID = builder.dependenciesList(vfs, projectId);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+      return Response.status(202).location(location).entity(location.toString()).build();
+   }
+
+   /**
+    * Start new job to get project dependencies in zip archive. Job may be started immediately or add in queue.
+    * Client should check location given in response header to current get status of job.
+    *
+    * @param vfsId
+    *    identifier of virtual file system
+    * @param projectId
+    *    identifier of project we want to send for getting dependencies
+    * @param uriInfo
+    *    context info about current request
+    * @return response with status 202 if request is accepted. Client get location of resource that it should check to
+    *         see the current status.
+    * @throws BuilderException
+    *    if request for new request was rejected by remote server
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
+    * @see BuilderClient#dependenciesCopy(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
+    */
+   @GET
+   @Path("dependencies/copy")
+   public Response dependenciesCopy(@QueryParam("projectid") String projectId, //
+                                    @QueryParam("vfsid") String vfsId, //
+                                    @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
+      final String buildID = builder.dependenciesCopy(vfs, projectId);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+      return Response.status(202).location(location).entity(location.toString()).build();
+   }
+
+   /**
+    * Check current status of previously launched job.
+    *
+    * @param buildID
+    *    ID of job
     * @return string that contains description of current status of build in JSON format. Do nothing with such string
     *         just re-send result to client
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     * @see BuilderClient#status(String)
     */
    @GET
@@ -94,11 +168,14 @@ public class BuilderService
    }
 
    /**
-    * Cancel previously launched build.
+    * Cancel previously launched job.
     *
-    * @param buildID ID of build
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @param buildID
+    *    ID of job
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     * @see BuilderClient#cancel(String)
     */
    @GET
@@ -109,12 +186,15 @@ public class BuilderService
    }
 
    /**
-    * Get build log.
+    * Get job log.
     *
-    * @param buildID ID of build
-    * @return stream that contains build log
-    * @throws IOException if any i/o errors occur
-    * @throws BuilderException any other errors related to build server internal state or parameter of client request
+    * @param buildID
+    *    ID of job
+    * @return stream that contains job log
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
     * @see BuilderClient#cancel(String)
     */
    @GET
