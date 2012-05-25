@@ -43,8 +43,8 @@ import org.junit.runners.Suite.SuiteClasses;
    RenameClosedFileTest.class,
    OpenAndSaveXmlFileWithNonLatinNameTest.class,
    CreateSaveAsXmlWithNonLatinNameTest.class,
-   DeletingXmlFileWithNonLatinNameTest.class,
-   CheckInformUserAfterCloseNoneSavedFile.class
+   CheckInformUserAfterCloseNoneSavedFile.class,
+   DeletingXmlFileWithNonLatinNameTest.class
 })
 public class FileTestSuite
 {

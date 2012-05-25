@@ -16,28 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.model;
+package org.exoplatform.ide.extension.googleappengine.client.project;
+
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+
+import com.google.gwt.cell.client.AbstractCell;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 4:40:20 PM anya $
- * 
+ * @version $Id:  May 24, 2012 10:02:43 AM anya $
+ *
  */
-public interface CronEntry
+public class CronEntryCell extends AbstractCell<CronEntry>
 {
-   public String getDescription();
 
-   public String getSchedule();
+   /**
+    * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+    */
+   @Override
+   public void render(com.google.gwt.cell.client.Cell.Context context, CronEntry value, SafeHtmlBuilder sb)
+   {
+      // TODO Auto-generated method stub
+      
+   }
 
-   public String getTimezone();
-
-   public String getUrl();
-
-   public void setDescription(String description);
-
-   public void setSchedule(String schedule);
-
-   public void setTimezone(String timezone);
-
-   public void setUrl(String url);
 }

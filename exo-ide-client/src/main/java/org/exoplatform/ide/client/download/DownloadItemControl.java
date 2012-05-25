@@ -26,6 +26,10 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -38,7 +42,8 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class DownloadItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
+   ViewVisibilityChangedHandler
 {
 
    enum Type {
@@ -58,6 +63,8 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
    private static final String PROMPT_ZIP = IDE.IDE_LOCALIZATION_CONSTANT.downloadZippedFolderControl();
 
    private boolean downloadZip;
+
+   private boolean browserPanelSelected = true;
 
    /**
     * 
@@ -121,6 +128,18 @@ public class DownloadItemControl extends SimpleControl implements IDEControl, It
       else
       {
          setEnabled(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      {
+         setEnabled(event.getView().isViewVisible());
       }
    }
 

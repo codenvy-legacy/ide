@@ -16,15 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.rollback;
+package org.exoplatform.ide.extension.googleappengine.client.dos;
 
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -34,45 +34,47 @@ import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperati
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 21, 2012 11:54:50 AM anya $
+ * @version $Id: May 24, 2012 5:00:19 PM anya $
  * 
  */
-public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements RollbackUpdateHandler
+public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHandler
 {
+
+   public DosHandler()
+   {
+      IDE.addHandler(UpdateDosEvent.TYPE, this);
+   }
+
    private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
    {
-
       @Override
       public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
       {
-         rollback(email, password, loggedInHandler);
+         updateDos(email, password, loggedInHandler);
       }
    };
 
-   public RollbackUpdatePresenter()
-   {
-      IDE.getInstance().addControl(new RollbackControl());
-
-      IDE.addHandler(RollbackUpdateEvent.TYPE, this);
-   }
-
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateHandler#onRollbackUpdate(org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent)
+    * @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent)
     */
    @Override
-   public void onRollbackUpdate(RollbackUpdateEvent event)
+   public void onUpdateDos(UpdateDosEvent event)
    {
-      if (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+      if (isAppEngineProject())
       {
-         rollback(null, null, null);
+         updateDos(null, null, null);
+      }
+      else
+      {
+         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
       }
    }
 
-   public void rollback(String email, String password, final LoggedInHandler loggedInHandler)
+   public void updateDos(String email, String password, final LoggedInHandler loggedInHandler)
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().rollback(currentVfs.getId(), currentProject.getId(), email,
+         GoogleAppEngineClientService.getInstance().updateDos(currentVfs.getId(), currentProject.getId(), email,
             password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
             {
 
@@ -83,7 +85,8 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
                   {
                      loggedInHandler.onLoggedIn();
                   }
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.rollbackUpdateSuccess(),
+
+                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateDosSuccessfully(),
                      Type.INFO));
                }
             });

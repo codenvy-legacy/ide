@@ -36,15 +36,15 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final String CANCEL_BUTTON_ID = "ideCloudFoundryAppViewCancelButton";
 
    private static final String TYPE_FIELD_ID = "ideCloudFoundryAppViewTypeField";
-   
+
    private static final String NAME_FIELD_ID = "ideCloudFoundryAppViewNameField";
 
    private static final String URL_FIELD_ID = "ideCloudFoundryAppViewUrlField";
-   
+
    private static final String INSTANCES_FIELD_ID = "ideCloudFoundryAppViewInstancesField";
-   
+
    private static final String MEMORY_FIELD_ID = "ideCloudFoundryAppViewMemoryField";
-   
+
    private static final String SERVER_FIELD_ID = "ideCloudFoundryAppViewServerField";
 
    private static CreateApplicationViewUiBinder uiBinder = GWT.create(CreateApplicationViewUiBinder.class);
@@ -52,7 +52,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    interface CreateApplicationViewUiBinder extends UiBinder<Widget, CreateApplicationView>
    {
    }
-   
+
    /**
     * Server field (location of Cloud Foundry instance where application must be created, e.g.
     *           http://api.cloudfoundry.com)
@@ -65,45 +65,45 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     */
    @UiField
    SelectItem typeField;
-   
+
    /**
     * Checkbox, that indicate, is type will be detected automatically
     * or selected by user.
     */
    @UiField
    CheckBox changeTypeField;
-   
+
    /**
     * Application name field.
     */
    @UiField
    TextInput nameField;
-   
+
    /**
     * Application URL field.
     */
    @UiField
    TextInput urlField;
-   
+
    /**
     * Checkbox, that indicate, is URL will be added automatically
     * or set by user.
     */
    @UiField
    CheckBox customUrlField;
-   
+
    /**
     * Number of instanses of application field.
     */
    @UiField
    TextInput instansesField;
-   
+
    /**
     * Memory field (needed for application).
     */
    @UiField
    TextInput memoryField;
-   
+
    /**
     * Is start application after creation.
     */
@@ -124,7 +124,8 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    public CreateApplicationView()
    {
-      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationTitle(), null, WIDTH,
+         HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       serverField.setName(SERVER_FIELD_ID);
@@ -256,6 +257,15 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#setIsStartAfterCreationCheckItem()
+    */
+   @Override
+   public void setIsStartAfterCreationCheckItem(boolean start)
+   {
+      startAfterCreationField.setValue(start);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#enableTypeField(boolean)
     */
    @Override
@@ -317,7 +327,11 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    {
       serverField.setValueMap(servers);
    }
-   
+
+   /**
+    * 
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display#enableAutodetectTypeCheckItem(boolean)
+    */
    @Override
    public void enableAutodetectTypeCheckItem(boolean enable)
    {

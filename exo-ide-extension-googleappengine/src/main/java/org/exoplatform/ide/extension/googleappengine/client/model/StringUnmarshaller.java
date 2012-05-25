@@ -18,26 +18,39 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.model;
 
+import com.google.gwt.http.client.Response;
+
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+
 /**
+ * Deserializer for response's body.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 4:40:20 PM anya $
+ * @version $Id: May 24, 2012 12:22:34 PM anya $
  * 
  */
-public interface CronEntry
+public class StringUnmarshaller implements Unmarshallable<StringBuilder>
 {
-   public String getDescription();
 
-   public String getSchedule();
+   protected StringBuilder builder;
 
-   public String getTimezone();
+   public StringUnmarshaller(StringBuilder builder)
+   {
+      this.builder = builder;
+   }
 
-   public String getUrl();
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    */
+   @Override
+   public void unmarshal(Response response)
+   {
+      builder.append(response.getText());
+   }
 
-   public void setDescription(String description);
-
-   public void setSchedule(String schedule);
-
-   public void setTimezone(String timezone);
-
-   public void setUrl(String url);
+   @Override
+   public StringBuilder getPayload()
+   {
+      return builder;
+   }
 }

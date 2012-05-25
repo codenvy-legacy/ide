@@ -16,28 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.model;
+package org.exoplatform.ide.extension.googleappengine.client.pagespeed;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link UpdatePageSpeedEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 4:40:20 PM anya $
+ * @version $Id: May 24, 2012 3:44:00 PM anya $
  * 
  */
-public interface CronEntry
+public interface UpdatePageSpeedHandler extends EventHandler
 {
-   public String getDescription();
-
-   public String getSchedule();
-
-   public String getTimezone();
-
-   public String getUrl();
-
-   public void setDescription(String description);
-
-   public void setSchedule(String schedule);
-
-   public void setTimezone(String timezone);
-
-   public void setUrl(String url);
+   /**
+    * Perform actions, when user tries to update page speed.
+    * 
+    * @param event
+    */
+   void onUpdatePageSpeed(UpdatePageSpeedEvent event);
 }

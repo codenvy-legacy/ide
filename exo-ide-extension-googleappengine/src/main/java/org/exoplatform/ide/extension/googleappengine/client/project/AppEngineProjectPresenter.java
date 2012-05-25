@@ -29,6 +29,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
+import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
+import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
+import org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
 
 /**
@@ -114,6 +118,46 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             rollbackApplicationUpdate();
          }
       });
+
+      display.getLogsButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            showLogs();
+         }
+      });
+
+      display.getUpdatePageSpeedButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updatePageSpeed();
+         }
+      });
+
+      display.getUpdateDosButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateDos();
+         }
+      });
+
+      display.getUpdateQueuesButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateQueues();
+         }
+      });
    }
 
    /**
@@ -150,5 +194,26 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    public void rollbackApplicationUpdate()
    {
       IDE.fireEvent(new RollbackUpdateEvent());
+   }
+
+   public void showLogs()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+      IDE.fireEvent(new ShowLogsEvent());
+   }
+
+   public void updatePageSpeed()
+   {
+      IDE.fireEvent(new UpdatePageSpeedEvent());
+   }
+
+   public void updateQueues()
+   {
+      IDE.fireEvent(new UpdateQueuesEvent());
+   }
+
+   public void updateDos()
+   {
+      IDE.fireEvent(new UpdateDosEvent());
    }
 }
