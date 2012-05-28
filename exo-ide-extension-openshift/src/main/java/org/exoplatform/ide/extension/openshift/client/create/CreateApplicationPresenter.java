@@ -294,7 +294,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       String applicationStr = "<br> [";
       applicationStr += "<b>Name</b>" + " : " + appInfo.getName() + "<br>";
       applicationStr += "<b>Git URL</b>" + " : " + appInfo.getGitUrl() + "<br>";
-      applicationStr += "<b>Public URL</b>" + " : " + appInfo.getPublicUrl() + "<br>";
+      applicationStr +=
+         "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
+            + appInfo.getPublicUrl() + "</a><br>";
       applicationStr += "<b>Type</b>" + " : " + appInfo.getType() + "<br>";
       applicationStr += "] ";
 

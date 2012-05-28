@@ -270,8 +270,8 @@ public class UserInfoPresenter extends GitPresenter implements ShowUserInfoHandl
       List<Property> properties = new ArrayList<Property>();
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationName(), appInfo.getName()));
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), appInfo.getType()));
-      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), appInfo
-         .getPublicUrl()));
+      properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), "<a href =\""
+         + appInfo.getPublicUrl() + "\" target=\"_blank\">" + appInfo.getPublicUrl() + "</a>"));
       properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), appInfo.getGitUrl()));
       String time =
          DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM).format(new Date((long)appInfo.getCreationTime()));
