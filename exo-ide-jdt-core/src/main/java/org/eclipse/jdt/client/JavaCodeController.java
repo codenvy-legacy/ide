@@ -266,6 +266,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
+      if(activeFile == null)
+         return;
       timer.cancel();
       needReparse = false;
       finishJob();
