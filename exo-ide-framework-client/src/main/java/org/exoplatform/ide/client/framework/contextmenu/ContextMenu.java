@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.framework.contextmenu;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
@@ -60,6 +62,8 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
     */
    private PopupMenu popupMenu;
 
+   private CloseMenuHandler closeHandler;
+
    private ContextMenu()
    {
    }
@@ -84,8 +88,9 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
     * @param y context menu top coordinate
     */
    @SuppressWarnings("rawtypes")
-   public void show(List<Control> commands, int x, int y)
+   public void show(List<Control> commands, int x, int y, CloseMenuHandler closeHandler)
    {
+      this.closeHandler = closeHandler;
       lockLayer = new MenuLockLayer(this);
 
       List<MenuItem> contextMenuItems = new ArrayList<MenuItem>();
@@ -105,8 +110,18 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
 
       popupMenu = new PopupMenu(contextMenuItems, lockLayer, this);
       popupMenu.getElement().setId(ID);
+      popupMenu.addDomHandler(new ContextMenuHandler()
+      {
+         
+         @Override
+         public void onContextMenu(ContextMenuEvent event)
+         {
+            event.stopPropagation();
+            event.preventDefault();
+         }
+      }, ContextMenuEvent.getType());
       lockLayer.add(popupMenu);
-
+      
       popupMenu.getElement().getStyle().setTop(y, Unit.PX);
       popupMenu.getElement().getStyle().setLeft(x, Unit.PX);
    }
@@ -144,6 +159,11 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
       {
          lockLayer.removeFromParent();
          lockLayer = null;
+      }
+      if (closeHandler != null)
+      {
+         closeHandler.onCloseMenu();
+         closeHandler = null;
       }
    }
 }

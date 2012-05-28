@@ -54,12 +54,17 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
       {
          Item item = event.getSelectedItems().get(0);
          ProjectModel project = ((ItemContext)item).getProject();
-         String sourcePath =
-            project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-               : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
-         sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
-         if (item.getPath().startsWith(sourcePath))
-            setEnabled(true);
+         if (project != null)
+         {
+            String sourcePath =
+               project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+                  : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+            sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
+            if (item.getPath().startsWith(sourcePath))
+               setEnabled(true);
+            else
+               setEnabled(false);
+         }
          else
             setEnabled(false);
       }

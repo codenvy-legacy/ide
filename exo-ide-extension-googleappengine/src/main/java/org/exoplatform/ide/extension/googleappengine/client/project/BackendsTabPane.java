@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.googleappengine.client.project;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,4 +42,114 @@ public class BackendsTabPane extends Composite
    {
       initWidget(uiBinder.createAndBindUi(this));
    }
+   
+   @UiField
+   Button configureBackendButton;
+   
+   @UiField
+   Button deleteBackendButton;
+
+   @UiField
+   Button getListBackendsButton;
+
+   @UiField
+   Button rollbackBackendButton;
+
+   @UiField
+   Button rollbackAllBackendsButton;
+
+   @UiField
+   Button setBackendStateButton;
+
+   @UiField
+   Button updateAllBackendsButton;
+
+   @UiField
+   Button updateBackendButton;
+   
+   @UiField
+   Button updateBackendsButton;
+
+   /**
+    * @return the uiBinder
+    */
+   public static BackendsTabPaneUiBinder getUiBinder()
+   {
+      return uiBinder;
+   }
+
+   /**
+    * @return the configureBackendButton
+    */
+   public Button getConfigureBackendButton()
+   {
+      return configureBackendButton;
+   }
+
+   /**
+    * @return the deleteBackendButton
+    */
+   public Button getDeleteBackendButton()
+   {
+      return deleteBackendButton;
+   }
+
+   /**
+    * @return the getListBackendsButton
+    */
+   public Button getGetListBackendsButton()
+   {
+      return getListBackendsButton;
+   }
+
+   /**
+    * @return the rollbackBackendButton
+    */
+   public Button getRollbackBackendButton()
+   {
+      return rollbackBackendButton;
+   }
+
+   /**
+    * @return the rollbackAllBackendsButton
+    */
+   public Button getRollbackAllBackendsButton()
+   {
+      return rollbackAllBackendsButton;
+   }
+
+   /**
+    * @return the setBackendStateButton
+    */
+   public Button getSetBackendStateButton()
+   {
+      return setBackendStateButton;
+   }
+
+   /**
+    * @return the updateAllBackendsButton
+    */
+   public Button getUpdateAllBackendsButton()
+   {
+      return updateAllBackendsButton;
+   }
+
+   /**
+    * @return the updateBackendButton
+    */
+   public Button getUpdateBackendButton()
+   {
+      return updateBackendButton;
+   }
+
+   /**
+    * @return the updateBackends
+    */
+   public Button getUpdateBackends()
+   {
+      return updateBackendsButton;
+   }
+   
+   
+   
 }

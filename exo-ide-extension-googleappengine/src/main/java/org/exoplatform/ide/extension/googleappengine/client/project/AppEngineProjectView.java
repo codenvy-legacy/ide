@@ -85,7 +85,6 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getConfigureBackendButton()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -105,7 +104,6 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateBackendButton()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
