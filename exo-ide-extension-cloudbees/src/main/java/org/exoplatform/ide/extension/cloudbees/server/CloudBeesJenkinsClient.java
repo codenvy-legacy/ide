@@ -34,13 +34,12 @@ import java.net.HttpURLConnection;
  */
 public class CloudBeesJenkinsClient extends JenkinsClient
 {
-   private final byte[] credentials;
+   private final String credentials;
 
    public CloudBeesJenkinsClient(String baseURL, String user, String password) throws UnsupportedEncodingException
    {
       super(baseURL);
-      credentials = encodeBase64((user + ":" + password).getBytes("ISO-8859-1"));
-
+      credentials = "Basic " + new String(encodeBase64((user + ":" + password).getBytes("ISO-8859-1")), "ISO-8859-1");
    }
 
    public CloudBeesJenkinsClient(InitParams initParams) throws UnsupportedEncodingException
@@ -64,11 +63,11 @@ public class CloudBeesJenkinsClient extends JenkinsClient
    }
 
    /**
-    * @see org.exoplatfrom.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection)
+    * @see org.exoplatform.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection)
     */
    @Override
    protected void authenticate(HttpURLConnection http) throws IOException
    {
-      http.setRequestProperty("Authorization", "Basic " + new String(credentials, "ISO-8859-1"));
+      http.setRequestProperty("Authorization", credentials);
    }
 }
