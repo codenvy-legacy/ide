@@ -20,13 +20,17 @@
       	float: left;
       	color: #D21A1A;
       }
+      
+      .space {
+      	margin-top: 10px;
+      }
    </ui:style>
    <f:Border margin="15" borderColor="transparent">
       <f:layer top="0" bottom="30">
          <g:FlowPanel>
             <g:Label text="{locale.emailFieldTitle}"></g:Label>
             <f:TextInput ui:field="emailField" height="22px" width="100%"></f:TextInput>
-            <g:Label text="{locale.passwordFieldTitle}"></g:Label>
+            <g:Label text="{locale.passwordFieldTitle}" addStyleNames="{style.space}"></g:Label>
             <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"></f:PasswordTextInput>
             <f:Label ui:field="loginResult" styleName="{style.label}"></f:Label>
          </g:FlowPanel>

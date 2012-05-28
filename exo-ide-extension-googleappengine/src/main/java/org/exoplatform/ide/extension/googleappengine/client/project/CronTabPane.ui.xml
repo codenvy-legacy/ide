@@ -1,12 +1,26 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:e="urn:import:org.exoplatform.ide.extension.googleappengine.client.cron">
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
    <ui:style>
-      
+      .right {
+      	float: right;
+      	margin-right: 10px;
+      }
    </ui:style>
+
    <f:Border borderColor="transparent">
-      <f:layer>
-         <g:FlowPanel></g:FlowPanel>
+      <f:layer top="0" bottom="32">
+         <f:Border margin="10">
+            <f:layer>
+               <e:CronGrid width="100%" ui:field="cronGrid"></e:CronGrid>
+            </f:layer>
+         </f:Border>
+      </f:layer>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel>
+            <f:ImageButton ui:field="updateCronButton" width="90px" height="22px" text="{locale.updateButton}" styleName="{style.right}"></f:ImageButton>
+         </g:FlowPanel>
       </f:layer>
    </f:Border>
 </ui:UiBinder>
