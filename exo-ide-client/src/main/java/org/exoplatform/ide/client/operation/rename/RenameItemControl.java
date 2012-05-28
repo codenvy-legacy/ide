@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -75,7 +76,7 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setDelimiterBefore(true);
+      //      setDelimiterBefore(true);
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());
    }
@@ -99,6 +100,7 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       if (vfsInfo == null)
       {
          setVisible(false);
+         setShowInContextMenu(false);
          return;
       }
       setVisible(true);
@@ -106,15 +108,18 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       if (!(activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay))
       {
          setEnabled(false);
+         setShowInContextMenu(false);
          return;
       }
 
       if (selectedItems.size() == 1 && !vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
       {
          setEnabled(true);
+         setShowInContextMenu(selectedItems.get(0) instanceof ProjectModel);
       }
       else
       {
+         setShowInContextMenu(false);
          setEnabled(false);
       }
    }

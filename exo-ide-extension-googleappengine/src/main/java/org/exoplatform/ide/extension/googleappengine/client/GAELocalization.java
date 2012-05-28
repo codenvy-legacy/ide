@@ -171,14 +171,71 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    /* Messages */
    @Key("update.pagespeed.successfully")
    String updatePageSpeedSuccessfully();
-   
+
    @Key("update.queues.successfully")
    String updateQueuesSuccessfully();
 
    @Key("update.dos.successfully")
    String updateDosSuccessfully();
-   
+
    @Key("update.indexes.successfully")
    @DefaultMessage("Application indexes are successfully updated")
    String updateIndexesSuccessfully();
+
+   @Key("vacuum.indexes.successfully")
+   @DefaultMessage("Application indexes are successfully updated")
+   String vacuumIndexesSuccessfully();
+   
+   @Key("configure.backend.button")
+   @DefaultMessage("Configure Backend")
+   String configureBackendButton();
+   
+   @Key("delete.backend.button")
+   @DefaultMessage("Delete Backend")
+   String deleteBackendButton();
+   
+   @Key("list.backends.button")
+   @DefaultMessage("Backends")
+   String getListBackendsButton();
+   
+   @Key("rollback.backend.button")
+   @DefaultMessage("Rollback Backend")
+   String rollbackBackendButton();
+   
+   @Key("rollback.allbackends.button")
+   @DefaultMessage("Rollback All Backends")
+   String rollbackAllBackendsButton();
+   
+   @Key("set.backend.state.button")
+   @DefaultMessage("Set Backend State")
+   String setBackendStateButton();
+   
+   @Key("update.all.backends.button")
+   @DefaultMessage("Update All Backends")
+   String updateAllBackendsButton();
+   
+   @Key("update.backend.button")
+   @DefaultMessage("Update Backend")
+   String updateBackendButton();
+   
+   @Key("update.backends.button")
+   @DefaultMessage("Update Backends")
+   String updateBackendsButton();
+
+   @Key("update.crons.successfully")
+   String updateCronsSuccessfully();
+
+   /* Crons */
+   @Key("cron.url.title")
+   String cronUrlTitle();
+
+   @Key("cron.description.title")
+   String cronDescriptionTitle();
+
+   @Key("cron.schedule.title")
+   String cronScheduleTitle();
+
+   @Key("cron.timezone.title")
+   String cronTimezoneTitle();
 }
+

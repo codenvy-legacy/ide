@@ -7,12 +7,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 
 public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPresenter.Display
 {
@@ -54,16 +56,18 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
       add(uiBinder.createAndBindUi(this));
 
       mainTabPain = new MainTabPain();
-      applicationTabPanel.addTab(GENERAL_TAB_ID, null,
+      applicationTabPanel.addTab(GENERAL_TAB_ID, new Image(GAEClientBundle.INSTANCE.general()),
          GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationGeneralTab(), mainTabPain, false);
 
       cronTabPane = new CronTabPane();
-      applicationTabPanel.addTab(CRONS_TAB_ID, null,
-         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);
+   /*   applicationTabPanel.addTab(CRONS_TAB_ID, new Image(GAEClientBundle.INSTANCE.crons()),
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);*/
 
       backendsTabPane = new BackendsTabPane();
-      applicationTabPanel.addTab(BACKENDS_TAB_ID, null,
-         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
+      /*
+       * applicationTabPanel.addTab(BACKENDS_TAB_ID, new Image(GAEClientBundle.INSTANCE.backends()),
+       * GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
+       */
    }
 
    /**
@@ -81,7 +85,6 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getConfigureBackendButton()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -101,7 +104,6 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateBackendButton()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -158,8 +160,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateCronButton()
    {
-      // TODO
-      return null;
+      return cronTabPane.getUpdateCronButton();
    }
 
    /**
@@ -205,6 +206,15 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    public HasClickHandlers getUpdateQueuesButton()
    {
       return mainTabPain.getUpdateQueuesButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getCronGrid()
+    */
+   @Override
+   public ListGridItem<CronEntry> getCronGrid()
+   {
+      return cronTabPane.getCronGrid();
    }
 
 }

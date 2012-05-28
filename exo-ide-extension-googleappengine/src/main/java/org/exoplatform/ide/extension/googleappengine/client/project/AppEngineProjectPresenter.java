@@ -18,23 +18,38 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronEvent;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesEvent;
+import org.exoplatform.ide.extension.googleappengine.client.indexes.VacuumIndexesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
+import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.client.model.CronListUnmarshaller;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
 import org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -76,9 +91,21 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       HasClickHandlers getUpdatePageSpeedButton();
 
       HasClickHandlers getUpdateQueuesButton();
+
+      ListGridItem<CronEntry> getCronGrid();
    }
 
    private Display display;
+
+   private PerformOperationHandler getCronsOperationHandler = new PerformOperationHandler()
+   {
+
+      @Override
+      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
+      {
+         getCrons(email, password, loggedInHandler);
+      }
+   };
 
    public AppEngineProjectPresenter()
    {
@@ -140,14 +167,23 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          }
       });
 
-      
       display.getUpdateIndexesButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
             updateIndexes();
+         }
+      });
+
+      display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            vacuumIndexes();
          }
       });
 
@@ -170,8 +206,17 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             updateQueues();
          }
       });
-   }
 
+      display.getUpdateCronButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateCrons();
+         }
+      });
+   }
 
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectHandler#onManageAppEngineProject(org.exoplatform.ide.extension.googleappengine.client.project.ManageAppEngineProjectEvent)
@@ -185,6 +230,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+      //TODO getCrons(null, null, null);
    }
 
    /**
@@ -201,11 +247,13 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
    public void updateApplication()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new DeployApplicationEvent());
    }
 
    public void rollbackApplicationUpdate()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new RollbackUpdateEvent());
    }
 
@@ -217,21 +265,63 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
    public void updatePageSpeed()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdatePageSpeedEvent());
    }
-   
+
    protected void updateIndexes()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateIndexesEvent());
+   }
+
+   protected void vacuumIndexes()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+      IDE.fireEvent(new VacuumIndexesEvent());
    }
 
    public void updateQueues()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateQueuesEvent());
    }
 
    public void updateDos()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateDosEvent());
+   }
+
+   public void updateCrons()
+   {
+      IDE.getInstance().closeView(display.asView().getId());
+      IDE.fireEvent(new UpdateCronEvent());
+   }
+
+   private void getCrons(String email, String password, final LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         GoogleAppEngineClientService.getInstance().cronInfo(
+            currentVfs.getId(),
+            currentProject.getId(),
+            email,
+            password,
+            new GoogleAppEngineAsyncRequestCallback<List<CronEntry>>(new CronListUnmarshaller(
+               new ArrayList<CronEntry>()), getCronsOperationHandler, null)
+            {
+
+               @Override
+               protected void onSuccess(List<CronEntry> result)
+               {
+                  display.getCronGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

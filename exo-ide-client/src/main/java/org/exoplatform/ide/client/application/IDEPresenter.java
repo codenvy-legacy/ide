@@ -26,6 +26,8 @@ import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
+import org.exoplatform.gwtframework.ui.client.menu.CloseMenuHandler;
+import org.exoplatform.ide.client.editor.EditorView;
 import org.exoplatform.ide.client.framework.contextmenu.ContextMenu;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
@@ -101,12 +103,28 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
 
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
+
             @Override
             public void execute()
             {
-               ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y);
+               ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, closeHandler);
             }
          });
+      }
+   };
+
+   private CloseMenuHandler closeHandler = new CloseMenuHandler()
+   {
+
+      @Override
+      public void onCloseMenu()
+      {
+         if (activeView instanceof EditorView)
+         {
+            ((EditorView)activeView).getEditor().setFocus();
+         }
+         else
+            activeView.asWidget().getElement().focus();
       }
    };
 
@@ -212,7 +230,7 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
          @Override
          public void execute()
          {
-            ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y);
+            ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, closeHandler);
          }
       });
    }

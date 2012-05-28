@@ -122,6 +122,7 @@ public class CutItemsCommand extends SimpleControl implements IDEControl, VfsCha
          || selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
+         setShowInContextMenu(false);
          return;
       }
 

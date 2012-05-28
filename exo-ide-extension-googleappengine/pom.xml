@@ -73,7 +73,7 @@
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
-      
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
@@ -96,6 +96,11 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-maven</artifactId>
       </dependency>
    </dependencies>
 

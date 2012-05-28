@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.client.create;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
 /**
@@ -42,7 +43,10 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
+      setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
+         GAEClientBundle.INSTANCE.createApplicationConrtolDisabled());
       setEvent(new CreateApplicationEvent());
+
    }
 
    /**

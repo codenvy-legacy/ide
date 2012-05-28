@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.login;
 
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
@@ -110,7 +110,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getLoginButton()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getLoginButton()
     */
    @Override
    public HasClickHandlers getLoginButton()
@@ -119,7 +119,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -128,25 +128,25 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getEmailField()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getEmailField()
     */
    @Override
-   public HasValue<String> getEmailField()
+   public TextFieldItem getEmailField()
    {
       return emailField;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#getPasswordField()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getPasswordField()
     */
    @Override
-   public HasValue<String> getPasswordField()
+   public TextFieldItem getPasswordField()
    {
       return passwordField;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#enableLoginButton(boolean)
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#enableLoginButton(boolean)
     */
    @Override
    public void enableLoginButton(boolean enabled)
@@ -155,7 +155,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginPresenter.Display#focusInEmailField()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#focusInEmailField()
     */
    @Override
    public void focusInEmailField()
@@ -164,7 +164,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter.Display#getLoginResult()
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getLoginResult()
     */
    @Override
    public HasValue<String> getLoginResult()
