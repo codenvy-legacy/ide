@@ -64,9 +64,10 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    public DeployApplicationPresenter()
    {
-      IDE.addHandler(DeployApplicationEvent.TYPE, this);
+      // TODO removed from menu:
+      // IDE.getInstance().addControl(new DeployApplicationControl());
 
-      IDE.getInstance().addControl(new DeployApplicationControl());
+      IDE.addHandler(DeployApplicationEvent.TYPE, this);
    }
 
    /**
