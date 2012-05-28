@@ -7,12 +7,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 
 public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPresenter.Display
 {
@@ -156,8 +158,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateCronButton()
    {
-      // TODO
-      return null;
+      return cronTabPane.getUpdateCronButton();
    }
 
    /**
@@ -203,6 +204,15 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    public HasClickHandlers getUpdateQueuesButton()
    {
       return mainTabPain.getUpdateQueuesButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getCronGrid()
+    */
+   @Override
+   public ListGridItem<CronEntry> getCronGrid()
+   {
+      return cronTabPane.getCronGrid();
    }
 
 }

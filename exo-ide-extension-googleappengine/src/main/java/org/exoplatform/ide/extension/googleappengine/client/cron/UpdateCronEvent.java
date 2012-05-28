@@ -16,30 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.project;
+package org.exoplatform.ide.extension.googleappengine.client.cron;
 
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
-
-import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to update cron.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  May 24, 2012 10:02:43 AM anya $
- *
+ * @version $Id: May 25, 2012 4:19:38 PM anya $
+ * 
  */
-public class CronEntryCell extends AbstractCell<CronEntry>
+public class UpdateCronEvent extends GwtEvent<UpdateCronHandler>
 {
+   /**
+    * Type, used to register the event.
+    */
+   public static final GwtEvent.Type<UpdateCronHandler> TYPE = new GwtEvent.Type<UpdateCronHandler>();
 
    /**
-    * @see com.google.gwt.cell.client.AbstractCell#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public void render(com.google.gwt.cell.client.Cell.Context context, CronEntry value, SafeHtmlBuilder sb)
+   public com.google.gwt.event.shared.GwtEvent.Type<UpdateCronHandler> getAssociatedType()
    {
-      // TODO Auto-generated method stub
-      
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(UpdateCronHandler handler)
+   {
+      handler.onUpdateCron(this);
    }
 
 }

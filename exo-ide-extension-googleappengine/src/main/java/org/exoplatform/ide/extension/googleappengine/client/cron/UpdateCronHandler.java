@@ -16,31 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client;
+package org.exoplatform.ide.extension.googleappengine.client.cron;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
-
-import java.util.List;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * The interface for the {@link AutoBean} generator.
+ * Handler for {@link UpdateCronEvent} event.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 11:25:04 AM anya $
+ * @version $Id: May 25, 2012 4:19:51 PM anya $
  * 
  */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
+public interface UpdateCronHandler extends EventHandler
 {
    /**
-    * Factory method for generating credentials bean.
+    * Perform actions, when user tries to update cron.
     * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * @param event
     */
-   AutoBean<Credentials> credentials();
-
- 
+   void onUpdateCron(UpdateCronEvent event);
 }

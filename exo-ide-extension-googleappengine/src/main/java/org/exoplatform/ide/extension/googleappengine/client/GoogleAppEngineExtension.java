@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.cron.CronsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
@@ -71,6 +72,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new VaccumIndexesHandlerImpl();
       new QueuesHandler();
       new DosHandler();
+      new CronsHandler();
    }
 
    /**
