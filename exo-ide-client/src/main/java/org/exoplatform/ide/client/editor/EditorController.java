@@ -280,7 +280,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       file.setContent(getEditorFromView(file.getId()).getText());
       if (!file.isPersisted())
       {
-         IDE.fireEvent(new SaveFileAsEvent());
+         IDE.fireEvent(new SaveFileAsEvent(activeFile, SaveFileAsEvent.SaveDialogType.YES_CANCEL, null, null));
       }
       else
       {
