@@ -16,31 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client;
+package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
-
-import java.util.List;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 
 /**
- * The interface for the {@link AutoBean} generator.
- * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 11:25:04 AM anya $
- * 
- */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: $
+*/
+public class BackendsPresenter extends GoogleAppEnginePresenter
 {
-   /**
-    * Factory method for generating credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> credentials();
+   interface Display extends IsView
+   {
+   
+   }
 
- 
 }

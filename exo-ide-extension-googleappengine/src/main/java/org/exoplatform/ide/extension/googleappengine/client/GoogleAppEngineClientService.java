@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import com.google.gwt.http.client.RequestException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,7 +59,7 @@ public abstract class GoogleAppEngineClientService
       String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
    public abstract void cronInfo(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+      GoogleAppEngineAsyncRequestCallback<List<CronEntry>> callback) throws RequestException;
 
    public abstract void deleteBackend(String vfsId, String projectId, String backendName, String email,
       String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;

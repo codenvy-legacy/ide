@@ -22,10 +22,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -62,14 +65,14 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
        * 
        * @return {@link HasValue}
        */
-      HasValue<String> getEmailField();
+      TextFieldItem getEmailField();
 
       /**
        * Get password field.
        * 
        * @return {@link HasValue}
        */
-      HasValue<String> getPasswordField();
+      TextFieldItem getPasswordField();
 
       /**
        * Login result label.
@@ -162,6 +165,31 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
          }
       });
 
+      display.getEmailField().addKeyUpHandler(new KeyUpHandler()
+      {
+
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
+            {
+               doLogin();
+            }
+         }
+      });
+
+      display.getPasswordField().addKeyUpHandler(new KeyUpHandler()
+      {
+
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
+            {
+               doLogin();
+            }
+         }
+      });
    }
 
    /**
@@ -188,7 +216,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
          Display display = GWT.create(Display.class);
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-         
+
          IDE.addHandler(GAEOperationFailedEvent.TYPE, this);
          display.enableLoginButton(false);
          display.focusInEmailField();
