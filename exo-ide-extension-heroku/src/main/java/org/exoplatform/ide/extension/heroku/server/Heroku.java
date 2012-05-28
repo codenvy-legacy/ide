@@ -471,8 +471,8 @@ public class Heroku
          XPath xPath = XPathFactory.newInstance().newXPath();
 
          name = (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING);
-         String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
-         String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
+         String gitUrl = (String)xPath.evaluate("/app/git-url", xmlDoc, XPathConstants.STRING);
+         String webUrl = (String)xPath.evaluate("/app/web-url", xmlDoc, XPathConstants.STRING);
 
          if (workDir != null)
          {
