@@ -51,7 +51,8 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
 
    public RollbackUpdatePresenter()
    {
-      IDE.getInstance().addControl(new RollbackControl());
+      //TODO removed:
+      //DE.getInstance().addControl(new RollbackControl());
 
       IDE.addHandler(RollbackUpdateEvent.TYPE, this);
    }

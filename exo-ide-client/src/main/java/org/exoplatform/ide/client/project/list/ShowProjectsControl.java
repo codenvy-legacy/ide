@@ -26,6 +26,12 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -36,7 +42,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 
-public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class ShowProjectsControl extends SimpleControl implements IDEControl, VfsChangedHandler, ViewActivatedHandler,
+   ItemsSelectedHandler
 {
 
    public static final String ID = "Project/Open...";
@@ -46,6 +53,8 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    private static final String PROMPT = "Open Project...";
 
    private VirtualFileSystemInfo vfsInfo;
+   
+   private boolean projectExplorerSelected = false;
 
    /**
     * 
@@ -68,6 +77,8 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    public void initialize()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       update();
    }
 
@@ -95,6 +106,33 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    {
       vfsInfo = event.getVfsInfo();
       update();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+
+      if (projectExplorerSelected && !event.getSelectedItems().isEmpty())
+      {
+         setShowInContextMenu(event.getSelectedItems().get(0) instanceof ProjectModel);
+      }
+      else
+      {
+         setShowInContextMenu(false);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      projectExplorerSelected = event.getView().getId().equals(TinyProjectExplorerView.ID);
+
    }
 
 }

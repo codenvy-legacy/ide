@@ -101,12 +101,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
 
    private LoginCanceledHandler loginCanceledHandler;
 
+   private String userEmail;
+
    private LoggedInHandler loggedInHandler = new LoggedInHandler()
    {
       @Override
       public void onLoggedIn()
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
    };
 
@@ -222,8 +227,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
          display.focusInEmailField();
          display.getLoginResult().setValue("");
       }
-      else
+
+      if (userEmail != null)
       {
+         display.getEmailField().setValue(userEmail);
          display.getLoginResult().setValue(GoogleAppEngineExtension.GAE_LOCALIZATION.loginFailedMessage());
       }
    }
@@ -233,9 +240,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
     */
    protected void doLogin()
    {
-      final String email = display.getEmailField().getValue();
+      userEmail = display.getEmailField().getValue();
       final String password = display.getPasswordField().getValue();
-      performOperationHandler.onPerformOperation(email, password, loggedInHandler);
+      IDE.getInstance().closeView(display.asView().getId());
+      performOperationHandler.onPerformOperation(userEmail, password, loggedInHandler);
    }
 
    /**
@@ -258,10 +266,19 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
    @Override
    public void onLoginFailed(LoginFailedEvent event)
    {
-      if (display != null)
+      if (display == null)
       {
-         display.getLoginResult().setValue(GoogleAppEngineExtension.GAE_LOCALIZATION.loginFailedMessage());
+         Display display = GWT.create(Display.class);
+         bindDisplay(display);
+         IDE.getInstance().openView(display.asView());
+
+         IDE.addHandler(GAEOperationFailedEvent.TYPE, this);
       }
+      if (userEmail != null)
+      {
+         display.getEmailField().setValue(userEmail);
+      }
+      display.getLoginResult().setValue(GoogleAppEngineExtension.GAE_LOCALIZATION.loginFailedMessage());
    }
 
    /**

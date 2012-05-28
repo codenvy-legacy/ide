@@ -24,10 +24,17 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * 
@@ -38,7 +45,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  */
 
 public class ShowProjectPropertiesControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ItemsSelectedHandler, ViewActivatedHandler
 {
 
    public static final String ID = "Project/Properties...";
@@ -46,6 +53,8 @@ public class ShowProjectPropertiesControl extends SimpleControl implements IDECo
    private static final String TITLE = "Properties...";
 
    private static final String PROMPT = "Show Project Properties...";
+
+   private boolean isNavigatorSelected;
 
    public ShowProjectPropertiesControl()
    {
@@ -62,6 +71,8 @@ public class ShowProjectPropertiesControl extends SimpleControl implements IDECo
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
       setVisible(true);
    }
 
@@ -75,6 +86,31 @@ public class ShowProjectPropertiesControl extends SimpleControl implements IDECo
    public void onProjectClosed(ProjectClosedEvent event)
    {
       setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      isNavigatorSelected =
+         event.getView() instanceof ProjectExplorerDisplay || event.getView() instanceof NavigatorDisplay;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+
+      if (event.getSelectedItems() == null || event.getSelectedItems().isEmpty())
+      {
+         setShowInContextMenu(false);
+         return;
+      }
+      setShowInContextMenu(isNavigatorSelected && event.getSelectedItems().get(0) instanceof ProjectModel);
    }
 
 }
