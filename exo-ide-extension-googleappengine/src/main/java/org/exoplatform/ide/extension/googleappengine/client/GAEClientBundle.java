@@ -36,4 +36,71 @@ public interface GAEClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/gae_Disabled.png")
    ImageResource googleAppEngineDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/create_app.png")
+   ImageResource createApplicationConrtol();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/create_app_Disabled.png")
+   ImageResource createApplicationConrtolDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/general.png")
+   ImageResource general();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/get_logs.png")
+   ImageResource getLogs();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/get_logs_Disabled.png")
+   ImageResource getLogsDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/logs.png")
+   ImageResource logs();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback.png")
+   ImageResource rollback();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_Disabled.png")
+   ImageResource rollbackDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_application.png")
+   ImageResource updateApplication();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_application_Disabled.png")
+   ImageResource updateApplicationDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/crons.png")
+   ImageResource crons();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/backends.png")
+   ImageResource backends();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/dos.png")
+   ImageResource updateDos();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/dos_Disabled.png")
+   ImageResource updateDosDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_indexes.png")
+   ImageResource updateIndexes();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_indexes_Disabled.png")
+   ImageResource updateIndexesDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/vacuum_indexes.png")
+   ImageResource vacuumIndexes();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/vacuum_indexes_Disabled.png")
+   ImageResource vacuumIndexesDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_pagespeed.png")
+   ImageResource updatePagespeed();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_pagespeed_Disabled.png")
+   ImageResource updatePagespeedDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_queues.png")
+   ImageResource updateQueues();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_queues_Disabled.png")
+   ImageResource updateQueuesDisabled();
+
 }

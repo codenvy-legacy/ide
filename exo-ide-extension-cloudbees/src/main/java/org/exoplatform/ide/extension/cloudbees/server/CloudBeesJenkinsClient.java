@@ -18,22 +18,15 @@
  */
 package org.exoplatform.ide.extension.cloudbees.server;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
-import org.exoplatform.ide.extension.jenkins.server.JenkinsException;
-import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -41,26 +34,16 @@ import java.net.URL;
  */
 public class CloudBeesJenkinsClient extends JenkinsClient
 {
-   private final String loginURL;
-   private final String authURL;
-   private final byte[] authForm;
+   private final byte[] credentials;
 
-   /*protected*/public CloudBeesJenkinsClient(String baseURL, String user, String password)
+   public CloudBeesJenkinsClient(String baseURL, String user, String password) throws UnsupportedEncodingException
    {
       super(baseURL);
-      String tmp = baseURL;
-      if (!tmp.endsWith("/"))
-         tmp += "/";
-      authURL = "https://sso.cloudbees.com/sso-gateway/signon/usernamePasswordLogin.do?josso_back_to=" + tmp;
-      loginURL = "https://sso.cloudbees.com/sso-gateway/signon/login.do?josso_back_to=" + tmp;
-      authForm = ("josso_username=" + user + "&josso_password=" + password + "&josso_cmd=login").getBytes();
+      credentials = encodeBase64((user + ":" + password).getBytes("ISO-8859-1"));
 
-      // Need to be able save cookies after authentication.
-      if (CookieHandler.getDefault() == null)
-         CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
    }
 
-   public CloudBeesJenkinsClient(InitParams initParams)
+   public CloudBeesJenkinsClient(InitParams initParams) throws UnsupportedEncodingException
    {
       this( //
          readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
@@ -80,118 +63,12 @@ public class CloudBeesJenkinsClient extends JenkinsClient
       return defaultValue;
    }
 
-   @Override
-   public void createJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
-      throws IOException, JenkinsException, VirtualFileSystemException
-   {
-      doLogin();
-      super.createJob(jobName, git, user, email, vfs, projectId);
-   }
-
-   @Override
-   public void updateJob(String jobName, String git, String user, String email, VirtualFileSystem vfs, String projectId)
-      throws IOException, JenkinsException, VirtualFileSystemException
-   {
-      doLogin();
-      super.updateJob(jobName, git, user, email, vfs, projectId);
-   }
-
-   @Override
-   public String getJob(String jobName) throws IOException, JenkinsException
-   {
-      doLogin();
-      return super.getJob(jobName);
-   }
-
-   @Override
-   public void build(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
-      VirtualFileSystemException
-   {
-      doLogin();
-      super.build(jobName, vfs, projectId);
-   }
-
-   @Override
-   public JobStatus jobStatus(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
-      JenkinsException, VirtualFileSystemException
-   {
-      doLogin();
-      return super.jobStatus(jobName, vfs, projectId);
-   }
-
-   @Override
-   public InputStream consoleOutput(String jobName, VirtualFileSystem vfs, String projectId) throws IOException,
-      JenkinsException, VirtualFileSystemException
-   {
-      doLogin();
-      return super.consoleOutput(jobName, vfs, projectId);
-   }
-
-   @Override
-   public void deleteJob(String jobName, VirtualFileSystem vfs, String projectId) throws IOException, JenkinsException,
-      VirtualFileSystemException
-   {
-      doLogin();
-      super.deleteJob(jobName, vfs, projectId);
-   }
-
-   private synchronized void doLogin() throws IOException, JenkinsException
-   {
-      // Since Jenkins does not provide 401 HTTP status when user need authenticated
-      // and even does not provide 403 when try access protected resources we need check
-      // login page each time to be sure cookies what we have still valid.
-      HttpURLConnection http = null;
-      int responseCode = 0;
-      boolean loggedIn = false;
-
-      try
-      {
-         http = (HttpURLConnection)new URL(loginURL).openConnection();
-         http.setRequestMethod("GET");
-         responseCode = http.getResponseCode();
-         if (!(responseCode == 200 || responseCode == 302))
-            throw fault(http);
-         // If not logged in yet then we stay at the same page what we are requested.
-         // Otherwise redirected to Jenkins 'dashboard' page (baseURL). 
-         loggedIn = !(http.getURL().toString().equals(loginURL));
-      }
-      finally
-      {
-         if (http != null)
-            http.disconnect();
-      }
-
-      if (!loggedIn)
-      {
-         http = null;
-         responseCode = 0;
-         try
-         {
-            http = (HttpURLConnection)new URL(authURL).openConnection();
-            http.setRequestMethod("POST");
-            http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-            http.setDoOutput(true);
-            OutputStream output = http.getOutputStream();
-            output.write(authForm);
-            output.close();
-            responseCode = http.getResponseCode();
-            if (!(responseCode == 200 || responseCode == 302))
-               throw fault(http);
-         }
-         finally
-         {
-            if (http != null)
-               http.disconnect();
-         }
-      }
-   }
-
    /**
     * @see org.exoplatfrom.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection)
     */
    @Override
    protected void authenticate(HttpURLConnection http) throws IOException
    {
-      // Nothing to do here since form authentication
+      http.setRequestProperty("Authorization", "Basic " + new String(credentials, "ISO-8859-1"));
    }
 }

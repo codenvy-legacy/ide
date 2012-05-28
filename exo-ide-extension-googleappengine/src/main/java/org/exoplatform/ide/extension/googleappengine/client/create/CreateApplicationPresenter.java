@@ -18,17 +18,14 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
-import com.google.gwt.user.client.Window;
-
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasLoadHandlers;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;

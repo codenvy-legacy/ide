@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.user.client.ui.Button;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -42,28 +41,28 @@ public class MainTabPain extends Composite
    }
 
    @UiField
-   Button updateApplicationButton;
-   
-   @UiField
-   Button rollbackApplicationButton;
+   ImageButton updateApplicationButton;
 
    @UiField
-   Button getLogsButton;
+   ImageButton rollbackApplicationButton;
 
    @UiField
-   Button updateDosButton;
+   ImageButton getLogsButton;
 
    @UiField
-   Button updateIndexesButton;
+   ImageButton updateDosButton;
 
    @UiField
-   Button vacuumIndexesButton;
+   ImageButton updateIndexesButton;
 
    @UiField
-   Button updatePageSpeedButton;
+   ImageButton vacuumIndexesButton;
 
    @UiField
-   Button updateQueuesButton;
+   ImageButton updatePageSpeedButton;
+
+   @UiField
+   ImageButton updateQueuesButton;
 
    public MainTabPain()
    {
@@ -73,7 +72,7 @@ public class MainTabPain extends Composite
    /**
     * @return the updateApplicationButton
     */
-   public Button getUpdateApplicationButton()
+   public ImageButton getUpdateApplicationButton()
    {
       return updateApplicationButton;
    }
@@ -81,7 +80,7 @@ public class MainTabPain extends Composite
    /**
     * @return the rollbackApplicationButton
     */
-   public Button getRollbackApplicationButton()
+   public ImageButton getRollbackApplicationButton()
    {
       return rollbackApplicationButton;
    }
@@ -89,7 +88,7 @@ public class MainTabPain extends Composite
    /**
     * @return the getLogsButton
     */
-   public Button getGetLogsButton()
+   public ImageButton getGetLogsButton()
    {
       return getLogsButton;
    }
@@ -97,7 +96,7 @@ public class MainTabPain extends Composite
    /**
     * @return the updateDosButton
     */
-   public Button getUpdateDosButton()
+   public ImageButton getUpdateDosButton()
    {
       return updateDosButton;
    }
@@ -105,7 +104,7 @@ public class MainTabPain extends Composite
    /**
     * @return the updateIndexesButton
     */
-   public Button getUpdateIndexesButton()
+   public ImageButton getUpdateIndexesButton()
    {
       return updateIndexesButton;
    }
@@ -113,7 +112,7 @@ public class MainTabPain extends Composite
    /**
     * @return the vacuumIndexesButton
     */
-   public Button getVacuumIndexesButton()
+   public ImageButton getVacuumIndexesButton()
    {
       return vacuumIndexesButton;
    }
@@ -121,7 +120,7 @@ public class MainTabPain extends Composite
    /**
     * @return the updatePageSpeedButton
     */
-   public Button getUpdatePageSpeedButton()
+   public ImageButton getUpdatePageSpeedButton()
    {
       return updatePageSpeedButton;
    }
@@ -129,7 +128,7 @@ public class MainTabPain extends Composite
    /**
     * @return the updateQueuesButton
     */
-   public Button getUpdateQueuesButton()
+   public ImageButton getUpdateQueuesButton()
    {
       return updateQueuesButton;
    }
