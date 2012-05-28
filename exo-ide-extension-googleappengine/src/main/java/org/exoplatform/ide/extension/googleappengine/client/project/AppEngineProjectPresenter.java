@@ -230,7 +230,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
-      getCrons(null, null, null);
+      //TODO getCrons(null, null, null);
    }
 
    /**

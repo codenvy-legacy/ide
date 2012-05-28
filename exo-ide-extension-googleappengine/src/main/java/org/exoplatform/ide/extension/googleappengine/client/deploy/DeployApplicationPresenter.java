@@ -49,6 +49,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    private LoggedInHandler loggedInHandler;
 
+   private String applicationUrl;
+
    private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
    {
 
@@ -58,7 +60,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          email = e;
          password = p;
          loggedInHandler = handler;
-         buildProject();
+         deployApplication();
       }
    };
 
@@ -85,12 +87,12 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
    }
 
-   public void deployApplication(String binUrl)
+   public void deployApplication()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, null, email, password,
-            new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl, email,
+            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
             {
 
                @Override
@@ -113,6 +115,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    private void buildProject()
    {
+      this.applicationUrl = null;
       IDE.addHandler(ProjectBuiltEvent.TYPE, this);
       IDE.fireEvent(new BuildProjectEvent());
    }
@@ -126,7 +129,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       IDE.removeHandler(ProjectBuiltEvent.TYPE, this);
       if (event.getBuildStatus().getDownloadUrl() != null)
       {
-         deployApplication(event.getBuildStatus().getDownloadUrl());
+         applicationUrl = event.getBuildStatus().getDownloadUrl();
+         deployApplication();
       }
    }
 }
