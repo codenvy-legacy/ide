@@ -108,7 +108,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
       @Override
       public void onLoggedIn()
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
    };
 
