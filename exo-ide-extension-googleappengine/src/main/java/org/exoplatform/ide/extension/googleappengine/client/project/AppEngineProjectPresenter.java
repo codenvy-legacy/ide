@@ -176,40 +176,10 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             updateIndexes();
          }
       });
-      
+
       display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
       {
-         
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            vacuumIndexes();
-         }
-      });
-      
-      display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
-      {
-         
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            vacuumIndexes();
-         }
-      });
-      
-      display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
-      {
-         
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            vacuumIndexes();
-         }
-      });
-      
-      display.getVacuumIndexesButton().addClickHandler(new ClickHandler()
-      {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
@@ -300,7 +270,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    {
       IDE.fireEvent(new UpdateIndexesEvent());
    }
-   
+
    protected void vacuumIndexes()
    {
       IDE.fireEvent(new VacuumIndexesEvent());
