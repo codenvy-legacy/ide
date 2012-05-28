@@ -56,16 +56,18 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
       add(uiBinder.createAndBindUi(this));
 
       mainTabPain = new MainTabPain();
-      applicationTabPanel.addTab(GENERAL_TAB_ID, null,
+      applicationTabPanel.addTab(GENERAL_TAB_ID, new Image(GAEClientBundle.INSTANCE.general()),
          GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationGeneralTab(), mainTabPain, false);
 
       cronTabPane = new CronTabPane();
-      applicationTabPanel.addTab(CRONS_TAB_ID, null,
-         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);
+   /*   applicationTabPanel.addTab(CRONS_TAB_ID, new Image(GAEClientBundle.INSTANCE.crons()),
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);*/
 
       backendsTabPane = new BackendsTabPane();
-      applicationTabPanel.addTab(BACKENDS_TAB_ID, null,
-         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
+      /*
+       * applicationTabPanel.addTab(BACKENDS_TAB_ID, new Image(GAEClientBundle.INSTANCE.backends()),
+       * GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
+       */
    }
 
    /**
