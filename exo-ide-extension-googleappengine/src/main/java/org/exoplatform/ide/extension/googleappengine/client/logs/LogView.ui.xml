@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
-
+   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
    <ui:style>
       .content {
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -34,7 +34,8 @@
                <c:TextInput ui:field="numDaysField" height="20px" width="40px" addStyleNames="{style.space}"></c:TextInput>
                <c:Label value="{locale.logsSeverityFieldTitle}" height="18px" isHTML="true" styleName="{style.label}"></c:Label>
                <c:SelectItem ui:field="severityField" height="20px" width="140px" addStyleNames="{style.space}"></c:SelectItem>
-               <c:ImageButton ui:field="getLogsButton" height="20px" width="60px" text="{locale.getLogsButton}"></c:ImageButton>
+               <c:ImageButton ui:field="getLogsButton" height="20px" width="60px" text="{locale.getLogsButton}" imageResource="{resource.getLogs}"
+                  disabledImageResource="{resource.getLogsDisabled}"></c:ImageButton>
             </g:HorizontalPanel>
          </c:Toolbar>
       </c:layer>

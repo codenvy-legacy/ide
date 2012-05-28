@@ -247,11 +247,13 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
    public void updateApplication()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new DeployApplicationEvent());
    }
 
    public void rollbackApplicationUpdate()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new RollbackUpdateEvent());
    }
 
@@ -263,31 +265,37 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
    public void updatePageSpeed()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdatePageSpeedEvent());
    }
 
    protected void updateIndexes()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateIndexesEvent());
    }
 
    protected void vacuumIndexes()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new VacuumIndexesEvent());
    }
 
    public void updateQueues()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateQueuesEvent());
    }
 
    public void updateDos()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateDosEvent());
    }
 
    public void updateCrons()
    {
+      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateCronEvent());
    }
 
