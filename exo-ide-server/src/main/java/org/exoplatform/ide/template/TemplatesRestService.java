@@ -42,6 +42,7 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -120,10 +121,13 @@ public class TemplatesRestService
 
    private VirtualFileSystemRegistry vfsRegistry;
 
-   public TemplatesRestService(String workspace, String templateConfig, VirtualFileSystemRegistry vfsRegistry)
+   private final EventListenerList listenerList;
+
+   public TemplatesRestService(String workspace, String templateConfig, VirtualFileSystemRegistry vfsRegistry, EventListenerList listenerList)
    {
       this.workspace = workspace;
       this.vfsRegistry = vfsRegistry;
+      this.listenerList = listenerList;
       if (templateConfig != null)
       {
          this.config = templateConfig;
@@ -345,7 +349,7 @@ public class TemplatesRestService
          context = contextResolver.getContext(RequestContext.class);
       }
 
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, listenerList);
       Folder projectFolder = vfs.createFolder(parentId, name);
       InputStream templateStream =
          Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
@@ -638,7 +642,7 @@ public class TemplatesRestService
    {
       try
       {
-         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
+         VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, listenerList);
          checkConfigNode(vfs);
 
          String id = "";

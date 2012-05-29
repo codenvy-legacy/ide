@@ -27,6 +27,7 @@ import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
 import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.jcr.RepositoryService;
 
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(RepositoryService repositoryService, VirtualFileSystemRegistry vfsRegistry,
+   public IDEServiceApplication(RepositoryService repositoryService, VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
       InitParams initParams)
    {
       String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
@@ -60,7 +61,7 @@ public class IDEServiceApplication extends Application
       objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
       objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
-      objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry));
+      objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry, eventListenerList));
 
       classes.add(LoopbackContentService.class);
       classes.add(RequestContextResolver.class);

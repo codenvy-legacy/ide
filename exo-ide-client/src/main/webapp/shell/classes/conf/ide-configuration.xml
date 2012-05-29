@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public 
-   License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version. This software is distributed 
-   in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-   See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
-   if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can 
+   redistribute it and/or modify it under the terms of the GNU Lesser General 
+   Public License as published by the Free Software Foundation; either version 
+   2.1 of the License, or (at your option) any later version. This software 
+   is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+   without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+   PURPOSE. See the GNU Lesser General Public License for more details. You 
+   should have received a copy of the GNU Lesser General Public License along 
+   with this software; if not, write to the Free Software Foundation, Inc., 
+   51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: 
+   http://www.fsf.org. -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
    <component>
@@ -12,19 +19,23 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider
+      </type>
    </component>
 
    <component>
-      <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider</type>
+      <type>org.chromattic.dataobject.runtime.ChromatticSessionProvider
+      </type>
       <init-params>
          <value-param>
             <name>rootNodePath</name>
@@ -42,15 +53,18 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyCompiler
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
+      <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider
+      </type>
    </component>
 
    <component>
@@ -80,21 +94,20 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
+      <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
+      <type>org.exoplatform.ide.extension.maven.server.BuilderApplication
+      </type>
    </component>
 
-   <!-- component> <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type> <init-params> <value-param> <name>defaultEntryPoint</name> <value>dev-monit</value> 
-      </value-param> <value-param> <name>discoverable</name> <value>true</value> </value-param> <value-param> <name>workspace</name> <value>production</value> 
-      </value-param> <value-param> <name>user-config</name> <value>/ide-home/users/</value> </value-param> </init-params> </component> <component> <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type> 
-      </component -->
-
    <component>
-      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesJenkinsClient</type>
+      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient
+      </key>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBeesJenkinsClient
+      </type>
       <init-params>
          <value-param>
             <name>jenkins-user</name>
@@ -117,11 +130,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
+      <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
+      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication
+      </type>
    </component>
 
    <component>
@@ -135,7 +150,8 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator
+      </type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -145,11 +161,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
+      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees
+      </type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -163,20 +181,24 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry</type>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
+      <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication
+      </type>
    </component>
 
 
    <component>
-      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
+      <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication
+      </type>
    </component>
 
    <component>
@@ -185,25 +207,30 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl
+      </type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
+      <type>org.exoplatform.ide.extension.ssh.server.KeyApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory</type>
+      <type>org.exoplatform.ide.git.server.jgit.ssh.IdeSshSessionFactory
+      </type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</key>
-      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider</type>
+      <type>org.exoplatform.ide.extension.ssh.server.SshKeyProvider
+      </type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -221,11 +248,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication</type>
+      <type>org.exoplatform.ide.extension.heroku.server.rest.HerokuApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator</type>
+      <type>org.exoplatform.ide.extension.heroku.server.HerokuAuthenticator
+      </type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -235,11 +264,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
+      <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.openshift.server.Express</type>
+      <type>org.exoplatform.ide.extension.openshift.server.Express
+      </type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -253,31 +284,38 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore</type>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry</type>
+      <type>org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
+      <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer
+      </type>
       <init-params>
          <values-param>
             <name>workspaces</name>
@@ -288,7 +326,13 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage</type>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList
+      </type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage
+      </type>
       <init-params>
          <value-param>
             <name>storage-path</name>
@@ -298,24 +342,30 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
-      <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>
+      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage
+      </key>
+      <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
+      <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
+      <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
+      <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication
+      </type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
+      <type>org.exoplatform.ide.extension.maven.server.BuilderClient
+      </type>
       <init-params>
          <value-param>
             <name>build-server-base-url</name>
@@ -325,8 +375,24 @@
    </component>
 
    <component>
-      <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
-      <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
+      <type>org.exoplatform.ide.extension.java.server.PomListener</type>
+      <init-params>
+         <value-param>
+            <name>vfsId</name>
+            <value>dev-monit</value>
+         </value-param>
+         <value-param>
+            <name>delay</name>
+            <value>2000</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <component>
+      <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner
+      </key>
+      <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner
+      </type>
       <init-params>
          <value-param>
             <name>cloudfoundry-target</name>
