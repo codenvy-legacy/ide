@@ -2,15 +2,25 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
    xmlns:e="urn:import:org.exoplatform.ide.extension.googleappengine.client.cron">
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
+   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
    <ui:style>
       .right {
       	float: right;
       	margin-right: 10px;
       }
+      
+      .label {
+      	font-size: 12px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	margin-left: 10px;
+      }
    </ui:style>
 
    <f:Border borderColor="transparent">
-      <f:layer top="0" bottom="32">
+      <f:layer top="10" height="20px">
+         <f:Label value="{locale.cronGridMessage}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
+      </f:layer>
+      <f:layer top="30" bottom="32">
          <f:Border margin="10">
             <f:layer>
                <e:CronGrid width="100%" ui:field="cronGrid"></e:CronGrid>
@@ -19,7 +29,8 @@
       </f:layer>
       <f:layer height="32px" bottom="0">
          <g:FlowPanel>
-            <f:ImageButton ui:field="updateCronButton" width="90px" height="22px" text="{locale.updateButton}" styleName="{style.right}"></f:ImageButton>
+            <f:ImageButton ui:field="updateCronButton" width="90px" height="22px" text="{locale.updateButton}" styleName="{style.right}"
+               imageResource="{resource.update}" disabledImageResource="{resource.updateDisabled}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
    </f:Border>

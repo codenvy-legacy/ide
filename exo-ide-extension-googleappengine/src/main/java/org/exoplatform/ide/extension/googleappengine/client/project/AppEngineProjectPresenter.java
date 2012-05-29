@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -36,9 +35,9 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClien
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronEvent;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VacuumIndexesEvent;
-import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
@@ -230,7 +229,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
-      //TODO getCrons(null, null, null);
+      getCrons(null, null, null);
    }
 
    /**
@@ -295,7 +294,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
    public void updateCrons()
    {
-      IDE.getInstance().closeView(display.asView().getId());
       IDE.fireEvent(new UpdateCronEvent());
    }
 

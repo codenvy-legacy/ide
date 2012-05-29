@@ -63,7 +63,7 @@ public class CronGrid extends ListGrid<CronEntry>
                @Override
                public String asString()
                {
-                  return "<a>" + cronEntry.getUrl() + "</a>";
+                  return "<b>" + cronEntry.getUrl() + "</b>";
                }
             };
             return html;
@@ -98,12 +98,12 @@ public class CronGrid extends ListGrid<CronEntry>
       };
 
       getCellTable().addColumn(urlColumn, URL);
-      getCellTable().setColumnWidth(urlColumn, "35%");
+      getCellTable().setColumnWidth(urlColumn, "25%");
       getCellTable().addColumn(descriptionColumn, DESCRIPTION);
-      getCellTable().setColumnWidth(descriptionColumn, "35%");
+      getCellTable().setColumnWidth(descriptionColumn, "30%");
       getCellTable().addColumn(scheduleColumn, SCHEDULE);
-      getCellTable().setColumnWidth(scheduleColumn, "15%");
+      getCellTable().setColumnWidth(scheduleColumn, "25%");
       getCellTable().addColumn(timezoneColumn, TIMEZONE);
-      getCellTable().setColumnWidth(timezoneColumn, "15%");
+      getCellTable().setColumnWidth(timezoneColumn, "20%");
    }
 }
