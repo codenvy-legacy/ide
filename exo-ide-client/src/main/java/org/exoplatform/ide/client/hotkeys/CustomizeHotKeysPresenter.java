@@ -70,6 +70,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
       HasClickHandlers getCancelButton();
 
+      HasClickHandlers getDefaultsButton();
+
       HasClickHandlers getBindButton();
 
       HasClickHandlers getUnbindButton();
@@ -114,6 +116,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    private Display display;
 
    private List<HotKeyItem> hotKeys;
+
+   // Need for resetting the modified hotkeys back to the default hotkeys.
+   private Map<SimpleControl, String> defaultHotkeys;
 
    private HotKeyItem selectedItem;
 
@@ -175,6 +180,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    public void onControlsUpdated(ControlsUpdatedEvent event)
    {
       controls = event.getControls();
+      defaultHotkeys = getCurrentHotKeys();
    }
 
    public void bindDisplay()
@@ -192,6 +198,14 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          public void onClick(ClickEvent event)
          {
             saveHotKeys();
+         }
+      });
+
+      display.getDefaultsButton().addClickHandler(new ClickHandler()
+      {
+         public void onClick(ClickEvent event)
+         {
+            restoreDefaults();
          }
       });
 
@@ -232,7 +246,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       });
 
-      fillHotkeyListGrid();
+      fillHotkeyListGrid(false);
 
       display.setHotKeyFieldEnabled(false);
    }
@@ -246,8 +260,11 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * the end on hotkey list.
     * 
     * Update value of hotkey list grid.
+    * 
+    * @param filledWithDefaultValues - if <code>true</code> - hotkey list will be filled with default values,
+    *                                  if <code>false</code> - hotkey list will be filled with current values
     */
-   private void fillHotkeyListGrid()
+   private void fillHotkeyListGrid(boolean filledWithDefaultValues)
    {
       HashMap<String, List<SimpleControl>> groups = new LinkedHashMap<String, List<SimpleControl>>();
       for (Control command : controls)
@@ -274,7 +291,9 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          List<SimpleControl> commands = groups.get(groupName);
          for (SimpleControl command : commands)
          {
-            hotKeys.add(new HotKeyItem(command, command.getHotKey(), groupName));
+            hotKeys.add(new HotKeyItem(command,
+                                       filledWithDefaultValues ? defaultHotkeys.get(command) : command.getHotKey(),
+                                       groupName));
          }
       }
 
@@ -555,14 +574,14 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    }
 
    /**
-    * Update state after binding or unbinding.
+    * Update state after binding, unbinding or resetting.
     */
    private void updateState()
    {
       // selectedItem = null;
 
       display.setBindButtonEnabled(false);
-      if (selectedItem.getHotKey() != null && !selectedItem.getHotKey().isEmpty())
+      if (selectedItem != null && selectedItem.getHotKey() != null && !selectedItem.getHotKey().isEmpty())
       {
          display.setUnbindButtonEnabled(true);
       }
@@ -576,6 +595,15 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       
       display.getHotKeyItemListGrid().setValue(hotKeys);      
       display.setOkButtonEnabled(true);
+   }
+
+   /**
+    * Resets the modified hotkeys back to the default hotkeys.
+    */
+   private void restoreDefaults()
+   {
+      fillHotkeyListGrid(true);
+      updateState();
    }
 
    /**
@@ -599,6 +627,27 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       {
          display.setBindButtonEnabled(false);
       }
+   }
+
+   /**
+    * Returns current (default) hotkeys.
+    * 
+    * @return current hotkeys
+    */
+   private Map<SimpleControl, String> getCurrentHotKeys()
+   {
+      Map<SimpleControl, String> defaultHotKeysMap = new LinkedHashMap<SimpleControl, String>();
+
+      for (Control<?> control : controls)
+      {
+         if (control instanceof SimpleControl && ((SimpleControl)control).getHotKey() != null
+            && !((SimpleControl)control).getHotKey().isEmpty())
+         {
+            defaultHotKeysMap.put((SimpleControl)control, ((SimpleControl)control).getHotKey());
+         }
+      }
+
+      return defaultHotKeysMap;
    }
 
 }
