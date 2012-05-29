@@ -21,11 +21,13 @@ package org.exoplatform.ide.miscellaneous;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.interactions.Actions;
 
 import java.io.IOException;
@@ -190,6 +192,56 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+   }
+
+   @Test
+   public void testResettingToDefaults() throws Exception
+   {
+      driver.navigate().refresh();
+
+      IDE.PROJECT.EXPLORER.waitOpened();IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
+      //step 1: create new hotkey for upload file (Alt+U)
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.File.UPLOAD_FILE);
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "u");
+      IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+
+      // step 2: check new hotkey
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.ALT.toString() + "u");
+      IDE.UPLOAD.waitOpened();
+      IDE.UPLOAD.clickCancelButton();
+
+      //step 3: resetting the hotkeys to the default values and checking
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
+      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      IDE.CUSTOMIZE_HOTKEYS.defaultsButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
+      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+
+      //step4: check that hotkey hasn't binded
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.ALT.toString() + "u");
+      boolean isUploadViewClosed = false;
+      try
+      {
+         IDE.UPLOAD.waitOpened();
+      }
+      catch(TimeoutException e)
+      {
+         isUploadViewClosed = true;
+      }
+      Assert.assertTrue(isUploadViewClosed);
    }
 
 }

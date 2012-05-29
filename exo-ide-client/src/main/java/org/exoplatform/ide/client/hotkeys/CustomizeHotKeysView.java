@@ -54,7 +54,7 @@ public class CustomizeHotKeysView extends ViewImpl implements
    /**
     * Initial width of this view
     */
-   private static final int WIDTH = 640;
+   private static final int WIDTH = 700;
 
    /**
     * Initial height of this view
@@ -78,6 +78,9 @@ public class CustomizeHotKeysView extends ViewImpl implements
 
    @UiField
    ImageButton cancelButton;
+
+   @UiField
+   ImageButton defaultsButton;
 
    @UiField
    HotKeyItemListGrid hotKeyItemListGrid;
@@ -108,6 +111,12 @@ public class CustomizeHotKeysView extends ViewImpl implements
    public HasClickHandlers getCancelButton()
    {
       return cancelButton;
+   }
+
+   @Override
+   public HasClickHandlers getDefaultsButton()
+   {
+      return defaultsButton;
    }
 
    @Override

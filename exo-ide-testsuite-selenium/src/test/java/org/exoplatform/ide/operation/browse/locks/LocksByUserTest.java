@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -92,6 +93,7 @@ public class LocksByUserTest extends LockFileAbstract
       //step 2 lock file an logout
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      String contentEditor=IDE.EDITOR.getTextFromCodeEditor(0);
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
@@ -118,14 +120,17 @@ public class LocksByUserTest extends LockFileAbstract
 
       //TODO Here failed but after fix issue IDE-1476 should be pass
      // checkAllUnlockStateButtons();
+      IDE.GOTOLINE.goToLine(1);
       IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.LOADER.waitClosed();
-      IDE.WARNING_DIALOG.waitOpened();
-      IDE.WARNING_DIALOG.getWarningMessage().contains("423 Locked");
-      IDE.WARNING_DIALOG.clickOk();
-      IDE.WARNING_DIALOG.waitClosed();
+      assertEquals(contentEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE);
+
+//      IDE.LOADER.waitClosed();
+//      IDE.WARNING_DIALOG.waitOpened();
+//      IDE.WARNING_DIALOG.getWarningMessage().contains("423 Locked");
+//      IDE.WARNING_DIALOG.clickOk();
+//      IDE.WARNING_DIALOG.waitClosed();
    }
 
    /**
