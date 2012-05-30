@@ -74,6 +74,11 @@
          <artifactId>exo-ide-editor-php</artifactId>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-python</artifactId>
+      </dependency>
+
       <!-- EXTENSIONS -->
 
 
