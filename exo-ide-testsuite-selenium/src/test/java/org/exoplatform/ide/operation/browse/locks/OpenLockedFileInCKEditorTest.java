@@ -31,6 +31,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
 
    private static final String FOLDER_NAME = OpenLockedFileInCKEditorTest.class.getSimpleName();
 
-   private static String PROJECT = LockFileTest.class.getSimpleName();
+   private static String PROJECT = OpenLockedFileInCKEditorTest.class.getSimpleName();
 
    private static final String FILE_NAME = "file-" + OpenLockedFileInCKEditorTest.class.getSimpleName();
 
@@ -60,7 +61,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
 
          VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
+            "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html",
             MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (Exception e)
@@ -95,8 +96,11 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
-      IDE.CK_EDITOR.WaitCkEditorOpened(0);
+      
+      IDE.CK_EDITOR.WaitCkEditorOpened(1);
       String contentEditor = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL+"s");
+      IDE.LOADER.waitClosed();
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
@@ -119,14 +123,19 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
+     
+      IDE.EDITOR.clickDesignButton();
+      IDE.LOADER.waitClosed();
+      
+      IDE.CK_EDITOR.WaitCkEditorOpened(1);
+      
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
 
       //TODO Here failed but after fix issue IDE-1476 should be pass
       // checkAllUnlockStateButtons();
-      IDE.GOTOLINE.goToLine(1);
-      IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
-      assertEquals(contentEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      
+      IDE.CK_EDITOR.deleteFileContentInCKEditor(0);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "i try is change content");
       IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE);
    }
 
