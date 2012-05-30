@@ -30,6 +30,7 @@
    <inherits name="org.exoplatform.ide.editor.jsp.JspEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.ruby.RubyEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.php.PhpEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.python.PythonEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.xml.XmlEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.javascript.JavaScriptEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.html.HtmlEditorExtension" />

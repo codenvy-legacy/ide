@@ -66,6 +66,7 @@ public class NewItemControlsFormatter implements ControlsFormatter
       controlIdsOrder.add("File/New/New JSP File");
       controlIdsOrder.add("File/New/New Ruby File");
       controlIdsOrder.add("File/New/New PHP File");
+      controlIdsOrder.add("File/New/New Python File");
 
       controlIdsOrder.add("File/New/Create File From Template...");
 

@@ -45,6 +45,7 @@ public class FileTemplates
       addGtmplTemplate();
       addRubyTemplate();
       addPhpTemplate();
+      addPythonTemplate();
       addJspTemplate();
       addJavaTemplate();
    }
@@ -88,6 +89,14 @@ public class FileTemplates
          "<html>\n" + "  <head>\n" + "     <title>PHP Test</title>\n" + "  </head>\n" + "  <body>\n"
             + "     <?php echo '<p>Hello World</p>'; ?>\n" + "  </body>\n" + "</html>";
       TEMPLATES.put(MimeType.APPLICATION_PHP, content);
+   }
+
+   private static void addPythonTemplate()
+   {
+      String content =
+         "# Hello world python program\n"
+            + "print \"Hello World!\";";
+      TEMPLATES.put(MimeType.TEXT_X_PYTHON, content);
    }
 
    private static void addGtmplTemplate()
