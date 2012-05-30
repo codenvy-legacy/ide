@@ -84,7 +84,7 @@ public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncReques
                IDE.fireEvent(new GAEOperationFailedEvent());
             }
          }
-         IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
       }
+      IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
    }
 }

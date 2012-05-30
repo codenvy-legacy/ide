@@ -49,6 +49,8 @@ public class CustomizeHotkeys extends AbstractTestModule
 
       String UNBIND_BUTTON_ID = "ideCustomizeHotKeysViewUnbindButton";
 
+      String DEFAULTS_BUTTON_ID = "ideCustomizeHotKeysViewDefaultsButton";
+
       String IS_UNBIND_ENABLED_SELECTOR = "div#" + UNBIND_BUTTON_ID + ENABLED_BUTTON_PREFICS;
 
       String IS_UNBIND_DISABLED_SELECTOR = "div#" + UNBIND_BUTTON_ID + DISABLED_BUTTON_PREFICS;
@@ -105,6 +107,9 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    @FindBy(id = Locators.UNBIND_BUTTON_ID)
    private WebElement unbindButton;
+
+   @FindBy(id = Locators.DEFAULTS_BUTTON_ID)
+   private WebElement defaultsButton;
 
    @FindBy(id = Locators.OK_BUTTON_ID)
    private WebElement okButton;
@@ -321,7 +326,7 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * click bind button button
+    * click bind button
     */
    public void bindlButtonClick()
    {
@@ -329,7 +334,7 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * click bind button button
+    * click unbind button
     */
    public void unbindlButtonClick()
    {
@@ -337,7 +342,15 @@ public class CustomizeHotkeys extends AbstractTestModule
    }
 
    /**
-    * click ok button button
+    * click on defaults button
+    */
+   public void defaultsButtonClick()
+   {
+      defaultsButton.click();
+   }
+
+   /**
+    * click ok button
     */
    public void okButtonClick()
    {

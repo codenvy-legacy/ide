@@ -33,6 +33,8 @@ public interface CronEntry
 
    public String getUrl();
 
+   public Object getNextTimesIterato();
+
    public void setDescription(String description);
 
    public void setSchedule(String schedule);
@@ -40,4 +42,6 @@ public interface CronEntry
    public void setTimezone(String timezone);
 
    public void setUrl(String url);
+
+   public void setNextTimesIterator(Object iterator);
 }
