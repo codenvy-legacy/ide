@@ -45,9 +45,9 @@ public class FileTemplates
       addGtmplTemplate();
       addRubyTemplate();
       addPhpTemplate();
-      addPythonTemplate();
       addJspTemplate();
       addJavaTemplate();
+      addPythonTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -89,14 +89,6 @@ public class FileTemplates
          "<html>\n" + "  <head>\n" + "     <title>PHP Test</title>\n" + "  </head>\n" + "  <body>\n"
             + "     <?php echo '<p>Hello World</p>'; ?>\n" + "  </body>\n" + "</html>";
       TEMPLATES.put(MimeType.APPLICATION_PHP, content);
-   }
-
-   private static void addPythonTemplate()
-   {
-      String content =
-         "# Hello world python program\n"
-            + "print \"Hello World!\";";
-      TEMPLATES.put(MimeType.TEXT_X_PYTHON, content);
    }
 
    private static void addGtmplTemplate()
@@ -162,5 +154,13 @@ public class FileTemplates
             + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world! ]]>" + "</Content>" + "</Module>";
 
       TEMPLATES.put(MimeType.GOOGLE_GADGET, content);
+   }
+
+   private static void addPythonTemplate()
+   {
+      String content =
+         "# Hello world python program\n"
+            + "print \"Hello World!\";";
+      TEMPLATES.put(MimeType.TEXT_X_PYTHON, content);
    }
 }
