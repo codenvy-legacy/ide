@@ -49,8 +49,6 @@ public class EditorFactory
 
       addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
          IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
-      addEditor(new CodeMirrorProducer("text/yaml", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
-         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
 
       addEditor(new CodeMirrorProducer("application/x-ruby+html", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
          IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
