@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -68,7 +69,7 @@ public abstract class GoogleAppEngineClientService
       GoogleAppEngineAsyncRequestCallback<Map<String, Long>> callback) throws RequestException;
 
    public abstract void listBackends(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+      GoogleAppEngineAsyncRequestCallback<List<Backend>> callback) throws RequestException;
 
    public abstract void requestLogs(String vfsId, String projectId, int numDays, String logSeverity, String email,
       String password, GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException;

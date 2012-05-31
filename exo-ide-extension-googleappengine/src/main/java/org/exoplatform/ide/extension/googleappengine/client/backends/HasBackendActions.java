@@ -16,32 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+package org.exoplatform.ide.extension.googleappengine.client.backends;
 
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+
+import com.google.gwt.event.logical.shared.SelectionHandler;
 
 /**
- * The interface for the {@link AutoBean} generator.
- * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 11:25:04 AM anya $
+ * @version $Id: May 30, 2012 11:40:58 AM anya $
  * 
  */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
+public interface HasBackendActions
 {
-   /**
-    * Factory method for generating credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> credentials();
-
-   AutoBean<CronEntry> cronEntry();
-
-   AutoBean<Backend> backend();
+   void addChangeStateHandler(SelectionHandler<Backend> handler);
 }

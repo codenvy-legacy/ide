@@ -55,11 +55,11 @@ public interface GAEClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/googleappengine/images/logs.png")
    ImageResource logs();
 
-   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback.png")
-   ImageResource rollback();
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_application.png")
+   ImageResource rollbackApplication();
 
-   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_Disabled.png")
-   ImageResource rollbackDisabled();
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_application_Disabled.png")
+   ImageResource rollbackApplicationDisabled();
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/update_application.png")
    ImageResource updateApplication();
@@ -109,4 +109,39 @@ public interface GAEClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/googleappengine/images/update_Disabled.png")
    ImageResource updateDisabled();
 
+   @Source("org/exoplatform/ide/extension/googleappengine/images/start.png")
+   ImageResource start();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/start_Disabled.png")
+   ImageResource startDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/stop.png")
+   ImageResource stop();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/stop_Disabled.png")
+   ImageResource stopDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/remove.png")
+   ImageResource remove();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/remove_Disabled.png")
+   ImageResource removeDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/configure.png")
+   ImageResource configure();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/configure_Disabled.png")
+   ImageResource configureDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback.png")
+   ImageResource rollback();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_Disabled.png")
+   ImageResource rollbackDisabled();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_all.png")
+   ImageResource rollbackAll();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_all_Disabled.png")
+   ImageResource rollbackAllDisabled();
 }

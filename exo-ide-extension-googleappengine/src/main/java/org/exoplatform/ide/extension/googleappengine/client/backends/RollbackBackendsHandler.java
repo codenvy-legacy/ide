@@ -18,19 +18,21 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS.
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public class BackendsPresenter extends GoogleAppEnginePresenter
+ * Handler for {@link RollbackBackendsEvent} event.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: May 29, 2012 5:22:50 PM anya $
+ * 
+ */
+public interface RollbackBackendsHandler extends EventHandler
 {
-   interface Display extends IsView
-   {
-   
-   }
-
+   /**
+    * Perform actions, when user tries to rollback backend(s).
+    * 
+    * @param event
+    */
+   void onRollbackBackend(RollbackBackendsEvent event);
 }

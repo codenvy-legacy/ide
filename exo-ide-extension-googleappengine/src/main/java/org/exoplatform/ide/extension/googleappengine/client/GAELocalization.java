@@ -53,8 +53,14 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("update.button")
    String updateButton();
 
+   @Key("update.all.button")
+   String updateAllButton();
+
    @Key("rollback.button")
    String rollbackButton();
+
+   @Key("rollback.all.button")
+   String rollbackAllButton();
 
    @Key("logs.button")
    String logsButton();
@@ -186,6 +192,24 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @DefaultMessage("Application indexes are successfully updated")
    String vacuumIndexesSuccessfully();
 
+   @Key("update.backend.successfully")
+   String updateBackendSuccessfully(String backend);
+
+   @Key("rollback.backend.successfully")
+   String rollbackBackendSuccessfully(String backend);
+
+   @Key("configure.backend.successfully")
+   String configureBackendSuccessfully(String backend);
+
+   @Key("delete.backend.successfully")
+   String deleteBackendSuccessfully(String backend);
+
+   @Key("update.all.backends.successfully")
+   String updateAllBackendsSuccessfully();
+
+   @Key("rollback.all.backends.successfully")
+   String rollbackAllBackendsSuccessfully();
+
    @Key("configure.backend.button")
    @DefaultMessage("Configure Backend")
    String configureBackendButton();
@@ -240,4 +264,35 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("cron.grid.message")
    String cronGridMessage();
+
+   /* Backend */
+   @Key("backend.name.title")
+   String backendNameTitle();
+
+   @Key("backend.state.title")
+   String backendStateTitle();
+
+   @Key("backend.class.title")
+   String backendClassTitle();
+
+   @Key("backend.instances.title")
+   String backendInstancesTitle();
+
+   @Key("backend.dynamic.title")
+   String backendDynamicTitle();
+
+   @Key("backend.public.title")
+   String backendPublicTitle();
+
+   @Key("backend.update.started")
+   String backendUpdateStarted(String backend);
+
+   @Key("backend.update.finished")
+   String backendUpdateFinished(String backend);
+
+   @Key("backends.update.started")
+   String backendsUpdateStarted();
+
+   @Key("backends.update.finished")
+   String backendsUpdateFinished();
 }

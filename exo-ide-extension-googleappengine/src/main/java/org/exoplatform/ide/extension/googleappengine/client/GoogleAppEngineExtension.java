@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.cron.CronsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
@@ -73,6 +74,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new QueuesHandler();
       new DosHandler();
       new CronsHandler();
+      new BackendsHandler();
    }
 
    /**
