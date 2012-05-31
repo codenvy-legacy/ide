@@ -373,6 +373,17 @@
          </value-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.extension.java.server.CodeAssistantStorageClient
+      </type>
+      <init-params>
+         <value-param>
+            <name>codeassistant-storage-base-url</name>
+            <value>http://localhost:8080/storage</value>
+         </value-param>
+      </init-params>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.extension.java.server.PomListener</type>

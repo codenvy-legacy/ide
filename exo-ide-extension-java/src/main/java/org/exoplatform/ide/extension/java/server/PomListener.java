@@ -40,7 +40,6 @@ import org.exoplatform.ide.vfs.server.observation.PathFilter;
 import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -78,10 +77,16 @@ public class PomListener implements Startable
 
    private final BuilderClient client;
 
-   public PomListener(EventListenerList listenerList, BuilderClient builderClient, InitParams params)
+   private Timer timer = new Timer();
+
+   private final CodeAssistantStorageClient storageClient;
+
+   public PomListener(EventListenerList listenerList, BuilderClient builderClient,
+      CodeAssistantStorageClient storageClient, InitParams params)
    {
       this.listenerList = listenerList;
       this.client = builderClient;
+      this.storageClient = storageClient;
       vfsId = ExoConfigurationHelper.readValueParam(params, "vfsId");
       DELAY = Integer.parseInt(ExoConfigurationHelper.readValueParam(params, "delay"));
    }
@@ -104,7 +109,6 @@ public class PomListener implements Startable
          try
          {
             final String buildId = client.dependenciesList(vfs, parent.getId());
-            final Timer timer = new Timer();
             timer.schedule(new TimerTask()
             {
 
@@ -170,6 +174,7 @@ public class PomListener implements Startable
                List<ConvertibleProperty> properties =
                   Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:classpath", dependecys)});
                vfs.updateItem(project.getId(), properties, null);
+               copyDependencys(project, vfs, dependecys);
             }
             catch (VirtualFileSystemException e)
             {
@@ -201,6 +206,54 @@ public class PomListener implements Startable
             }
          }
 
+      }
+
+      private void copyDependencys(final Item project, VirtualFileSystem vfs, final String dependencyList)
+      {
+         try
+         {
+            final String copyId = client.dependenciesCopy(vfs, project.getId());
+            timer.schedule(new TimerTask()
+            {
+
+               @Override
+               public void run()
+               {
+                  try
+                  {
+                     String status = client.status(copyId);
+                     JsonParser parser = new JsonParser();
+                     parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
+                     BuildStatusBean buildStatus =
+                        ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
+                     if (Status.IN_PROGRESS != buildStatus.getStatus())
+                     {
+                        cancel();
+                        storageClient.updateIndex(dependencyList, buildStatus.getDownloadUrl());
+                     }
+
+                  }
+                  catch (Exception e)
+                  {
+                     cancel();
+                     LOG.error("Copy dependency of the '" + project.getPath() + " failed", e);
+                  }
+               }
+            }, DELAY, DELAY);
+
+         }
+         catch (IOException e)
+         {
+            LOG.error("Error with project " + project.getPath(), e);
+         }
+         catch (BuilderException e)
+         {
+            LOG.error("Error when build project: " + project.getPath(), e);
+         }
+         catch (VirtualFileSystemException e)
+         {
+            LOG.error("Error when build project: " + project.getPath(), e);
+         }
       }
    };
 
