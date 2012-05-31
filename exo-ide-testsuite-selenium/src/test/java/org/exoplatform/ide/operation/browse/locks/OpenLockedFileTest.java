@@ -18,16 +18,24 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.Cookie;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Check, that can open locked file only in read-only mode.
@@ -36,17 +44,13 @@ import java.io.IOException;
  * @version $Id: Sep 21, 2010 $
  *
  */
-public class OpenLockedFileTest extends LockFileAbstract
+public class OpenLockedFileTest extends BaseTest
 {
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/";
+   private static final String PROJECT = OpenLockedFileTest.class.getSimpleName();
 
    private static final String FOLDER_NAME = OpenLockedFileTest.class.getSimpleName();
 
    static final String FILE_NAME = "file-" + OpenLockedFileTest.class.getSimpleName();
-
-   static final String LOCK_BUTTON =
-      "//div[@class=\"exoIconButtonPanel\"and @enabled='false' and @title=\"Lock File\"]";
 
    @Before
    public void setUp()
@@ -54,8 +58,11 @@ public class OpenLockedFileTest extends LockFileAbstract
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
       try
       {
-         VirtualFileSystemUtils.mkcol(URL + FOLDER_NAME);
-         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, URL + FOLDER_NAME + "/" + FILE_NAME);
+         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
+
+         VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/"
+            + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -67,58 +74,55 @@ public class OpenLockedFileTest extends LockFileAbstract
    {
       try
       {
-         VirtualFileSystemUtils.delete(URL + FOLDER_NAME);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
       }
    }
 
-   @Ignore
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      IDE.WORKSPACE.waitForRootItem();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/");
-      IDE.WORKSPACE.selectItem(URL + FOLDER_NAME + "/");
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      //step 1 open and lock file. Check state of the file
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //----- 1 ----------
-      //open file
-      IDE.WORKSPACE.waitForItem(URL + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //----- 2 ----------
-      //lock file
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNLOCK_FILE, true);
-      checkFileLocking(URL + FOLDER_NAME + "/"+FILE_NAME, false);
+      IDE.LOADER.waitClosed();
+      IDE.LOCK_FILE.isUnLockCommandActive();
 
-      //----- 3 ----------
-      //delete lock tokens from cookies and refresh
+      //step 2 delete lock Cookies and check states buttons and files after delete
       deleteLockTokensCookies();
-      refresh();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.LOCK_FILE.isLockCommandNotActive();
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      IDE.LOCK_FILE.waitDisabledLockIconInEditMenu();
+      IDE.MENU.clickOnLockLayer();
+      IDE.LOCK_FILE.isLockIconOnTabView(1);
+      assertTrue(IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME));
+   }
 
-      //----- 4 ----------
-      //check that file is locked
-      waitForElementPresent(LOCK_BUTTON);
-
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.LOCK_FILE, false);
-      checkCantSaveLockedFile();
-
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      IDE.WORKSPACE.clickOpenIconOfFolder(URL + FOLDER_NAME + "/");
-      checkFileLocking(URL + FOLDER_NAME + "/" + FILE_NAME, true);
-
-      //----- 5 ----------
-      //close and open file
-      IDE.EDITOR.closeFile(0);
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + FOLDER_NAME + "/" + FILE_NAME, false);
-
-      checkCantSaveLockedFile();
-
-      IDE.EDITOR.closeFile(0);
+   private void deleteLockTokensCookies()
+   {
+      Set<Cookie> allCookies = driver.manage().getCookies();
+      for (Cookie loadedCookie : allCookies)
+      {
+         if (loadedCookie.getName().contains("lock"))
+         {
+            driver.manage().deleteCookieNamed(loadedCookie.getName());
+         }
+      }
    }
 
 }
