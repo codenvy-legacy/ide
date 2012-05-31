@@ -388,6 +388,26 @@
 									<type>java-source</type>
 								</artifactItem>
 
+                        <artifactItem>
+                           <groupId>org.datanucleus</groupId>
+                           <artifactId>datanucleus-core</artifactId>
+                           <version>1.1.5</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.datanucleus</groupId>
+                           <artifactId>datanucleus-jpa</artifactId>
+                           <version>1.1.5</version>
+                           <type>java-source</type>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>javax.jdo</groupId>
+                           <artifactId>jdo2-api</artifactId>
+                           <version>2.3-eb</version>
+                           <type>java-source</type>
+                        </artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -634,6 +654,90 @@
 									<artifactId>spring-webmvc</artifactId>
 									<version>3.0.5.RELEASE</version>
 								</artifactItem>
+
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-api-1.0-sdk</artifactId>
+                           <version>1.6.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-api-labs</artifactId>
+                           <version>1.6.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-jsr107cache</artifactId>
+                           <version>1.6.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>com.google.appengine</groupId>
+                           <artifactId>appengine-tools-sdk</artifactId>
+                           <version>1.6.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>com.google.appengine.orm</groupId>
+                           <artifactId>datanucleus-appengine</artifactId>
+                           <version>1.0.10</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.datanucleus</groupId>
+                           <artifactId>datanucleus-core</artifactId>
+                           <version>1.1.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.datanucleus</groupId>
+                           <artifactId>datanucleus-jpa</artifactId>
+                           <version>1.1.5</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>javax.el</groupId>
+                           <artifactId>el-api</artifactId>
+                           <version>2.2</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.apache.geronimo.specs</groupId>
+                           <artifactId>geronimo-jpa_3.0_spec</artifactId>
+                           <version>1.1.1</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.apache.geronimo.specs</groupId>
+                           <artifactId>geronimo-jta_1.1_spec</artifactId>
+                           <version>1.1.1</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>javax.jdo</groupId>
+                           <artifactId>jdo2-api</artifactId>
+                           <version>2.3-eb</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>org.apache.tomcat</groupId>
+                           <artifactId>jsp-api</artifactId>
+                           <version>6.0.35</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>net.sf.jsr107cache</groupId>
+                           <artifactId>jsr107cache</artifactId>
+                           <version>1.1</version>
+                        </artifactItem>
+
+                        <artifactItem>
+                           <groupId>javax.servlet</groupId>
+                           <artifactId>servlet-api</artifactId>
+                           <version>2.5</version>
+                        </artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
