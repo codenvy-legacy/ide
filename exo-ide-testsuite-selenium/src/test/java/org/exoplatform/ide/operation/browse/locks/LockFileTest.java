@@ -86,7 +86,7 @@ public class LockFileTest extends LockFileAbstract
       }
    }
 
-   //@Test
+   @Test
    public void testLockFileManually() throws Exception
    {
 
