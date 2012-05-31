@@ -53,7 +53,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.exoplatform.ide.maven.BuildHelper.delete;
@@ -458,7 +457,8 @@ public class BuildService
 
    /* ====================================================== */
 
-   private static final Pattern DEPENDENCY_FORMAT = Pattern.compile("^(\\s*)(.+):(.+):(.+):(.+):(.+)$");
+//   private static final Pattern DEPENDENCY_FORMAT = Pattern.compile("^(\\s*)(.+):(.+):(.+):(.+):(.+)$");
+   private static final Pattern DEPENDENCY_LINE_SPLITTER = Pattern.compile(":");
 
    private static final ResultGetter DEPENDENCIES_LIST_GETTER = new DependenciesListGetter();
 
@@ -486,19 +486,19 @@ public class BuildService
                ByteArrayOutputStream bout = new ByteArrayOutputStream();
                OutputStreamWriter w = new OutputStreamWriter(bout);
                w.write('[');
-               Matcher m = null;
                String line;
                int i = 0;
                while ((line = br.readLine()) != null)
                {
-                  m = m == null ? DEPENDENCY_FORMAT.matcher(line) : m.reset(line);
-                  if (m.matches())
+                  // Line has format '   asm:asm:jar:sources?:3.0:compile'
+                  String[] segments = DEPENDENCY_LINE_SPLITTER.split(line.trim());
+                  // skip line for 'source' artifact
+                  if (segments.length == 5)
                   {
-                     // Line has format '   asm:asm:jar:3.0:compile'
-                     String groupID = m.group(2);
-                     String artifactID = m.group(3);
-                     String type = m.group(4);
-                     String version = m.group(5);
+                     String groupID = segments[0];
+                     String artifactID = segments[1];
+                     String type = segments[2];
+                     String version = segments[3];
 
                      if (i > 0)
                      {
