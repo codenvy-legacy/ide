@@ -16,32 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client;
+package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * The interface for the {@link AutoBean} generator.
+ * Handler for {@link ConfigureBackendEvent} event.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 11:25:04 AM anya $
+ * @version $Id: May 30, 2012 5:24:51 PM anya $
  * 
  */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
+public interface ConfigureBackendHandler extends EventHandler
 {
    /**
-    * Factory method for generating credentials bean.
+    * Perform actions, when user tries to configure backend.
     * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * @param event
     */
-   AutoBean<Credentials> credentials();
-
-   AutoBean<CronEntry> cronEntry();
-
-   AutoBean<Backend> backend();
+   void onConfigureBackend(ConfigureBackendEvent event);
 }

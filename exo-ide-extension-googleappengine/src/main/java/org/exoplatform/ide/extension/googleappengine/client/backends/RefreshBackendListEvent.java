@@ -16,32 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client;
+package org.exoplatform.ide.extension.googleappengine.client.backends;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
-import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * The interface for the {@link AutoBean} generator.
+ * Event occurs, when it is necessary to refresh backends list.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 11:25:04 AM anya $
+ * @version $Id: May 30, 2012 3:19:09 PM anya $
  * 
  */
-public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
+public class RefreshBackendListEvent extends GwtEvent<RefreshBackendListHandler>
 {
    /**
-    * Factory method for generating credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
+    * Type, used to register the event.
     */
-   AutoBean<Credentials> credentials();
+   public static final GwtEvent.Type<RefreshBackendListHandler> TYPE = new GwtEvent.Type<RefreshBackendListHandler>();
 
-   AutoBean<CronEntry> cronEntry();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RefreshBackendListHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
-   AutoBean<Backend> backend();
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(RefreshBackendListHandler handler)
+   {
+      handler.onRefreshBackendList(this);
+   }
+
 }
