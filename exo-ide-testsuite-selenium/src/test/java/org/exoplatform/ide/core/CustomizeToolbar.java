@@ -347,9 +347,9 @@ public class CustomizeToolbar extends AbstractTestModule
             "Paste Item(s)", "Delete...", "Search...", "Refresh Selected Folder", "Delimiter", "Undo Typing",
             "Redo Typing", "Format", "Delimiter", "Find-Replace...", "Delimiter", "Lock / Unlock File", "Delimiter",
             "Show / Hide Outline", "Delimiter", "Show / Hide Documentation", "Spacer", "Properties", "Show Preview",
-            "Deploy widget", "Show Netwibes Preview", "Set / Unset Autoload", "Validate", "Deploy", "Undeploy",
-            "Run in Sandbox", "Deploy to Sandbox", "Undeploy from Sandbox", "Launch REST Service",
-            "Show Template Preview", "Show Gadget Preview", "Preview node type", "Deploy node type");
+            "Set / Unset Autoload", "Validate", "Deploy", "Undeploy", "Run in Sandbox", "Deploy to Sandbox",
+            "Undeploy from Sandbox", "Launch REST Service", "Show Template Preview", "Show Gadget Preview",
+            "Preview node type", "Deploy node type");
 
       for (String chkName : defaultSet)
       {
@@ -366,30 +366,29 @@ public class CustomizeToolbar extends AbstractTestModule
             "Open File By Path...", "Open by URL...", "Download File...", "Download Zipped Folder...", "Save",
             "Save As...", "Save All", "Save As Template...", "Delete...", "Rename...", "Search...",
             "Refresh Selected Folder", "File / New", "Create Folder...", "New TEXT", "New OpenSocial Gadget",
-            "New XML", "New Java Script", "New HTML", "New CSS", "New REST Service", "New POGO",
-            "New Template", "New Data Object", "New Package", "New Java Class", "New JSP File", "New Ruby File",
-            "New PHP File", "Create File From Template...", "Project / New", "Create Project...", "Create Project...",
+            "New XML", "New Java Script", "New HTML", "New CSS", "New REST Service", "New POGO", "New Template",
+            "New Data Object", "New Package", "New Java Class", "New JSP File", "New Ruby File", "New PHP File",
+            "Create File From Template...", "Project / New", "Create Project...", "Create Project...",
             "Import a Sample Project...", "Import from GitHub...", "Project", "Open...", "Close", "Properties...",
             "Open Resource...", "Clean", "Configure Classpath...", "Build", "Project / PaaS", "CloudBees",
-            "CloudFoundry", "Heroku", "OpenShift", "Edit", "Cut Item(s)", "Copy Item(s)", "Paste Item(s)", "Undo Typing",
-            "Redo Typing", "Format", "Organize Imports", "Add Block Comment", "Remove Block Comment",
+            "CloudFoundry", "Heroku", "OpenShift", "Edit", "Cut Item(s)", "Copy Item(s)", "Paste Item(s)",
+            "Undo Typing", "Redo Typing", "Format", "Organize Imports", "Add Block Comment", "Remove Block Comment",
             "Find-Replace...", "Show / Hide Line Numbers", "Delete Current Line", "Go to Line...",
-            "Lock / Unlock File", "Delete", "Select All", "Toggle Comment", "Do Autocomplete...", "Quick Fix",
-            "View", "Properties", "Show / Hide Outline", "Show / Hide Documentation", "Go to Folder", "Get URL...",
-            "Progress", "Output", "Log", "Show / Hide Hidden Files", "Run", "Show Preview", "Deploy widget",
-            "Show Netwibes Preview", "Set / Unset Autoload", "Validate", "Deploy", "Undeploy", "Run in Sandbox",
-            "Deploy to Sandbox", "Undeploy from Sandbox", "Launch REST Service", "Show Template Preview",
-            "Show Gadget Preview", "Preview node type", "Deploy node type", "Debug", "Run", "Stop",
-            "Git", "Initialize Repository", "Clone Repository...", "Delete Repository...", "Add...", "Reset Files...",
-            "Reset...", "Remove...", "Commit...", "Branches...", "Merge...", "Show History...", "Status",
-            "Git URL (Read-Only)...", "Git / Remote", "Push...", "Fetch...", "Pull...", "Remotes...",
-            "PaaS / CloudBees", "CreateApplication", "AppList", "PaaS / CloudFoundry", "CreateApp", "Applications",
-            "SwitchAccount", "PaaS / Heroku", "Create application...", "Applications", "Deploy public key",
-            "Switch account...", "PaaS / OpenShift", "Create domain...", "Create application...", "User info...",
-            "Update SSH public key...", "Switch account...", "Window / Show View", "Navigator", "Project Explorer",
-            "Window / Navigation", "Next Editor", "Previous Editor", "Window", "Workspace...", "Customize Toolbar...",
-            "HotKeys...", "Formatter", "Ssh Key Manager", "Help", "About...", "REST Services Discovery",
-            "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
+            "Lock / Unlock File", "Delete", "Select All", "Toggle Comment", "Do Autocomplete...", "Quick Fix", "View",
+            "Properties", "Show / Hide Outline", "Show / Hide Documentation", "Go to Folder", "Get URL...", "Progress",
+            "Output", "Log", "Show / Hide Hidden Files", "Run", "Show Preview", "Set / Unset Autoload", "Validate",
+            "Deploy", "Undeploy", "Run in Sandbox", "Deploy to Sandbox", "Undeploy from Sandbox",
+            "Launch REST Service", "Show Template Preview", "Show Gadget Preview", "Preview node type",
+            "Deploy node type", "Debug", "Run", "Stop", "Git", "Initialize Repository", "Clone Repository...",
+            "Delete Repository...", "Add...", "Reset Files...", "Reset...", "Remove...", "Commit...", "Branches...",
+            "Merge...", "Show History...", "Status", "Git URL (Read-Only)...", "Git / Remote", "Push...", "Fetch...",
+            "Pull...", "Remotes...", "PaaS / CloudBees", "CreateApplication", "AppList", "PaaS / CloudFoundry",
+            "CreateApp", "Applications", "SwitchAccount", "PaaS / Heroku", "Create application...", "Applications",
+            "Deploy public key", "Switch account...", "PaaS / OpenShift", "Create domain...", "Create application...",
+            "User info...", "Update SSH public key...", "Switch account...", "Window / Show View", "Navigator",
+            "Project Explorer", "Window / Navigation", "Next Editor", "Previous Editor", "Window", "Workspace...",
+            "Customize Toolbar...", "HotKeys...", "Formatter", "Ssh Key Manager", "Help", "About...",
+            "REST Services Discovery", "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
       for (String chkName : defaultSet)
       {
          assertTrue(getSet.contains(chkName.toString()));

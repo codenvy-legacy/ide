@@ -92,7 +92,6 @@ public class HotkeysFormTest extends BaseTest
    {
       //step 1 create new project, open Customize Hotkey form
       //select CSS file and checks status of buttons 
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
