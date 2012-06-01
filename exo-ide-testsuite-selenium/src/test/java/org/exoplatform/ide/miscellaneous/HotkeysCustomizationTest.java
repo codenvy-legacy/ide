@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -46,12 +47,17 @@ public class HotkeysCustomizationTest extends BaseTest
 {
    private final static String PROJECT = HotkeysCustomizationTest.class.getSimpleName();
 
+   private final static String FILE_NAME = HotkeysCustomizationTest.class.getSimpleName();
+
    @Before
    public void setUp() throws Exception
    {
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         VirtualFileSystemUtils.put(
+            "src/test/resources/org/exoplatform/ide/operation/restservice/RESTServiceGetURL.groovy",
+            MimeType.GROOVY_SERVICE, WS_URL + PROJECT + "/" + FILE_NAME);
       }
       catch (IOException e)
       {
@@ -117,6 +123,7 @@ public class HotkeysCustomizationTest extends BaseTest
 
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
@@ -142,7 +149,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.EDITOR.selectTab(2);
       //this workaround for problem with select iframes in coseeditor 
       new Actions(driver).sendKeys(Keys.CONTROL + "h").build().perform();
-       // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
+      // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
       //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
       //refresh browser and fix issue IDE-1392
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
@@ -192,23 +199,23 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      closeAllTabs();
    }
 
    @Test
    public void testResettingToDefaults() throws Exception
    {
+      //reopen project after refresh, because if this action need for correctly work in short keys in IDE 
       driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 1: create new hotkey for upload file (Alt+U)
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.File.UPLOAD_FILE);
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "u");
+      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
+      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Open File By Path...");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "q");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
@@ -216,10 +223,13 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
 
       // step 2: check new hotkey
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.ALT.toString() + "u");
-      IDE.UPLOAD.waitOpened();
-      IDE.UPLOAD.clickCancelButton();
-
+      IDE.selectMainFrame();
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      new Actions(driver).sendKeys(Keys.CONTROL.toString() + "q").build().perform();
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.CONTROL.toString() + "q");
+      IDE.OPEN_FILE_BY_PATH.waitOpened();
+      IDE.OPEN_FILE_BY_PATH.clickCancelButton();
+      IDE.OPEN_FILE_BY_PATH.waitClosed();
       //step 3: resetting the hotkeys to the default values and checking
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
@@ -231,17 +241,25 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
 
       //step4: check that hotkey hasn't binded
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.ALT.toString() + "u");
+      IDE.PROJECT.EXPLORER.typeKeys(Keys.CONTROL.toString() + "q");
       boolean isUploadViewClosed = false;
       try
       {
          IDE.UPLOAD.waitOpened();
       }
-      catch(TimeoutException e)
+      catch (TimeoutException e)
       {
          isUploadViewClosed = true;
       }
       Assert.assertTrue(isUploadViewClosed);
    }
 
+   //--------------
+   private void closeAllTabs() throws Exception
+   {
+      for (int i = 0; i < 4; i++)
+      {
+         IDE.EDITOR.closeTabIgnoringChanges(1);
+      }
+   }
 }

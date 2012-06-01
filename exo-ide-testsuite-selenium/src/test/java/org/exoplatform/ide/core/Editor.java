@@ -282,7 +282,7 @@ public class Editor extends AbstractTestModule
          fail("Dialog has been not found!");
       }
 
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
