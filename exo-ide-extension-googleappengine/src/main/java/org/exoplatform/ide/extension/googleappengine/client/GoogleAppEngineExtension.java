@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.cron.CronsHandler;
@@ -37,6 +36,8 @@ import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedH
 import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.queues.QueuesHandler;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -60,10 +61,10 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new GoogleAppEngineControl());
+      IDE.getInstance().addControl(new CreateApplicationControl());
 
-      new AppEngineProjectPresenter();
-      new CreateApplicationPresenter();
       new DeployApplicationPresenter();
+      new AppEngineProjectPresenter();
       new LoginPresenter();
       new RollbackUpdatePresenter();
 
@@ -84,5 +85,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
    }
 }
