@@ -32,6 +32,8 @@ public class Dependency
    private String type;
 
    private String version;
+   
+   private String classifier;
 
    /**
     * 
@@ -46,13 +48,14 @@ public class Dependency
     * @param type
     * @param version
     */
-   public Dependency(String groupID, String artifactID, String type, String version)
+   public Dependency(String groupID, String artifactID, String type, String version, String classifier)
    {
       super();
       this.groupID = groupID;
       this.artifactID = artifactID;
       this.type = type;
       this.version = version;
+      this.classifier = classifier;
    }
 
    /**
@@ -126,6 +129,22 @@ public class Dependency
    public String toString()
    {
       return groupID + ":" + artifactID + ":" + type + ":" + version;
+   }
+
+   /**
+    * @return the classifier
+    */
+   public String getClassifier()
+   {
+      return classifier;
+   }
+
+   /**
+    * @param classifier the classifier to set
+    */
+   public void setClassifier(String classifier)
+   {
+      this.classifier = classifier;
    }
 
 }

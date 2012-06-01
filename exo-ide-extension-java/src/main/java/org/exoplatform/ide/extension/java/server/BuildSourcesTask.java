@@ -16,7 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.api;
+package org.exoplatform.ide.extension.java.server;
+
+import org.exoplatform.ide.extension.maven.server.BuilderClient;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.io.IOException;
 
@@ -25,15 +28,29 @@ import java.io.IOException;
  * @version $Id:
  *
  */
-public interface InfoStorage
+public class BuildSourcesTask extends BuildTask
 {
-   DataWriter getWriter() throws IOException;
-   
-   boolean isArtifactExist(String artifact);
 
    /**
-    * @param artifact
-    * @return
+    * @param dependencyList
+    * @param project
+    * @param copyId
+    * @param client
+    * @param storageClient
     */
-   boolean isJavaDockForArtifactExist(String artifact);
+   public BuildSourcesTask(String dependencyList, Item project, String copyId, BuilderClient client,
+      CodeAssistantStorageClient storageClient)
+   {
+      super(dependencyList, project, copyId, client, storageClient);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.java.server.BuildTask#buildSuccess(java.lang.String)
+    */
+   @Override
+   protected void buildSuccess(String downloadUrl) throws IOException
+   {
+      storageClient.updateDockIndex(dependencyList, downloadUrl);
+   }
+
 }

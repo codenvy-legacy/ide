@@ -74,10 +74,19 @@ public class LocalInfoStorage implements InfoStorage
    @Override
    public boolean isArtifactExist(String artifact)
    {
+      return isExist(artifact, IndexType.PACKAGE);
+   }
+
+   /**
+    * @param artifact
+    * @return
+    */
+   private boolean isExist(String artifact, IndexType indexType)
+   {
       try
       {
          List<String> artifacts =
-            queryExecutor.executeQuery(new ArtifactExtractor(), IndexType.PACKAGE, eq("artifact", artifact), 100, 0);
+            queryExecutor.executeQuery(new ArtifactExtractor(), indexType, eq("artifact", artifact), 100, 0);
          return (artifacts != null && !artifacts.isEmpty());
       }
       catch (CodeAssistantException e)
@@ -86,6 +95,15 @@ public class LocalInfoStorage implements InfoStorage
             LOG.error(e.getMessage(), e);
       }
       return false;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isJavaDockForArtifactExist(java.lang.String)
+    */
+   @Override
+   public boolean isJavaDockForArtifactExist(String artifact)
+   {
+      return isExist(artifact, IndexType.DOC);
    }
 
 }

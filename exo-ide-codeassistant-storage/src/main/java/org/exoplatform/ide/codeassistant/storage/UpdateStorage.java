@@ -46,15 +46,31 @@ public class UpdateStorage
    @Inject
    private UpdateStorageService storageService;
 
-   @Path("update")
+   @Path("update/type")
    @POST
    @Consumes("application/json")
-   public void updateDependecys(Dependencys dependencys)
+   public void updateTypeDependecys(Dependencys dependencys)
    {
       try
       {
          InputStream zip = doDownload(dependencys.getZipUrl());
-         storageService.updateIndex(dependencys.getDependencies(), zip);
+         storageService.updateTypeIndex(dependencys.getDependencies(), zip);
+      }
+      catch (IOException e)
+      {
+         LOG.error("Can't find dependencys", e);
+      }
+   }
+   
+   @Path("update/dock")
+   @POST
+   @Consumes("application/json")
+   public void updateJavaDock(Dependencys dependencys)
+   {
+      try
+      {
+         InputStream zip = doDownload(dependencys.getZipUrl());
+         storageService.updateDockIndex(dependencys.getDependencies(), zip);
       }
       catch (IOException e)
       {

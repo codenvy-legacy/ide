@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -122,9 +121,14 @@ public class UpdateStorageService
             new LinkedBlockingQueue<Runnable>(updateQueueSize), new ThreadPoolExecutor.AbortPolicy());
    }
 
-   public void updateIndex(List<Dependency> dependencies, InputStream in) throws IOException
+   public void updateTypeIndex(List<Dependency> dependencies, InputStream in) throws IOException
    {
-      addTask(createDependencys(in), dependencies);
+      addTask(new TypeUpdateInvoker(infoStorage, dependencies, createDependencys(in)));
+   }
+   
+   public void updateDockIndex(List<Dependency> dependencies, InputStream in) throws IOException
+   {
+      addTask(new DockUpdateInvoker(infoStorage, dependencies, createDependencys(in)));
    }
 
    public void shutdown()
@@ -148,9 +152,8 @@ public class UpdateStorageService
     * @param createDependencys
     * @param dependencies
     */
-   private void addTask(File dependencyFolder, List<Dependency> dependencies)
+   private void addTask(final UpdateInvoker invoker)
    {
-      final UpdateInvoker invoker = new UpdateInvoker(infoStorage, dependencies, dependencyFolder);
       pool.submit(new Runnable()
       {
 

@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
+ * Rest client for Codeassistant storage
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -72,11 +73,26 @@ public class CodeAssistantStorageClient
       return defaultValue;
    }
 
-   public void updateIndex(String dependencyList, String zipUrl)
+   public void updateTypeIndex(String dependencyList, String zipUrl) throws IOException
+   {
+      sendRequest(new URL(baseURL + "/storage/update/type"), dependencyList, zipUrl);
+   }
+
+   public void updateDockIndex(String dependencyList, String zipUrl) throws IOException
+   {
+      sendRequest(new URL(baseURL + "/storage/update/dock"), dependencyList, zipUrl);
+   }
+
+   /**
+    * @param dependencyList
+    * @param zipUrl
+    * @throws IOException 
+    */
+   private void sendRequest(URL url, String dependencyList, String zipUrl) throws IOException
    {
       try
       {
-         URL url = new URL(baseURL + "/storage/update");
+
          HttpURLConnection http = null;
 
          http = (HttpURLConnection)url.openConnection();
@@ -98,11 +114,7 @@ public class CodeAssistantStorageClient
          if (LOG.isDebugEnabled())
             LOG.debug(e.getMessage(), e);
       }
-      catch (IOException e)
-      {
-         if (LOG.isDebugEnabled())
-            LOG.debug(e.getMessage(), e);
-      }
+      
    }
 
 }

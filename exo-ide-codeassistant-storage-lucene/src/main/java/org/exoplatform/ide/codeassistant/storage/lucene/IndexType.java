@@ -29,8 +29,7 @@ public enum IndexType {
 
    JAVA("indexType", "java"), // 
    DOC("indexType", "doc"), //
-   PACKAGE("indexType", "package"), //
-   ARTIFACT("indexType", "artifact");
+   PACKAGE("indexType", "package");
 
    private final String indexFieldName;
 

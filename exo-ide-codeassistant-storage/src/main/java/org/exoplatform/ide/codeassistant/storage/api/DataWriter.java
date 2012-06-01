@@ -21,6 +21,7 @@ package org.exoplatform.ide.codeassistant.storage.api;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -40,5 +41,11 @@ public interface DataWriter
     * @param packages
     */
    void addPackages(Set<String> packages, String artifact);
+
+   /**
+    * @param javaDocs
+    * @param artifact
+    */
+   void addJavaDocs(Map<String, String> javaDocs, String artifact);
 
 }

@@ -208,42 +208,13 @@ public class PomListener implements Startable
 
       }
 
-      private void copyDependencys(final Item project, VirtualFileSystem vfs, final String dependencyList)
+      private void copyDependencys(final Item project, final VirtualFileSystem vfs, final String dependencyList)
       {
          try
          {
-            final String copyId = client.dependenciesCopy(vfs, project.getId());
-            timer.schedule(new TimerTask()
-            {
-
-               @Override
-               public void run()
-               {
-                  try
-                  {
-                     String status = client.status(copyId);
-                     JsonParser parser = new JsonParser();
-                     parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
-                     BuildStatusBean buildStatus =
-                        ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
-                     if (Status.IN_PROGRESS != buildStatus.getStatus())
-                     {
-                        cancel();
-                        if(Status.SUCCESSFUL == buildStatus.getStatus())
-                           
-                          storageClient.updateIndex(dependencyList, buildStatus.getDownloadUrl());
-                        else
-                           LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-                     }
-
-                  }
-                  catch (Exception e)
-                  {
-                     cancel();
-                     LOG.error("Copy dependency of the '" + project.getPath() + " failed", e);
-                  }
-               }
-            }, DELAY, DELAY);
+            final String copyId = client.dependenciesCopy(vfs, project.getId(), null);
+            timer.schedule(new BuildDependencyTask(client, storageClient, vfs, timer, dependencyList, project, copyId,
+               DELAY), DELAY, DELAY);
 
          }
          catch (IOException e)

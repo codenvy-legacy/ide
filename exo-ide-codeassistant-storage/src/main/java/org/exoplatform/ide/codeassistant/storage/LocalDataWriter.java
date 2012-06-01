@@ -26,9 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
+ * Implementation of {@link DataWriter}, uses {@link LuceneDataWriter}
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -61,7 +63,7 @@ public class LocalDataWriter implements DataWriter
       }
       catch (SaveDataIndexException e)
       {
-         LOG.error("Can't sava type info for artifact:" + artifact, e);
+         LOG.error("Can't save type info for artifact:" + artifact, e);
       }
    }
 
@@ -77,7 +79,23 @@ public class LocalDataWriter implements DataWriter
       }
       catch (SaveDataIndexException e)
       {
-         LOG.error("Can't sava packages for artifact:" + artifact, e);
+         LOG.error("Can't save packages for artifact:" + artifact, e);
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.api.DataWriter#addJavaDocs(java.util.Map, java.lang.String)
+    */
+   @Override
+   public void addJavaDocs(Map<String, String> javaDocs, String artifact)
+   {
+      try
+      {
+         dataWriter.addJavaDocs(javaDocs, artifact);
+      }
+      catch (SaveDataIndexException e)
+      {
+         LOG.error("Can't save javadock for artifact:" + artifact, e);
       }
    }
 
