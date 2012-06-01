@@ -280,7 +280,7 @@ public class BuildService
     * @param data
     *    the zipped maven project
     * @param classifier
-    *    classifier to look for, e.g. : sources
+    *    classifier to look for, e.g. : sources. May be <code>null</code>.
     * @return build task
     * @throws java.io.IOException
     *    if i/o error occur when try to unzip project
