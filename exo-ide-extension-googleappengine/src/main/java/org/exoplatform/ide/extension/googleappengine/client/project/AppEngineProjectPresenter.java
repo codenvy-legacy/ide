@@ -19,8 +19,6 @@
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -376,16 +374,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       display.enableRollbackBackendButton(false);
       display.enableUpdateBackendButton(false);
       getResourceLimits(null, null, null);
-
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            getBackends(null, null, null);
-         }
-      });
-
       getCrons(null, null, null);
    }
 
@@ -570,6 +558,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
                protected void onSuccess(List<ResourceLimit> result)
                {
                   display.getResourceLimitGrid().setValue(result);
+                  getBackends(null, null, null);
                }
             });
       }
