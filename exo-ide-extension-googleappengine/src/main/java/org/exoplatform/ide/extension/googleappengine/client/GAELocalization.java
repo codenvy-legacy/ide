@@ -38,8 +38,12 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("login.button")
    String loginButton();
 
-   @Key("ready.button")
-   String readyButton();
+   @Key("deploy.button")
+   String deployButton();
+   
+   @Key("create.button")
+   @DefaultMessage("Create")
+   String createButton();
 
    @Key("close.button")
    String closeButton();
@@ -99,6 +103,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("deploy.application.finished")
    String deployApplicationFinished(String projectName);
+   
+   @Key("deploy.application.instruction")
+   String deployApplicationInstruction();
 
    /* Manage Application */
    @Key("manage.application.view.title")

@@ -19,6 +19,8 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.everrest.core.impl.ContainerResponse;
+import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -31,6 +33,8 @@ import org.exoplatform.ide.vfs.server.observation.PathFilter;
 import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -38,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -228,6 +233,8 @@ public class EventsTest extends JcrFileSystemTest
       assertEquals(ChangeEvent.ChangeType.RENAMED, listener.events.get(0).getType());
       assertEquals(testNodePath + '/' + "_FILE_NEW_NAME_", listener.events.get(0).getItemPath());
       assertEquals("text/plain", listener.events.get(0).getMimeType());
+      VirtualFileSystem vfs = listener.events.get(0).getVirtualFileSystem();
+      vfs.updateItem(fileId, Collections.<ConvertibleProperty>emptyList(), null);
    }
 
    public void testImport() throws Exception
