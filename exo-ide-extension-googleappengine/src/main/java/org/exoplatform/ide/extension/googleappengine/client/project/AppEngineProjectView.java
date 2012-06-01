@@ -14,7 +14,10 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.extension.googleappengine.client.backends.HasBackendActions;
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
 
 public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPresenter.Display
 {
@@ -23,6 +26,8 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    private static final String GENERAL_TAB_ID = "ideAppEngineProjectViewGeneralTab";
 
    private static final String CRONS_TAB_ID = "ideAppEngineProjectViewCronsTab";
+
+   private static final String RESOURCE_LIMITS_TAB_ID = "ideAppEngineProjectViewResourceLimitsTab";
 
    private static final String BACKENDS_TAB_ID = "ideAppEngineProjectViewBackendsTab";
 
@@ -43,6 +48,8 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
 
    private BackendsTabPane backendsTabPane;
 
+   private ResourceLimitsTabPane resourceLimitsTabPane;
+
    @UiField
    TabPanel applicationTabPanel;
 
@@ -59,16 +66,19 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
       applicationTabPanel.addTab(GENERAL_TAB_ID, new Image(GAEClientBundle.INSTANCE.general()),
          GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationGeneralTab(), mainTabPain, false);
 
+      resourceLimitsTabPane = new ResourceLimitsTabPane();
+
+      applicationTabPanel.addTab(RESOURCE_LIMITS_TAB_ID, new Image(GAEClientBundle.INSTANCE.resourceLimits()),
+         GoogleAppEngineExtension.GAE_LOCALIZATION.resourceLimitsTabTitle(), resourceLimitsTabPane, false);
+
       cronTabPane = new CronTabPane();
       applicationTabPanel.addTab(CRONS_TAB_ID, new Image(GAEClientBundle.INSTANCE.crons()),
          GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationCronsTab(), cronTabPane, false);
 
       backendsTabPane = new BackendsTabPane();
 
-      /*
-       * applicationTabPanel.addTab(BACKENDS_TAB_ID, new Image(GAEClientBundle.INSTANCE.backends()),
-       * GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
-       */
+      applicationTabPanel.addTab(BACKENDS_TAB_ID, new Image(GAEClientBundle.INSTANCE.backends()),
+         GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationBackendsTab(), backendsTabPane, false);
    }
 
    /**
@@ -86,7 +96,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getConfigureBackendButton()
    {
-      return null;
+      return backendsTabPane.getConfigureBackendButton();
    }
 
    /**
@@ -95,8 +105,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getDeleteBackendButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return backendsTabPane.getDeleteBackendButton();
    }
 
    /**
@@ -105,7 +114,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getUpdateBackendButton()
    {
-      return null;
+      return backendsTabPane.getUpdateBackendButton();
    }
 
    /**
@@ -114,8 +123,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getRollbackBackendButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return backendsTabPane.getRollbackBackendButton();
    }
 
    /**
@@ -124,8 +132,7 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    @Override
    public HasClickHandlers getRollbackAllBackendsButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return backendsTabPane.getRollbackAllBackendsButton();
    }
 
    /**
@@ -216,6 +223,78 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    public ListGridItem<CronEntry> getCronGrid()
    {
       return cronTabPane.getCronGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getBackendGrid()
+    */
+   @Override
+   public ListGridItem<Backend> getBackendGrid()
+   {
+      return backendsTabPane.getBackendGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getUpdateAllBackendsButton()
+    */
+   @Override
+   public HasClickHandlers getUpdateAllBackendsButton()
+   {
+      return backendsTabPane.getUpdateAllBackendsButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#enableUpdateBackendButton(boolean)
+    */
+   @Override
+   public void enableUpdateBackendButton(boolean enabled)
+   {
+      backendsTabPane.getUpdateBackendButton().setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#enableRollbackBackendButton(boolean)
+    */
+   @Override
+   public void enableRollbackBackendButton(boolean enabled)
+   {
+      backendsTabPane.getRollbackBackendButton().setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#enableDeleteBackendButton(boolean)
+    */
+   @Override
+   public void enableDeleteBackendButton(boolean enabled)
+   {
+      backendsTabPane.getDeleteBackendButton().setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#enableConfigureBackendButton(boolean)
+    */
+   @Override
+   public void enableConfigureBackendButton(boolean enabled)
+   {
+      backendsTabPane.getConfigureBackendButton().setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getBackendActions()
+    */
+   @Override
+   public HasBackendActions getBackendActions()
+   {
+      return backendsTabPane.getBackendGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getResourceLimitGrid()
+    */
+   @Override
+   public ListGridItem<ResourceLimit> getResourceLimitGrid()
+   {
+      return resourceLimitsTabPane.getResourceLimitsGrid();
    }
 
 }

@@ -19,9 +19,13 @@
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,6 +37,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
+import org.exoplatform.ide.extension.googleappengine.client.backends.ConfigureBackendEvent;
+import org.exoplatform.ide.extension.googleappengine.client.backends.DeleteBackendEvent;
+import org.exoplatform.ide.extension.googleappengine.client.backends.HasBackendActions;
+import org.exoplatform.ide.extension.googleappengine.client.backends.RefreshBackendListEvent;
+import org.exoplatform.ide.extension.googleappengine.client.backends.RefreshBackendListHandler;
+import org.exoplatform.ide.extension.googleappengine.client.backends.RollbackBackendsEvent;
+import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendStateEvent;
+import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendsEvent;
 import org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronEvent;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
@@ -41,8 +53,13 @@ import org.exoplatform.ide.extension.googleappengine.client.indexes.VacuumIndexe
 import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
+import org.exoplatform.ide.extension.googleappengine.client.model.BackendsUnmarshaller;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronListUnmarshaller;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimitsUnmarshaller;
+import org.exoplatform.ide.extension.googleappengine.client.model.State;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
 import org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdateEvent;
@@ -56,7 +73,7 @@ import java.util.List;
  * 
  */
 public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implements ManageAppEngineProjectHandler,
-   ViewClosedHandler
+   ViewClosedHandler, RefreshBackendListHandler
 {
 
    interface Display extends IsView
@@ -68,6 +85,8 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       HasClickHandlers getDeleteBackendButton();
 
       HasClickHandlers getUpdateBackendButton();
+
+      HasClickHandlers getUpdateAllBackendsButton();
 
       HasClickHandlers getRollbackBackendButton();
 
@@ -92,9 +111,25 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       HasClickHandlers getUpdateQueuesButton();
 
       ListGridItem<CronEntry> getCronGrid();
+
+      ListGridItem<Backend> getBackendGrid();
+
+      ListGridItem<ResourceLimit> getResourceLimitGrid();
+
+      void enableUpdateBackendButton(boolean enabled);
+
+      void enableRollbackBackendButton(boolean enabled);
+
+      void enableDeleteBackendButton(boolean enabled);
+
+      void enableConfigureBackendButton(boolean enabled);
+
+      HasBackendActions getBackendActions();
    }
 
    private Display display;
+
+   private Backend selectedBackend;
 
    private PerformOperationHandler getCronsOperationHandler = new PerformOperationHandler()
    {
@@ -106,16 +141,52 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       }
    };
 
+   private PerformOperationHandler getBackendsOperationHandler = new PerformOperationHandler()
+   {
+
+      @Override
+      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
+      {
+         getBackends(email, password, loggedInHandler);
+      }
+   };
+
+   private PerformOperationHandler getResourceLimitsOperationHandler = new PerformOperationHandler()
+   {
+
+      @Override
+      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
+      {
+         getResourceLimits(email, password, loggedInHandler);
+      }
+   };
+
    public AppEngineProjectPresenter()
    {
       IDE.getInstance().addControl(new AppEngineProjectControl());
 
       IDE.addHandler(ManageAppEngineProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RefreshBackendListEvent.TYPE, this);
    }
 
    public void bindDisplay()
    {
+      display.getBackendGrid().addSelectionHandler(new SelectionHandler<Backend>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<Backend> event)
+         {
+            selectedBackend = event.getSelectedItem();
+            boolean enabled = (selectedBackend != null);
+            display.enableConfigureBackendButton(enabled);
+            display.enableDeleteBackendButton(enabled);
+            display.enableRollbackBackendButton(enabled);
+            display.enableUpdateBackendButton(enabled);
+         }
+      });
+
       display.getCloseButton().addClickHandler(new ClickHandler()
       {
 
@@ -215,6 +286,77 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
             updateCrons();
          }
       });
+
+      display.getUpdateAllBackendsButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateAllBackends();
+         }
+      });
+
+      display.getRollbackAllBackendsButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            rollbackAllBackends();
+         }
+      });
+
+      display.getUpdateBackendButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            updateBackend();
+         }
+      });
+
+      display.getRollbackBackendButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            rollbackBackend();
+         }
+      });
+
+      display.getConfigureBackendButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            configureBackend();
+         }
+      });
+
+      display.getDeleteBackendButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            deleteBackend();
+         }
+      });
+
+      display.getBackendActions().addChangeStateHandler(new SelectionHandler<Backend>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<Backend> event)
+         {
+            updateBackendState(event.getSelectedItem().getName(),
+               State.START.equals(event.getSelectedItem().getState()) ? State.STOP : State.START);
+         }
+      });
    }
 
    /**
@@ -229,6 +371,21 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+      display.enableConfigureBackendButton(false);
+      display.enableDeleteBackendButton(false);
+      display.enableRollbackBackendButton(false);
+      display.enableUpdateBackendButton(false);
+      getResourceLimits(null, null, null);
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            getBackends(null, null, null);
+         }
+      });
+
       getCrons(null, null, null);
    }
 
@@ -297,6 +454,48 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       IDE.fireEvent(new UpdateCronEvent());
    }
 
+   public void updateAllBackends()
+   {
+      IDE.fireEvent(new UpdateBackendsEvent(true));
+   }
+
+   public void updateBackend()
+   {
+      if (selectedBackend != null)
+      {
+         IDE.fireEvent(new UpdateBackendsEvent(selectedBackend.getName()));
+      }
+   }
+
+   public void rollbackBackend()
+   {
+      if (selectedBackend != null)
+      {
+         IDE.fireEvent(new RollbackBackendsEvent(selectedBackend.getName()));
+      }
+   }
+
+   public void rollbackAllBackends()
+   {
+      IDE.fireEvent((new RollbackBackendsEvent(true)));
+   }
+
+   public void deleteBackend()
+   {
+      if (selectedBackend != null)
+      {
+         IDE.fireEvent(new DeleteBackendEvent(selectedBackend.getName()));
+      }
+   }
+
+   public void configureBackend()
+   {
+      if (selectedBackend != null)
+      {
+         IDE.fireEvent(new ConfigureBackendEvent(selectedBackend.getName()));
+      }
+   }
+
    private void getCrons(String email, String password, final LoggedInHandler loggedInHandler)
    {
       try
@@ -322,4 +521,74 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
+
+   public void updateBackendState(String backendName, State state)
+   {
+      IDE.fireEvent(new UpdateBackendStateEvent(backendName, state));
+   }
+
+   private void getBackends(String email, String password, final LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         GoogleAppEngineClientService.getInstance().listBackends(
+            currentVfs.getId(),
+            currentProject.getId(),
+            email,
+            password,
+            new GoogleAppEngineAsyncRequestCallback<List<Backend>>(new BackendsUnmarshaller(new ArrayList<Backend>()),
+               getBackendsOperationHandler, null)
+            {
+
+               @Override
+               protected void onSuccess(List<Backend> result)
+               {
+                  display.getBackendGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void getResourceLimits(String email, String password, final LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         GoogleAppEngineClientService.getInstance().getResourceLimits(
+            currentVfs.getId(),
+            currentProject.getId(),
+            email,
+            password,
+            new GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>>(new ResourceLimitsUnmarshaller(
+               new ArrayList<ResourceLimit>()), getResourceLimitsOperationHandler, null)
+            {
+
+               @Override
+               protected void onSuccess(List<ResourceLimit> result)
+               {
+                  display.getResourceLimitGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.backends.RefreshBackendListHandler#onRefreshBackendList(org.exoplatform.ide.extension.googleappengine.client.backends.RefreshBackendListEvent)
+    */
+   @Override
+   public void onRefreshBackendList(RefreshBackendListEvent event)
+   {
+      if (display != null)
+      {
+         getBackends(null, null, null);
+      }
+   }
+
 }

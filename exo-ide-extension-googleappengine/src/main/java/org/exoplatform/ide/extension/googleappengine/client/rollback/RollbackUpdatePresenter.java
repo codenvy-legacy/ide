@@ -63,7 +63,7 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
    @Override
    public void onRollbackUpdate(RollbackUpdateEvent event)
    {
-      if (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+      if (isAppEngineProject())
       {
          rollback(null, null, null);
       }

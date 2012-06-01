@@ -105,6 +105,7 @@ public class ProjectResolver
       sortedTypes.add(RAILS);
       sortedTypes.add(SPRING);
       sortedTypes.add(APP_ENGINE_JAVA);
+      sortedTypes.add(APP_ENGINE_PYTHON);
    }
 
    public static Set<String> getProjectsTypes()

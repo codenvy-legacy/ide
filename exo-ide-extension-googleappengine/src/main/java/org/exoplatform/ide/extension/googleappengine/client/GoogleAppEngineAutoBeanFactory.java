@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.googleappengine.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 
@@ -41,4 +42,6 @@ public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
    AutoBean<Credentials> credentials();
 
    AutoBean<CronEntry> cronEntry();
+
+   AutoBean<Backend> backend();
 }

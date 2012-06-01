@@ -292,6 +292,18 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-python</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-editor-yaml</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-css</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -794,6 +806,8 @@
       <module>exo-ide-editor-ruby</module>
       <module>exo-ide-editor-php</module>
       <module>exo-ide-editor-xml</module>
+      <module>exo-ide-editor-python</module>
+      <module>exo-ide-editor-yaml</module>
 
       <module>exo-ide-jdt-core</module>
 

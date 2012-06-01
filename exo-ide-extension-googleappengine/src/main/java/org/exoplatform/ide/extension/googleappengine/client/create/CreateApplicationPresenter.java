@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
@@ -153,7 +152,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
     */
    public void onDeploy()
    {
-      if (canDeploy())
+      if (isAppEngineProject())
       {
          IDE.fireEvent(new DeployApplicationEvent());
       }
@@ -162,16 +161,6 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationCannotDeploy());
       }
       IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Returns whether deploy can be performed.
-    * 
-    * @return {@link Boolean} <code>true</code> if can perform deploy to GAE
-    */
-   private boolean canDeploy()
-   {
-      return currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType());
    }
 
    /**
@@ -188,10 +177,10 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       String projectId = currentProject.getId();
       String vfsId = currentVfs.getId();
       UrlBuilder builder = new UrlBuilder();
-      String redirectUrl =   builder.setProtocol(Window.Location.getProtocol())//
-                                    .setHost(Window.Location.getHost())//
-                                    .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
-                                    
+      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+         .setHost(Window.Location.getHost())//
+         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
       String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
       Window.open(url, "_blank", null);
    }
