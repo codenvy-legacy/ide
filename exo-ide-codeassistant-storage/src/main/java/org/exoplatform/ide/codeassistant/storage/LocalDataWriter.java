@@ -22,6 +22,8 @@ import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveDataIndexException;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Set;
@@ -33,6 +35,8 @@ import java.util.Set;
  */
 public class LocalDataWriter implements DataWriter
 {
+
+   private static final Logger LOG = LoggerFactory.getLogger(LocalDataWriter.class);
 
    private LuceneDataWriter dataWriter;
 
@@ -53,12 +57,11 @@ public class LocalDataWriter implements DataWriter
    {
       try
       {
-         dataWriter.addTypeInfo(typeInfos);
+         dataWriter.addTypeInfo(typeInfos, artifact);
       }
       catch (SaveDataIndexException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         LOG.error("Can't sava type info for artifact:" + artifact, e);
       }
    }
 
@@ -70,12 +73,11 @@ public class LocalDataWriter implements DataWriter
    {
       try
       {
-         dataWriter.addPackages(packages);
+         dataWriter.addPackages(packages, artifact);
       }
       catch (SaveDataIndexException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         LOG.error("Can't sava packages for artifact:" + artifact, e);
       }
    }
 

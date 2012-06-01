@@ -69,6 +69,10 @@ public class UpdateInvoker
 
          for (Dependency dep : dependencies)
          {
+            String artifact = dep.toString();
+            if (infoStorage.isArtifactExist(artifact))
+               continue;
+
             Set<String> packages = new TreeSet<String>();
             String jarName = getJarName(dep);
             if (LOG.isDebugEnabled())
@@ -78,8 +82,8 @@ public class UpdateInvoker
                File jarFile = new File(dependencyFolder, jarName);
                List<TypeInfo> typeInfos = JarParser.parse(jarFile);
                packages.addAll(PackageParser.parse(jarFile));
-               writer.addTypeInfo(typeInfos, dep.toString());
-               writer.addPackages(packages, dep.toString());
+               writer.addTypeInfo(typeInfos, artifact);
+               writer.addPackages(packages, artifact);
             }
             catch (IOException e)
             {

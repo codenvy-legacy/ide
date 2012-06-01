@@ -43,6 +43,7 @@ public final class DataIndexFields
    
    public static final String PACKAGE = "package";
    
+   public static final String ARTIFACT = "artifact";
 //   public static final String DESCRIPTOR = "descriptor";
    
    private DataIndexFields()

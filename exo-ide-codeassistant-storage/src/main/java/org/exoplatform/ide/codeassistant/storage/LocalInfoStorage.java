@@ -18,12 +18,21 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import static org.exoplatform.ide.codeassistant.storage.lucene.search.SearchByFieldConstraint.eq;
+
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
+import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.ArtifactExtractor;
+import org.exoplatform.ide.codeassistant.storage.lucene.search.LuceneQueryExecutor;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -33,7 +42,11 @@ import java.io.IOException;
 public class LocalInfoStorage implements InfoStorage
 {
 
+   private static final Logger LOG = LoggerFactory.getLogger(LocalInfoStorage.class);
+
    private LuceneInfoStorage infoStorage;
+
+   private final LuceneQueryExecutor queryExecutor;
 
    /**
     * @param infoStorage
@@ -42,6 +55,7 @@ public class LocalInfoStorage implements InfoStorage
    {
       super();
       this.infoStorage = infoStorage;
+      queryExecutor = new LuceneQueryExecutor(infoStorage);
    }
 
    /**
@@ -52,6 +66,26 @@ public class LocalInfoStorage implements InfoStorage
    public DataWriter getWriter() throws IOException
    {
       return new LocalDataWriter(new LuceneDataWriter(infoStorage));
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.api.InfoStorage#isArtifactExist(java.lang.String)
+    */
+   @Override
+   public boolean isArtifactExist(String artifact)
+   {
+      try
+      {
+         List<String> artifacts =
+            queryExecutor.executeQuery(new ArtifactExtractor(), IndexType.PACKAGE, eq("artifact", artifact), 100, 0);
+         return (artifacts != null && !artifacts.isEmpty());
+      }
+      catch (CodeAssistantException e)
+      {
+         if (LOG.isDebugEnabled())
+            LOG.error(e.getMessage(), e);
+      }
+      return false;
    }
 
 }

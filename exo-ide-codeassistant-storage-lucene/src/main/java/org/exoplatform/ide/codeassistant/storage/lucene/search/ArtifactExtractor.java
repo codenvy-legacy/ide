@@ -16,7 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage.api;
+package org.exoplatform.ide.codeassistant.storage.lucene.search;
+
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.MapFieldSelector;
+import org.apache.lucene.index.IndexReader;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
 
 import java.io.IOException;
 
@@ -25,9 +30,18 @@ import java.io.IOException;
  * @version $Id:
  *
  */
-public interface InfoStorage
+public class ArtifactExtractor implements ContentExtractor<String>
 {
-   DataWriter getWriter() throws IOException;
-   
-   boolean isArtifactExist(String artifact);
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.storage.lucene.search.ContentExtractor#getValue(org.apache.lucene.index.IndexReader, int)
+    */
+   @Override
+   public String getValue(IndexReader reader, int doc) throws IOException
+   {
+      Document document = reader.document(doc, new MapFieldSelector(new String[]{DataIndexFields.ARTIFACT}));
+
+      return document.get(DataIndexFields.ARTIFACT);
+   }
+
 }

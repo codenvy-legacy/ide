@@ -62,10 +62,10 @@ public class LuceneTypeInfoWriterTest
    @Test
    public void shouldBeAbleToAddTwice() throws Exception
    {
-      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))}));
+      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(Object.class))}), "rt");
       IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
       assertEquals(1, reader.numDocs());
-      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(List.class))}));
+      writer.addTypeInfo(Arrays.asList(new TypeInfo[]{parse(getClassFile(List.class))}), "rt");
       reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
       assertEquals(2, reader.numDocs());
 

@@ -61,15 +61,15 @@ public class DataStorageWriter
          luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneDataWriter writer = new LuceneDataWriter(luceneInfoStorage);
 
-         Set<String> packages = new TreeSet<String>();
          for (String jar : jars)
          {
+            Set<String> packages = new TreeSet<String>();
             File jarFile = new File(jar);
             List<TypeInfo> typeInfos = JarParser.parse(jarFile);
             packages.addAll(PackageParser.parse(jarFile));
-            writer.addTypeInfo(typeInfos);
+            writer.addTypeInfo(typeInfos, jar);
+            writer.addPackages(packages, jar);
          }
-         writer.addPackages(packages);
       }
       finally
       {
@@ -103,7 +103,7 @@ public class DataStorageWriter
             try
             {
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
-               writer.addJavaDocs(javaDocs);
+               writer.addJavaDocs(javaDocs, jar);
             }
             finally
             {

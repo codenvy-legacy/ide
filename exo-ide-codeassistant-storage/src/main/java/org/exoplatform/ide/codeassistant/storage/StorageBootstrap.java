@@ -52,6 +52,8 @@ public class StorageBootstrap implements ServletContextListener
 
    private LuceneInfoStorage luceneStorage;
 
+   private String storagePath;
+
    /**
     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
     */
@@ -60,7 +62,7 @@ public class StorageBootstrap implements ServletContextListener
    {
       Map<String, Object> options = new HashMap<String, Object>();
       ServletContext ctx = sce.getServletContext();
-      String storagePath = ctx.getInitParameter(STORAGE_PATH_NAME);
+      storagePath = ctx.getInitParameter(STORAGE_PATH_NAME);
       if (storagePath == null)
          storagePath = System.getProperty("java.io.tmpdir") + "/" + "ide-codeassistant-lucene-index";
 
@@ -140,6 +142,8 @@ public class StorageBootstrap implements ServletContextListener
          updateStorageService.shutdown();
       if (luceneStorage != null)
          luceneStorage.closeIndexes();
+      if (storagePath != null)
+         UpdateUtil.delete(new File(storagePath));
    }
 
 }

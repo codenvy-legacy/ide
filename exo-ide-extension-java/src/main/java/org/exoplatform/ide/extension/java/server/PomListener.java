@@ -229,7 +229,11 @@ public class PomListener implements Startable
                      if (Status.IN_PROGRESS != buildStatus.getStatus())
                      {
                         cancel();
-                        storageClient.updateIndex(dependencyList, buildStatus.getDownloadUrl());
+                        if(Status.SUCCESSFUL == buildStatus.getStatus())
+                           
+                          storageClient.updateIndex(dependencyList, buildStatus.getDownloadUrl());
+                        else
+                           LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
                      }
 
                   }

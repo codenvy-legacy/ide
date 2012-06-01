@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -150,15 +151,84 @@ public class UpdateStorageService
    private void addTask(File dependencyFolder, List<Dependency> dependencies)
    {
       final UpdateInvoker invoker = new UpdateInvoker(infoStorage, dependencies, dependencyFolder);
-      pool.execute(new Runnable()
+      pool.submit(new Runnable()
       {
 
          @Override
          public void run()
          {
+            TimeOutThread t = new TimeOutThread(timeoutMillis, Thread.currentThread());
+            t.start();
             invoker.execute();
+            t.kill();
          }
       });
+   }
+
+   /**
+    * Timeout Thread. Kill the main task if necessary.
+    * 
+    * @author el
+    * 
+    */
+   public static class TimeOutThread extends Thread
+   {
+      final long timeout;
+
+      final Thread controlledObj;
+
+      TimeOutThread(long timeout, Thread controlledObj)
+      {
+         setDaemon(true);
+         this.timeout = timeout;
+         this.controlledObj = controlledObj;
+      }
+
+      boolean isRunning = true;
+
+      /**
+       * If we done need the {@link TimeOutThread} thread, we may kill it.
+       */
+      public void kill()
+      {
+         isRunning = false;
+         synchronized (this)
+         {
+            notify();
+         }
+      }
+
+      /**
+       * 
+       */
+      @Override
+      public void run()
+      {
+         long deltaT = 0l;
+         try
+         {
+            long start = System.currentTimeMillis();
+            while (isRunning && deltaT < timeout)
+            {
+               synchronized (this)
+               {
+                  wait(Math.max(100, timeout - deltaT));
+               }
+               deltaT = System.currentTimeMillis() - start;
+            }
+         }
+         catch (InterruptedException e)
+         {
+            // If the thread is interrupted,
+            // you may not want to kill the main thread,
+            // but probably yes.
+         }
+         finally
+         {
+            isRunning = false;
+         }
+         controlledObj.interrupt();
+      }
    }
 
    /**

@@ -54,13 +54,14 @@ public class DataIndexer
     * @return created document
     * @throws IOException
     */
-   public Document createJavaDocDocument(String fqn, String javaDoc) throws IOException
+   public Document createJavaDocDocument(String fqn, String javaDoc, String artifact) throws IOException
    {
       Document javaDocDocument = new Document();
 
       javaDocDocument.add(new Field(IndexType.DOC.getIndexFieldName(), IndexType.DOC.getIndexFieldValue(), Store.YES,
          Index.NOT_ANALYZED));
       javaDocDocument.add(new Field(DataIndexFields.FQN, fqn, Store.YES, Index.NOT_ANALYZED));
+      javaDocDocument.add(new Field(DataIndexFields.ARTIFACT, artifact, Store.YES, Index.NOT_ANALYZED));
       javaDocDocument.add(new Field(DataIndexFields.JAVA_DOC, javaDoc, Store.YES, Index.NOT_ANALYZED_NO_NORMS));
       return javaDocDocument;
    }
@@ -72,7 +73,7 @@ public class DataIndexer
     * @return
     * @throws IOException
     */
-   public Document createTypeInfoDocument(TypeInfo typeInfo) throws IOException
+   public Document createTypeInfoDocument(TypeInfo typeInfo, String artifact) throws IOException
    {
       Document typeInfoDocument = new Document();
 
@@ -82,6 +83,8 @@ public class DataIndexer
       String fqn = typeInfo.getName();
 
       typeInfoDocument.add(new Field(DataIndexFields.CLASS_NAME, simpleName(fqn), Store.YES, Index.NOT_ANALYZED));
+      
+      typeInfoDocument.add(new Field(DataIndexFields.ARTIFACT, artifact, Store.YES, Index.NOT_ANALYZED));
 
       typeInfoDocument.add(new Field(DataIndexFields.MODIFIERS, Integer.toString(typeInfo.getModifiers()), Store.YES,
          Index.NOT_ANALYZED));
@@ -109,12 +112,13 @@ public class DataIndexer
     * @param pack package name
     * @return
     */
-   public Document createPackageDocument(String pack)
+   public Document createPackageDocument(String pack, String artifact)
    {
       Document packageDocument = new Document();
       packageDocument.add(new Field(IndexType.PACKAGE.getIndexFieldName(), IndexType.PACKAGE.getIndexFieldValue(),
          Store.YES, Index.NOT_ANALYZED));
       packageDocument.add(new Field(DataIndexFields.PACKAGE, pack, Store.YES, Index.NOT_ANALYZED));
+      packageDocument.add(new Field(DataIndexFields.ARTIFACT, artifact, Store.YES, Index.NOT_ANALYZED));
       return packageDocument;
    }
 
