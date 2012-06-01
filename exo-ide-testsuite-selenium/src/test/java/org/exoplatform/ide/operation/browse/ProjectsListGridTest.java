@@ -74,6 +74,8 @@ public class ProjectsListGridTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT1);
+      IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT2);
       assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
       int countOfProjects = IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid();
 

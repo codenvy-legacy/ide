@@ -175,6 +175,9 @@ public interface IdePreferencesLocalizationConstant extends Constants
    @Key("customizeHotkeys.button.unbind")
    String customizeHotkeysUnbindButton();
 
+   @Key("customizeHotkeys.button.defaults")
+   String customizeHotkeysDefaultsButton();
+
    /*
     * HotKeyItemListGrid
     */

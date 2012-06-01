@@ -55,6 +55,8 @@ public class ProjectExplorer extends AbstractTestModule
       String PROJECT_ROW_SELECTOR = "table#" + PROJECTS_LIST_GRID_ID + ">tbody:first-of-type tr";
 
       String OPEN_CLOSE_BUTTON_LOCATOR = "//div[@id='%s']/table/tbody/tr/td[1]/img";
+
+      String PROJECT_LIST_GRID_ITEM = "//table[@id='ideProjectExplorerProjectsListGrid']//div[@style and text()='%s']";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -127,6 +129,27 @@ public class ProjectExplorer extends AbstractTestModule
             try
             {
                WebElement item = driver().findElement(By.id(getItemId(path)));
+               return item != null && item.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   public void waitForItemInProjectList(final String gridItem) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement item = driver().findElement(By.xpath(String.format(Locators.PROJECT_LIST_GRID_ITEM, gridItem)));
                return item != null && item.isDisplayed();
             }
             catch (Exception e)

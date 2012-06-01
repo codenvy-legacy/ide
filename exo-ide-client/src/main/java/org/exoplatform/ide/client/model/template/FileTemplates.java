@@ -47,6 +47,7 @@ public class FileTemplates
       addPhpTemplate();
       addJspTemplate();
       addJavaTemplate();
+      addPythonTemplate();
    }
 
    public static String getTemplateFor(String mimeType)
@@ -153,5 +154,13 @@ public class FileTemplates
             + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world! ]]>" + "</Content>" + "</Module>";
 
       TEMPLATES.put(MimeType.GOOGLE_GADGET, content);
+   }
+
+   private static void addPythonTemplate()
+   {
+      String content =
+         "# Hello world python program\n"
+            + "print \"Hello World!\";";
+      TEMPLATES.put(MimeType.TEXT_X_PYTHON, content);
    }
 }

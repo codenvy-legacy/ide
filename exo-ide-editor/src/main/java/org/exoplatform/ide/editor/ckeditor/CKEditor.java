@@ -166,16 +166,16 @@ public class CKEditor extends Editor
 
                                                                  // add Hot Key Listener
                                                                  instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::setHotKeysClickListener(Lcom/google/gwt/core/client/JavaScriptObject;)(editor);
-                                                                 //         var Ctrl_s_keycode = $wnd.CKEDITOR.CTRL + 115;
-                                                                 //         var Ctrl_S_keycode = $wnd.CKEDITOR.CTRL + 83;          
-                                                                 //         editor.exoSaveFunction = function(e) {
-                                                                 //            // test if was pressed "Ctrl + S" or "Ctrl + s"
-                                                                 //            if (e.data.keyCode == Ctrl_s_keycode || e.data.keyCode == Ctrl_S_keycode) {
-                                                                 //              instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onSaveContent()();  // call onSaveContent() listener                
-                                                                 //              return false;  // this disables default action (submitting the form)
-                                                                 //            }
-                                                                 //         }
-                                                                 //         editor.on('key', editor.exoSaveFunction);
+                                                                          var Ctrl_s_keycode = $wnd.CKEDITOR.CTRL + 115;
+                                                                          var Ctrl_S_keycode = $wnd.CKEDITOR.CTRL + 83;          
+                                                                          editor.exoSaveFunction = function(e) {
+                                                                             // test if was pressed "Ctrl + S" or "Ctrl + s"
+                                                                             if (e.data.keyCode == Ctrl_s_keycode || e.data.keyCode == Ctrl_S_keycode) {
+                                                                               instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::onSaveContent()();  // call onSaveContent() listener                
+                                                                               return false;  // this disables default action (submitting the form)
+                                                                             }
+                                                                          }
+                                                                          editor.on('key', editor.exoSaveFunction);
 
                                                                  // add onCursorActitvity listener
                                                                  editor.exoCursorActivity = function() {
@@ -552,7 +552,7 @@ public class CKEditor extends Editor
                                                                         keyPressed += "Alt+" + String(e.data.keyCode - $wnd.CKEDITOR.ALT);
                                                                         }              
                                                                         
-                                                                        // find similar key ammong the hotKeyList 
+                                                                        // find similar key among the hotKeyList 
                                                                         var hotKeyList = instance.@org.exoplatform.ide.editor.ckeditor.CKEditor::getHotKeyList()();                  
 
                                                                         // listen Ctrl+S key pressing if hotKeyList is null

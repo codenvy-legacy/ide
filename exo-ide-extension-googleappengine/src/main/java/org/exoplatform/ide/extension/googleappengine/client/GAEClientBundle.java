@@ -103,4 +103,10 @@ public interface GAEClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/googleappengine/images/update_queues_Disabled.png")
    ImageResource updateQueuesDisabled();
 
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update.png")
+   ImageResource update();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/update_Disabled.png")
+   ImageResource updateDisabled();
+
 }

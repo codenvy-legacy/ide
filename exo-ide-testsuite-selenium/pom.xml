@@ -156,7 +156,6 @@
 										<exclude>**/*NavigateVersionsTest</exclude>
 										<exclude>**/*BaseTest.java</exclude>
 										<exclude>**/*DebugChangeVariable.java</exclude>
-										<exclude>**/*SmokeTestSuite</exclude>
 									</excludes>
 								</configuration>
 							</execution>

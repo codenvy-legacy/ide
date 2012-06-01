@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -68,6 +66,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -471,8 +471,8 @@ public class Heroku
          XPath xPath = XPathFactory.newInstance().newXPath();
 
          name = (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING);
-         String gitUrl = (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING);
-         String webUrl = (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING);
+         String gitUrl = (String)xPath.evaluate("/app/git-url", xmlDoc, XPathConstants.STRING);
+         String webUrl = (String)xPath.evaluate("/app/web-url", xmlDoc, XPathConstants.STRING);
 
          if (workDir != null)
          {
@@ -651,9 +651,9 @@ public class Heroku
          if (!inRawFormat)
          {
             info.put("name", (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
-            info.put("webUrl", (String)xPath.evaluate("/app/web_url", xmlDoc, XPathConstants.STRING));
+            info.put("webUrl", (String)xPath.evaluate("/app/web-url", xmlDoc, XPathConstants.STRING));
             info.put("domainName", (String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
-            info.put("gitUrl", (String)xPath.evaluate("/app/git_url", xmlDoc, XPathConstants.STRING));
+            info.put("gitUrl", (String)xPath.evaluate("/app/git-url", xmlDoc, XPathConstants.STRING));
             info.put("dynos", (String)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.STRING));
             info.put("workers", (String)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.STRING));
             info.put("repoSize", (String)xPath.evaluate("/app/repo-size", xmlDoc, XPathConstants.STRING));
@@ -745,7 +745,7 @@ public class Heroku
       }
 
       HttpURLConnection http = null;
-      GitConnection git = null;
+      GitConnection git;
       try
       {
          URL url = new URL(HEROKU_API + "/apps/" + name);
@@ -1147,9 +1147,10 @@ public class Heroku
             if (length > 0)
             {
                byte[] b = new byte[length];
-               for (int point = -1, off = 0; (point = input.read(b, off, length - off)) > 0; off += point) //
+               int point, off = 0;
+               while ((point = input.read(b, off, length - off)) > 0)
                {
-                  ;
+                  off += point;
                }
                firstChunk = new URL(new String(b));
             }
@@ -1157,7 +1158,7 @@ public class Heroku
             {
                byte[] buf = new byte[128];
                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-               int point = -1;
+               int point;
                while ((point = input.read(buf)) != -1)
                {
                   bout.write(buf, 0, point);
@@ -1325,7 +1326,7 @@ public class Heroku
    private static void authenticate(HerokuCredentials herokuCredentials, HttpURLConnection http) throws IOException
    {
       byte[] base64 =
-         encodeBase64((herokuCredentials.getEmail() + ":" + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
+         encodeBase64((herokuCredentials.getEmail() + ':' + herokuCredentials.getApiKey()).getBytes("ISO-8859-1"));
       http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
    }
 
@@ -1436,9 +1437,10 @@ public class Heroku
       if (contentLength > 0)
       {
          byte[] b = new byte[contentLength];
-         for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
+         int point, off = 0;
+         while ((point = input.read(b, off, contentLength - off)) > 0)
          {
-            ;
+            off += point;
          }
          return b;
       }
@@ -1446,7 +1448,7 @@ public class Heroku
       {
          ByteArrayOutputStream bout = new ByteArrayOutputStream();
          byte[] buf = new byte[1024];
-         int point = -1;
+         int point;
          while ((point = input.read(buf)) != -1)
          {
             bout.write(buf, 0, point);

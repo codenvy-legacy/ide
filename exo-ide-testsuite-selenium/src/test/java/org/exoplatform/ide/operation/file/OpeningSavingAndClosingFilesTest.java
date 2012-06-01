@@ -200,12 +200,14 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
       assertEquals("Change file\n" + DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor(0));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
@@ -213,37 +215,37 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       assertEquals("Change file\n  " + DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(3);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(4);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
       assertEquals("Change file\n" + DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(5);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(6);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
    }
 
@@ -259,36 +261,42 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
       IDE.EDITOR.selectTab(1);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor(1));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       IDE.EDITOR.selectTab(2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.selectTab(3);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
       IDE.EDITOR.selectTab(4);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
       IDE.EDITOR.selectTab(5);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
       IDE.EDITOR.selectTab(6);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
       assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
