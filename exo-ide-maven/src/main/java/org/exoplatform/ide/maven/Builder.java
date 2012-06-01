@@ -94,9 +94,11 @@ public class Builder
    @POST
    @Path("dependencies/copy")
    @Consumes("application/zip")
-   public Response dependenciesCopy(@Context UriInfo uriInfo, InputStream data) throws IOException
+   public Response dependenciesCopy(@Context UriInfo uriInfo,
+                                    @QueryParam("classifier") String classifier,
+                                    InputStream data) throws IOException
    {
-      MavenBuildTask task = tasks.dependenciesCopy(data);
+      MavenBuildTask task = tasks.dependenciesCopy(data, classifier);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
       return Response
          .status(202)
