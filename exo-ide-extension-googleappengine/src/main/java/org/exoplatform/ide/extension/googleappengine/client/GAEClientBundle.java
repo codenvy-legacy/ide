@@ -144,4 +144,10 @@ public interface GAEClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_all_Disabled.png")
    ImageResource rollbackAllDisabled();
+   
+   @Source("org/exoplatform/ide/extension/googleappengine/images/resource_limits.png")
+   ImageResource resourceLimits();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/resource_limits_Disabled.png")
+   ImageResource resourceLimitsDisabled();
 }

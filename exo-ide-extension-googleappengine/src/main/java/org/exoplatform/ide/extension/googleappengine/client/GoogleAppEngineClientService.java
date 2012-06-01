@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
-import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
+import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * Client service for managing Google App Engine.
@@ -66,7 +66,7 @@ public abstract class GoogleAppEngineClientService
       String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
    public abstract void getResourceLimits(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Map<String, Long>> callback) throws RequestException;
+      GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException;
 
    public abstract void listBackends(String vfsId, String projectId, String email, String password,
       GoogleAppEngineAsyncRequestCallback<List<Backend>> callback) throws RequestException;

@@ -80,7 +80,9 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      boolean isAppEngine = ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType());
+      boolean isAppEngine =
+         ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType())
+            || ProjectResolver.APP_ENGINE_PYTHON.equals(event.getProject().getProjectType());
       setVisible(isAppEngine);
       setEnabled(isAppEngine);
    }

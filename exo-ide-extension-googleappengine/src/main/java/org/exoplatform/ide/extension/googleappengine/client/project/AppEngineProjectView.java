@@ -17,6 +17,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 import org.exoplatform.ide.extension.googleappengine.client.backends.HasBackendActions;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
 
 public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPresenter.Display
 {
@@ -25,6 +26,8 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    private static final String GENERAL_TAB_ID = "ideAppEngineProjectViewGeneralTab";
 
    private static final String CRONS_TAB_ID = "ideAppEngineProjectViewCronsTab";
+
+   private static final String RESOURCE_LIMITS_TAB_ID = "ideAppEngineProjectViewResourceLimitsTab";
 
    private static final String BACKENDS_TAB_ID = "ideAppEngineProjectViewBackendsTab";
 
@@ -45,6 +48,8 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
 
    private BackendsTabPane backendsTabPane;
 
+   private ResourceLimitsTabPane resourceLimitsTabPane;
+
    @UiField
    TabPanel applicationTabPanel;
 
@@ -60,6 +65,11 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
       mainTabPain = new MainTabPain();
       applicationTabPanel.addTab(GENERAL_TAB_ID, new Image(GAEClientBundle.INSTANCE.general()),
          GoogleAppEngineExtension.GAE_LOCALIZATION.manageApplicationGeneralTab(), mainTabPain, false);
+
+      resourceLimitsTabPane = new ResourceLimitsTabPane();
+
+      applicationTabPanel.addTab(RESOURCE_LIMITS_TAB_ID, new Image(GAEClientBundle.INSTANCE.resourceLimits()),
+         GoogleAppEngineExtension.GAE_LOCALIZATION.resourceLimitsTabTitle(), resourceLimitsTabPane, false);
 
       cronTabPane = new CronTabPane();
       applicationTabPanel.addTab(CRONS_TAB_ID, new Image(GAEClientBundle.INSTANCE.crons()),
@@ -276,6 +286,15 @@ public class AppEngineProjectView extends ViewImpl implements AppEngineProjectPr
    public HasBackendActions getBackendActions()
    {
       return backendsTabPane.getBackendGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter.Display#getResourceLimitGrid()
+    */
+   @Override
+   public ListGridItem<ResourceLimit> getResourceLimitGrid()
+   {
+      return resourceLimitsTabPane.getResourceLimitsGrid();
    }
 
 }

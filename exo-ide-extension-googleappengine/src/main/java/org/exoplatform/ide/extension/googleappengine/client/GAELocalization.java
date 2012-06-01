@@ -265,6 +265,28 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("cron.grid.message")
    String cronGridMessage();
 
+   /* Resource limits */
+   @Key("resource.limits.tab.title")
+   String resourceLimitsTabTitle();
+
+   @Key("resource.column.title")
+   String resourceColumnTitle();
+
+   @Key("limit.column.title")
+   String limitColumnTitle();
+
+   @Key("max.blob.size")
+   String maxBlobSize();
+
+   @Key("max.file.size")
+   String maxFileSize();
+
+   @Key("max.file.count")
+   String maxFileCount();
+
+   @Key("max.total.file.size")
+   String maxTotalFileSize();
+
    /* Backend */
    @Key("backend.name.title")
    String backendNameTitle();

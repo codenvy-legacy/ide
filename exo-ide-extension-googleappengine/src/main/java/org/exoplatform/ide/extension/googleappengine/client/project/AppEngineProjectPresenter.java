@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.googleappengine.client.project;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -55,6 +57,8 @@ import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.BackendsUnmarshaller;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronListUnmarshaller;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimitsUnmarshaller;
 import org.exoplatform.ide.extension.googleappengine.client.model.State;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent;
 import org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent;
@@ -110,6 +114,8 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
 
       ListGridItem<Backend> getBackendGrid();
 
+      ListGridItem<ResourceLimit> getResourceLimitGrid();
+
       void enableUpdateBackendButton(boolean enabled);
 
       void enableRollbackBackendButton(boolean enabled);
@@ -142,6 +148,16 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
       {
          getBackends(email, password, loggedInHandler);
+      }
+   };
+
+   private PerformOperationHandler getResourceLimitsOperationHandler = new PerformOperationHandler()
+   {
+
+      @Override
+      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
+      {
+         getResourceLimits(email, password, loggedInHandler);
       }
    };
 
@@ -359,7 +375,17 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       display.enableDeleteBackendButton(false);
       display.enableRollbackBackendButton(false);
       display.enableUpdateBackendButton(false);
-      getBackends(null, null, null);
+      getResourceLimits(null, null, null);
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            getBackends(null, null, null);
+         }
+      });
+
       getCrons(null, null, null);
    }
 
@@ -518,6 +544,32 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
                protected void onSuccess(List<Backend> result)
                {
                   display.getBackendGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void getResourceLimits(String email, String password, final LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         GoogleAppEngineClientService.getInstance().getResourceLimits(
+            currentVfs.getId(),
+            currentProject.getId(),
+            email,
+            password,
+            new GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>>(new ResourceLimitsUnmarshaller(
+               new ArrayList<ResourceLimit>()), getResourceLimitsOperationHandler, null)
+            {
+
+               @Override
+               protected void onSuccess(List<ResourceLimit> result)
+               {
+                  display.getResourceLimitGrid().setValue(result);
                }
             });
       }

@@ -33,10 +33,10 @@ import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployRequest
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Implementation of {@link GoogleAppEngineClientService}.
@@ -170,7 +170,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     */
    @Override
    public void getResourceLimits(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Map<String, Long>> callback) throws RequestException
+      GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException
    {
       String url = restServiceContext + RESOURCE_LIMITS;
 
@@ -178,7 +178,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
       AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).data(getCredentialsData(email, password))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**

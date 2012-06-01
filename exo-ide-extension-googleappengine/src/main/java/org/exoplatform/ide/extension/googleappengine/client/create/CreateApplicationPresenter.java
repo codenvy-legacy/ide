@@ -156,7 +156,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    {
       if (display.getDeployValue().getValue())
       {
-         if (canDeploy())
+         if (isAppEngineProject())
          {
             IDE.fireEvent(new DeployApplicationEvent());
          }
@@ -168,13 +168,4 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       IDE.getInstance().closeView(display.asView().getId());
    }
 
-   /**
-    * Returns whether deploy can be performed.
-    * 
-    * @return {@link Boolean} <code>true</code> if can perform deploy to GAE
-    */
-   private boolean canDeploy()
-   {
-      return currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType());
-   }
 }
