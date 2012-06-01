@@ -376,16 +376,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       display.enableRollbackBackendButton(false);
       display.enableUpdateBackendButton(false);
       getResourceLimits(null, null, null);
-
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            getBackends(null, null, null);
-         }
-      });
-
       getCrons(null, null, null);
    }
 
@@ -570,6 +560,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
                protected void onSuccess(List<ResourceLimit> result)
                {
                   display.getResourceLimitGrid().setValue(result);
+                  getBackends(null, null, null);
                }
             });
       }
