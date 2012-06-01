@@ -123,6 +123,8 @@ public class BuilderService
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for getting dependencies
+    * @param classifier
+    *    classifier to look for, e.g. : sources. May be <code>null</code>.
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to
@@ -133,16 +135,17 @@ public class BuilderService
     *    if any i/o errors occur
     * @throws VirtualFileSystemException
     *    if any error in VFS
-    * @see BuilderClient#dependenciesCopy(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
+    * @see BuilderClient#dependenciesCopy(org.exoplatform.ide.vfs.server.VirtualFileSystem, String, String)
     */
    @GET
    @Path("dependencies/copy")
    public Response dependenciesCopy(@QueryParam("projectid") String projectId, //
                                     @QueryParam("vfsid") String vfsId, //
+                                    @QueryParam("classifier") String classifier, //
                                     @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
-      final String buildID = builder.dependenciesCopy(vfs, projectId);
+      final String buildID = builder.dependenciesCopy(vfs, projectId, classifier);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }

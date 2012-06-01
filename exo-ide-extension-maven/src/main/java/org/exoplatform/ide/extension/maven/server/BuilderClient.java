@@ -101,6 +101,8 @@ public class BuilderClient
     *    virtual file system
     * @param projectId
     *    identifier of project we want to send for collect dependencies
+    * @param classifier
+    *    classifier to look for, e.g. : sources. May be <code>null</code>.
     * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
     * @throws IOException
     *    if any i/o errors occur
@@ -109,11 +111,15 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String dependenciesCopy(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
-      VirtualFileSystemException
+   public String dependenciesCopy(VirtualFileSystem vfs, String projectId, String classifier) throws IOException,
+      BuilderException, VirtualFileSystemException
    {
-      URL url = new URL(baseURL + "/builder/maven/dependencies/copy");
-      return run(url, vfs.exportZip(projectId));
+      String url = baseURL + "/builder/maven/dependencies/copy";
+      if (!(classifier == null || classifier.isEmpty()))
+      {
+         url += "?classifier=" + classifier;
+      }
+      return run(new URL(url), vfs.exportZip(projectId));
    }
 
    /**
