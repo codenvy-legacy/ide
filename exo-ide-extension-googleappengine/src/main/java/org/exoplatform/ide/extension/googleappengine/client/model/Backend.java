@@ -22,26 +22,44 @@ import java.util.Set;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  May 23, 2012 4:45:33 PM anya $
- *
+ * @version $Id: May 23, 2012 4:45:33 PM anya $
+ * 
  */
 public interface Backend
 {
    public String getInstanceClass();
-   
-   public int getInstances();
-   
-   public int getMaxConcurrentRequests();
-   
+
+   public Integer getInstances();
+
+   public Integer getMaxConcurrentRequests();
+
    public String getName();
-   
+
    public Set<Option> getOptions();
-   
+
    public State getState();
-   
-   public boolean isDynamic();
-   
-   public boolean isFailFast();
-   
-   public boolean isPublic();
+
+   public Boolean isDynamic();
+
+   public Boolean isFailFast();
+
+   public Boolean isPublic();
+
+   public void setInstanceClass(String instanceClass);
+
+   public void setInstances(Integer number);
+
+   public void setMaxConcurrentRequests(Integer number);
+
+   public void setName(String name);
+
+   public void setOptions(Set<Option> options);
+
+   public void setState(State state);
+
+   public void setDynamic(Boolean isDynamic);
+
+   public void setFailFast(Boolean isFailFast);
+
+   public void setPublic(Boolean isPublic);
 }

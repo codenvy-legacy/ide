@@ -33,33 +33,33 @@
          <g:FlowPanel>
             <g:FlowPanel addStyleNames="{style.box} {style.line}">
                <g:Label text="{locale.manageApplicationApplication}" addStyleNames="{style.label}"></g:Label>
-               <f:ImageButton ui:field="updateApplicationButton" width="90px" height="20px" text="{locale.updateButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="updateApplicationButton" width="90px" height="22px" text="{locale.updateButton}" addStyleNames="{style.left}"
                   imageResource="{resource.updateApplication}" disabledImageResource="{resource.updateApplicationDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="rollbackApplicationButton" width="90px" height="20px" text="{locale.rollbackButton}"
-                  addStyleNames="{style.left}" imageResource="{resource.rollback}" disabledImageResource="{resource.rollbackDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="getLogsButton" width="90px" height="20px" text="{locale.logsButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="rollbackApplicationButton" width="90px" height="22px" text="{locale.rollbackButton}"
+                  addStyleNames="{style.left}" imageResource="{resource.rollbackApplication}" disabledImageResource="{resource.rollbackApplicationDisabled}"></f:ImageButton>
+               <f:ImageButton ui:field="getLogsButton" width="90px" height="22px" text="{locale.logsButton}" addStyleNames="{style.left}"
                   imageResource="{resource.logs}"></f:ImageButton>
             </g:FlowPanel>
             <g:FlowPanel addStyleNames="{style.box} {style.line}">
                <g:Label text="{locale.manageApplicationIndexes}" addStyleNames="{style.label}"></g:Label>
-               <f:ImageButton ui:field="updateIndexesButton" width="90px" height="20px" text="{locale.updateButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="updateIndexesButton" width="90px" height="22px" text="{locale.updateButton}" addStyleNames="{style.left}"
                   imageResource="{resource.updateIndexes}" disabledImageResource="{resource.updateIndexesDisabled}"></f:ImageButton>
-               <f:ImageButton ui:field="vacuumIndexesButton" width="90px" height="20px" text="{locale.vacuumButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="vacuumIndexesButton" width="90px" height="22px" text="{locale.vacuumButton}" addStyleNames="{style.left}"
                   imageResource="{resource.vacuumIndexes}" disabledImageResource="{resource.vacuumIndexesDisabled}"></f:ImageButton>
             </g:FlowPanel>
             <g:FlowPanel addStyleNames="{style.box} {style.line}">
                <g:Label text="{locale.manageApplicationPagespeed}" addStyleNames="{style.label}"></g:Label>
-               <f:ImageButton ui:field="updatePageSpeedButton" width="90px" height="20px" text="{locale.updateButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="updatePageSpeedButton" width="90px" height="22px" text="{locale.updateButton}" addStyleNames="{style.left}"
                   imageResource="{resource.updatePagespeed}" disabledImageResource="{resource.updatePagespeedDisabled}"></f:ImageButton>
             </g:FlowPanel>
             <g:FlowPanel addStyleNames="{style.box} {style.line}">
                <g:Label text="{locale.manageApplicationQueues}" addStyleNames="{style.label}"></g:Label>
-               <f:ImageButton ui:field="updateQueuesButton" width="90px" height="20px" text="{locale.updateButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="updateQueuesButton" width="90px" height="22px" text="{locale.updateButton}" addStyleNames="{style.left}"
                   imageResource="{resource.updateQueues}" disabledImageResource="{resource.updateQueuesDisabled}"></f:ImageButton>
             </g:FlowPanel>
             <g:FlowPanel styleName="{style.box}">
                <g:Label text="{locale.manageApplicationDos}" addStyleNames="{style.label}"></g:Label>
-               <f:ImageButton ui:field="updateDosButton" width="90px" height="20px" text="{locale.updateButton}" addStyleNames="{style.left}"
+               <f:ImageButton ui:field="updateDosButton" width="90px" height="22px" text="{locale.updateButton}" addStyleNames="{style.left}"
                   imageResource="{resource.updateDos}" disabledImageResource="{resource.updateDosDisabled}"></f:ImageButton>
             </g:FlowPanel>
          </g:FlowPanel>

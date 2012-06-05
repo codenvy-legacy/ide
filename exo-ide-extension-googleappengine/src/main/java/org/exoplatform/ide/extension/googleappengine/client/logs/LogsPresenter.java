@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.logs;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -111,7 +109,7 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
-      if (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+      if (isAppEngineProject())
       {
          if (display == null)
          {
