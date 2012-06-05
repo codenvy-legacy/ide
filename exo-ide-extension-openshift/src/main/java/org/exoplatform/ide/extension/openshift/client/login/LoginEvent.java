@@ -34,6 +34,30 @@ public class LoginEvent extends GwtEvent<LoginHandler>
     */
    public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
 
+   private LoggedInHandler loggedInHandler;
+
+   private LoginCanceledHandler loginCanceledHandler;
+
+   public LoginEvent()
+   {
+   }
+
+   public LoginEvent(LoggedInHandler loggedInHandler, LoginCanceledHandler loginCanceledHandler)
+   {
+      this.loggedInHandler = loggedInHandler;
+      this.loginCanceledHandler = loginCanceledHandler;
+   }
+
+   public LoggedInHandler loggedInHandler()
+   {
+      return loggedInHandler;
+   }
+
+   public LoginCanceledHandler loginCanceledHandler()
+   {
+      return loginCanceledHandler;
+   }
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */

@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client.key;
 
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -37,6 +34,9 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 /**
  * Presenter for updating public key on OpenShift. First - get user's information to retrieve domain name, then update public SSH
  * key.
@@ -48,12 +48,28 @@ import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, LoggedInHandler
 {
 
+   private static UpdatePublicKeyCommandHandler instance;
+
+   private UpdatePublicKeyCallback updatePublicKeyCallback;
+
    /**
     *
     */
    public UpdatePublicKeyCommandHandler()
    {
+      instance = this;
       IDE.addHandler(UpdatePublicKeyEvent.TYPE, this);
+   }
+
+   public static UpdatePublicKeyCommandHandler getInstance()
+   {
+      return instance;
+   }
+
+   public void updatePublicKey(UpdatePublicKeyCallback updatePublicKeyCallback)
+   {
+      this.updatePublicKeyCallback = updatePublicKeyCallback;
+      getUserInfo();
    }
 
    /**
@@ -100,8 +116,14 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
                      return;
                   }
                }
+
                IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .getUserInfoFail()));
+               if (updatePublicKeyCallback != null)
+               {
+                  updatePublicKeyCallback.onPublicKeyUpdated(true);
+                  updatePublicKeyCallback = null;
+               }
             }
          });
       }
@@ -149,6 +171,12 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
             {
                IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.updatePublicKeySuccess(),
                   Type.INFO));
+
+               if (updatePublicKeyCallback != null)
+               {
+                  updatePublicKeyCallback.onPublicKeyUpdated(true);
+                  updatePublicKeyCallback = null;
+               }
             }
 
             /**
@@ -168,8 +196,14 @@ public class UpdatePublicKeyCommandHandler implements UpdatePublicKeyHandler, Lo
                      return;
                   }
                }
+
                IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .updatePublicKeyFailed()));
+               if (updatePublicKeyCallback != null)
+               {
+                  updatePublicKeyCallback.onPublicKeyUpdated(false);
+                  updatePublicKeyCallback = null;
+               }
             }
          });
       }

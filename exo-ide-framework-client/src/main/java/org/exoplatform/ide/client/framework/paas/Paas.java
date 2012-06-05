@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class Paas
 {
+
    private String name;
 
    /**
@@ -88,4 +89,15 @@ public class Paas
    {
       provider.deploy(project);
    }
+   
+   public boolean canCreateProject()
+   {
+      return false;
+   }
+   
+   public void createProject(ProjectModel project)
+   {
+      provider.createProject(project);
+   }
+
 }
