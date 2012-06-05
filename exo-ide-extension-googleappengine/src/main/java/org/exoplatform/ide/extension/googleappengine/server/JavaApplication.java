@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+
 /**
  * Wrapper for com.google.appengine.tools.admin.Application to make possible cleanup temporary files.
  *
@@ -161,7 +163,7 @@ public class JavaApplication implements GenericApplication
    public void cleanStagingDirectory()
    {
       delegate.cleanStagingDirectory();
-      Application.recursiveDelete(new java.io.File(getPath()));
+      deleteRecursive(new java.io.File(getPath()));
    }
 
    @Override

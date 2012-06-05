@@ -27,26 +27,24 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
+
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class FilesHelper
+class Utils
 {
    private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
    private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
@@ -59,19 +57,8 @@ class FilesHelper
       boolean accept(String name);
    }
 
-   static final NameFilter UPLOAD_FILTER = new NameFilter()
-   {
-      @Override
-      public boolean accept(String name)
-      {
-         return !(".cloudfoundry-application".equals(name) || ".vmc_target".equals(name) || ".project".equals(name) // eXo IDE specific.  
-            || name.endsWith("~") || name.endsWith(".log")); // Do the same as cloud foundry command line tool does. 
-      }
-   };
-
    static final NameFilter WAR_FILTER = new TypeFilter(".war");
    static final NameFilter RUBY_FILTER = new TypeFilter(".rb");
-   //static final NameFilter JS_FILTER = new TypeFilter(".js");
    static final NameFilter PHP_FILTER = new TypeFilter(".php");
 
    private static class TypeFilter implements NameFilter
@@ -97,127 +84,11 @@ class FilesHelper
       unzip(zip, target);
    }
 
-   static List<java.io.File> list(java.io.File dir, NameFilter filter)
-   {
-      if (!dir.isDirectory())
-      {
-         throw new IllegalArgumentException("Not a directory. ");
-      }
-      List<java.io.File> files = new ArrayList<java.io.File>();
-      LinkedList<java.io.File> q = new LinkedList<java.io.File>();
-      q.add(dir);
-      while (!q.isEmpty())
-      {
-         java.io.File current = q.pop();
-         java.io.File[] list = current.listFiles();
-         if (list != null)
-         {
-            for (int i = 0; i < list.length; i++)
-            {
-               final java.io.File f = list[i];
-               if (f.isDirectory())
-               {
-                  // Always hide .git directory. Not need to send it to CloudFoundry infrastructure.
-                  if (!(".git".equals(f.getName())))
-                  {
-                     q.push(f);
-                  }
-               }
-               else if (filter.accept(f.getName()))
-               {
-                  files.add(f);
-               }
-            }
-         }
-      }
-      return files;
-   }
-
-   static void zipDir(String zipRootPath, java.io.File dir, java.io.File zip, NameFilter filter) throws IOException
-   {
-      if (!dir.isDirectory())
-      {
-         throw new IllegalArgumentException("Not a directory. ");
-      }
-      FileOutputStream fos = null;
-      ZipOutputStream zipOut = null;
-      try
-      {
-         byte[] b = new byte[8192];
-         fos = new FileOutputStream(zip);
-         zipOut = new ZipOutputStream(fos);
-         LinkedList<java.io.File> q = new LinkedList<java.io.File>();
-         q.add(dir);
-         while (!q.isEmpty())
-         {
-            java.io.File current = q.pop();
-            java.io.File[] list = current.listFiles();
-            if (list != null)
-            {
-               for (int i = 0; i < list.length; i++)
-               {
-                  final java.io.File f = list[i];
-                  final String zipEntryName =
-                     f.getAbsolutePath().substring(zipRootPath.length() + 1).replace('\\', '/');
-                  if (f.isDirectory())
-                  {
-                     if (!(".git".equals(f.getName())))
-                     {
-                        q.push(f);
-                        zipOut.putNextEntry(new ZipEntry(zipEntryName.endsWith("/") //
-                           ? zipEntryName //
-                           : zipEntryName + "/"));
-                     }
-                  }
-                  else if (filter.accept(f.getName()))
-                  {
-                     zipOut.putNextEntry(new ZipEntry(zipEntryName));
-                     FileInputStream in = null;
-                     try
-                     {
-                        in = new FileInputStream(f);
-                        int r;
-                        while ((r = in.read(b)) != -1)
-                        {
-                           zipOut.write(b, 0, r);
-                        }
-                     }
-                     finally
-                     {
-                        if (in != null)
-                        {
-                           in.close();
-                        }
-                        zipOut.closeEntry();
-                     }
-                  }
-               }
-            }
-         }
-      }
-      finally
-      {
-         if (zipOut != null)
-         {
-            zipOut.close();
-         }
-         if (fos != null)
-         {
-            fos.close();
-         }
-      }
-   }
-
-   static void unzip(java.io.File zip, java.io.File targetDir) throws IOException
-   {
-      unzip(new FileInputStream(zip), targetDir);
-   }
-
    /** Read the first line from file or <code>null</code> if file not found. */
    static String readFile(VirtualFileSystem vfs, Item parent, String name) throws VirtualFileSystemException,
       IOException
    {
-      return readFile(vfs, (parent.getPath() + "/" + name));
+      return readFile(vfs, (parent.getPath() + '/' + name));
    }
 
    /** Read the first line from file or <code>null</code> if file not found. */
@@ -255,7 +126,7 @@ class FilesHelper
       String parentPath = item.getPath();
       try
       {
-         Item file = vfs.getItemByPath(parentPath + "/" + name, null, PropertyFilter.NONE_FILTER);
+         Item file = vfs.getItemByPath(parentPath + '/' + name, null, PropertyFilter.NONE_FILTER);
          vfs.delete(file.getId(), null);
       }
       catch (ItemNotFoundException ignored)
@@ -263,79 +134,15 @@ class FilesHelper
       }
    }
 
-   static void unzip(InputStream in, java.io.File targetDir) throws IOException
+   static String detectFramework(java.io.File path) throws IOException
    {
-      ZipInputStream zipIn = null;
-      try
-      {
-         zipIn = new ZipInputStream(in);
-         byte[] b = new byte[8192];
-         ZipEntry zipEntry;
-         while ((zipEntry = zipIn.getNextEntry()) != null)
-         {
-            java.io.File file = new java.io.File(targetDir, zipEntry.getName());
-            if (!zipEntry.isDirectory())
-            {
-               java.io.File parent = file.getParentFile();
-               if (!parent.exists())
-               {
-                  parent.mkdirs();
-               }
-               FileOutputStream fos = new FileOutputStream(file);
-               try
-               {
-                  int r;
-                  while ((r = zipIn.read(b)) != -1)
-                  {
-                     fos.write(b, 0, r);
-                  }
-               }
-               finally
-               {
-                  fos.close();
-               }
-            }
-            else
-            {
-               file.mkdirs();
-            }
-            zipIn.closeEntry();
-         }
-      }
-      finally
-      {
-         if (zipIn != null)
-         {
-            zipIn.close();
-         }
-         in.close();
-      }
-   }
-
-   static boolean delete(java.io.File fileOrDir)
-   {
-      if (fileOrDir.isDirectory())
-      {
-         for (java.io.File f : fileOrDir.listFiles())
-         {
-            if (!delete(f))
-            {
-               return false;
-            }
-         }
-      }
-      return fileOrDir.delete();
-   }
-
-   static String detectFramework(java.io.File war) throws IOException
-   {
-      if (war.isFile() && WAR_FILTER.accept(war.getName()))
+      if (path.isFile() && WAR_FILTER.accept(path.getName()))
       {
          FileInputStream fis = null;
          ZipInputStream zipIn = null;
          try
          {
-            fis = new FileInputStream(war);
+            fis = new FileInputStream(path);
             zipIn = new ZipInputStream(fis);
             Matcher springMatcher1 = null;
             Matcher springMatcher2 = null;
@@ -379,11 +186,10 @@ class FilesHelper
          }
          return "java_web";
       }
-      return null;
+      return "standalone";
    }
 
-   static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException,
-      IOException
+   static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException
    {
       Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
       try
@@ -395,14 +201,14 @@ class FilesHelper
       {
       }
       List<Item> children = vfs.getChildren(projectId, -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
-      Matcher sinatraMatcher = null;
-      // Check each ruby file to include "sinatra" import. 
       for (Item i : children)
       {
          if (RUBY_FILTER.accept(i.getName()))
          {
             InputStream in = null;
             BufferedReader reader = null;
+            // Check each ruby file to include "sinatra" import.
+            Matcher sinatraMatcher = null;
             try
             {
                in = vfs.getContent(i.getId()).getStream();
@@ -453,7 +259,7 @@ class FilesHelper
             return "wsgi";
          }
       }
-      return null;
+      return "standalone";
    }
 
    static String countFileHash(java.io.File file, MessageDigest digest) throws IOException

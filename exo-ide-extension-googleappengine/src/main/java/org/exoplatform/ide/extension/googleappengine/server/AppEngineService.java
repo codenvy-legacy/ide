@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.server;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -171,12 +172,12 @@ public class AppEngineService
 
    @POST
    @Path("update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void update(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+   @Produces(MediaType.APPLICATION_JSON)
+   public ApplicationInfo update(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
       @QueryParam("bin") URL bin, Map<String, String> credentials) throws Exception
    {
-      client.update(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, bin,
-         credentials.get("email"), credentials.get("password"));
+      return client.update(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
+         bin, credentials.get("email"), credentials.get("password"));
    }
 
    @POST
@@ -272,8 +273,8 @@ public class AppEngineService
    @GET
    @Path("change-appid/{vfsid}/{projectid}")
    public Response changeApplicationId(@PathParam("vfsid") String vfsId, //
-                                      @PathParam("projectid") String projectId, //
-                                      @QueryParam("app_id") String appId) throws VirtualFileSystemException, IOException
+      @PathParam("projectid") String projectId, //
+      @QueryParam("app_id") String appId) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
@@ -286,6 +287,9 @@ public class AppEngineService
       String newContent = PATTERN.matcher(content).replaceFirst("<application>" + appId + "</application>");
       vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
          new ByteArrayInputStream(newContent.getBytes()), null);
-      return Response.ok("Now your application ready to deploy. You can close this tab. Please switch to IDE tab and push deploy button").build();
+      return Response
+         .ok(
+            "Now your application ready to deploy. You can close this tab. Please switch to IDE tab and push deploy button")
+         .build();
    }
 }

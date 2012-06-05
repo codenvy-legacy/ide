@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -286,10 +287,10 @@ public class PythonApplication implements GenericApplication
    {
       if (stagingDir != null)
       {
-         Application.recursiveDelete(stagingDir);
+         deleteRecursive(stagingDir);
       }
       // Delete original application directory. Always get fresh copy of sources from IDE.
-      Application.recursiveDelete(appDir);
+      deleteRecursive(appDir);
    }
 
    @Override
