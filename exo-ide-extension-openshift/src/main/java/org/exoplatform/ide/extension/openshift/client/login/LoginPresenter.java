@@ -18,6 +18,18 @@
  */
 package org.exoplatform.ide.extension.openshift.client.login;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,19 +40,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.openshift.client.login.SwitchAccountEvent;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
-import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * Presenter for login view. The view must be pointed in Views.gwt.xml.
@@ -80,7 +79,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
        * @return {@link HasValue}
        */
       HasValue<String> getLoginResult();
-      
+
       /**
        * Get password field.
        * 
@@ -102,6 +101,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
    }
 
    private Display display;
+
+   private LoggedInHandler loggedInHandler;
+
+   private LoginCanceledHandler loginCanceledHandler;
 
    public LoginPresenter()
    {
@@ -125,6 +128,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          public void onClick(ClickEvent event)
          {
             IDE.getInstance().closeView(display.asView().getId());
+            if (loginCanceledHandler != null)
+            {
+               loginCanceledHandler.onLoginCanceled(new LoginCanceledEvent());
+               loginCanceledHandler = null;
+            }
+
          }
       });
 
@@ -195,6 +204,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          display.enableLoginButton(false);
          display.focusInEmailField();
       }
+
+      loggedInHandler = event.loggedInHandler();
+      loginCanceledHandler = event.loginCanceledHandler();
    }
 
    /**
@@ -209,7 +221,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
       {
          OpenShiftClientService.getInstance().login(email, password, new AsyncRequestCallback<String>()
          {
-
             /**
              * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onSuccess(java.lang.Object)
              */
@@ -218,6 +229,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
             {
                IDE.getInstance().closeView(display.asView().getId());
                IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+
+               if (loggedInHandler != null)
+               {
+                  loggedInHandler.onLoggedIn(new LoggedInEvent());
+                  loggedInHandler = null;
+               }
+
                IDE.fireEvent(new LoggedInEvent(false));
             }
 
@@ -264,7 +282,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, SwitchAc
          openLoginForm();
       }
    }
-   
+
    /**
     * Open form to login to OpenShift
     */

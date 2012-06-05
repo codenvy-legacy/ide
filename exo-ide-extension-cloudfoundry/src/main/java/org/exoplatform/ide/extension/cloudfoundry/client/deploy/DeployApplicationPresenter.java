@@ -416,4 +416,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
       this.vfs = event.getVfsInfo();
    }
 
+   @Override
+   public void createProject(ProjectModel project)
+   {
+   }
+
 }

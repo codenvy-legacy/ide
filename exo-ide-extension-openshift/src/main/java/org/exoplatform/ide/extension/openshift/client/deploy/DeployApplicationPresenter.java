@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.extension.openshift.client.deploy;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -35,7 +31,6 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -43,30 +38,41 @@ import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
 import org.exoplatform.ide.client.framework.paas.PaasComponent;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftLocalizationConstant;
+import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCallback;
+import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledEvent;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
  * 
  */
-public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler, LoggedInHandler
+public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler
 {
-   interface Display
+
+   public interface Display
    {
       HasValue<String> getApplicationNameField();
 
@@ -96,15 +102,20 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
 
-      IDE.getInstance().addPaas(new Paas("OpenShift", this, Arrays.asList(ProjectResolver.RAILS)));
+      IDE.getInstance().addPaas(new Paas("OpenShift", this, Arrays.asList(ProjectResolver.RAILS, ProjectResolver.PHP))
+      {
+         @Override
+         public boolean canCreateProject()
+         {
+            return true;
+         }
+      });
    }
 
    public void bindDisplay()
    {
-
       display.getApplicationNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
@@ -121,7 +132,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
 
       display.getTypeField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
@@ -135,17 +145,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             }
          }
       });
-
-   }
-
-   // ----Implementation------------------------
-
-   /**
-    * Register {@link LoggedInHandler} handler.
-    */
-   protected void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -166,53 +165,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       return lb.createApplicationSuccess(applicationStr);
    }
 
-   private void createApplication()
-   {
-      try
-      {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
-            applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-                  paasCallback.onDeploy(true);
-               }
-
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        addLoggedInHandler();
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
-                  }
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
-                  paasCallback.onDeploy(false);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
-         paasCallback.onDeploy(false);
-      }
-   }
-
    /**
     * @see org.exoplatform.ide.client.framework.paas.PaasComponent#getView()
     */
@@ -224,6 +176,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       {
          display = GWT.create(Display.class);
       }
+
       bindDisplay();
       getApplicationTypes();
    }
@@ -251,8 +204,6 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    @Override
    public void deploy(ProjectModel project)
    {
-      this.project = project;
-      createApplication();
    }
 
    /**
@@ -264,25 +215,31 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       this.vfs = event.getVfsInfo();
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         createApplication();
-      }
-   }
-
    private void getApplicationTypes()
    {
       try
       {
          OpenShiftClientService.getInstance().getApplicationTypes(
-            new AsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()))
+            new OpenShiftAsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()),
+               new LoggedInHandler()
+               {
+                  @Override
+                  public void onLoggedIn(LoggedInEvent event)
+                  {
+                     getApplicationTypes();
+                  }
+               }, new LoginCanceledHandler()
+               {
+
+                  @Override
+                  public void onLoginCanceled(LoginCanceledEvent event)
+                  {
+                     if (paasCallback != null)
+                     {
+                        paasCallback.onViewReceived(display.getView());
+                     }
+                  }
+               })
             {
                @Override
                protected void onSuccess(List<String> result)
@@ -291,13 +248,11 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   applicationType = display.getTypeField().getValue();
                   display.getApplicationNameField().setValue("");
                   applicationName = null;
-                  paasCallback.onViewReceived(display.getView());
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  if (paasCallback != null)
+                  {
+                     paasCallback.onViewReceived(display.getView());
+                  }
                }
             });
       }
@@ -305,6 +260,107 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   @Override
+   public void createProject(final ProjectModel newProject)
+   {
+      project = newProject;
+
+      try
+      {
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
+            applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(AppInfo result)
+               {
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
+
+                  new Timer()
+                  {
+                     @Override
+                     public void run()
+                     {
+                        updateSSHPublicKey();
+                     }
+                  }.schedule(1000);
+               }
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.OK == serverException.getHTTPStatus()
+                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+                     {
+                        IDE.fireEvent(new LoginEvent());
+                        return;
+                     }
+                  }
+
+                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
+                  paasCallback.projectCreationFailed();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
+         paasCallback.projectCreationFailed();
+      }
+   }
+
+   private void updateSSHPublicKey()
+   {
+      UpdatePublicKeyCommandHandler.getInstance().updatePublicKey(new UpdatePublicKeyCallback()
+      {
+         @Override
+         public void onPublicKeyUpdated(boolean success)
+         {
+            if (!success)
+            {
+               return;
+            }
+
+            new Timer()
+            {
+               @Override
+               public void run()
+               {
+                  pullAppSources();
+               }
+            }.schedule(1000);
+         }
+      });
+   }
+
+   private void pullAppSources()
+   {
+      new PullApplicationSourcesHandler().pullApplicationSources(vfs, project, new PullCompleteCallback()
+      {
+         @Override
+         public void onPullComplete(boolean success)
+         {
+            if (success)
+            {
+               paasCallback.onProjectCreated(project);
+            }
+            else
+            {
+               paasCallback.projectCreationFailed();
+            }
+         }
+      });
+
    }
 
 }

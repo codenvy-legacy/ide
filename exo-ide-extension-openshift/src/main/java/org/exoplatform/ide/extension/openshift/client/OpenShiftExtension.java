@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -33,6 +30,7 @@ import org.exoplatform.ide.extension.openshift.client.controls.SwitchAccountCont
 import org.exoplatform.ide.extension.openshift.client.controls.UpdatePublicKeyControl;
 import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.delete.DeleteApplicationCommandHandler;
+import org.exoplatform.ide.extension.openshift.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.domain.CreateDomainPresenter;
 import org.exoplatform.ide.extension.openshift.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommandHandler;
@@ -40,6 +38,9 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
+
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * OpenShift extension to be added to IDE.
@@ -116,7 +117,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
 
-      // new DeployApplicationPresenter();
+      new DeployApplicationPresenter();
       new OpenShiftProjectPresenter();
    }
 

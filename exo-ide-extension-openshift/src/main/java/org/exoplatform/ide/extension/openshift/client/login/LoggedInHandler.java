@@ -29,10 +29,12 @@ import com.google.gwt.event.shared.EventHandler;
  */
 public interface LoggedInHandler extends EventHandler
 {
+   
    /**
     * Perform actions after user's try to log in OpenShift.
     * 
     * @param event
     */
    void onLoggedIn(LoggedInEvent event);
+   
 }

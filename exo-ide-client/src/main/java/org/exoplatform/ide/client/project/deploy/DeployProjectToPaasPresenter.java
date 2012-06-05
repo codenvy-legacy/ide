@@ -18,19 +18,12 @@
  */
 package org.exoplatform.ide.client.project.deploy;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -43,12 +36,21 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -57,6 +59,7 @@ import java.util.List;
  */
 public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler, ViewClosedHandler, VfsChangedHandler
 {
+
    public interface Display extends IsView
    {
       HasClickHandlers getCancelButton();
@@ -87,6 +90,8 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
    private String templateName;
 
    private String projectType;
+   
+   private ProjectModel createdProject;
 
    /**
     * Current paas;
@@ -115,18 +120,44 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       {
          if (result)
          {
-            createProject();
+            if (paas != null)
+            {
+               if (paas.canCreateProject())
+               {
+                  createEmptyProject();
+               }
+               else
+               {
+                  createProject();
+               }
+
+            }
          }
+         
          // if form isn't valid, then do nothing
          // all validation messages must be shown by paases
       }
 
       @Override
+      public void onProjectCreated(ProjectModel createdProject)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+         IDE.fireEvent(new ProjectCreatedEvent(createdProject));         
+      }
+
+      @Override
+      public void projectCreationFailed()
+      {
+         Dialogs.getInstance().showError("Project could not be created");
+      }
+
+      @Override
       public void onDeploy(boolean result)
       {
-         // TODO Auto-generated method stub
-
+         IDE.getInstance().closeView(display.asView().getId());
+         IDE.fireEvent(new ProjectCreatedEvent(createdProject));         
       }
+
    };
 
    public DeployProjectToPaasPresenter()
@@ -213,6 +244,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                @Override
                protected void onSuccess(final ProjectModel result)
                {
+                  createdProject = result;
                   loader.hide();
                   if (paas != null)
                   {
@@ -248,6 +280,42 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       }
    }
 
+   private void createEmptyProject()
+   {
+      final IDELoader loader = new IDELoader();
+      try
+      {
+         loader.show();
+         final ProjectModel newProject = new ProjectModel();
+         newProject.setName(projectName);
+         newProject.setProjectType(projectType);
+         
+         VirtualFileSystem.getInstance().createProject(vfsInfo.getRoot(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
+            {
+
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  loader.hide();
+                  paas.createProject(newProject);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (Exception e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
    /**
     * @see org.exoplatform.ide.client.project.deploy.DeployProjectToPaasHandler#onDeployProjectToPaas(org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent)
     */

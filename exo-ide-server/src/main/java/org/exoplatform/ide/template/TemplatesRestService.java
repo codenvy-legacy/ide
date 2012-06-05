@@ -337,7 +337,6 @@ public class TemplatesRestService
       @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName,
       @Context Providers providers) throws VirtualFileSystemException, IOException
    {
-
       ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
       RequestContext context = null;
       if (contextResolver != null)

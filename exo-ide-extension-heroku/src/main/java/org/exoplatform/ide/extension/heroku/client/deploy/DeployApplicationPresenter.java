@@ -321,4 +321,9 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       }
    }
 
+   @Override
+   public void createProject(ProjectModel project)
+   {
+   }
+
 }
