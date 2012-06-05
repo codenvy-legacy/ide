@@ -39,7 +39,6 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
-import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -51,15 +50,15 @@ import org.exoplatform.ide.vfs.shared.Item;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -78,6 +77,14 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+import static org.exoplatform.ide.extension.cloudfoundry.server.Utils.detectFramework;
+import static org.exoplatform.ide.helper.JsonHelper.fromJson;
+import static org.exoplatform.ide.helper.JsonHelper.parseJson;
+import static org.exoplatform.ide.helper.JsonHelper.toJson;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -103,18 +110,19 @@ public class Cloudfoundry
 
    static
    {
-      Map<String, Framework> fm = new HashMap<String, Framework>(11);
-      fm.put("rails3",    new FrameworkImpl("rails3",    "Rails",            null, 256, "Rails  Application"));
-      fm.put("spring",    new FrameworkImpl("spring",    "Spring",           null, 512, "Java SpringSource Spring Application"));
-      fm.put("grails",    new FrameworkImpl("grails",    "Grails",           null, 512, "Java SpringSource Grails Application"));
-      fm.put("lift",      new FrameworkImpl("lift",      "Lift",             null, 512, "Scala Lift Application"));
-      fm.put("java_web",  new FrameworkImpl("java_web",  "JavaWeb",          null, 512, "Java Web Application"));
-      fm.put("sinatra",   new FrameworkImpl("sinatra",   "Sinatra",          null, 128, "Sinatra Application"));
-      fm.put("node",      new FrameworkImpl("node",      "Node",             null, 64,  "Node.js Application"));
-      fm.put("php",       new FrameworkImpl("php",       "PHP",              null, 128, "PHP Application"));
-      fm.put("otp_rebar", new FrameworkImpl("otp_rebar", "Erlang/OTP Rebar", null, 64,  "Erlang/OTP Rebar Application"));
-      fm.put("wsgi",      new FrameworkImpl("wsgi",      "WSGI",             null, 64,  "Python WSGI Application"));
-      fm.put("django",    new FrameworkImpl("django",    "Django",           null, 128, "Python Django Application"));
+      Map<String, Framework> fm = new HashMap<String, Framework>(12);
+      fm.put("rails3", new FrameworkImpl("rails3", "Rails", null, 256, "Rails  Application"));
+      fm.put("spring", new FrameworkImpl("spring", "Spring", null, 512, "Java SpringSource Spring Application"));
+      fm.put("grails", new FrameworkImpl("grails", "Grails", null, 512, "Java SpringSource Grails Application"));
+      fm.put("lift", new FrameworkImpl("lift", "Lift", null, 512, "Scala Lift Application"));
+      fm.put("java_web", new FrameworkImpl("java_web", "JavaWeb", null, 512, "Java Web Application"));
+      fm.put("sinatra", new FrameworkImpl("sinatra", "Sinatra", null, 128, "Sinatra Application"));
+      fm.put("node", new FrameworkImpl("node", "Node", null, 64, "Node.js Application"));
+      fm.put("php", new FrameworkImpl("php", "PHP", null, 128, "PHP Application"));
+      fm.put("otp_rebar", new FrameworkImpl("otp_rebar", "Erlang/OTP Rebar", null, 64, "Erlang/OTP Rebar Application"));
+      fm.put("wsgi", new FrameworkImpl("wsgi", "WSGI", null, 64, "Python WSGI Application"));
+      fm.put("django", new FrameworkImpl("django", "Django", null, 128, "Python Django Application"));
+      fm.put("standalone", new FrameworkImpl("standalone", "Standalone", null, 256, "Standalone Application"));
       FRAMEWORKS = Collections.unmodifiableMap(fm);
    }
 
@@ -124,7 +132,7 @@ public class Cloudfoundry
    {
       byte[] b = new byte[3];
       gen.nextBytes(b);
-      return service + '-' + FilesHelper.toHex(b);
+      return service + '-' + Utils.toHex(b);
    }
 
    private final CloudfoundryAuthenticator authenticator;
@@ -132,26 +140,31 @@ public class Cloudfoundry
    public Cloudfoundry(CloudfoundryAuthenticator authenticator)
    {
       this.authenticator = authenticator;
-   // Create a trust manager that does not validate certificate chains
-      TrustManager[] trustAllCerts = new TrustManager[]{
-          new X509TrustManager() {
-              public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                  return null;
-              }
-              public void checkClientTrusted(
-                  java.security.cert.X509Certificate[] certs, String authType) {
-              }
-              public void checkServerTrusted(
-                  java.security.cert.X509Certificate[] certs, String authType) {
-              }
-          }
+      // Create a trust manager that does not validate certificate chains
+      TrustManager trustAllManager = new X509TrustManager()
+      {
+         public java.security.cert.X509Certificate[] getAcceptedIssuers()
+         {
+            return null;
+         }
+
+         public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+         {
+         }
+
+         public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+         {
+         }
       };
       // Install the all-trusting trust manager
-      try {
-          SSLContext sc = SSLContext.getInstance("SSL");
-          sc.init(null, trustAllCerts, new java.security.SecureRandom());
-          HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-      } catch (Exception e) {
+      try
+      {
+         SSLContext sc = SSLContext.getInstance("SSL");
+         sc.init(null, new TrustManager[]{trustAllManager}, new java.security.SecureRandom());
+         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+      }
+      catch (Exception ignored)
+      {
       }
    }
 
@@ -248,7 +261,7 @@ public class Cloudfoundry
    private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
-      SystemInfoImpl systemInfo = JsonHelper.fromJson(
+      SystemInfoImpl systemInfo = fromJson(
          getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class, null);
 
       for (Framework framework : systemInfo.getFrameworks().values())
@@ -313,7 +326,7 @@ public class Cloudfoundry
    private CloudFoundryApplication applicationInfo(Credential credential, String app) throws CloudfoundryException,
       IOException, ParsingResponseException
    {
-      return JsonHelper.fromJson(getJson(credential.target + "/apps/" + app, credential.token, 200),
+      return fromJson(getJson(credential.target + "/apps/" + app, credential.token, 200),
          CloudFoundryApplication.class, null);
    }
 
@@ -339,6 +352,15 @@ public class Cloudfoundry
     *    which is dependents to framework type
     * @param noStart
     *    if <code>true</code> then do not start newly created application
+    * @param runtime
+    *    the name of runtime for application, e.g. java, php, ruby18, node. Typically we are able to determine
+    *    framework
+    *    and not need this parameter. This parameter must be not null or empty for standalone application
+    * @param command
+    *    the command to run application. This parameter required for standalone applications. Example:
+    *    <pre>
+    *                                     java -cp my_application.jar org.example.Main
+    *                               </pre>
     * @param debugMode
     *    must be not <code>null</code> if need run application under debugger
     * @param vfs
@@ -365,6 +387,8 @@ public class Cloudfoundry
                                                     int instances,
                                                     int memory,
                                                     boolean noStart,
+                                                    String runtime,
+                                                    String command,
                                                     DebugMode debugMode,
                                                     VirtualFileSystem vfs,
                                                     String projectId,
@@ -384,7 +408,8 @@ public class Cloudfoundry
          throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
       }
       Credential credential = getCredential(server);
-      return createApplication(credential, app, framework, url, instances, memory, noStart, debugMode, vfs, projectId, war);
+      return createApplication(credential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
+         vfs, projectId, war);
    }
 
    private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
@@ -396,10 +421,12 @@ public class Cloudfoundry
                                                      int instances,
                                                      int memory,
                                                      boolean noStart,
+                                                     String runtime,
+                                                     String command,
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL war) throws CloudfoundryException, ParsingResponseException,
+                                                     URL url) throws CloudfoundryException, ParsingResponseException,
       VirtualFileSystemException, IOException
    {
       SystemInfo systemInfo = systemInfo(credential);
@@ -411,32 +438,61 @@ public class Cloudfoundry
       checkApplicationName(credential, app);
 
       CloudFoundryApplication appInfo;
-      java.io.File warFile = null;
+      java.io.File path = null;
+      boolean cleanup = false;
       try
       {
-         if (war != null)
+         if (url != null)
          {
-            warFile = downloadWarFile(app, war);
+            URI uri = URI.create(url.toString());
+            if ("file".equals(uri.getScheme()))
+            {
+               path = new java.io.File(uri);
+            }
+            else
+            {
+               path = downloadFile(null, "vmc_" + app, ".war", url);
+               cleanup = true; // remove only downloaded file.
+            }
          }
 
          if (frameworkName == null)
          {
-            if (warFile != null)
+            if (path != null)
             {
-               frameworkName = FilesHelper.detectFramework(warFile);
+               frameworkName = detectFramework(path);
             }
             else
             {
-               frameworkName = FilesHelper.detectFramework(vfs, projectId);
-            }
-            // If framework cannot be detected.
-            if (frameworkName == null)
-            {
-               throw new RuntimeException("Can't detect application type. ");
+               frameworkName = detectFramework(vfs, projectId);
             }
          }
 
-         Framework cfg = getFramework(systemInfo, frameworkName);
+         Framework framework;
+
+         if (frameworkName == null)
+         {
+            throw new RuntimeException("Can't detect application type. ");
+         }
+         else if ("standalone".equals(frameworkName))
+         {
+            // Need to some more info for standalone applications.
+            if (command == null || command.isEmpty())
+            {
+               throw new IllegalArgumentException("Command required for standalone application. ");
+            }
+            Map runtimes = getRuntimes(credential);
+            if (runtimes.get(runtime) == null)
+            {
+               throw new IllegalArgumentException(
+                  "Unsupported runtime '" + runtime + "'. List of supported runtimes: " + runtimes.keySet());
+            }
+            framework = FRAMEWORKS.get("standalone");
+         }
+         else
+         {
+            framework = getFramework(systemInfo, frameworkName);
+         }
 
          if (instances <= 0)
          {
@@ -445,7 +501,7 @@ public class Cloudfoundry
 
          if (memory <= 0)
          {
-            memory = cfg.getMemory();
+            memory = framework.getMemory();
          }
 
          // Check memory capacity.
@@ -461,15 +517,13 @@ public class Cloudfoundry
             appUrl = app + m.group(4);
          }
 
-         String json =
-            postJson(credential.target + "/apps", credential.token,
-               JsonHelper.toJson(new CreateApplication(app, instances, appUrl, memory, cfg.getName())), 302);
-         CreateResponse resp = JsonHelper.fromJson(json, CreateResponse.class, null);
-         appInfo =
-            JsonHelper.fromJson(doJsonRequest(resp.getRedirect(), "GET", credential.token, null, 200),
-               CloudFoundryApplication.class, null);
+         CreateApplication payload = new CreateApplication(app, instances, appUrl, memory, framework.getName(), runtime, command);
+         String json = postJson(credential.target + "/apps", credential.token, toJson(payload), 302);
+         CreateResponse resp = fromJson(json, CreateResponse.class, null);
+         appInfo = fromJson(doJsonRequest(resp.getRedirect(), "GET", credential.token, null, 200),
+            CloudFoundryApplication.class, null);
 
-         uploadApplication(credential, app, vfs, projectId, warFile);
+         uploadApplication(credential, app, vfs, projectId, path);
 
          if (vfs != null && projectId != null)
          {
@@ -484,9 +538,9 @@ public class Cloudfoundry
       }
       finally
       {
-         if (warFile != null && warFile.exists())
+         if (path != null && cleanup)
          {
-            warFile.delete();
+            deleteRecursive(path);
          }
       }
       return appInfo;
@@ -552,13 +606,16 @@ public class Cloudfoundry
       String name = appInfo.getName();
       if (debug != null)
       {
-         String stack = appInfo.getStaging().getStack();
-         RuntimeInfo runtimeInfo = getRuntimeInfo(stack, credential);
+         String runtime = appInfo.getStaging().getStack();
+         RuntimeInfo runtimeInfo = getRuntimeInfo(runtime, credential);
          Set<String> debugModes = runtimeInfo != null ? runtimeInfo.getDebug_modes() : Collections.<String>emptySet();
          if (!debugModes.contains(debug))
          {
             StringBuilder msg = new StringBuilder();
-            msg.append("Unsupported debug mode '").append(debug).append("' for application ").append(name);
+            msg.append("Unsupported debug mode '");
+            msg.append(debug);
+            msg.append("' for application ");
+            msg.append(name);
             if (debugModes.isEmpty())
             {
                msg.append(". Debug is not supported. ");
@@ -575,7 +632,7 @@ public class Cloudfoundry
       {
          appInfo.setState("STARTED"); // Update application state.
          appInfo.setDebug(debug);
-         putJson(credential.target + "/apps/" + name, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + name, credential.token, toJson(appInfo), 200);
          // Check is application started.
          final int attempt = 3;
          boolean started = false;
@@ -642,7 +699,7 @@ public class Cloudfoundry
       if (!"STOPPED".equals(appInfo.getState()))
       {
          appInfo.setState("STOPPED"); // Update application state.
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
       }
       else if (failIfStopped)
       {
@@ -756,7 +813,7 @@ public class Cloudfoundry
    {
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
       appInfo.setName(newname);
-      putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+      putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
    }
 
    /**
@@ -805,18 +862,28 @@ public class Cloudfoundry
       updateApplication(getCredential(server), app, vfs, projectId, war);
    }
 
-   private void updateApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, URL war)
+   private void updateApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, URL url)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
 
-      java.io.File warFile = null;
+      java.io.File path = null;
+      boolean cleanup = false;
       try
       {
-         if (war != null)
+         if (url != null)
          {
-            warFile = downloadWarFile(app, war);
-            uploadApplication(credential, app, vfs, projectId, warFile);
+            URI uri = URI.create(url.toString());
+            if ("file".equals(uri.getScheme()))
+            {
+               path = new java.io.File(uri);
+            }
+            else
+            {
+               path = downloadFile(null, "vmc_" + app, ".war", url);
+               cleanup = true;
+            }
+            uploadApplication(credential, app, vfs, projectId, path);
          }
          else
          {
@@ -825,9 +892,9 @@ public class Cloudfoundry
       }
       finally
       {
-         if (warFile != null && warFile.exists())
+         if (path != null && cleanup)
          {
-            warFile.delete();
+            deleteRecursive(path);
          }
       }
 
@@ -915,7 +982,7 @@ public class Cloudfoundry
       // If have something to update then do that.
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
       }
    }
 
@@ -981,7 +1048,7 @@ public class Cloudfoundry
       List<String> uris = appInfo.getUris();
       if (uris != null && uris.size() > 0 && uris.remove(url))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
       }
    }
 
@@ -1053,7 +1120,7 @@ public class Cloudfoundry
                + "M required. ");
          }
          appInfo.getResources().setMemory(memory);
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -1106,7 +1173,7 @@ public class Cloudfoundry
       throws ParsingResponseException, CloudfoundryException, IOException
    {
       InstanceInfo[] instancesInfo =
-         JsonHelper.fromJson(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
+         fromJson(getJson(credential.target + "/apps/" + app + "/instances", credential.token, 200),
             InstancesInfo.class, null).getInstances();
       if (instancesInfo != null && instancesInfo.length > 0)
       {
@@ -1200,7 +1267,7 @@ public class Cloudfoundry
       if (currentInst != newInst)
       {
          appInfo.setInstances(newInst);
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -1324,7 +1391,7 @@ public class Cloudfoundry
       throws IOException, ParsingResponseException, CloudfoundryException
    {
       Map cloudStats =
-         JsonHelper.fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
+         fromJson(getJson(credential.target + "/apps/" + app + "/stats", credential.token, 200), Map.class,
             new HashMap<String, Stats>(0)
             {
             }.getClass().getGenericSuperclass());
@@ -1389,7 +1456,7 @@ public class Cloudfoundry
          server = authenticator.readTarget();
       }
       Credential credential = getCredential(server);
-      return JsonHelper.fromJson(getJson(credential.target + "/apps", credential.token, 200),
+      return fromJson(getJson(credential.target + "/apps", credential.token, 200),
          CloudFoundryApplication[].class, null);
    }
 
@@ -1432,7 +1499,7 @@ public class Cloudfoundry
    private ProvisionedService[] provisionedServices(Credential credential) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      return JsonHelper.fromJson(getJson(credential.target + "/services", credential.token, 200),
+      return fromJson(getJson(credential.target + "/services", credential.token, 200),
          ProvisionedService[].class, null);
    }
 
@@ -1516,7 +1583,7 @@ public class Cloudfoundry
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
-      postJson(credential.target + "/services", credential.token, JsonHelper.toJson(req), 200);
+      postJson(credential.target + "/services", credential.token, toJson(req), 200);
 
       // Be sure service available.
       ProvisionedService res = findService(credential, name);
@@ -1635,7 +1702,7 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -1697,7 +1764,7 @@ public class Cloudfoundry
       List<String> services = appInfo.getServices();
       if (services != null && services.size() > 0 && services.remove(name))
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -1773,7 +1840,7 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -1848,7 +1915,7 @@ public class Cloudfoundry
 
       if (updated)
       {
-         putJson(credential.target + "/apps/" + app, credential.token, JsonHelper.toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
          if (restart && "STARTED".equals(appInfo.getState()))
          {
             restartApplication(credential, app, appInfo.getMeta().getDebug());
@@ -2000,25 +2067,29 @@ public class Cloudfoundry
       return framework;
    }
 
-   private RuntimeInfo getRuntimeInfo(String stackName, Credential credential)
+   private RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
-      Map runtimes = JsonHelper.fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
+      return (RuntimeInfo)getRuntimes(credential).get(runtime);
+   }
+
+   private Map getRuntimes(Credential credential)
+      throws CloudfoundryException, ParsingResponseException, IOException
+   {
+      return fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
          new HashMap<String, RuntimeInfo>(0)
          {
          }.getClass().getGenericSuperclass());
-      return (RuntimeInfo)runtimes.get(stackName);
    }
 
    private ProvisionedService findService(Credential credential, String name) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      ProvisionedService[] services = provisionedServices(credential);
-      for (int i = 0; i < services.length; i++)
+      for (ProvisionedService service : provisionedServices(credential))
       {
-         if (name.equals(services[i].getName()))
+         if (name.equals(service.getName()))
          {
-            return services[i];
+            return service;
          }
       }
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
@@ -2054,7 +2125,7 @@ public class Cloudfoundry
          // If cannot update property of project try to remove file with application name.
          if (name == null)
          {
-            FilesHelper.delete(vfs, projectId, ".cloudfoundry-application");
+            Utils.delete(vfs, projectId, ".cloudfoundry-application");
          }
          else
          {
@@ -2077,7 +2148,7 @@ public class Cloudfoundry
           */
          if (app == null)
          {
-            app = FilesHelper.readFile(vfs, item, ".cloudfoundry-application");
+            app = Utils.readFile(vfs, item, ".cloudfoundry-application");
          }
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
@@ -2106,7 +2177,7 @@ public class Cloudfoundry
          // If cannot update property of project try to remove file with application name.
          if (server == null)
          {
-            FilesHelper.delete(vfs, projectId, ".vmc_target");
+            Utils.delete(vfs, projectId, ".vmc_target");
          }
          else
          {
@@ -2128,7 +2199,7 @@ public class Cloudfoundry
           */
          if (server == null)
          {
-            server = FilesHelper.readFile(vfs, item, ".vmc_target");
+            server = Utils.readFile(vfs, item, ".vmc_target");
          }
       }
       if (server == null)
@@ -2140,15 +2211,14 @@ public class Cloudfoundry
 
    private static final byte[] NEW_LINE = "\r\n".getBytes();
    private static final byte[] HYPHENS = "--".getBytes();
-   private static final byte[] CONTENT_DISPOSITION_RESOURCES="Content-Disposition: form-data; name=\"resources\"\r\n\r\n".getBytes();
-   private static final byte[] CONTENT_DISPOSITION_METHOD="Content-Disposition: form-data; name=\"_method\"\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_DISPOSITION_RESOURCES = "Content-Disposition: form-data; name=\"resources\"\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_DISPOSITION_METHOD = "Content-Disposition: form-data; name=\"_method\"\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_DISPOSITION_APPLICATION = "Content-Disposition: form-data; name=\"application\"; filename=\"".getBytes();
    private static final byte[] PUT = "put".getBytes();
-   private static final byte[] CONTENT_TYPE_ZIP="Content-type: application/zip\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_TYPE_ZIP = "Content-type: application/zip\r\n\r\n".getBytes();
 
-   private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId,
-                                  java.io.File warFile)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException,
-      IOException
+   private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
+      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       java.io.File zip = null;
       HttpURLConnection http = null;
@@ -2157,8 +2227,8 @@ public class Cloudfoundry
       {
          uploadDir = new java.io.File(System.getProperty("java.io.tmpdir"), ".vmc_" + app + "_files");
 
-         // Be sure directory is clean.  
-         if (uploadDir.exists() && !FilesHelper.delete(uploadDir))
+         // Be sure directory is clean.
+         if (uploadDir.exists() && !deleteRecursive(uploadDir))
          {
             throw new RuntimeException("Temporary directory for uploaded files already exists. ");
          }
@@ -2168,16 +2238,27 @@ public class Cloudfoundry
             throw new RuntimeException("Cannot create temporary directory for uploaded files. ");
          }
 
-         if (warFile != null && FilesHelper.WAR_FILTER.accept(warFile.getName()))
+         if (path != null)
          {
-            FilesHelper.unzip(warFile, uploadDir);
+            if (path.isFile())
+            {
+               String name = path.getName();
+               if (name.endsWith(".war") || name.endsWith(".zip") || name.endsWith(".jar"))
+               {
+                  unzip(path, uploadDir);
+               }
+            }
+            else
+            {
+               copy(path, uploadDir, null);
+            }
          }
          else
          {
-            FilesHelper.copy(vfs, projectId, uploadDir);
+            Utils.copy(vfs, projectId, uploadDir);
          }
 
-         List<java.io.File> files = FilesHelper.list(uploadDir, FilesHelper.UPLOAD_FILTER);
+         List<java.io.File> files = list(uploadDir, GIT_FILTER);
 
          long totalSize = 0;
          for (java.io.File f : files)
@@ -2203,24 +2284,18 @@ public class Cloudfoundry
             {
                digest.reset();
                java.io.File f = files.get(i);
-               fingerprints[i] =
-                  new ApplicationFile(f.length(), FilesHelper.countFileHash(f, digest), f.getAbsolutePath());
+               fingerprints[i] = new ApplicationFile(f.length(), Utils.countFileHash(f, digest), f.getAbsolutePath());
             }
-            resources =
-               JsonHelper.fromJson(
-                  postJson(credential.target + "/resources", credential.token, JsonHelper.toJson(fingerprints), 200),
-                  ApplicationFile[].class, null);
+            resources = fromJson(postJson(credential.target + "/resources", credential.token, toJson(fingerprints), 200),
+               ApplicationFile[].class, null);
 
             String uploadDirPath = uploadDir.getAbsolutePath() + '/';
 
-            for (int i = 0; i < resources.length; i++)
+            for (ApplicationFile resource : resources)
             {
-               java.io.File f = new java.io.File(resources[i].getFn());
-               if (f.exists())
-               {
-                  f.delete(); // Remove files that we don't need to upload.
-               }
-               resources[i].setFn(resources[i].getFn().replace(uploadDirPath, ""));
+               java.io.File f = new java.io.File(resource.getFn());
+               f.delete(); // Remove files that we don't need to upload.
+               resource.setFn(resource.getFn().replace(uploadDirPath, ""));
             }
          }
 
@@ -2230,7 +2305,19 @@ public class Cloudfoundry
          }
 
          zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
-         FilesHelper.zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, FilesHelper.UPLOAD_FILTER);
+         zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
+         {
+            @Override
+            public boolean accept(java.io.File parent, String name)
+            {
+               return !(".cloudfoundry-application".equals(name)
+                  || ".vmc_target".equals(name)
+                  || ".project".equals(name)
+                  || ".git".equals(name)
+                  || name.endsWith("~")
+                  || name.endsWith(".log"));
+            }
+         });
 
          // Upload application data.
          http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
@@ -2252,7 +2339,7 @@ public class Cloudfoundry
 
             output.write(NEW_LINE);
             output.write(CONTENT_DISPOSITION_RESOURCES);
-            output.write(JsonHelper.toJson(resources).getBytes());
+            output.write(toJson(resources).getBytes());
 
             output.write(NEW_LINE);
             output.write(HYPHENS);
@@ -2271,7 +2358,9 @@ public class Cloudfoundry
                // Add zipped application files if any.
                String filename = zip.getName();
                output.write(NEW_LINE);
-               output.write(("Content-Disposition: form-data; name=\"application\"; filename=\"" + filename + "\"").getBytes());
+               output.write(CONTENT_DISPOSITION_APPLICATION);
+               output.write(filename.getBytes());
+               output.write('"');
 
                output.write(NEW_LINE);
                output.write(CONTENT_TYPE_ZIP);
@@ -2311,21 +2400,14 @@ public class Cloudfoundry
       }
       finally
       {
-         // Close connection and cleanup temporary file and directory.
-         try
+         if (uploadDir != null)
          {
-            if (uploadDir != null && uploadDir.exists())
-            {
-               FilesHelper.delete(uploadDir);
-            }
-            if (zip != null && zip.exists())
-            {
-               zip.delete();
-            }
+            deleteRecursive(uploadDir);
          }
-         catch (Exception ignored)
+
+         if (zip != null)
          {
-            // Ignore exception if cannot delete temporary files.
+            zip.delete();
          }
 
          if (http != null)
@@ -2414,57 +2496,6 @@ public class Cloudfoundry
             http.disconnect();
          }
       }
-   }
-
-   private java.io.File downloadWarFile(String app, URL url) throws IOException
-   {
-      java.io.File war = java.io.File.createTempFile("vmc_" + app, ".war");
-      URLConnection conn = null;
-      String protocol = url.getProtocol().toLowerCase();
-      try
-      {
-         conn = url.openConnection();
-         if ("http".equals(protocol) || "https".equals(protocol))
-         {
-            HttpURLConnection http = (HttpURLConnection)conn;
-            http.setInstanceFollowRedirects(false);
-            http.setRequestMethod("GET");
-         }
-         InputStream input = conn.getInputStream();
-         FileOutputStream foutput = null;
-         try
-         {
-            foutput = new FileOutputStream(war);
-            byte[] b = new byte[1024];
-            int r;
-            while ((r = input.read(b)) != -1)
-            {
-               foutput.write(b, 0, r);
-            }
-         }
-         finally
-         {
-            try
-            {
-               if (foutput != null)
-               {
-                  foutput.close();
-               }
-            }
-            finally
-            {
-               input.close();
-            }
-         }
-      }
-      finally
-      {
-         if (conn != null && "http".equals(protocol) || "https".equals(protocol))
-         {
-            ((HttpURLConnection)conn).disconnect();
-         }
-      }
-      return war;
    }
 
    /* ---------------------------------------------------------- */
@@ -2561,7 +2592,7 @@ public class Cloudfoundry
    {
       try
       {
-         JsonValue jsonServices = JsonHelper.parseJson(json);
+         JsonValue jsonServices = parseJson(json);
          List<SystemService> result = new ArrayList<SystemService>();
          for (Iterator<String> types = jsonServices.getKeys(); types.hasNext(); )
          {
@@ -2585,5 +2616,5 @@ public class Cloudfoundry
          throw new ParsingResponseException(e.getMessage(), e);
       }
    }
-   
+
 }

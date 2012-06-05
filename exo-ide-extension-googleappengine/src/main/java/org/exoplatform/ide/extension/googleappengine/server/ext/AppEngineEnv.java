@@ -19,9 +19,6 @@
 package org.exoplatform.ide.extension.googleappengine.server.ext;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.extension.googleappengine.server.AppEngineClient;
-import org.exoplatform.ide.extension.googleappengine.server.Utils;
 import org.picocontainer.Startable;
 
 import java.io.File;
@@ -30,6 +27,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -43,19 +43,6 @@ public abstract class AppEngineEnv implements Startable
    public AppEngineEnv(InitParams params)
    {
       this(readValueParam(params, "appengine-sdk-dir"), readValueParam(params, "appengine-sdk-zip"));
-   }
-
-   private static String readValueParam(InitParams initParams, String paramName)
-   {
-      if (initParams != null)
-      {
-         ValueParam vp = initParams.getValueParam(paramName);
-         if (vp != null)
-         {
-            return vp.getValue();
-         }
-      }
-      return null;
    }
 
    protected AppEngineEnv(String sdkDirPath, String sdkZipPath)
@@ -81,7 +68,7 @@ public abstract class AppEngineEnv implements Startable
             {
                throw new RuntimeException("Unable create folder " + sdkDirPath);
             }
-            Utils.unzip(sdkZip, sdkDir);
+            unzip(sdkZip, sdkDir);
          }
          Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
          addURL.setAccessible(true);

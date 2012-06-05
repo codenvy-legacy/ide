@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.server;
 
 import com.google.appengine.tools.admin.CronEntry;
 import com.google.apphosting.utils.config.BackendsXml;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 
 import java.io.Reader;
@@ -218,12 +219,13 @@ public class AppEngineService
    @POST
    @Path("update")
    @Consumes(MediaType.APPLICATION_JSON)
-   public void update(@QueryParam("vfsid") String vfsId,
-                      @QueryParam("projectid") String projectId,
-                      @QueryParam("bin") URL bin,
-                      Map<String, String> credentials) throws Exception
+   @Produces(MediaType.APPLICATION_JSON)
+   public ApplicationInfo update(@QueryParam("vfsid") String vfsId,
+                                 @QueryParam("projectid") String projectId,
+                                 @QueryParam("bin") URL bin,
+                                 Map<String, String> credentials) throws Exception
    {
-      client.update(
+      return client.update(
          vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId,
          bin,

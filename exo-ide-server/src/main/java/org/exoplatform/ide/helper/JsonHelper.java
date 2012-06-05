@@ -160,8 +160,7 @@ public class JsonHelper
       {
          JsonParser parser = new JsonParser();
          parser.parse(new StringReader(json));
-         JsonValue jsonValue = parser.getJsonObject();
-         return jsonValue;
+         return parser.getJsonObject();
       }
       catch (JsonException jsone)
       {

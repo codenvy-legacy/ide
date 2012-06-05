@@ -197,7 +197,7 @@ public class CloudfoundryAuthenticator
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_target";
-      String target = FilesHelper.readFile(vfs, path);
+      String target = Utils.readFile(vfs, path);
       if (target == null || target.isEmpty())
       {
          return defaultTarget;
@@ -210,7 +210,7 @@ public class CloudfoundryAuthenticator
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_token";
-      String str = FilesHelper.readFile(vfs, path);
+      String str = Utils.readFile(vfs, path);
       if (str == null)
       {
          return new CloudfoundryCredentials();
@@ -251,7 +251,7 @@ public class CloudfoundryAuthenticator
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String cloudFoundryPath = config + user + "/cloud_foundry";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Folder cloudFoundry = null;
+      Folder cloudFoundry;
       try
       {
          Item item = vfs.getItemByPath(cloudFoundryPath, null, PropertyFilter.NONE_FILTER);
