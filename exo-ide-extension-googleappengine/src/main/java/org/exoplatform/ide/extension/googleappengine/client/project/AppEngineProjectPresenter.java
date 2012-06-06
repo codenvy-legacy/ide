@@ -28,12 +28,15 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.backends.ConfigureBackendEvent;
 import org.exoplatform.ide.extension.googleappengine.client.backends.DeleteBackendEvent;
@@ -341,7 +344,20 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
          @Override
          public void onClick(ClickEvent event)
          {
-            deleteBackend();
+            Dialogs.getInstance().ask(GoogleAppEngineExtension.GAE_LOCALIZATION.backendDeleteTitle(),
+               GoogleAppEngineExtension.GAE_LOCALIZATION.backendDeleteQuestion(selectedBackend.getName()),
+               new BooleanValueReceivedHandler()
+               {
+
+                  @Override
+                  public void booleanValueReceived(Boolean value)
+                  {
+                     if (value != null && value)
+                     {
+                        deleteBackend();
+                     }
+                  }
+               });
          }
       });
 
