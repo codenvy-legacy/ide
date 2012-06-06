@@ -52,4 +52,4 @@ jars/geronimo-jta_1.1_spec-1.1.1.jar
 jars/jdo2-api-2.3-eb.jar
 jars/jsp-api-6.0.35.jar
 jars/jsr107cache-1.1.jar
-jars/servlet-api-2.5.jar
+jars/gwt-user-2.4.0.jar
