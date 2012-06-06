@@ -18,24 +18,21 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasLoadHandlers;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -48,40 +45,43 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    interface Display extends IsView
    {
       /**
-       * @return {@link String}
-       */
-      String getAppEngineFrameContent();
-
-      void setAppEngineFrameContent(String content);
-
-      /**
-       * @return {@link HasLoadHandlers} handler for iframe loaded event
-       */
-      HasLoadHandlers getLoadHandler();
-
-      /**
        * @return {@link HasClickHandlers} handler for ready button click
        */
-      HasClickHandlers getReadyButton();
-      
+      HasClickHandlers getDeployButton();
+
       /**
        * @return {@link HasClickHandlers} handler for cancel button click
        */
       HasClickHandlers getCancelButton();
 
       /**
-       * @return {@link HasValue} deploy application field value
+       * @return {@link HasClickHandlers} handler for cancel button click
        */
-      HasValue<Boolean> getDeployValue();
+      HasClickHandlers getCreateButton();
+
+      /**
+       * 
+       */
+      void enableDeployButton(boolean enable);
+
+      /**
+       * 
+       */
+      void enableCreateButton(boolean enable);
+
+      void setUserInstructions(String instructions);
+
    }
 
    private Display display;
-   
-   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com";
 
-   public CreateApplicationPresenter()
+   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp";
+
+   private final String restContext;
+
+   public CreateApplicationPresenter(String restContext)
    {
-      IDE.getInstance().addControl(new CreateApplicationControl());
+      this.restContext = restContext;
 
       IDE.addHandler(CreateApplicationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -89,17 +89,6 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    public void bindDisplay()
    {
-      display.getLoadHandler().addLoadHandler(new LoadHandler()
-      {
-
-         @Override
-         public void onLoad(LoadEvent event)
-         {
-            /*
-             * display.setAppEngineFrameContent(GoogleAppEngineExtension.GAE_LOCALIZATION .createApplicationNotLoggedMessage());
-             */
-         }
-      });
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -111,13 +100,23 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          }
       });
 
-      display.getReadyButton().addClickHandler(new ClickHandler()
+      display.getDeployButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            onReady();
+            onDeploy();
+         }
+      });
+
+      display.getCreateButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            startCreateApp();
          }
       });
    }
@@ -128,13 +127,12 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      Window.open(GOOGLE_APP_ENGINE_URL, "_blank", null);
-    /*  if (display == null)
+      if (display == null)
       {
          display = GWT.create(Display.class);
          bindDisplay();
          IDE.getInstance().openView(display.asView());
-      }*/
+      }
    }
 
    /**
@@ -152,29 +150,38 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    /**
     * Perform actions, when user is ready.
     */
-   public void onReady()
+   public void onDeploy()
    {
-      if (display.getDeployValue().getValue())
+      if (isAppEngineProject())
       {
-         if (canDeploy())
-         {
-            IDE.fireEvent(new DeployApplicationEvent());
-         }
-         else
-         {
-            Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationCannotDeploy());
-         }
+         IDE.fireEvent(new DeployApplicationEvent());
+      }
+      else
+      {
+         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationCannotDeploy());
       }
       IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
-    * Returns whether deploy can be performed.
-    * 
-    * @return {@link Boolean} <code>true</code> if can perform deploy to GAE
+    * Will be opened Google AppEngine page for create new application
+    * with redirection url in query parameter (e.g. https://appengine.google.com/start/createapp?redirect_url=http://tenant.cloud-ide.com/rest/service
+    * After creation new Application  Google will call  http://tenant.cloud-ide.com/rest/service?app_id=s~new-app&foo=bar
+    * IDE can get new application id in this case. 
     */
-   private boolean canDeploy()
+   private void startCreateApp()
    {
-      return currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType());
+      display.enableDeployButton(true);
+      display.enableCreateButton(false);
+      display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
+      String projectId = currentProject.getId();
+      String vfsId = currentVfs.getId();
+      UrlBuilder builder = new UrlBuilder();
+      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+         .setHost(Window.Location.getHost())//
+         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
+      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+      Window.open(url, "_blank", null);
    }
 }

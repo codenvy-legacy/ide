@@ -87,6 +87,7 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
     */
    protected boolean isAppEngineProject()
    {
-      return (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()));
+      return (currentProject != null && (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()) || ProjectResolver.APP_ENGINE_PYTHON
+         .equals(currentProject.getProjectType())));
    }
 }

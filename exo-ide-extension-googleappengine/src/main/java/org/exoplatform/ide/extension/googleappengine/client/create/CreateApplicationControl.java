@@ -20,6 +20,12 @@ package org.exoplatform.ide.extension.googleappengine.client.create;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
@@ -30,7 +36,8 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @version $Id: May 21, 2012 2:11:53 PM anya $
  * 
  */
-public class CreateApplicationControl extends SimpleControl implements IDEControl
+public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
+   ProjectClosedHandler
 {
    private static final String ID = "PaaS/Google App Engine/Create";
 
@@ -41,6 +48,8 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    public CreateApplicationControl()
    {
       super(ID);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(GAEClientBundle.INSTANCE.createApplicationConrtol(),
@@ -57,5 +66,20 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    {
       setVisible(true);
       setEnabled(true);
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      setEnabled(false);
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      if (event.getProject() != null && ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType()))
+      {
+         setEnabled(true);
+      }
    }
 }

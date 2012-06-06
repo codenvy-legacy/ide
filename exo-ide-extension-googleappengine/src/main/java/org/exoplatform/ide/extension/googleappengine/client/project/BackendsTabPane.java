@@ -21,9 +21,11 @@ package org.exoplatform.ide.extension.googleappengine.client.project;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.ide.extension.googleappengine.client.backends.BackendGrid;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -42,46 +44,32 @@ public class BackendsTabPane extends Composite
    {
       initWidget(uiBinder.createAndBindUi(this));
    }
-   
-   @UiField
-   Button configureBackendButton;
-   
-   @UiField
-   Button deleteBackendButton;
 
    @UiField
-   Button getListBackendsButton;
+   ImageButton configureBackendButton;
 
    @UiField
-   Button rollbackBackendButton;
+   ImageButton deleteBackendButton;
 
    @UiField
-   Button rollbackAllBackendsButton;
+   ImageButton rollbackBackendButton;
 
    @UiField
-   Button setBackendStateButton;
+   ImageButton rollbackAllBackendsButton;
 
    @UiField
-   Button updateAllBackendsButton;
+   ImageButton updateAllBackendsButton;
 
    @UiField
-   Button updateBackendButton;
-   
-   @UiField
-   Button updateBackendsButton;
+   ImageButton updateBackendButton;
 
-   /**
-    * @return the uiBinder
-    */
-   public static BackendsTabPaneUiBinder getUiBinder()
-   {
-      return uiBinder;
-   }
+   @UiField
+   BackendGrid backendsGrid;
 
    /**
     * @return the configureBackendButton
     */
-   public Button getConfigureBackendButton()
+   public ImageButton getConfigureBackendButton()
    {
       return configureBackendButton;
    }
@@ -89,23 +77,15 @@ public class BackendsTabPane extends Composite
    /**
     * @return the deleteBackendButton
     */
-   public Button getDeleteBackendButton()
+   public ImageButton getDeleteBackendButton()
    {
       return deleteBackendButton;
    }
 
    /**
-    * @return the getListBackendsButton
-    */
-   public Button getGetListBackendsButton()
-   {
-      return getListBackendsButton;
-   }
-
-   /**
     * @return the rollbackBackendButton
     */
-   public Button getRollbackBackendButton()
+   public ImageButton getRollbackBackendButton()
    {
       return rollbackBackendButton;
    }
@@ -113,23 +93,15 @@ public class BackendsTabPane extends Composite
    /**
     * @return the rollbackAllBackendsButton
     */
-   public Button getRollbackAllBackendsButton()
+   public ImageButton getRollbackAllBackendsButton()
    {
       return rollbackAllBackendsButton;
    }
 
    /**
-    * @return the setBackendStateButton
-    */
-   public Button getSetBackendStateButton()
-   {
-      return setBackendStateButton;
-   }
-
-   /**
     * @return the updateAllBackendsButton
     */
-   public Button getUpdateAllBackendsButton()
+   public ImageButton getUpdateAllBackendsButton()
    {
       return updateAllBackendsButton;
    }
@@ -137,19 +109,13 @@ public class BackendsTabPane extends Composite
    /**
     * @return the updateBackendButton
     */
-   public Button getUpdateBackendButton()
+   public ImageButton getUpdateBackendButton()
    {
       return updateBackendButton;
    }
 
-   /**
-    * @return the updateBackends
-    */
-   public Button getUpdateBackends()
+   public BackendGrid getBackendGrid()
    {
-      return updateBackendsButton;
+      return backendsGrid;
    }
-   
-   
-   
 }

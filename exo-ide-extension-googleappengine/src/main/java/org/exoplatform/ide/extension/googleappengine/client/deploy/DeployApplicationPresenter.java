@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.googleappengine.client.deploy;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -78,12 +79,24 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onDeployApplication(DeployApplicationEvent event)
    {
-      if (currentProject != null && ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+      if (isAppEngineProject())
       {
          email = null;
          password = null;
          loggedInHandler = null;
-         buildProject();
+         applicationUrl = null;
+         if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+         {
+            buildProject();
+         }
+         else
+         {
+            deployApplication();
+         }
+      }
+      else
+      {
+         Dialogs.getInstance().showError(GoogleAppEngineExtension.GAE_LOCALIZATION.notAppEngineProjectError());
       }
    }
 
