@@ -42,6 +42,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -90,7 +92,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
    private String templateName;
 
    private String projectType;
-   
+
    private ProjectModel createdProject;
 
    /**
@@ -133,7 +135,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
             }
          }
-         
+
          // if form isn't valid, then do nothing
          // all validation messages must be shown by paases
       }
@@ -142,7 +144,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       public void onProjectCreated(ProjectModel createdProject)
       {
          IDE.getInstance().closeView(display.asView().getId());
-         IDE.fireEvent(new ProjectCreatedEvent(createdProject));         
+         IDE.fireEvent(new ProjectCreatedEvent(createdProject));
       }
 
       @Override
@@ -155,7 +157,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       public void onDeploy(boolean result)
       {
          IDE.getInstance().closeView(display.asView().getId());
-         IDE.fireEvent(new ProjectCreatedEvent(createdProject));         
+         IDE.fireEvent(new ProjectCreatedEvent(createdProject));
       }
 
    };
@@ -289,7 +291,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          final ProjectModel newProject = new ProjectModel();
          newProject.setName(projectName);
          newProject.setProjectType(projectType);
-         
+
          VirtualFileSystem.getInstance().createProject(vfsInfo.getRoot(),
             new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
             {
@@ -315,7 +317,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.project.deploy.DeployProjectToPaasHandler#onDeployProjectToPaas(org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent)
     */
@@ -344,24 +346,47 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
    {
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
+      
       bindDisplay();
+      
+      paas = null;      
       paases = new ArrayList<String>();
-      paases.add("None");
       paases.addAll(getPaasValues());
+      
       display.setPaasValueMap(paases.toArray(new String[paases.size()]));
-      paas = null;
-      display.getSelectPaasField().setValue("None");
+      display.getSelectPaasField().setValue(paases.get(0));
+      
+      if (paas != null) {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               paas.getView(projectName, paasCallback);
+            }
+         });
+      }
    }
 
    private List<String> getPaasValues()
    {
       List<String> paases = new ArrayList<String>();
+      paases.add("None");
+
       this.paasList = IDE.getInstance().getPaases();
       for (Paas paas : this.paasList)
       {
          if (paas.getSupportedProjectTypes().contains(projectType))
          {
-            paases.add(paas.getName());
+            if (paas.isFirstInDeployments())
+            {
+               paases.add(0, paas.getName());
+               this.paas = paas;
+            }
+            else
+            {
+               paases.add(paas.getName());
+            }
          }
 
       }
