@@ -24,7 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
+import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -78,7 +78,7 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new CreateNewProjectEvent());
+            IDE.fireEvent(new CreateProjectEvent());
          }
       });
 

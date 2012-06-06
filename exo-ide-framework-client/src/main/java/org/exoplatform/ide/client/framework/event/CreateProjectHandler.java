@@ -21,14 +21,14 @@ package org.exoplatform.ide.client.framework.event;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link CreateNewProjectEvent}
+ * Handler for {@link CreateProjectEvent}
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateNewProjectHandler.java Dec 8, 2011 5:38:28 PM vereshchaka $
  */
-public interface CreateNewProjectHandler extends EventHandler
+public interface CreateProjectHandler extends EventHandler
 {
 
-   void onCreateNewProject(CreateNewProjectEvent event);
+   void onCreateProject(CreateProjectEvent event);
 
 }

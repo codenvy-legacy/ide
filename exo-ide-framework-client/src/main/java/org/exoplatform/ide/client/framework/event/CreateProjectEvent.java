@@ -26,19 +26,68 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateNewProjectEvent.java Dec 8, 2011 5:38:18 PM vereshchaka $
  */
-public class CreateNewProjectEvent extends GwtEvent<CreateNewProjectHandler>
+public class CreateProjectEvent extends GwtEvent<CreateProjectHandler>
 {
 
-   public static final GwtEvent.Type<CreateNewProjectHandler> TYPE = new GwtEvent.Type<CreateNewProjectHandler>();
+   public static final GwtEvent.Type<CreateProjectHandler> TYPE = new GwtEvent.Type<CreateProjectHandler>();
+   
+   /**
+    * Predefined project name
+    */
+   private String projectName;
+   
+   /**
+    * Predefined project type
+    */
+   private String projectType;
 
-   @Override
-   protected void dispatch(CreateNewProjectHandler handler)
+   /**
+    * Creates new instance of this event
+    */
+   public CreateProjectEvent()
    {
-      handler.onCreateNewProject(this);
+   }
+   
+   /**
+    * Creates new instance of this event
+    * 
+    * @param projectName
+    * @param projectType
+    */
+   public CreateProjectEvent(String projectName, String projectType)
+   {
+      this.projectName = projectName;
+      this.projectType = projectType;
+   }
+
+   /**
+    * Returns predefined project name
+    * 
+    * @return
+    */
+   public String getProjectName()
+   {
+      return projectName;
+   }
+
+   /**
+    * Returns predefined project type
+    * 
+    * @return
+    */
+   public String getProjectType()
+   {
+      return projectType;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateNewProjectHandler> getAssociatedType()
+   protected void dispatch(CreateProjectHandler handler)
+   {
+      handler.onCreateProject(this);
+   }
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateProjectHandler> getAssociatedType()
    {
       return TYPE;
    }
