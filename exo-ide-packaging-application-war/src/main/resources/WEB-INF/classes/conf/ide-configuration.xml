@@ -377,15 +377,15 @@
       <init-params>
          <value-param>
             <name>cloudfoundry-target</name>
-            <value>http://api.javarun2.exoplatform.com</value>
+            <value>http://api.cfet.exoplatform.org</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-user</name>
-            <value>vparfonov@exoplatform.com</value>
+            <value>skryzhny@exoplatform.com</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-password</name>
-            <value>1234qwer</value>
+            <value>eXoAdmin12321</value>
          </value-param>
       </init-params>
    </component>
