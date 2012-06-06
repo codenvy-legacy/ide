@@ -61,7 +61,7 @@ public class AppEngineService
 {
    private static final Pattern PATTERN_XML = Pattern.compile(".*<application>.*</application>.*");
 
-   private static final Pattern PATTERN_YAML = Pattern.compile(".*application:.*");
+   private static final Pattern PATTERN_YAML = Pattern.compile("application:.*");
 
    @Inject
    private AppEngineClient client;
@@ -285,7 +285,6 @@ public class AppEngineService
       String path =
          item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
       appId = StringUtils.removeStart(appId, "s~");
-
       if (changeAppEngXml(vfs, path, appId) || changeAppEngYaml(vfs, path, appId))
       {
          return Response
@@ -300,7 +299,15 @@ public class AppEngineService
       }
 
    }
-
+   
+   /**
+    * Change appengine-web.xml file setting application's id.
+    * 
+    * @param vfs virtual file system
+    * @param path path to project's root
+    * @param appId application's id
+    * @return {@link Boolean} <code>true</code> if successfully changed the appengine-web.xml
+    */
    private boolean changeAppEngXml(VirtualFileSystem vfs, String path, String appId)
    {
       String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
@@ -311,7 +318,6 @@ public class AppEngineService
          String newContent = PATTERN_XML.matcher(content).replaceFirst("<application>" + appId + "</application>");
          vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
             new ByteArrayInputStream(newContent.getBytes()), null);
-
          return true;
       }
       catch (ItemNotFoundException e)
@@ -332,6 +338,14 @@ public class AppEngineService
       }
    }
 
+   /**
+    * Change app.yaml file setting application's id.
+    * 
+    * @param vfs virtual file system
+    * @param path path to project's root
+    * @param appId application's id
+    * @return {@link Boolean} <code>true</code> if successfully changed the app.yaml
+    */
    private boolean changeAppEngYaml(VirtualFileSystem vfs, String path, String appId)
    {
       String path2appengineYaml = path + "/app.yaml";

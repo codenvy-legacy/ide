@@ -29,6 +29,7 @@ import com.google.appengine.tools.admin.UpdateListener;
 import com.google.appengine.tools.util.ClientCookieManager;
 import com.google.apphosting.utils.config.BackendsXml;
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoBean;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -268,7 +269,7 @@ public class AppEngineClient
       {
          admin.update(DUMMY_UPDATE_LISTENER);
          final String id = admin.getApplication().getAppId();
-         return new ApplicationInfo(id, "http://" + id + ".appspot.com");
+         return new ApplicationInfoBean(id, "http://" + id + ".appspot.com");
       }
       finally
       {
