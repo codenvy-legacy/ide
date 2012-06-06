@@ -18,12 +18,17 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.google.appengine.tools.admin.CronEntry;
+import com.google.apphosting.utils.config.BackendsXml;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -47,9 +52,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.appengine.tools.admin.CronEntry;
-import com.google.apphosting.utils.config.BackendsXml;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -57,7 +59,9 @@ import com.google.apphosting.utils.config.BackendsXml;
 @Path("ide/appengine")
 public class AppEngineService
 {
-   private static final Pattern PATTERN = Pattern.compile(".*<application>.*</application>.*");
+   private static final Pattern PATTERN_XML = Pattern.compile(".*<application>.*</application>.*");
+
+   private static final Pattern PATTERN_YAML = Pattern.compile(".*application:.*");
 
    @Inject
    private AppEngineClient client;
@@ -280,16 +284,81 @@ public class AppEngineService
       Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
       String path =
          item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
-      String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
-      File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
-      String content = IOUtils.toString(vfs.getContent(fileAppEngXml.getId()).getStream());
       appId = StringUtils.removeStart(appId, "s~");
-      String newContent = PATTERN.matcher(content).replaceFirst("<application>" + appId + "</application>");
-      vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
-         new ByteArrayInputStream(newContent.getBytes()), null);
-      return Response
-         .ok(
-            "Now your application ready to deploy. You can close this tab. Please switch to IDE tab and push deploy button")
-         .build();
+
+      if (changeAppEngXml(vfs, path, appId) || changeAppEngYaml(vfs, path, appId))
+      {
+         return Response
+            .ok(
+               "Now your application is ready to deploy. You can close this tab. Please, switch to IDE tab and push Deploy button")
+            .build();
+      }
+      else
+      {
+         return Response.serverError().entity("Unable to modify App Engine application settings.")
+            .type(MediaType.TEXT_PLAIN).build();
+      }
+
+   }
+
+   private boolean changeAppEngXml(VirtualFileSystem vfs, String path, String appId)
+   {
+      String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
+      try
+      {
+         File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
+         String content = IOUtils.toString(vfs.getContent(fileAppEngXml.getId()).getStream());
+         String newContent = PATTERN_XML.matcher(content).replaceFirst("<application>" + appId + "</application>");
+         vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
+            new ByteArrayInputStream(newContent.getBytes()), null);
+
+         return true;
+      }
+      catch (ItemNotFoundException e)
+      {
+         return false;
+      }
+      catch (PermissionDeniedException e)
+      {
+         return false;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         return false;
+      }
+      catch (IOException e)
+      {
+         return false;
+      }
+   }
+
+   private boolean changeAppEngYaml(VirtualFileSystem vfs, String path, String appId)
+   {
+      String path2appengineYaml = path + "/app.yaml";
+      try
+      {
+         File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, PropertyFilter.NONE_FILTER);
+         String content = IOUtils.toString(vfs.getContent(fileAppEngYaml.getId()).getStream());
+         String newContent = PATTERN_YAML.matcher(content).replaceFirst("application: " + appId);
+         vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),
+            new ByteArrayInputStream(newContent.getBytes()), null);
+         return true;
+      }
+      catch (ItemNotFoundException e)
+      {
+         return false;
+      }
+      catch (PermissionDeniedException e)
+      {
+         return false;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         return false;
+      }
+      catch (IOException e)
+      {
+         return false;
+      }
    }
 }

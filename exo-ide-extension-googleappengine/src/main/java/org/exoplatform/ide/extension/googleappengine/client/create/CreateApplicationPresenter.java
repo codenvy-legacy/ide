@@ -164,10 +164,10 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    }
 
    /**
-    * Will be opened Google AppEngine page for create new application
-    * with redirection url in query parameter (e.g. https://appengine.google.com/start/createapp?redirect_url=http://tenant.cloud-ide.com/rest/service
-    * After creation new Application  Google will call  http://tenant.cloud-ide.com/rest/service?app_id=s~new-app&foo=bar
-    * IDE can get new application id in this case. 
+    * Will be opened Google AppEngine page for create new application with redirection url in query parameter (e.g.
+    * https://appengine.google.com/start/createapp?redirect_url=http://tenant.cloud-ide.com/rest/service After creation new
+    * Application Google will call http://tenant.cloud-ide.com/rest/service?app_id=s~new-app&foo=bar IDE can get new application
+    * id in this case.
     */
    private void startCreateApp()
    {
