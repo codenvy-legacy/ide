@@ -73,8 +73,9 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
    public void testGroovyClassNameProject() throws Exception
    {
       IDE.EDITOR.moveCursorDown(0, 12);
-      IDE.EDITOR.typeTextIntoEditor(0, "Po");
+      IDE.EDITOR.typeTextIntoEditor(0, "Poj");
       IDE.CODEASSISTANT.openForm();
+     
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Pojo"));
       IDE.CODEASSISTANT.moveCursorDown(1);
       IDE.CODEASSISTANT.insertSelectedItem();
@@ -86,7 +87,7 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
       IDE.CODEASSISTANT.openForm();
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      
       assertTrue(IDE.CODEASSISTANT.isElementPresent("getName():java.lang.String"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("printText(String):void"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("setName(String):void"));
