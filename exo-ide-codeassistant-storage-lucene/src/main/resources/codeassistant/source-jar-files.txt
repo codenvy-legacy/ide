@@ -42,3 +42,4 @@ sources/servlet-api-2.5-sources.jar
 sources/datanucleus-core-1.1.5-sources.jar
 sources/datanucleus-jpa-1.1.5-sources.jar
 sources/jdo2-api-2.3-eb-sources.jar
+sources/gwt-user-2.4.0-sources.jar
