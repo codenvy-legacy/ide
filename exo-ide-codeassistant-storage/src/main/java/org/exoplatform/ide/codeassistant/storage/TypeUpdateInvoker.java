@@ -59,8 +59,7 @@ public class TypeUpdateInvoker implements UpdateInvoker
       this.dependencies = dependencies;
       this.dependencyFolder = dependencyFolder;
    }
-   
-   
+
    /**
     * @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute()
     */
@@ -70,13 +69,13 @@ public class TypeUpdateInvoker implements UpdateInvoker
       try
       {
          DataWriter writer = infoStorage.getWriter();
-   
+
          for (Dependency dep : dependencies)
          {
             String artifact = dep.toString();
             if (infoStorage.isArtifactExist(artifact))
                continue;
-   
+
             Set<String> packages = new TreeSet<String>();
             String jarName = getJarName(dep);
             if (LOG.isDebugEnabled())
@@ -86,8 +85,11 @@ public class TypeUpdateInvoker implements UpdateInvoker
                File jarFile = new File(dependencyFolder, jarName);
                List<TypeInfo> typeInfos = JarParser.parse(jarFile);
                packages.addAll(PackageParser.parse(jarFile));
-               writer.addTypeInfo(typeInfos, artifact);
-               writer.addPackages(packages, artifact);
+               if (!infoStorage.isArtifactExist(artifact))
+               {
+                  writer.addTypeInfo(typeInfos, artifact);
+                  writer.addPackages(packages, artifact);
+               }
             }
             catch (IOException e)
             {
@@ -113,7 +115,7 @@ public class TypeUpdateInvoker implements UpdateInvoker
    private String getJarName(Dependency dep)
    {
       StringBuilder b = new StringBuilder();
-       b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('.').append(dep.getType());
+      b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('.').append(dep.getType());
       return b.toString();
    }
 }

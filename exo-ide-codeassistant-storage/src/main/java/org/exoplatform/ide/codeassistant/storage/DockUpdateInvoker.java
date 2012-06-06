@@ -76,10 +76,10 @@ public class DockUpdateInvoker implements UpdateInvoker
 
             String jarName = getJarName(dep);
             File jarFile = new File(dependencyFolder, jarName);
-            
+
             if (LOG.isDebugEnabled())
                LOG.debug("Load javadoc from: " + jarName);
-            
+
             if (!jarFile.exists())
                continue;
 
@@ -87,7 +87,10 @@ public class DockUpdateInvoker implements UpdateInvoker
             try
             {
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
-               writer.addJavaDocs(javaDocs, artifact);
+               if (!infoStorage.isJavaDockForArtifactExist(artifact))
+               {
+                  writer.addJavaDocs(javaDocs, artifact);
+               }
             }
             finally
             {
@@ -97,7 +100,7 @@ public class DockUpdateInvoker implements UpdateInvoker
       }
       catch (IOException e)
       {
-         LOG.error("Can't index javadoc for", e);
+         LOG.error("Can't index javadoc", e);
       }
       finally
       {
@@ -112,8 +115,8 @@ public class DockUpdateInvoker implements UpdateInvoker
    private String getJarName(Dependency dep)
    {
       StringBuilder b = new StringBuilder();
-      b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('-').append("sources")
-         .append('.').append(dep.getType());
+      b.append(dep.getArtifactID()).append('-').append(dep.getVersion()).append('-').append("sources").append('.')
+         .append(dep.getType());
       return b.toString();
    }
 

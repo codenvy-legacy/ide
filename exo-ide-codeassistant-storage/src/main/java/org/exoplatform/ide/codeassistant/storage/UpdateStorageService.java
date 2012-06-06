@@ -170,9 +170,6 @@ public class UpdateStorageService
 
    /**
     * Timeout Thread. Kill the main task if necessary.
-    * 
-    * @author el
-    * 
     */
    public static class TimeOutThread extends Thread
    {
@@ -222,9 +219,6 @@ public class UpdateStorageService
          }
          catch (InterruptedException e)
          {
-            // If the thread is interrupted,
-            // you may not want to kill the main thread,
-            // but probably yes.
          }
          finally
          {
