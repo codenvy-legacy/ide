@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.extension.cloudbees.server;
 
-import com.cloudbees.api.AccountInfo;
-import com.cloudbees.api.AccountKeysResponse;
-import com.cloudbees.api.ApplicationDeleteResponse;
-import com.cloudbees.api.ApplicationInfo;
-import com.cloudbees.api.BeesClient;
-import com.cloudbees.api.BeesClientConfiguration;
-import com.cloudbees.api.UploadProgress;
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -49,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -60,12 +56,23 @@ import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
 
+import com.cloudbees.api.AccountInfo;
+import com.cloudbees.api.AccountKeysResponse;
+import com.cloudbees.api.ApplicationDeleteResponse;
+import com.cloudbees.api.ApplicationInfo;
+import com.cloudbees.api.BeesClient;
+import com.cloudbees.api.BeesClientConfiguration;
+import com.cloudbees.api.UploadProgress;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudBees
+public class CloudBees extends JenkinsClient
 {
+
+   private final String credentials;
+
    private static class DummyUploadProgress implements UploadProgress
    {
       @Override
@@ -82,13 +89,26 @@ public class CloudBees
 
    private final VirtualFileSystemRegistry vfsRegistry;
 
-   public CloudBees(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
+   public CloudBees(VirtualFileSystemRegistry vfsRegistry, InitParams initParams) throws UnsupportedEncodingException
    {
-      this(vfsRegistry, readValueParam(initParams, "workspace"), readValueParam(initParams, "user-config"));
+      this(vfsRegistry,//
+         readValueParam(initParams, "workspace", null), //
+         readValueParam(initParams, "user-config", null),//
+         readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
+         readValueParam(initParams, "jenkins-user", null), //
+         readValueParam(initParams, "jenkins-password", null) //
+      );
    }
 
-   public CloudBees(VirtualFileSystemRegistry vfsRegistry, String workspace, String config)
+   public CloudBees(VirtualFileSystemRegistry vfsRegistry,//
+      String workspace, //
+      String config, //
+      String baseURL, //
+      String user, //
+      String password) throws UnsupportedEncodingException
    {
+      super(baseURL);
+      credentials = "Basic " + new String(encodeBase64((user + ":" + password).getBytes("ISO-8859-1")), "ISO-8859-1");
       this.vfsRegistry = vfsRegistry;
       this.workspace = workspace;
       if (config != null)
@@ -105,17 +125,24 @@ public class CloudBees
       }
    }
 
-   private static String readValueParam(InitParams initParams, String paramName)
+   private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
    {
       if (initParams != null)
       {
          ValueParam vp = initParams.getValueParam(paramName);
          if (vp != null)
-         {
             return vp.getValue();
-         }
       }
-      return null;
+      return defaultValue;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection)
+    */
+   @Override
+   protected void authenticate(HttpURLConnection http) throws IOException
+   {
+      http.setRequestProperty("Authorization", credentials);
    }
 
    public void login(String domain, String email, String password) throws Exception
@@ -282,6 +309,7 @@ public class CloudBees
             HttpURLConnection http = (HttpURLConnection)conn;
             http.setInstanceFollowRedirects(false);
             http.setRequestMethod("GET");
+            authenticate(http);
          }
          InputStream input = conn.getInputStream();
          FileOutputStream foutput = null;
