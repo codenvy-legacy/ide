@@ -83,7 +83,8 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      if (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType))
+      if (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+         || ProjectResolver.APP_ENGINE_JAVA.equals(projectType))
       {
          setEnabled(true);
          setShowInContextMenu(true);
