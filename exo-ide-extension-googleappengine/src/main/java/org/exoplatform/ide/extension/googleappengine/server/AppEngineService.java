@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import com.google.appengine.tools.admin.CronEntry;
+import com.google.apphosting.utils.config.BackendsXml;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
@@ -46,9 +49,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.google.appengine.tools.admin.CronEntry;
-import com.google.apphosting.utils.config.BackendsXml;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
