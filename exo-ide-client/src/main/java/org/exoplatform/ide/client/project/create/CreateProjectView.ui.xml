@@ -101,6 +101,9 @@
             <f:ImageButton ui:field="nextButton" text="Next" width="90px" styleName="{style.rightButton}" imageResource="{resource.next}"
                disabledImageResource="{resource.nextDisabled}" buttonId="ideCreateNewProjectNextButton"></f:ImageButton>
 
+            <f:ImageButton ui:field="finishButton" text="Finish" width="90px" styleName="{style.rightButton}" imageResource="{resource.ok}"
+               disabledImageResource="{resource.okDisabled}" buttonId="ideCreateNewProjectNextButton" visible="false"></f:ImageButton>
+
          </g:FlowPanel>
       </g:layer>
 

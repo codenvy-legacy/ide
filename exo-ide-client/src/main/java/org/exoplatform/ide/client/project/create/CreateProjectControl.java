@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
+import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $
  */
 @RolesAllowed({"administrators", "developers"})
-public class CreateProjectFromTemplateControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
    public static final String ID = "Project/New/Create Project...";
@@ -51,13 +51,13 @@ public class CreateProjectFromTemplateControl extends SimpleControl implements I
    /**
     * 
     */
-   public CreateProjectFromTemplateControl()
+   public CreateProjectControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.newProject(), IDEImageBundle.INSTANCE.newProjectDisabled());
-      setEvent(new CreateNewProjectEvent());
+      setEvent(new CreateProjectEvent());
    }
 
    /**

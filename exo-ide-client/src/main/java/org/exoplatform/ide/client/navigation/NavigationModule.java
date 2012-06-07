@@ -57,7 +57,7 @@ import org.exoplatform.ide.client.operation.search.SearchResultsPresenter;
 import org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter;
 import org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter;
 import org.exoplatform.ide.client.progress.ProgressPresenter;
-import org.exoplatform.ide.client.project.create.CreateProjectFromTemplateControl;
+import org.exoplatform.ide.client.project.create.CreateProjectControl;
 import org.exoplatform.ide.client.statusbar.NavigatorStatusControl;
 import org.exoplatform.ide.client.template.SaveAsTemplatePresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -78,7 +78,7 @@ public class NavigationModule implements InitializeServicesHandler
       IDE.getInstance().addControl(new NewItemMenuGroup());
 
       IDE.getInstance().addControl(new CreateFileFromTemplateControl());
-      IDE.getInstance().addControl(new CreateProjectFromTemplateControl());
+      IDE.getInstance().addControl(new CreateProjectControl());
 
       new CreateFolderPresenter();
 

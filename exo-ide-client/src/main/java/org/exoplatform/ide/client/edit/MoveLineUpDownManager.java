@@ -148,14 +148,6 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       editor = event.getEditor();
-
-      if (editor == null)
-      {
-         return;
-      }
-
-      int lines = editor.getDocument().getNumberOfLines();
-      System.out.println("lines > " + lines);
    }
 
 }
