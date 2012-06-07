@@ -96,9 +96,12 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public Object getDefaultValue()
    {
-      if (method.get("annotationValue").isNull() == null)
+      if (method.containsKey("annotationDefault"))
       {
-         return AnnotationParseUtil.getValue(method.get("annotationValue").isObject());
+         if (method.get("annotationDefault").isNull() == null)
+         {
+            return AnnotationParseUtil.getValue(method.get("annotationDefault").isObject());
+         }
       }
       return null;
    }

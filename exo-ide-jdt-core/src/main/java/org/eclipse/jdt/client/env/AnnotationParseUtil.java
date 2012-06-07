@@ -22,6 +22,7 @@ import com.google.gwt.json.client.JSONArray;
 
 import org.eclipse.jdt.client.internal.compiler.env.ClassSignature;
 import org.eclipse.jdt.client.internal.compiler.env.EnumConstantSignature;
+import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.impl.BooleanConstant;
 import org.eclipse.jdt.client.internal.compiler.impl.ByteConstant;
 import org.eclipse.jdt.client.internal.compiler.impl.CharConstant;
@@ -53,6 +54,12 @@ public class AnnotationParseUtil
          String val = array.get(1).isString().stringValue();
          return getConstant(type, val);
       }
+      else if (value.get("enumConstant").isNull() == null)
+      {
+         JSONArray array = value.get("enumConstant").isArray();
+         return new EnumConstantSignature(array.get(0).isString().stringValue().toCharArray(), array.get(1).isString()
+            .stringValue().toCharArray());
+      }
       else if (value.get("arrayType").isNull() == null)
       {
          JSONArray array = value.get("arrayType").isArray();
@@ -74,24 +81,18 @@ public class AnnotationParseUtil
             }
          }
          else
-            return null;
+            return new Object[0];
       }
       else if (value.get("classSignature").isString() != null
          && !value.get("classSignature").isString().stringValue().isEmpty())
       {
          return new ClassSignature(value.get("classSignature").isString().stringValue().toCharArray());
       }
-      else if (value.get("enumConstant").isNull() == null)
-      {
-         JSONArray array = value.get("enumConstant").isArray();
-         return new EnumConstantSignature(array.get(0).isString().stringValue().toCharArray(), array.get(1).isString()
-            .stringValue().toCharArray());
-      }
       else if (value.get("annotation").isNull() == null)
       {
          return new BinaryAnnotationImpl(value.get("annotation").isObject());
       }
-      return null;
+      return new IBinaryAnnotation[0];
    }
 
    /**
