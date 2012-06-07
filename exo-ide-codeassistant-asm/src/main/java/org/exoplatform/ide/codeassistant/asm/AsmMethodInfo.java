@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.asm.visitors.MethodSignatureVisitor;
+import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
@@ -160,7 +161,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    {
       return methodNode.desc;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -169,7 +170,21 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
    {
       return methodNode.signature;
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getAnnotationDefault()
+    */
+   @Override
+   public AnnotationValue getAnnotationDefault()
+   {
+      if (methodNode.annotationDefault != null)
+      {
+         return new AsmAnnotationValue(methodNode.annotationDefault);
+      }
+      else
+         return null;
+   }
+
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.MethodInfo#setConstructor(boolean)
     */
@@ -224,7 +239,6 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
       throw new UnsupportedOperationException("Set not supported");
    }
 
-
    @Override
    public void setDescriptor(String descriptor)
    {
@@ -233,6 +247,15 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
 
    @Override
    public void setSignature(String signature)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setAnnotationDefault(org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue)
+    */
+   @Override
+   public void setAnnotationDefault(AnnotationValue value)
    {
       throw new UnsupportedOperationException("Set not supported");
    }

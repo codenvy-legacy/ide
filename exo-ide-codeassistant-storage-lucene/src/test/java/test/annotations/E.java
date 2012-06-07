@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm.test;
+package test.annotations;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 15, 2010 4:53:36 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version ${Id}:  Nov 23, 2011 3:59:17 PM evgen $
  *
  */
-public @interface Foo {
-
-   int foo();
-   
-   String[] bar();
+public enum E {
+  ONE, TWO, THREE
 }
