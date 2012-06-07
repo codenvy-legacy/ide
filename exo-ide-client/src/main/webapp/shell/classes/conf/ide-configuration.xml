@@ -319,7 +319,7 @@
       <init-params>
          <value-param>
             <name>cloudfoundry-target</name>
-            <value>http://api.javarun2.exoplatform.com</value>
+            <value>http://api.cfet.exoplatform.org</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-user</name>
@@ -327,7 +327,7 @@
          </value-param>
          <value-param>
             <name>cloudfoundry-password</name>
-            <value>eXoAdmin</value>
+            <value>eXoAdmin12321</value>
          </value-param>
       </init-params>
    </component>

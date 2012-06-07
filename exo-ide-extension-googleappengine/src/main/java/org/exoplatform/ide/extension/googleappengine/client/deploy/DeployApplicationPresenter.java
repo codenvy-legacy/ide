@@ -19,8 +19,10 @@
 package org.exoplatform.ide.extension.googleappengine.client.deploy;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -32,6 +34,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -104,19 +107,27 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    {
       try
       {
+         AutoBean<ApplicationInfo> applicationInfo = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.applicationInfo();
+         AutoBeanUnmarshaller<ApplicationInfo> unmarshaller =
+            new AutoBeanUnmarshaller<ApplicationInfo>(applicationInfo);
+
          GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl, email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+            password,
+            new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller, performOperationHandler, null)
             {
 
                @Override
-               protected void onSuccess(Object result)
+               protected void onSuccess(ApplicationInfo result)
                {
                   if (loggedInHandler != null)
                   {
                      loggedInHandler.onLoggedIn();
                   }
-                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION
-                     .deployApplicationSuccess(currentProject.getName()), Type.INFO));
+                  StringBuilder link = new StringBuilder("<a href='");
+                  link.append(result.getWebURL()).append("' target='_blank'>").append(result.getWebURL())
+                     .append("</a>");
+                  IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationSuccess(
+                     currentProject.getName(), link.toString()), Type.INFO));
                }
             });
       }

@@ -117,19 +117,21 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       final String requestUrl = restServiceContext + CREATE;
 
       server = checkServerUrl(server);
+      
+      CreateApplicationRequest createApplicationRequest = new CreateApplicationRequest(server, name, type, requestUrl, instances, memory, nostart, vfsId, projectId, war);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+//      String params = "name=" + name;
+//      params += (server == null) ? "" : "&server=" + server;
+//      params += (type != null) ? "&type=" + type : "";
+//      params += (url != null) ? "&url=" + url : "";
+//      params += "&instances=" + instances;
+//      params += "&mem=" + memory;
+//      params += "&nostart=" + nostart;
+//      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
+//      params += (projectId != null) ? "&projectid=" + projectId : "";
+//      params += (war != null) ? "&war=" + war : "";
 
-      String params = "name=" + name;
-      params += (server == null) ? "" : "&server=" + server;
-      params += (type != null) ? "&type=" + type : "";
-      params += (url != null) ? "&url=" + url : "";
-      params += "&instances=" + instances;
-      params += "&mem=" + memory;
-      params += "&nostart=" + nostart;
-      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
-      params += (projectId != null) ? "&projectid=" + projectId : "";
-      params += (war != null) ? "&war=" + war : "";
-
-      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(data)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
@@ -524,5 +526,125 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
+   
+   static class CreateApplicationRequest {
+     
+      private final String server;
 
+      private final String name;
+
+      private final String type;
+
+      private final String url;
+
+      private final int instances;
+
+      private final int memory;
+
+      private final boolean nostart;
+
+      private final String vfsId;
+
+      private final String projectId;
+
+      private final String war;
+
+      public CreateApplicationRequest(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+         String vfsId, String projectId, String war)
+      {
+         this.server = server;
+         this.name = name;
+         this.type = type;
+         this.url = url;
+         this.instances = instances;
+         this.memory = memory;
+         this.nostart = nostart;
+         this.vfsId = vfsId;
+         this.projectId = projectId;
+         this.war = war;
+      }
+
+      /**
+       * @return the server
+       */
+      public String getServer()
+      {
+         return server;
+      }
+
+      /**
+       * @return the name
+       */
+      public String getName()
+      {
+         return name;
+      }
+
+      /**
+       * @return the type
+       */
+      public String getType()
+      {
+         return type;
+      }
+
+      /**
+       * @return the url
+       */
+      public String getUrl()
+      {
+         return url;
+      }
+
+      /**
+       * @return the instances
+       */
+      public int getInstances()
+      {
+         return instances;
+      }
+
+      /**
+       * @return the memory
+       */
+      public int getMemory()
+      {
+         return memory;
+      }
+
+      /**
+       * @return the nostart
+       */
+      public boolean isNostart()
+      {
+         return nostart;
+      }
+
+      /**
+       * @return the vfsId
+       */
+      public String getVfsId()
+      {
+         return vfsId;
+      }
+
+      /**
+       * @return the projectId
+       */
+      public String getProjectId()
+      {
+         return projectId;
+      }
+
+      /**
+       * @return the war
+       */
+      public String getWar()
+      {
+         return war;
+      }
+      
+      
+  }
 }
+

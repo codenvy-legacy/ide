@@ -41,8 +41,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
 import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
@@ -66,6 +68,7 @@ public class PythonApplication implements GenericApplication
    private UpdateListener updateListener;
    private PrintWriter errorWriter;
 
+   private final Map<String, Pattern> staticFilesPatterns = new HashMap<String, Pattern>();
 
    public PythonApplication(File appDir)
    {
@@ -208,9 +211,29 @@ public class PythonApplication implements GenericApplication
    @Override
    public String getMimeTypeIfStatic(String path)
    {
-      if (path.contains("__static__/"))
+      for (Object o : appInfo.handlers)
       {
-         return Application.guessContentTypeFromName(path);
+         Map m = (Map)o;
+         String staticDir = (String)m.get("static_dir");
+         String regex = staticDir != null ? staticDir + ".*" : (String)m.get("upload");
+         if (regex != null)
+         {
+            Pattern pattern = staticFilesPatterns.get(regex);
+            if (pattern == null)
+            {
+               pattern = Pattern.compile(regex);
+               staticFilesPatterns.put(regex, pattern);
+            }
+            if (pattern.matcher(path).matches())
+            {
+               String mimeType = (String)m.get("mime_type");
+               if (mimeType == null)
+               {
+                  mimeType = Application.guessContentTypeFromName(path);
+               }
+               return mimeType;
+            }
+         }
       }
       return null;
    }

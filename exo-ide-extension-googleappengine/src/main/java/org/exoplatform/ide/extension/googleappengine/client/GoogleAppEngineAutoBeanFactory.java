@@ -24,6 +24,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 
 /**
  * The interface for the {@link AutoBean} generator.
@@ -44,4 +45,6 @@ public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
    AutoBean<CronEntry> cronEntry();
 
    AutoBean<Backend> backend();
+
+   AutoBean<ApplicationInfo> applicationInfo();
 }
