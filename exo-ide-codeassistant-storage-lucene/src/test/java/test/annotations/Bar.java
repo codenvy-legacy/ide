@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,18 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm.test;
+package test.annotations;
+
+import java.util.List;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 15, 2010 4:53:36 PM evgen $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
  *
  */
-public @interface Foo {
+public @interface Bar {
 
-   int foo();
+   int i() default 42;
    
-   String[] bar();
+   String strring() default "";
+
+   E enu() default E.ONE;
+
+   Class<?> clazz() default String.class;
+
+   String[] str() default "str";
+
+   double[] vertex() default {1.4, 2.04, 5.0007};
+   
+   Class<?>[] clazzs() default {Integer.class, List.class, Math.class};
+   
+   Foo getF() default @Foo(foo = 5, bar = {"aaa", "bbb"});
+
 }

@@ -69,7 +69,7 @@ public class MethodInfoExtractor
          Collections.<String> emptyList(),//
          true,//
          null,//
-         constructor.getDeclaringClass().getCanonicalName(), null, null);
+         constructor.getDeclaringClass().getCanonicalName(), null, null, null);
    }
 
    /**
@@ -101,7 +101,7 @@ public class MethodInfoExtractor
          Collections.<String> emptyList(), //
          false,//
          genericType2String(method.getGenericReturnType()),//
-         method.getDeclaringClass().getCanonicalName(), null, null);
+         method.getDeclaringClass().getCanonicalName(), null, null, null);
    }
 
    /**
