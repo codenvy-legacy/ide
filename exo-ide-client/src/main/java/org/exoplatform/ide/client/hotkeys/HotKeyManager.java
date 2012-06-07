@@ -254,6 +254,8 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          shortcut += "+" + HotKeyHelper.getKeyName(String.valueOf(keyCode));
       }
 
+      boolean hotKeyBinded = false;
+
       // search associated command
       if (hotKeyMap.containsKey(shortcut))
       {
@@ -262,17 +264,21 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          if (control instanceof SimpleControl)
          {
             SimpleControl simpleControl = (SimpleControl)control;
-            if (shortcut.equals(simpleControl.getHotKey()) && simpleControl.getEvent() != null
-               && (simpleControl.isEnabled() || simpleControl.isIgnoreDisable()))
-            {
-               IDE.fireEvent(simpleControl.getEvent());
-               return true;
-            }
 
+            if (shortcut.equals(simpleControl.getHotKey()))
+            {
+               hotKeyBinded = true;
+
+               if (simpleControl.getEvent() != null && (simpleControl.isEnabled() || simpleControl.isIgnoreDisable()))
+               {
+                  IDE.fireEvent(simpleControl.getEvent());
+                  return true;
+               }
+            }
          }
       }
 
-      return false;
+      return hotKeyBinded;
    }
 
    public void setHotKeys(Map<String, String> newHotKeys)
