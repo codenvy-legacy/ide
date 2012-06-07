@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -62,7 +61,7 @@ public class ClassInfoExtractorTest
       TypeInfo cd = ClassParser.parse(Foo.class);
       assertEquals(JavaType.ANNOTATION.toString(), cd.getType());
    }
-
+   
    @Test
    public void shouldExtractCorrectEnum() throws Exception
    {
