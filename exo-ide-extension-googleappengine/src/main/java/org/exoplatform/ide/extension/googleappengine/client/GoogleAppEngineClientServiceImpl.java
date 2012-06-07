@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
+import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -300,7 +301,7 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
     */
    @Override
    public void update(String vfsId, ProjectModel project, String bin, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+      GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
       String url = restServiceContext + UPDATE;
 

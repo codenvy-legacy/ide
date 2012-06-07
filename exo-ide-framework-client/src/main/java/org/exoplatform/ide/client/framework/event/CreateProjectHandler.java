@@ -16,18 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.asm.test;
+package org.exoplatform.ide.client.framework.event;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS.
- *
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: Dec 15, 2010 4:53:36 PM evgen $
- *
+ * Handler for {@link CreateProjectEvent}
+ * 
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: CreateNewProjectHandler.java Dec 8, 2011 5:38:28 PM vereshchaka $
  */
-public @interface Foo {
+public interface CreateProjectHandler extends EventHandler
+{
 
-   int foo();
-   
-   String[] bar();
+   void onCreateProject(CreateProjectEvent event);
+
 }

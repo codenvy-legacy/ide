@@ -64,6 +64,13 @@ public interface MethodInfo extends Member
     * return the signature of the method. May be <tt>null</tt>.
     */
    String getSignature();
+   
+   /**
+    * The default value of this annotation interface method.
+    * May be <tt>null</tt>.
+    * @return
+    */
+   AnnotationValue getAnnotationDefault();
 
    /**
     * @return the isConstructor
@@ -99,6 +106,6 @@ public interface MethodInfo extends Member
     */
    void setSignature(String signature);
 
-   
+   void setAnnotationDefault(AnnotationValue value);
 
 }

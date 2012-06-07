@@ -19,41 +19,19 @@
 package org.exoplatform.ide.extension.googleappengine.shared;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id:  Jun 6, 2012 4:28:29 PM anya $
+ *
  */
-public class ApplicationInfo
+public interface ApplicationInfo
 {
-   private String applicationId;
-   private String webURL;
 
-   public ApplicationInfo(String applicationId, String webURL)
-   {
-      this.applicationId = applicationId;
-      this.webURL = webURL;
-   }
+   public String getWebURL();
 
-   public ApplicationInfo()
-   {
-   }
+   public void setWebURL(String webURL);
 
-   public String getWebURL()
-   {
-      return webURL;
-   }
+   public String getApplicationId();
 
-   public void setWebURL(String webURL)
-   {
-      this.webURL = webURL;
-   }
+   public void setApplicationId(String applicationId);
 
-   public String getApplicationId()
-   {
-      return applicationId;
-   }
-
-   public void setApplicationId(String applicationId)
-   {
-      this.applicationId = applicationId;
-   }
 }

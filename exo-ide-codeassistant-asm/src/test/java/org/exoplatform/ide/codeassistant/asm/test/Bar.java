@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,31 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.event;
+package org.exoplatform.ide.codeassistant.asm.test;
 
-import com.google.gwt.event.shared.GwtEvent;
+import java.util.List;
 
 /**
- * Event for opening form to creat project.
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CreateNewProjectEvent.java Dec 8, 2011 5:38:18 PM vereshchaka $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public class CreateNewProjectEvent extends GwtEvent<CreateNewProjectHandler>
-{
+public @interface Bar {
 
-   public static final GwtEvent.Type<CreateNewProjectHandler> TYPE = new GwtEvent.Type<CreateNewProjectHandler>();
+   int i() default 42;
+   
+   String strring() default "";
 
-   @Override
-   protected void dispatch(CreateNewProjectHandler handler)
-   {
-      handler.onCreateNewProject(this);
-   }
+   E enu() default E.ONE;
 
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateNewProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   Class<?> clazz() default String.class;
+
+   String[] str() default "str";
+
+   double[] vertex() default {1.4, 2.04, 5.0007};
+   
+   Class<?>[] clazzs() default {Integer.class, List.class, Math.class};
+   
+   Foo getF() default @Foo(foo = 5, bar = {"aaa", "bbb"});
 
 }
