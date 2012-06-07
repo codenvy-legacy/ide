@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
+import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 
 import java.util.Collections;
@@ -66,6 +67,11 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
     */
    public String signature;
 
+   /**
+    * Method default annotation value. May be <tt>null</tt>.
+    */
+   private AnnotationValue annotationValue;
+
    public MethodInfoBean()
    {
       this.parameterTypes = Collections.emptyList();
@@ -82,7 +88,8 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       String genericReturnType,//
       String declaringClass, //
       String descriptor, //
-      String signature)
+      String signature,//
+      AnnotationValue annotationValue)
    {
       super(name, modifiers);
       this.isConstructor = isConstructor;
@@ -90,6 +97,7 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
       this.declaringClass = declaringClass;
       this.descriptor = descriptor;
       this.signature = signature;
+      this.annotationValue = annotationValue;
       setExceptionTypes(exceptionTypes);
       setParameterNames(parameterNames);
       setParameterTypes(parameterTypes);
@@ -410,6 +418,24 @@ public class MethodInfoBean extends MemberBean implements MethodInfo
          return false;
       }
       return true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#getAnnotationDefault()
+    */
+   @Override
+   public AnnotationValue getAnnotationDefault()
+   {
+      return annotationValue;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo#setAnnotationDefault(org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue)
+    */
+   @Override
+   public void setAnnotationDefault(AnnotationValue value)
+   {
+      annotationValue = value;
    }
 
 }
