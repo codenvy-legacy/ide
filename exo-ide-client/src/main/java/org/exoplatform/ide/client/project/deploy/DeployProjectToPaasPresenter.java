@@ -188,7 +188,10 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       @Override
       public void onProjectCreated(ProjectModel createdProject)
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
          IDE.fireEvent(new ProjectCreatedEvent(createdProject));
       }
 
@@ -201,8 +204,10 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       @Override
       public void onDeploy(boolean result)
       {
-         IDE.getInstance().closeView(display.asView().getId());
-         IDE.fireEvent(new ProjectCreatedEvent(createdProject));
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
 
    };
