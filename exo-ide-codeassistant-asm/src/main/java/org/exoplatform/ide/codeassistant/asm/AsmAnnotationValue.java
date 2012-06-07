@@ -77,6 +77,8 @@ public class AsmAnnotationValue implements AnnotationValue
       if (defaultValue instanceof List<?>)
       {
          List<?> list = (List<?>)defaultValue;
+         if(list.size() == 0)
+            return new String[0];
          String[] arr = new String[list.size() + 1];
          for (int i = 0; i < list.size(); i++)
          {
