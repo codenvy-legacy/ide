@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.operation.closeeditor.CloseEditorController;
 import org.exoplatform.ide.client.operation.findtext.FindTextPresenter;
 import org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter;
 
@@ -90,6 +91,7 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       new CodeCommentsManager();
 
       new SwitchingEditorCommandHandler();
+      new CloseEditorController();
    }
 
    /**
