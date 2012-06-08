@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.http.client.UrlBuilder;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -664,7 +666,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
          AutoBeanUnmarshaller<DebugApplicationInstance> unmarshaller =
             new AutoBeanUnmarshaller<DebugApplicationInstance>(debugApplicationInstance);
-         ApplicationRunnerClientService.getInstance().debugApplication(warUrl,
+         ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl,
             new AsyncRequestCallback<DebugApplicationInstance>(unmarshaller)
             {
                @Override
@@ -735,7 +737,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
          AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
             new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
-         ApplicationRunnerClientService.getInstance().runApplication(warUrl,
+         ApplicationRunnerClientService.getInstance().runApplication(project.getName(), warUrl,
             new AsyncRequestCallback<ApplicationInstance>(unmarshaller)
             {
                @Override
@@ -771,17 +773,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private String getAppUrlsAsString(ApplicationInstance application)
    {
       String appUris = "";
-      String uri = application.getWebURL();
-      if (!uri.startsWith("http"))
-      {
-         uri = "http://" + uri;
-      }
+      UrlBuilder builder = new UrlBuilder();
+      String uri = builder.setProtocol("http").setHost(application.getHost()).setPort(application.getPort()).buildString();
       appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
-      if (!appUris.isEmpty())
-      {
-         // crop unnecessary symbols
-         appUris = appUris.substring(2);
-      }
+//      if (!appUris.isEmpty())
+//      {
+//         // crop unnecessary symbols
+//         appUris = appUris.substring(2);
+//      }
       return appUris;
    }
 

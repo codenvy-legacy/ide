@@ -5,7 +5,7 @@ package org.exoplatform.ide.extension.java.jdi.client;
  */
 public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
-
+   
    @DefaultMessage("Run/Debug")
    @Key("control.launchDebuggerControlId")
    String debugAppControlId();
@@ -342,4 +342,11 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("view.breakpointProperties.cancelButton.title")
    String breakpointPropertiesViewCancelButtonTitle();
 
+   @DefaultMessage("Starting <b>{0}</b>")
+   @Key("run.app.starting")
+   String starting(String project);
+   
+   @DefaultMessage("<b>{0}</b> : started")
+   @Key("run.app.started")
+   String started(String project);
 }
