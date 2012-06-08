@@ -39,6 +39,8 @@ public class AnnotationValueBean implements AnnotationValue
 
    private Annotation annotation;
 
+   private Annotation[] annotations;
+
    /**
     * 
     */
@@ -54,7 +56,7 @@ public class AnnotationValueBean implements AnnotationValue
     * @param annotation
     */
    public AnnotationValueBean(String[] primitiveType, String[] arrayType, String classSignature, String[] enumConstant,
-      Annotation annotation)
+      Annotation annotation, Annotation[] annotations)
    {
       super();
       this.primitiveType = primitiveType;
@@ -62,6 +64,7 @@ public class AnnotationValueBean implements AnnotationValue
       this.classSignature = classSignature;
       this.enumConstant = enumConstant;
       this.annotation = annotation;
+      this.annotations = annotations;
    }
 
    /**
@@ -152,6 +155,24 @@ public class AnnotationValueBean implements AnnotationValue
    public void setAnnotation(Annotation annotation)
    {
       this.annotation = annotation;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue#getAnnotationArray()
+    */
+   @Override
+   public Annotation[] getAnnotations()
+   {
+      return annotations;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue#setAnnotationArray(org.exoplatform.ide.codeassistant.jvm.shared.Annotation[])
+    */
+   @Override
+   public void setAnnotations(Annotation[] annotations)
+   {
+      this.annotations = annotations;
    }
 
 }

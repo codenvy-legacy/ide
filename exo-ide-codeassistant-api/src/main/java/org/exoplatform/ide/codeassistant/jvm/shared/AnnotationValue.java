@@ -59,6 +59,8 @@ public interface AnnotationValue
 
    Annotation getAnnotation();
 
+   Annotation[] getAnnotations();
+   
    void setPrimitiveType(String[] value);
 
    void setArrayType(String[] value);
@@ -68,4 +70,6 @@ public interface AnnotationValue
    void setEnumConstant(String[] value);
 
    void setAnnotation(Annotation annotation);
+   
+   void setAnnotations(Annotation[] annotation);
 }
