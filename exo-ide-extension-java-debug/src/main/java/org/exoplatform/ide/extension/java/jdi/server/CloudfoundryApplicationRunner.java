@@ -315,7 +315,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
       final int attempt = 5;
       int port = -1;
-      for (int i = 0; !(i < 5 || stats == null || (port = stats.getPort()) < 0); i++)
+      for (int i = 0; i < attempt && (stats == null || (port = stats.getPort()) == -1); i++)
       {
          try
          {
