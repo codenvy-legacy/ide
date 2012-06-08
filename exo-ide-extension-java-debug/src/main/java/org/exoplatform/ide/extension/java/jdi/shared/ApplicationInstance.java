@@ -28,9 +28,13 @@ public interface ApplicationInstance
 
    void setName(String name);
 
-   String getWebURL();
+   String getHost();
 
-   void setWebURL(String url);
+   void setHost(String host);
+
+   int getPort();
+
+   void setPort(int port);
 
    String getStopURL();
 

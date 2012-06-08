@@ -25,6 +25,7 @@ import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.DebugApplicationInstanceImpl;
@@ -213,10 +214,20 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          CloudFoundryApplication cfApp = createApplication(cloudfoundry.getTarget(), url, null);
          final String name = cfApp.getName();
+         CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(cloudfoundry.getTarget(), name, null, null).get("0");
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {}.", name);
-         return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         ApplicationInstance appInst = new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         if (stats != null)
+         {
+            final int port = stats.getPort();
+            if (port > 0)
+            {
+               appInst.setPort(port);
+            }
+         }
+         return appInst;
       }
       catch (CloudfoundryException e)
       {
@@ -271,11 +282,22 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
+         // need to get port.
+         CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {} under debug.", name);
-         return new DebugApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
-            instances[0].getDebugHost(), instances[0].getDebugPort());
+         DebugApplicationInstanceImpl dAppInst = new DebugApplicationInstanceImpl(name, cfApp.getUris().get(0), null,
+            applicationLifetime, instances[0].getDebugHost(), instances[0].getDebugPort());
+         if (stats != null)
+         {
+            final int port = stats.getPort();
+            if (port > 0)
+            {
+               dAppInst.setPort(port);
+            }
+         }
+         return dAppInst;
       }
       catch (CloudfoundryException e)
       {
