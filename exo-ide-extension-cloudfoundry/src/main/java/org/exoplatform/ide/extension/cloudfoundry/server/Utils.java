@@ -32,7 +32,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -262,8 +264,39 @@ class Utils
       return "standalone";
    }
 
+   private static final int maxEntries = 2048;
+   private static final Map<String, FileItem> cache = new LinkedHashMap<String, FileItem>(maxEntries + 1, 1.0f, true)
+   {
+      protected boolean removeEldestEntry(Map.Entry<String, FileItem> eldest)
+      {
+         return size() > maxEntries;
+      }
+   };
+
+   private static class FileItem
+   {
+      final String hash;
+      final long lastModified;
+
+      FileItem(String hash, long lastModified)
+      {
+         this.hash = hash;
+         this.lastModified = lastModified;
+      }
+   }
+
    static String countFileHash(java.io.File file, MessageDigest digest) throws IOException
    {
+      final String path = file.getAbsolutePath();
+      FileItem fi;
+      synchronized (cache)
+      {
+         fi = cache.get(path);
+         if (fi != null && fi.lastModified == file.lastModified())
+         {
+            return fi.hash;
+         }
+      }
       FileInputStream fis = null;
       DigestInputStream dis = null;
       try
@@ -273,7 +306,18 @@ class Utils
          while (dis.read() != -1)
          {
          }
-         return toHex(digest.digest());
+         synchronized (cache)
+         {
+            fi = cache.get(path);
+            if (fi == null || fi.lastModified < file.lastModified())
+            {
+               String hex = toHex(digest.digest());
+               fi = new FileItem(hex, file.lastModified());
+               cache.put(path, fi);
+               return hex;
+            }
+            return fi.hash;
+         }
       }
       finally
       {
