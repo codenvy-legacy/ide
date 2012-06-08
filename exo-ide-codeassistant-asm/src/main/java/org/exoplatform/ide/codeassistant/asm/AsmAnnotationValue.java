@@ -77,8 +77,12 @@ public class AsmAnnotationValue implements AnnotationValue
       if (defaultValue instanceof List<?>)
       {
          List<?> list = (List<?>)defaultValue;
-         if(list.size() == 0)
+         if (list.size() == 0)
             return new String[0];
+
+         if (list.get(0) instanceof AnnotationNode)
+            return null;
+
          String[] arr = new String[list.size() + 1];
          for (int i = 0; i < list.size(); i++)
          {
@@ -89,10 +93,14 @@ public class AsmAnnotationValue implements AnnotationValue
       }
       else if (defaultValue.getClass().isArray())
       {
+         //this is enum
+         if(String.class == defaultValue.getClass().getComponentType())
+            return null;
+         
          String[] arr = new String[Array.getLength(defaultValue) + 1];
          for (int i = 0; i < Array.getLength(defaultValue); i++)
          {
-            arr[i+1] = Array.get(defaultValue, i).toString();
+            arr[i + 1] = Array.get(defaultValue, i).toString();
          }
          arr[0] = Array.get(defaultValue, 0).getClass().getSimpleName();
          return arr;
@@ -133,9 +141,35 @@ public class AsmAnnotationValue implements AnnotationValue
    @Override
    public Annotation getAnnotation()
    {
-      if(defaultValue instanceof AnnotationNode)
+      if (defaultValue instanceof AnnotationNode)
       {
          return new AsmAnnotation((AnnotationNode)defaultValue);
+      }
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue#getAnnotationArray()
+    */
+   @Override
+   public Annotation[] getAnnotations()
+   {
+      if (defaultValue instanceof List<?>)
+      {
+         List<?> list = (List<?>)defaultValue;
+         if (list.size() == 0)
+            return new Annotation[0];
+         if (list.get(0) instanceof AnnotationNode)
+         {
+            Annotation[] ann = new Annotation[list.size()];
+            for (int i = 0; i < list.size(); i++)
+            {
+               ann[i] = new AsmAnnotation((AnnotationNode)list.get(i));
+            }
+            return ann;
+         }
+         else
+            return null;
       }
       return null;
    }
@@ -181,6 +215,15 @@ public class AsmAnnotationValue implements AnnotationValue
     */
    @Override
    public void setAnnotation(Annotation annotation)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue#setAnnotationArray(org.exoplatform.ide.codeassistant.jvm.shared.Annotation[])
+    */
+   @Override
+   public void setAnnotations(Annotation[] annotation)
    {
       throw new UnsupportedOperationException("Set not supported");
    }
