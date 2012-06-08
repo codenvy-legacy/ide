@@ -22,9 +22,8 @@
       }
       
       .title {
-      	font-size: 13px;
+      	font-size: 12px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-weight: bold;
       }
       
       .note {
@@ -35,8 +34,8 @@
       }
    </ui:style>
 
-   <f:Border margin="5" borderColor="transparent">
-      <f:layer top="0" height="100px">
+   <f:Border margin="15" borderColor="transparent">
+      <f:layer top="0" height="60px">
          <f:Label value="{locale.createApplicationInstruction}" ui:field="instructionLabel" isHTML="true" wordWrap="true" height="100px" styleName="{style.title}" width="100%" />
       </f:layer>
       <f:layer height="22px" bottom="0">

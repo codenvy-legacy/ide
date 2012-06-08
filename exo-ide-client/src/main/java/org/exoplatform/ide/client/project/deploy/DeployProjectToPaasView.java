@@ -18,19 +18,20 @@
  */
 package org.exoplatform.ide.client.project.deploy;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -123,16 +124,17 @@ public class DeployProjectToPaasView extends ViewImpl implements DeployProjectTo
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display#setPaas(com.google.gwt.user.client.ui.Composite)
+    * @see org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display#setPaasWidget(com.google.gwt.user.client.ui.Widget)
     */
    @Override
-   public void setPaas(Composite composite)
+   public void setPaasWidget(Widget widget)
    {
       if (paasPanel.getWidgetCount() > 0)
       {
          paasPanel.remove(0);
       }
-      paasPanel.add(composite);
+
+      paasPanel.add(widget);
    }
 
    /**
@@ -145,6 +147,19 @@ public class DeployProjectToPaasView extends ViewImpl implements DeployProjectTo
       {
          paasPanel.remove(0);
       }
+   }
+
+   @Override
+   public void focusSelectPaasField()
+   {
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            selectPaasField.setFocus(true);
+         }
+      });
    }
 
 }

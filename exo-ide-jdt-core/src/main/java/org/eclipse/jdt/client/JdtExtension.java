@@ -116,7 +116,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
       options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
       options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
-      options.put(JavaCore.COMPILER_PB_UNUSED_DECLARED_THROWN_EXCEPTION_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+      options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
+      
 
    }
    

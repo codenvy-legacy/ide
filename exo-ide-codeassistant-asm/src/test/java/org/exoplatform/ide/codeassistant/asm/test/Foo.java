@@ -27,4 +27,7 @@ package org.exoplatform.ide.codeassistant.asm.test;
  */
 public @interface Foo {
 
+   int foo();
+   
+   String[] bar();
 }

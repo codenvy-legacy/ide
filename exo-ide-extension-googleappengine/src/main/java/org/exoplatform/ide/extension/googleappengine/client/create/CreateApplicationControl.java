@@ -65,7 +65,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    public void initialize()
    {
       setVisible(true);
-      setEnabled(true);
+      setEnabled(false);
    }
 
    @Override
@@ -77,7 +77,9 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (event.getProject() != null && ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType()))
+      if (event.getProject() != null
+         && (ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType()) || ProjectResolver.APP_ENGINE_PYTHON
+            .equals(event.getProject().getProjectType())))
       {
          setEnabled(true);
       }

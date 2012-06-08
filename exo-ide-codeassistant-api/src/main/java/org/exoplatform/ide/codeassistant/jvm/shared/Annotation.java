@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,19 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.codeassistant.jvm.shared;
 
 /**
- * Handler for {@link CreateNewProjectEvent}
- * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CreateNewProjectHandler.java Dec 8, 2011 5:38:28 PM vereshchaka $
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public interface CreateNewProjectHandler extends EventHandler
+public interface Annotation
 {
+   String getTypeName();
 
-   void onCreateNewProject(CreateNewProjectEvent event);
+   AnnotationParameter[] getAnnotationParameters();
 
+   void setTypeName(String name);
+
+   void setAnnotationParameters(AnnotationParameter[] parameters);
 }

@@ -29,6 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
@@ -40,7 +41,7 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientServiceImpl.java Jul 12, 2011 10:25:10 AM vereshchaka $
- *
+ * 
  */
 public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 {
@@ -106,8 +107,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#create(java.lang.String, java.lang.String, java.lang.String, int, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#create(java.lang.String, java.lang.String,
+    *      java.lang.String, int, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
@@ -118,18 +121,22 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       server = checkServerUrl(server);
 
-      String params = "name=" + name;
-      params += (server == null) ? "" : "&server=" + server;
-      params += (type != null) ? "&type=" + type : "";
-      params += (url != null) ? "&url=" + url : "";
-      params += "&instances=" + instances;
-      params += "&mem=" + memory;
-      params += "&nostart=" + nostart;
-      params += (vfsId != null) ? "&vfsid=" + vfsId : "";
-      params += (projectId != null) ? "&projectid=" + projectId : "";
-      params += (war != null) ? "&war=" + war : "";
+      CreateApplicationRequest createApplicationRequest =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+      createApplicationRequest.setName(name);
+      createApplicationRequest.setServer(server);
+      createApplicationRequest.setType(type);
+      createApplicationRequest.setUrl(url);
+      createApplicationRequest.setInstances(instances);
+      createApplicationRequest.setMemory(memory);
+      createApplicationRequest.setNostart(nostart);
+      createApplicationRequest.setVfsid(vfsId);
+      createApplicationRequest.setProjectid(projectId);
+      createApplicationRequest.setWar(war);
 
-      AsyncRequest.build(RequestBuilder.POST, requestUrl + "?" + params).loader(loader)
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(data)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
@@ -142,8 +149,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
@@ -152,7 +160,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String url = restServiceContext + LOGIN;
 
       server = checkServerUrl(server);
-      
+
       Credentials credentialsBean = CloudFoundryExtension.AUTO_BEAN_FACTORY.credentials().as();
       credentialsBean.setServer(server);
       credentialsBean.setEmail(email);
@@ -165,7 +173,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -181,8 +189,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationInfo(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationInfo(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
@@ -203,8 +212,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
@@ -225,7 +235,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getFrameworks()
     */
    @Override
@@ -238,8 +248,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#startApplication(java.lang.String, java.lang.String)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#startApplication(java.lang.String,
+    *      java.lang.String)
     */
    @Override
    public void startApplication(String vfsId, String projectId, String name, String server,
@@ -260,8 +271,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#stopApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#stopApplication(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void stopApplication(String vfsId, String projectId, String name, String server,
@@ -282,8 +294,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#restartApplication(java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#restartApplication(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void restartApplication(String vfsId, String projectId, String name, String server,
@@ -304,8 +317,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void updateApplication(String vfsId, String projectId, String name, String server, String war,
@@ -327,8 +341,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#renameApplication(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#renameApplication(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void renameApplication(String vfsId, String projectId, String name, String server, String newName,
@@ -349,8 +364,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#mapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#mapUrl(java.lang.String, java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void mapUrl(String vfsId, String projectId, String name, String server, String url,
@@ -371,8 +387,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#unmapUrl(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#unmapUrl(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
@@ -393,8 +410,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateMemory(java.lang.String, java.lang.String, int, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateMemory(java.lang.String,
+    *      java.lang.String, int, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void updateMemory(String vfsId, String projectId, String name, String server, int mem,
@@ -415,8 +433,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateInstances(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateInstances(java.lang.String,
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
@@ -437,8 +456,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * @throws RequestException
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
     */
    @Override
    public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
@@ -464,7 +485,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getSystemInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -481,7 +502,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -501,7 +522,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override

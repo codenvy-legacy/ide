@@ -27,8 +27,10 @@ import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +44,10 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class AppengineServiceTest
 {
    protected final String BASE_URI = "http://localhost/service";
@@ -52,6 +55,8 @@ public class AppengineServiceTest
    protected final String SERVICE_URI = BASE_URI + "/ide/appengine/";
 
    private VirtualFileSystem vfs;
+
+   private Folder testFolder;
 
    protected ResourceLauncher launcher;
 
@@ -84,30 +89,59 @@ public class AppengineServiceTest
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       vfs = vfsRegistry.getProvider("ws").newInstance(null, null);
 
+      testFolder = vfs.createFolder(vfs.getInfo().getRoot().getId(), "test");
    }
 
    @Test
    public void shoudChangeAppengineWebXml() throws Exception
    {
-      //create AppEngine Project
-      String rootfolderid = vfs.getInfo().getRoot().getId();
+      // create AppEngine Project
       URL testZipResource = Thread.currentThread().getContextClassLoader().getResource("google-app-engine.zip");
       java.io.File f = new java.io.File(testZipResource.toURI());
       FileInputStream in = new FileInputStream(f);
-      vfs.importZip(rootfolderid, in, false);
-      //Update app_id
+      vfs.importZip(testFolder.getId(), in, false);
+      // Update app_id
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("change-appid/ws/")//
-         .append(rootfolderid)//
+         .append(testFolder.getId())//
          .append("?app_id=test").toString();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("GET", path, BASE_URI, h, null, null);
-      //Check app_id is changed
+      // Check app_id is changed
       Assert.assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      String content = IOUtils.toString(vfs.getContent("/src/main/webapp/WEB-INF/appengine-web.xml", null).getStream());
+      String content =
+         IOUtils.toString(vfs.getContent("test/src/main/webapp/WEB-INF/appengine-web.xml", null).getStream());
       Assert.assertTrue(content.contains("<application>test</application>"));
    }
 
+   @Test
+   public void testChangeAppEngineWebYaml() throws Exception
+   {
+      // create AppEngine Project
+      URL testZipResource = Thread.currentThread().getContextClassLoader().getResource("gae-python.zip");
+      java.io.File f = new java.io.File(testZipResource.toURI());
+      FileInputStream in = new FileInputStream(f);
+      vfs.importZip(testFolder.getId(), in, true);
+      // Update app_id
+      String path = new StringBuilder() //
+         .append(SERVICE_URI) //
+         .append("change-appid/ws/")//
+         .append(testFolder.getId())//
+         .append("?app_id=test").toString();
+      Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+      h.put("Content-Type", Arrays.asList("application/json"));
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, h, null, null);
+      // Check app_id is changed
+      Assert.assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      String content = IOUtils.toString(vfs.getContent("test/app.yaml", null).getStream());
+      Assert.assertTrue(content.contains("application: test"));
+   }
+
+   @After
+   public void tearDown() throws Exception
+   {
+      vfs.delete(testFolder.getId(), null);
+   }
 }

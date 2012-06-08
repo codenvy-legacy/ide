@@ -401,6 +401,13 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.htmlPreview")
    String htmlPreview();
 
+
+   @Key("control.closeEditor.title")
+   String closeEditorControlTitle();
+   
+   @Key("control.closeEditor.prompt")
+   String closeEditorControlPrompt();
+   
    /*
     * 
     */

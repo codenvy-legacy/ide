@@ -102,7 +102,7 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    String deployApplicationControlPrompt();
 
    @Key("deploy.application.success")
-   String deployApplicationSuccess(String project);
+   String deployApplicationSuccess(String project, String link);
 
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);

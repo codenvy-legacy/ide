@@ -19,7 +19,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final String ID = "exoCreateApplicationView";
 
    private static final String DEPLOY_BUTTON_ID = "exoCreateApplicationViewDeployButton";
-   
+
    private static final String CREATE_BUTTON_ID = "exoCreateApplicationViewCreateButton";
 
    private static final String CANCEL_BUTTON_ID = "exoCreateApplicationViewCancelButton";
@@ -28,7 +28,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 550;
 
-   private static final int HEIGHT = 250;
+   private static final int HEIGHT = 180;
 
    private static CreateApplicationViewUiBinder uiBinder = GWT.create(CreateApplicationViewUiBinder.class);
 
@@ -41,10 +41,10 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    @UiField
    ImageButton cancelButton;
-   
+
    @UiField
    ImageButton createButton;
-   
+
    @UiField
    Label instructionLabel;
 
@@ -56,7 +56,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
-
 
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter.Display#getDeployButton()
@@ -76,29 +75,27 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       return cancelButton;
    }
 
-
    @Override
    public HasClickHandlers getCreateButton()
    {
       return createButton;
    }
-   
+
    @Override
    public void enableDeployButton(boolean enable)
    {
       deployButton.setEnabled(enable);
    }
-   
+
    @Override
    public void enableCreateButton(boolean enable)
    {
       createButton.setEnabled(enable);
    }
-   
+
    @Override
    public void setUserInstructions(String instructions)
    {
-      instructionLabel.setText(instructions);
+      instructionLabel.setValue(instructions);
    }
- 
 }

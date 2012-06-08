@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationParamerBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationValueBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.Annotation;
+import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter;
+import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
@@ -141,11 +147,109 @@ public class ExternalizationTools
             method.setConstructor(in.readBoolean());
             method.setDescriptor(readStringUTF(in));
             method.setSignature(readStringUTF(in));
+            method.setAnnotationDefault(readAnnotationValue(in));
             result.add(method);
 
          }
       }
       return result;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static AnnotationValue readAnnotationValue(ObjectInput in) throws IOException
+   {
+      if (in.readBoolean())
+      {
+         AnnotationValue ann = new AnnotationValueBean();
+         ann.setPrimitiveType(readArrayStringUTF(in));
+         ann.setArrayType(readArrayStringUTF(in));
+         ann.setClassSignature(readStringUTF(in));
+         ann.setEnumConstant(readArrayStringUTF(in));
+         ann.setAnnotation(readAnnotation(in));
+         ann.setAnnotations(readAnnotations(in));
+         return ann;
+      }
+      return null;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static Annotation[] readAnnotations(ObjectInput in) throws IOException
+   {
+      if (in.readBoolean())
+      {
+         int length = in.readInt();
+         Annotation[] ann = new Annotation[length];
+         for (int i = 0; i < length; i++)
+         {
+            ann[i] = readAnnotation(in);
+         }
+         return ann;
+      }
+      return null;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static Annotation readAnnotation(ObjectInput in) throws IOException
+   {
+      if (in.readBoolean())
+      {
+         Annotation ann = new AnnotationBean();
+         ann.setTypeName(readStringUTF(in));
+         ann.setAnnotationParameters(readAnnotationParameters(in));
+         return ann;
+      }
+      return null;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static AnnotationParameter[] readAnnotationParameters(ObjectInput in) throws IOException
+   {
+      int len = in.readInt();
+      if (len == 0)
+         return null;
+      AnnotationParameter[] parameters = new AnnotationParameter[len];
+      for (int i = 0; i < len; i++)
+      {
+         AnnotationParameter p = new AnnotationParamerBean();
+         p.setName(readStringUTF(in));
+         p.setValue(readAnnotationValue(in));
+         parameters[i] = p;
+      }
+      return parameters;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static String[] readArrayStringUTF(ObjectInput in) throws IOException
+   {
+      int leng = in.readInt();
+      if (leng == 0)
+         return null;
+      String[] str = new String[leng];
+      for (int i = 0; i < leng; i++)
+      {
+         str[i] = readStringUTF(in);
+      }
+      return str;
    }
 
    /**
@@ -248,7 +352,7 @@ public class ExternalizationTools
                writeStringUTF(((FieldInfo)element).getDeclaringClass(), out);
                writeStringUTF(((FieldInfo)element).getDescriptor(), out);
                writeStringUTF(((FieldInfo)element).getSignature(), out);
-               
+
             }
             else if (element instanceof MethodInfo)
             {
@@ -261,9 +365,120 @@ public class ExternalizationTools
                out.writeBoolean(((MethodInfo)element).isConstructor());
                writeStringUTF(((MethodInfo)element).getDescriptor(), out);
                writeStringUTF(((MethodInfo)element).getSignature(), out);
+               writeAnnotationValue(((MethodInfo)element).getAnnotationDefault(), out);
             }
 
          }
+      }
+   }
+
+   /**
+    * @param annotationDefault
+    * @param out
+    * @throws IOException 
+    */
+   public static void writeAnnotationValue(AnnotationValue annotationDefault, ObjectOutput out) throws IOException
+   {
+      if (annotationDefault == null)
+      {
+         out.writeBoolean(false);
+      }
+      else
+      {
+         out.writeBoolean(true);
+         writeArrayStringUTF(annotationDefault.getPrimitiveType(), out);
+         writeArrayStringUTF(annotationDefault.getArrayType(), out);
+         writeStringUTF(annotationDefault.getClassSignature(), out);
+         writeArrayStringUTF(annotationDefault.getEnumConstant(), out);
+         writeAnnotation(annotationDefault.getAnnotation(), out);
+         writeAnnotaions(annotationDefault.getAnnotations(), out);
+      }
+   }
+
+   /**
+    * @param annotations
+    * @param out
+    * @throws IOException 
+    */
+   public static void writeAnnotaions(Annotation[] annotations, ObjectOutput out) throws IOException
+   {
+      if (annotations == null)
+      {
+         out.writeBoolean(false);
+      }
+      else
+      {
+         out.writeBoolean(true);
+         out.writeInt(annotations.length);
+         for (Annotation a : annotations)
+         {
+            writeAnnotation(a, out);
+         }
+      }
+   }
+
+   /**
+    * @param annotation
+    * @param out
+    * @throws IOException 
+    * @throws UnsupportedEncodingException 
+    */
+   public static void writeAnnotation(Annotation annotation, ObjectOutput out) throws UnsupportedEncodingException,
+      IOException
+   {
+      if (annotation == null)
+      {
+         out.writeBoolean(false);
+      }
+      else
+      {
+         out.writeBoolean(true);
+         writeStringUTF(annotation.getTypeName(), out);
+         writeAnnotationParameters(annotation.getAnnotationParameters(), out);
+      }
+   }
+
+   /**
+    * @param annotationParameters
+    * @param out
+    * @throws IOException 
+    */
+   public static void writeAnnotationParameters(AnnotationParameter[] annotationParameters, ObjectOutput out)
+      throws IOException
+   {
+      if (annotationParameters == null)
+      {
+         out.writeInt(0);
+      }
+      else
+      {
+         out.writeInt(annotationParameters.length);
+         for (AnnotationParameter p : annotationParameters)
+         {
+            writeStringUTF(p.getName(), out);
+            writeAnnotationValue(p.getValue(), out);
+         }
+      }
+   }
+
+   /**
+    * Write array if UTF string to ObjectOutput. At first - length of the array, than call
+    *  {@link #writeStringUTF(String, ObjectOutput)} for each string.  
+    * @param strings
+    * @param out
+    * @throws IOException 
+    */
+   public static void writeArrayStringUTF(String[] strings, ObjectOutput out) throws IOException
+   {
+      if (strings == null)
+      {
+         out.writeInt(0);
+      }
+      else
+      {
+         out.writeInt(strings.length);
+         for (String s : strings)
+            writeStringUTF(s, out);
       }
    }
 
