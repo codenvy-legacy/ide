@@ -103,6 +103,7 @@ public class AppEngineService
    @POST
    @Path("resource_limits")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Map<String, Long> getResourceLimits(@QueryParam("vfsid") String vfsId,
       @QueryParam("projectid") String projectId, Map<String, String> credentials) throws Exception
    {
@@ -176,6 +177,7 @@ public class AppEngineService
 
    @POST
    @Path("update")
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public ApplicationInfo update(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
       @QueryParam("bin") URL bin, Map<String, String> credentials) throws Exception
@@ -216,7 +218,7 @@ public class AppEngineService
 
    @POST
    @Path("cron/update")
-   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_JSON)
    public void updateCron(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
       Map<String, String> credentials) throws Exception
    {
@@ -299,7 +301,7 @@ public class AppEngineService
       }
 
    }
-   
+
    /**
     * Change appengine-web.xml file setting application's id.
     * 

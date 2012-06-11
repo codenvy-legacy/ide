@@ -356,5 +356,714 @@
 	  "mandatory": true
       }
     ]
+},
+{
+    "command": ["appcfg update"],
+    "path": "/ide/appengine/update",
+    "method": "POST",
+    "description" : "Create or update an app version.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "bin",
+	  "type": "QUERY",
+	  "options":["-w", "--war"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg rollback"],
+    "path": "/ide/appengine/rollback",
+    "method": "POST",
+    "description" : "Rollback an in-progress update.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backend configure"],
+    "path": "/ide/appengine/backend/configure",
+    "method": "POST",
+    "description" : "Configure the specified backend.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backend set_state"],
+    "path": "/ide/appengine/backend/set_state",
+    "method": "POST",
+    "description" : "Set start/stop state of the specified backend.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_state",
+	  "type": "QUERY",
+	  "options":[-s, --state],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backend delete"],
+    "path": "/ide/appengine/backend/delete",
+    "method": "POST",
+    "description" : "Delete the specified backend.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backend rollback"],
+    "path": "/ide/appengine/backend/rollback",
+    "method": "POST",
+    "description" : "Roll back a previously in-progress update.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backend update"],
+    "path": "/ide/appengine/backend/update",
+    "method": "POST",
+    "description" : "Update the specified backend.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "backend_name",
+	  "type": "QUERY",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backends update"],
+    "path": "/ide/appengine/backends/update_all",
+    "method": "POST",
+    "description" : "Update all backend.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backends rollback"],
+    "path": "/ide/appengine/backends/rollback",
+    "method": "POST",
+    "description" : "Roll back all in-progress update.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg backends"],
+    "path": "/ide/appengine/backends/list",
+    "method": "POST",
+    "description" : "List all backends.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg cron_info"],
+    "path": "/ide/appengine/cron/info",
+    "method": "POST",
+    "description" : "Displays times for the next several runs of each cron job.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg update_cron"],
+    "path": "/ide/appengine/cron/update",
+    "method": "POST",
+    "description" : "Update application cron jobs.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg resource_limits_info"],
+    "path": "/ide/appengine/resource_limits",
+    "method": "POST",
+    "description" : "Display resource limits.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg request_logs"],
+    "path": "/ide/appengine/logs",
+    "method": "POST",
+    "description" : "Write request logs in Apache common log format.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "num_days",
+	  "type": "QUERY",
+	  "options":[-d, --days],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "log_severity",
+	  "type": "QUERY",
+	  "options":[-s, --severity],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg update_dos"],
+    "path": "/ide/appengine/dos/update",
+    "method": "POST",
+    "description" : "Update application DoS protection configuration.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg update_indexes"],
+    "path": "/ide/appengine/indexes/update",
+    "method": "POST",
+    "description" : "Update application indexes.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg vacuum_indexes"],
+    "path": "/ide/appengine/vacuum_indexes",
+    "method": "POST",
+    "description" : "Delete unused indexes from application.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg update_pagespeed"],
+    "path": "/ide/appengine/pagespeed/update",
+    "method": "POST",
+    "description" : "Update page speed.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
+},
+{
+    "command": ["appcfg update_queues"],
+    "path": "/ide/appengine/queues/update",
+    "method": "POST",
+    "description" : "Update application task queue definitions.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "email",
+	  "type": "BODY",
+	  "options":["-e", "--email"],
+	  "hasArg": true,
+	  "mandatory": false
+      },
+      {
+	  "name": "password",
+	  "type": "BODY",
+	  "options":["-p", "--passwd"],
+	  "hasArg": true,
+	  "mandatory": false
+      }
+    ]
 }
 ]
