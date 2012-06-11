@@ -193,10 +193,30 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       throws VirtualFileSystemException, CodeAssistantException
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
-      JavaClass clazz = builder.getClassByName(fqn);
-
-      if (clazz == null)
+      JavaClass clazz = null;
+      if(fqn.contains("$"))
+      {
+        String parentFqn = fqn.substring(0, fqn.lastIndexOf('$'));
+        JavaClass parentClass = builder.getClassByName(parentFqn);
+        if (parentClass == null)
          return null;
+         clazz = parentClass.getNestedClassByName(fqn.substring(fqn.lastIndexOf('$') + 1));
+      }
+      else
+        clazz = builder.getClassByName(fqn);
+      
+      
+      if (clazz == null)
+      {
+         //test if asks inner class
+//         String parentFqn = fqn.substring(0, fqn.lastIndexOf('.'));
+//         JavaClass parentClass = builder.getClassByName(parentFqn);
+//         if (parentClass == null)
+//            return null;
+//         clazz = parentClass.getNestedClassByName(fqn.substring(fqn.lastIndexOf('.') + 1));
+//         if (clazz == null)
+            return null;
+      }
 
       return new JavaTypeToTypeInfoConverter(storage).convert(clazz);
    }

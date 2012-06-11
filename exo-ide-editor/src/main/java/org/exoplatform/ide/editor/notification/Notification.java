@@ -19,8 +19,6 @@
 
 package org.exoplatform.ide.editor.notification;
 
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
@@ -54,7 +52,7 @@ public class Notification
       this.targetElement = targetElement;
 
       title = targetElement.getAttribute("title");
-      targetElement.setAttribute("title", null);
+      targetElement.removeAttribute("title");
 
       notificationPanel = new FlowPanel();
       notificationPanel.setStyleName("editor-notification");

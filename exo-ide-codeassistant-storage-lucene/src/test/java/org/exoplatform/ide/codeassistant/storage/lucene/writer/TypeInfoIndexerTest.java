@@ -86,6 +86,7 @@ public class TypeInfoIndexerTest
       verify(typeInfo).getFields();
       verify(typeInfo).getMethods();
       verify(typeInfo, times(2)).getSignature();
+      verify(typeInfo).getNestedTypes();
       verifyNoMoreInteractions(typeInfo);
    }
 

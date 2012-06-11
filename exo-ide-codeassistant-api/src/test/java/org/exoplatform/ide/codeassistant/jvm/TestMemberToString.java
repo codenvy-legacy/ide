@@ -42,7 +42,7 @@ public class TestMemberToString
    @Test
    public void testFieldInfoToString()
    {
-      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass", null, null);
+      FieldInfo fieldInfo = new FieldInfoBean("field", Modifier.PUBLIC, "java.lang.String", "test.TestClass", null, null, null);
 
       assertEquals("public java.lang.String test.TestClass.field", fieldInfo.toString());
    }

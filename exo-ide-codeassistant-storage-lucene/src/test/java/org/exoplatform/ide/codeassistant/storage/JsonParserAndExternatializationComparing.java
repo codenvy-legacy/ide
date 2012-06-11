@@ -159,8 +159,8 @@ public class JsonParserAndExternatializationComparing
       typeInfo.setMethods(Arrays.asList(new MethodInfo[]{publicConstructor, protectedConstructor, publicMethod,
          privateMethod}));
 
-      FieldInfoBean publicField = new FieldInfoBean("field1", Modifier.PUBLIC, "test.TestClass", "String", "dummyDescriptor", null);
-      FieldInfoBean privateField = new FieldInfoBean("field2", Modifier.PRIVATE, "test.TestClass", "Integer", "dummyDescriptor", null);
+      FieldInfoBean publicField = new FieldInfoBean("field1", Modifier.PUBLIC, "test.TestClass", "String", "dummyDescriptor", null, null);
+      FieldInfoBean privateField = new FieldInfoBean("field2", Modifier.PRIVATE, "test.TestClass", "Integer", "dummyDescriptor", null, null);
       typeInfo.setFields(Arrays.asList(new FieldInfo[]{publicField, privateField}));
       return typeInfo;
    }

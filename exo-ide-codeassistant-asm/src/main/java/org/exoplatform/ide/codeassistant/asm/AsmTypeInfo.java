@@ -20,10 +20,12 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
@@ -49,7 +51,7 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
 
    public AsmTypeInfo(ClassNode classNode)
    {
-      super(classNameFromType(classNode.name), classNode.access, classNode);
+      super(classNameFromType(classNode.name), classNode.access);
       this.classNode = classNode;
    }
 
@@ -127,7 +129,25 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
    @Override
    public String getSignature()
    {
-      return classNode.signature != null ? classNode.signature : "" ;
+      return classNode.signature != null ? classNode.signature : "";
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getNestedTypes()
+    */
+   @Override
+   @SuppressWarnings("unchecked")
+   public List<Member> getNestedTypes()
+   {
+      List<InnerClassNode> innerClasses = classNode.innerClasses;
+      if (innerClasses != null)
+      {
+         List<Member> nested = new ArrayList<Member>();
+         for (InnerClassNode node : innerClasses)
+            nested.add(new AsmMember(node.name, node.access));
+         return nested;
+      }
+      return null;
    }
 
    /**
@@ -178,6 +198,15 @@ public class AsmTypeInfo extends AsmMember implements TypeInfo
 
    @Override
    public void setSignature(String signature)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setNestedTypes(java.util.List)
+    */
+   @Override
+   public void setNestedTypes(List<Member> types)
    {
       throw new UnsupportedOperationException("Set not supported");
    }

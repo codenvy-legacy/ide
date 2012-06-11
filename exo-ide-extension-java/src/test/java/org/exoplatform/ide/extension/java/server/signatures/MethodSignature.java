@@ -64,6 +64,20 @@ public class MethodSignature extends SignatureBase
       MethodInfo methodInfo = typeInfo.getMethods().get(0);
       assertThat(methodInfo.getSignature()).isNotNull().isEqualTo("(Ljava/util/List<TE;>;)I");
    }
+   
+   @Test
+   public void metgodWithArrayAndGericParameter() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("import java.util.List;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public int method(String[] tt, List<String> list){\n");
+      b.append("retrun 0;");
+      b.append(" }\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      MethodInfo methodInfo = typeInfo.getMethods().get(0);
+      assertThat(methodInfo.getSignature()).isNotNull().isEqualTo("([Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;)I");
+   }
 
    @Test
    public void metgodReturnGeneric() throws Exception

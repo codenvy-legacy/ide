@@ -22,6 +22,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import junit.framework.Assert;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -32,14 +33,17 @@ import org.exoplatform.ide.codeassistant.asm.test.B;
 import org.exoplatform.ide.codeassistant.asm.test.E;
 import org.exoplatform.ide.codeassistant.asm.test.Foo;
 import org.exoplatform.ide.codeassistant.asm.test.I;
+import org.exoplatform.ide.codeassistant.asm.test.WithNestedTypes;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -201,6 +205,18 @@ public class ClassInfoExtractorTest
       assertEquals("ONE", en.getFields().get(0).getName());
       assertEquals("TWO", en.getFields().get(1).getName());
       assertEquals("THREE", en.getFields().get(2).getName());
+   }
+   
+   @Test
+   public void testNestedTypesExtract() throws IOException
+   {
+      TypeInfo en = ClassParser.parse(WithNestedTypes.class);
+      List<Member> nestedTypes = en.getNestedTypes();
+      assertNotNull(nestedTypes);
+      assertEquals(1, nestedTypes.size());
+      Member member = nestedTypes.get(0);
+      assertEquals("org/exoplatform/ide/codeassistant/asm/test/WithNestedTypes$Nested1", member.getName());
+      assertTrue(Modifier.isInterface(member.getModifiers()));
    }
 
    private MethodInfo getMethodInfo(List<MethodInfo> mds, Method method)

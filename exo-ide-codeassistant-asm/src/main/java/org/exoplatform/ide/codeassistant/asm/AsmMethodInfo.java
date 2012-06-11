@@ -47,7 +47,7 @@ public class AsmMethodInfo extends AsmMember implements MethodInfo
 
    public AsmMethodInfo(MethodNode methodNode, AsmTypeInfo declaredClass)
    {
-      super(methodNode.name, methodNode.access, methodNode);
+      super(methodNode.name, methodNode.access);
       this.methodNode = methodNode;
       this.declaredClass = declaredClass;
    }

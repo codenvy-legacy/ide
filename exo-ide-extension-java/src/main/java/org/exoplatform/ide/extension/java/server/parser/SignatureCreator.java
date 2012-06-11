@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.server.parser;
 
-
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 import com.thoughtworks.qdox.model.Type;
@@ -32,7 +31,7 @@ public class SignatureCreator
 {
 
    public static final String ObjectSignature = "Ljava/lang/Object;"; //$NON-NLS-1$
-   
+
    public static final int BASE_TYPE_SIGNATURE = 2;
 
    private static final char[] BOOLEAN = "boolean".toCharArray(); //$NON-NLS-1$
@@ -250,11 +249,19 @@ public class SignatureCreator
       String[] signatures = new String[parameters.length];
       for (int i = 0; i < parameters.length; i++)
       {
-         if (parameters[i].getValue().length()==1)
-          signatures[i] = ObjectSignature; 
+         Type type = parameters[i];
+         if (type.getFullyQualifiedName().length() == 1)
+            signatures[i] = ObjectSignature;
          else
-           signatures[i] = createTypeSignature(parameters[i].getValue(), true);
-         
+         {
+            StringBuilder b = new StringBuilder(type.getFullyQualifiedName());
+            if(type.isArray())
+            {
+               appendArray(type.getDimensions(), b);
+            }
+            signatures[i] = createTypeSignature(b.toString(), true);
+         }
+
       }
       String genericValue;
       if (method.isConstructor())
@@ -263,22 +270,34 @@ public class SignatureCreator
       }
       else
       {
-//         method.getReturnType().getValue());
-         genericValue = method.getReturnType().getValue().length() == 1 ? "java.lang.Object" : method.getReturnType().getValue();
+         Type returnType = method.getReturnType();
+         genericValue =
+            returnType.getFullyQualifiedName().length() == 1 ? "java.lang.Object" : returnType.getFullyQualifiedName();
+         if (returnType.isArray())
+         {
+            StringBuilder result = new StringBuilder(genericValue);
+            appendArray(returnType.getDimensions(), result);
+            genericValue = result.toString();
+         }
       }
 
       return createMethodSignature(signatures, createTypeSignature(genericValue, true)).replace('.', '/');
    }
-   
+
+   private static void appendArray(int dimensions, StringBuilder result)
+   {
+      for (int i = 0; i < dimensions; i++)
+         result.append("[]");
+   }
+
    public static String createTypeSignature(JavaField field)
    {
-      if(field.getType().getFullyQualifiedName().contains("."))
-      return createTypeSignature(field.getType().getGenericValue(), true);
+      if (field.getType().isPrimitive() || field.getType().getFullyQualifiedName().contains("."))
+         return createTypeSignature(field.getType().getGenericValue(), true);
       else
          return ObjectSignature;
    }
-   
-   
+
    /**
     * Creates a new type parameter signature with the given name and bounds.
     * 
@@ -298,7 +317,7 @@ public class SignatureCreator
       }
       return new String(createTypeParameterSignature(typeParameterName.toCharArray(), boundSignatureChars));
    }
-   
+
    /**
     * Creates a new type parameter signature with the given name and bounds.
     * 
@@ -362,7 +381,7 @@ public class SignatureCreator
    {
       return createTypeSignature(typeName == null ? null : typeName.toCharArray(), isResolved);
    }
-   
+
    /**
     * Creates a new type signature from the given type name. If the type name is qualified, then it is expected to be dot-based.
     * The type name may contain primitive types or array types. However, parameterized types are not supported.
@@ -391,7 +410,6 @@ public class SignatureCreator
    {
       return createTypeSignature(typeName == null ? null : typeName.toCharArray(), true).replaceAll("\\.", "/");
    }
-   
 
    /**
     * Creates a new type signature from the given type name encoded as a character array. The type name may contain primitive
@@ -992,7 +1010,7 @@ public class SignatureCreator
    {
       return getArrayCount(typeSignature.toCharArray());
    }
-   
+
    /**
     * Answers a new array with appending the suffix character at the end of the array. <br>
     * <br>
