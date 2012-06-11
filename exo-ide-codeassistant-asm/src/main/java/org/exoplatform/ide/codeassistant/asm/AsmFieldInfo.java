@@ -36,7 +36,7 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
 
    public AsmFieldInfo(FieldNode fieldNode, AsmTypeInfo declaredClass)
    {
-      super(fieldNode.name, fieldNode.access, fieldNode);
+      super(fieldNode.name, fieldNode.access);
       this.fieldNode = fieldNode;
       this.declaredClass = declaredClass;
    }

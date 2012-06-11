@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.java.server.signatures;
 import static org.fest.assertions.Assertions.assertThat;
 
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.junit.Test;
 
@@ -41,6 +42,61 @@ public class DescriptorTest extends SignatureBase
       TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
       FieldInfo fieldInfo = typeInfo.getFields().get(0);
       assertThat(fieldInfo.getDescriptor()).isEqualTo("Ljava/lang/Object;");
+   }
+   
+   @Test
+   public void fieldPrimitiveSignature() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public int field;\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      FieldInfo fieldInfo = typeInfo.getFields().get(0);
+      assertThat(fieldInfo.getDescriptor()).isEqualTo("I");
+   }
+   
+   @Test
+   public void fieldStringSignature() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public String field;\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      FieldInfo fieldInfo = typeInfo.getFields().get(0);
+      assertThat(fieldInfo.getDescriptor()).isEqualTo("Ljava/lang/String;");
+   }
+   
+   @Test
+   public void methodReturnArraySignature() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public String[] field(){return null;};\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      MethodInfo methodInfo = typeInfo.getMethods().get(0);
+      assertThat(methodInfo.getDescriptor()).isEqualTo("()[Ljava/lang/String;");
+   }
+   
+   @Test
+   public void methodReturnMultiArraySignature() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public String[][][][] field(){return null;};\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      MethodInfo methodInfo = typeInfo.getMethods().get(0);
+      assertThat(methodInfo.getDescriptor()).isEqualTo("()[[[[Ljava/lang/String;");
+   }
+   
+   @Test
+   public void methodParameterArraySignature() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public class TestClass<E>{\n");
+      b.append("public void field(String[] ss){return;};\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      MethodInfo methodInfo = typeInfo.getMethods().get(0);
+      assertThat(methodInfo.getDescriptor()).isEqualTo("([Ljava/lang/String;)V");
    }
    
 }

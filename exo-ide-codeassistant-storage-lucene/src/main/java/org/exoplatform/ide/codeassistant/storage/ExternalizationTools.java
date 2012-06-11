@@ -22,6 +22,7 @@ import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationParamerBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationValueBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MemberBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.Annotation;
@@ -561,6 +562,34 @@ public class ExternalizationTools
       result.setInterfaces(readStringUTFList(in));
       result.setFields(readFields(in));
       result.setMethods(readMethods(in));
+      result.setNestedTypes(readNestedTypes(in));
+      return result;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static List<Member> readNestedTypes(ObjectInputStream in) throws IOException
+   {
+      int size = in.readInt();
+      List<Member> result = null;
+      if (size == 0)
+      {
+         result = Collections.emptyList();
+      }
+      else
+      {
+         result = new ArrayList<Member>(size);
+         for (int i = 0; i < size; i++)
+         {
+            Member member = new MemberBean();
+            member.setModifiers(in.readInt());
+            member.setName(readStringUTF(in));
+            result.add(member);
+         }
+      }
       return result;
    }
 
@@ -587,6 +616,7 @@ public class ExternalizationTools
       writeStringUTFList(typeInfo.getInterfaces(), out);
       writeObjectList(typeInfo.getFields(), out);
       writeObjectList(typeInfo.getMethods(), out);
+      writeObjectList(typeInfo.getNestedTypes(), out);
       out.close();
       return bos.toByteArray();
    }

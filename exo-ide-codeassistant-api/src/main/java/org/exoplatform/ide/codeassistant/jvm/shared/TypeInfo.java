@@ -47,6 +47,11 @@ public interface TypeInfo extends ShortTypeInfo
    String getSuperClass();
 
    /**
+    * @return type nested types or <code>null</code>
+    */
+   List<Member> getNestedTypes();
+
+   /**
     * @param fields
     *           the fields to set
     */
@@ -69,5 +74,10 @@ public interface TypeInfo extends ShortTypeInfo
     *           the superClass to set
     */
    void setSuperClass(String superClass);
+
+   /**
+    * @param types the nested types to set
+    */
+   void setNestedTypes(List<Member> types);
 
 }

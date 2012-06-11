@@ -30,11 +30,13 @@ import com.thoughtworks.qdox.model.WildcardType;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MemberBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
@@ -71,11 +73,11 @@ public class JavaTypeToTypeInfoConverter
          return mod;
       }
    }
-   
+
    private static final int AccAnnotation = 0x2000;
-   
+
    private static final int AccInterface = 0x0200;
-   
+
    private static final int AccEnum = 0x4000;
 
    private static final Log LOG = ExoLogger.getLogger(JavaTypeToTypeInfoConverter.class);
@@ -101,20 +103,33 @@ public class JavaTypeToTypeInfoConverter
       else
          type.setSuperClass("java.lang.Object");
 
-      int modifiers = modifiersToInteger(clazz.getModifiers());
-      if(clazz.isInterface())
-        modifiers |= AccInterface;
-      else if(clazz.isEnum())
-         modifiers |= AccEnum;
-      type.setModifiers(modifiers);
-      
-
+      type.setModifiers(typeModifierToInt(clazz));
       type.setInterfaces(toListFqn(clazz.getImplements()));
       type.setFields(toFieldInfo(clazz));
       JavaMethod[] methods = clazz.getMethods();
       type.setMethods(toMethods(clazz, methods));
       type.setSignature(createTypeSignature(clazz));
+      type.setNestedTypes(getNestedTypes(clazz));
       return type;
+   }
+
+   /**
+    * @param clazz
+    * @return
+    */
+   private List<Member> getNestedTypes(JavaClass clazz)
+   {
+      if (clazz.getNestedClasses().length != 0)
+      {
+         List<Member> members = new ArrayList<Member>();
+         for (JavaClass nested : clazz.getNestedClasses())
+         {
+            members.add(new MemberBean(nested.getFullyQualifiedName(), typeModifierToInt(nested)));
+         }
+         return members;
+      }
+
+      return null;
    }
 
    /**
@@ -145,8 +160,9 @@ public class JavaTypeToTypeInfoConverter
                break;
             }
          }
-         
-         if (isInterfacesGeneric || (clazz.getSuperClass() != null && clazz.getSuperClass().getActualTypeArguments() != null))
+
+         if (isInterfacesGeneric
+            || (clazz.getSuperClass() != null && clazz.getSuperClass().getActualTypeArguments() != null))
             appendSuperClassAndInterfaces(clazz, signature);
       }
       return signature.length() == 0 ? null : signature.toString();
@@ -357,7 +373,7 @@ public class JavaTypeToTypeInfoConverter
          con.add(info);
       }
       // if class don't has a constructor - add default
-      if (!hasConstructor)
+      if (!hasConstructor && !clazz.isInterface())
       {
          MethodInfo defaultConstructor = new MethodInfoBean();
          defaultConstructor.setDeclaringClass(clazz.getFullyQualifiedName());
@@ -496,6 +512,20 @@ public class JavaTypeToTypeInfoConverter
    }
 
    /**
+    * @param modifiers
+    * @return
+    */
+   private static Integer typeModifierToInt(JavaClass type)
+   {
+      int i = modifiersToInteger(type.getModifiers());
+      if (type.isInterface())
+         i |= AccInterface;
+      else if (type.isEnum())
+         i |= AccEnum;
+      return i;
+   }
+
+   /**
     * 
     * 
     * @param types
@@ -518,7 +548,7 @@ public class JavaTypeToTypeInfoConverter
    public ShortTypeInfo toShortTypeInfo(JavaClass clazz)
    {
       ShortTypeInfo info = new ShortTypeInfoBean();
-      info.setModifiers(modifiersToInteger(clazz.getModifiers()));
+      info.setModifiers(typeModifierToInt(clazz));
       info.setName(clazz.getFullyQualifiedName());
       info.setType(getType(clazz).name());
       info.setSignature(createTypeSignature(clazz));
