@@ -22,6 +22,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryField;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
@@ -86,7 +87,12 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public char[] getEnclosingTypeName()
    {
-      // TODO Auto-generated method stub
+
+      char[] name = getName();
+      if (CharOperation.contains('$', name))
+      {
+         return CharOperation.subarray(name, 0, CharOperation.indexOf('$', name));
+      }
       return null;
    }
 
@@ -141,7 +147,17 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public IBinaryNestedType[] getMemberTypes()
    {
-      // TODO Auto-generated method stub
+      if(jsObj.get("nestedTypes").isArray() != null)
+      {
+         JSONArray array = jsObj.get("nestedTypes").isArray();
+         IBinaryNestedType[] nested = new IBinaryNestedType[array.size()];
+         char[] parentType = getName();
+         for(int i = 0; i< array.size(); i++)
+         {
+            nested[i] = new BinaryNestedTypeImpl(parentType, array.get(i).isObject());
+         }
+         return nested;
+      }
       return null;
    }
 
@@ -184,7 +200,12 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public char[] getSourceName()
    {
-      return Signature.getSimpleName(jsObj.get("name").isString().stringValue()).toCharArray();
+      String name = jsObj.get("name").isString().stringValue();
+      if (name.contains("$"))
+         return Signature.getSimpleName(name.substring(name.lastIndexOf("$") + 1)).toCharArray();
+
+      return Signature.getSimpleName(name).toCharArray();
+
    }
 
    /**
@@ -233,8 +254,7 @@ public class BinaryTypeImpl implements IBinaryType
    @Override
    public boolean isMember()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return CharOperation.contains('$', getName());
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.IBinaryType#sourceFileName() */

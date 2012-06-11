@@ -49,6 +49,12 @@ public interface FieldInfo extends Member
     * @return the field's descriptor.   
     */
    String getDescriptor();
+   
+   /**
+    * Should return field initial value description if exist, otherwise <code>null</code>.
+    * @return initial value;
+    */
+   String getValue();
 
    void setDeclaringClass(String declaringClass);
 
@@ -64,5 +70,10 @@ public interface FieldInfo extends Member
     * @param descriptor
     */
    void setDescriptor(String descriptor);
+   
+   /**
+    * @param value
+    */
+   void setValue(String value);
 
 }

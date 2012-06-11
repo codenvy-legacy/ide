@@ -22,6 +22,7 @@ import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationParamerBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.AnnotationValueBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.FieldInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.bean.MemberBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.MethodInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.Annotation;
@@ -104,6 +105,7 @@ public class ExternalizationTools
             field.setDeclaringClass(readStringUTF(in));
             field.setDescriptor(readStringUTF(in));
             field.setSignature(readStringUTF(in));
+            field.setValue(readStringUTF(in));
             result.add(field);
          }
       }
@@ -352,6 +354,7 @@ public class ExternalizationTools
                writeStringUTF(((FieldInfo)element).getDeclaringClass(), out);
                writeStringUTF(((FieldInfo)element).getDescriptor(), out);
                writeStringUTF(((FieldInfo)element).getSignature(), out);
+               writeStringUTF(((FieldInfo)element).getValue(), out);
 
             }
             else if (element instanceof MethodInfo)
@@ -561,6 +564,34 @@ public class ExternalizationTools
       result.setInterfaces(readStringUTFList(in));
       result.setFields(readFields(in));
       result.setMethods(readMethods(in));
+      result.setNestedTypes(readNestedTypes(in));
+      return result;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static List<Member> readNestedTypes(ObjectInputStream in) throws IOException
+   {
+      int size = in.readInt();
+      List<Member> result = null;
+      if (size == 0)
+      {
+         result = Collections.emptyList();
+      }
+      else
+      {
+         result = new ArrayList<Member>(size);
+         for (int i = 0; i < size; i++)
+         {
+            Member member = new MemberBean();
+            member.setModifiers(in.readInt());
+            member.setName(readStringUTF(in));
+            result.add(member);
+         }
+      }
       return result;
    }
 
@@ -587,6 +618,7 @@ public class ExternalizationTools
       writeStringUTFList(typeInfo.getInterfaces(), out);
       writeObjectList(typeInfo.getFields(), out);
       writeObjectList(typeInfo.getMethods(), out);
+      writeObjectList(typeInfo.getNestedTypes(), out);
       out.close();
       return bos.toByteArray();
    }
