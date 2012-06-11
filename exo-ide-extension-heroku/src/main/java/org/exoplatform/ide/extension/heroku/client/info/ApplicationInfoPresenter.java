@@ -38,7 +38,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -199,6 +198,12 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                            ? (property.getName().substring(0, 1).toUpperCase() + property.getName().substring(1))
                            : property.getName().toUpperCase();
                      property.setName(name);
+
+                     if ("WebUrl".equals(property.getName()))
+                     {
+                        property.setValue("<a href =\"" + property.getValue() + "\" target=\"_blank\">"
+                           + property.getValue() + "</a>");
+                     }
                   }
                   Collections.sort(properties, new PropertiesComparator());
                   display.getApplicationInfoGrid().setValue(properties);

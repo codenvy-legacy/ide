@@ -68,12 +68,23 @@ public class ApplicationInfoGrid extends ListGrid<Property>
          }
       };
 
-      Column<Property, String> valueColumn = new Column<Property, String>(new TextCell())
+      Column<Property, SafeHtml> valueColumn = new Column<Property, SafeHtml>(new SafeHtmlCell())
       {
+
          @Override
-         public String getValue(Property property)
+         public SafeHtml getValue(final Property property)
          {
-            return property.getValue();
+            SafeHtml html = new SafeHtml()
+            {
+               private static final long serialVersionUID = 1L;
+
+               @Override
+               public String asString()
+               {
+                  return property.getValue();
+               }
+            };
+            return html;
          }
       };
 

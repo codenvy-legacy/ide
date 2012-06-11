@@ -70,14 +70,30 @@ public class ApplicationInfoGrid extends ListGrid<Entry<String, String>>
             }
          };
 
-      Column<Entry<String, String>, String> valueColumn = new Column<Entry<String, String>, String>(new TextCell())
-      {
-         @Override
-         public String getValue(Entry<String, String> entry)
+      Column<Entry<String, String>, SafeHtml> valueColumn =
+         new Column<Entry<String, String>, SafeHtml>(new SafeHtmlCell())
          {
-            return entry.getValue();
-         }
-      };
+
+            @Override
+            public SafeHtml getValue(final Entry<String, String> entry)
+            {
+               SafeHtml html = new SafeHtml()
+               {
+                  private static final long serialVersionUID = 1L;
+
+                  @Override
+                  public String asString()
+                  {
+                     if ("url".equalsIgnoreCase(entry.getKey()))
+                     {
+                        return "<a href =\"" + entry.getValue() + "\" target=\"_blank\">" + entry.getValue() + "</a>";
+                     }
+                     return entry.getValue();
+                  }
+               };
+               return html;
+            }
+         };
 
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().setColumnWidth(nameColumn, "35%");

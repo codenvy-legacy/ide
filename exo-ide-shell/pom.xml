@@ -28,11 +28,11 @@
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
       </dependency>
-      <dependency>
+      <!-- <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
          <scope>test</scope>
-      </dependency>
+      </dependency> -->
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
@@ -262,16 +262,39 @@
             </dependency>
             
             <!--DELETE -->
-             <dependency>
+            <dependency>
                <groupId>org.json</groupId>
                <artifactId>json</artifactId>
                <version>1.5</version>
             </dependency>
-            
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-git</artifactId>
             </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-googleappengine</artifactId>
+               <exclusions>
+                  <exclusion>
+                     <groupId>com.google.appengine</groupId>
+                     <artifactId>appengine-java-sdk</artifactId>
+                  </exclusion>
+               </exclusions>
+            </dependency>
+
+           <!--  <dependency>
+               <groupId>com.google.appengine</groupId>
+               <artifactId>appengine-java-sdk</artifactId>
+               <type>zip</type>
+            </dependency> -->
+
+            <dependency>
+               <groupId>com.google.appengine</groupId>
+               <artifactId>appengine-tools-sdk</artifactId>
+            </dependency>
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-vfs-jcr</artifactId>

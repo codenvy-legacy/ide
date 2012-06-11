@@ -148,8 +148,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
                      .getName()));
                   properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationType(), result
                      .getType()));
-                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(), result
-                     .getPublicUrl()));
+                  properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationPublicUrl(),
+                     "<a href =\"" + result.getPublicUrl() + "\" target=\"_blank\">" + result.getPublicUrl() + "</a>"));
                   properties.add(new Property(OpenShiftExtension.LOCALIZATION_CONSTANT.applicationGitUrl(), result
                      .getGitUrl()));
                   String time =
