@@ -71,6 +71,12 @@ public class JavaTypeToTypeInfoConverter
          return mod;
       }
    }
+   
+   private static final int AccAnnotation = 0x2000;
+   
+   private static final int AccInterface = 0x0200;
+   
+   private static final int AccEnum = 0x4000;
 
    private static final Log LOG = ExoLogger.getLogger(JavaTypeToTypeInfoConverter.class);
 
@@ -95,7 +101,13 @@ public class JavaTypeToTypeInfoConverter
       else
          type.setSuperClass("java.lang.Object");
 
-      type.setModifiers(modifiersToInteger(clazz.getModifiers()));
+      int modifiers = modifiersToInteger(clazz.getModifiers());
+      if(clazz.isInterface())
+        modifiers |= AccInterface;
+      else if(clazz.isEnum())
+         modifiers |= AccEnum;
+      type.setModifiers(modifiers);
+      
 
       type.setInterfaces(toListFqn(clazz.getImplements()));
       type.setFields(toFieldInfo(clazz));
@@ -133,7 +145,8 @@ public class JavaTypeToTypeInfoConverter
                break;
             }
          }
-         if (isInterfacesGeneric || clazz.getSuperClass().getActualTypeArguments() != null)
+         
+         if (isInterfacesGeneric || (clazz.getSuperClass() != null && clazz.getSuperClass().getActualTypeArguments() != null))
             appendSuperClassAndInterfaces(clazz, signature);
       }
       return signature.length() == 0 ? null : signature.toString();

@@ -42,5 +42,7 @@ public @interface Bar {
    Class<?>[] clazzs() default {Integer.class, List.class, Math.class};
    
    Foo getF() default @Foo(foo = 5, bar = {"aaa", "bbb"});
+   
+   Foo[] getArr() default {@Foo(foo = 5, bar = {"aaa", "bbb"}), @Foo(foo=10, bar={"ccc, ddd"})};
 
 }

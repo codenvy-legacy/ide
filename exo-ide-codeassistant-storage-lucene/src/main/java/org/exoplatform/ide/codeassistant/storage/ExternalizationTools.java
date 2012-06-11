@@ -170,6 +170,27 @@ public class ExternalizationTools
          ann.setClassSignature(readStringUTF(in));
          ann.setEnumConstant(readArrayStringUTF(in));
          ann.setAnnotation(readAnnotation(in));
+         ann.setAnnotations(readAnnotations(in));
+         return ann;
+      }
+      return null;
+   }
+
+   /**
+    * @param in
+    * @return
+    * @throws IOException 
+    */
+   public static Annotation[] readAnnotations(ObjectInput in) throws IOException
+   {
+      if (in.readBoolean())
+      {
+         int length = in.readInt();
+         Annotation[] ann = new Annotation[length];
+         for (int i = 0; i < length; i++)
+         {
+            ann[i] = readAnnotation(in);
+         }
          return ann;
       }
       return null;
@@ -370,6 +391,29 @@ public class ExternalizationTools
          writeStringUTF(annotationDefault.getClassSignature(), out);
          writeArrayStringUTF(annotationDefault.getEnumConstant(), out);
          writeAnnotation(annotationDefault.getAnnotation(), out);
+         writeAnnotaions(annotationDefault.getAnnotations(), out);
+      }
+   }
+
+   /**
+    * @param annotations
+    * @param out
+    * @throws IOException 
+    */
+   public static void writeAnnotaions(Annotation[] annotations, ObjectOutput out) throws IOException
+   {
+      if (annotations == null)
+      {
+         out.writeBoolean(false);
+      }
+      else
+      {
+         out.writeBoolean(true);
+         out.writeInt(annotations.length);
+         for (Annotation a : annotations)
+         {
+            writeAnnotation(a, out);
+         }
       }
    }
 

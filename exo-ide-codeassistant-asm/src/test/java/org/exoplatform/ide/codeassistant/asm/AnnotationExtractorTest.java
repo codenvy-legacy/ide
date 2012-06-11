@@ -79,6 +79,7 @@ public class AnnotationExtractorTest
       assertEquals(2, constant.length);
       assertEquals("Lorg/exoplatform/ide/codeassistant/asm/test/E;", constant[0]);
       assertEquals("ONE", constant[1]);
+      assertThat(defaultValue.getArrayType()).isNullOrEmpty();
    }
 
    @Test
@@ -148,6 +149,19 @@ public class AnnotationExtractorTest
       AnnotationParameter parameter = annotation.getAnnotationParameters()[1];
       assertThat(parameter.getName()).isEqualTo("bar");
       assertThat(parameter.getValue().getArrayType()).containsOnly("String", "aaa", "bbb");
+   }
+   @Test
+   public void shouldExtractAnnotationArrayDefaultParameter() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(Bar.class);
+      AnnotationValue defaultValue = cd.getMethods().get(8).getAnnotationDefault();
+      Annotation[] annotations = defaultValue.getAnnotations();
+      assertThat(annotations).hasSize(2);
+      assertThat(defaultValue.getArrayType()).isNullOrEmpty();
+      Annotation annotation = annotations[1];
+      AnnotationParameter parameter = annotation.getAnnotationParameters()[0];
+      assertThat(parameter.getName()).isEqualTo("foo");
+      assertThat(parameter.getValue().getPrimitiveType()).containsOnly("Integer","10");
    }
 
 }

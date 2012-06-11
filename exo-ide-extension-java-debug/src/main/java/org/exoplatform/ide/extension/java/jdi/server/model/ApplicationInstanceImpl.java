@@ -27,22 +27,24 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 public class ApplicationInstanceImpl implements ApplicationInstance
 {
    private String name;
-   private String webURL;
+   private String host;
+
+   private int port = 80;
    private String stopURL;
    private int lifetime = -1;
 
-   public ApplicationInstanceImpl(String name, String webURL, String stopURL, int lifetime)
+   public ApplicationInstanceImpl(String name, String host, String stopURL, int lifetime)
    {
       this.name = name;
-      this.webURL = webURL;
+      this.host = host;
       this.stopURL = stopURL;
       this.lifetime = lifetime;
    }
 
-   public ApplicationInstanceImpl(String name, String webURL, String stopURL)
+   public ApplicationInstanceImpl(String name, String host, String stopURL)
    {
       this.name = name;
-      this.webURL = webURL;
+      this.host = host;
       this.stopURL = stopURL;
    }
 
@@ -63,15 +65,27 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    }
 
    @Override
-   public String getWebURL()
+   public String getHost()
    {
-      return webURL;
+      return host;
    }
 
    @Override
-   public void setWebURL(String webURL)
+   public void setHost(String host)
    {
-      this.webURL = webURL;
+      this.host = host;
+   }
+
+   @Override
+   public int getPort()
+   {
+      return port;
+   }
+
+   @Override
+   public void setPort(int port)
+   {
+      this.port = port;
    }
 
    @Override
@@ -103,7 +117,8 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    {
       return "ApplicationInstanceImpl{" +
          "name='" + name + '\'' +
-         ", webURL='" + webURL + '\'' +
+         ", host='" + host + '\'' +
+         ", port=" + port +
          ", stopURL='" + stopURL + '\'' +
          ", lifetime=" + lifetime +
          '}';

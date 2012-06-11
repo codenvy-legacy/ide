@@ -25,6 +25,7 @@ import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.DebugApplicationInstanceImpl;
@@ -47,10 +48,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 import static org.exoplatform.ide.commons.FileUtils.*;
 import static org.exoplatform.ide.commons.ZipUtils.listEntries;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
@@ -211,12 +212,19 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       try
       {
-         CloudFoundryApplication cfApp = createApplication(cloudfoundry.getTarget(), url, null);
+         final String target = cloudfoundry.getTarget();
+         CloudFoundryApplication cfApp = createApplication(target, url, null);
          final String name = cfApp.getName();
+         final int port = getPort(name, target);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {}.", name);
-         return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         ApplicationInstance appInst = new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         if (port > 0)
+         {
+            appInst.setPort(port);
+         }
+         return appInst;
       }
       catch (CloudfoundryException e)
       {
@@ -271,11 +279,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
+         final int port = getPort(name, target);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {} under debug.", name);
-         return new DebugApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime,
-            instances[0].getDebugHost(), instances[0].getDebugPort());
+         DebugApplicationInstanceImpl dAppInst = new DebugApplicationInstanceImpl(name, cfApp.getUris().get(0), null,
+            applicationLifetime, instances[0].getDebugHost(), instances[0].getDebugPort());
+         if (port > 0)
+         {
+            dAppInst.setPort(port);
+         }
+         return dAppInst;
       }
       catch (CloudfoundryException e)
       {
@@ -293,6 +307,26 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          throw new ApplicationRunnerException(e.getMessage(), e);
       }
+   }
+
+   private int getPort(String name, String target) throws CloudfoundryException, ParsingResponseException, IOException,
+      VirtualFileSystemException
+   {
+      CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
+      final int attempt = 5;
+      int port = -1;
+      for (int i = 0; i < attempt && (stats == null || (port = stats.getPort()) == -1); i++)
+      {
+         try
+         {
+            Thread.sleep(2000);
+         }
+         catch (InterruptedException ignored)
+         {
+         }
+         stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
+      }
+      return port;
    }
 
    @Override

@@ -266,11 +266,12 @@ class Utils
    {
       FileInputStream fis = null;
       DigestInputStream dis = null;
+      byte[] b = new byte[8192];
       try
       {
          fis = new FileInputStream(file);
          dis = new DigestInputStream(fis, digest);
-         while (dis.read() != -1)
+         while (dis.read(b) != -1)
          {
          }
          return toHex(digest.digest());

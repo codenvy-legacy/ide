@@ -54,24 +54,24 @@ public class ApplicationRunnerClientService
       return instance;
    }
 
-   public void runApplication(String war, AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
+   public void runApplication(String project, String war, AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
    {
       String requestUrl = BASE_URL + "/run?war=" + war;
 
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, true).requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
    
    
-   public void debugApplication(String war, AsyncRequestCallback<DebugApplicationInstance> callback) throws RequestException
+   public void debugApplication(String project, String war, AsyncRequestCallback<DebugApplicationInstance> callback) throws RequestException
    {
       String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, true).requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }

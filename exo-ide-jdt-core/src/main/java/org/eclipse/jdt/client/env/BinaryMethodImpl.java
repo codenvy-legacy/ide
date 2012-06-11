@@ -22,21 +22,10 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
-import org.eclipse.jdt.client.internal.compiler.env.ClassSignature;
-import org.eclipse.jdt.client.internal.compiler.env.EnumConstantSignature;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
-import org.eclipse.jdt.client.internal.compiler.impl.BooleanConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.ByteConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.CharConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.Constant;
-import org.eclipse.jdt.client.internal.compiler.impl.DoubleConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.FloatConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.IntConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.LongConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.ShortConstant;
-import org.eclipse.jdt.client.internal.compiler.impl.StringConstant;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -46,7 +35,7 @@ public class BinaryMethodImpl implements IBinaryMethod
 {
 
    private JSONObject method;
-
+   
    /** @param method */
    public BinaryMethodImpl(JSONObject method)
    {
@@ -58,7 +47,14 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public int getModifiers()
    {
-      return (int)method.get("modifiers").isNumber().doubleValue();
+      
+      int modifiers = (int)method.get("modifiers").isNumber().doubleValue();
+      //asm not add  AccAnnotationDefault constant for method modifiers, so add manual for annotation methods with default values 
+      if(getDefaultValue() != null)
+      {
+         modifiers |= ClassFileConstants.AccAnnotationDefault;
+      }
+      return modifiers;
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#isConstructor() */
