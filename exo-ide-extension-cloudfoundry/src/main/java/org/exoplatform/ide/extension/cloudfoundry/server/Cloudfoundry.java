@@ -656,7 +656,7 @@ public class Cloudfoundry
             }
             LOG.debug("startApplication. Check is started, attempt: {}", (i + 1));
             appInfo = applicationInfo(credential, name);
-            started = "RUNNING".equals(appInfo.getState());
+            started = appInfo.getInstances() == appInfo.getRunningInstances();
          }
          if (!started)
          {
