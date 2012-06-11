@@ -313,20 +313,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       VirtualFileSystemException
    {
       CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
-      final int attempt = 5;
-      int port = -1;
-      for (int i = 0; i < attempt && (stats == null || (port = stats.getPort()) == -1); i++)
+      if (stats != null)
       {
-         try
-         {
-            Thread.sleep(2000);
-         }
-         catch (InterruptedException ignored)
-         {
-         }
-         stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
+         return stats.getPort();
       }
-      return port;
+      return -1;
    }
 
    @Override
