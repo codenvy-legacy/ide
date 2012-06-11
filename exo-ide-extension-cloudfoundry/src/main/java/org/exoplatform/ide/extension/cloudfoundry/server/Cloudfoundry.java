@@ -22,7 +22,9 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
+import org.exoplatform.ide.extension.cloudfoundry.server.json.Crashes;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateResponse;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
@@ -46,6 +48,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -81,7 +85,6 @@ import javax.net.ssl.X509TrustManager;
 import static org.exoplatform.ide.commons.FileUtils.*;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
-import static org.exoplatform.ide.extension.cloudfoundry.server.Utils.detectFramework;
 import static org.exoplatform.ide.helper.JsonHelper.fromJson;
 import static org.exoplatform.ide.helper.JsonHelper.parseJson;
 import static org.exoplatform.ide.helper.JsonHelper.toJson;
@@ -125,6 +128,8 @@ public class Cloudfoundry
       fm.put("standalone", new FrameworkImpl("standalone", "Standalone", null, 256, "Standalone Application"));
       FRAMEWORKS = Collections.unmodifiableMap(fm);
    }
+
+   private static final Log LOG = ExoLogger.getLogger(Cloudfoundry.class);
 
    private static final Random gen = new Random();
 
@@ -392,8 +397,7 @@ public class Cloudfoundry
                                                     DebugMode debugMode,
                                                     VirtualFileSystem vfs,
                                                     String projectId,
-                                                    URL war)
-      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+                                                    URL war) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       if (app == null || app.isEmpty())
       {
@@ -426,9 +430,10 @@ public class Cloudfoundry
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL url) throws CloudfoundryException, ParsingResponseException,
-      VirtualFileSystemException, IOException
+                                                     URL url) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
+      final long start = System.currentTimeMillis();
+      LOG.debug("createApplication START");
       SystemInfo systemInfo = systemInfo(credential);
       SystemResources limits = systemInfo.getLimits();
       SystemResources usage = systemInfo.getUsage();
@@ -460,11 +465,11 @@ public class Cloudfoundry
          {
             if (path != null)
             {
-               frameworkName = detectFramework(path);
+               frameworkName = Utils.detectFramework(path);
             }
             else
             {
-               frameworkName = detectFramework(vfs, projectId);
+               frameworkName = Utils.detectFramework(vfs, projectId);
             }
          }
 
@@ -542,6 +547,8 @@ public class Cloudfoundry
          {
             deleteRecursive(path);
          }
+         final long time = System.currentTimeMillis() - start;
+         LOG.debug("createApplication END, time: {} ms", time);
       }
       return appInfo;
    }
@@ -622,31 +629,49 @@ public class Cloudfoundry
             }
             else
             {
-               msg.append(". Available modes: ").append(debugModes);
+               msg.append(". Available modes: ");
+               msg.append(debugModes);
             }
             throw new IllegalArgumentException(msg.toString());
          }
       }
-      // Do nothing if application already started.
       if (!"STARTED".equals(appInfo.getState()))
       {
          appInfo.setState("STARTED"); // Update application state.
          appInfo.setDebug(debug);
          putJson(credential.target + "/apps/" + name, credential.token, toJson(appInfo), 200);
          // Check is application started.
-         final int attempt = 3;
+         final int attempts = 30;
+         final int sleepTime = 2000;
+         // 1 minute for start application.
          boolean started = false;
-         for (int i = 0; i < attempt && !started; i++)
+         for (int i = 0; i < attempts && !started; i++)
          {
+            try
+            {
+               Thread.sleep(sleepTime);
+            }
+            catch (InterruptedException ignored)
+            {
+            }
+            LOG.debug("startApplication. Check is started, attempt: {}", (i + 1));
             appInfo = applicationInfo(credential, name);
-            started = "STARTED".equals(appInfo.getState());
+            started = "RUNNING".equals(appInfo.getState());
          }
-         // TODO check application crashes and throw exception if any.
+         if (!started)
+         {
+            Crashes.Crash[] crashes = applicationCrashes(credential, name).getCrashes();
+            if (crashes != null && crashes.length > 0)
+            {
+               throw new CloudfoundryException(400, "Application '" + name + "' failed to start. ", "text/plain");
+            }
+         }
       }
       else if (failIfStarted)
       {
          throw new CloudfoundryException(400, "Application '" + name + "' already started. ", "text/plain");
       }
+      LOG.debug("startApplication. State: '{}'", appInfo.getState());
       // Send info about application to client to make possible check is application started or not.
       return appInfo;
    }
@@ -695,7 +720,6 @@ public class Cloudfoundry
       ParsingResponseException, CloudfoundryException
    {
       CloudFoundryApplication appInfo = applicationInfo(credential, app);
-      // Do nothing if application already stopped.
       if (!"STOPPED".equals(appInfo.getState()))
       {
          appInfo.setState("STOPPED"); // Update application state.
@@ -758,6 +782,11 @@ public class Cloudfoundry
    {
       stopApplication(credential, app, false);
       return startApplication(credential, app, debug, false);
+   }
+
+   private Crashes applicationCrashes(Credential credential, String app) throws IOException, ParsingResponseException, CloudfoundryException
+   {
+      return fromJson(getJson(credential.target + "/apps/" + app + "/crashes", credential.token, 200), Crashes.class, null);
    }
 
    /**
@@ -1112,12 +1141,9 @@ public class Cloudfoundry
          if (limits != null && usage != null //
             && (appInfo.getInstances() * (memory - currentMem)) > (limits.getMemory() - usage.getMemory()))
          {
-            throw new IllegalStateException("Not enough resources. " //
-               + "Available memory " //
-               + ((limits.getMemory() - usage.getMemory()) + currentMem) //
-               + "M but " //
-               + (appInfo.getInstances() * memory) //
-               + "M required. ");
+            throw new IllegalStateException("Not enough resources. Available memory " //
+               + ((limits.getMemory() - usage.getMemory()) + currentMem) + 'M'
+               + " but " + (appInfo.getInstances() * memory) + "M required. ");
          }
          appInfo.getResources().setMemory(memory);
          putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
@@ -1181,10 +1207,7 @@ public class Cloudfoundry
          for (int i = 0; i < instancesInfo.length; i++)
          {
             InstanceInfo info = instancesInfo[i];
-            instances[i] = new InstanceImpl(info.getDebug_ip(),
-               info.getDebug_port(),
-               info.getConsole_ip(),
-               info.getConsole_port());
+            instances[i] = new InstanceImpl(info.getDebug_ip(), info.getDebug_port(), info.getConsole_ip(), info.getConsole_port());
          }
          return instances;
       }
@@ -1456,8 +1479,7 @@ public class Cloudfoundry
          server = authenticator.readTarget();
       }
       Credential credential = getCredential(server);
-      return fromJson(getJson(credential.target + "/apps", credential.token, 200),
-         CloudFoundryApplication[].class, null);
+      return fromJson(getJson(credential.target + "/apps", credential.token, 200), CloudFoundryApplication[].class, null);
    }
 
    /**
@@ -1499,8 +1521,7 @@ public class Cloudfoundry
    private ProvisionedService[] provisionedServices(Credential credential) throws IOException,
       ParsingResponseException, CloudfoundryException
    {
-      return fromJson(getJson(credential.target + "/services", credential.token, 200),
-         ProvisionedService[].class, null);
+      return fromJson(getJson(credential.target + "/services", credential.token, 200), ProvisionedService[].class, null);
    }
 
    /**
@@ -2016,12 +2037,9 @@ public class Cloudfoundry
       if (limits != null && usage != null //
          && (instances * memory) > (limits.getMemory() - usage.getMemory()))
       {
-         throw new IllegalStateException("Not enough resources to create new application. " //
-            + "Available memory " + //
-            (limits.getMemory() - usage.getMemory()) //
-            + "M but " //
-            + (instances * memory) //
-            + "M required. ");
+         throw new IllegalStateException("Not enough resources to create new application." //
+            + " Available memory " + (limits.getMemory() - usage.getMemory()) + 'M' //
+            + " but " + (instances * memory) + "M required. ");
       }
    }
 
@@ -2048,23 +2066,12 @@ public class Cloudfoundry
    private Framework getFramework(SystemInfo systemInfo, String frameworkName)
    {
       Framework framework = systemInfo.getFrameworks().get(frameworkName);
-      if (framework == null)
+      if (framework != null)
       {
-         StringBuilder msg = new StringBuilder();
-         msg.append("Unsupported framework ").append(frameworkName).append(". Must be ");
-         int i = 0;
-         for (String t : systemInfo.getFrameworks().keySet())
-         {
-            if (i > 0)
-            {
-               msg.append(" or ");
-            }
-            msg.append(t);
-            i++;
-         }
-         throw new IllegalArgumentException(msg.toString());
+         return framework;
       }
-      return framework;
+      throw new IllegalArgumentException(
+         "Unsupported framework '" + frameworkName + "'. List of supported frameworks: " + systemInfo.getFrameworks().keySet());
    }
 
    private RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
@@ -2220,23 +2227,15 @@ public class Cloudfoundry
    private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
+      LOG.debug("uploadApplication START");
+      final long start = System.currentTimeMillis();
+
       java.io.File zip = null;
       HttpURLConnection http = null;
       java.io.File uploadDir = null;
       try
       {
-         uploadDir = new java.io.File(System.getProperty("java.io.tmpdir"), ".vmc_" + app + "_files");
-
-         // Be sure directory is clean.
-         if (uploadDir.exists() && !deleteRecursive(uploadDir))
-         {
-            throw new RuntimeException("Temporary directory for uploaded files already exists. ");
-         }
-
-         if (!uploadDir.mkdir())
-         {
-            throw new RuntimeException("Cannot create temporary directory for uploaded files. ");
-         }
+         uploadDir = createTempDirectory(null, "vmc_" + app);
 
          if (path != null)
          {
@@ -2280,12 +2279,16 @@ public class Cloudfoundry
             }
 
             ApplicationFile[] fingerprints = new ApplicationFile[files.size()];
+            final long startSHA1 = System.currentTimeMillis();
             for (int i = 0; i < fingerprints.length; i++)
             {
                digest.reset();
                java.io.File f = files.get(i);
                fingerprints[i] = new ApplicationFile(f.length(), Utils.countFileHash(f, digest), f.getAbsolutePath());
             }
+            final long timeSHA1 = System.currentTimeMillis() - startSHA1;
+            LOG.debug("Count SHA1 for {} files in {} ms", files.size(), timeSHA1);
+
             resources = fromJson(postJson(credential.target + "/resources", credential.token, toJson(fingerprints), 200),
                ApplicationFile[].class, null);
 
@@ -2304,6 +2307,7 @@ public class Cloudfoundry
             resources = new ApplicationFile[0];
          }
 
+         final long startZIP = System.currentTimeMillis();
          zip = new java.io.File(System.getProperty("java.io.tmpdir"), app + ".zip");
          zipDir(uploadDir.getAbsolutePath(), uploadDir, zip, new FilenameFilter()
          {
@@ -2318,6 +2322,8 @@ public class Cloudfoundry
                   || name.endsWith(".log"));
             }
          });
+         final long timeZIP = System.currentTimeMillis() - startZIP;
+         LOG.debug("zip application in {} ms", timeZIP);
 
          // Upload application data.
          http = (HttpURLConnection)new URL(credential.target + "/apps/" + app + "/application").openConnection();
@@ -2404,16 +2410,17 @@ public class Cloudfoundry
          {
             deleteRecursive(uploadDir);
          }
-
          if (zip != null)
          {
             zip.delete();
          }
-
          if (http != null)
          {
             http.disconnect();
          }
+
+         final long time = System.currentTimeMillis() - start;
+         LOG.debug("uploadApplication END, time: {} ms", time);
       }
    }
 
