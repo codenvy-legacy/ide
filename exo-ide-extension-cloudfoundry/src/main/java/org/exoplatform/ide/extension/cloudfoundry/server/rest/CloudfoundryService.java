@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -109,7 +110,7 @@ public class CloudfoundryService
    @Path("apps/info")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudFoundryApplication applicationInfo( //
+   public CloudFoundryApplication applicationInfo(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -122,34 +123,55 @@ public class CloudfoundryService
 
    @Path("apps/create")
    @POST
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudFoundryApplication createApplication( //
-      @QueryParam("server") String server, //
-      @QueryParam("name") String app, //
-      @QueryParam("type") String framework, //
-      @QueryParam("url") String url, //
-      @DefaultValue("1") @QueryParam("instances") int instances, //
-      @QueryParam("mem") int memory, //
-      @QueryParam("nostart") boolean noStart, //
-      @QueryParam("debug") String debug,
-      @QueryParam("vfsid") String vfsId, //
-      @QueryParam("projectid") String projectId, //
-      @QueryParam("war") URL war //
-   ) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   public CloudFoundryApplication createApplication(Map<String, String> params) throws CloudfoundryException,
+      ParsingResponseException, VirtualFileSystemException, IOException
    {
+      String debug = params.get("debug");
       DebugMode debugMode = null;
       if (debug != null)
       {
          debugMode = debug.isEmpty() ? new DebugMode() : new DebugMode(debug);
       }
-      return cloudfoundry.createApplication(server, app, framework, url, instances, memory, noStart, debugMode,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
+
+      int instances;
+      try
+      {
+         instances = Integer.parseInt(params.get("instances"));
+      }
+      catch (NumberFormatException e)
+      {
+         instances = 1;
+      }
+
+      int mem;
+      try
+      {
+         mem = Integer.parseInt(params.get("mem"));
+      }
+      catch (NumberFormatException e)
+      {
+         mem = 0;
+      }
+
+      boolean noStart = Boolean.parseBoolean(params.get("nostart"));
+
+      String vfsId = params.get("vfsid");
+      VirtualFileSystem vfs = vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null;
+
+      String warURLStr = params.get("war");
+      URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
+
+      return cloudfoundry.createApplication(params.get("server"), params.get("name"), params.get("type"),
+         params.get("url"), instances, mem, noStart, params.get("runtime"), params.get("command"), debugMode, vfs,
+         params.get("projectid"), warURL);
    }
 
    @Path("apps/start")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudFoundryApplication startApplication( //
+   public CloudFoundryApplication startApplication(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("debug") String debug,
@@ -168,7 +190,7 @@ public class CloudfoundryService
 
    @Path("apps/stop")
    @POST
-   public void stopApplication( //
+   public void stopApplication(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -182,7 +204,7 @@ public class CloudfoundryService
    @Path("apps/restart")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudFoundryApplication restartApplication( //
+   public CloudFoundryApplication restartApplication(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("debug") String debug,
@@ -216,7 +238,7 @@ public class CloudfoundryService
 
    @Path("apps/update")
    @POST
-   public void updateApplication( //
+   public void updateApplication(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -230,7 +252,7 @@ public class CloudfoundryService
 
    @Path("apps/map")
    @POST
-   public void mapUrl( //
+   public void mapUrl(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -244,7 +266,7 @@ public class CloudfoundryService
 
    @Path("apps/unmap")
    @POST
-   public void unmapUrl( //
+   public void unmapUrl(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -258,7 +280,7 @@ public class CloudfoundryService
 
    @Path("apps/mem")
    @POST
-   public void mem( //
+   public void mem(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -272,7 +294,7 @@ public class CloudfoundryService
 
    @Path("apps/instances")
    @POST
-   public void instances( //
+   public void instances(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -286,7 +308,7 @@ public class CloudfoundryService
 
    @Path("apps/instances/info")
    @GET
-   public Instance[] applicationInstances( //
+   public Instance[] applicationInstances(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -299,7 +321,7 @@ public class CloudfoundryService
 
    @Path("apps/env/add")
    @POST
-   public void environmentAdd( //
+   public void environmentAdd(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -314,7 +336,7 @@ public class CloudfoundryService
 
    @Path("apps/env/delete")
    @POST
-   public void environmentDelete( //
+   public void environmentDelete(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -328,7 +350,7 @@ public class CloudfoundryService
 
    @Path("apps/delete")
    @POST
-   public void deleteApplication( //
+   public void deleteApplication(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -343,7 +365,7 @@ public class CloudfoundryService
    @Path("apps/stats")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, CloudfoundryApplicationStatistics> applicationStats( //
+   public Map<String, CloudfoundryApplicationStatistics> applicationStats(
       @QueryParam("server") String server, //
       @QueryParam("name") String app, //
       @QueryParam("vfsid") String vfsId, //
@@ -375,7 +397,7 @@ public class CloudfoundryService
    @Path("services/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public ProvisionedService createService( //
+   public ProvisionedService createService(
       @QueryParam("server") String server, //
       @QueryParam("type") String service, //
       @QueryParam("name") String name, //
@@ -390,7 +412,7 @@ public class CloudfoundryService
 
    @Path("services/delete/{name}")
    @POST
-   public void deleteService( //
+   public void deleteService(
       @QueryParam("server") String server, //
       @PathParam("name") String name //
    ) throws IOException, ParsingResponseException, CloudfoundryException, VirtualFileSystemException
@@ -400,7 +422,7 @@ public class CloudfoundryService
 
    @Path("services/bind/{name}")
    @POST
-   public void bindService( //
+   public void bindService(
       @QueryParam("server") String server, //
       @PathParam("name") String name, //
       @QueryParam("app") String app, //
@@ -414,7 +436,7 @@ public class CloudfoundryService
 
    @Path("services/unbind/{name}")
    @POST
-   public void unbindService( //
+   public void unbindService(
       @QueryParam("server") String server, //
       @PathParam("name") String name, //
       @QueryParam("app") String app, //
@@ -428,7 +450,7 @@ public class CloudfoundryService
 
    @Path("apps/validate-action")
    @POST
-   public void validateAction( //
+   public void validateAction(
       @QueryParam("server") String server, //
       @QueryParam("action") String action, //
       @QueryParam("name") String app, //

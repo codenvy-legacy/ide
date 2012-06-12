@@ -152,6 +152,7 @@ public class NameEnvironment implements INameEnvironment
          return new NameEnvironmentAnswer(new BinaryTypeImpl(JSONParser
             .parseLenient(TypeInfoStorage.get().getType(key)).isObject()), null);
       }
+
       if (projectId != null)
       {
 

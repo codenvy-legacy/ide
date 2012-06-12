@@ -144,16 +144,25 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    {
       if (properties == null)
       {
-         return lb.createApplicationSuccess("");
+         return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess("");
       }
-      String message = "<br> [";
+      StringBuilder message = new StringBuilder("<br> [");
       for (Property property : properties)
       {
-         message += "<b>" + property.getName() + "</b>" + " : " + property.getValue() + "<br>";
+         if ("webUrl".equals(property.getName()))
+         {
+            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append("<a href='")
+               .append(property.getValue()).append("' target='_blank'>").append(property.getValue()).append("</a>")
+               .append("<br>");
+         }
+         else
+         {
+            message.append("<b>").append(property.getName()).append("</b>").append(" : ").append(property.getValue())
+               .append("<br>");
+         }
       }
-      message += "] ";
-
-      return lb.createApplicationSuccess(message);
+      message.append("] ");
+      return HerokuExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(message.toString());
    }
 
    private void createApplication()
@@ -319,6 +328,11 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                .initFailed();
          IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
+   }
+
+   @Override
+   public void createProject(ProjectModel project)
+   {
    }
 
 }

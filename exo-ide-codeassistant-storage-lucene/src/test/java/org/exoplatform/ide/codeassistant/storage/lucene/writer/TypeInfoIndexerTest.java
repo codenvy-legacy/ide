@@ -28,6 +28,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import test.annotations.Bar;
+
 import test.classes.CTestClass;
 
 import org.apache.lucene.document.Document;
@@ -35,6 +37,8 @@ import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.exoplatform.ide.codeassistant.asm.ClassParser;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
+import org.exoplatform.ide.codeassistant.jvm.shared.Annotation;
+import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationValue;
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
@@ -82,6 +86,7 @@ public class TypeInfoIndexerTest
       verify(typeInfo).getFields();
       verify(typeInfo).getMethods();
       verify(typeInfo, times(2)).getSignature();
+      verify(typeInfo).getNestedTypes();
       verifyNoMoreInteractions(typeInfo);
    }
 
@@ -104,6 +109,18 @@ public class TypeInfoIndexerTest
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
       Document document = indexer.createTypeInfoDocument(expected, "rt");
+      when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
+
+      TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
+
+      assertTypeInfoEquals(expected, actual);
+   }
+
+   @Test
+   public void shouldBeAbleToRestoreTypeInfoWithAnnotationDefaultValues() throws Exception
+   {
+      TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(Bar.class));
+      Document document = indexer.createTypeInfoDocument(expected);
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
@@ -145,8 +162,35 @@ public class TypeInfoIndexerTest
          assertArrayEquals(expected.get(i).getExceptionTypes().toArray(), actual.get(i).getExceptionTypes().toArray());
          assertArrayEquals(expected.get(i).getParameterNames().toArray(), actual.get(i).getParameterNames().toArray());
          assertArrayEquals(expected.get(i).getParameterTypes().toArray(), actual.get(i).getParameterTypes().toArray());
-
+         assertAnnotationDefaultEquals(expected.get(i).getAnnotationDefault(), actual.get(i).getAnnotationDefault());
       }
+   }
+
+   /**
+    * @param expected
+    * @param actual
+    */
+   private static void assertAnnotationDefaultEquals(AnnotationValue expected, AnnotationValue actual)
+   {
+      assertEquals(actual == null, expected == null);
+      if(actual == null)
+         return;
+      assertArrayEquals(expected.getPrimitiveType(), actual.getPrimitiveType());
+      assertArrayEquals(expected.getArrayType(), actual.getArrayType());
+      assertArrayEquals(expected.getEnumConstant(), actual.getEnumConstant());
+      assertAnnotationEquals(expected.getAnnotation(), actual.getAnnotation());
+   }
+
+   /**
+    * @param expected
+    * @param actual
+    */
+   private static void assertAnnotationEquals(Annotation expected, Annotation actual)
+   {
+      assertEquals(actual == null, expected == null);
+      if(actual == null)
+         return;
+      assertEquals(expected.getTypeName(), actual.getTypeName());
    }
 
    public static void assertTypeInfoEquals(TypeInfo expected, TypeInfo actual)

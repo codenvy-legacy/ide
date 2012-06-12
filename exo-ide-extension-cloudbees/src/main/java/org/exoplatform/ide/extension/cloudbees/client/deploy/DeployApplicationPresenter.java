@@ -249,7 +249,8 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                   output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize())
                      .append(" : ").append(appInfo.getClusterSize()).append("<br>");
                   output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
-                     .append(appInfo.getUrl()).append("<br>");
+                     .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>")
+                     .append(appInfo.getUrl()).append("</a>").append("<br>");
 
                   IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
@@ -322,6 +323,11 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
    public void onVfsChanged(VfsChangedEvent event)
    {
       this.vfs = event.getVfsInfo();
+   }
+
+   @Override
+   public void createProject(ProjectModel project)
+   {
    }
 
 }

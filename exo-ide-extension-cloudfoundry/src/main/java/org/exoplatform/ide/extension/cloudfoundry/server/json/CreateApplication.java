@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.json;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class CreateApplication
     *    uris: ["my-app.cloudfoundry.com"],
     *    instances: 1,
     *    resources: {memory: 128},
-    *    staging: {framework: "sinatra", runtime: null}
+    *    staging: {framework: "sinatra", runtime: "ruby18"}
     * }
     */
    private final String name;
@@ -44,55 +43,79 @@ public class CreateApplication
    private final String url;
    private final int memory;
    private final String framework;
+   private final String runtime;
+   private final String command;
 
-   public CreateApplication(String name, int instances, String url, int memory, String framework)
+   public CreateApplication(String name,
+                            int instances,
+                            String url,
+                            int memory,
+                            String framework,
+                            String runtime,
+                            String command)
    {
       this.name = name;
       this.instances = instances;
       this.url = url;
       this.memory = memory;
       this.framework = framework;
+      this.runtime = runtime;
+      this.command = command;
    }
 
    // Next getters for correct serialization to JSON format.
 
-   /* Application name. */
+   /** Application name. */
    public String getName()
    {
       return name;
    }
 
-   /* Number of VM instances used for application. */
+   /** Number of VM instances used for application. */
    public int getInstances()
    {
       return instances;
    }
 
-   /* Cloudfoundry API expected for array of string with one item. */
+   /** Cloudfoundry API expected for array of string with one item. */
    public String[] getUris()
    {
       return new String[]{url};
    }
 
-   /* Application resources. Just one parameter: memory size in MB. */
+   /** Application resources. Just one parameter: memory size in MB. */
    public Map<String, Integer> getResources()
    {
       return Collections.singletonMap("memory", memory);
    }
 
-   /* Staging, send framework name only, 'runtime' always null */
+   /**
+    * Staging, send framework name only, 'runtime' and 'command' are optional. Send them only for 'standalone'
+    * application.
+    */
    public Map<String, String> getStaging()
    {
-      Map<String, String> m = new HashMap<String, String>(2);
+      Map<String, String> m = new HashMap<String, String>(3);
       m.put("framework", framework);
-      m.put("runtime", null);
+      m.put("runtime", runtime);
+      if (!(command == null || command.isEmpty()))
+      {
+         m.put("command", command);
+      }
       return m;
    }
 
    @Override
    public String toString()
    {
-      return "CreateApplication [name=" + getName() + ", instances=" + getInstances() + ", uris="
-         + Arrays.toString(getUris()) + ", resources=" + getResources() + ", staging=" + getStaging() + "]";
+      return "CreateApplication{" +
+         "name='" + name + '\'' +
+         ", instances=" + instances +
+         ", url='" + url + '\'' +
+         ", memory=" + memory +
+         ", framework='" + framework + '\'' +
+         ", runtime='" + runtime + '\'' +
+         ", command='" + command + '\'' +
+         '}';
    }
 }

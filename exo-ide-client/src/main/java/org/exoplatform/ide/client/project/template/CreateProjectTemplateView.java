@@ -136,7 +136,7 @@ public class CreateProjectTemplateView extends ViewImpl implements CreateProject
    }
 
    /**
-    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getCreateButton()
+    * @see org.exoplatform.ide.client.template.CreateProjectTemplatePresenter.Display#getNextButton()
     */
    public HasClickHandlers getCreateButton()
    {

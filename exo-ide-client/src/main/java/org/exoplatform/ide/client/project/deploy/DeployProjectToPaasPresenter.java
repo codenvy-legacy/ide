@@ -18,23 +18,16 @@
  */
 package org.exoplatform.ide.client.project.deploy;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.CreateNewProjectEvent;
+import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
@@ -42,13 +35,29 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.hotkeys.HotKeyHelper.KeyCode;
 import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -57,21 +66,62 @@ import java.util.List;
  */
 public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler, ViewClosedHandler, VfsChangedHandler
 {
+
    public interface Display extends IsView
    {
+
+      /**
+       * Get Cancel button.
+       * 
+       * @return
+       */
       HasClickHandlers getCancelButton();
 
+      /**
+       * Get Back button.
+       * 
+       * @return
+       */
       HasClickHandlers getBackButton();
 
+      /**
+       * Get Finish button.
+       * 
+       * @return
+       */
       HasClickHandlers getFinishButton();
 
+      /**
+       * Get Select PaaS select item.
+       * 
+       * @return
+       */
       HasValue<String> getSelectPaasField();
 
+      /**
+       * Set values for Select PaaS select item.
+       * 
+       * @param values
+       */
       void setPaasValueMap(String[] values);
 
-      void setPaas(Composite composite);
+      /**
+       * Set focus to Select PaaS select item.
+       */
+      void focusSelectPaasField();
 
+      /**
+       * Set widget according to selected PaaS.
+       * 
+       * @param widget
+       */
+      void setPaasWidget(Widget widget);
+
+      /**
+       * Hide PaaS widget
+       */
       void hidePaas();
+
    }
 
    private Display display;
@@ -88,6 +138,8 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
 
    private String projectType;
 
+   private ProjectModel createdProject;
+
    /**
     * Current paas;
     */
@@ -100,7 +152,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       {
          if (composite != null)
          {
-            display.setPaas(composite);
+            display.setPaasWidget(composite);
          }
          else
          {
@@ -115,18 +167,49 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       {
          if (result)
          {
-            createProject();
+            if (paas != null)
+            {
+               if (paas.canCreateProject())
+               {
+                  createEmptyProject();
+               }
+               else
+               {
+                  createProject();
+               }
+
+            }
          }
+
          // if form isn't valid, then do nothing
          // all validation messages must be shown by paases
       }
 
       @Override
+      public void onProjectCreated(ProjectModel createdProject)
+      {
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+         IDE.fireEvent(new ProjectCreatedEvent(createdProject));
+      }
+
+      @Override
+      public void projectCreationFailed()
+      {
+         Dialogs.getInstance().showError("Project could not be created");
+      }
+
+      @Override
       public void onDeploy(boolean result)
       {
-         // TODO Auto-generated method stub
-
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
+
    };
 
    public DeployProjectToPaasPresenter()
@@ -143,7 +226,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          @Override
          public void onClick(ClickEvent event)
          {
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -152,39 +235,31 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            String value = event.getValue();
-            if ("None".equals(value))
-            {
-               display.hidePaas();
-               paas = null;
-            }
-            else
-            {
-               for (Paas cpaas : paasList)
-               {
-                  if (cpaas.getName().equals(value))
-                  {
-                     paas = cpaas;
-                     paas.getView(projectName, paasCallback);
-                  }
-               }
-            }
+            paasSelected(event.getValue());
          }
       });
+
+      if (display.getSelectPaasField() instanceof HasKeyPressHandlers)
+      {
+         ((HasKeyPressHandlers)display.getSelectPaasField()).addKeyPressHandler(new KeyPressHandler()
+         {
+            @Override
+            public void onKeyPress(KeyPressEvent event)
+            {
+               if (KeyCode.ENTER == event.getNativeEvent().getKeyCode())
+               {
+                  beginCreateProject();
+               }
+            }
+         });
+      }
 
       display.getFinishButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            if (paas != null)
-            {
-               paas.validate();
-            }
-            else
-            {
-               createProject();
-            }
+            beginCreateProject();
          }
       });
 
@@ -193,10 +268,43 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.eventBus().fireEvent(new CreateNewProjectEvent());
-            closeView();
+            IDE.getInstance().closeView(display.asView().getId());
+            IDE.eventBus().fireEvent(new CreateProjectEvent(projectName, projectType));
          }
       });
+
+      display.focusSelectPaasField();
+   }
+
+   private void beginCreateProject()
+   {
+      if (paas != null)
+      {
+         paas.validate();
+      }
+      else
+      {
+         createProject();
+      }
+   }
+
+   private void paasSelected(String paasName)
+   {
+      if ("None".equals(paasName))
+      {
+         display.hidePaas();
+         paas = null;
+         return;
+      }
+
+      for (Paas p : paasList)
+      {
+         if (p.getName().equals(paasName))
+         {
+            paas = p;
+            paas.getView(projectName, paasCallback);
+         }
+      }
    }
 
    private void createProject()
@@ -213,6 +321,7 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
                @Override
                protected void onSuccess(final ProjectModel result)
                {
+                  createdProject = result;
                   loader.hide();
                   if (paas != null)
                   {
@@ -248,6 +357,42 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       }
    }
 
+   private void createEmptyProject()
+   {
+      final IDELoader loader = new IDELoader();
+      try
+      {
+         loader.show();
+         final ProjectModel newProject = new ProjectModel();
+         newProject.setName(projectName);
+         newProject.setProjectType(projectType);
+
+         VirtualFileSystem.getInstance().createProject(vfsInfo.getRoot(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
+            {
+
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  loader.hide();
+                  paas.createProject(newProject);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (Exception e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    /**
     * @see org.exoplatform.ide.client.project.deploy.DeployProjectToPaasHandler#onDeployProjectToPaas(org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent)
     */
@@ -257,7 +402,30 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       projectName = event.getProjectName();
       templateName = event.getTemplateName();
       projectType = event.getProjectType();
-      openView();
+
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+
+      bindDisplay();
+
+      paas = null;
+      paases = new ArrayList<String>();
+      paases.addAll(getPaasValues());
+
+      display.setPaasValueMap(paases.toArray(new String[paases.size()]));
+      display.getSelectPaasField().setValue(paases.get(0));
+
+      if (paas != null)
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               paas.getView(projectName, paasCallback);
+            }
+         });
+      }
    }
 
    /**
@@ -272,37 +440,29 @@ public class DeployProjectToPaasPresenter implements DeployProjectToPaasHandler,
       }
    }
 
-   private void openView()
-   {
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-      paases = new ArrayList<String>();
-      paases.add("None");
-      paases.addAll(getPaasValues());
-      display.setPaasValueMap(paases.toArray(new String[paases.size()]));
-      paas = null;
-      display.getSelectPaasField().setValue("None");
-   }
-
    private List<String> getPaasValues()
    {
       List<String> paases = new ArrayList<String>();
+      paases.add("None");
+
       this.paasList = IDE.getInstance().getPaases();
       for (Paas paas : this.paasList)
       {
          if (paas.getSupportedProjectTypes().contains(projectType))
          {
-            paases.add(paas.getName());
+            if (paas.isFirstInDeployments())
+            {
+               paases.add(0, paas.getName());
+               this.paas = paas;
+            }
+            else
+            {
+               paases.add(paas.getName());
+            }
          }
 
       }
       return paases;
-   }
-
-   private void closeView()
-   {
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**

@@ -33,5 +33,7 @@ public interface PaasComponent
    void validate();
 
    void deploy(ProjectModel project);
+   
+   void createProject(ProjectModel project);
 
 }

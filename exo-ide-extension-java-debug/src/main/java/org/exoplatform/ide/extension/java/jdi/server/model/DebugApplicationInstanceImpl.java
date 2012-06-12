@@ -81,7 +81,7 @@ public class DebugApplicationInstanceImpl extends ApplicationInstanceImpl implem
    {
       return "DebugApplicationInstanceImpl{" +
          "name='" + getName() + '\'' +
-         ", webURL='" + getWebURL() + '\'' +
+         ", webURL='" + getHost() + '\'' +
          ", stopURL='" + getStopURL() + '\'' +
          ", lifetime=" + getLifetime() +
          ", debugPort=" + debugPort +

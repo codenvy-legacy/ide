@@ -19,13 +19,13 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.DebugApplicationInstanceImpl;
@@ -38,6 +38,7 @@ import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.ZipUtils.listEntries;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
@@ -96,16 +102,16 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final ScheduledExecutorService applicationTerminator;
    private final String cfUser;
    private final String cfPassword;
-
+   private final java.io.File appEngineSdk;
 
    public CloudfoundryApplicationRunner(InitParams initParams)
    {
       this(
-         getValueParam(initParams, "cloudfoundry-target"),
-         getValueParam(initParams, "cloudfoundry-user"),
-         getValueParam(initParams, "cloudfoundry-password"),
-         parseNumber(getValueParam(initParams, "cloudfoundry-application-lifetime"), DEFAULT_APPLICATION_LIFETIME)
-            .intValue()
+         readValueParam(initParams, "cloudfoundry-target"),
+         readValueParam(initParams, "cloudfoundry-user"),
+         readValueParam(initParams, "cloudfoundry-password"),
+         parseNumber(readValueParam(initParams, "cloudfoundry-application-lifetime"),
+            DEFAULT_APPLICATION_LIFETIME).intValue()
       );
    }
 
@@ -138,16 +144,30 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applications = new CopyOnWriteArrayList<Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-   }
 
-   private static String getValueParam(InitParams initParams, String name)
-   {
-      if (initParams != null)
+      java.io.File lib = null;
+      try
       {
-         ValueParam vp = initParams.getValueParam(name);
-         return vp != null ? vp.getValue() : null;
+         Class cl = Thread.currentThread().getContextClassLoader()
+            .loadClass("com.google.appengine.tools.development.DevAppServerMain");
+         URL cs = cl.getProtectionDomain().getCodeSource().getLocation();
+         lib = new java.io.File(URI.create(cs.toString()));
+         while (!(lib == null || "lib".equals(lib.getName())))
+         {
+            lib = lib.getParentFile();
+         }
       }
-      return null;
+      catch (ClassNotFoundException ignored)
+      {
+      }
+
+      appEngineSdk = lib == null ? null : lib.getParentFile();
+      if (appEngineSdk == null)
+      {
+         LOG.error("**********************************\n"
+            + "* Google appengine SDK not found *\n"
+            + "**********************************");
+      }
    }
 
    private static Double parseNumber(String str, double defaultValue)
@@ -188,18 +208,23 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
-   private ApplicationInstance doRunApplication(URL war) throws ApplicationRunnerException
+   private ApplicationInstance doRunApplication(URL url) throws ApplicationRunnerException
    {
       try
       {
          final String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring", null,
-            1, -1, false, null, null, null, war);
+         CloudFoundryApplication cfApp = createApplication(target, url, null);
          final String name = cfApp.getName();
+         final int port = getPort(name, target);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {}.", name);
-         return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         ApplicationInstance appInst = new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
+         if (port > 0)
+         {
+            appInst.setPort(port);
+         }
+         return appInst;
       }
       catch (CloudfoundryException e)
       {
@@ -242,30 +267,29 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
-   private DebugApplicationInstance doDebugApplication(URL war, boolean suspend) throws ApplicationRunnerException
+   private DebugApplicationInstance doDebugApplication(URL url, boolean suspend) throws ApplicationRunnerException
    {
       try
       {
          final String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = cloudfoundry.createApplication(target, generateAppName(16), "spring",
-            null, 1, 256, false, suspend ? new DebugMode("suspend") : new DebugMode(), null, null, war);
+         CloudFoundryApplication cfApp = createApplication(target, url, suspend ? new DebugMode("suspend") : new DebugMode());
          final String name = cfApp.getName();
          Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
          if (instances.length != 1)
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
+         final int port = getPort(name, target);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
          applications.add(new Application(name, expired));
          LOG.debug("Start application {} under debug.", name);
-         return new DebugApplicationInstanceImpl(
-            name,
-            cfApp.getUris().get(0),
-            null,
-            applicationLifetime,
-            instances[0].getDebugHost(),
-            instances[0].getDebugPort()
-         );
+         DebugApplicationInstanceImpl dAppInst = new DebugApplicationInstanceImpl(name, cfApp.getUris().get(0), null,
+            applicationLifetime, instances[0].getDebugHost(), instances[0].getDebugPort());
+         if (port > 0)
+         {
+            dAppInst.setPort(port);
+         }
+         return dAppInst;
       }
       catch (CloudfoundryException e)
       {
@@ -283,6 +307,17 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          throw new ApplicationRunnerException(e.getMessage(), e);
       }
+   }
+
+   private int getPort(String name, String target) throws CloudfoundryException, ParsingResponseException, IOException,
+      VirtualFileSystemException
+   {
+      CloudfoundryApplicationStatistics stats = cloudfoundry.applicationStats(target, name, null, null).get("0");
+      if (stats != null)
+      {
+         return stats.getPort();
+      }
+      return -1;
    }
 
    @Override
@@ -358,6 +393,77 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          }
       }
       applications.clear();
+   }
+
+   private CloudFoundryApplication createApplication(String target, URL url, DebugMode debug)
+      throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
+   {
+      java.io.File path = null;
+      try
+      {
+         path = downloadFile(null, "app-", ".war", url);
+         final String framework;
+         final String command;
+         if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
+         {
+            // Need to do some additional job to be able run google appengine application with SDK.
+            path = prepareAppEngineApplication(path);
+            framework = "standalone";
+            command = "java -ea -cp appengine-java-sdk/lib/appengine-tools-api.jar"
+               + " -javaagent:appengine-java-sdk/lib/agent/appengine-agent.jar"
+               + " $JAVA_OPTS"
+               + " com.google.appengine.tools.development.DevAppServerMain"
+               + " --port=$VCAP_APP_PORT"
+               + " --address=0.0.0.0"
+               + " application";
+         }
+         else
+         {
+            framework = "spring"; // send 'spring' even fot 'regular' web applications
+            command = null;
+         }
+         return cloudfoundry.createApplication(target, generateAppName(16), framework, null, 1, 256, false, "java",
+            command, debug, null, null, path.toURI().toURL());
+      }
+      finally
+      {
+         if (path != null)
+         {
+            deleteRecursive(path);
+         }
+      }
+   }
+
+   private enum APPLICATION_TYPE
+   {
+      JAVA_WEB,
+      JAVA_WEB_APP_ENGINE
+   }
+
+   private APPLICATION_TYPE determineApplicationType(java.io.File war) throws IOException
+   {
+      for (String f : listEntries(war))
+      {
+         if (f.endsWith("WEB-INF/appengine-web.xml"))
+         {
+            return APPLICATION_TYPE.JAVA_WEB_APP_ENGINE;
+         }
+      }
+      return APPLICATION_TYPE.JAVA_WEB;
+   }
+
+   private java.io.File prepareAppEngineApplication(java.io.File war) throws IOException
+   {
+      if (appEngineSdk == null)
+      {
+         throw new RuntimeException("Unable run or debug appengine project. Google appengine SDK not found. ");
+      }
+      java.io.File root = createTempDirectory(null, "gae-app-");
+      // copy sdk and content of war file in the same directory.
+      copy(appEngineSdk, new java.io.File(root, "appengine-java-sdk"), null);
+      unzip(war, new java.io.File(root, "application"));
+      deleteRecursive(war); // Delete war file. Don't need it any more.
+      return root;
    }
 
    private void login() throws ApplicationRunnerException

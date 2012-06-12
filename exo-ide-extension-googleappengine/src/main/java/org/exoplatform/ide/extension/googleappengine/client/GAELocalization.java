@@ -38,8 +38,12 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("login.button")
    String loginButton();
 
-   @Key("ready.button")
-   String readyButton();
+   @Key("deploy.button")
+   String deployButton();
+
+   @Key("create.button")
+   @DefaultMessage("Create")
+   String createButton();
 
    @Key("close.button")
    String closeButton();
@@ -53,8 +57,14 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("update.button")
    String updateButton();
 
+   @Key("update.all.button")
+   String updateAllButton();
+
    @Key("rollback.button")
    String rollbackButton();
+
+   @Key("rollback.all.button")
+   String rollbackAllButton();
 
    @Key("logs.button")
    String logsButton();
@@ -92,13 +102,16 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    String deployApplicationControlPrompt();
 
    @Key("deploy.application.success")
-   String deployApplicationSuccess(String project);
+   String deployApplicationSuccess(String project, String link);
 
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);
 
    @Key("deploy.application.finished")
    String deployApplicationFinished(String projectName);
+
+   @Key("deploy.application.instruction")
+   String deployApplicationInstruction();
 
    /* Manage Application */
    @Key("manage.application.view.title")
@@ -186,6 +199,24 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @DefaultMessage("Application indexes are successfully updated")
    String vacuumIndexesSuccessfully();
 
+   @Key("update.backend.successfully")
+   String updateBackendSuccessfully(String backend);
+
+   @Key("rollback.backend.successfully")
+   String rollbackBackendSuccessfully(String backend);
+
+   @Key("configure.backend.successfully")
+   String configureBackendSuccessfully(String backend);
+
+   @Key("delete.backend.successfully")
+   String deleteBackendSuccessfully(String backend);
+
+   @Key("update.all.backends.successfully")
+   String updateAllBackendsSuccessfully();
+
+   @Key("rollback.all.backends.successfully")
+   String rollbackAllBackendsSuccessfully();
+
    @Key("configure.backend.button")
    @DefaultMessage("Configure Backend")
    String configureBackendButton();
@@ -240,4 +271,63 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("cron.grid.message")
    String cronGridMessage();
+
+   /* Resource limits */
+   @Key("resource.limits.tab.title")
+   String resourceLimitsTabTitle();
+
+   @Key("resource.column.title")
+   String resourceColumnTitle();
+
+   @Key("limit.column.title")
+   String limitColumnTitle();
+
+   @Key("max.blob.size")
+   String maxBlobSize();
+
+   @Key("max.file.size")
+   String maxFileSize();
+
+   @Key("max.file.count")
+   String maxFileCount();
+
+   @Key("max.total.file.size")
+   String maxTotalFileSize();
+
+   /* Backend */
+   @Key("backend.name.title")
+   String backendNameTitle();
+
+   @Key("backend.state.title")
+   String backendStateTitle();
+
+   @Key("backend.class.title")
+   String backendClassTitle();
+
+   @Key("backend.instances.title")
+   String backendInstancesTitle();
+
+   @Key("backend.dynamic.title")
+   String backendDynamicTitle();
+
+   @Key("backend.public.title")
+   String backendPublicTitle();
+
+   @Key("backend.delete.title")
+   String backendDeleteTitle();
+   
+   @Key("backend.delete.question")
+   String backendDeleteQuestion(String backend);
+
+   @Key("backend.update.started")
+   String backendUpdateStarted(String backend);
+
+   @Key("backend.update.finished")
+   String backendUpdateFinished(String backend);
+
+   @Key("backends.update.started")
+   String backendsUpdateStarted();
+
+   @Key("backends.update.finished")
+   String backendsUpdateFinished();
 }

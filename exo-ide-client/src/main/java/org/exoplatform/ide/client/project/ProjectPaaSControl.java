@@ -101,7 +101,8 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
          || project.getPropertyValue("heroku-application") != null
          || project.getPropertyValue("openshift-express-application") != null
          || project.getPropertyValue("cloudfoundry-application") != null
-         || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType());
+         || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
+         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType());
    }
 
    /**

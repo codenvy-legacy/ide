@@ -42,6 +42,12 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/java-project.png")
    ImageResource javaProject();
 
+   @Source("org/exoplatform/ide/client/bundled-images/projects/gae_java.png")
+   ImageResource gaeJavaProject();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/gae_python.png")
+   ImageResource gaePythonProject();
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/ror.png")
    ImageResource rubyProject();
 
@@ -62,5 +68,4 @@ public interface IconImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
-
 }

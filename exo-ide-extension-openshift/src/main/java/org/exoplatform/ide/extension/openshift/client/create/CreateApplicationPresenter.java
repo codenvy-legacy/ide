@@ -18,22 +18,12 @@
  */
 package org.exoplatform.ide.extension.openshift.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -41,20 +31,30 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledEvent;
+import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Presenter for creating new OpenShift application.
@@ -63,10 +63,10 @@ import java.util.List;
  * @version $Id: Jun 7, 2011 5:50:34 PM anya $
  * 
  */
-public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler,
-   LoggedInHandler
+public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler
 {
-   interface Display extends IsView
+   
+   public interface Display extends IsView
    {
       /**
        * Get create button's click handler.
@@ -136,7 +136,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    {
       display.getCreateButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -146,7 +145,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -156,7 +154,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       display.getApplicationNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
@@ -182,38 +179,48 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     * @see org.exoplatform.ide.extension.openshift.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEvent)
     */
    @Override
-   public void onCreateApplication(CreateApplicationEvent event)
+   public void onCreateApplication(final CreateApplicationEvent createApplicationEvent)
    {
       if (makeSelectionCheck())
       {
          final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
-
          try
          {
-            OpenShiftClientService.getInstance().getApplicationTypes(
-               new AsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()))
-               {
-                  @Override
-                  protected void onSuccess(List<String> result)
-                  {
-                     if (display == null)
+            
+            OpenShiftClientService.getInstance().getApplicationTypes(new OpenShiftAsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()),
+                     new LoggedInHandler()
                      {
-                        display = GWT.create(Display.class);
-                        bindDisplay();
-                        IDE.getInstance().openView(display.asView());
-                        display.setApplicationTypeValues(result.toArray(new String[result.size()]));
-                        display.focusInApplicationNameField();
-                        display.getWorkDirLocationField().setValue(projectModel.getPath());
-                        display.enableCreateButton(false);
-                     }
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
+                        @Override
+                        public void onLoggedIn(LoggedInEvent event)
+                        {
+                           onCreateApplication(createApplicationEvent);
+                        }
+                     },
+                     
+                     new LoginCanceledHandler()
+                     {
+                        @Override
+                        public void onLoginCanceled(LoginCanceledEvent event)
+                        {
+                           
+                        }
+                     })
+            {
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (display == null)
                   {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-               });
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                     display.setApplicationTypeValues(result.toArray(new String[result.size()]));
+                     display.focusInApplicationNameField();
+                     display.getWorkDirLocationField().setValue(projectModel.getPath());
+                     display.enableCreateButton(false);
+                  }                  
+               }
+            });
          }
          catch (RequestException e)
          {
@@ -234,37 +241,33 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       {
          AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
          AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+
+         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
+
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
-            new AsyncRequestCallback<AppInfo>(unmarshaller)
+            new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, new LoggedInHandler()
+            {
+               @Override
+               public void onLoggedIn(LoggedInEvent event)
+               {
+                  doCreateApplication();
+               }
+            }, new LoginCanceledHandler()
             {
 
+               @Override
+               public void onLoginCanceled(LoginCanceledEvent event)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+            }, errorMessage)
+            {
                @Override
                protected void onSuccess(AppInfo result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-               }
-
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        addLoggedInHandler();
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
-                  }
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
-                     .createApplicationFail(applicationName)));
                }
             });
       }
@@ -273,14 +276,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
             .createApplicationFail(applicationName)));
       }
-   }
-
-   /**
-    * Register {@link LoggedInHandler} handler.
-    */
-   protected void addLoggedInHandler()
-   {
-      IDE.addHandler(LoggedInEvent.TYPE, this);
    }
 
    /**
@@ -302,17 +297,5 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       return OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(applicationStr);
    }
-
-   /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
-         doCreateApplication();
-      }
-   }
+   
 }

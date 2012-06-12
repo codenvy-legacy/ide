@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.jvm.bean;
 
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
+import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
@@ -37,20 +38,24 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    private String superClass;
 
    private List<String> interfaces;
-   
-   private String signature; 
+
+   private String signature;
+
+   private List<Member> nestedTypes;
 
    public TypeInfoBean()
    {
       this.methods = Collections.emptyList();
       this.fields = Collections.emptyList();
+      this.nestedTypes = Collections.emptyList();
    }
 
    public TypeInfoBean(String name, int modifiers, List<MethodInfo> methods, List<FieldInfo> fields, String superClass,
-      List<String> interfaces, String type, String signature)
+      List<String> interfaces, String type, String signature, List<Member> nestedTypes)
    {
       super(name, modifiers, type, signature);
       this.superClass = superClass;
+      this.nestedTypes = nestedTypes;
       setMethods(methods);
       setFields(fields);
       setInterfaces(interfaces);
@@ -238,6 +243,24 @@ public class TypeInfoBean extends ShortTypeInfoBean implements TypeInfo
    public void setSignature(String signature)
    {
       this.signature = signature;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#getNestedTypes()
+    */
+   @Override
+   public List<Member> getNestedTypes()
+   {
+      return nestedTypes;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo#setNestedTypes(java.util.List)
+    */
+   @Override
+   public void setNestedTypes(List<Member> types)
+   {
+      nestedTypes = types;
    }
 
 }

@@ -92,7 +92,6 @@ public class HotkeysFormTest extends BaseTest
    {
       //step 1 create new project, open Customize Hotkey form
       //select CSS file and checks status of buttons 
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -195,11 +194,11 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_TEXT_FILE);
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.SHIFT.toString() + "Y");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys("y");
       IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
       IDE.CUSTOMIZE_HOTKEYS.typeKeys("8");
       IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.SHIFT.toString() + "n");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys("n");
       IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
 
       //step 2 Presses Ctrl and Alt and check states buttons and messages on the form

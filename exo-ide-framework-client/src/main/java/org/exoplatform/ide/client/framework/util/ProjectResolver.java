@@ -94,7 +94,8 @@ public class ProjectResolver
          types.put(SERVLET_JSP, IconImageBundle.INSTANCE.javaProject());
          types.put(PHP, IconImageBundle.INSTANCE.phpProject());
          types.put(UNDEFINED, IconImageBundle.INSTANCE.defaultProject());
-         types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.javaProject());
+         types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.gaeJavaProject());
+         types.put(APP_ENGINE_PYTHON, IconImageBundle.INSTANCE.gaePythonProject());
       }
 
       sortedTypes.add(UNDEFINED);
@@ -105,6 +106,7 @@ public class ProjectResolver
       sortedTypes.add(RAILS);
       sortedTypes.add(SPRING);
       sortedTypes.add(APP_ENGINE_JAVA);
+      sortedTypes.add(APP_ENGINE_PYTHON);
    }
 
    public static Set<String> getProjectsTypes()

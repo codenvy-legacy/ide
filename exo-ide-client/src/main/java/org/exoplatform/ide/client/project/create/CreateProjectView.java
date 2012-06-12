@@ -18,12 +18,7 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
@@ -33,14 +28,20 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.model.template.ProjectTemplate;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CreateProjectView.java Dec 1, 2011 12:51:33 PM vereshchaka $
  * 
  */
-public class CreateProjectView extends ViewImpl implements CreateProjectFromTemplatePresenter.Display
+public class CreateProjectView extends ViewImpl implements CreateProjectPresenter.Display
 {
    private static final String ID = "CreateNewProjectView";
 
@@ -63,10 +64,13 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    ProjectTemplateListGrid templateListGrid;
 
    @UiField
+   ImageButton cancelButton;
+
+   @UiField
    ImageButton nextButton;
 
    @UiField
-   ImageButton cancelButton;
+   ImageButton finishButton;
 
    @UiField
    TextInput projectNameField;
@@ -78,7 +82,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -87,26 +91,16 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getCreateButton()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getNextButton()
     */
    @Override
-   public HasClickHandlers getCreateButton()
+   public HasClickHandlers getNextButton()
    {
       return nextButton;
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getDeleteButton()
-    */
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getNameField()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getNameField()
     */
    @Override
    public HasValue<String> getNameField()
@@ -115,7 +109,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getSelectedTemplates()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getSelectedTemplates()
     */
    @Override
    public List<ProjectTemplate> getSelectedTemplates()
@@ -124,7 +118,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#getTemplateListGrid()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getTemplateListGrid()
     */
    @Override
    public ListGridItem<ProjectTemplate> getTemplateListGrid()
@@ -133,43 +127,16 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#selectLastTemplate()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setNextButtonEnabled(boolean)
     */
    @Override
-   public void selectLastTemplate()
-   {
-      templateListGrid.selectLastItem();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setCreateButtonEnabled(boolean)
-    */
-   @Override
-   public void setCreateButtonEnabled(boolean enabled)
+   public void setNextButtonEnabled(boolean enabled)
    {
       nextButton.setEnabled(enabled);
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setDeleteButtonEnabled(boolean)
-    */
-   @Override
-   public void setDeleteButtonEnabled(boolean enabled)
-   {
-      // TODO
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#setNameFieldEnabled(boolean)
-    */
-   @Override
-   public void setNameFieldEnabled(boolean enabled)
-   {
-      projectNameField.setEnabled(enabled);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#focusInNameField()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#focusInNameField()
     */
    @Override
    public void focusInNameField()
@@ -178,12 +145,48 @@ public class CreateProjectView extends ViewImpl implements CreateProjectFromTemp
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectFromTemplatePresenter.Display#selectAllTextInNameField()
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#selectAllTextInNameField()
     */
    @Override
    public void selectAllTextInNameField()
    {
       projectNameField.selectAll();
+   }
+
+   @Override
+   public HasKeyPressHandlers nameTextField()
+   {
+      return projectNameField;
+   }
+
+   @Override
+   public HasClickHandlers getFinishButton()
+   {
+      return finishButton;
+   }
+
+   @Override
+   public void setNextButtonVisible(boolean visible)
+   {
+      nextButton.setVisible(visible);
+   }
+
+   @Override
+   public void setFinishButtonVisible(boolean visible)
+   {
+      finishButton.setVisible(visible);
+   }
+
+   @Override
+   public void setFinishButtonEnabled(boolean enabled)
+   {
+      finishButton.setEnabled(enabled);
+   }
+
+   @Override
+   public void setProjectNameFieldEnabled(boolean enabled)
+   {
+      projectNameField.setEnabled(enabled);
    }
 
 }

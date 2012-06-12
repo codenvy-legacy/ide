@@ -67,20 +67,18 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       /*-{
          $doc.onkeydown = null; 
       }-*/;
-
-      private native void init()
-      /*-{
-         $doc.onkeydown = function(ev)
-         { 
-            var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
-            hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(ev || $wnd.event);
-         }                        
-      }-*/;
    }
+   
+   private native void registerKeyDownHandler()
+   /*-{
+      $doc.onkeydown = function(ev)
+      { 
+         var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
+         hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(ev || $wnd.event);
+      }                              
+   }-*/;
 
    private HotKeyPressedListener hotKeyPressedListener;
-
-   //private Map<String, String> hotKeys;
 
    private Map<String, String> hotKeyMap;
 
@@ -103,7 +101,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
       final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
       Window.addWindowClosingHandler(closeListener);
-      closeListener.init();
+      registerKeyDownHandler();
 
       hotKeyMap = applicationSettings.getValueAsMap("hotkeys");
       if (hotKeyMap == null)
@@ -185,7 +183,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       boolean ctrl = event.getCtrlKey();
       boolean alt = event.getAltKey();
       boolean shift = event.getShiftKey();
-
+      
       if (hotKeyPressedListener != null)
       {
          hotKeyPressedListener.onHotKeyPressed(ctrl, alt, shift, keyCode);
@@ -254,6 +252,8 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          shortcut += "+" + HotKeyHelper.getKeyName(String.valueOf(keyCode));
       }
 
+      boolean hotKeyBinded = false;
+
       // search associated command
       if (hotKeyMap.containsKey(shortcut))
       {
@@ -262,17 +262,21 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          if (control instanceof SimpleControl)
          {
             SimpleControl simpleControl = (SimpleControl)control;
-            if (shortcut.equals(simpleControl.getHotKey()) && simpleControl.getEvent() != null
-               && (simpleControl.isEnabled() || simpleControl.isIgnoreDisable()))
-            {
-               IDE.fireEvent(simpleControl.getEvent());
-               return true;
-            }
 
+            if (shortcut.equals(simpleControl.getHotKey()))
+            {
+               hotKeyBinded = true;
+
+               if (simpleControl.getEvent() != null && (simpleControl.isEnabled() || simpleControl.isIgnoreDisable()))
+               {
+                  IDE.fireEvent(simpleControl.getEvent());
+                  return true;
+               }
+            }
          }
       }
 
-      return false;
+      return hotKeyBinded;
    }
 
    public void setHotKeys(Map<String, String> newHotKeys)

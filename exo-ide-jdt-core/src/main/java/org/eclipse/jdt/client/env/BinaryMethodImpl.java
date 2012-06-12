@@ -22,6 +22,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryAnnotation;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
@@ -34,7 +35,7 @@ public class BinaryMethodImpl implements IBinaryMethod
 {
 
    private JSONObject method;
-
+   
    /** @param method */
    public BinaryMethodImpl(JSONObject method)
    {
@@ -46,7 +47,14 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public int getModifiers()
    {
-      return (int)method.get("modifiers").isNumber().doubleValue();
+      
+      int modifiers = (int)method.get("modifiers").isNumber().doubleValue();
+      //asm not add  AccAnnotationDefault constant for method modifiers, so add manual for annotation methods with default values 
+      if(getDefaultValue() != null)
+      {
+         modifiers |= ClassFileConstants.AccAnnotationDefault;
+      }
+      return modifiers;
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.IGenericMethod#isConstructor() */
@@ -84,7 +92,13 @@ public class BinaryMethodImpl implements IBinaryMethod
    @Override
    public Object getDefaultValue()
    {
-      // TODO Auto-generated method stub
+      if (method.containsKey("annotationDefault"))
+      {
+         if (method.get("annotationDefault").isNull() == null)
+         {
+            return AnnotationParseUtil.getValue(method.get("annotationDefault").isObject());
+         }
+      }
       return null;
    }
 

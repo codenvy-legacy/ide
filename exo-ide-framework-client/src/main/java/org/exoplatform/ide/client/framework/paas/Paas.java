@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.paas;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Class, where paases store their data, when they are registred in IDE.
@@ -32,6 +32,7 @@ import java.util.List;
  */
 public class Paas
 {
+
    private String name;
 
    /**
@@ -88,4 +89,35 @@ public class Paas
    {
       provider.deploy(project);
    }
+
+   /**
+    * Returns <b>true</b> if PaaS can create project sources.
+    * 
+    * @return <b>true</b> if PaaS can create project sources.
+    */
+   public boolean canCreateProject()
+   {
+      return false;
+   }
+
+   /**
+    * Creates project
+    * 
+    * @param project
+    */
+   public void createProject(ProjectModel project)
+   {
+      provider.createProject(project);
+   }
+
+   /**
+    * Override this method to set this PaaS the first in the list of deployments.
+    * 
+    * @return <b>true</b> if PaaS must be the first in the list of deployments, <b>false</b> otherwise.
+    */
+   public boolean isFirstInDeployments()
+   {
+      return false;
+   }
+
 }

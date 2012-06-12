@@ -36,7 +36,7 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
 
    public AsmFieldInfo(FieldNode fieldNode, AsmTypeInfo declaredClass)
    {
-      super(fieldNode.name, fieldNode.access, fieldNode);
+      super(fieldNode.name, fieldNode.access);
       this.fieldNode = fieldNode;
       this.declaredClass = declaredClass;
    }
@@ -76,15 +76,26 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
    {
       throw new UnsupportedOperationException("Set not supported");
    }
-   
+
    public String getDescriptor()
    {
       return fieldNode.desc;
    }
-   
+
    public String getSignature()
    {
       return fieldNode.signature;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#getValue()
+    */
+   @Override
+   public String getValue()
+   {
+      if (fieldNode.value != null)
+         return fieldNode.value.toString();
+      return null;
    }
 
    /**
@@ -101,6 +112,15 @@ public class AsmFieldInfo extends AsmMember implements FieldInfo
     */
    @Override
    public void setDescriptor(String descriptor)
+   {
+      throw new UnsupportedOperationException("Set not supported");
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo#setValue(java.lang.String)
+    */
+   @Override
+   public void setValue(String value)
    {
       throw new UnsupportedOperationException("Set not supported");
    }

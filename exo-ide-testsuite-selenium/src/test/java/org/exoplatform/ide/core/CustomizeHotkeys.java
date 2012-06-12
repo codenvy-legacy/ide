@@ -73,7 +73,7 @@ public class CustomizeHotkeys extends AbstractTestModule
 
       String BINDING_ROWS = "//table[@id='" + LIST_GRID_FORM + "']" + "/tbody//tr/td/div/span[contains(.,'%s')]";
 
-      String MAXIMIZE_TITLE = "img[title=Maximize]";
+      String MAXIMIZE_TITLE = "div#ideCustomizeHotKeysView-window img[title=Maximize]";
 
       String CLOSE_TITLE = "img[title=Close]";
 

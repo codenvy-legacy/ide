@@ -3,7 +3,9 @@
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
    <ui:style>
       .frameBorder {
-      	border: 1px solid #6f6f6f;
+      	border: 1px solid #B6CCE8;
+      	background-color: #E6E6E6;
+      	padding: 10px;
       }
       
       .right {
@@ -11,14 +13,17 @@
       	margin-left: auto;
       }
       
+      .btn {
+      	top: 140;
+      }
+      
       .left-float {
       	float: left;
       }
       
       .title {
-      	font-size: 13px;
+      	font-size: 12px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-weight: bold;
       }
       
       .note {
@@ -27,29 +32,17 @@
       	font-weight: bold;
       	color: #8a0909;
       }
-      
-      .checkbox {
-      	font-size: 11px;
-      	font-weight: bold;
-      }
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
-      <f:layer top="0" height="20px">
-         <f:Label value="{locale.createApplicationInstruction}" isHTML="true" styleName="{style.title}" width="100%"></f:Label>
-      </f:layer>
-      <f:layer top="22" height="20px">
-         <f:Label value="{locale.createApplicationLoggedNote}" isHTML="true" styleName="{style.note}" width="100%"></f:Label>
-      </f:layer>
-      <f:layer top="45" bottom="60">
-         <g:Frame ui:field="frame" width="99%" height="99%" styleName="{style.frameBorder}"></g:Frame>
-      </f:layer>
-      <f:layer bottom="35" height="20px">
-         <g:CheckBox ui:field="deployField" HTML="{locale.createApplicationDeployField}" addStyleNames="{style.checkbox}"></g:CheckBox>
+      <f:layer top="0" height="60px">
+         <f:Label value="{locale.createApplicationInstruction}" ui:field="instructionLabel" isHTML="true" wordWrap="true" height="100px" styleName="{style.title}" width="100%" />
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.right}">
-            <f:ImageButton ui:field="readyButton" width="90" height="22" text="{locale.readyButton}" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
+         <g:FlowPanel width="280px" styleName="{style.right}">
+            <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageName="yes" addStyleNames="{style.left-float}" />
+            <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+            <f:ImageButton ui:field="deployButton" enabled="false" width="90" height="22" text="{locale.deployButton}" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
          </g:FlowPanel>

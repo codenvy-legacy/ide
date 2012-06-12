@@ -40,6 +40,9 @@ public class LoggedInEvent extends GwtEvent<LoggedInHandler>
     */
    private boolean isFailed;
 
+   public LoggedInEvent() {
+   }
+   
    /**
     * @param isFailed if <code>true</code> log in failed
     */

@@ -339,10 +339,10 @@ public class ShellService
          }
       }
 
-      if (jsonObject.keySet().size() > 0)
-      {
+    /*  TODO if (jsonObject.keySet().size() > 0)
+      {*/
          asyncRequest.data(jsonObject.toString());
-      }
+   /*   }*/
    }
 
    /**
