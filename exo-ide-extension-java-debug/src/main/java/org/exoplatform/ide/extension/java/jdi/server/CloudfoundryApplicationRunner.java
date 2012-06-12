@@ -186,9 +186,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    @Override
-   public synchronized ApplicationInstance runApplication(URL war) throws ApplicationRunnerException
+   public ApplicationInstance runApplication(URL war) throws ApplicationRunnerException
    {
-      // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
          return doRunApplication(war);
@@ -245,9 +244,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    @Override
-   public synchronized DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException
+   public DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException
    {
-      // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
          return doDebugApplication(war, suspend);
@@ -321,9 +319,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    @Override
-   public synchronized void stopApplication(String name) throws ApplicationRunnerException
+   public void stopApplication(String name) throws ApplicationRunnerException
    {
-      // Method should be 'synchronized'. At the moment we use just one user as deployer.
       try
       {
          doStopApplication(name);

@@ -37,8 +37,8 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  Aug 18, 2011 evgen $
- *
+ * @version $Id: Aug 18, 2011 evgen $
+ * 
  */
 public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> implements HasApplicationsActions
 {
@@ -66,7 +66,7 @@ public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> impl
    public ApplicationsListGrid()
    {
       setID("applicationsListGrid");
-      
+
       TextCell textCell = new TextCell();
       nameColumn = new Column<CloudFoundryApplication, String>(textCell)
       {
@@ -165,13 +165,21 @@ public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> impl
 
       getCellTable().addColumn(nameColumn, "Application");
       getCellTable().addColumn(instancesColumn, "#");
+      getCellTable().setColumnWidth(instancesColumn, "8px");
       getCellTable().addColumn(stateColumn, "Health");
+      getCellTable().setColumnWidth(stateColumn, "50px");
       getCellTable().addColumn(urlColumn, "URLS");
       getCellTable().addColumn(servicesColumn, "Services");
+      getCellTable().setColumnWidth(servicesColumn, "60px");
+
       getCellTable().addColumn(startColumn, "Start");
+      getCellTable().setColumnWidth(startColumn, "60px");
       getCellTable().addColumn(stopColumn, "Stop");
+      getCellTable().setColumnWidth(stopColumn, "60px");
       getCellTable().addColumn(restartColumn, "Restart");
+      getCellTable().setColumnWidth(restartColumn, "60px");
       getCellTable().addColumn(deleteColumn, "Delete");
+      getCellTable().setColumnWidth(deleteColumn, "60px");
    }
 
    private class ListLink extends AbstractSafeHtmlCell<List<String>>
@@ -186,7 +194,8 @@ public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> impl
       }
 
       /**
-       * @see com.google.gwt.cell.client.AbstractSafeHtmlCell#render(com.google.gwt.cell.client.Cell.Context, com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+       * @see com.google.gwt.cell.client.AbstractSafeHtmlCell#render(com.google.gwt.cell.client.Cell.Context,
+       *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
        */
       @Override
       protected void render(com.google.gwt.cell.client.Cell.Context context, SafeHtml data, SafeHtmlBuilder sb)
@@ -228,7 +237,8 @@ public class ApplicationsListGrid extends ListGrid<CloudFoundryApplication> impl
          StringBuilder b = new StringBuilder();
          for (String s : object)
          {
-            b.append("<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s + " target=\"_blank\">" + s + "</a>")
+            b.append(
+               "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s + " target=\"_blank\">" + s + "</a>")
                .append("<br>");
          }
          String string = b.toString();

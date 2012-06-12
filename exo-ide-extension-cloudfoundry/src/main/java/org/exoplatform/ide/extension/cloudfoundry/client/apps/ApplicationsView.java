@@ -49,7 +49,7 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
    
    private static final int HEIGHT = 300;
 
-   private static final int WIDTH = 820;
+   private static final int WIDTH = 850;
 
    /**
     * Close button.

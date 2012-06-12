@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticatorService;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,12 +31,12 @@ import javax.ws.rs.core.Application;
  */
 public class AppEngineApplication extends Application
 {
-
    @Override
    public Set<Class<?>> getClasses()
    {
-      Set<Class<?>> classes = new HashSet<Class<?>>(1);
+      Set<Class<?>> classes = new HashSet<Class<?>>(2);
       classes.add(AppEngineService.class);
+      classes.add(OAuthAuthenticatorService.class);
       return classes;
    }
 

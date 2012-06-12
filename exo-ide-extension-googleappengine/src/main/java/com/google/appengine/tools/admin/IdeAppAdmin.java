@@ -18,8 +18,6 @@
  */
 package com.google.appengine.tools.admin;
 
-import org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore;
-
 import java.io.PrintWriter;
 
 import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
@@ -32,24 +30,21 @@ import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
 public class IdeAppAdmin extends AppAdminImpl
 {
    private final GenericApplication app;
-   private final AppEngineCookieStore cookieStore;
 
    public IdeAppAdmin(ConnectOptions options,
                       GenericApplication app,
                       PrintWriter errorWriter,
                       ApplicationProcessingOptions appOptions,
-                      Class<? extends AppVersionUpload> appVersionUploadClass,
-                      AppEngineCookieStore cookieStore)
+                      Class<? extends AppVersionUpload> appVersionUploadClass)
    {
       super(options, app, errorWriter, appOptions, appVersionUploadClass);
       this.app = app;
-      this.cookieStore = cookieStore;
    }
 
    @Override
    protected ServerConnection getServerConnection(ConnectOptions options)
    {
-      return new IdeClientLoginServerConnection(options, cookieStore);
+      return new OAuth2ServerConnection(options);
    }
 
    public GenericApplication getApplication()

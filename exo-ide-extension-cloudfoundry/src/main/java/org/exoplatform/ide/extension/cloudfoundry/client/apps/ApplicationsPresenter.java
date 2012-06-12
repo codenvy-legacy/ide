@@ -31,14 +31,14 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
@@ -56,7 +56,7 @@ import java.util.List;
  * @version $Id: Aug 18, 2011 evgen $
  * 
  */
-public class ApplicationsPresenter implements ViewClosedHandler, ShowApplicationsHandler, OutputHandler
+public class ApplicationsPresenter implements ViewClosedHandler, ShowApplicationsHandler, ApplicationDeletedHandler
 {
    public interface Display extends IsView
    {
@@ -89,6 +89,8 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
 
    private List<String> servers = new ArrayList<String>();
 
+   private String currentServer;
+
    /**
     *  
     */
@@ -96,7 +98,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    {
       IDE.addHandler(ShowApplicationsEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(OutputEvent.TYPE, this);
+      IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
    }
 
    /**
@@ -118,7 +120,8 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onClick(ClickEvent event)
          {
-            getApplicationList(display.getServerSelectField().getValue());
+            currentServer = display.getServerSelectField().getValue();
+            getApplicationList();
          }
       });
 
@@ -158,7 +161,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<CloudFoundryApplication> event)
          {
-            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName()));
+            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
          }
       });
    }
@@ -182,16 +185,6 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       {
          display = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.output.event.OutputHandler#onOutput(org.exoplatform.ide.client.framework.output.event.OutputEvent)
-    */
-   @Override
-   public void onOutput(OutputEvent event)
-   {
-      if (display != null)
-         onShowApplications(null);
    }
 
    private void checkLogginedToServer()
@@ -220,8 +213,10 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                      bindDisplay();
                      IDE.getInstance().openView(display.asView());
                   }
+                  display.setServerValues(servers.toArray(new String[servers.size()]));
                   // fill the list of applications
-                  getApplicationList(servers.get(0));
+                  currentServer = servers.get(0);
+                  getApplicationList();
                }
 
                @Override
@@ -237,37 +232,33 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       }
    }
 
-   private void getApplicationList(final String server)
+   private void getApplicationList()
    {
       try
       {
          CloudFoundryClientService.getInstance().getApplicationList(
-            server,
+            currentServer,
             new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
                new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()//
                {
                   @Override
                   public void onLoggedIn()
                   {
-                     getApplicationList(server);
+                     getApplicationList();
                   }
-               }, null, server)
+               }, null, currentServer)
             {
 
                @Override
                protected void onSuccess(List<CloudFoundryApplication> result)
                {
                   display.getAppsGrid().setValue(result);
-                  display.getServerSelectField().setValue(server);
+                  display.getServerSelectField().setValue(currentServer);
 
                   // update the list of servers, if was enter value, that doesn't present in list
-                  if (!servers.contains(server))
+                  if (!servers.contains(currentServer))
                   {
                      getServers();
-                  }
-                  else
-                  {
-                     display.setServerValues(servers.toArray(new String[servers.size()]));
                   }
                }
             });
@@ -302,6 +293,18 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent)
+    */
+   @Override
+   public void onApplicationDeleted(ApplicationDeletedEvent event)
+   {
+      if (display != null)
+      {
+         getApplicationList();
       }
    }
 
