@@ -18,13 +18,23 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
+import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -37,6 +47,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class UpdateStorageService
 {
+
+   private static final Logger LOG = LoggerFactory.getLogger(UpdateStorageService.class);
 
    public static final String INFO_STORAGE = "update.info.storage";
 
@@ -82,6 +94,10 @@ public class UpdateStorageService
 
    private final InfoStorage infoStorage;
 
+   private Thread writerThread;
+
+   private BlockingQueue<WriterTask> writerQueue;
+
    private static <O> O getOption(Map<String, Object> config, String option, Class<O> type, O defaultValue)
    {
       if (config != null)
@@ -119,16 +135,21 @@ public class UpdateStorageService
       this.pool =
          new ThreadPoolExecutor(workerNumber, workerNumber, 0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>(updateQueueSize), new ThreadPoolExecutor.AbortPolicy());
+
+      writerQueue = new LinkedBlockingQueue<WriterTask>();
+      StorageWriter storageWriter = new StorageWriter(writerQueue, infoStorage);
+      writerThread = new Thread(storageWriter, "StorageWriter");
+      writerThread.start();
    }
 
    public void updateTypeIndex(List<Dependency> dependencies, InputStream in) throws IOException
    {
-      addTask(new TypeUpdateInvoker(infoStorage, dependencies, createDependencys(in)));
+      addTask(new TypeUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
    }
-   
+
    public void updateDockIndex(List<Dependency> dependencies, InputStream in) throws IOException
    {
-      addTask(new DockUpdateInvoker(infoStorage, dependencies, createDependencys(in)));
+      addTask(new DockUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
    }
 
    public void shutdown()
@@ -140,6 +161,8 @@ public class UpdateStorageService
          {
             pool.shutdownNow();
          }
+         //Task with null artifact will shutdown writer thread 
+         writerQueue.add(new WriterTask(null, null, null, null));
       }
       catch (InterruptedException e)
       {

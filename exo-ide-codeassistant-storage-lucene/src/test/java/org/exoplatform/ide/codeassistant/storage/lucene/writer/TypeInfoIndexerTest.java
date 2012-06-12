@@ -120,7 +120,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreTypeInfoWithAnnotationDefaultValues() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(Bar.class));
-      Document document = indexer.createTypeInfoDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected, "rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);

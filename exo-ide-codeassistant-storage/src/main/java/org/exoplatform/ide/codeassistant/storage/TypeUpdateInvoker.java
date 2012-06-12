@@ -20,8 +20,8 @@ package org.exoplatform.ide.codeassistant.storage;
 
 import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
+import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -47,15 +48,18 @@ public class TypeUpdateInvoker implements UpdateInvoker
 
    File dependencyFolder;
 
+   private final BlockingQueue<WriterTask> writerQueue;
+
    /**
     * @param infoStorage
     * @param dependencies
     * @param dependencyFolder
     * @param queue 
     */
-   public TypeUpdateInvoker(InfoStorage infoStorage, List<Dependency> dependencies, File dependencyFolder)
+   public TypeUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue, List<Dependency> dependencies, File dependencyFolder)
    {
       this.infoStorage = infoStorage;
+      this.writerQueue = writerQueue;
       this.dependencies = dependencies;
       this.dependencyFolder = dependencyFolder;
    }
@@ -68,8 +72,6 @@ public class TypeUpdateInvoker implements UpdateInvoker
    {
       try
       {
-         DataWriter writer = infoStorage.getWriter();
-
          for (Dependency dep : dependencies)
          {
             String artifact = dep.toString();
@@ -85,22 +87,19 @@ public class TypeUpdateInvoker implements UpdateInvoker
                File jarFile = new File(dependencyFolder, jarName);
                List<TypeInfo> typeInfos = JarParser.parse(jarFile);
                packages.addAll(PackageParser.parse(jarFile));
-               if (!infoStorage.isArtifactExist(artifact))
-               {
-                  writer.addTypeInfo(typeInfos, artifact);
-                  writer.addPackages(packages, artifact);
-               }
+               writerQueue.put(new WriterTask(artifact, typeInfos, packages));
             }
             catch (IOException e)
             {
                if (LOG.isDebugEnabled())
                   LOG.debug("Can't open: " + jarName, e);
             }
+            catch (InterruptedException e)
+            {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }
          }
-      }
-      catch (IOException e)
-      {
-         LOG.error("Can't index dependency", e);
       }
       finally
       {

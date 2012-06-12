@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import org.exoplatform.ide.codeassistant.asm.JarParser;
-import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.slf4j.Logger;
@@ -29,10 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -77,33 +71,11 @@ public class StorageBootstrap implements ServletContextListener
       try
       {
          luceneStorage = new LuceneInfoStorage(storagePath);
-         final InfoStorage infoStorage = new LocalInfoStorage(luceneStorage);
-         options.put(UpdateStorageService.INFO_STORAGE, infoStorage);
-         Thread t = new Thread(new Runnable()
-         {
 
-            @Override
-            public void run()
-            {
-               try
-               {
-                  LOG.info("Indexing rt.jar");
-                  DataWriter writer = infoStorage.getWriter();
-                  Set<String> packages = new TreeSet<String>();
-                  File jarFile = new File(System.getProperty("java.home") + "/lib/rt.jar");
-                  List<TypeInfo> typeInfos = JarParser.parse(jarFile);
-                  packages.addAll(PackageParser.parse(jarFile));
-                  writer.addTypeInfo(typeInfos, "rt");
-                  writer.addPackages(packages, "rt");
-                  LOG.info("rt.jar indexed");
-               }
-               catch (IOException e)
-               {
-                  LOG.error("Can't read rt.jar", e);
-               }
-            }
-         });
-         t.start();
+         InfoStorage infoStorage = new LocalInfoStorage(luceneStorage);
+
+         options.put(UpdateStorageService.INFO_STORAGE, infoStorage);
+
       }
       catch (IOException e)
       {

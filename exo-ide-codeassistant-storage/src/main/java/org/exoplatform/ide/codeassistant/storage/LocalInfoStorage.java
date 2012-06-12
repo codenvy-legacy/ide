@@ -92,7 +92,7 @@ public class LocalInfoStorage implements InfoStorage
       catch (CodeAssistantException e)
       {
          if (LOG.isDebugEnabled())
-            LOG.error(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
       }
       return false;
    }

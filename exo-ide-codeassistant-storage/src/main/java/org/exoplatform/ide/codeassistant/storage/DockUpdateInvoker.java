@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
+import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -45,14 +46,17 @@ public class DockUpdateInvoker implements UpdateInvoker
 
    private final File dependencyFolder;
 
+   private final BlockingQueue<WriterTask> writerQueue;
+
    /**
     * @param infoStorage
     * @param dependencies
     * @param createDependencys
     */
-   public DockUpdateInvoker(InfoStorage infoStorage, List<Dependency> dependencies, File dependencyFolder)
+   public DockUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue, List<Dependency> dependencies, File dependencyFolder)
    {
       this.infoStorage = infoStorage;
+      this.writerQueue = writerQueue;
       this.dependencies = dependencies;
       this.dependencyFolder = dependencyFolder;
    }
@@ -66,7 +70,6 @@ public class DockUpdateInvoker implements UpdateInvoker
       QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
       try
       {
-         DataWriter writer = infoStorage.getWriter();
          for (Dependency dep : dependencies)
          {
 
@@ -89,8 +92,13 @@ public class DockUpdateInvoker implements UpdateInvoker
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
                if (!infoStorage.isJavaDockForArtifactExist(artifact))
                {
-                  writer.addJavaDocs(javaDocs, artifact);
+                 writerQueue.put(new WriterTask(artifact, javaDocs));
                }
+            }
+            catch (InterruptedException e)
+            {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
             }
             finally
             {
