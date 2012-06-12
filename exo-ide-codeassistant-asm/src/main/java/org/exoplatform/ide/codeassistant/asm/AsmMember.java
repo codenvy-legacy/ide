@@ -20,7 +20,6 @@ package org.exoplatform.ide.codeassistant.asm;
 
 import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.MemberNode;
 
 /**
  * Member based on org.objectweb.asm.tree.MemberNode created during class file
@@ -30,19 +29,15 @@ import org.objectweb.asm.tree.MemberNode;
  */
 public class AsmMember implements Member
 {
-   //for future use
-   private final MemberNode memberNode;
-
    private final String name;
 
    private final int modifiers;
 
-   public AsmMember(String name, int modifiers, MemberNode memberNode)
+   public AsmMember(String name, int modifiers)
    {
       super();
       this.name = name;
       this.modifiers = modifiers;
-      this.memberNode = memberNode;
    }
 
    /**

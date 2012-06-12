@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeleteApplicationEvent.java Jul 15, 2011 10:38:59 AM vereshchaka $
- *
+ * 
  */
 public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 {
@@ -36,20 +36,24 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
 
    private String applicationName;
 
+   private String server;
+
    /**
     * 
     */
    public DeleteApplicationEvent()
    {
+      this.applicationName = null;
+      this.server = null;
    }
 
    /**
     * @param applicationName
     */
-   public DeleteApplicationEvent(String applicationName)
+   public DeleteApplicationEvent(String applicationName, String server)
    {
-      super();
       this.applicationName = applicationName;
+      this.server = server;
    }
 
    /**
@@ -78,4 +82,11 @@ public class DeleteApplicationEvent extends GwtEvent<DeleteApplicationHandler>
       return applicationName;
    }
 
+   /**
+    * @return the server
+    */
+   public String getServer()
+   {
+      return server;
+   }
 }

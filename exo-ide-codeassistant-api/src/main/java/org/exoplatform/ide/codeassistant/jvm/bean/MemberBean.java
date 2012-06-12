@@ -22,7 +22,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.Member;
 
 import java.lang.reflect.Modifier;
 
-public abstract class MemberBean implements Member
+public class MemberBean implements Member
 {
 
    private int modifiers;

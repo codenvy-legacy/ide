@@ -92,6 +92,11 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    private String appName;
 
+   /**
+    * Name of the server.
+    */
+   private String serverName;
+
    public DeleteApplicationPresenter()
    {
       IDE.addHandler(DeleteApplicationEvent.TYPE, this);
@@ -126,6 +131,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    @Override
    public void onDeleteApplication(DeleteApplicationEvent event)
    {
+      serverName = event.getServer();
       if (event.getApplicationName() == null && makeSelectionCheck())
          getApplicationInfo();
       else
@@ -197,7 +203,7 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
       try
       {
-         CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, null,
+         CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, serverName,
             isDeleteServices, new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null)
             {
                @Override

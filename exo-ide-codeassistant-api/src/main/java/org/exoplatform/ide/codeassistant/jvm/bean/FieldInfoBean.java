@@ -43,18 +43,22 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
     */
    private String signature;
 
+   private String value;
+
    public FieldInfoBean()
    {
 
    }
 
-   public FieldInfoBean(String name, int modifiers, String type, String declaringClass, String descriptor, String signature)
+   public FieldInfoBean(String name, int modifiers, String type, String declaringClass, String descriptor,
+      String signature, String value)
    {
       super(name, modifiers);
       this.type = type;
       this.declaringClass = declaringClass;
       this.descriptor = descriptor;
       this.signature = signature;
+      this.value = value;
    }
 
    /**
@@ -150,7 +154,24 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
       result = prime * result + (type == null ? 0 : type.hashCode());
       result = prime * result + (signature == null ? 0 : signature.hashCode());
       result = prime * result + (descriptor == null ? 0 : descriptor.hashCode());
+      result = prime * result + (value == null ? 0 : value.hashCode());
       return result;
+   }
+
+   /**
+    * @return the value
+    */
+   public String getValue()
+   {
+      return value;
+   }
+
+   /**
+    * @param value the value to set
+    */
+   public void setValue(String value)
+   {
+      this.value = value;
    }
 
    /**
@@ -194,7 +215,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
       {
          return false;
       }
-      
+
       if (signature == null)
       {
          if (other.signature != null)
@@ -206,7 +227,7 @@ public class FieldInfoBean extends MemberBean implements FieldInfo
       {
          return false;
       }
-      
+
       if (descriptor == null)
       {
          if (other.descriptor != null)

@@ -60,6 +60,7 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
       setEvent(new CleanProjectEvent());
       supportedProjectType.add(ProjectResolver.SERVLET_JSP);
       supportedProjectType.add(ProjectResolver.SPRING);
+      supportedProjectType.add(ProjectResolver.APP_ENGINE_JAVA);
    }
 
    /**

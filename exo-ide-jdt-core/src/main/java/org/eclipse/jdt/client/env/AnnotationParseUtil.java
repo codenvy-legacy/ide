@@ -110,7 +110,7 @@ public class AnnotationParseUtil
       return cons;
    }
 
-   private static Constant getConstant(String type, String value)
+   public static Constant getConstant(String type, String value)
    {
       if ("Byte".equals(type))
          return ByteConstant.fromValue(Byte.parseByte(value));
