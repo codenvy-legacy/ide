@@ -693,7 +693,6 @@
                      <goal>copy</goal>
                   </goals>
                   <configuration>
-                     <!-- includeTypes>zip</includeTypes -->
                      <stripVersion>true</stripVersion>
                      <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
                      <artifactItems>
@@ -1066,7 +1065,24 @@
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
                            overwrite="true" />
-                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide"/>
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
+                           <patternset>
+                              <exclude name="**/bin/**"/>
+                              <exclude name="**/demos/**"/>
+                              <exclude name="**/src/**"/>
+                              <exclude name="**/docs/javadoc/**"/>
+                              <exclude name="**/docs/remoteapi/**"/>
+                              <exclude name="**/docs/testing/**"/>
+                              <exclude name="**/docs/tools/**"/>
+                              <exclude name="**/docs/javadoc/**"/>
+                              <exclude name="**/ABOUT"/>
+                              <exclude name="**/COPYING"/>
+                              <exclude name="**/README"/>
+                              <exclude name="**/README.ORM"/>
+                              <exclude name="**/RELEASE_NOTES"/>
+                              <exclude name="**/RELEASE_NOTES.ORM"/>
+                           </patternset>
+                        </unzip>
                         <move  file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
                      </tasks>
                   </configuration>
