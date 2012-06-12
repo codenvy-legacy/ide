@@ -20,15 +20,12 @@ package org.exoplatform.ide.extension.googleappengine.server;
 
 import com.google.appengine.tools.admin.CronEntry;
 import com.google.apphosting.utils.config.BackendsXml;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -37,20 +34,21 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -69,218 +67,236 @@ public class AppEngineService
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
 
-   @POST
+   @GET
    @Path("backend/configure")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void configureBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, Map<String, String> credentials) throws Exception
+   public void configureBackend(@QueryParam("vfsid") String vfsId,
+                                @QueryParam("projectid") String projectId,
+                                @QueryParam("backend_name") String backendName,
+                                @Context SecurityContext security) throws Exception
    {
       client.configureBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, credentials.get("email"), credentials.get("password"));
+         backendName, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("cron/info")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public List<CronEntry> cronInfo(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public List<CronEntry> cronInfo(@QueryParam("vfsid") String vfsId,
+                                   @QueryParam("projectid") String projectId,
+                                   @Context SecurityContext security) throws Exception
    {
       return client.cronInfo(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backend/delete")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void deleteBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, Map<String, String> credentials) throws Exception
+   public void deleteBackend(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("backend_name") String backendName,
+                             @Context SecurityContext security) throws Exception
    {
       client.deleteBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, credentials.get("email"), credentials.get("password"));
+         backendName, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("resource_limits")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, Long> getResourceLimits(@QueryParam("vfsid") String vfsId,
-      @QueryParam("projectid") String projectId, Map<String, String> credentials) throws Exception
+                                              @QueryParam("projectid") String projectId, 
+                                              @Context SecurityContext security) throws Exception
    {
       return client.getResourceLimits(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, credentials.get("email"), credentials.get("password"));
+         projectId, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backends/list")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public List<BackendsXml.Entry> listBackends(@QueryParam("vfsid") String vfsId,
-      @QueryParam("projectid") String projectId, Map<String, String> credentials) throws Exception
+                                               @QueryParam("projectid") String projectId,
+                                               @Context SecurityContext security) throws Exception
    {
       return client.listBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, credentials.get("email"), credentials.get("password"));
+         projectId, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("logs")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.TEXT_PLAIN)
-   public Reader requestLogs(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("num_days") int numDays, @QueryParam("log_severity") String logSeverity,
-      Map<String, String> credentials) throws Exception
+   public Reader requestLogs(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("num_days") int numDays, 
+                             @QueryParam("log_severity") String logSeverity,
+                             @Context SecurityContext security) throws Exception
    {
       return client.requestLogs(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, numDays, logSeverity, credentials.get("email"), credentials.get("password"));
+         projectId, numDays, logSeverity, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("rollback")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void rollback(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void rollback(@QueryParam("vfsid") String vfsId,
+                        @QueryParam("projectid") String projectId,
+                        @Context SecurityContext security) throws Exception
    {
       client.rollback(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backend/rollback")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void rollbackBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, Map<String, String> credentials) throws Exception
+   public void rollbackBackend(@QueryParam("vfsid") String vfsId,
+                               @QueryParam("projectid") String projectId,
+                               @QueryParam("backend_name") String backendName, 
+                               @Context SecurityContext security) throws Exception
    {
       client.rollbackBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, credentials.get("email"), credentials.get("password"));
+         backendName, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backends/rollback")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void rollbackAllBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void rollbackAllBackends(@QueryParam("vfsid") String vfsId,
+                                   @QueryParam("projectid") String projectId,
+                                   @Context SecurityContext security) throws Exception
    {
       client.rollbackAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, credentials.get("email"), credentials.get("password"));
+         projectId, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backend/set_state")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void setBackendState(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @QueryParam("backend_state") String backendState,
-      Map<String, String> credentials) throws Exception
+   public void setBackendState(@QueryParam("vfsid") String vfsId,
+                               @QueryParam("projectid") String projectId,
+                               @QueryParam("backend_name") String backendName,
+                               @QueryParam("backend_state") String backendState,
+                               @Context SecurityContext security) throws Exception
    {
       client.setBackendState(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, backendState, credentials.get("email"), credentials.get("password"));
+         backendName, backendState, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("update")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInfo update(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("bin") URL bin, Map<String, String> credentials) throws Exception
+   public ApplicationInfo update(@QueryParam("vfsid") String vfsId,
+                                 @QueryParam("projectid") String projectId,
+                                 @QueryParam("bin") URL bin,
+                                 @Context SecurityContext security) throws Exception
    {
       return client.update(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         bin, credentials.get("email"), credentials.get("password"));
+         bin, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backends/update_all")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateAllBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updateAllBackends(@QueryParam("vfsid") String vfsId,
+                                 @QueryParam("projectid") String projectId,
+                                 @Context SecurityContext security) throws Exception
    {
       client.updateAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, credentials.get("email"), credentials.get("password"));
+         projectId, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backend/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, Map<String, String> credentials) throws Exception
+   public void updateBackend(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @QueryParam("backend_name") String backendName, 
+                             @Context SecurityContext security) throws Exception
    {
       client.updateBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, credentials.get("email"), credentials.get("password"));
+         backendName, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("backends/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backends_name") List<String> backendNames, Map<String, String> credentials) throws Exception
+   public void updateBackends(@QueryParam("vfsid") String vfsId,
+                              @QueryParam("projectid") String projectId,
+                              @QueryParam("backends_name") List<String> backendNames,
+                              @Context SecurityContext security) throws Exception
    {
       client.updateBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendNames, credentials.get("email"), credentials.get("password"));
+         backendNames, getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("cron/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateCron(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updateCron(@QueryParam("vfsid") String vfsId,
+                          @QueryParam("projectid") String projectId,
+                          @Context SecurityContext security) throws Exception
    {
       client.updateCron(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("dos/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateDos(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updateDos(@QueryParam("vfsid") String vfsId,
+                         @QueryParam("projectid") String projectId,
+                         @Context SecurityContext security) throws Exception
    {
       client.updateDos(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("indexes/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateIndexes(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updateIndexes(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @Context SecurityContext security) throws Exception
    {
       client.updateIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("pagespeed/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updatePagespeed(@QueryParam("vfsid") String vfsId,
+                               @QueryParam("projectid") String projectId,
+                               @Context SecurityContext security) throws Exception
    {
       client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("queues/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void updateQueues(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void updateQueues(@QueryParam("vfsid") String vfsId,
+                            @QueryParam("projectid") String projectId,
+                            @Context SecurityContext security) throws Exception
    {
       client.updateQueues(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
    }
 
-   @POST
+   @GET
    @Path("vacuum_indexes")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void vacuumIndexes(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      Map<String, String> credentials) throws Exception
+   public void vacuumIndexes(@QueryParam("vfsid") String vfsId,
+                             @QueryParam("projectid") String projectId,
+                             @Context SecurityContext security) throws Exception
    {
       client.vacuumIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         credentials.get("email"), credentials.get("password"));
+         getUserId(security));
+   }
+
+   private String getUserId(SecurityContext security)
+   {
+      Principal principal = security.getUserPrincipal();
+      if (principal != null)
+      {
+         return principal.getName();
+      }
+      return null;
    }
 
    @GET
    @Path("change-appid/{vfsid}/{projectid}")
    public Response changeApplicationId(@PathParam("vfsid") String vfsId, //
-      @PathParam("projectid") String projectId, //
-      @QueryParam("app_id") String appId) throws VirtualFileSystemException, IOException
+                                       @PathParam("projectid") String projectId, //
+                                       @QueryParam("app_id") String appId) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
@@ -292,6 +308,7 @@ public class AppEngineService
          return Response
             .ok(
                "Now your application is ready to deploy. You can close this tab. Please, switch to IDE tab and push Deploy button")
+            .type(MediaType.TEXT_PLAIN)
             .build();
       }
       else
@@ -304,7 +321,7 @@ public class AppEngineService
 
    /**
     * Change appengine-web.xml file setting application's id.
-    * 
+    *
     * @param vfs virtual file system
     * @param path path to project's root
     * @param appId application's id
@@ -322,14 +339,6 @@ public class AppEngineService
             new ByteArrayInputStream(newContent.getBytes()), null);
          return true;
       }
-      catch (ItemNotFoundException e)
-      {
-         return false;
-      }
-      catch (PermissionDeniedException e)
-      {
-         return false;
-      }
       catch (VirtualFileSystemException e)
       {
          return false;
@@ -342,7 +351,7 @@ public class AppEngineService
 
    /**
     * Change app.yaml file setting application's id.
-    * 
+    *
     * @param vfs virtual file system
     * @param path path to project's root
     * @param appId application's id
@@ -359,14 +368,6 @@ public class AppEngineService
          vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),
             new ByteArrayInputStream(newContent.getBytes()), null);
          return true;
-      }
-      catch (ItemNotFoundException e)
-      {
-         return false;
-      }
-      catch (PermissionDeniedException e)
-      {
-         return false;
       }
       catch (VirtualFileSystemException e)
       {

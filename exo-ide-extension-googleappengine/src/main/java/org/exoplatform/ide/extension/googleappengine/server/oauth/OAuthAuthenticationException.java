@@ -16,39 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.appengine.tools.admin;
-
-import org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-
-import java.io.IOException;
-
-import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
+package org.exoplatform.ide.extension.googleappengine.server.oauth;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class IdeClientLoginServerConnection extends ClientLoginServerConnection
+@SuppressWarnings("serial")
+public final class OAuthAuthenticationException extends Exception
 {
-   private final AppEngineCookieStore cookieStore;
-
-   public IdeClientLoginServerConnection(ConnectOptions options, AppEngineCookieStore cookieStore)
+   public OAuthAuthenticationException(String message)
    {
-      super(options);
-      this.cookieStore = cookieStore;
-   }
-
-   @Override
-   public void saveCookies() throws IOException
-   {
-      try
-      {
-         cookieStore.saveCookies(options.getUserId(), cookies);
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new IOException(e.getMessage(), e);
-      }
+      super(message);
    }
 }

@@ -311,7 +311,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineCookieStore</type>
+      <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
    </component>
 
    <external-component-plugins>

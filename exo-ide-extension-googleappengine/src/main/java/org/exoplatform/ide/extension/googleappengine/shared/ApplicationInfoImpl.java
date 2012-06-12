@@ -22,18 +22,18 @@ package org.exoplatform.ide.extension.googleappengine.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ApplicationInfoBean implements ApplicationInfo
+public class ApplicationInfoImpl implements ApplicationInfo
 {
    private String applicationId;
    private String webURL;
 
-   public ApplicationInfoBean(String applicationId, String webURL)
+   public ApplicationInfoImpl(String applicationId, String webURL)
    {
       this.applicationId = applicationId;
       this.webURL = webURL;
    }
 
-   public ApplicationInfoBean()
+   public ApplicationInfoImpl()
    {
    }
 
