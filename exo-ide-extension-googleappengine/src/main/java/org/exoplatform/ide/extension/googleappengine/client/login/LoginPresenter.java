@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -108,12 +109,15 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private void doLogin()
    {
-      String url = GWT.getModuleBaseURL().replace("/" + GWT.getModuleName(), "");
-      url = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
-      url +=
-         GoogleAppEngineClientService.getInstance().getAuthUrl().startsWith("/") ? GoogleAppEngineClientService
-            .getInstance().getAuthUrl() : "/" + GoogleAppEngineClientService.getInstance().getAuthUrl();
-      Window.open(url, "_blank", null);
+      UrlBuilder builder = new UrlBuilder();
+      builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
+         .setPath(GoogleAppEngineClientService.getInstance().getAuthUrl());
+      if (Window.Location.getPort() != null && !Window.Location.getPort().isEmpty())
+      {
+         builder.setPort(Integer.parseInt(Window.Location.getPort()));
+      }
+
+      Window.open(builder.buildString(), "_blank", null);
 
       IDE.getInstance().closeView(display.asView().getId());
    }
