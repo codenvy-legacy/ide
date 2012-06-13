@@ -34,6 +34,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("cancel.button")
    String cancelButton();
+   
+   @Key("go.button")
+   String goButton();
 
    @Key("login.button")
    String loginButton();
@@ -155,14 +158,8 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("login.view.title")
    String loginViewTitle();
 
-   @Key("email.field.title")
-   String emailFieldTitle();
-
-   @Key("password.field.title")
-   String passwordFieldTitle();
-
-   @Key("login.failed.message")
-   String loginFailedMessage();
+   @Key("login.message")
+   String loginMessage();
 
    /* Logs */
    @Key("logs.view.title")
@@ -315,7 +312,7 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("backend.delete.title")
    String backendDeleteTitle();
-   
+
    @Key("backend.delete.question")
    String backendDeleteQuestion(String backend);
 

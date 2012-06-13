@@ -93,7 +93,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.extension.openshift.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.openshift.client.login.LoginEvent)
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent)
     */
    @Override
    public void onLogin(LoginEvent event)

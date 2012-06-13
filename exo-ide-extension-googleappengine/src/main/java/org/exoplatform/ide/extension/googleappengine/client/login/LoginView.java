@@ -43,9 +43,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 410;
+   private static final int WIDTH = 425;
 
-   private static final int HEIGHT = 205;
+   private static final int HEIGHT = 180;
 
    private static final String LABEL_ID = "ideLoginViewLabel";
 
@@ -80,7 +80,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public LoginView()
    {
       super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginViewTitle(), new Image(
-         GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT);
+         GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT, true);
       add(uiBinder.createAndBindUi(this));
 
       goButton.setButtonId(GO_BUTTON_ID);
