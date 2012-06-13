@@ -161,6 +161,8 @@ public class CommitTest extends BaseTest
       createFiles();
 
       IDE.GIT.ADD.addToIndex();
+      //add delay for reparse on Dav-fs after add to index operation
+      Thread.sleep(3000);
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);

@@ -59,6 +59,8 @@ public class ResetToCommitTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, ZIP_PATH);
+         //need for reparce zip project
+         Thread.sleep(3000);
       }
       catch (Exception e)
       {

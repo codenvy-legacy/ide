@@ -58,7 +58,6 @@ public class RemoveFilesTest extends BaseTest
          VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
          VirtualFileSystemUtils.put(new byte[]{1}, MimeType.TEXT_CSS, WS_URL + PROJECT + "/" + TEST_FILE1);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + TEST_FOLDER);
-
          Thread.sleep(3000);
       }
       catch (Exception e)

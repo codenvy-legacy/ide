@@ -87,6 +87,10 @@ public class DeleteRepositoryTest extends BaseTest
 
       IDE.OUTPUT.waitForMessageShow(1, 15);
       IDE.LOADER.waitClosed();
+      
+      //delay need for end git 
+      Thread.sleep(3000);
+      
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.DELETE));
       
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.DELETE);

@@ -60,6 +60,7 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
+         Thread.sleep(1000);
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
          Thread.sleep(3000);
       }

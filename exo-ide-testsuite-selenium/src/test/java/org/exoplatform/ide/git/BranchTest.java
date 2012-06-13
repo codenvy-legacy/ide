@@ -59,7 +59,7 @@ public class BranchTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, ZIP_PATH);
-         Thread.sleep(2000);
+         Thread.sleep(3000);
       }
       catch (Exception e)
       {
@@ -72,7 +72,7 @@ public class BranchTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         Thread.sleep(2000);
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -186,11 +186,15 @@ public class BranchTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
+      //this delay need for reparse project in Dav-Fs
+      Thread.sleep(1500);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
 
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
       IDE.GIT.BRANCHES.waitOpened();
+      
+      // System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 
