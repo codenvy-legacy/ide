@@ -42,7 +42,8 @@ import org.junit.runners.Suite.SuiteClasses;
                RemoteRepositoriesTest.class,//
                PushTest.class,//
                DeleteRepositoryTest.class,//
-               PullTest.class})
+               PullTest.class,//
+               MergeTest.class})
 public class GitTestSuite
 {
 

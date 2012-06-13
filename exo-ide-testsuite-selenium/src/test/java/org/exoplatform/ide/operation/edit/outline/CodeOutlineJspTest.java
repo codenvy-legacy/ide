@@ -148,16 +148,25 @@ public class CodeOutlineJspTest extends BaseTest
       // check highlight tag body 
       IDE.GOTOLINE.goToLine(12);
       IDE.STATUSBAR.waitCursorPositionAt("12 : 1");
+      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
+      //Driver Wait method for highliter element does not works.
+      Thread.sleep(500);
       IDE.OUTLINE.isItemSelected(6);
 
       //check highlight tag java code
       IDE.GOTOLINE.goToLine(4);
       IDE.STATUSBAR.waitCursorPositionAt("4 : 1");
+      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
+      //Driver Wait method for highliter element does not works.
+      Thread.sleep(500);
       IDE.OUTLINE.isItemSelected(3);
 
       //check highlight tag java code
       IDE.GOTOLINE.goToLine(23);
       IDE.STATUSBAR.waitCursorPositionAt("23 : 1");
+      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
+      //Driver Wait method for highliter element does not works.
+      Thread.sleep(500);
       IDE.OUTLINE.isItemSelected(11);
    }
 
