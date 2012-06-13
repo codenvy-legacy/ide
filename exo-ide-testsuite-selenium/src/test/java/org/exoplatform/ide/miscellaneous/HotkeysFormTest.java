@@ -56,7 +56,7 @@ public class HotkeysFormTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(ENTRY_POINT_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {
