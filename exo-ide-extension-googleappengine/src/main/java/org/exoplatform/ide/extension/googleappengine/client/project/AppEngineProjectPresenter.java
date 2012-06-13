@@ -347,18 +347,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    @Override
    public void onManageAppEngineProject(ManageAppEngineProjectEvent event)
    {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-      display.enableConfigureBackendButton(false);
-      display.enableDeleteBackendButton(false);
-      display.enableRollbackBackendButton(false);
-      display.enableUpdateBackendButton(false);
       getResourceLimits();
-      getCrons();
    }
 
    /**
@@ -532,7 +521,9 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
                @Override
                protected void onSuccess(List<ResourceLimit> result)
                {
+                  openView();
                   display.getResourceLimitGrid().setValue(result);
+                  getCrons();
                   getBackends();
                }
             });
@@ -541,6 +532,20 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+   
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+      }
+      display.enableConfigureBackendButton(false);
+      display.enableDeleteBackendButton(false);
+      display.enableRollbackBackendButton(false);
+      display.enableUpdateBackendButton(false);
    }
 
    /**

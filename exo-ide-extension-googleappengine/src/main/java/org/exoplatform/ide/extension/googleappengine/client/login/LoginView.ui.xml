@@ -14,11 +14,13 @@
       }
       
       .label {
-      	margin-top: 5px;
+      	margin-top: 7px;
+      	margin-left: 10px;
       	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	float: left;
-      	color: #D21A1A;
+      	float: right;
+      	height: 64px;
+      	width: 78%;
       }
       
       .space {
@@ -28,14 +30,15 @@
    <f:Border margin="15" borderColor="transparent">
       <f:layer top="0" bottom="30">
          <g:FlowPanel>
-            <f:Label ui:field="label"></f:Label>
+            <g:Image resource="{resource.googleAppEngineLogo}" width="64px" height="64" styleName="{style.left-float}"></g:Image>
+            <f:Label ui:field="label" value="{locale.loginMessage}" isHTML="true" styleName="{style.label}"></f:Label>
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="goButton" width="90" height="22" text="Go" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
+            <f:ImageButton ui:field="goButton" width="90" height="22" text="{locale.goButton}" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
    </f:Border>
