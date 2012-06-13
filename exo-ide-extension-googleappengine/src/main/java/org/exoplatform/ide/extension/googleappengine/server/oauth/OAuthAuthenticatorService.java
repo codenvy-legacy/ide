@@ -46,8 +46,7 @@ public class OAuthAuthenticatorService
    @Path("auth")
    public Response authenticate(@Context UriInfo uriInfo) throws OAuthAuthenticationException
    {
-      final String redirectUrl = uriInfo.getBaseUriBuilder().path(getClass(), "callback").build().toString();
-      return Response.temporaryRedirect(URI.create(oauth.authenticate(redirectUrl))).build();
+      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUri())).build();
    }
 
    @GET
@@ -59,8 +58,7 @@ public class OAuthAuthenticatorService
       {
          throw new OAuthAuthenticationException("User is not logged in. ");
       }
-      final String redirectUrl = uriInfo.getBaseUriBuilder().path(getClass(), "callback").build().toString();
-      oauth.callback(uriInfo.getRequestUri().toString(), redirectUrl, principal.getName());
+      oauth.callback(uriInfo.getRequestUri().toString(), principal.getName());
       return Response.ok("<html><body>Authentication successful. Please, switch to IDE tab</body></html>",
          MediaType.TEXT_HTML).build();
    }
