@@ -25,6 +25,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -153,7 +155,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  if ("STARTED".equals(result.getState()))
+                  if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
                   {
                      String msg =
                         CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStarted(result.getName());
@@ -235,26 +237,31 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  if (!"STARTED".equals(result.getState()))
+                  if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
                   {
                      String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
-                     IDE.fireEvent(new OutputEvent(msg));
-                     return;
-                  }
-                  final String appUris = getAppUrisAsString(result);
-                  String msg = "";
-                  if (appUris.isEmpty())
-                  {
-                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationCreatedSuccessfully(result.getName());
+                     if (result.getUris().isEmpty())
+                     {
+                        msg += "<br>" + CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedWithNoUrls();
+                     }
+                     else
+                     {
+                        msg +=
+                           "<br>"
+                              + CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
+                                 getAppUrisAsString(result));
+                     }
+                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                   }
                   else
                   {
-                     msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(), appUris);
+                     String msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
                   }
-                  IDE.fireEvent(new OutputEvent(msg));
-                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                 
                }
             });
       }
@@ -371,19 +378,29 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  final String appUris = getAppUrisAsString(result);
-                  String msg = "";
-                  if (appUris.isEmpty())
+                  if (result.getInstances() == result.getRunningInstances())
                   {
-                     msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+                     final String appUris = getAppUrisAsString(result);
+                     String msg = "";
+                     if (appUris.isEmpty())
+                     {
+                        msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+                     }
+                     else
+                     {
+                        msg =
+                           CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(),
+                              appUris);
+                     }
+                     IDE.fireEvent(new OutputEvent(msg, Type.INFO));
+                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                   }
                   else
                   {
-                     msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(), appUris);
+                     String msg =
+                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg, Type.ERROR));
                   }
-                  IDE.fireEvent(new OutputEvent(msg));
-                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                }
             });
       }

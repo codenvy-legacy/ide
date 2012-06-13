@@ -70,8 +70,8 @@ public class HotkeysCustomizationTest extends BaseTest
       deleteCookies();
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
       {

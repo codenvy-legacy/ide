@@ -59,10 +59,12 @@ public class ShellView extends Composite implements ShellPresenter.Display
    @UiField
    TermText termText;
 
-   /**
-    * 
-    */
    private TextBox textBox;
+
+   /**
+    * Selected text before mouse up event.
+    */
+   private String selectedText;
 
    public ShellView()
    {
@@ -73,7 +75,7 @@ public class ShellView extends Composite implements ShellPresenter.Display
 
       focusInConsole();
       getElement().setTabIndex(0);
-      sinkEvents(Event.ONFOCUS);
+      sinkEvents(Event.ONMOUSEUP | Event.ONMOUSEDOWN);
    }
 
    /**
@@ -82,9 +84,54 @@ public class ShellView extends Composite implements ShellPresenter.Display
    @Override
    public void onBrowserEvent(Event event)
    {
-      focusInConsole();
-      super.onBrowserEvent(event);
+      switch (DOM.eventGetType(event))
+      {
+         case Event.ONMOUSEDOWN :
+            onMouseDown();
+            break;
+
+         case Event.ONMOUSEUP :
+            onMouseUp();
+            break;
+      }
    }
+
+   /**
+    * Remember selected text before on mouse down event.
+    */
+   private void onMouseDown()
+   {
+      selectedText = getSelectedText();
+   }
+
+   /**
+    * Leave focus if text selection changed.
+    */
+   private void onMouseUp()
+   {
+      String nowSelected = getSelectedText();
+      if (nowSelected == null || nowSelected.isEmpty() || nowSelected == selectedText)
+      {
+         focusInConsole();
+      }
+   }
+
+   /**
+    * Get selected text.
+    * 
+    * @return {@link String} selected text
+    */
+   private native String getSelectedText() /*-{
+		var txt = '';
+		if ($wnd.getSelection) {
+			txt += $wnd.getSelection();
+		} else if (document.getSelection) {
+			txt += document.getSelection();
+		} else if (document.selection) {
+			txt += document.selection.createRange().text;
+		}
+		return txt;
+   }-*/;
 
    /**
     * @see org.exoplatform.ide.shell.client.ConsoleWriter#print(java.lang.String)

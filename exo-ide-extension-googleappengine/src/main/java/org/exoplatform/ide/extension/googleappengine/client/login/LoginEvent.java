@@ -35,42 +35,6 @@ public class LoginEvent extends GwtEvent<LoginHandler>
    public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
 
    /**
-    * Handler for performing operation with passing credentials.
-    */
-   private PerformOperationHandler performOperationHandler;
-
-   /**
-    * Login canceled handler.
-    */
-   private LoginCanceledHandler loginCanceled;
-
-   /**
-    * @param performOperationHandler handler for performing operation with passing credentials
-    * @param loginCanceled login canceled handler
-    */
-   public LoginEvent(PerformOperationHandler performOperationHandler, LoginCanceledHandler loginCanceled)
-   {
-      this.performOperationHandler = performOperationHandler;
-      this.loginCanceled = loginCanceled;
-   }
-
-   /**
-    * @return {@link PerformOperationHandler} handler for performing operation with passing credentials
-    */
-   public PerformOperationHandler getPerformOperationHandler()
-   {
-      return performOperationHandler;
-   }
-
-   /**
-    * @return {@link LoginCanceledHandler} login canceled handler
-    */
-   public LoginCanceledHandler getLoginCanceled()
-   {
-      return loginCanceled;
-   }
-
-   /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override

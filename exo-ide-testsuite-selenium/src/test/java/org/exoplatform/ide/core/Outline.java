@@ -156,6 +156,24 @@ public class Outline extends AbstractTestModule
          }
       });
    }
+   
+   /**
+    * Wait Outline view opened.
+    * 
+    * @throws Exception
+    */
+   public void waitHighliterRedraw() throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return highlighter != null && highlighter.isDisplayed();
+         }
+      });
+   }
+   
 
    /**
     * Wait Outline view closed.
@@ -319,11 +337,13 @@ public class Outline extends AbstractTestModule
     * Returns the outline's item selection state. Row number starts from <code>1</code>.
     * 
     * @param rowNumber number of the row
+    * @throws Exception 
     */
 
-   public boolean isItemSelected(int rowNumber)
+   public boolean isItemSelected(int rowNumber) throws Exception
    {
       int linePosition = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
+      waitHighliterRedraw();
       return highlighter.getLocation().y==linePosition;
    }
 

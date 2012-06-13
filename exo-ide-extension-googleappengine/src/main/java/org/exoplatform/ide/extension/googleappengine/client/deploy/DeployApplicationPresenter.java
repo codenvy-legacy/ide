@@ -32,8 +32,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -47,26 +45,7 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements DeployApplicationHandler,
    ProjectBuiltHandler
 {
-   private String email;
-
-   private String password;
-
-   private LoggedInHandler loggedInHandler;
-
    private String applicationUrl;
-
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String e, String p, LoggedInHandler handler)
-      {
-         email = e;
-         password = p;
-         loggedInHandler = handler;
-         deployApplication();
-      }
-   };
 
    public DeployApplicationPresenter()
    {
@@ -84,9 +63,6 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    {
       if (isAppEngineProject())
       {
-         email = null;
-         password = null;
-         loggedInHandler = null;
          applicationUrl = null;
          if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
          {
@@ -111,18 +87,13 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          AutoBeanUnmarshaller<ApplicationInfo> unmarshaller =
             new AutoBeanUnmarshaller<ApplicationInfo>(applicationInfo);
 
-         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl, email,
-            password,
-            new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller, performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl,
+            new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller)
             {
 
                @Override
                protected void onSuccess(ApplicationInfo result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
                   StringBuilder link = new StringBuilder("<a href='");
                   link.append(result.getWebURL()).append("' target='_blank'>").append(result.getWebURL())
                      .append("</a>");

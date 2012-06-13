@@ -36,8 +36,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.model.StringUnmarshaller;
 
 import java.util.LinkedHashMap;
@@ -74,16 +72,6 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
       severities.put("CRITICAL", "Critical");
    }
 
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         getLogs(email, password, loggedInHandler);
-      }
-   };
-
    public LogsPresenter()
    {
       IDE.addHandler(ShowLogsEvent.TYPE, this);
@@ -98,7 +86,7 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
          @Override
          public void onClick(ClickEvent event)
          {
-            getLogs(null, null, null);
+            getLogs();
          }
       });
    }
@@ -123,7 +111,7 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
          {
             ((View)display).setViewVisible();
          }
-         getLogs(null, null, null);
+         getLogs();
       }
       else
       {
@@ -131,29 +119,19 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
       }
    }
 
-   public void getLogs(String email, String password, final LoggedInHandler loggedInHandler)
+   public void getLogs()
    {
       String logSeverity = display.getSeverityField().getValue();
       int numDays = isCorrectValue() ? Integer.parseInt(display.getDaysField().getValue()) : 1;
       try
       {
-         GoogleAppEngineClientService.getInstance().requestLogs(
-            currentVfs.getId(),
-            currentProject.getId(),
-            numDays,
+         GoogleAppEngineClientService.getInstance().requestLogs(currentVfs.getId(), currentProject.getId(), numDays,
             logSeverity,
-            email,
-            password,
-            new GoogleAppEngineAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()),
-               performOperationHandler, null)
+            new GoogleAppEngineAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
                   display.setLogs(result.toString());
                }
             });

@@ -360,7 +360,7 @@
 {
     "command": ["appcfg update"],
     "path": "/ide/appengine/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Create or update an app version.",
     "params": [
       {
@@ -381,27 +381,13 @@
 	  "options":["-w", "--war"],
 	  "hasArg": true,
 	  "mandatory": false
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg rollback"],
     "path": "/ide/appengine/rollback",
-    "method": "POST",
+    "method": "GET",
     "description" : "Rollback an in-progress update.",
     "params": [
       {
@@ -415,27 +401,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backend configure"],
     "path": "/ide/appengine/backend/configure",
-    "method": "POST",
+    "method": "GET",
     "description" : "Configure the specified backend.",
     "params": [
       {
@@ -456,27 +428,13 @@
 	  "options":[],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backend set_state"],
     "path": "/ide/appengine/backend/set_state",
-    "method": "POST",
+    "method": "GET",
     "description" : "Set start/stop state of the specified backend.",
     "params": [
       {
@@ -504,27 +462,13 @@
 	  "options":[-s, --state],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backend delete"],
     "path": "/ide/appengine/backend/delete",
-    "method": "POST",
+    "method": "GET",
     "description" : "Delete the specified backend.",
     "params": [
       {
@@ -545,27 +489,13 @@
 	  "options":[],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backend rollback"],
     "path": "/ide/appengine/backend/rollback",
-    "method": "POST",
+    "method": "GET",
     "description" : "Roll back a previously in-progress update.",
     "params": [
       {
@@ -586,27 +516,13 @@
 	  "options":[],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backend update"],
     "path": "/ide/appengine/backend/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update the specified backend.",
     "params": [
       {
@@ -627,27 +543,13 @@
 	  "options":[],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backends update"],
     "path": "/ide/appengine/backends/update_all",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update all backend.",
     "params": [
       {
@@ -661,27 +563,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backends rollback"],
     "path": "/ide/appengine/backends/rollback",
-    "method": "POST",
+    "method": "GET",
     "description" : "Roll back all in-progress update.",
     "params": [
       {
@@ -695,27 +583,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg backends"],
     "path": "/ide/appengine/backends/list",
-    "method": "POST",
+    "method": "GET",
     "description" : "List all backends.",
     "params": [
       {
@@ -729,27 +603,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg cron_info"],
     "path": "/ide/appengine/cron/info",
-    "method": "POST",
+    "method": "GET",
     "description" : "Displays times for the next several runs of each cron job.",
     "params": [
       {
@@ -763,27 +623,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg update_cron"],
     "path": "/ide/appengine/cron/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update application cron jobs.",
     "params": [
       {
@@ -797,27 +643,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg resource_limits_info"],
     "path": "/ide/appengine/resource_limits",
-    "method": "POST",
+    "method": "GET",
     "description" : "Display resource limits.",
     "params": [
       {
@@ -831,27 +663,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg request_logs"],
     "path": "/ide/appengine/logs",
-    "method": "POST",
+    "method": "GET",
     "description" : "Write request logs in Apache common log format.",
     "params": [
       {
@@ -879,27 +697,13 @@
 	  "options":[-s, --severity],
 	  "hasArg": true,
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg update_dos"],
     "path": "/ide/appengine/dos/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update application DoS protection configuration.",
     "params": [
       {
@@ -913,27 +717,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg update_indexes"],
     "path": "/ide/appengine/indexes/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update application indexes.",
     "params": [
       {
@@ -947,27 +737,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg vacuum_indexes"],
     "path": "/ide/appengine/vacuum_indexes",
-    "method": "POST",
+    "method": "GET",
     "description" : "Delete unused indexes from application.",
     "params": [
       {
@@ -981,27 +757,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg update_pagespeed"],
     "path": "/ide/appengine/pagespeed/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update page speed.",
     "params": [
       {
@@ -1015,27 +777,13 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 },
 {
     "command": ["appcfg update_queues"],
     "path": "/ide/appengine/queues/update",
-    "method": "POST",
+    "method": "GET",
     "description" : "Update application task queue definitions.",
     "params": [
       {
@@ -1049,20 +797,6 @@
 	  "type": "QUERY",
 	  "options":[],
 	  "mandatory": true
-      },
-      {
-	  "name": "email",
-	  "type": "BODY",
-	  "options":["-e", "--email"],
-	  "hasArg": true,
-	  "mandatory": false
-      },
-      {
-	  "name": "password",
-	  "type": "BODY",
-	  "options":["-p", "--passwd"],
-	  "hasArg": true,
-	  "mandatory": false
       }
     ]
 }

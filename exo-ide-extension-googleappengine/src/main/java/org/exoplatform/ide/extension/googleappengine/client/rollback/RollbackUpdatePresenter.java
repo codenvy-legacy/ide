@@ -24,13 +24,10 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -39,21 +36,8 @@ import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperati
  */
 public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements RollbackUpdateHandler
 {
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         rollback(email, password, loggedInHandler);
-      }
-   };
-
    public RollbackUpdatePresenter()
    {
-      //TODO removed:
-      //DE.getInstance().addControl(new RollbackControl());
-
       IDE.addHandler(RollbackUpdateEvent.TYPE, this);
    }
 
@@ -65,25 +49,21 @@ public class RollbackUpdatePresenter extends GoogleAppEnginePresenter implements
    {
       if (isAppEngineProject())
       {
-         rollback(null, null, null);
+         rollback();
       }
    }
 
-   public void rollback(String email, String password, final LoggedInHandler loggedInHandler)
+   public void rollback()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().rollback(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().rollback(currentVfs.getId(), currentProject.getId(),
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.rollbackUpdateSuccess(),
                      Type.INFO));
                }

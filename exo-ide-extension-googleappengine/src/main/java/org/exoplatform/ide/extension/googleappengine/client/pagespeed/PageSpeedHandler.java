@@ -29,8 +29,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -45,15 +43,6 @@ public class PageSpeedHandler extends GoogleAppEnginePresenter implements Update
       IDE.addHandler(UpdatePageSpeedEvent.TYPE, this);
    }
 
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updatePageSpeed(email, password, loggedInHandler);
-      }
-   };
-
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedHandler#onUpdatePageSpeed(org.exoplatform.ide.extension.googleappengine.client.pagespeed.UpdatePageSpeedEvent)
     */
@@ -62,7 +51,7 @@ public class PageSpeedHandler extends GoogleAppEnginePresenter implements Update
    {
       if (isAppEngineProject())
       {
-         updatePageSpeed(null, null, null);
+         updatePageSpeed();
       }
       else
       {
@@ -70,22 +59,17 @@ public class PageSpeedHandler extends GoogleAppEnginePresenter implements Update
       }
    }
 
-   public void updatePageSpeed(String email, String password, final LoggedInHandler loggedInHandler)
+   public void updatePageSpeed()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().updatePagespeed(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().updatePagespeed(currentVfs.getId(), currentProject.getId(),
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-
                   IDE.fireEvent(new OutputEvent(
                      GoogleAppEngineExtension.GAE_LOCALIZATION.updatePageSpeedSuccessfully(), Type.INFO));
                }

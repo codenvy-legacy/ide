@@ -51,8 +51,6 @@ import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplica
 import org.exoplatform.ide.extension.googleappengine.client.dos.UpdateDosEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesEvent;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VacuumIndexesEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.logs.ShowLogsEvent;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.BackendsUnmarshaller;
@@ -131,36 +129,6 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    private Display display;
 
    private Backend selectedBackend;
-
-   private PerformOperationHandler getCronsOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         getCrons(email, password, loggedInHandler);
-      }
-   };
-
-   private PerformOperationHandler getBackendsOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         getBackends(email, password, loggedInHandler);
-      }
-   };
-
-   private PerformOperationHandler getResourceLimitsOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         getResourceLimits(email, password, loggedInHandler);
-      }
-   };
 
    public AppEngineProjectPresenter()
    {
@@ -379,18 +347,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    @Override
    public void onManageAppEngineProject(ManageAppEngineProjectEvent event)
    {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-      display.enableConfigureBackendButton(false);
-      display.enableDeleteBackendButton(false);
-      display.enableRollbackBackendButton(false);
-      display.enableUpdateBackendButton(false);
-      getResourceLimits(null, null, null);
-      getCrons(null, null, null);
+      getResourceLimits();
    }
 
    /**
@@ -500,17 +457,15 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       }
    }
 
-   private void getCrons(String email, String password, final LoggedInHandler loggedInHandler)
+   private void getCrons()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().cronInfo(
             currentVfs.getId(),
             currentProject.getId(),
-            email,
-            password,
             new GoogleAppEngineAsyncRequestCallback<List<CronEntry>>(new CronListUnmarshaller(
-               new ArrayList<CronEntry>()), getCronsOperationHandler, null)
+               new ArrayList<CronEntry>()))
             {
 
                @Override
@@ -531,17 +486,12 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       IDE.fireEvent(new UpdateBackendStateEvent(backendName, state));
    }
 
-   private void getBackends(String email, String password, final LoggedInHandler loggedInHandler)
+   private void getBackends()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().listBackends(
-            currentVfs.getId(),
-            currentProject.getId(),
-            email,
-            password,
-            new GoogleAppEngineAsyncRequestCallback<List<Backend>>(new BackendsUnmarshaller(new ArrayList<Backend>()),
-               getBackendsOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().listBackends(currentVfs.getId(), currentProject.getId(),
+            new GoogleAppEngineAsyncRequestCallback<List<Backend>>(new BackendsUnmarshaller(new ArrayList<Backend>()))
             {
 
                @Override
@@ -557,24 +507,24 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       }
    }
 
-   private void getResourceLimits(String email, String password, final LoggedInHandler loggedInHandler)
+   private void getResourceLimits()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().getResourceLimits(
             currentVfs.getId(),
             currentProject.getId(),
-            email,
-            password,
             new GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>>(new ResourceLimitsUnmarshaller(
-               new ArrayList<ResourceLimit>()), getResourceLimitsOperationHandler, null)
+               new ArrayList<ResourceLimit>()))
             {
 
                @Override
                protected void onSuccess(List<ResourceLimit> result)
                {
+                  openView();
                   display.getResourceLimitGrid().setValue(result);
-                  getBackends(null, null, null);
+                  getCrons();
+                  getBackends();
                }
             });
       }
@@ -582,6 +532,20 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+   
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+      }
+      display.enableConfigureBackendButton(false);
+      display.enableDeleteBackendButton(false);
+      display.enableRollbackBackendButton(false);
+      display.enableUpdateBackendButton(false);
    }
 
    /**
@@ -592,7 +556,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    {
       if (display != null)
       {
-         getBackends(null, null, null);
+         getBackends();
       }
    }
 
