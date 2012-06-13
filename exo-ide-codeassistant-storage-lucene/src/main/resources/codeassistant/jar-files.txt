@@ -1,55 +1,373 @@
-jars/rt.jar
-
-jars/chromattic.api-1.1.0-beta6.jar
-jars/chromattic.apt-1.1.0-beta6.jar
-jars/chromattic.core-1.1.0-beta6.jar
-jars/chromattic.ext-1.1.0-beta6.jar
-jars/chromattic.spi-1.1.0-beta6.jar
-jars/exo.core.component.database-2.4.7-GA.jar
-jars/exo.core.component.document-2.4.7-GA.jar
-jars/exo.core.component.organization.api-2.4.7-GA.jar
-jars/exo.core.component.script.groovy-2.4.7-GA.jar
-jars/exo.core.component.security.core-2.4.7-GA.jar
-jars/exo.core.component.xml-processing-2.4.7-GA.jar
-jars/exo.jcr.component.core-1.14.7-GA.jar
-jars/exo.jcr.component.ext-1.14.7-GA.jar
-jars/exo.jcr.component.webdav-1.14.7-GA.jar
-jars/exo.jcr.framework.command-1.14.7-GA.jar
-jars/exo.jcr.framework.web-1.14.7-GA.jar
-jars/exo.kernel.commons-2.3.7-GA.jar
-jars/exo.kernel.component.command-2.3.7-GA.jar
-jars/exo.kernel.component.common-2.3.7-GA.jar
-jars/exo.kernel.container-2.3.7-GA.jar
-jars/exo.ws.commons-2.2.7-GA.jar
-jars/exo.ws.frameworks.json-2.2.7-GA.jar
-jars/exo.ws.rest.core-2.2.7-GA.jar
-jars/exo.ws.rest.ext-2.2.7-GA.jar
-jars/jcr-1.0.jar
-jars/jsr250-api-1.0.jar
-jars/jsr311-api-1.0.jar
-jars/spring-aop-3.0.5.RELEASE.jar
-jars/spring-asm-3.0.5.RELEASE.jar
-jars/spring-beans-3.0.5.RELEASE.jar
-jars/spring-context-3.0.5.RELEASE.jar
-jars/spring-context-support-3.0.5.RELEASE.jar
-jars/spring-core-3.0.5.RELEASE.jar
-jars/spring-expression-3.0.5.RELEASE.jar
-jars/spring-web-3.0.5.RELEASE.jar
-jars/spring-webmvc-3.0.5.RELEASE.jar
-jars/aopalliance-1.0.jar
-jars/servlet-api-2.5.jar
-
-jars/appengine-api-1.0-sdk-1.6.5.jar
-jars/appengine-api-labs-1.6.5.jar
-jars/appengine-jsr107cache-1.6.5.jar
-jars/appengine-tools-sdk-1.6.5.jar
-jars/datanucleus-appengine-1.0.10.jar
-jars/datanucleus-core-1.1.5.jar
-jars/datanucleus-jpa-1.1.5.jar
-jars/el-api-2.2.jar
-jars/geronimo-jpa_3.0_spec-1.1.1.jar
-jars/geronimo-jta_1.1_spec-1.1.1.jar
-jars/jdo2-api-2.3-eb.jar
-jars/jsp-api-6.0.35.jar
-jars/jsr107cache-1.1.jar
-jars/gwt-user-2.4.0.jar
+[
+{
+  "path" :"jars/rt.jar",
+  "groupID" : "java",
+  "artifactID" :"rt",
+  "version" : "1.6",
+  "type":"jar"
+},
+{
+  "path" :"jars/chromattic.api-1.1.0-beta6.jar",
+  "groupID" : "org.chromattic",
+  "artifactID" :"chromattic.api",
+  "version" : "1.1.0-beta6",
+  "type":"jar"
+},
+{
+  "path" :"jars/chromattic.apt-1.1.0-beta6.jar",
+  "groupID" : "org.chromattic",
+  "artifactID" :"chromattic.apt",
+  "version" : "1.1.0-beta6",
+  "type":"jar"
+},
+{
+  "path" :"jars/chromattic.core-1.1.0-beta6.jar",
+  "groupID" : "org.chromattic",
+  "artifactID" :"chromattic.core",
+  "version" : "1.1.0-beta6",
+  "type":"jar"
+},
+{
+  "path" :"jars/chromattic.ext-1.1.0-beta6.jar",
+  "groupID" : "org.chromattic",
+  "artifactID" :"chromattic.ext",
+  "version" : "1.1.0-beta6",
+  "type":"jar"
+},
+{
+  "path" :"jars/chromattic.spi-1.1.0-beta6.jar",
+  "groupID" : "org.chromattic",
+  "artifactID" :"chromattic.spi",
+  "version" : "1.1.0-beta6",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.database-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.database",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.document-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.document",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.organization.api-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.organization.api",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.security.core-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.security.core",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.script.groovy-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.script.groovy",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.core.component.xml-processing-2.4.7-GA.jar",
+  "groupID" : "org.exoplatform.core",
+  "artifactID" :"exo.core.component.xml-processing",
+  "version" : "2.4.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.jcr.component.core-1.14.7-GA.jar",
+  "groupID" : "org.exoplatform.jcr",
+  "artifactID" :"exo.jcr.component.core",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.jcr.component.ext-1.14.7-GA.jar",
+  "groupID" : "org.exoplatform.jcr",
+  "artifactID" :"exo.jcr.component.ext",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.jcr.component.webdav-1.14.7-GA.jar",
+  "groupID" : "org.exoplatform.jcr",
+  "artifactID" :"exo.jcr.component.webdav",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.jcr.framework.command-1.14.7-GA.jar",
+  "groupID" : "org.exoplatform.jcr",
+  "artifactID" :"exo.jcr.framework.command",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.jcr.framework.web-1.14.7-GA.jar",
+  "groupID" : "org.exoplatform.jcr",
+  "artifactID" :"exo.jcr.framework.web",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.kernel.commons-2.3.7-GA.jar",
+  "groupID" : "org.exoplatform.kernel",
+  "artifactID" :"exo.kernel.commons",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.kernel.component.command-2.3.7-GA.jar",
+  "groupID" : "org.exoplatform.kernel",
+  "artifactID" :"exo.kernel.component.command",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.kernel.component.common-2.3.7-GA.jar",
+  "groupID" : "org.exoplatform.kernel",
+  "artifactID" :"exo.kernel.component.common",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.kernel.container-2.3.7-GA.jar",
+  "groupID" : "org.exoplatform.kernel",
+  "artifactID" :"exo.kernel.container",
+  "version" : "1.14.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.ws.commons-2.2.7-GA.jar",
+  "groupID" : "org.exoplatform.ws",
+  "artifactID" :"exo.ws.commons",
+  "version" : "2.2.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.ws.frameworks.json-2.2.7-GA.jar",
+  "groupID" : "org.exoplatform.ws",
+  "artifactID" :"exo.ws.frameworks.json",
+  "version" : "2.2.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.ws.rest.core-2.2.7-GA.jar",
+  "groupID" : "org.exoplatform.ws",
+  "artifactID" :"exo.ws.rest.core",
+  "version" : "2.2.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/exo.ws.rest.ext-2.2.7-GA.jar",
+  "groupID" : "org.exoplatform.ws",
+  "artifactID" :"exo.ws.rest.ext",
+  "version" : "2.2.7-GA",
+  "type":"jar"
+},
+{
+  "path" :"jars/jcr-1.0.jar",
+  "groupID" : "javax.jcr",
+  "artifactID" :"jcr",
+  "version" : "1.0",
+  "type":"jar"
+},
+{
+  "path" :"jars/jsr250-api-1.0.jar",
+  "groupID" : "javax.annotation",
+  "artifactID" :"jsr250-api",
+  "version" : "1.0",
+  "type":"jar"
+},
+{
+  "path" :"jars/jsr311-api-1.0.jar",
+  "groupID" : "javax.ws.rs",
+  "artifactID" :"jsr311-api",
+  "version" : "1.0",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-aop-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-aop",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-asm-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-asm",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-beans-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-beans",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-context-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-context",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-core-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-core",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-context-support-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-context-support",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-expression-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-expression",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-webmvc-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-webmvc",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/spring-web-3.0.5.RELEASE.jar",
+  "groupID" : "org.springframework",
+  "artifactID" :"spring-web",
+  "version" : "3.0.5.RELEASE",
+  "type":"jar"
+},
+{
+  "path" :"jars/aopalliance-1.0.jar",
+  "groupID" : "aopalliance",
+  "artifactID" :"aopalliance",
+  "version" : "1.0",
+  "type":"jar"
+},
+{
+  "path" :"jars/servlet-api-2.5.jar",
+  "groupID" : "javax.servlet",
+  "artifactID" :"servlet-api",
+  "version" : "2.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/appengine-api-1.0-sdk-1.6.5.jar",
+  "groupID" : "com.google.appengine",
+  "artifactID" :"appengine-api-1.0-sdk",
+  "version" : "1.6.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/appengine-api-labs-1.6.5.jar",
+  "groupID" : "com.google.appengine",
+  "artifactID" :"appengine-api-labs",
+  "version" : "1.6.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/appengine-jsr107cache-1.6.5.jar",
+  "groupID" : "com.google.appengine",
+  "artifactID" :"appengine-jsr107cache",
+  "version" : "1.6.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/appengine-tools-sdk-1.6.5.jar",
+  "groupID" : "com.google.appengine",
+  "artifactID" :"appengine-tools-sdk",
+  "version" : "1.6.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/datanucleus-appengine-1.0.10.jar",
+  "groupID" : "com.google.appengine.orm",
+  "artifactID" :"datanucleus-appengine",
+  "version" : "1.0.10",
+  "type":"jar"
+},
+{
+  "path" :"jars/datanucleus-core-1.1.5.jar",
+  "groupID" : "org.datanucleus",
+  "artifactID" :"datanucleus-core",
+  "version" : "1.1.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/datanucleus-jpa-1.1.5.jar",
+  "groupID" : "org.datanucleus",
+  "artifactID" :"datanucleus-jpa",
+  "version" : "1.1.5",
+  "type":"jar"
+},
+{
+  "path" :"jars/el-api-2.2.jar",
+  "groupID" : "javax.el",
+  "artifactID" :"el-api",
+  "version" : "2.2",
+  "type":"jar"
+},
+{
+  "path" :"jars/geronimo-jpa_3.0_spec-1.1.1.jar",
+  "groupID" : "org.apache.geronimo.specs",
+  "artifactID" :"geronimo-jpa_3.0_spe",
+  "version" : "1.1.1",
+  "type":"jar"
+},
+{
+  "path" :"jars/geronimo-jta_1.1_spec-1.1.1.jar",
+  "groupID" : "org.apache.geronimo.specs",
+  "artifactID" :"geronimo-jta_1.1_spec",
+  "version" : "1.1.1",
+  "type":"jar"
+},
+{
+  "path" :"jars/jdo2-api-2.3-eb.jar",
+  "groupID" : "javax.jdo",
+  "artifactID" :"jdo2-api",
+  "version" : "2.3-eb",
+  "type":"jar"
+},
+{
+  "path" :"jars/jsp-api-6.0.35.jar",
+  "groupID" : "org.apache.tomcat",
+  "artifactID" :"jsp-api",
+  "version" : "6.0.35",
+  "type":"jar"
+},
+{
+  "path" :"jars/jsr107cache-1.1.jar",
+  "groupID" : "net.sf.jsr107cache",
+  "artifactID" :"jsr107cache",
+  "version" : "1.1",
+  "type":"jar"
+},
+{
+  "path" :"jars/gwt-user-2.4.0.jar",
+  "groupID" : "com.google.gwt",
+  "artifactID" :"gwt-user",
+  "version" : "2.4.0",
+  "type":"jar"
+}
+]

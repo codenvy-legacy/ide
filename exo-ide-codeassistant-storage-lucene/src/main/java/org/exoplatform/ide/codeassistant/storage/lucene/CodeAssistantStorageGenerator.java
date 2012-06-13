@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
+import org.everrest.core.impl.provider.json.ArrayValue;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonUtils;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.container.xml.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -76,41 +84,51 @@ public class CodeAssistantStorageGenerator
       storageWriter.writeSourceJarsToIndex(getJarFilesList(sourceArchiveFilesList));
    }
 
-   private List<String> getJarFilesList(String jarFilesList) throws IOException
+   private Artifact[] getJarFilesList(String jarFilesList) throws IOException
    {
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
       InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
-
-      Reader reader = null;
-      if (io != null)
-      {
-         reader = new InputStreamReader(io);
-      }
-      else
-      {
-         reader = new FileReader(new File(jarFilesList));
-      }
-      BufferedReader br = new BufferedReader(reader);
+      JsonParser p = new JsonParser();
+      if (io == null)
+         io = new FileInputStream(new File(jarFilesList));
+      
+//      BufferedReader br = new BufferedReader(reader);
       try
       {
-         List<String> list = new ArrayList<String>();
-         String nextLine = null;
-         while ((nextLine = br.readLine()) != null)
+         p.parse(io);
+         ArrayValue arr = (ArrayValue)p.getJsonObject();
+         
+         List<Artifact> list = new ArrayList<Artifact>(arr.size()); 
+         for (Iterator<JsonValue> iterator = arr.getElements(); iterator.hasNext();)
          {
-            nextLine = nextLine.trim();
-            if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
-            {
-               String pathToJar = Deserializer.resolveVariables(nextLine);
-               list.add(pathToJar);
-            }
+            list.add(ObjectBuilder.createObject(Artifact.class, iterator.next()));
          }
-         return list;
+         return list.toArray(new Artifact[list.size()]);
+//         List<String> list = new ArrayList<String>();
+//         String nextLine = null;
+//         while ((nextLine = br.readLine()) != null)
+//         {
+//            nextLine = nextLine.trim();
+//            if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
+//            {
+//               String pathToJar = Deserializer.resolveVariables(nextLine);
+//               list.add(pathToJar);
+//            }
+//         }
+//         return list;
 
+      }
+      catch (JsonException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
       finally
       {
-         br.close();
+//         br.close();
+         io.close();
       }
+      return null;
    }
 
    public static void main(String[] args)
