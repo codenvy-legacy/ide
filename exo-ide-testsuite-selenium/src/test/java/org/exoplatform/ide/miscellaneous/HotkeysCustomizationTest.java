@@ -106,6 +106,8 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
       IDE.ASK_FOR_VALUE_DIALOG.clickNoButton();
       IDE.ASK_DIALOG.waitClosed();
+      //need for fix problem 
+      Thread.sleep(500);
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
