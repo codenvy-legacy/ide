@@ -120,7 +120,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       void setSelectedIndexForTypeSelectItem(int index);
 
       void focusInUrlField();
-      
+
       void enableAutodetectTypeCheckItem(boolean enable);
 
       /**
@@ -148,11 +148,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       boolean nostart;
 
-      // TODO workdir
-      String workDir;
-
-      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart,
-         String workDir)
+      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart)
       {
          this.server = server;
          this.name = name;
@@ -161,7 +157,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          this.instances = instances;
          this.memory = memory;
          this.nostart = nostart;
-         this.workDir = workDir;
       }
    }
 
@@ -515,9 +510,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                protected void onSuccess(CloudFoundryApplication result)
                {
                   warUrl = null;
-                  String msg = lb.applicationCreatedSuccessfully(result.getName());
-                  if ("STARTED".equals(result.getState()))
+
+                  if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
                   {
+                     String msg = lb.applicationCreatedSuccessfully(result.getName());
                      if (result.getUris().isEmpty())
                      {
                         msg += "<br>" + lb.applicationStartedWithNoUrls();
@@ -526,8 +522,18 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      {
                         msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
                      }
+                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   }
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                  else if ("STARTED".equals(result.getState()) && result.getInstances() != result.getRunningInstances())
+                  {
+                     String msg = lb.applicationWasNotStarted(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+                  }
+                  else
+                  {
+                     String msg = lb.applicationCreatedSuccessfully(result.getName());
+                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+                  }
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 
@@ -690,8 +696,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
       }
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
-      // TODO
-      return new AppData(server, name, type, url, instances, memory, nostart, selectedItems.get(0).getId());
+
+      return new AppData(server, name, type, url, instances, memory, nostart);
    }
 
    /**
