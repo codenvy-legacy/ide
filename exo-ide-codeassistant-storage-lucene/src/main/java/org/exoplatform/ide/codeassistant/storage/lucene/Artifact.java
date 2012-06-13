@@ -27,23 +27,22 @@ public class Artifact
 {
 
    private String path;
-   
+
    private String artifactID;
-   
+
    private String groupID;
-   
+
    private String version;
-   
+
    private String type;
 
-   
    /**
     * 
     */
    public Artifact()
    {
    }
-   
+
    /**
     * @return the path
     */
@@ -123,11 +122,10 @@ public class Artifact
    {
       this.type = type;
    }
-   
+
    public String getArtifactString()
    {
-      return groupID + ":" + artifactID + ":" + type + ":" + version;
+      return groupID + ":" + artifactID + ":" + version + ":" + type;
    }
 
-   
 }

@@ -128,7 +128,7 @@ public class Dependency
    @Override
    public String toString()
    {
-      return groupID + ":" + artifactID + ":" + type + ":" + version;
+      return groupID + ":" + artifactID + ":" + version + ":" + type;
    }
 
    /**
