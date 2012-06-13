@@ -44,6 +44,7 @@ public class OAuthAuthenticator
    private static final List<String> SCOPE = Collections.singletonList("https://www.googleapis.com/auth/appengine.admin");
 
    private final AuthorizationCodeFlow flow;
+   private final String configuredRedirectUri;
 
    private static GoogleClientSecrets loadClientSecrets() throws IOException
    {
@@ -64,6 +65,8 @@ public class OAuthAuthenticator
    {
       this.flow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
          SCOPE).setCredentialStore(credentialStore).build();
+      List<String> redirectUris = clientSecrets.getDetails().getRedirectUris();
+      this.configuredRedirectUri = !(redirectUris == null || redirectUris.isEmpty()) ? redirectUris.get(0) : null;
    }
 
    /**
@@ -92,7 +95,8 @@ public class OAuthAuthenticator
     */
    public final String authenticate(String redirectUri)
    {
-      AuthorizationCodeRequestUrl url = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
+      AuthorizationCodeRequestUrl url = flow.newAuthorizationUrl().setRedirectUri(
+         !(configuredRedirectUri == null || configuredRedirectUri.isEmpty()) ? configuredRedirectUri : redirectUri);
       setState(url);
       return url.build();
    }
