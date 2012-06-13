@@ -22,18 +22,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 
 /**
  * Presenter for log in Google App Engine operation. The view must be pointed in Views.gwt.xml.
@@ -42,83 +37,30 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @version $Id: May 18, 2012 12:19:01 PM anya $
  * 
  */
-public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFailedHandler, GAEOperationFailedHandler
+public class LoginPresenter implements LoginHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
       /**
-       * Get login button click handler.
+       * Get Go button click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */
-      HasClickHandlers getLoginButton();
+      HasClickHandlers getGoButton();
 
       /**
-       * Get cancel button click handler.
+       * Get Cancel button click handler.
        * 
        * @return {@link HasClickHandlers} click handler
        */
       HasClickHandlers getCancelButton();
-
-      /**
-       * Get email field.
-       * 
-       * @return {@link HasValue}
-       */
-      TextFieldItem getEmailField();
-
-      /**
-       * Get password field.
-       * 
-       * @return {@link HasValue}
-       */
-      TextFieldItem getPasswordField();
-
-      /**
-       * Login result label.
-       * 
-       * @return {@link String}
-       */
-      HasValue<String> getLoginResult();
-
-      /**
-       * Change the enable state of the login button.
-       * 
-       * @param enabled
-       */
-      void enableLoginButton(boolean enabled);
-
-      /**
-       * Give focus to login field.
-       */
-      void focusInEmailField();
-
    }
 
    private Display display;
 
-   private PerformOperationHandler performOperationHandler;
-
-   private LoginCanceledHandler loginCanceledHandler;
-
-   private String userEmail;
-
-   private LoggedInHandler loggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      }
-   };
-
    public LoginPresenter()
    {
       IDE.addHandler(LoginEvent.TYPE, this);
-      IDE.addHandler(LoginFailedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -136,14 +78,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
          @Override
          public void onClick(ClickEvent event)
          {
-            if (loginCanceledHandler != null)
-               loginCanceledHandler.onLoginCanceled();
-
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
-      display.getLoginButton().addClickHandler(new ClickHandler()
+      display.getGoButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
@@ -151,61 +90,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
             doLogin();
          }
       });
-
-      display.getEmailField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableLoginButton(isFieldsFullFilled());
-         }
-      });
-
-      display.getPasswordField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableLoginButton(isFieldsFullFilled());
-         }
-      });
-
-      display.getEmailField().addKeyUpHandler(new KeyUpHandler()
-      {
-
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
-            {
-               doLogin();
-            }
-         }
-      });
-
-      display.getPasswordField().addKeyUpHandler(new KeyUpHandler()
-      {
-
-         @Override
-         public void onKeyUp(KeyUpEvent event)
-         {
-            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
-            {
-               doLogin();
-            }
-         }
-      });
-   }
-
-   /**
-    * Check whether necessary fields are fullfilled.
-    * 
-    * @return if <code>true</code> all necessary fields are fullfilled
-    */
-   private boolean isFieldsFullFilled()
-   {
-      return (display.getEmailField().getValue() != null && !display.getEmailField().getValue().isEmpty()
-         && display.getPasswordField().getValue() != null && !display.getPasswordField().getValue().isEmpty());
    }
 
    /**
@@ -214,36 +98,24 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
    @Override
    public void onLogin(LoginEvent event)
    {
-      performOperationHandler = event.getPerformOperationHandler();
-      loginCanceledHandler = event.getLoginCanceled();
       if (display == null)
       {
          Display display = GWT.create(Display.class);
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-
-         IDE.addHandler(GAEOperationFailedEvent.TYPE, this);
-         display.enableLoginButton(false);
-         display.focusInEmailField();
-         display.getLoginResult().setValue("");
-      }
-
-      if (userEmail != null)
-      {
-         display.getEmailField().setValue(userEmail);
-         display.getLoginResult().setValue(GoogleAppEngineExtension.GAE_LOCALIZATION.loginFailedMessage());
       }
    }
 
-   /**
-    * Perform log in Google App Engine account.
-    */
-   protected void doLogin()
+   private void doLogin()
    {
-      userEmail = display.getEmailField().getValue();
-      final String password = display.getPasswordField().getValue();
+      String url = GWT.getModuleBaseURL().replace("/" + GWT.getModuleName(), "");
+      url = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+      url +=
+         GoogleAppEngineClientService.getInstance().getAuthUrl().startsWith("/") ? GoogleAppEngineClientService
+            .getInstance().getAuthUrl() : "/" + GoogleAppEngineClientService.getInstance().getAuthUrl();
+      Window.open(url, "_blank", null);
+
       IDE.getInstance().closeView(display.asView().getId());
-      performOperationHandler.onPerformOperation(userEmail, password, loggedInHandler);
    }
 
    /**
@@ -255,41 +127,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler, LoginFai
       if (event.getView() instanceof Display)
       {
          display = null;
-         loginCanceledHandler = null;
-         IDE.removeHandler(GAEOperationFailedEvent.TYPE, this);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginFailedHandler#onLoginFailed(org.exoplatform.ide.extension.googleappengine.client.login.LoginFailedEvent)
-    */
-   @Override
-   public void onLoginFailed(LoginFailedEvent event)
-   {
-      if (display == null)
-      {
-         Display display = GWT.create(Display.class);
-         bindDisplay(display);
-         IDE.getInstance().openView(display.asView());
-
-         IDE.addHandler(GAEOperationFailedEvent.TYPE, this);
-      }
-      if (userEmail != null)
-      {
-         display.getEmailField().setValue(userEmail);
-      }
-      display.getLoginResult().setValue(GoogleAppEngineExtension.GAE_LOCALIZATION.loginFailedMessage());
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.GAEOperationFailedHandler#onGAEOperationFailed(org.exoplatform.ide.extension.googleappengine.client.login.GAEOperationFailedEvent)
-    */
-   @Override
-   public void onGAEOperationFailed(GAEOperationFailedEvent event)
-   {
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 }

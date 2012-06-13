@@ -28,16 +28,12 @@
    <f:Border margin="15" borderColor="transparent">
       <f:layer top="0" bottom="30">
          <g:FlowPanel>
-            <g:Label text="{locale.emailFieldTitle}"></g:Label>
-            <f:TextInput ui:field="emailField" height="22px" width="100%"></f:TextInput>
-            <g:Label text="{locale.passwordFieldTitle}" addStyleNames="{style.space}"></g:Label>
-            <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"></f:PasswordTextInput>
-            <f:Label ui:field="loginResult" styleName="{style.label}"></f:Label>
+            <f:Label ui:field="label"></f:Label>
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="loginButton" width="90" height="22" text="Log in" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
+            <f:ImageButton ui:field="goButton" width="90" height="22" text="Go" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
          </g:FlowPanel>

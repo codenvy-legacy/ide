@@ -29,8 +29,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -45,15 +43,6 @@ public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHan
       IDE.addHandler(UpdateDosEvent.TYPE, this);
    }
 
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updateDos(email, password, loggedInHandler);
-      }
-   };
-
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesHandler#onUpdateQueues(org.exoplatform.ide.extension.googleappengine.client.queues.UpdateQueuesEvent)
     */
@@ -62,7 +51,7 @@ public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHan
    {
       if (isAppEngineProject())
       {
-         updateDos(null, null, null);
+         updateDos();
       }
       else
       {
@@ -70,22 +59,17 @@ public class DosHandler extends GoogleAppEnginePresenter implements UpdateDosHan
       }
    }
 
-   public void updateDos(String email, String password, final LoggedInHandler loggedInHandler)
+   public void updateDos()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().updateDos(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().updateDos(currentVfs.getId(), currentProject.getId(),
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateDosSuccessfully(),
                      Type.INFO));
                }

@@ -25,11 +25,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.extension.googleappengine.client.login.GAEOperationFailedEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoginFailedEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -38,23 +34,13 @@ import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperati
  */
 public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
-   private PerformOperationHandler performOperationHandler;
-
-   private LoginCanceledHandler loginCanceledHandler;
-
-   protected GoogleAppEngineAsyncRequestCallback(Unmarshallable<T> unmarshaller,
-      PerformOperationHandler performOperationHandler, LoginCanceledHandler loginCanceledHandler)
+   public GoogleAppEngineAsyncRequestCallback()
    {
-      super(unmarshaller);
-      this.performOperationHandler = performOperationHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
    }
 
-   protected GoogleAppEngineAsyncRequestCallback(PerformOperationHandler performOperationHandler,
-      LoginCanceledHandler loginCanceledHandler)
+   public GoogleAppEngineAsyncRequestCallback(Unmarshallable<T> unmarshaller)
    {
-      this.performOperationHandler = performOperationHandler;
-      this.loginCanceledHandler = loginCanceledHandler;
+      super(unmarshaller);
    }
 
    /**
@@ -69,19 +55,10 @@ public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncReques
          if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus())
          {
             String message = serverException.getMessage();
-            if (message.contains("password do not match."))
+            if (message.contains("Must authenticate first."))
             {
-               IDE.fireEvent(new LoginEvent(performOperationHandler, loginCanceledHandler));
+               IDE.fireEvent(new LoginEvent());
                return;
-            }
-            else if (message.contains("verify you are a human."))
-            {
-               IDE.fireEvent(new LoginFailedEvent());
-               return;
-            }
-            else
-            {
-               IDE.fireEvent(new GAEOperationFailedEvent());
             }
          }
       }

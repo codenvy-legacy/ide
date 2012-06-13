@@ -27,16 +27,15 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implements UpdateIndexesHandler
 {
 
@@ -44,15 +43,6 @@ public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implement
    {
       IDE.addHandler(UpdateIndexesEvent.TYPE, this);
    }
-
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         onUpdateIndexes(email, password, loggedInHandler);
-      }
-   };
 
    /**
     * {@inheritDoc}
@@ -62,7 +52,7 @@ public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implement
    {
       if (isAppEngineProject())
       {
-         onUpdateIndexes(null, null, null);
+         onUpdate();
       }
       else
       {
@@ -70,22 +60,17 @@ public class UpdateIndexesHandlerImpl extends GoogleAppEnginePresenter implement
       }
    }
 
-   public void onUpdateIndexes(String email, String password, final LoggedInHandler loggedInHandler)
+   public void onUpdate()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().updateIndexes(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().updateIndexes(currentVfs.getId(), currentProject.getId(),
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateIndexesSuccessfully(),
                      Type.INFO));
                }

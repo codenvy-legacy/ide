@@ -57,60 +57,62 @@ public abstract class GoogleAppEngineClientService
       instance = this;
    }
 
-   public abstract void configureBackend(String vfsId, String projectId, String backendName, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
-
-   public abstract void cronInfo(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<List<CronEntry>> callback) throws RequestException;
-
-   public abstract void deleteBackend(String vfsId, String projectId, String backendName, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
-
-   public abstract void getResourceLimits(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException;
-
-   public abstract void listBackends(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<List<Backend>> callback) throws RequestException;
-
-   public abstract void requestLogs(String vfsId, String projectId, int numDays, String logSeverity, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException;
-
-   public abstract void rollback(String vfsId, String projectId, String email, String password,
+   public abstract void configureBackend(String vfsId, String projectId, String backendName,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void rollbackBackend(String vfsId, String projectId, String backendName, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+   public abstract void cronInfo(String vfsId, String projectId,
+      GoogleAppEngineAsyncRequestCallback<List<CronEntry>> callback) throws RequestException;
 
-   public abstract void rollbackAllBackends(String vfsId, String projectId, String email, String password,
+   public abstract void deleteBackend(String vfsId, String projectId, String backendName,
+      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+
+   public abstract void getResourceLimits(String vfsId, String projectId,
+      GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException;
+
+   public abstract void listBackends(String vfsId, String projectId,
+      GoogleAppEngineAsyncRequestCallback<List<Backend>> callback) throws RequestException;
+
+   public abstract void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
+      GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException;
+
+   public abstract void rollback(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
+      throws RequestException;
+
+   public abstract void rollbackBackend(String vfsId, String projectId, String backendName,
+      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+
+   public abstract void rollbackAllBackends(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
    public abstract void setBackendState(String vfsId, String projectId, String backendName, String backendState,
-      String email, String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void update(String vfsId, ProjectModel project, String bin, String email, String password,
+   public abstract void update(String vfsId, ProjectModel project, String bin,
       GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
 
-   public abstract void updateAllBackends(String vfsId, String projectId, String email, String password,
+   public abstract void updateAllBackends(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void updateBackend(String vfsId, String projectId, String backendName, String email,
-      String password, GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
-
-   public abstract void updateCron(String vfsId, String projectId, String email, String password,
+   public abstract void updateBackend(String vfsId, String projectId, String backendName,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void updateDos(String vfsId, String projectId, String email, String password,
+   public abstract void updateCron(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
+      throws RequestException;
+
+   public abstract void updateDos(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
+      throws RequestException;
+
+   public abstract void updateIndexes(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void updateIndexes(String vfsId, String projectId, String email, String password,
+   public abstract void updatePagespeed(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void updatePagespeed(String vfsId, String projectId, String email, String password,
+   public abstract void updateQueues(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void updateQueues(String vfsId, String projectId, String email, String password,
+   public abstract void vacuumIndexes(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
-
-   public abstract void vacuumIndexes(String vfsId, String projectId, String email, String password,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
+   
+   public abstract String getAuthUrl();
 }

@@ -29,8 +29,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 import org.exoplatform.ide.extension.googleappengine.client.model.State;
 
 /**
@@ -42,96 +40,6 @@ import org.exoplatform.ide.extension.googleappengine.client.model.State;
 public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateBackendsHandler,
    UpdateBackendStateHandler, DeleteBackendHandler, RollbackBackendsHandler, ConfigureBackendHandler
 {
-   /**
-    * Handler for update all backends operation.
-    */
-   private PerformOperationHandler updateAllOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updateAllBackends(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for update backend operation.
-    */
-   private PerformOperationHandler updateOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updateBackend(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for rollback all backends operation.
-    */
-   private PerformOperationHandler rollbackAllOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         rollbackAllBackends(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for rollback backend operation.
-    */
-   private PerformOperationHandler rollbackOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         rollbackBackend(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for configure backend operation.
-    */
-   private PerformOperationHandler configureOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         configureBackend(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for delete backend operation.
-    */
-   private PerformOperationHandler deleteOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         deleteBackend(email, password, loggedInHandler);
-      }
-   };
-
-   /**
-    * Handler for update backend's state operation.
-    */
-   private PerformOperationHandler updateStateOperationHandler = new PerformOperationHandler()
-   {
-
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updateState(email, password, loggedInHandler);
-      }
-   };
 
    /**
     * Current backend's name.
@@ -162,12 +70,12 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
       {
          if (event.isAll())
          {
-            updateAllBackends(null, null, null);
+            updateAllBackends();
          }
          else
          {
             backendName = event.getBackendName();
-            updateBackend(null, null, null);
+            updateBackend();
          }
       }
       else
@@ -186,7 +94,7 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
       {
          backendName = event.getBackendName();
          backendState = event.getState();
-         updateState(null, null, null);
+         updateState();
       }
       else
       {
@@ -203,7 +111,7 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
       if (isAppEngineProject())
       {
          backendName = event.getBackendName();
-         configureBackend(null, null, null);
+         configureBackend();
       }
       else
       {
@@ -221,12 +129,12 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
       {
          if (event.isAll())
          {
-            rollbackAllBackends(null, null, null);
+            rollbackAllBackends();
          }
          else
          {
             backendName = event.getBackendName();
-            rollbackBackend(null, null, null);
+            rollbackBackend();
          }
       }
       else
@@ -244,7 +152,7 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
       if (isAppEngineProject())
       {
          backendName = event.getBackendName();
-         deleteBackend(null, null, null);
+         deleteBackend();
       }
       else
       {
@@ -255,17 +163,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform updating backend's state.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void updateState(String email, String password, LoggedInHandler loggedInHandler)
+   private void updateState()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().setBackendState(currentVfs.getId(), currentProject.getId(),
-            backendName, backendState.name(), email, password,
-            new GoogleAppEngineAsyncRequestCallback<Object>(updateStateOperationHandler, null)
+            backendName, backendState.name(), new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -284,16 +188,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform updating backend.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void updateBackend(String email, String password, final LoggedInHandler loggedInHandler)
+   private void updateBackend()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().updateBackend(currentVfs.getId(), currentProject.getId(),
-            backendName, email, password, new GoogleAppEngineAsyncRequestCallback<Object>(updateOperationHandler, null)
+            backendName, new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -314,16 +215,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform updating backends.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void updateAllBackends(String email, String password, final LoggedInHandler loggedInHandler)
+   private void updateAllBackends()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().updateAllBackends(currentVfs.getId(), currentProject.getId(),
-            email, password, new GoogleAppEngineAsyncRequestCallback<Object>(updateAllOperationHandler, null)
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -344,17 +242,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform rollback backend.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void rollbackBackend(String email, String password, final LoggedInHandler loggedInHandler)
+   private void rollbackBackend()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().rollbackBackend(currentVfs.getId(), currentProject.getId(),
-            backendName, email, password,
-            new GoogleAppEngineAsyncRequestCallback<Object>(rollbackOperationHandler, null)
+            backendName, new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -375,16 +269,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform rollback all backends.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void rollbackAllBackends(String email, String password, final LoggedInHandler loggedInHandler)
+   private void rollbackAllBackends()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().rollbackAllBackends(currentVfs.getId(), currentProject.getId(),
-            email, password, new GoogleAppEngineAsyncRequestCallback<Object>(rollbackAllOperationHandler, null)
+            new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -405,16 +296,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
    /**
     * Perform deleting backend.
     * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void deleteBackend(String email, String password, final LoggedInHandler loggedInHandler)
+   private void deleteBackend()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().deleteBackend(currentVfs.getId(), currentProject.getId(),
-            backendName, email, password, new GoogleAppEngineAsyncRequestCallback<Object>(deleteOperationHandler, null)
+            backendName, new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
@@ -434,18 +322,13 @@ public class BackendsHandler extends GoogleAppEnginePresenter implements UpdateB
 
    /**
     * Perform configuring backend.
-    * 
-    * @param email user's email (can be <code>null</code>)
-    * @param password user's password (can be <code>null</code>)
-    * @param loggedInHandler handler for logged in operation (can be <code>null</code>)
     */
-   private void configureBackend(String email, String password, final LoggedInHandler loggedInHandler)
+   private void configureBackend()
    {
       try
       {
          GoogleAppEngineClientService.getInstance().configureBackend(currentVfs.getId(), currentProject.getId(),
-            backendName, email, password,
-            new GoogleAppEngineAsyncRequestCallback<Object>(configureOperationHandler, null)
+            backendName, new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override

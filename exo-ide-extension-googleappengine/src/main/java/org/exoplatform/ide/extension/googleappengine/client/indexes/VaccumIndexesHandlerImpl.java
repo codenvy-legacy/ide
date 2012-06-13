@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.indexes;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -27,10 +29,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
-
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -44,16 +42,7 @@ public class VaccumIndexesHandlerImpl extends GoogleAppEnginePresenter implement
    {
       IDE.addHandler(VacuumIndexesEvent.TYPE, this);
    }
-
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         onVacuumIndexes(email, password, loggedInHandler);
-      }
-   };
-
+   
    /**
     * {@inheritDoc}
     */
@@ -62,7 +51,7 @@ public class VaccumIndexesHandlerImpl extends GoogleAppEnginePresenter implement
    {
       if (isAppEngineProject())
       {
-         onVacuumIndexes(null, null, null);
+         onVacuum();
       }
       else
       {
@@ -70,22 +59,16 @@ public class VaccumIndexesHandlerImpl extends GoogleAppEnginePresenter implement
       }
    }
 
-   public void onVacuumIndexes(String email, String password, final LoggedInHandler loggedInHandler)
+   public void onVacuum()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().vacuumIndexes(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().vacuumIndexes(currentVfs.getId(), currentProject.getId(), new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.vacuumIndexesSuccessfully(),
                      Type.INFO));
                }

@@ -29,8 +29,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsync
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.googleappengine.client.login.PerformOperationHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -44,15 +42,6 @@ public class CronsHandler extends GoogleAppEnginePresenter implements UpdateCron
       IDE.addHandler(UpdateCronEvent.TYPE, this);
    }
 
-   private PerformOperationHandler performOperationHandler = new PerformOperationHandler()
-   {
-      @Override
-      public void onPerformOperation(String email, String password, LoggedInHandler loggedInHandler)
-      {
-         updateCrons(email, password, loggedInHandler);
-      }
-   };
-
    /**
     * @see org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronHandler#onUpdateCron(org.exoplatform.ide.extension.googleappengine.client.cron.UpdateCronEvent)
     */
@@ -61,7 +50,7 @@ public class CronsHandler extends GoogleAppEnginePresenter implements UpdateCron
    {
       if (isAppEngineProject())
       {
-         updateCrons(null, null, null);
+         updateCrons();
       }
       else
       {
@@ -69,22 +58,16 @@ public class CronsHandler extends GoogleAppEnginePresenter implements UpdateCron
       }
    }
 
-   public void updateCrons(String email, String password, final LoggedInHandler loggedInHandler)
+   public void updateCrons()
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().updateCron(currentVfs.getId(), currentProject.getId(), email,
-            password, new GoogleAppEngineAsyncRequestCallback<Object>(performOperationHandler, null)
+         GoogleAppEngineClientService.getInstance().updateCron(currentVfs.getId(), currentProject.getId(), new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  if (loggedInHandler != null)
-                  {
-                     loggedInHandler.onLoggedIn();
-                  }
-
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.updateCronsSuccessfully(),
                      Type.INFO));
                }
