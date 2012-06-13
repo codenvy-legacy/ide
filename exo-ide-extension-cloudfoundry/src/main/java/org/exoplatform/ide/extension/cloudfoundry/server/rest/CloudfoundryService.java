@@ -250,6 +250,37 @@ public class CloudfoundryService
          : null, projectId, war);
    }
 
+   @Path("apps/files")
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   public String getFiles(
+      @QueryParam("server") String server, //
+      @QueryParam("name") String app, //
+      @QueryParam("path") String path, //
+      @QueryParam("instance") String instance, //
+      @QueryParam("vfsid") String vfsId, //
+      @QueryParam("projectid") String projectId //
+   ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   {
+      return cloudfoundry.getFiles(server, app, path, instance,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+   }
+
+   @Path("apps/logs")
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   public String getLogs(
+      @QueryParam("server") String server, //
+      @QueryParam("name") String app, //
+      @QueryParam("instance") String instance, //
+      @QueryParam("vfsid") String vfsId, //
+      @QueryParam("projectid") String projectId //
+   ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
+   {
+      return cloudfoundry.getLogs(server, app, instance,
+         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+   }
+
    @Path("apps/map")
    @POST
    public void mapUrl(
