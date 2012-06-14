@@ -314,9 +314,12 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       if (userInfo == null)
          return;
       Preferences preferences = GWT.create(Preferences.class);
-      ContentAssistHistory.store(contentAssistHistory, preferences,
-         Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
-      QualifiedTypeNameHistory.getDefault().save();
+      if (contentAssistHistory != null)
+      {
+         ContentAssistHistory.store(contentAssistHistory, preferences,
+            Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
+         QualifiedTypeNameHistory.getDefault().save();
+      }
    }
 
 }

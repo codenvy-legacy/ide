@@ -83,7 +83,9 @@ public class FormatSourceControl extends SimpleControl implements IDEControl, Ed
 
       if (event.getEditor().isCapable(EditorCapability.FORMAT_SOURCE))
       {
-         if (MimeType.TEXT_PLAIN.equals(event.getFile().getMimeType()))
+         String mimeType = event.getFile().getMimeType();
+         //TODO add possibility to configure editor capability's 
+         if (MimeType.TEXT_PLAIN.equals(mimeType) || MimeType.TEXT_X_PYTHON.equals(mimeType))
          {
             setVisible(false);
             setEnabled(false);

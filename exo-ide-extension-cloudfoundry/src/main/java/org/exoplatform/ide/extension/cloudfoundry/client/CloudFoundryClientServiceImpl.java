@@ -87,6 +87,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    private static final String TARGETS = BASE_URL + "/target/all";
 
    private static final String TARGET = BASE_URL + "/target";
+   
+   private static final String LOGS = BASE_URL + "/apps/logs";
 
    /**
     * REST service context.
@@ -544,6 +546,18 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String url = restServiceContext + TARGET;
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+
    }
 
 }

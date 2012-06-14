@@ -774,13 +774,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       String appUris = "";
       UrlBuilder builder = new UrlBuilder();
-      String uri = builder.setProtocol("http").setHost(application.getHost()).setPort(application.getPort()).buildString();
+      String uri = builder.setProtocol("http").setHost(application.getHost()).buildString();
       appUris += ", " + "<a href=\"" + uri + "\" target=\"_blank\">" + uri + "</a>";
-//      if (!appUris.isEmpty())
-//      {
-//         // crop unnecessary symbols
-//         appUris = appUris.substring(2);
-//      }
       return appUris;
    }
 

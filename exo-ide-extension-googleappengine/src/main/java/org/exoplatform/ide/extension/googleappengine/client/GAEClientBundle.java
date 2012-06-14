@@ -153,4 +153,10 @@ public interface GAEClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/resource_limits_Disabled.png")
    ImageResource resourceLimitsDisabled();
+   
+   @Source("org/exoplatform/ide/extension/googleappengine/images/logout.png")
+   ImageResource logout();
+   
+   @Source("org/exoplatform/ide/extension/googleappengine/images/logout_Disabled.png")
+   ImageResource logoutDisabled();
 }
