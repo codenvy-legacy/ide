@@ -43,7 +43,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 {
    private static final String ID = "ideLoginView";
 
-   private static final int WIDTH = 425;
+   private static final int WIDTH = 440;
 
    private static final int HEIGHT = 180;
 

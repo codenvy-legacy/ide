@@ -27,9 +27,13 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -45,6 +49,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDelet
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -71,6 +76,8 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
       HasClickHandlers getCloseButton();
 
       HasClickHandlers getUpdateButton();
+      
+      HasClickHandlers getLogsButton();
 
       HasClickHandlers getDeleteButton();
 
@@ -119,6 +126,7 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
     */
    private ProjectModel openedProject;
 
+
    public CloudFoundryProjectPresenter()
    {
       IDE.getInstance().addControl(new CloudFoundryControl());
@@ -151,6 +159,15 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
          public void onClick(ClickEvent event)
          {
             IDE.eventBus().fireEvent(new UpdateApplicationEvent());
+         }
+      });
+      
+      display.getLogsButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            getLogs();   
          }
       });
 
@@ -226,6 +243,34 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
          }
       });
 
+   }
+
+   protected void getLogs() 
+   {
+      try
+      {
+         CloudFoundryClientService.getInstance().getLogs(vfs.getId(), openedProject.getId(), new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+         {
+            
+            @Override
+            protected void onSuccess(StringBuilder result)
+            {
+               System.out.println(">>>" + result.toString());
+               IDE.fireEvent(new OutputEvent("<pre>" + result.toString()+ "</pre>", Type.OUTPUT));
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -312,7 +357,8 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-
+   
+   
    /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler#onApplicationDeleted(org.exoplatform.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent)
     */
@@ -360,4 +406,5 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
          getApplicationInfo(openedProject);
       }
    }
+  
 }

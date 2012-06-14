@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.client;
 
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
@@ -113,6 +114,8 @@ public abstract class GoogleAppEngineClientService
 
    public abstract void vacuumIndexes(String vfsId, String projectId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;
-   
+
    public abstract String getAuthUrl();
+
+   public abstract void logout(AsyncRequestCallback<Object> callback) throws RequestException;
 }

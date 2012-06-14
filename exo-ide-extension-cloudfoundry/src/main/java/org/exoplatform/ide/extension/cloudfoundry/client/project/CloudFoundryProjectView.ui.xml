@@ -103,7 +103,8 @@
                   <g:FlowPanel width="100%" height="28px" styleName="{style.actions}">
                      <g:Label text="{locale.manageProjectActions}" addStyleNames="{style.labelH}" width="20%"></g:Label>
                      <g:Button ui:field="updateButton" height="20px" width="70px" text="{locale.updateButton}" styleName="{style.left} {style.space}"></g:Button>
-                     <g:Button ui:field="deleteButton" height="20px" width="70px" text="{locale.deleteButton}" styleName="{style.left}"></g:Button>
+                     <g:Button ui:field="deleteButton" height="20px" width="70px" text="{locale.deleteButton}" styleName="{style.left} {style.space}"></g:Button>
+                     <g:Button ui:field="logsButton" height="20px" width="70px" text="{locale.logsButton}" styleName="{style.left}"></g:Button>
                   </g:FlowPanel>
                </g:FlowPanel>
             </c:layer>

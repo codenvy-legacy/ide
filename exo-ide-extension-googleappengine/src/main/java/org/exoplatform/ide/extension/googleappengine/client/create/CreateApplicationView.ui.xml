@@ -1,15 +1,10 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
+   <ui:with field='resource' type='org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle' />
    <ui:style>
-      .frameBorder {
-      	border: 1px solid #B6CCE8;
-      	background-color: #E6E6E6;
-      	padding: 10px;
-      }
-      
-      .right {
-      	display: block;
+      .center {
+      	margin-right: auto;
       	margin-left: auto;
       }
       
@@ -21,28 +16,33 @@
       	float: left;
       }
       
-      .title {
-      	font-size: 12px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      }
-      
-      .note {
+      .label {
+      	margin-top: 15px;
       	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-weight: bold;
-      	color: #8a0909;
+      	float: right;
+      	height: 64px;
+      	width: 83%;
       }
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
-      <f:layer top="0" height="60px">
-         <f:Label value="{locale.createApplicationInstruction}" ui:field="instructionLabel" isHTML="true" wordWrap="true" height="100px" styleName="{style.title}" width="100%" />
+      <f:layer top="0" height="64px">
+         <g:FlowPanel>
+            <g:Image resource="{resource.googleAppEngineLogo}" width="64px" height="64" styleName="{style.left-float}"></g:Image>
+            <f:Label value="{locale.createApplicationInstruction}" ui:field="instructionLabel" isHTML="true" wordWrap="true" styleName="{style.label}" />
+         </g:FlowPanel>
+
+
+
+
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="280px" styleName="{style.right}">
+         <g:FlowPanel width="280px" styleName="{style.center}">
             <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}" imageName="yes" addStyleNames="{style.left-float}" />
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-            <f:ImageButton ui:field="deployButton" enabled="false" width="90" height="22" text="{locale.deployButton}" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
+            <f:ImageButton ui:field="deployButton" enabled="false" width="90" height="22" text="{locale.deployButton}" imageName="yes"
+               addStyleNames="{style.left-float}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
          </g:FlowPanel>
