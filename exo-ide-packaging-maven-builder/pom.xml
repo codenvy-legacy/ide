@@ -14,7 +14,7 @@
 
    <artifactId>exo-ide-packaging-maven-builder</artifactId>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Assemblies Tomcat</name>
+   <name>eXo IDE :: Assemblies Tomcat :: Maven Builder</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

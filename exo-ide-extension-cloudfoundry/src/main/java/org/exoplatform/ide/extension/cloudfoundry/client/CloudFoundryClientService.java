@@ -271,5 +271,15 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   
+   /**
+    * Getting logs for CloudFoundry Application
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
 }

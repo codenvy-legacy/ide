@@ -26,7 +26,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final String TITLE = GoogleAppEngineExtension.GAE_LOCALIZATION.createApplicationViewTitle();
 
-   private static final int WIDTH = 550;
+   private static final int WIDTH = 545;
 
    private static final int HEIGHT = 180;
 

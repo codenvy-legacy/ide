@@ -34,7 +34,7 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("cancel.button")
    String cancelButton();
-   
+
    @Key("go.button")
    String goButton();
 
@@ -161,6 +161,18 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("login.message")
    String loginMessage();
 
+   @Key("logout.control.title")
+   String logoutControlTitle();
+
+   @Key("logout.control.prompt")
+   String logoutControlPrompt();
+
+   @Key("logout.not.logged")
+   String logoutNotLogged();
+
+   @Key("logout.success")
+   String logoutSuccess();
+
    /* Logs */
    @Key("logs.view.title")
    String logsViewTitle();
@@ -177,6 +189,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    /* Error */
    @Key("not.app.engine.project")
    String notAppEngineProjectError();
+
+   @Key("unknown.error.message")
+   String unknownErrorMessage();
 
    /* Messages */
    @Key("update.pagespeed.successfully")
