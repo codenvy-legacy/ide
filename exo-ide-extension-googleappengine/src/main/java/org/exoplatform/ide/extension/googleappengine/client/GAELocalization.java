@@ -35,9 +35,6 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("cancel.button")
    String cancelButton();
 
-   @Key("go.button")
-   String goButton();
-
    @Key("login.button")
    String loginButton();
 

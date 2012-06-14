@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server.oauth;
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.security.Principal;
 
 import javax.inject.Inject;
@@ -32,7 +34,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * RESTful wrapper for OAuthAuthenticator.
- *
+ * 
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -56,11 +58,20 @@ public class OAuthAuthenticatorService
 
    @GET
    @Path("callback")
-   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException
+   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException, MalformedURLException
    {
       oauth.callback(uriInfo.getRequestUri().toString());
-      return Response.ok("<html><body>Authentication successful. Please, switch to IDE tab</body></html>",
-         MediaType.TEXT_HTML).build();
+
+      URL logoLocation =
+         new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(), uriInfo.getBaseUri().getPort(),
+            "/IDE/images/logo/exo_logo.png");
+
+      return Response
+         .ok(
+            "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
+               + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
+               + "<p>Authentication successful. Please, switch to IDE tab.</p>" + "<img src=\""
+               + logoLocation.toString() + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
    }
 
    @GET
@@ -72,8 +83,9 @@ public class OAuthAuthenticatorService
       {
          return Response.ok().build();
       }
-      return Response.status(404).entity("Not found OAuth token for "
-         + (principal != null ? principal.getName() : null)).type(MediaType.TEXT_PLAIN).build();
+      return Response.status(404)
+         .entity("Not found OAuth token for " + (principal != null ? principal.getName() : null))
+         .type(MediaType.TEXT_PLAIN).build();
    }
 
 }
