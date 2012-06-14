@@ -59,6 +59,8 @@ public class CodeMirrorConfiguration
 
    private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
    
+   private TabMode tabMode = TabMode.SPACES;
+   
    /**
     * Preset configuration of plain text
     */
@@ -245,5 +247,24 @@ public class CodeMirrorConfiguration
    {
       return codeErrorMarkStyle;
    }
+
+   /**
+    * @return the tabMode
+    */
+   public TabMode getTabMode()
+   {
+      return tabMode;
+   }
+
+   /**
+    * @param tabMode the tabMode to set
+    */
+   public CodeMirrorConfiguration setTabMode(TabMode tabMode)
+   {
+      this.tabMode = tabMode;
+      return this;
+   }
+   
+   
 
 }

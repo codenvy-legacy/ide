@@ -208,12 +208,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       editorObject =
          initCodeMirror(editorId, width, height, readOnly, continuousScanning, textWrapping, showLineNumbers,
-            styleURLs, parserNames, javaScriptDirectory);
+            styleURLs, parserNames, javaScriptDirectory, configuration.getTabMode().toString());
 
    }
 
    private native JavaScriptObject initCodeMirror(String id, String w, String h, boolean readOnly, int cs, boolean tr,
-      boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory) /*-{
+      boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory, String modeTab) /*-{
 		var instance = this;
 		var changeFunction = function() {
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContentChanged()();
@@ -263,7 +263,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			lineNumbers : lineNumbers,
 			readOnly : readOnly,
 			textWrapping : tr,
-			tabMode : "spaces",
+			tabMode : modeTab,
 			content : "", // to fix bug with blocked deleting function of CodeMirror just after opening file [WBT-223]
 			onChange : changeFunction,
 			//           saveFunction: saveFunction,

@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
+import org.exoplatform.ide.editor.codemirror.TabMode;
 
 /**
  * Provides a text editing area. Support syntax coloration for Python language.
@@ -59,7 +60,7 @@ public class PythonEditorExtension extends Extension implements InitializeServic
    {
       CodeMirrorConfiguration pythonCodeMirrorConfiguration =
          new CodeMirrorConfiguration().setGenericParsers("['parsepython.js']").setGenericStyles(
-            "['" + CodeMirrorConfiguration.PATH + "css/pythoncolors.css']");
+            "['" + CodeMirrorConfiguration.PATH + "css/pythoncolors.css']").setTabMode(TabMode.INDENT);
 
       IDE.getInstance().addEditor(
          new CodeMirrorProducer(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
