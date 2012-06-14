@@ -55,6 +55,8 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    private static final String DELETE_BUTTON_ID = "ideCloudFoundryProjectViewDeleteButton";
 
    private static final String UPDATE_BUTTON_ID = "ideCloudFoundryProjectViewUpdateButton";
+   
+   private static final String LOGS_BUTTON_ID = "ideCloudFoundryProjectViewLogsButton";
 
    private static final String INFO_BUTTON_ID = "ideCloudFoundryProjectViewInfoButton";
 
@@ -97,6 +99,9 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
 
    @UiField
    Button updateButton;
+   
+   @UiField
+   Button logsButton;
 
    @UiField
    ImageButton infoButton;
@@ -151,6 +156,7 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
 
       deleteButton.getElement().setId(DELETE_BUTTON_ID);
       updateButton.getElement().setId(UPDATE_BUTTON_ID);
+      logsButton.getElement().setId(LOGS_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);
       infoButton.setButtonId(INFO_BUTTON_ID);
 
@@ -187,6 +193,12 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    public HasClickHandlers getUpdateButton()
    {
       return updateButton;
+   }
+   
+   @Override
+   public HasClickHandlers getLogsButton()
+   {
+      return logsButton;
    }
 
    /**

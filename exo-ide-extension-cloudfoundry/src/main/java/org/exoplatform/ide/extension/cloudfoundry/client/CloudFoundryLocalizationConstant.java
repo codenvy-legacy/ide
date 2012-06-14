@@ -43,6 +43,11 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("button.delete")
    String deleteButton();
+   
+   @Key("button.logs")
+   @DefaultMessage("Logs")
+   String logsButton();
+
 
    @Key("button.close")
    String closeButton();
