@@ -91,6 +91,25 @@ public class OAuthAuthenticator
    }
 
    /**
+    * Invalidate OAuth token for specified user.
+    *
+    * @param userId
+    *    user
+    * @return <code>true</code> if OAuth token invalidated and <code>false</code> otherwise, e.g. if user does not have
+    *         token yet
+    */
+   public final boolean invalidateToken(String userId)
+   {
+      Credential credential = flow.loadCredential(userId);
+      if (credential != null)
+      {
+         flow.getCredentialStore().delete(userId, credential);
+         return true;
+      }
+      return false;
+   }
+
+   /**
     * Create authentication URL.
     *
     * @return URL for authentication
