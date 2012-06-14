@@ -55,7 +55,7 @@ public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncReques
          if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus())
          {
             String message = serverException.getMessage();
-            if (message.contains("Must authenticate first."))
+            if (message.contains("401 Unauthorized"))
             {
                IDE.fireEvent(new LoginEvent());
                return;

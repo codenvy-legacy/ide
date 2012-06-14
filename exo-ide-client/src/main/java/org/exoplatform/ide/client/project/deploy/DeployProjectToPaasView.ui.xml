@@ -96,7 +96,7 @@
       <g:layer>
          <g:FlowPanel stylePrimaryName="{style.topBox}">
             <g:Label text="Deploy to PaaS" styleName="{style.labelTitle}"></g:Label>
-            <g:Label text="Select PaaS where to deploy your project" styleName="{style.labelDescription}"></g:Label>
+            <g:Label text="Select a PaaS to deploy your project" styleName="{style.labelDescription}"></g:Label>
          </g:FlowPanel>
       </g:layer>
 
