@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.googleappengine.server;
 
 import com.google.appengine.tools.admin.AdminException;
+import com.google.appengine.tools.admin.HttpIoException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,20 +38,25 @@ public class AppAdminExceptionMapper implements ExceptionMapper<AdminException>
    {
       String causeMessage = null;
       Throwable cause = exception.getCause();
+      int status = 500;
       if (cause != null)
       {
          causeMessage = cause.getMessage();
+         if (cause instanceof HttpIoException)
+         {
+            status = ((HttpIoException)cause).getResponseCode();
+         }
       }
       if (causeMessage != null)
       {
          return Response
-            .serverError()
+            .status(status)
             .entity(exception.getMessage() + ' ' + causeMessage)
             .type(MediaType.TEXT_PLAIN)
             .build();
       }
       return Response
-         .serverError()
+         .status(status)
          .entity(exception.getMessage())
          .type(MediaType.TEXT_PLAIN)
          .build();
