@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
+
 import java.util.List;
 
 /**

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
 import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
 import org.slf4j.Logger;

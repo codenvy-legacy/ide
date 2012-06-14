@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.vfs.shared.Item;
 

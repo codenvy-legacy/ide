@@ -24,6 +24,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.List;
  * @version ${Id}: Nov 28, 2011 4:34:52 PM evgen $
  * 
  */
+@Ignore
 public class JavaDocBuilderVfsTest extends JavaDocBase
 {
 

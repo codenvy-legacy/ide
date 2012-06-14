@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.slf4j.Logger;
@@ -83,7 +84,9 @@ public class StorageBootstrap implements ServletContextListener
       }
 
       UpdateStorageService updateService = new UpdateStorageService(options);
+      CodeAssistantStorage storage = new StorageService(luceneStorage);
       ctx.setAttribute(UpdateStorageService.class.getName(), updateService);
+      ctx.setAttribute(CodeAssistantStorage.class.getName(), storage);
 
    }
 
@@ -114,8 +117,6 @@ public class StorageBootstrap implements ServletContextListener
          updateStorageService.shutdown();
       if (luceneStorage != null)
          luceneStorage.closeIndexes();
-      if (storagePath != null)
-         UpdateUtil.delete(new File(storagePath));
    }
 
 }

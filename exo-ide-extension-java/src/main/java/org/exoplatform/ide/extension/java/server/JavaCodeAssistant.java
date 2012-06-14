@@ -24,7 +24,7 @@ import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaMethod;
 
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
@@ -65,12 +65,9 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
     */
    private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
-   private VirtualFileSystemRegistry vfsRegistry;
-
-   public JavaCodeAssistant(CodeAssistantStorage storage, VirtualFileSystemRegistry vfsRegistry)
+   public JavaCodeAssistant(CodeAssistantStorageClient storage, VirtualFileSystemRegistry vfsRegistry)
    {
-      super(storage);
-      this.vfsRegistry = vfsRegistry;
+      super(storage, vfsRegistry);
    }
 
    private JavaDocBuilderVfs parseProject(String projectId, String vfsId) throws VirtualFileSystemException,
@@ -112,27 +109,6 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       if (sourceFolder.getItemType() != ItemType.FOLDER)
          throw new CodeAssistantException(500, "Can't find project source, in " + sourcePath);
       return (Folder)sourceFolder;
-   }
-
-   /**
-    * @param projectId
-    * @param vfs
-    * @return
-    * @throws ItemNotFoundException
-    * @throws PermissionDeniedException
-    * @throws VirtualFileSystemException
-    * @throws CodeAssistantException
-    */
-   private Project getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
-      PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
-   {
-      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-      Project project = null;
-      if (item instanceof Project)
-         project = (Project)item;
-      else
-         throw new CodeAssistantException(400, "'projectId' is not project Id");
-      return project;
    }
 
    /**
@@ -194,31 +170,30 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       JavaClass clazz = null;
-      if(fqn.contains("$"))
+      if (fqn.contains("$"))
       {
-        String parentFqn = fqn.substring(0, fqn.lastIndexOf('$'));
-        JavaClass parentClass = builder.getClassByName(parentFqn);
-        if (parentClass == null)
-         return null;
+         String parentFqn = fqn.substring(0, fqn.lastIndexOf('$'));
+         JavaClass parentClass = builder.getClassByName(parentFqn);
+         if (parentClass == null)
+            return null;
          clazz = parentClass.getNestedClassByName(fqn.substring(fqn.lastIndexOf('$') + 1));
       }
       else
-        clazz = builder.getClassByName(fqn);
-      
-      
+         clazz = builder.getClassByName(fqn);
+
       if (clazz == null)
       {
          //test if asks inner class
-//         String parentFqn = fqn.substring(0, fqn.lastIndexOf('.'));
-//         JavaClass parentClass = builder.getClassByName(parentFqn);
-//         if (parentClass == null)
-//            return null;
-//         clazz = parentClass.getNestedClassByName(fqn.substring(fqn.lastIndexOf('.') + 1));
-//         if (clazz == null)
-            return null;
+         //         String parentFqn = fqn.substring(0, fqn.lastIndexOf('.'));
+         //         JavaClass parentClass = builder.getClassByName(parentFqn);
+         //         if (parentClass == null)
+         //            return null;
+         //         clazz = parentClass.getNestedClassByName(fqn.substring(fqn.lastIndexOf('.') + 1));
+         //         if (clazz == null)
+         return null;
       }
 
-      return new JavaTypeToTypeInfoConverter(storage).convert(clazz);
+      return new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId)).convert(clazz);
    }
 
    /**
@@ -231,7 +206,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
+      JavaTypeToTypeInfoConverter converter =
+         new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getName().startsWith(className))
@@ -250,7 +226,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
+      JavaTypeToTypeInfoConverter converter =
+         new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getFullyQualifiedName().startsWith(prefix))
@@ -269,7 +246,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<ShortTypeInfo> types = new ArrayList<ShortTypeInfo>();
-      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
+      JavaTypeToTypeInfoConverter converter =
+         new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
       if (prefix == null || prefix.isEmpty())
       {
          for (JavaClass clazz : builder.getClasses())
@@ -381,7 +359,8 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
    {
       JavaDocBuilderVfs builder = parseProject(projectId, vfsId);
       List<TypeInfo> typeInfos = new ArrayList<TypeInfo>();
-      JavaTypeToTypeInfoConverter converter = new JavaTypeToTypeInfoConverter(storage);
+      JavaTypeToTypeInfoConverter converter =
+         new JavaTypeToTypeInfoConverter(storage, getProjectDependencys(projectId, vfsId));
       for (JavaClass clazz : builder.getClasses())
       {
          if (clazz.getName().startsWith(namePrefix))

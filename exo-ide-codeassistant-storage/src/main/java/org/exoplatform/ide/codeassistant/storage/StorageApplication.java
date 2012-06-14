@@ -39,6 +39,7 @@ public class StorageApplication extends Application
    {
       Set<Class<?>> classes = new HashSet<Class<?>>();
       classes.add(UpdateStorage.class);
+      classes.add(Storage.class);
       return classes;
    }
 

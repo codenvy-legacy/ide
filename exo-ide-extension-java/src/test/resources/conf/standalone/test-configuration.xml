@@ -130,7 +130,7 @@
                                                                                                                                                                                                                
    <component>                                                                                                                                                                                                 
      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>                                                                                                                                     
-     <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>                                                                                                                  
+     <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>                                                                                                                  
    </component>        
 
    <component>

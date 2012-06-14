@@ -19,6 +19,7 @@
 package org.exoplatform.ide.codeassistant.storage;
 
 import org.exoplatform.ide.codeassistant.asm.JarParser;
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;

@@ -282,21 +282,6 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.codeassistant.storage.lucene.ExoFsLuceneInfoStorage</type>
-      <init-params>
-         <value-param>
-            <name>storage-path</name>
-            <value>target/ide-codeassistant-lucene-index</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <component>
-      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>
-      <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>
-   </component>
-
-   <component>
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
    </component>
 
@@ -319,7 +304,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.java.server.CodeAssistantStorageClient
+      <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient
       </type>
       <init-params>
          <value-param>
