@@ -97,11 +97,11 @@ public class Github
          throw new InvalidArgumentException("'User's name must not be null.");
       }
 
-      String url = "http://github.com/api/v2/json/repos/show/" + user;
+      String url = "https://api.github.com/users/" + user + "/repos";
       String method = "GET";
       String response = doJsonRequest(url, method, null, 200);
-      JsonValue repositoryJsValue = JsonHelper.parseJson(response);
-      JsonValue reposArray = repositoryJsValue.getElement("repositories");
+      JsonValue reposArray = JsonHelper.parseJson(response);
+//      JsonValue reposArray = repositoryJsValue.getElement("repositories");
       if (reposArray == null || !reposArray.isArray())
          return null;
 
