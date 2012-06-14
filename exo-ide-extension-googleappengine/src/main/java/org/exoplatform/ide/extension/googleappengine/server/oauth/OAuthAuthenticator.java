@@ -125,7 +125,11 @@ public class OAuthAuthenticator
       AuthorizationCodeRequestUrl url = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
       StringBuilder state = new StringBuilder();
       addState(state);
-      state.append("&userId=");
+      if (state.length() > 0)
+      {
+         state.append('&');
+      }
+      state.append("userId=");
       state.append(userId);
       url.setState(state.toString());
       return url.build();
