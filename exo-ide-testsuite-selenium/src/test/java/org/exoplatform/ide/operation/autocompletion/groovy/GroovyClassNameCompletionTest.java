@@ -53,12 +53,13 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
 
       // open autocomplete form
       IDE.CODEASSISTANT.openForm();
-
+      IDE.CODEASSISTANT.waitForDocPanelOpened();
+      
       assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStore"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
 
       IDE.CODEASSISTANT.setFocusTInput(); //insure that focus set to proposal from
-      IDE.CODEASSISTANT.moveCursorDown(1);
+      IDE.CODEASSISTANT.moveCursorDown(4);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 

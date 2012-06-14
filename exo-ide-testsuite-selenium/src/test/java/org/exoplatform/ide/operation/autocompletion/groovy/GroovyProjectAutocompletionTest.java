@@ -75,14 +75,13 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       IDE.EDITOR.moveCursorDown(0, 12);
       IDE.EDITOR.typeTextIntoEditor(0, "Poj");
       IDE.CODEASSISTANT.openForm();
-     
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Pojo"));
-      IDE.CODEASSISTANT.moveCursorDown(1);
-      IDE.CODEASSISTANT.insertSelectedItem();
 
+      IDE.CODEASSISTANT.insertSelectedItem();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
 
       IDE.EDITOR.typeTextIntoEditor(0, " p\n");
+      
       IDE.EDITOR.typeTextIntoEditor(0, "p.");
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
