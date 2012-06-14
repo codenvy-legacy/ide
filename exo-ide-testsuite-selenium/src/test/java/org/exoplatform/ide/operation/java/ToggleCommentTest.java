@@ -107,6 +107,10 @@ public class ToggleCommentTest extends BaseTest
          IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "C");
+      
+      //need for reparse code for correct asserts
+      Thread.sleep(1500);
+      
       content = IDE.EDITOR.getTextFromCodeEditor(0);
       assertFalse(content.contains("//      numbers.add(1);"));
       assertFalse(content.contains("//      numbers.add(2);"));
