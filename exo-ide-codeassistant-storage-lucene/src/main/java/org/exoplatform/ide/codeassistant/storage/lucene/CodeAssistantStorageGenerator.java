@@ -25,6 +25,7 @@ import org.everrest.core.impl.provider.json.JsonUtils;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.container.xml.Deserializer;
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,41 +92,19 @@ public class CodeAssistantStorageGenerator
       JsonParser p = new JsonParser();
       if (io == null)
          io = new FileInputStream(new File(jarFilesList));
-      
-//      BufferedReader br = new BufferedReader(reader);
+
       try
       {
          p.parse(io);
-         ArrayValue arr = (ArrayValue)p.getJsonObject();
-         
-         List<Artifact> list = new ArrayList<Artifact>(arr.size()); 
-         for (Iterator<JsonValue> iterator = arr.getElements(); iterator.hasNext();)
-         {
-            list.add(ObjectBuilder.createObject(Artifact.class, iterator.next()));
-         }
-         return list.toArray(new Artifact[list.size()]);
-//         List<String> list = new ArrayList<String>();
-//         String nextLine = null;
-//         while ((nextLine = br.readLine()) != null)
-//         {
-//            nextLine = nextLine.trim();
-//            if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
-//            {
-//               String pathToJar = Deserializer.resolveVariables(nextLine);
-//               list.add(pathToJar);
-//            }
-//         }
-//         return list;
+         return (Artifact[])ObjectBuilder.createArray(Artifact[].class, p.getJsonObject());
 
       }
       catch (JsonException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       finally
       {
-//         br.close();
          io.close();
       }
       return null;

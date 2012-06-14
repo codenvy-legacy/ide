@@ -171,11 +171,11 @@ public class PomListener implements Startable
             try
             {
                ConversationState.setCurrent(new ConversationState(new Identity("__system")));
-               String dependecys = readBody(data, http.getContentLength());
+               String dependencys = readBody(data, http.getContentLength());
                List<ConvertibleProperty> properties =
-                  Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:classpath", dependecys)});
+                  Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:classpath", dependencys)});
                vfs.updateItem(project.getId(), properties, null);
-               copyDependencys(project, vfs, dependecys);
+               copyDependencys(project, vfs, dependencys);
             }
             catch (VirtualFileSystemException e)
             {
