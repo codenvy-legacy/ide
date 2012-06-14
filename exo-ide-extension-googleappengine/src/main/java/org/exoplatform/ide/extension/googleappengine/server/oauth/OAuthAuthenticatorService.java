@@ -44,21 +44,21 @@ public class OAuthAuthenticatorService
 
    @GET
    @Path("auth")
-   public Response authenticate() throws OAuthAuthenticationException
-   {
-      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUri())).build();
-   }
-
-   @GET
-   @Path("callback")
-   public Response callback(@Context UriInfo uriInfo, @Context SecurityContext security) throws OAuthAuthenticationException
+   public Response authenticate(@Context SecurityContext security) throws OAuthAuthenticationException
    {
       final Principal principal = security.getUserPrincipal();
       if (principal == null)
       {
          throw new OAuthAuthenticationException("User is not logged in. ");
       }
-      oauth.callback(uriInfo.getRequestUri().toString(), principal.getName());
+      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUri(principal.getName()))).build();
+   }
+
+   @GET
+   @Path("callback")
+   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException
+   {
+      oauth.callback(uriInfo.getRequestUri().toString());
       return Response.ok("<html><body>Authentication successful. Please, switch to IDE tab</body></html>",
          MediaType.TEXT_HTML).build();
    }
@@ -75,4 +75,5 @@ public class OAuthAuthenticatorService
       return Response.status(404).entity("Not found OAuth token for "
          + (principal != null ? principal.getName() : null)).type(MediaType.TEXT_PLAIN).build();
    }
+
 }
