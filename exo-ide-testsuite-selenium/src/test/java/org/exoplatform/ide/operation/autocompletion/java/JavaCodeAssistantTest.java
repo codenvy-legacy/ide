@@ -135,7 +135,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       //step 3 open form, select first element and insert
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
-      assertThat(proposalsText).containsOnly("ArrayList(int arg0) - java.util.ArrayList",
+      assertThat(proposalsText).contains("ArrayList(int arg0) - java.util.ArrayList",
          "ArrayList() - java.util.ArrayList", "ArrayList(Collection arg0) - java.util.ArrayList");
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();

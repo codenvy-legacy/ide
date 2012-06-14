@@ -113,7 +113,6 @@ public class SearchByMimeTypeTest extends BaseTest
    @AfterClass
    public static void tearDown() throws IOException
    {
-      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_1);
-      VirtualFileSystemUtils.delete(WS_URL + FOLDER_NAME_2);
+      VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }
 }
