@@ -19,10 +19,13 @@
 package org.exoplatform.ide.extension.googleappengine.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 
 /**
@@ -52,6 +55,21 @@ public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncReques
          IDE.fireEvent(new LoginEvent());
          return;
       }
-      IDE.fireEvent(new ExceptionThrownEvent(exception));
+      if (exception instanceof ServerException)
+      {
+         ServerException serverException = (ServerException)exception;
+         if (serverException.getMessage() != null)
+         {
+            IDE.fireEvent(new OutputEvent(serverException.getMessage(), Type.ERROR));
+         }
+         else
+         {
+            IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.unknownErrorMessage(), Type.ERROR));
+         }
+      }
+      else
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
+      }
    }
 }

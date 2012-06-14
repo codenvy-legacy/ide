@@ -190,6 +190,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("not.app.engine.project")
    String notAppEngineProjectError();
 
+   @Key("unknown.error.message")
+   String unknownErrorMessage();
+
    /* Messages */
    @Key("update.pagespeed.successfully")
    String updatePageSpeedSuccessfully();
