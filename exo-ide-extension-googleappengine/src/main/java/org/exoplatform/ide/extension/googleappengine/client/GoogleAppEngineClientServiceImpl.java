@@ -23,6 +23,7 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.googleappengine.client.backends.UpdateBackendStatusHandler;
@@ -58,6 +59,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    private final String APP_ENGINE = "/ide/appengine/";
 
    private final String AUTH_URL = APP_ENGINE + "oauth/auth";
+
+   private final String LOGOUT = APP_ENGINE + "oauth/invalidate";
 
    private final String BACKEND_CONFIGURE = APP_ENGINE + "backend/configure";
 
@@ -443,5 +446,16 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    public String getAuthUrl()
    {
       return restServiceContext + AUTH_URL;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#logout(org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback)
+    */
+   @Override
+   public void logout(AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = restServiceContext + LOGOUT;
+
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 }

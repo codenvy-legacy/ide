@@ -30,6 +30,7 @@ import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplica
 import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VaccumIndexesHandlerImpl;
+import org.exoplatform.ide.extension.googleappengine.client.login.AccountsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedHandler;
@@ -76,7 +77,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new DosHandler();
       new CronsHandler();
       new BackendsHandler();
-      
+      new AccountsHandler();
+
       new GoogleAppEnginePaaS();
    }
 

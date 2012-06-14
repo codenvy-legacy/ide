@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 
 /**
@@ -49,19 +47,11 @@ public abstract class GoogleAppEngineAsyncRequestCallback<T> extends AsyncReques
    @Override
    protected void onFailure(Throwable exception)
    {
-      if (exception instanceof ServerException)
+      if (exception instanceof UnauthorizedException)
       {
-         ServerException serverException = (ServerException)exception;
-         if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus())
-         {
-            String message = serverException.getMessage();
-            if (message.contains("401 Unauthorized"))
-            {
-               IDE.fireEvent(new LoginEvent());
-               return;
-            }
-         }
+         IDE.fireEvent(new LoginEvent());
+         return;
       }
-      IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+      IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
 }
