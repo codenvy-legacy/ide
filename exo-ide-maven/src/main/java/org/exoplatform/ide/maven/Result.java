@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.maven;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -26,13 +29,19 @@ import java.io.InputStream;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class Result
+final class Result
 {
    /** Stream that contains result ot task, e.g. binary stream of maven artifact. */
    private final InputStream stream;
 
+   /** File that contains result of task. */
+   private final File file;
+
    /** Media type of result. This value is sent to the client. */
    private final String mediaType;
+
+   /** Time when task was done. */
+   private final long time;
 
    /**
     * This value may be sent to the client in Content-Disposition header. It may be useful to prevent some clients (e.g.
@@ -40,25 +49,41 @@ public final class Result
     */
    private final String fileName;
 
-   public Result(InputStream stream, String mediaType, String fileName)
+   Result(InputStream stream, String mediaType, String fileName, long time)
    {
       this.stream = stream;
+      this.file = null;
       this.mediaType = mediaType;
       this.fileName = fileName;
+      this.time = time;
    }
 
-   public String getMediaType()
+   Result(File file, String mediaType, String fileName, long time)
+   {
+      this.file = file;
+      this.stream = null;
+      this.mediaType = mediaType;
+      this.fileName = fileName;
+      this.time = time;
+   }
+
+   String getMediaType()
    {
       return mediaType;
    }
 
-   public InputStream getStream()
+   InputStream getStream() throws IOException
    {
-      return stream;
+      return stream != null ? stream : new FileInputStream(file);
    }
 
-   public String getFileName()
+   String getFileName()
    {
       return fileName;
+   }
+
+   long getTime()
+   {
+      return time;
    }
 }

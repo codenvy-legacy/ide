@@ -459,7 +459,7 @@ public class BuildService
          });
          if (filtered != null && filtered.length > 0)
          {
-            return new Result(new FileInputStream(filtered[0]), "application/zip", filtered[0].getName());
+            return new Result(filtered[0], "application/zip", filtered[0].getName(), filtered[0].lastModified());
          }
          return null;
       }
@@ -561,7 +561,7 @@ public class BuildService
                w.write(']');
                w.flush();
                w.close();
-               return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json");
+               return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json", 0);
             }
             finally
             {
@@ -594,7 +594,7 @@ public class BuildService
          {
             File zip = new File(target, "dependencies.zip");
             BuildHelper.zip(dependencies, zip);
-            return new Result(new FileInputStream(zip), "application/zip", zip.getName());
+            return new Result(zip, "application/zip", zip.getName(), 0);
          }
          return null;
       }
