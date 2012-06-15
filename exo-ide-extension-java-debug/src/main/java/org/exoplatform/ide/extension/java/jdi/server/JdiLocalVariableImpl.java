@@ -18,10 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import com.sun.jdi.ArrayType;
-import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.LocalVariable;
-import com.sun.jdi.PrimitiveType;
 import com.sun.jdi.StackFrame;
 import com.sun.jdi.Value;
 
@@ -49,27 +46,13 @@ public class JdiLocalVariableImpl implements JdiLocalVariable
    @Override
    public boolean isArray() throws DebuggerException
    {
-      try
-      {
-         return variable.type() instanceof ArrayType;
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
+      return JdiType.isArray(variable.signature());
    }
 
    @Override
    public boolean isPrimitive() throws DebuggerException
    {
-      try
-      {
-         return variable.type() instanceof PrimitiveType;
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
+      return JdiType.isPrimitive(variable.signature());
    }
 
    @Override

@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server.oauth;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.security.Principal;
 
 import javax.inject.Inject;
@@ -58,20 +56,18 @@ public class OAuthAuthenticatorService
 
    @GET
    @Path("callback")
-   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException, MalformedURLException
+   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException
    {
       oauth.callback(uriInfo.getRequestUri().toString());
 
-      URL logoLocation =
-         new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(), uriInfo.getBaseUri().getPort(),
-            "/IDE/images/logo/exo_logo.png");
-
+      String logoLocation = uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
+      
       return Response
          .ok(
             "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
                + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
                + "<p>Authentication successful. Please, switch to IDE tab.</p>" + "<img src=\""
-               + logoLocation.toString() + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
+               + logoLocation + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
    }
 
    @GET

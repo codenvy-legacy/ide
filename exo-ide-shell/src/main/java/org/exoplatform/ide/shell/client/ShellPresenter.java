@@ -34,6 +34,7 @@ import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 
 import org.exoplatform.gwtframework.commons.exception.JobNotFoundException;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
@@ -408,7 +409,12 @@ public class ShellPresenter
                {
                   return;
                }
-
+               
+               if (exception instanceof UnauthorizedException)
+               {
+                  display.println("Unauthorized to perform operation.");
+               }
+               
                String message =
                   (exception.getMessage() != null) ? exception.getMessage()
                      : "Unknown error in processing the command.\n";

@@ -29,12 +29,12 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -74,7 +74,7 @@ public class AppEngineService
       @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.configureBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(security));
+         backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -84,7 +84,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       return client.cronInfo(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -93,7 +93,7 @@ public class AppEngineService
       @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.deleteBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(security));
+         backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -103,7 +103,7 @@ public class AppEngineService
       @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
    {
       return client.getResourceLimits(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, getUserId(security));
+         projectId, getUserId(/*security*/));
    }
 
    @GET
@@ -113,7 +113,7 @@ public class AppEngineService
       @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
    {
       return client.listBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, getUserId(security));
+         projectId, getUserId(/*security*/));
    }
 
    @GET
@@ -124,7 +124,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       return client.requestLogs(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, numDays, logSeverity, getUserId(security));
+         projectId, numDays, logSeverity, getUserId(/*security*/));
    }
 
    @GET
@@ -133,7 +133,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.rollback(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -142,7 +142,7 @@ public class AppEngineService
       @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.rollbackBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(security));
+         backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -151,7 +151,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.rollbackAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, getUserId(security));
+         projectId, getUserId(/*security*/));
    }
 
    @GET
@@ -161,7 +161,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.setBackendState(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, backendState, getUserId(security));
+         backendName, backendState, getUserId(/*security*/));
    }
 
    @GET
@@ -171,7 +171,7 @@ public class AppEngineService
       @QueryParam("bin") URL bin, @Context SecurityContext security) throws Exception
    {
       return client.update(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         bin, getUserId(security));
+         bin, getUserId(/*security*/));
    }
 
    @GET
@@ -180,7 +180,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updateAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
-         projectId, getUserId(security));
+         projectId, getUserId(/*security*/));
    }
 
    @GET
@@ -189,7 +189,7 @@ public class AppEngineService
       @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.updateBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(security));
+         backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -198,7 +198,7 @@ public class AppEngineService
       @QueryParam("backends_name") List<String> backendNames, @Context SecurityContext security) throws Exception
    {
       client.updateBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendNames, getUserId(security));
+         backendNames, getUserId(/*security*/));
    }
 
    @GET
@@ -207,7 +207,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updateCron(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -216,7 +216,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updateDos(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -225,7 +225,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updateIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -234,7 +234,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -243,7 +243,7 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.updateQueues(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
    @GET
@@ -252,17 +252,20 @@ public class AppEngineService
       @Context SecurityContext security) throws Exception
    {
       client.vacuumIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(security));
+         getUserId(/*security*/));
    }
 
-   private String getUserId(SecurityContext security)
+   private String getUserId(/*SecurityContext security*/)
    {
+/*
       Principal principal = security.getUserPrincipal();
       if (principal != null)
       {
          return principal.getName();
       }
       return null;
+*/
+      return ConversationState.getCurrent().getIdentity().getUserId();
    }
 
    @GET
@@ -278,15 +281,14 @@ public class AppEngineService
       appId = StringUtils.removeStart(appId, "s~");
       if (changeAppEngXml(vfs, path, appId) || changeAppEngYaml(vfs, path, appId))
       {
-         URL uri =
-            new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(), uriInfo.getBaseUri().getPort(),
-               "/IDE/images/logo/exo_logo.png");
+         String logoLocation =
+            uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
          return Response
             .ok(
                "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
                   + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
                   + "<p>Your application has been created.<br>Close this tab and use the Deploy button in Cloud IDE.</p>"
-                  + "<img src=\"" + uri.toString() + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
+                  + "<img src=\"" + logoLocation + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
       }
       else
       {
