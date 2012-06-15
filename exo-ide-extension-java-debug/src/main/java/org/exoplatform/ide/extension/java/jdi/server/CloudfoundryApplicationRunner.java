@@ -412,6 +412,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                + " com.google.appengine.tools.development.DevAppServerMain"
                + " --port=$VCAP_APP_PORT"
                + " --address=0.0.0.0"
+               + " --disable_update_check"
                + " application";
          }
          else
