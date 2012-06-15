@@ -61,4 +61,8 @@ public interface BuildStatus
    void setError(String error);
 
    void setDownloadUrl(String downloadUrl);
+
+   long getTime();
+
+   void setTime(long time);
 }
