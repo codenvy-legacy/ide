@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -533,7 +534,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                               && serverException.getMessage() != null
                               && serverException.getMessage().contains("not found"))
                            {
+                              IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
                               IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                              return;
                            }
                         }
                         IDE.fireEvent(new ExceptionThrownEvent(exception));
