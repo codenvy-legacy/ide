@@ -22,19 +22,30 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class AppStopedEvent extends GwtEvent<AppStopedHandler>
 {
 
    public static final GwtEvent.Type<AppStopedHandler> TYPE = new GwtEvent.Type<AppStopedHandler>();
 
    private String appName;
-   
-   public AppStopedEvent(String name)
+
+   /**
+    * Application was stopped manually.
+    */
+   private boolean manually;
+
+   /**
+    * @param name name of the stopped application
+    * @param manually application was stopped manually
+    */
+   public AppStopedEvent(String name, boolean manually)
    {
       this.appName = name;
+      this.manually = manually;
    }
 
    @Override
@@ -48,10 +59,17 @@ public class AppStopedEvent extends GwtEvent<AppStopedHandler>
    {
       handler.onAppStoped(this);
    }
-   
+
    public String getAppName()
    {
       return appName;
    }
 
+   /**
+    * @return the manually
+    */
+   public boolean isManually()
+   {
+      return manually;
+   }
 }

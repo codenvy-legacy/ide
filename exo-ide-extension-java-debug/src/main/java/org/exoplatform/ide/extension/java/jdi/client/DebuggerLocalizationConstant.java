@@ -5,7 +5,7 @@ package org.exoplatform.ide.extension.java.jdi.client;
  */
 public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
-   
+
    @DefaultMessage("Run/Debug")
    @Key("control.launchDebuggerControlId")
    String debugAppControlId();
@@ -208,6 +208,10 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Start application failed.")
    @Key("startAppFailed")
    String startApplicationFailed();
+   
+   @DefaultMessage("Stop application failed.")
+   @Key("stop.application.failed")
+   String stopApplicationFailed();
 
    /*************************************************************************
     * Change value view
@@ -345,7 +349,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Starting <b>{0}</b>")
    @Key("run.app.starting")
    String starting(String project);
-   
+
    @DefaultMessage("<b>{0}</b> : started")
    @Key("run.app.started")
    String started(String project);

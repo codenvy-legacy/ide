@@ -28,8 +28,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -94,9 +96,10 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
    ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
@@ -521,8 +524,20 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   {
                      cancel();
                      IDE.getInstance().closeView(display.asView().getId());
-                     if (runningApp !=  null)
+                     if (runningApp != null)
+                     {
+                        if (exception instanceof ServerException)
+                        {
+                           ServerException serverException = (ServerException)exception;
+                           if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
+                              && serverException.getMessage() != null
+                              && serverException.getMessage().contains("not found"))
+                           {
+                              IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                           }
+                        }
                         IDE.fireEvent(new ExceptionThrownEvent(exception));
+                     }
                   }
                });
          }
@@ -798,13 +813,26 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new AppStopedEvent(runningApp.getName()));
+                  IDE.fireEvent(new AppStopedEvent(runningApp.getName(), true));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new OutputEvent(exception.getMessage(), OutputMessage.Type.WARNING));
+                  String message =
+                     (exception.getMessage() != null) ? exception.getMessage()
+                        : DebuggerExtension.LOCALIZATION_CONSTANT.stopApplicationFailed();
+                  IDE.fireEvent(new OutputEvent(message, OutputMessage.Type.WARNING));
+
+                  if (exception instanceof ServerException)
+                  {
+                     ServerException serverException = (ServerException)exception;
+                     if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
+                        && "Application not found".equals(serverException.getMessage()))
+                     {
+                        IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                     }
+                  }
                }
             });
          }
@@ -818,8 +846,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onAppStoped(AppStopedEvent appStopedEvent)
    {
-      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
-      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      if (appStopedEvent.isManually())
+      {
+         String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      }
       runningApp = null;
    }
 
