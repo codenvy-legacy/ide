@@ -24,6 +24,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -125,7 +126,7 @@ public class Builder
                      .status(200)
                      .entity("{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
                         + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
-                        + "\"}")
+                        + "\",\"time\":" + result.getResult().getTime() + '}')
                      .type(MediaType.APPLICATION_JSON).build();
                }
                else
@@ -145,6 +146,10 @@ public class Builder
                }
             }
             catch (MavenInvocationException e)
+            {
+               throw new WebApplicationException(e);
+            }
+            catch (IOException e)
             {
                throw new WebApplicationException(e);
             }
@@ -214,6 +219,11 @@ public class Builder
                      if (fileName != null)
                      {
                         builder.header("Content-Disposition", "attachment; filename=\"" + fileName + '"');
+                     }
+                     long time = result.getTime();
+                     if (time > 0)
+                     {
+                        builder.lastModified(new Date(time));
                      }
                      return builder.build();
                   }

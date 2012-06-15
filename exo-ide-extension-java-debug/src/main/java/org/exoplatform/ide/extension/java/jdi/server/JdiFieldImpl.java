@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import com.sun.jdi.ArrayType;
-import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.Field;
 import com.sun.jdi.ObjectReference;
-import com.sun.jdi.PrimitiveType;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.Value;
 
@@ -83,27 +80,13 @@ public class JdiFieldImpl implements JdiField, Comparable<JdiFieldImpl>
    @Override
    public boolean isArray() throws DebuggerException
    {
-      try
-      {
-         return field.type() instanceof ArrayType;
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
+      return JdiType.isArray(field.signature());
    }
 
    @Override
    public boolean isPrimitive() throws DebuggerException
    {
-      try
-      {
-         return field.type() instanceof PrimitiveType;
-      }
-      catch (ClassNotLoadedException e)
-      {
-         throw new DebuggerException(e.getMessage(), e);
-      }
+      return JdiType.isPrimitive(field.signature());
    }
 
    @Override
