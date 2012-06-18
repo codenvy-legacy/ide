@@ -208,10 +208,14 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Start application failed.")
    @Key("startAppFailed")
    String startApplicationFailed();
-   
+
    @DefaultMessage("Stop application failed.")
    @Key("stop.application.failed")
    String stopApplicationFailed();
+
+   @DefaultMessage("Debugger is disconnected.")
+   @Key("debugger.disconnected")
+   String debuggeDisconnected();
 
    /*************************************************************************
     * Change value view
