@@ -20,7 +20,6 @@ package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
