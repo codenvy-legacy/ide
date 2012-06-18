@@ -110,7 +110,7 @@ public abstract class ChangeEventFilter
       }
    }
 
-   public static ChangeEventFilter ANY_FILTER = new AnyFilter();
+   public static final ChangeEventFilter ANY_FILTER = new AnyFilter();
 
    private static class AnyFilter extends ChangeEventFilter
    {

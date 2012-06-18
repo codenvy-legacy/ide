@@ -89,7 +89,7 @@ public final class ContentStreamWriter implements MessageBodyWriter<ContentStrea
       try
       {
          byte[] buf = new byte[8192];
-         int rd = -1;
+         int rd;
          while ((rd = content.read(buf)) != -1)
          {
             entityStream.write(buf, 0, rd);

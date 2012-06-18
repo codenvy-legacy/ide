@@ -50,7 +50,7 @@ public class NoCacheJsonWriter<T> implements MessageBodyWriter<T>
    @SuppressWarnings("rawtypes")
    private MessageBodyWriter writer;
 
-   private static ThreadLocal<MessageBodyWriter> writerContext = new ThreadLocal<MessageBodyWriter>();
+   private static final ThreadLocal<MessageBodyWriter> writerContext = new ThreadLocal<MessageBodyWriter>();
 
    /**
     * @see javax.ws.rs.ext.MessageBodyWriter#isWriteable(java.lang.Class, java.lang.reflect.Type,
