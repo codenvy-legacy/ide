@@ -278,4 +278,14 @@ public class MockVirtualFileSystem implements VirtualFileSystem
       // TODO Auto-generated method stub
       return null;
    }
+
+   @Override
+   public void startWatchUpdates(String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   {
+   }
+
+   @Override
+   public void stopWatchUpdates(String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   {
+   }
 }

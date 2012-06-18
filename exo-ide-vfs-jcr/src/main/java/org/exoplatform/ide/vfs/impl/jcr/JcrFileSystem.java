@@ -1916,6 +1916,58 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
+   @Path("watch/start/{projectId}")
+   @Override
+   public void startWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException,
+      InvalidArgumentException, VirtualFileSystemException
+   {
+      if (listeners == null)
+      {
+         throw new VirtualFileSystemException("EventListenerList is not configured properly. ");
+      }
+      Session session = session();
+      try
+      {
+         ItemData projectData = getItemData(session, projectId);
+         if (ItemType.PROJECT != projectData.getType())
+         {
+            throw new InvalidArgumentException("Item is not a project. ");
+         }
+         if (!listeners.addEventListener(
+            ProjectUpdateEventFilter.newFilter((ProjectData)projectData), new ProjectUpdateListener(projectId)))
+         {
+            throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
+         }
+      }
+      finally
+      {
+         session.logout();
+      }
+   }
+
+   @Path("watch/stop/{projectId}")
+   @Override
+   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   {
+      if (listeners != null)
+      {
+         Session session = session();
+         try
+         {
+            ItemData projectData = getItemData(session, projectId);
+            if (ItemType.PROJECT != projectData.getType() // Do not check listeners if not a project.
+               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter((ProjectData)projectData), new ProjectUpdateListener(projectId)))
+            {
+               throw new InvalidArgumentException("'" + projectData.getName() + "' is not under watching. ");
+            }
+         }
+         finally
+         {
+            session.logout();
+         }
+      }
+   }
+
    /**
     * Get JCR path from Virtual File System path.
     *
@@ -2140,7 +2192,7 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       catch (javax.jcr.ItemNotFoundException e)
       {
-         throw new ItemNotFoundException("Object " + id + " does not exists. ");
+         throw new ItemNotFoundException("Object '" + id + "' does not exists. ");
       }
       catch (AccessDeniedException e)
       {

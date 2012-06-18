@@ -33,7 +33,7 @@ public class EventListenerList
 {
    private static final ErrorHandler DEFAULT_ERROR_HANDLER = new LogErrorHandler();
 
-   private final List<ListenerHolder> listeners;
+   private final CopyOnWriteArrayList<ListenerHolder> listeners;
    private final ErrorHandler errorHandler;
 
    public EventListenerList(ErrorHandler errorHandler)
@@ -52,7 +52,7 @@ public class EventListenerList
    }
 
    /**
-    * Add new EventListener to the list.
+    * Add new EventListener to the list if the same combination of listener and filter is not present.
     * Here is example how to add new EventListener that get events about updating content of all web.xml files in VFS
     * 'my-vfs':
     * <pre>
@@ -74,18 +74,20 @@ public class EventListenerList
     * </pre>
     *
     * @param eventFilter
-    *    filter for events. Listener get only events matched to the filter. If this parameter may be <code>null</code>
+    *    filter for events. Listener get only events matched to the filter. If this parameter is <code>null</code>
     *    listener will get all events
     * @param listener
     *    EventListener
+    * @return <code>true</code> if listener was added and <code>false</code> otherwise
     */
-   public void addEventListener(ChangeEventFilter eventFilter, EventListener listener)
+   public boolean addEventListener(ChangeEventFilter eventFilter, EventListener listener)
    {
       if (listener == null)
       {
          throw new IllegalArgumentException("EventListener may not be null. ");
       }
-      listeners.add(new ListenerHolder(eventFilter == null ? ChangeEventFilter.ANY_FILTER : eventFilter, listener));
+      return listeners.addIfAbsent(
+         new ListenerHolder(eventFilter == null ? ChangeEventFilter.ANY_FILTER : eventFilter, listener));
    }
 
    /**
@@ -96,6 +98,7 @@ public class EventListenerList
     * @param listener
     *    EventListener
     * @return <code>true</code> if listener was removed and <code>false</code> otherwise
+    * @see #addEventListener(ChangeEventFilter, EventListener)
     */
    public boolean removeEventListener(ChangeEventFilter eventFilter, EventListener listener)
    {
