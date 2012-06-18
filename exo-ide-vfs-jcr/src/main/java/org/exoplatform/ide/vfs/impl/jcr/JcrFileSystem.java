@@ -2314,11 +2314,6 @@ public class JcrFileSystem implements VirtualFileSystem
 
    private String formatAsHtml(String message, int exitCode)
    {
-      return new StringBuilder() //
-         .append("<pre>Code: ") //
-         .append(exitCode) //
-         .append(" Text: ") //
-         .append(message) //
-         .append("</pre>").toString();
+      return "<pre>Code: " + exitCode + " Text: " + message + "</pre>";
    }
 }

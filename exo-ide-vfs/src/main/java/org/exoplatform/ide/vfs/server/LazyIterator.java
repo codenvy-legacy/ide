@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  */
 public abstract class LazyIterator<T> implements Iterator<T>
 {
-   public static LazyIterator<Object> EMPTY_ITEMS_ITERATOR = new EmptyIterator();
+   public static final LazyIterator<Object> EMPTY_ITEMS_ITERATOR = new EmptyIterator();
 
    private static class EmptyIterator extends LazyIterator<Object>
    {
