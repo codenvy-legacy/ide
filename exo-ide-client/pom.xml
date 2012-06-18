@@ -268,7 +268,7 @@
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-java-debug</artifactId>
+               <artifactId>exo-ide-extension-java-runtime</artifactId>
             </dependency>
 
             <dependency>
