@@ -212,6 +212,7 @@ public class ShellPresenter
          public void onKeyPress(KeyPressEvent event)
          {
             int code = event.getNativeEvent().getKeyCode();
+
             boolean handled = false;
             if (code == KeyCodes.KEY_BACKSPACE)
             {
@@ -265,7 +266,7 @@ public class ShellPresenter
                display.moveEnd();
                handled = true;
             }
-            else if (code == KeyCodes.KEY_DELETE)
+            else if (code == KeyCodes.KEY_DELETE && BrowserResolver.CURRENT_BROWSER == Browser.FIREFOX)
             {
                display.deleteSymbol();
                handled = true;
@@ -296,7 +297,6 @@ public class ShellPresenter
          public void onKeyDown(KeyDownEvent event)
          {
             int code = event.getNativeKeyCode();
-
             // key code 86 is 'v'
             if (event.getNativeEvent().getKeyCode() == 86 && event.isControlKeyDown())
             {
@@ -409,12 +409,12 @@ public class ShellPresenter
                {
                   return;
                }
-               
+
                if (exception instanceof UnauthorizedException)
                {
                   display.println("Unauthorized to perform operation.");
                }
-               
+
                String message =
                   (exception.getMessage() != null) ? exception.getMessage()
                      : "Unknown error in processing the command.\n";
