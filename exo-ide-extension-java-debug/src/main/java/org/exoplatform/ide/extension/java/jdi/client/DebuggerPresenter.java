@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.http.client.UrlBuilder;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,6 +42,7 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -82,11 +85,14 @@ import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -104,6 +110,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
    ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
 {
+   private final static String  LAST_SUCCESS_BUILD = "lastSuccessBuild";
+   
+   private final static String  ARTIFACT_DOWNLOAD_URL =  "artifactDownloadUrl";
+   
    private Display display;
 
    private DebuggerInfo debuggerInfo;
@@ -113,8 +123,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private ApplicationInstance runningApp;
 
    private BreakpointsManager breakpointsManager;
-
-   private String warUrl;
 
    private boolean startDebugger;
 
@@ -653,6 +661,30 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void buildApplication()
    {
+      try
+      {
+         //Going to check is need built project.
+         //Need compare to properties lastBuildTime and lastModificationTime  
+         VirtualFileSystem.getInstance().getItemById(project.getId(), new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
+         {
+            
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               result.getItem().getProperty(LAST_SUCCESS_BUILD);
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+      
       IDE.addHandler(ProjectBuiltEvent.TYPE, this);
       IDE.fireEvent(new BuildProjectEvent());
    }
@@ -661,18 +693,50 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onProjectBuilt(ProjectBuiltEvent event)
    {
       IDE.removeHandler(event.getAssociatedType(), this);
-      if (event.getBuildStatus().getDownloadUrl() != null)
+      BuildStatus buildStatus = event.getBuildStatus();
+      if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL))
       {
-         warUrl = event.getBuildStatus().getDownloadUrl();
+         IDE.eventBus().fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarting(), Type.INFO));
+         writeBuildTime(buildStatus);
          if (startDebugger)
-            debugApplication();
+            debugApplication(buildStatus.getDownloadUrl());
          else
-            runApplication();
+            runApplication(buildStatus.getDownloadUrl());
 
       }
    }
+   
+   
+   private void writeBuildTime(BuildStatus buildStatus)
+   {
+      project.getProperties().add(new StringProperty(LAST_SUCCESS_BUILD, buildStatus.getTime()));
+      project.getProperties().add(new StringProperty(ARTIFACT_DOWNLOAD_URL,  buildStatus.getDownloadUrl()));
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<Object>()
+         {
 
-   private void debugApplication()
+            @Override
+            protected void onSuccess(Object result)
+            {
+               //Nothing todo
+            }
+
+            @Override
+            protected void onFailure(Throwable ignore)
+            {
+               //Ignore this exception
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   
+}
+
+   private void debugApplication(String warUrl)
    {
       try
       {
@@ -687,7 +751,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(DebugApplicationInstance result)
                {
-                  warUrl = null;
                   String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
                   msg +=
                      "<br>"
@@ -744,7 +807,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    }
 
-   private void runApplication()
+   private void runApplication(String warUrl)
    {
       try
       {
@@ -758,7 +821,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(ApplicationInstance result)
                {
-                  warUrl = null;
                   String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
                   msg +=
                      "<br>"

@@ -62,7 +62,7 @@ public interface BuildStatus
 
    void setDownloadUrl(String downloadUrl);
 
-   long getTime();
+   String getTime();
 
-   void setTime(long time);
+   void setTime(String time);
 }
