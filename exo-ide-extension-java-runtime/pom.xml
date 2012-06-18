@@ -7,8 +7,8 @@
 		<artifactId>exo-ide-parent</artifactId>
 		<version>1.2.0-M8-SNAPSHOT</version>
 	</parent>
-	<artifactId>exo-ide-extension-java-debug</artifactId>
-	<name>eXo IDE :: Extension :: Java :: Debug</name>
+	<artifactId>exo-ide-extension-java-runtime</artifactId>
+	<name>eXo IDE :: Extension :: Java :: Runtime</name>
 
 	<dependencies>
 		<!-- Client side dependencies -->
