@@ -108,6 +108,9 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(
          "// simple groovy script\n" + "import Path\n" + "import javax.ws.rs.GET\n" + "import some.pack.String\n"
             + "import javax.inject.Inject\n" + "import java.util.prefs.Base64\n"));
+
+      //need for disappear values after fix of error marker 16
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
       testAfterFixFirstError();
 
       //step 3 delete all code and  type new test-code. Tests error-markers
@@ -127,7 +130,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
       IDE.ERROR_MARKS.selectAndInsertFqn("-java.util.prefs");
       testAfterFixFileWithNewCode();
-      
+
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
@@ -191,8 +194,11 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    private void testAfterFixFileWithNewCode() throws Exception
    {
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith("import java.util.prefs.Base64\n"));
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(1);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(1));
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(2);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(2));
+      IDE.ERROR_MARKS.waitErrorMarkerIsAppear(3);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(3));
    }
 
@@ -234,8 +240,12 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
     */
    private void testAfterFixFirstError() throws InterruptedException
    {
+      IDE.ERROR_MARKS.waitChangesInErrorMarker(
+         "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ", 17);
+
       assertEquals("'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ",
          IDE.ERROR_MARKS.getTextFromErorMarker(17));
+
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(18));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(18));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(37));

@@ -42,6 +42,8 @@ public class ErrorMarks extends AbstractTestModule
 
       String ERROR_MARKER_PREFIX = "//div[@class='CodeMirror-line-numbers']/div[text() = '%s' and @title]";
 
+      String ERROR_MARKER_LABEL = "//div[@class='CodeMirror-line-numbers']//div[@title=\"%s\" and text()=%s]";
+
       String DECLARATION_FORM_ID = "ideAssistImportDeclarationForm";
 
       String DECLARATION_FORM = "//div[@id='ideAssistImportDeclarationForm']//div[@class='gwt-Label' and text()='%s']";
@@ -122,7 +124,7 @@ public class ErrorMarks extends AbstractTestModule
    public void waitErrorMarkerIsAppear(final int numMark)
    {
 
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -142,7 +144,7 @@ public class ErrorMarks extends AbstractTestModule
    }
 
    /**
-    * wait marker is appear
+    * wait marker is disappear
     * @param numString
     * @return
     */
@@ -169,7 +171,36 @@ public class ErrorMarks extends AbstractTestModule
    }
 
    /**
-    * wait marker is appear
+    * wait setting changes in error marker
+    * after fix or other changes in code 
+    * @param markLabel
+    * @param numMarker
+    */
+   public void waitChangesInErrorMarker(final String markLabel, final int numMarker)
+   {
+
+      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            try
+            {
+               WebElement mark =
+                  driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_LABEL, markLabel, numMarker)));
+               return true;
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait fqn declaration is appear
     * @param numString
     * @return
     */
@@ -279,7 +310,7 @@ public class ErrorMarks extends AbstractTestModule
          mark.click();
          new Actions(driver()).sendKeys(Keys.ARROW_DOWN.toString()).build().perform();
          //sendKeys(Keys.ARROW_DOWN.toString());
-       //delay for emulation of the user input
+         //delay for emulation of the user input
          Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
    }
