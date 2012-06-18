@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.login;
 
+import com.google.gwt.http.client.RequestException;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,6 +27,9 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -117,9 +122,43 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          builder.setPort(Integer.parseInt(Window.Location.getPort()));
       }
 
-      Window.open(builder.buildString(), "_blank", null);
+      final String url = builder.buildString();
 
-      IDE.getInstance().closeView(display.asView().getId());
+      try
+      {
+         GoogleAppEngineClientService.getInstance().logout(new AsyncRequestCallback<Object>()
+         {
+
+            @Override
+            protected void onSuccess(Object result)
+            {
+               if (display != null)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+               Window.open(url, "_blank", null);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (display != null)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+               if (exception instanceof UnauthorizedException)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  return;
+               }
+               Window.open(url, "_blank", null);
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

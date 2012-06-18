@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
 /**
@@ -50,7 +51,7 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
       setTitle(TITLE);
       setPrompt(PROMPT);
       setEvent(new DeployApplicationEvent());
-
+      setImages(GAEClientBundle.INSTANCE.updateApplication(), GAEClientBundle.INSTANCE.updateApplicationDisabled());
    }
 
    /**
