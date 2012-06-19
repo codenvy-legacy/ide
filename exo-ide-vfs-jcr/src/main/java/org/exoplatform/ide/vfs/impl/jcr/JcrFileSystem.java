@@ -1938,6 +1938,9 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
          }
+         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         properties.add(new ConvertibleProperty("vfs:lastUpdateTime", "0"));
+         projectData.updateProperties(properties, null, null, null);
       }
       finally
       {
