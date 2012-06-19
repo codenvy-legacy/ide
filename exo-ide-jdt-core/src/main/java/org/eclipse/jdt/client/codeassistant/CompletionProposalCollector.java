@@ -673,24 +673,25 @@ public class CompletionProposalCollector extends CompletionRequestor
       if (declarationKey == null)
          return null;
 
+      return null;
       // IJavaElement element = fJavaProject.findElement(new String(declarationKey), null);
       // if (!(element instanceof IType))
       // return null;
       //
       // IType type = (IType)element;
-      String completion = String.valueOf(proposal.getCompletion());
-      int start = proposal.getReplaceStart();
-      int length = getLength(proposal);
-      int relevance = computeRelevance(proposal);
+//      String completion = String.valueOf(proposal.getCompletion());
+//      int start = proposal.getReplaceStart();
+//      int length = getLength(proposal);
+//      int relevance = computeRelevance(proposal);
+//
+//      StyledString label = fLabelProvider.createAnonymousTypeLabel(proposal);
 
-      StyledString label = fLabelProvider.createAnonymousTypeLabel(proposal);
-
-      // TODO find super type
-      JavaCompletionProposal javaProposal =
-         new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
-            String.valueOf(proposal.getDeclarationSignature()), (TypeDeclaration)null, relevance);
-      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
-      return javaProposal;
+//      // TODO find super type
+//      JavaCompletionProposal javaProposal =
+//         new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
+//            String.valueOf(proposal.getDeclarationSignature()), (TypeDeclaration)null, relevance);
+//      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
+//      return javaProposal;
    }
 
    private IJavaCompletionProposal createFieldProposal(CompletionProposal proposal)
