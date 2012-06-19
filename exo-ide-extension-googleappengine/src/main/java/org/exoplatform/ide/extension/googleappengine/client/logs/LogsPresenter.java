@@ -65,6 +65,7 @@ public class LogsPresenter extends GoogleAppEnginePresenter implements ShowLogsH
    private LinkedHashMap<String, String> severities = new LinkedHashMap<String, String>();
 
    {
+      severities.put("", "All");
       severities.put("ERROR", "Error");
       severities.put("INFO", "Info");
       severities.put("WARN", "Warning");
