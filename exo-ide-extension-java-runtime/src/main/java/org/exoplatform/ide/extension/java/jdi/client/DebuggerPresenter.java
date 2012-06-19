@@ -660,14 +660,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void buildApplicationIfNeed()
    {
-      checkNeedBuildOrNot();
-
       IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildProjectEvent());
-   }
-
-   private void checkNeedBuildOrNot()
-   {
       try
       {
          //Going to check is need built project.
@@ -701,6 +694,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onFailure(Throwable exception)
                {
+                  exception.printStackTrace();
                }
             });
       }
@@ -720,51 +714,48 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          buildTime = Long.parseLong(buildTimeProperty.getValue().get(0));
       }
       StringProperty lastUpdateTimeProp = (StringProperty)item.getItem().getProperty("vfs:lastUpdateTime");
-      if (lastUpdateTimeProp != null && !lastUpdateTimeProp.getValue().isEmpty())
-      {
-         lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
-      }
-      else
-      {
-         try
-         {
-            VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
-            {
-
-               @Override
-               protected void onSuccess(Object result)
-               {
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-               }
-            });
-         }
-         catch (RequestException e)
-         {
-            e.printStackTrace();
-         }
-      }
+      if (lastUpdateTimeProp == null)
+         return false;
+      lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
       return buildTime > lastUpdateTime;
+   }
+
+   private void startWatchingProjectChanges()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
+         {
+
+            @Override
+            protected void onSuccess(Object result)
+            {
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    @Override
    public void onProjectBuilt(ProjectBuiltEvent event)
    {
-      IDE.removeHandler(event.getAssociatedType(), this);
       BuildStatus buildStatus = event.getBuildStatus();
       if (buildStatus.getStatus().equals(BuildStatus.Status.SUCCESSFUL))
       {
          IDE.eventBus().fireEvent(
             new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarting(), Type.INFO));
+         startApplication(buildStatus.getDownloadUrl());
          writeBuildInfo(buildStatus);
-         if (startDebugger)
-            debugApplication(buildStatus.getDownloadUrl());
-         else
-            runApplication(buildStatus.getDownloadUrl());
-
+         startWatchingProjectChanges();
       }
    }
 
@@ -1056,7 +1047,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       display.setVariables(list);
    }
 
-   private void checkDownloadUrl(String url)
+   private void checkDownloadUrl(final String url)
    {
       try
       {
@@ -1066,7 +1057,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             @Override
             protected void onSuccess(Object result)
             {
-
+               startApplication(url);
             }
 
             @Override
@@ -1081,6 +1072,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          e.printStackTrace();
       }
+   }
+
+   private void startApplication(final String url)
+   {
+      if (IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE))
+         IDE.eventBus().removeHandler(ProjectBuiltEvent.TYPE, this);
+      if (startDebugger)
+         debugApplication(url);
+      else
+         runApplication(url);
    }
 
 }

@@ -327,8 +327,13 @@
          </value-param>
          <value-param>
             <name>cloudfoundry-password</name>
-            <value>eXoAdmin12321</value>
+            <value>eXoAdmin12321ff</value>
          </value-param>
       </init-params>
+   </component>
+   
+   
+   <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 </configuration>

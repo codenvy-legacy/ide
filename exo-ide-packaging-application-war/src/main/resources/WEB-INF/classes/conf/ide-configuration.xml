@@ -390,4 +390,8 @@
       </init-params>
    </component>
    
+   <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+   </component>
+   
 </configuration>
