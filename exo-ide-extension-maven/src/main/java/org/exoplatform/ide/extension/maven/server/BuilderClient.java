@@ -94,7 +94,8 @@ public class BuilderClient
    }
 
    /**
-    * Send request to start collect project dependencies and add them in zip archive. Process may be started immediately
+    * Send request to start collect project dependencies and add them in zip archive. Process may be started
+    * immediately
     * or add in queue.
     *
     * @param vfs
@@ -323,6 +324,42 @@ public class BuilderClient
       {
          http.disconnect();
          throw be;
+      }
+   }
+
+   /**
+    * Check is URL for download artifact is valid. Artifact may be removed by timeout but GWT client not able to check
+    * it because to cross-domain restriction for ajax requests.
+    *
+    * @param url
+    *    URL for checking
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    URL is not valid or any other errors related to build server internal state
+    */
+   public void checkDownloadURL(String url) throws IOException, BuilderException
+   {
+      URL checkURL = new URL(url);
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)checkURL.openConnection();
+         http.setRequestMethod("HEAD"); // don't want to download artifact
+         authenticate(http);
+         int responseCode = http.getResponseCode();
+         if (responseCode != 200)
+         {
+            // no response body.
+            throw new BuilderException(responseCode, "", "text/plain");
+         }
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
       }
    }
 
