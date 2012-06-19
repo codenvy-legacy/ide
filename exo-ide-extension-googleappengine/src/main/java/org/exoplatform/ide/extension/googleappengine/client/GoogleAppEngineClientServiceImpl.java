@@ -211,7 +211,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
 
       StringBuilder params = new StringBuilder("?");
       params.append("vfsid=").append(vfsId).append("&projectid=").append(projectId).append("&num_days=")
-         .append(numDays).append("&log_severity=").append(logSeverity);
+         .append(numDays);
+
+      if (logSeverity != null && !logSeverity.isEmpty())
+      {
+         params.append("&log_severity=").append(logSeverity);
+      }
 
       AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).send(callback);
