@@ -11,6 +11,8 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.Signature;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.
@@ -37,7 +39,7 @@ public final class AnonymousTypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      // TODO
-      return null;
+      return docContext + Signature.toString(new String(fProposal.getDeclarationKey())) + "&projectid=" + projectId
+               + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
    }
 }

@@ -849,6 +849,7 @@ public final class CompletionEngine extends Engine implements ISearchRequestor, 
          new ProblemReporter(DefaultErrorHandlingPolicies.proceedWithAllProblems(), this.compilerOptions,
             this.problemFactory);
       this.lookupEnvironment = new LookupEnvironment(this, this.compilerOptions, this.problemReporter, nameEnvironment);
+      requestor.setLookupEnvironment(lookupEnvironment);
       this.parser = new CompletionParser(this.problemReporter, this.requestor.isExtendedContextRequired());
       this.monitor = monitor;
    }

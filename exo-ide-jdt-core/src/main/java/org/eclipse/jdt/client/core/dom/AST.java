@@ -469,7 +469,7 @@ public final class AST
     *
     * @return the binding resolver for this AST
     */
-   BindingResolver getBindingResolver()
+   public BindingResolver getBindingResolver()
    {
       return this.resolver;
    }
