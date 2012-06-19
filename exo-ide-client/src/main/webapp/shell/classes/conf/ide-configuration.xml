@@ -323,11 +323,11 @@
          </value-param>
          <value-param>
             <name>cloudfoundry-user</name>
-            <value>skryzhny@exoplatform.com</value>
+            <value>support@cloud-ide.com</value>
          </value-param>
          <value-param>
             <name>cloudfoundry-password</name>
-            <value>eXoAdmin12321ff</value>
+            <value>eXoAdmin12321</value>
          </value-param>
       </init-params>
    </component>
