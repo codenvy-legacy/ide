@@ -18,176 +18,320 @@
  */
 package org.exoplatform.ide.extension.samples.shared;
 
-import java.util.Date;
-
 /**
- * Interface describe GitHub repository.
+ * GitHub repository, taken from API v3.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Repository.java Mar 25, 2012 11:25:43 PM azatsarynnyy $
- *
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Mar 29, 2012 12:41:47 PM anya $
+ * 
  */
 public interface Repository
 {
+   /**
+    * Get repository's name.
+    * 
+    * @return {@link String} name
+    */
+   String getName();
 
    /**
-    * @return the description
+    * Set repository's name.
+    * 
+    * @param name repository's name
     */
-   public String getDescription();
+   void setName(String name);
 
    /**
-    * @param description the description to set
+    * Get repository's location.
+    * 
+    * @return {@link String} url
     */
-   public void setDescription(String description);
+   String getUrl();
 
    /**
-    * @return the isPrivate
+    * Set repository's URL.
+    * 
+    * @param url repository's URL
     */
-   public boolean isPrivate();
+   void setUrl(String url);
 
    /**
-    * @param isPrivate the isPrivate to set
+    * Get repository's home page.
+    * 
+    * @return {@link String} home page
     */
-   public void setPrivate(boolean isPrivate);
+   String getHomepage();
 
    /**
-    * @return the url
+    * Set repository's home page.
+    * 
+    * @param homepage home page
     */
-   public String getUrl();
+   void setHomepage(String homepage);
 
    /**
-    * @param url the url to set
+    * Get the number of repository's forks.
+    * 
+    * @return forks
     */
-   public void setUrl(String url);
+   int getForks();
 
    /**
-    * @return the owner
+    * Set the number of repository's forks.
+    * 
+    * @param forks number of forks
     */
-   public String getOwner();
+   void setForks(int forks);
 
    /**
-    * @param owner the owner to set
+    * Get repository's language.
+    * 
+    * @return {@link String} language
     */
-   public void setOwner(String owner);
+   String getLanguage();
 
    /**
-    * @return the homepage
+    * Set repository's language.
+    * 
+    * @param language language
     */
-   public String getHomepage();
+   void setLanguage(String language);
 
    /**
-    * @param homepage the homepage to set
+    * Get fork state.
+    * 
+    * @return {@link Boolean} <code>true</code> id forked
     */
-   public void setHomepage(String homepage);
+   boolean isFork();
 
    /**
-    * @return the hasWiki
+    * Set fork state.
+    * 
+    * @param fork fork
     */
-   public boolean isHasWiki();
+   void setFork(boolean fork);
 
    /**
-    * @param hasWiki the hasWiki to set
+    * Get the number of repository's watchers.
+    * 
+    * @return {@link Integer} the number of watchers
     */
-   public void setHasWiki(boolean hasWiki);
+   int getWatchers();
 
    /**
-    * @return the openIssues
+    * Set the number of repository's watchers.
+    * 
+    * @param watchers wathers
     */
-   public int getOpenIssues();
+   void setWatchers(int watchers);
 
    /**
-    * @param openIssues the openIssues to set
+    * Get private state of the repository.
+    * 
+    * @return {@link Boolean} private state of the repository
     */
-   public void setOpenIssues(int openIssues);
+   boolean isPrivate();
 
    /**
-    * @return the hasIssues
+    * Set private state of the repository.
+    * 
+    * @param isPrivate private
     */
-   public boolean isHasIssues();
+   void setPrivate(boolean isPrivate);
 
    /**
-    * @param hasIssues the hasIssues to set
+    * Get repository's size.
+    * 
+    * @return {@link Integer} size
     */
-   public void setHasIssues(boolean hasIssues);
+   int getSize();
 
    /**
-    * @return the pushed
+    * Set repository's size.
+    * 
+    * @param size size
     */
-   public Date getPushed();
+   void setSize(int size);
 
    /**
-    * @param pushed the pushed to set
+    * Get repository's description.
+    * 
+    * @return {@link String} description
     */
-   public void setPushed(Date pushed);
+   String getDescription();
 
    /**
-    * @return the created
+    * Set repository's description.
+    * 
+    * @param description
     */
-   public Date getCreated();
+   void setDescription(String description);
 
    /**
-    * @param created the created to set
+    * Get SSH URL.
+    * 
+    * @return {@link String} SSH URL
     */
-   public void setCreated(Date created);
+   String getSshUrl();
 
    /**
-    * @return the watchers
+    * Set SSH URL.
+    * 
+    * @param sshUrl
     */
-   public int getWatchers();
+   void setSshUrl(String sshUrl);
 
    /**
-    * @param watchers the watchers to set
+    * Get HTML URL.
+    * 
+    * @return {@link String} HTML URL
     */
-   public void setWatchers(int watchers);
+   String getHtmlUrl();
 
    /**
-    * @return the forks
+    * Set HTML URL.
+    * 
+    * @param htmlUrl
     */
-   public int getForks();
+   void setHtmlUrl(String htmlUrl);
 
    /**
-    * @param forks the forks to set
+    * Get updated date.
+    * 
+    * @return {@link String}
     */
-   public void setForks(int forks);
+   String getUpdatedAt();
 
    /**
-    * @return the fork
+    * Set updated date.
+    * 
+    * @param updatedAt
     */
-   public boolean isFork();
+   void setUpdatedAt(String updatedAt);
 
    /**
-    * @param fork the fork to set
+    * Get Git URL.
+    * 
+    * @return {@link String} Git URL
     */
-   public void setFork(boolean fork);
+   String getGitUrl();
 
    /**
-    * @return the size
+    * Set Git URL.
+    * 
+    * @param gitUrl
     */
-   public int getSize();
+   void setGitUrl(String gitUrl);
 
    /**
-    * @param size the size to set
+    * Get whether repository has wiki.
+    * 
+    * @return {@link Boolean} <code> true</code> - has wiki
     */
-   public void setSize(int size);
+   boolean isHasWiki();
 
    /**
-    * @return the name
+    * Set whether repository has wiki.
+    * 
+    * @param hasWiki
     */
-   public String getName();
+   void setHasWiki(boolean hasWiki);
 
    /**
-    * @param name the name to set
+    * Get clone URL.
+    * 
+    * @return {@link String} clone URL
     */
-   public void setName(String name);
+   String getCloneUrl();
 
    /**
-    * @return the hasDownloads
+    * Set clone URL.
+    * 
+    * @param cloneUrl
     */
-   public boolean isHasDownloads();
+   void setCloneUrl(String cloneUrl);
 
    /**
-    * @param hasDownloads the hasDownloads to set
+    * Get SVN URL.
+    * 
+    * @return {@link String} SVN URL
     */
-   public void setHasDownloads(boolean hasDownloads);
+   String getSvnUrl();
 
+   /**
+    * Set SVN URL.
+    * 
+    * @param svnUrl
+    */
+   void setSvnUrl(String svnUrl);
+
+   /**
+    * Get the number of opened issues.
+    * 
+    * @return {@link Integer} number of opened issues
+    */
+   int getOpenedIssues();
+
+   /**
+    * Set the number of opened issues.
+    * 
+    * @param openedIssues
+    */
+   void setOpenedIssues(int openedIssues);
+
+   /**
+    * Get repository's created date.
+    * 
+    * @return {@link String} created date
+    */
+   String getCreatedAt();
+
+   /**
+    * Set repository's created date.
+    * 
+    * @param createdAt
+    */
+   void setCreatedAt(String createdAt);
+
+   /**
+    * Get repository's pushed date.
+    * 
+    * @return {@link String} pushed date
+    */
+   String getPushedAt();
+
+   /**
+    * Set repository's pushed date.
+    * 
+    * @param pushedAt
+    */
+   void setPushedAt(String pushedAt);
+
+   /**
+    * Get whether repository has downloads.
+    * 
+    * @return {@link Boolean} <code> true</code> - has downloads
+    */
+   boolean isHasDownloads();
+
+   /**
+    * Set whether repository has downloads.
+    * 
+    * @param hasDownloads
+    */
+   void setHasDownloads(boolean hasDownloads);
+
+   /**
+    * Get whether repository has issues.
+    * 
+    * @return {@link Boolean} <code> true</code> - has issues
+    */
+   boolean isHasIssues();
+
+   /**
+    * Set whether repository has issues.
+    * 
+    * @param hasIssues
+    */
+   void setHasIssues(boolean hasIssues);
 }

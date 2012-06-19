@@ -33,14 +33,22 @@ import org.exoplatform.ide.extension.samples.shared.Repository;
 import java.util.List;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: RepositoriesUnmarshaller.java Aug 29, 2011 4:56:02 PM vereshchaka $
+ * Umarshaller for repositories list.
  * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id:  Apr 2, 2012 10:39:45 AM anya $
+ *
  */
 public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>>
 {
+   /**
+    * Repositories list.
+    */
    private List<Repository> repositories;
 
+   /**
+    * @param repositories extended repositories
+    */
    public RepositoriesUnmarshaller(List<Repository> repositories)
    {
       this.repositories = repositories;
