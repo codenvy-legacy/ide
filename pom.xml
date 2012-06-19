@@ -189,7 +189,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-extension-java-debug</artifactId>
+            <artifactId>exo-ide-extension-java-runtime</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -822,7 +822,7 @@
       <module>exo-ide-extension-gadget</module>
       <module>exo-ide-extension-groovy</module>
       <module>exo-ide-extension-java</module>
-      <module>exo-ide-extension-java-debug</module>
+      <module>exo-ide-extension-java-runtime</module>
       <!--module>exo-ide-extension-netvibes</module IDE-1663 --> 
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>

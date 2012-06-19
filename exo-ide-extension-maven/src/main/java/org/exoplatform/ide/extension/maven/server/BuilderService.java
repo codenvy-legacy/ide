@@ -206,4 +206,25 @@ public class BuilderService
    {
       return builder.log(buildID);
    }
+
+   /**
+    * Check is URL for download artifact is valid. Artifact may be removed by timeout but GWT client not able to check
+    * it because to cross-domain restriction for ajax requests.
+    *
+    * @param url
+    *    URL for checking
+    * @return response with status 200 if URL valid
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    URL is not valid or any other errors related to build server internal state
+    * @see BuilderClient#checkDownloadURL(String)
+    */
+   @GET
+   @Path("check_download_url")
+   public Response checkDownloadURL(@QueryParam("url") String url) throws BuilderException, IOException
+   {
+      builder.checkDownloadURL(url);
+      return Response.ok().build();
+   }
 }
