@@ -88,7 +88,6 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,9 +105,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
    ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
 {
-   private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
-
-   private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
 
    private Display display;
 
@@ -647,102 +643,19 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onRunApp(RunAppEvent event)
    {
+      if (!IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE))
+         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
       startDebugger = false;
-      buildApplicationIfNeed();
+      IDE.fireEvent(new BuildProjectEvent());
    }
 
    @Override
    public void onDebugApp(DebugAppEvent event)
    {
+      if (!IDE.eventBus().isEventHandled(ProjectBuiltEvent.TYPE))
+         IDE.addHandler(ProjectBuiltEvent.TYPE, this);
       startDebugger = true;
-      buildApplicationIfNeed();
-   }
-
-   private void buildApplicationIfNeed()
-   {
-      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      try
-      {
-         //Going to check is need built project.
-         //Need compare to properties lastBuildTime and lastModificationTime  
-         //After check is artifact available for downloading   
-         VirtualFileSystem.getInstance().getItemById(project.getId(),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
-            {
-
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  StringProperty downloadUrlProp = (StringProperty)result.getItem().getProperty(ARTIFACT_DOWNLOAD_URL);
-                  if (downloadUrlProp != null && !downloadUrlProp.getValue().isEmpty())
-                  {
-                     if (isProjectChangedAfterLastBuild(result))
-                     {
-                        checkDownloadUrl(downloadUrlProp.getValue().get(0));
-                     }
-                     else
-                     {
-                        IDE.fireEvent(new BuildProjectEvent());
-                     }
-                  }
-                  else
-                  {
-                     IDE.fireEvent(new BuildProjectEvent());
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  exception.printStackTrace();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
-   
-   private boolean isProjectChangedAfterLastBuild(ItemWrapper item)
-   {
-      long buildTime = 0;
-      long lastUpdateTime = 0;
-      StringProperty buildTimeProperty = (StringProperty)item.getItem().getProperty(LAST_SUCCESS_BUILD);
-      if (buildTimeProperty != null && !buildTimeProperty.getValue().isEmpty())
-      {
-         buildTime = Long.parseLong(buildTimeProperty.getValue().get(0));
-      }
-      StringProperty lastUpdateTimeProp = (StringProperty)item.getItem().getProperty("vfs:lastUpdateTime");
-      if (lastUpdateTimeProp == null)
-         return false;
-      lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
-      return buildTime > lastUpdateTime;
-   }
-
-   private void startWatchingProjectChanges()
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
-         {
-
-            @Override
-            protected void onSuccess(Object result)
-            {
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
+      IDE.fireEvent(new BuildProjectEvent());
    }
 
    @Override
@@ -754,38 +667,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.eventBus().fireEvent(
             new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarting(), Type.INFO));
          startApplication(buildStatus.getDownloadUrl());
-         writeBuildInfo(buildStatus);
-         startWatchingProjectChanges();
       }
-   }
-
-   private void writeBuildInfo(BuildStatus buildStatus)
-   {
-      project.getProperties().add(new StringProperty(LAST_SUCCESS_BUILD, buildStatus.getTime()));
-      project.getProperties().add(new StringProperty(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<Object>()
-         {
-
-            @Override
-            protected void onSuccess(Object result)
-            {
-               //Nothing todo
-            }
-
-            @Override
-            protected void onFailure(Throwable ignore)
-            {
-               //Ignore this exception
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-
    }
 
    private void debugApplication(String warUrl)
@@ -1047,32 +929,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       display.setVariables(list);
    }
 
-   private void checkDownloadUrl(final String url)
-   {
-      try
-      {
-         DebuggerClientService.getInstance().checkArtifactUrl(url, new AsyncRequestCallback<Object>()
-         {
-
-            @Override
-            protected void onSuccess(Object result)
-            {
-               startApplication(url);
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new BuildProjectEvent());
-            }
-
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
 
    private void startApplication(final String url)
    {
