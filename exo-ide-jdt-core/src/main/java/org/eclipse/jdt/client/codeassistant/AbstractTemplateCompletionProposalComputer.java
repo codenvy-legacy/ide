@@ -11,7 +11,6 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;

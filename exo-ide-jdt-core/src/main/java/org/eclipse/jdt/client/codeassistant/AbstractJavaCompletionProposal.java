@@ -1161,9 +1161,11 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 
       CompletionProposal proposal = ((MemberProposalInfo)proposalInfo).fProposal;
       return proposal != null
-         && (proposal.getKind() == CompletionProposal.METHOD_REF || proposal.getKind() == CompletionProposal.FIELD_REF
-            || proposal.getKind() == CompletionProposal.TYPE_REF
-            || proposal.getKind() == CompletionProposal.CONSTRUCTOR_INVOCATION || proposal.getKind() == CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION);
+         && (proposal.getKind() == CompletionProposal.METHOD_REF // 
+            || proposal.getKind() == CompletionProposal.FIELD_REF //
+            || proposal.getKind() == CompletionProposal.TYPE_REF //
+            || proposal.getKind() == CompletionProposal.CONSTRUCTOR_INVOCATION //
+            || proposal.getKind() == CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION);
    }
 
 }
