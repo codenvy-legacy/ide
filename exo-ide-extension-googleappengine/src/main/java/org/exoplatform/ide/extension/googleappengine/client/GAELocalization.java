@@ -95,6 +95,12 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    String createApplicationCannotDeploy();
 
    /* Deploy application */
+   @Key("deploy.application.use.existed.id.field")
+   String deployApplicationUseExistedIdField();
+
+   @Key("deploy.application.empty.id.message")
+   String deployApplicationEmptyIdMessage();
+
    @Key("deploy.application.control.title")
    String deployApplicationControlTitle();
 

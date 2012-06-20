@@ -18,21 +18,28 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.Window;
+import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
+import org.exoplatform.ide.extension.googleappengine.shared.User;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -116,7 +123,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          @Override
          public void onClick(ClickEvent event)
          {
-            startCreateApp();
+            isUserLogged();
          }
       });
    }
@@ -183,5 +190,45 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
 
       String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
       Window.open(url, "_blank", null);
+   }
+
+   private void isUserLogged()
+   {
+      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      try
+      {
+         GoogleAppEngineClientService.getInstance().getLoggedUser(
+            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(User result)
+               {
+                  if (result.isAuthenticated())
+                  {
+                     startCreateApp();
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new LoginEvent());
+                  }
+               }
+
+               /**
+                * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+                  // TODO
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO
+      }
    }
 }
