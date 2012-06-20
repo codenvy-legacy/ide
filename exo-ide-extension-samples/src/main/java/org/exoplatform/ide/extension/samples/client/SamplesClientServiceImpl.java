@@ -30,7 +30,6 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
     * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesList(AsyncRequestCallback<List<RepositoryExt>> callback) throws RequestException
+   public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException
    {
       String url = restServiceContext + LIST;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);

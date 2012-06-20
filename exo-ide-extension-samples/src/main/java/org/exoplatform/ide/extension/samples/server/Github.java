@@ -30,7 +30,6 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -96,12 +95,12 @@ public class Github
       {
          throw new InvalidArgumentException("'User's name must not be null.");
       }
-
+      
       String url = "https://api.github.com/users/" + user + "/repos";
       String method = "GET";
       String response = doJsonRequest(url, method, null, 200);
       JsonValue reposArray = JsonHelper.parseJson(response);
-//      JsonValue reposArray = repositoryJsValue.getElement("repositories");
+      reposArray = formatJsonArray(reposArray);
       if (reposArray == null || !reposArray.isArray())
          return null;
 
@@ -154,7 +153,7 @@ public class Github
     * @throws ParsingResponseException
     * @throws VirtualFileSystemException
     */
-   public RepositoryExt[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+   public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
       VirtualFileSystemException
    {
       GitHubCredentials credentials = authenticator.readCredentials();
@@ -172,7 +171,7 @@ public class Github
     * @throws IOException
     * @throws GithubException
     */
-   private RepositoryExt[] getRepositories(GitHubCredentials credentials) throws ParsingResponseException, IOException,
+   private Repository[] getRepositories(GitHubCredentials credentials) throws ParsingResponseException, IOException,
       GithubException
    {
       String url = "https://api.github.com/user/repos";
@@ -184,7 +183,7 @@ public class Github
       reposArray = formatJsonArray(reposArray);
       try
       {
-         RepositoryExt[] repos = (RepositoryExt[])ObjectBuilder.createArray(RepositoryExt[].class, reposArray);
+         Repository[] repos = (Repository[])ObjectBuilder.createArray(Repository[].class, reposArray);
          return repos;
       }
       catch (JsonException jsone)

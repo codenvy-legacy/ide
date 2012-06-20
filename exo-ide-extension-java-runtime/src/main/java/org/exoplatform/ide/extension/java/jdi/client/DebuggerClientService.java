@@ -51,11 +51,14 @@ public class DebuggerClientService
 {
 
    private static String BASE_URL;
-
+   
    private static DebuggerClientService instance;
+
+   private final String restContext;
 
    public DebuggerClientService(String restContext)
    {
+      this.restContext = restContext;
       BASE_URL = restContext + "/ide/java/debug";
       instance = this;
    }
@@ -166,6 +169,13 @@ public class DebuggerClientService
       AsyncRequest.build(RequestBuilder.POST, BASE_URL + "/expression/" + id).data(expression)
          .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENTTYPE, MimeType.TEXT_PLAIN)
          .loader(new EmptyLoader()).send(callback);
+   }
+   
+   
+   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
+      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
    }
 
 }

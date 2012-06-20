@@ -22,7 +22,6 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 import java.util.List;
 
@@ -56,7 +55,7 @@ public abstract class SamplesClientService
     * 
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(AsyncRequestCallback<List<RepositoryExt>> callback) throws RequestException;
+   public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException;
 
    /**
     * Get the list of available public repositories from GitHub user.

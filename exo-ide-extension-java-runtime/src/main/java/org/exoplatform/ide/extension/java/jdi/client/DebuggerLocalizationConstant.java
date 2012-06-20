@@ -193,6 +193,10 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("evaluateExpression")
    String evaluateExpression();
 
+   @DefaultMessage("Application starting...")
+   @Key("appStarting")
+   String applicationStarting();
+   
    @DefaultMessage("Application <b>{0}</b> started.")
    @Key("appStarted")
    String applicationStarted(String name);

@@ -126,7 +126,7 @@ public class Builder
                      .status(200)
                      .entity("{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
                         + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
-                        + "\",\"time\":" + result.getResult().getTime() + '}')
+                        + "\",\"time\":\"" + Long.toString(result.getResult().getTime()) + "\"}")
                      .type(MediaType.APPLICATION_JSON).build();
                }
                else

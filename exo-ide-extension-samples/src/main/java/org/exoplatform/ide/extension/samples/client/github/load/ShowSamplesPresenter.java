@@ -175,9 +175,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       try
       {
-         //User's name will be taken from configuration:
-         SamplesClientService.getInstance().getRepositoriesByUser(null,
-            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
+         // User's name will be taken from configuration:
+         SamplesClientService.getInstance().getRepositoriesByUser(
+            null,
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(
+               new ArrayList<Repository>()))
             {
                @Override
                protected void onSuccess(List<Repository> result)
@@ -187,7 +189,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   for (Repository repo : result)
                   {
                      String[] arr = parseDescription(repo.getDescription());
-                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getCloneUrl()));
                   }
                   display.getSamplesListGrid().setValue(projectDataList);
                   display.enableNextButton(false);
@@ -284,9 +286,11 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    {
       try
       {
-         //User's name will be taken from configuration:
-         SamplesClientService.getInstance().getRepositoriesByUser(null,
-            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(new ArrayList<Repository>()))
+         // User's name will be taken from configuration:
+         SamplesClientService.getInstance().getRepositoriesByUser(
+            null,
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(
+               new ArrayList<Repository>()))
             {
                @Override
                protected void onSuccess(List<Repository> result)
@@ -296,7 +300,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   for (Repository repo : result)
                   {
                      String[] arr = parseDescription(repo.getDescription());
-                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getUrl()));
+                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getCloneUrl()));
                   }
                   display.getSamplesListGrid().setValue(projectDataList);
                   display.enableNextButton(false);

@@ -48,8 +48,8 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesExtUnmarshaller;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
+import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
+import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -309,15 +309,15 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       try
       {
          SamplesClientService.getInstance().getRepositoriesList(
-            new AsyncRequestCallback<List<RepositoryExt>>(new RepositoriesExtUnmarshaller(
-               new ArrayList<RepositoryExt>()))
+            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(
+               new ArrayList<Repository>()))
             {
                @Override
-               protected void onSuccess(List<RepositoryExt> result)
+               protected void onSuccess(List<Repository> result)
                {
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   readonlyUrls.clear();
-                  for (RepositoryExt repo : result)
+                  for (Repository repo : result)
                   {
                      projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getSshUrl()));
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
