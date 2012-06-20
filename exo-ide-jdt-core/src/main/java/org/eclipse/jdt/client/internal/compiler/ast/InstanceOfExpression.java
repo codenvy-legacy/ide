@@ -57,6 +57,18 @@ public class InstanceOfExpression extends OperatorExpression
       return this.expression.analyseCode(currentScope, flowContext, flowInfo).unconditionalInits();
    }
 
+   /**
+    * Code generation for instanceOfExpression
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+   */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      this.expression.generateCode(currentScope, true);
+   }
+
    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
    {
       this.expression.printExpression(indent, output).append(" instanceof "); //$NON-NLS-1$
@@ -67,9 +79,7 @@ public class InstanceOfExpression extends OperatorExpression
    {
       this.constant = Constant.NotAConstant;
       TypeBinding expressionType = this.expression.resolveType(scope);
-      TypeBinding checkedType = this.type.resolveType(scope, true /*
-                                                                   * check bounds
-                                                                   */);
+      TypeBinding checkedType = this.type.resolveType(scope, true /* check bounds*/);
       if (expressionType == null || checkedType == null)
          return null;
 
@@ -85,7 +95,9 @@ public class InstanceOfExpression extends OperatorExpression
       return this.resolvedType = TypeBinding.BOOLEAN;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsUnnecessaryCast(Scope,TypeBinding) */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#tagAsUnnecessaryCast(Scope,TypeBinding)
+    */
    public void tagAsUnnecessaryCast(Scope scope, TypeBinding castType)
    {
       // null is not instanceof Type, recognize direct scenario

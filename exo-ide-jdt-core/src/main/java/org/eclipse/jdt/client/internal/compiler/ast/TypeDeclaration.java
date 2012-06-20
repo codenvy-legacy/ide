@@ -29,6 +29,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.CompilationUnitScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.LocalTypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MemberTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.NestedTypeBinding;
@@ -109,6 +110,8 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
 
    public TypeDeclaration enclosingType; // for member types only
 
+   public FieldBinding enumValuesSyntheticfield; // for enum
+
    public int enumConstantsCounter;
 
    // 1.5 support
@@ -119,7 +122,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       this.compilationResult = compilationResult;
    }
 
-   /* We cause the compilation task to abort to a given extent. */
+   /*
+    *	We cause the compilation task to abort to a given extent.
+    */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
       switch (abortLevel)
@@ -136,17 +141,18 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /**
-    * This method is responsible for adding a <clinit> method declaration to the type method collections. Note that this
-    * implementation is inserting it in first place (as VAJ or javac), and that this impacts the behavior of the method
-    * ConstantPool.resetForClinit(int. int), in so far as the latter will have to reset the constant pool state accordingly (if it
-    * was added first, it does not need to preserve some of the method specific cached entries since this will be the first
-    * method). inserts the clinit method declaration in the first position.
-    * 
+    * This method is responsible for adding a <clinit> method declaration to the type method collections.
+    * Note that this implementation is inserting it in first place (as VAJ or javac), and that this
+    * impacts the behavior of the method ConstantPool.resetForClinit(int. int), in so far as
+    * the latter will have to reset the constant pool state accordingly (if it was added first, it does
+    * not need to preserve some of the method specific cached entries since this will be the first method).
+    * inserts the clinit method declaration in the first position.
+    *
     * @see org.eclipse.jdt.client.internal.compiler.codegen.ConstantPool#resetForClinit(int, int)
     */
    public final void addClinit()
    {
-      // see comment on needClassInitMethod
+      //see comment on needClassInitMethod
       if (needClassInitMethod())
       {
          int length;
@@ -173,14 +179,14 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /*
-    * INTERNAL USE ONLY - Creates a fake method declaration for the corresponding binding. It is used to report errors for missing
-    * abstract methods.
+    * INTERNAL USE ONLY - Creates a fake method declaration for the corresponding binding.
+    * It is used to report errors for missing abstract methods.
     */
    public MethodDeclaration addMissingAbstractMethodFor(MethodBinding methodBinding)
    {
       TypeBinding[] argumentTypes = methodBinding.parameters;
       int argumentsLength = argumentTypes.length;
-      // the constructor
+      //the constructor
       MethodDeclaration methodDeclaration = new MethodDeclaration(this.compilationResult);
       methodDeclaration.selector = methodBinding.selector;
       methodDeclaration.sourceStart = this.sourceStart;
@@ -194,11 +200,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          for (int i = argumentsLength; --i >= 0;)
          {
             arguments[i] =
-               new Argument((baseName + i).toCharArray(), 0L, null /* type ref */, ClassFileConstants.AccDefault);
+               new Argument((baseName + i).toCharArray(), 0L, null /*type ref*/, ClassFileConstants.AccDefault);
          }
       }
 
-      // adding the constructor in the methods list
+      //adding the constructor in the methods list
       if (this.missingAbstractMethods == null)
       {
          this.missingAbstractMethods = new MethodDeclaration[]{methodDeclaration};
@@ -212,28 +218,39 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          this.missingAbstractMethods = newMethods;
       }
 
-      // ============BINDING UPDATE==========================
+      //============BINDING UPDATE==========================
       methodDeclaration.binding =
-         new MethodBinding(methodDeclaration.modifiers | ClassFileConstants.AccSynthetic, // methodDeclaration
+         new MethodBinding(methodDeclaration.modifiers | ClassFileConstants.AccSynthetic, //methodDeclaration
             methodBinding.selector, methodBinding.returnType, argumentsLength == 0 ? Binding.NO_PARAMETERS
-               : argumentTypes, // arguments bindings
-            methodBinding.thrownExceptions, // exceptions
-            this.binding); // declaringClass
+               : argumentTypes, //arguments bindings
+            methodBinding.thrownExceptions, //exceptions
+            this.binding); //declaringClass
 
       methodDeclaration.scope = new MethodScope(this.scope, methodDeclaration, true);
       methodDeclaration.bindArguments();
 
-      /*
-       * if (binding.methods == null) { binding.methods = new MethodBinding[] { methodDeclaration.binding }; } else {
-       * MethodBinding[] newMethods; System.arraycopy( binding.methods, 0, newMethods = new MethodBinding[binding.methods.length +
-       * 1], 1, binding.methods.length); newMethods[0] = methodDeclaration.binding; binding.methods = newMethods; }
-       */
-      // ===================================================
+      /*		if (binding.methods == null) {
+      			binding.methods = new MethodBinding[] { methodDeclaration.binding };
+      		} else {
+      			MethodBinding[] newMethods;
+      			System.arraycopy(
+      				binding.methods,
+      				0,
+      				newMethods = new MethodBinding[binding.methods.length + 1],
+      				1,
+      				binding.methods.length);
+      			newMethods[0] = methodDeclaration.binding;
+      			binding.methods = newMethods;
+      		}*/
+      //===================================================
 
       return methodDeclaration;
    }
 
-   /** Flow analysis for a local innertype */
+   /**
+    *	Flow analysis for a local innertype
+    *
+    */
    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
       if (this.ignoreFurtherInvestigation)
@@ -257,7 +274,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return flowInfo;
    }
 
-   /** Flow analysis for a member innertype */
+   /**
+    *	Flow analysis for a member innertype
+    *
+    */
    public void analyseCode(ClassScope enclosingClassScope)
    {
       if (this.ignoreFurtherInvestigation)
@@ -274,7 +294,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Flow analysis for a local member innertype */
+   /**
+    *	Flow analysis for a local member innertype
+    *
+    */
    public void analyseCode(ClassScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
       if (this.ignoreFurtherInvestigation)
@@ -297,7 +320,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Flow analysis for a package member type */
+   /**
+    *	Flow analysis for a package member type
+    *
+    */
    public void analyseCode(CompilationUnitScope unitScope)
    {
       if (this.ignoreFurtherInvestigation)
@@ -313,12 +339,13 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /**
-    * Check for constructor vs. method with no return type. Answers true if at least one constructor is defined
+    * Check for constructor vs. method with no return type.
+    * Answers true if at least one constructor is defined
     */
    public boolean checkConstructors(Parser parser)
    {
-      // if a constructor has not the name of the type,
-      // convert it into a method with 'null' as its return type
+      //if a constructor has not the name of the type,
+      //convert it into a method with 'null' as its return type
       boolean hasConstructor = false;
       if (this.methods != null)
       {
@@ -333,7 +360,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
                   // unless an explicit constructor call was supplied
                   ConstructorDeclaration c = (ConstructorDeclaration)am;
                   if (c.constructorCall == null || c.constructorCall.isImplicitSuper())
-                  { // changed to a method
+                  { //changed to a method
                      MethodDeclaration m = parser.convertToMethodDeclaration(c, this.compilationResult);
                      this.methods[i] = m;
                   }
@@ -368,23 +395,23 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
 
    public ConstructorDeclaration createDefaultConstructor(boolean needExplicitConstructorCall, boolean needToInsert)
    {
-      // Add to method'set, the default constuctor that just recall the
-      // super constructor with no arguments
-      // The arguments' type will be positionned by the TC so just use
-      // the default int instead of just null (consistency purpose)
+      //Add to method'set, the default constuctor that just recall the
+      //super constructor with no arguments
+      //The arguments' type will be positionned by the TC so just use
+      //the default int instead of just null (consistency purpose)
 
-      // the constructor
+      //the constructor
       ConstructorDeclaration constructor = new ConstructorDeclaration(this.compilationResult);
       constructor.bits |= ASTNode.IsDefaultConstructor;
       constructor.selector = this.name;
       constructor.modifiers = this.modifiers & ExtraCompilerModifiers.AccVisibilityMASK;
 
-      // if you change this setting, please update the
-      // SourceIndexer2.buildTypeDeclaration(TypeDeclaration,char[]) method
+      //if you change this setting, please update the
+      //SourceIndexer2.buildTypeDeclaration(TypeDeclaration,char[]) method
       constructor.declarationSourceStart = constructor.sourceStart = this.sourceStart;
       constructor.declarationSourceEnd = constructor.sourceEnd = constructor.bodyEnd = this.sourceEnd;
 
-      // the super call inside the constructor
+      //the super call inside the constructor
       if (needExplicitConstructorCall)
       {
          constructor.constructorCall = SuperReference.implicitSuperConstructorCall();
@@ -392,7 +419,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          constructor.constructorCall.sourceEnd = this.sourceEnd;
       }
 
-      // adding the constructor in the methods list: rank is not critical since bindings will be sorted
+      //adding the constructor in the methods list: rank is not critical since bindings will be sorted
       if (needToInsert)
       {
          if (this.methods == null)
@@ -415,14 +442,14 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    public MethodBinding createDefaultConstructorWithBinding(MethodBinding inheritedConstructorBinding,
       boolean eraseThrownExceptions)
    {
-      // Add to method'set, the default constuctor that just recall the
-      // super constructor with the same arguments
+      //Add to method'set, the default constuctor that just recall the
+      //super constructor with the same arguments
       String baseName = "$anonymous"; //$NON-NLS-1$
       TypeBinding[] argumentTypes = inheritedConstructorBinding.parameters;
       int argumentsLength = argumentTypes.length;
-      // the constructor
+      //the constructor
       ConstructorDeclaration constructor = new ConstructorDeclaration(this.compilationResult);
-      constructor.selector = new char[]{'x'}; // no maining
+      constructor.selector = new char[]{'x'}; //no maining
       constructor.sourceStart = this.sourceStart;
       constructor.sourceEnd = this.sourceEnd;
       int newModifiers = this.modifiers & ExtraCompilerModifiers.AccVisibilityMASK;
@@ -439,10 +466,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          for (int i = argumentsLength; --i >= 0;)
          {
             arguments[i] =
-               new Argument((baseName + i).toCharArray(), 0L, null /* type ref */, ClassFileConstants.AccDefault);
+               new Argument((baseName + i).toCharArray(), 0L, null /*type ref*/, ClassFileConstants.AccDefault);
          }
       }
-      // the super call inside the constructor
+      //the super call inside the constructor
       constructor.constructorCall = SuperReference.implicitSuperConstructorCall();
       constructor.constructorCall.sourceStart = this.sourceStart;
       constructor.constructorCall.sourceEnd = this.sourceEnd;
@@ -457,7 +484,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          }
       }
 
-      // adding the constructor in the methods list
+      //adding the constructor in the methods list
       if (this.methods == null)
       {
          this.methods = new AbstractMethodDeclaration[]{constructor};
@@ -471,17 +498,17 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          this.methods = newMethods;
       }
 
-      // ============BINDING UPDATE==========================
+      //============BINDING UPDATE==========================
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=277643, align with javac on JLS 15.12.2.6
       ReferenceBinding[] thrownExceptions =
          eraseThrownExceptions ? this.scope.environment().convertToRawTypes(
             inheritedConstructorBinding.thrownExceptions, true, true) : inheritedConstructorBinding.thrownExceptions;
 
       SourceTypeBinding sourceType = this.binding;
-      constructor.binding = new MethodBinding(constructor.modifiers, // methodDeclaration
-         argumentsLength == 0 ? Binding.NO_PARAMETERS : argumentTypes, // arguments bindings
-         thrownExceptions, // exceptions
-         sourceType); // declaringClass
+      constructor.binding = new MethodBinding(constructor.modifiers, //methodDeclaration
+         argumentsLength == 0 ? Binding.NO_PARAMETERS : argumentTypes, //arguments bindings
+         thrownExceptions, //exceptions
+         sourceType); //declaringClass
       constructor.binding.tagBits |= (inheritedConstructorBinding.tagBits & TagBits.HasMissingType);
       constructor.binding.modifiers |= ExtraCompilerModifiers.AccIsDefaultConstructor;
 
@@ -495,15 +522,16 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          length);
       methodBindings[0] = constructor.binding;
       if (++length > 1)
-         ReferenceBinding.sortMethods(methodBindings, 0, length); // need to resort, since could be valid methods ahead (140643) -
-                                                                  // DOM needs eager sorting
+         ReferenceBinding.sortMethods(methodBindings, 0, length); // need to resort, since could be valid methods ahead (140643) - DOM needs eager sorting
       sourceType.setMethods(methodBindings);
-      // ===================================================
+      //===================================================
 
       return constructor.binding;
    }
 
-   /** Find the matching parse node, answers null if nothing found */
+   /**
+    * Find the matching parse node, answers null if nothing found
+    */
    public FieldDeclaration declarationOf(FieldBinding fieldBinding)
    {
       if (fieldBinding != null && this.fields != null)
@@ -518,22 +546,26 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
-   //   /** Find the matching parse node, answers null if nothing found */
-   //   public TypeDeclaration declarationOf(MemberTypeBinding memberTypeBinding)
-   //   {
-   //      if (memberTypeBinding != null && this.memberTypes != null)
-   //      {
-   //         for (int i = 0, max = this.memberTypes.length; i < max; i++)
-   //         {
-   //            TypeDeclaration memberTypeDecl;
-   //            if ((memberTypeDecl = this.memberTypes[i]).binding == memberTypeBinding)
-   //               return memberTypeDecl;
-   //         }
-   //      }
-   //      return null;
-   //   }
+   /**
+    * Find the matching parse node, answers null if nothing found
+    */
+   public TypeDeclaration declarationOf(MemberTypeBinding memberTypeBinding)
+   {
+      if (memberTypeBinding != null && this.memberTypes != null)
+      {
+         for (int i = 0, max = this.memberTypes.length; i < max; i++)
+         {
+            TypeDeclaration memberTypeDecl;
+            if ((memberTypeDecl = this.memberTypes[i]).binding == memberTypeBinding)
+               return memberTypeDecl;
+         }
+      }
+      return null;
+   }
 
-   /** Find the matching parse node, answers null if nothing found */
+   /**
+    * Find the matching parse node, answers null if nothing found
+    */
    public AbstractMethodDeclaration declarationOf(MethodBinding methodBinding)
    {
       if (methodBinding != null && this.methods != null)
@@ -550,8 +582,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /**
-    * Finds the matching type amoung this type's member types. Returns null if no type with this name is found. The type name is a
-    * compound name relative to this type e.g. if this type is X and we're looking for Y.X.A.B then a type name would be {X, A, B}
+    * Finds the matching type amoung this type's member types.
+    * Returns null if no type with this name is found.
+    * The type name is a compound name relative to this type
+    * e.g. if this type is X and we're looking for Y.X.A.B
+    *     then a type name would be {X, A, B}
     */
    public TypeDeclaration declarationOfType(char[][] typeName)
    {
@@ -577,12 +612,123 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       return null;
    }
 
+   /**
+    * Generic bytecode generation for type
+    */
+   public void generateCode()
+   {
+      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+         return;
+      this.bits |= ASTNode.HasBeenGenerated;
+      if (this.ignoreFurtherInvestigation)
+      {
+         return;
+      }
+      try
+      {
+         // create the result for a compiled type
+
+         if (this.memberTypes != null)
+         {
+            for (int i = 0, max = this.memberTypes.length; i < max; i++)
+            {
+               TypeDeclaration memberType = this.memberTypes[i];
+               memberType.generateCode(this.scope);
+            }
+         }
+         // generate all methods
+         if (this.methods != null)
+         {
+            for (int i = 0, max = this.methods.length; i < max; i++)
+            {
+               this.methods[i].generateCode(this.scope);
+            }
+         }
+
+         if (this.ignoreFurtherInvestigation)
+         { // trigger problem type generation for code gen errors
+            throw new AbortType(this.scope.referenceCompilationUnit().compilationResult, null);
+         }
+
+         // finalize the compiled type result
+      }
+      catch (AbortType e)
+      {
+         if (this.binding == null)
+            return;
+      }
+   }
+
+   /**
+    * Bytecode generation for a local inner type (API as a normal statement code gen)
+    */
+   public void generateCode(BlockScope blockScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
+         return;
+      }
+      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+         return;
+      if (this.binding != null)
+      {
+         SyntheticArgumentBinding[] enclosingInstances =
+            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
+         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
+         {
+            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
+            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
+            if (slotSize > 0xFF)
+            { // no more than 255 words of arguments
+               blockScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
+                  blockScope.referenceType());
+            }
+         }
+      }
+      generateCode();
+   }
+
+   /**
+    * Bytecode generation for a member inner type
+    */
+   public void generateCode(ClassScope classScope)
+   {
+      if ((this.bits & ASTNode.HasBeenGenerated) != 0)
+         return;
+      if (this.binding != null)
+      {
+         SyntheticArgumentBinding[] enclosingInstances =
+            ((NestedTypeBinding)this.binding).syntheticEnclosingInstances();
+         for (int i = 0, slotSize = 0, count = enclosingInstances == null ? 0 : enclosingInstances.length; i < count; i++)
+         {
+            SyntheticArgumentBinding enclosingInstance = enclosingInstances[i];
+            enclosingInstance.resolvedPosition = ++slotSize; // shift by 1 to leave room for aload0==this
+            if (slotSize > 0xFF)
+            { // no more than 255 words of arguments
+               classScope.problemReporter().noMoreAvailableSpaceForArgument(enclosingInstance,
+                  classScope.referenceType());
+            }
+         }
+      }
+      generateCode();
+   }
+
+   /**
+    * Bytecode generation for a package member
+    */
+   public void generateCode(CompilationUnitScope unitScope)
+   {
+      generateCode();
+   }
+
    public boolean hasErrors()
    {
       return this.ignoreFurtherInvestigation;
    }
 
-   /** Common flow analysis for all types */
+   /**
+    *	Common flow analysis for all types
+    */
    private void internalAnalyseCode(FlowContext flowContext, FlowInfo flowInfo)
    {
       if (!this.binding.isUsed() && this.binding.isOrEnclosedByPrivateType())
@@ -608,12 +754,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
                if ((staticFieldInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
                   field.bits &= ~ASTNode.IsReachable;
 
-               /*
-                * if (field.isField()){ staticInitializerContext.handledExceptions = NoExceptions; // no exception is allowed
-                * jls8.3.2 } else {
-                */
+               /*if (field.isField()){
+               	staticInitializerContext.handledExceptions = NoExceptions; // no exception is allowed jls8.3.2
+               } else {*/
                staticInitializerContext.handledExceptions = Binding.ANY_EXCEPTION; // tolerate them all, and record them
-               /* } */
+               /*}*/
                staticFieldInfo =
                   field.analyseCode(this.staticInitializerScope, staticInitializerContext, staticFieldInfo);
                // in case the initializer is not reachable, use a reinitialized flowInfo and enter a fake reachable
@@ -629,12 +774,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
                if ((nonStaticFieldInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
                   field.bits &= ~ASTNode.IsReachable;
 
-               /*
-                * if (field.isField()){ initializerContext.handledExceptions = NoExceptions; // no exception is allowed jls8.3.2 }
-                * else {
-                */
+               /*if (field.isField()){
+               	initializerContext.handledExceptions = NoExceptions; // no exception is allowed jls8.3.2
+               } else {*/
                initializerContext.handledExceptions = Binding.ANY_EXCEPTION; // tolerate them all, and record them
-               /* } */
+               /*}*/
                nonStaticFieldInfo = field.analyseCode(this.initializerScope, initializerContext, nonStaticFieldInfo);
                // in case the initializer is not reachable, use a reinitialized flowInfo and enter a fake reachable
                // branch, since the previous initializer already got the blame.
@@ -653,8 +797,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             if (flowContext != null)
             { // local type
                this.memberTypes[i].analyseCode(this.scope, flowContext,
-                  nonStaticFieldInfo.copy().setReachMode(flowInfo.reachMode())); // reset reach mode in case initializers did
-                                                                                 // abrupt completely
+                  nonStaticFieldInfo.copy().setReachMode(flowInfo.reachMode())); // reset reach mode in case initializers did abrupt completely
             }
             else
             {
@@ -691,11 +834,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             }
          }
       }
-      //      // enable enum support ?
-      //      if (this.binding.isEnum() && !this.binding.isAnonymousType())
-      //      {
-      //         this.enumValuesSyntheticfield = this.binding.addSyntheticFieldForEnumValues();
-      //      }
+      // enable enum support ?
+      if (this.binding.isEnum() && !this.binding.isAnonymousType())
+      {
+         this.enumValuesSyntheticfield = this.binding.addSyntheticFieldForEnumValues();
+      }
    }
 
    public final static int kind(int flags)
@@ -714,9 +857,12 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /*
-    * Access emulation for a local type force to emulation of access to direct enclosing instance. By using the initializer scope,
-    * we actually only request an argument emulation, the field is not added until actually used. However we will force
-    * allocations to be qualified with an enclosing instance. 15.9.2
+    * Access emulation for a local type
+    * force to emulation of access to direct enclosing instance.
+    * By using the initializer scope, we actually only request an argument emulation, the
+    * field is not added until actually used. However we will force allocations to be qualified
+    * with an enclosing instance.
+    * 15.9.2
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
@@ -744,14 +890,13 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          }
          // From 1.5 on, provide access to enclosing instance synthetic constructor argument when declared inside constructor call
          // only for direct anonymous type
-         // public class X {
-         // void foo() {}
-         // class M {
-         // M(Object o) {}
-         // M() { this(new Object() { void baz() { foo(); }}); } // access to #foo() indirects through constructor synthetic arg:
-         // val$this$0
-         // }
-         // }
+         //public class X {
+         //	void foo() {}
+         //	class M {
+         //		M(Object o) {}
+         //		M() { this(new Object() { void baz() { foo(); }}); } // access to #foo() indirects through constructor synthetic arg: val$this$0
+         //	}
+         //}
          if (!methodScope.isStatic && methodScope.isConstructorCall
             && currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_5)
          {
@@ -759,7 +904,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             if (enclosing.isNestedType())
             {
                NestedTypeBinding nestedEnclosing = (NestedTypeBinding)enclosing;
-               // if (nestedEnclosing.findSuperTypeErasingTo(nestedEnclosing.enclosingType()) == null) { // only if not inheriting
+               //					if (nestedEnclosing.findSuperTypeErasingTo(nestedEnclosing.enclosingType()) == null) { // only if not inheriting
                SyntheticArgumentBinding syntheticEnclosingInstanceArgument =
                   nestedEnclosing.getSyntheticArgument(nestedEnclosing.enclosingType(), true);
                if (syntheticEnclosingInstanceArgument != null)
@@ -767,16 +912,18 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
                   nestedType.addSyntheticArgumentAndField(syntheticEnclosingInstanceArgument);
                }
             }
-            // }
+            //				}
          }
       }
    }
 
    /**
-    * Access emulation for a local member type force to emulation of access to direct enclosing instance. By using the initializer
-    * scope, we actually only request an argument emulation, the field is not added until actually used. However we will force
-    * allocations to be qualified with an enclosing instance.
-    * 
+    * Access emulation for a local member type
+    * force to emulation of access to direct enclosing instance.
+    * By using the initializer scope, we actually only request an argument emulation, the
+    * field is not added until actually used. However we will force allocations to be qualified
+    * with an enclosing instance.
+    *
     * Local member cannot be static.
     */
    public void manageEnclosingInstanceAccessIfNecessary(ClassScope currentScope, FlowInfo flowInfo)
@@ -789,8 +936,8 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /**
-    * A <clinit> will be requested as soon as static fields or assertions are present. It will be eliminated during classfile
-    * creation if no bytecode was actually produced based on some optimizations/compiler settings.
+    * A <clinit> will be requested as soon as static fields or assertions are present. It will be eliminated during
+    * classfile creation if no bytecode was actually produced based on some optimizations/compiler settings.
     */
    public final boolean needClassInitMethod()
    {
@@ -811,7 +958,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          for (int i = this.fields.length; --i >= 0;)
          {
             FieldDeclaration field = this.fields[i];
-            // need to test the modifier directly while there is no binding yet
+            //need to test the modifier directly while there is no binding yet
             if ((field.modifiers & ClassFileConstants.AccStatic) != 0)
                return true; // TODO (philippe) shouldn't it check whether field is initializer or has some initial value ?
          }
@@ -821,11 +968,11 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
 
    public void parseMethods(Parser parser, CompilationUnitDeclaration unit)
    {
-      // connect method bodies
+      //connect method bodies
       if (unit.ignoreMethodBodies)
          return;
 
-      // members
+      //members
       if (this.memberTypes != null)
       {
          int length = this.memberTypes.length;
@@ -837,7 +984,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          }
       }
 
-      // methods
+      //methods
       if (this.methods != null)
       {
          int length = this.methods.length;
@@ -849,7 +996,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          }
       }
 
-      // initializers
+      //initializers
       if (this.fields != null)
       {
          int length = this.fields.length;
@@ -1021,12 +1168,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          boolean needSerialVersion =
             this.scope.compilerOptions().getSeverity(CompilerOptions.MissingSerialVersion) != ProblemSeverities.Ignore
                && sourceType.isClass()
-               && sourceType.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoExternalizable, false /*
-                                                                                                 * Externalizable is not a class
-                                                                                                 */) == null
-               && sourceType.findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*
-                                                                                               * Serializable is not a class
-                                                                                               */) != null;
+               && sourceType
+                  .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoExternalizable, false /*Externalizable is not a class*/) == null
+               && sourceType
+                  .findSuperTypeOriginatingFrom(TypeIds.T_JavaIoSerializable, false /*Serializable is not a class*/) != null;
 
          if (needSerialVersion)
          {
@@ -1170,7 +1315,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
          }
          if (needSerialVersion)
          {
-            // check that the current type doesn't extend javax.rmi.CORBA.Stub
+            //check that the current type doesn't extend javax.rmi.CORBA.Stub
             TypeBinding javaxRmiCorbaStub = this.scope.getType(TypeConstants.JAVAX_RMI_CORBA_STUB, 4);
             if (javaxRmiCorbaStub.isValidBinding())
             {
@@ -1282,7 +1427,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Resolve a local type declaration */
+   /**
+    * Resolve a local type declaration
+    */
    public void resolve(BlockScope blockScope)
    {
 
@@ -1334,7 +1481,7 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
             }
             else if (blockScope.isDefinedInType(existingType))
             {
-               // collision with enclosing type
+               //	collision with enclosing type
                blockScope.problemReporter().typeCollidesWithEnclosingType(this);
             }
             else if (blockScope.isDefinedInSameUnit(existingType))
@@ -1357,7 +1504,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Resolve a member type declaration (can be a local member) */
+   /**
+    * Resolve a member type declaration (can be a local member)
+    */
    public void resolve(ClassScope upperScope)
    {
       // member scopes are already created
@@ -1372,7 +1521,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       updateMaxFieldCount();
    }
 
-   /** Resolve a top level type declaration */
+   /**
+    * Resolve a top level type declaration
+    */
    public void resolve(CompilationUnitScope upperScope)
    {
       // top level : scope are already created
@@ -1385,7 +1536,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       this.ignoreFurtherInvestigation = true;
    }
 
-   /** Iteration for a package member type */
+   /**
+    *	Iteration for a package member type
+    *
+    */
    public void traverse(ASTVisitor visitor, CompilationUnitScope unitScope)
    {
       try
@@ -1455,7 +1609,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Iteration for a local innertype */
+   /**
+    *	Iteration for a local innertype
+    */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
    {
       try
@@ -1525,7 +1681,10 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Iteration for a member innertype */
+   /**
+    *	Iteration for a member innertype
+    *
+    */
    public void traverse(ASTVisitor visitor, ClassScope classScope)
    {
       try
@@ -1596,12 +1755,13 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
    }
 
    /**
-    * MaxFieldCount's computation is necessary so as to reserve space for the flow info field portions. It corresponds to the
-    * maximum amount of fields this class or one of its innertypes have.
-    * 
-    * During name resolution, types are traversed, and the max field count is recorded on the outermost type. It is then
-    * propagated down during the flow analysis.
-    * 
+    * MaxFieldCount's computation is necessary so as to reserve space for
+    * the flow info field portions. It corresponds to the maximum amount of
+    * fields this class or one of its innertypes have.
+    *
+    * During name resolution, types are traversed, and the max field count is recorded
+    * on the outermost type. It is then propagated down during the flow analysis.
+    *
     * This method is doing either up/down propagation.
     */
    void updateMaxFieldCount()
@@ -1619,7 +1779,9 @@ public class TypeDeclaration extends Statement implements ProblemSeverities, Ref
       }
    }
 
-   /** Returns whether the type is a secondary one or not. */
+   /**
+    * Returns whether the type is a secondary one or not.
+    */
    public boolean isSecondary()
    {
       return (this.bits & ASTNode.IsSecondaryType) != 0;

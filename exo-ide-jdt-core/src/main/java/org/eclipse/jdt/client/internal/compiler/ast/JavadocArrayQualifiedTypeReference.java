@@ -19,6 +19,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 public class JavadocArrayQualifiedTypeReference extends ArrayQualifiedTypeReference
 {
 
+   public int tagSourceStart, tagSourceEnd;
+
    public JavadocArrayQualifiedTypeReference(JavadocQualifiedTypeReference typeRef, int dim)
    {
       super(typeRef.tokens, dim, typeRef.sourcePositions);
@@ -34,10 +36,9 @@ public class JavadocArrayQualifiedTypeReference extends ArrayQualifiedTypeRefere
       scope.problemReporter().javadocDeprecatedType(type, this, scope.getDeclarationModifiers());
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

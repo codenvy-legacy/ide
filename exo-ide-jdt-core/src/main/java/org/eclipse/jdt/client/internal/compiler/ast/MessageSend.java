@@ -33,6 +33,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.ProblemReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.RawTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
@@ -49,9 +50,11 @@ public class MessageSend extends Expression implements InvocationSite
 
    public MethodBinding binding; // exact binding resulting from lookup
 
+   public MethodBinding syntheticAccessor; // synthetic accessor for inner-emulation
+
    public TypeBinding expectedType; // for generic method invocation (return type inference)
 
-   public long nameSourcePosition; // (start<<32)+end
+   public long nameSourcePosition; //(start<<32)+end
 
    public TypeBinding actualReceiverType;
 
@@ -107,17 +110,15 @@ public class MessageSend extends Expression implements InvocationSite
          // must verify that exceptions potentially thrown by this expression are caught in the method
          flowContext.checkExceptionHandlers(thrownExceptions, this, flowInfo.copy(), currentScope);
          // TODO (maxime) the copy above is needed because of a side effect into
-         // checkExceptionHandlers; consider protecting there instead of here;
-         // NullReferenceTest#test0510
+         //               checkExceptionHandlers; consider protecting there instead of here;
+         //               NullReferenceTest#test0510
       }
       manageSyntheticAccessIfNecessary(currentScope, flowInfo);
       return flowInfo;
    }
 
    /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.client.internal.compiler.lookup.Scope,
-    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding,
-    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.client.internal.compiler.lookup.Scope, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public void computeConversion(Scope scope, TypeBinding runtimeTimeType, TypeBinding compileTimeType)
    {
@@ -131,18 +132,14 @@ public class MessageSend extends Expression implements InvocationSite
          // extra cast needed if method return type is type variable
          if (originalType.leafComponentType().isTypeVariable())
          {
-            TypeBinding targetType = (!compileTimeType.isBaseType() && runtimeTimeType.isBaseType()) ? compileTimeType // unboxing:
-                                                                                                                       // checkcast
-                                                                                                                       // before
-                                                                                                                       // conversion
+            TypeBinding targetType = (!compileTimeType.isBaseType() && runtimeTimeType.isBaseType()) ? compileTimeType // unboxing: checkcast before conversion
                : runtimeTimeType;
             this.valueCast = originalType.genericCast(targetType);
          }
          else if (this.binding == scope.environment().arrayClone && runtimeTimeType.id != TypeIds.T_JavaLangObject
             && scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5)
          {
-            // from 1.5 source level on, array#clone() resolves to array type, but codegen to #clone()Object - thus require extra
-            // inserted cast
+            // from 1.5 source level on, array#clone() resolves to array type, but codegen to #clone()Object - thus require extra inserted cast
             this.valueCast = runtimeTimeType;
          }
          if (this.valueCast instanceof ReferenceBinding)
@@ -160,7 +157,37 @@ public class MessageSend extends Expression implements InvocationSite
       super.computeConversion(scope, runtimeTimeType, compileTimeType);
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+   /**
+    * MessageSend code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      // generate receiver/enclosing instance access
+      MethodBinding codegenBinding =
+         this.binding instanceof PolymorphicMethodBinding ? this.binding : this.binding.original();
+      boolean isStatic = codegenBinding.isStatic();
+      if (isStatic)
+      {
+         this.receiver.generateCode(currentScope, false);
+      }
+      else if ((this.bits & ASTNode.DepthMASK) != 0 && this.receiver.isImplicitThis())
+      { // outer access ?
+      }
+      else
+      {
+         this.receiver.generateCode(currentScope, true);
+      }
+      // generate arguments
+      generateArguments(this.binding, this.arguments, currentScope);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -190,6 +217,9 @@ public class MessageSend extends Expression implements InvocationSite
          // depth is set for both implicit and explicit access (see MethodBinding#canBeSeenBy)
          if (currentScope.enclosingSourceType() != codegenBinding.declaringClass)
          {
+            this.syntheticAccessor =
+               ((SourceTypeBinding)codegenBinding.declaringClass)
+                  .addSyntheticMethod(codegenBinding, false /* not super access there */);
             currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
             return;
          }
@@ -198,6 +228,10 @@ public class MessageSend extends Expression implements InvocationSite
       else if (this.receiver instanceof QualifiedSuperReference)
       { // qualified super
 
+         // qualified super need emulation always
+         SourceTypeBinding destinationType =
+            (SourceTypeBinding)(((QualifiedSuperReference)this.receiver).currentCompatibleType);
+         this.syntheticAccessor = destinationType.addSyntheticMethod(codegenBinding, isSuperAccess());
          currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
          return;
 
@@ -205,10 +239,16 @@ public class MessageSend extends Expression implements InvocationSite
       else if (this.binding.isProtected())
       {
 
+         SourceTypeBinding enclosingSourceType;
          if (((this.bits & ASTNode.DepthMASK) != 0)
-            && codegenBinding.declaringClass.getPackage() != currentScope.enclosingSourceType().getPackage())
+            && codegenBinding.declaringClass.getPackage() != (enclosingSourceType = currentScope.enclosingSourceType())
+               .getPackage())
          {
 
+            SourceTypeBinding currentCompatibleType =
+               (SourceTypeBinding)enclosingSourceType
+                  .enclosingTypeAt((this.bits & ASTNode.DepthMASK) >> ASTNode.DepthSHIFT);
+            this.syntheticAccessor = currentCompatibleType.addSyntheticMethod(codegenBinding, isSuperAccess());
             currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
             return;
          }
@@ -220,7 +260,9 @@ public class MessageSend extends Expression implements InvocationSite
       return FlowInfo.UNKNOWN;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
+    */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;
@@ -324,9 +366,7 @@ public class MessageSend extends Expression implements InvocationSite
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
-                                                                                       * check bounds
-                                                                                       */)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
             {
                argHasError = true;
             }
@@ -371,11 +411,10 @@ public class MessageSend extends Expression implements InvocationSite
          {
             if (this.actualReceiverType instanceof ReferenceBinding)
             {
-               // record a best guess, for clients who need hint about possible method match
+               //  record a best guess, for clients who need hint about possible method match
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
-                                                                                                  // null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
                this.binding =
                   this.receiver.isImplicitThis() ? scope.getImplicitMethod(this.selector, pseudoArgs, this) : scope
                      .findMethod((ReferenceBinding)this.actualReceiverType, this.selector, pseudoArgs, this);
@@ -434,7 +473,7 @@ public class MessageSend extends Expression implements InvocationSite
             }
          }
          // https://bugs.eclipse.org/bugs/show_bug.cgi?id=245007 avoid secondary errors in case of
-         // missing super type for anonymous classes ...
+         // missing super type for anonymous classes ... 
          ReferenceBinding declaringClass = this.binding.declaringClass;
          boolean avoidSecondary =
             declaringClass != null && declaringClass.isAnonymousType()
@@ -532,7 +571,7 @@ public class MessageSend extends Expression implements InvocationSite
          this.bits |= ASTNode.Unchecked;
       }
 
-      // -------message send that are known to fail at compile time-----------
+      //-------message send that are known to fail at compile time-----------
       if (this.binding.isAbstract())
       {
          if (this.receiver.isSuper())
@@ -611,7 +650,9 @@ public class MessageSend extends Expression implements InvocationSite
       }
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding) */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
+    */
    public void setExpectedType(TypeBinding expectedType)
    {
       this.expectedType = expectedType;

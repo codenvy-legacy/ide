@@ -19,6 +19,8 @@ public class BranchLabel extends Label
 
    BranchLabel delegate; //
 
+   public final static int USED = 2;
+   
    // Label tagbits
    public int tagBits;
 
@@ -256,13 +258,5 @@ public class BranchLabel extends Label
 
       buffer.deleteCharAt(buffer.length() - 1).deleteCharAt(buffer.length() - 1).append("] )"); //$NON-NLS-1$
       return buffer.toString();
-   }
-
-   /** @see org.eclipse.jdt.client.internal.compiler.codegen.Label#place() */
-   @Override
-   public void place()
-   {
-      // TODO Auto-generated method stub
-
    }
 }

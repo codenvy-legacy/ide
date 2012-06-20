@@ -23,9 +23,11 @@ public class ArrayInitializer extends Expression
 
    public Expression[] expressions;
 
-   public ArrayBinding binding; // the type of the { , , , }
+   public ArrayBinding binding; //the type of the { , , , }
 
-   /** ArrayInitializer constructor comment. */
+   /**
+    * ArrayInitializer constructor comment.
+    */
    public ArrayInitializer()
    {
 
@@ -43,6 +45,64 @@ public class ArrayInitializer extends Expression
          }
       }
       return flowInfo;
+   }
+
+   /**
+    * Code generation for a array initializer
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+
+      // Flatten the values and compute the dimensions, by iterating in depth into nested array initializers
+      int expressionLength = (this.expressions == null) ? 0 : this.expressions.length;
+      if (this.expressions != null)
+      {
+         // binding is an ArrayType, so I can just deal with the dimension
+         int elementsTypeID = this.binding.dimensions > 1 ? -1 : this.binding.leafComponentType.id;
+         for (int i = 0; i < expressionLength; i++)
+         {
+            Expression expr;
+            if ((expr = this.expressions[i]).constant != Constant.NotAConstant)
+            {
+               switch (elementsTypeID)
+               { // filter out initializations to default values
+                  case T_int :
+                  case T_short :
+                  case T_byte :
+                  case T_char :
+                  case T_long :
+                     if (expr.constant.longValue() != 0)
+                     {
+                        expr.generateCode(currentScope, true);
+                     }
+                     break;
+                  case T_float :
+                  case T_double :
+                     double constantValue = expr.constant.doubleValue();
+                     if (constantValue == -0.0 || constantValue != 0)
+                     {
+                        expr.generateCode(currentScope, true);
+                     }
+                     break;
+                  case T_boolean :
+                     if (expr.constant.booleanValue() != false)
+                     {
+                        expr.generateCode(currentScope, true);
+                     }
+                     break;
+                  default :
+                     if (!(expr instanceof NullLiteral))
+                     {
+                        expr.generateCode(currentScope, true);
+                     }
+               }
+            }
+            else if (!(expr instanceof NullLiteral))
+            {
+               expr.generateCode(currentScope, true);
+            }
+         }
+      }
    }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
@@ -84,8 +144,7 @@ public class ArrayInitializer extends Expression
          // allow new List<?>[5]
          if ((this.bits & IsAnnotationDefaultValue) == 0)
          { // annotation default value need only to be commensurate JLS9.7
-           // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer
-           // resolution
+           // allow new List<?>[5] - only check for generic array when no initializer, since also checked inside initializer resolution
             TypeBinding leafComponentType = expectedType.leafComponentType();
             if (!leafComponentType.isReifiable())
             {

@@ -12,6 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo;
@@ -105,26 +106,26 @@ public class EqualExpression extends BinaryExpression
          if ((this.left.constant != Constant.NotAConstant) && (this.left.constant.typeID() == T_boolean))
          {
             if (this.left.constant.booleanValue())
-            { // true == anything
-              // this is equivalent to the right argument inits
+            { //  true == anything
+              //  this is equivalent to the right argument inits
                result = this.right.analyseCode(currentScope, flowContext, flowInfo);
             }
             else
             { // false == anything
-              // this is equivalent to the right argument inits negated
+              //  this is equivalent to the right argument inits negated
                result = this.right.analyseCode(currentScope, flowContext, flowInfo).asNegatedCondition();
             }
          }
          else if ((this.right.constant != Constant.NotAConstant) && (this.right.constant.typeID() == T_boolean))
          {
             if (this.right.constant.booleanValue())
-            { // anything == true
-              // this is equivalent to the left argument inits
+            { //  anything == true
+              //  this is equivalent to the left argument inits
                result = this.left.analyseCode(currentScope, flowContext, flowInfo);
             }
             else
             { // anything == false
-              // this is equivalent to the right argument inits negated
+              //  this is equivalent to the right argument inits negated
                result = this.left.analyseCode(currentScope, flowContext, flowInfo).asNegatedCondition();
             }
          }
@@ -136,30 +137,30 @@ public class EqualExpression extends BinaryExpression
          }
       }
       else
-      { // NOT_EQUAL :
+      { //NOT_EQUAL :
          if ((this.left.constant != Constant.NotAConstant) && (this.left.constant.typeID() == T_boolean))
          {
             if (!this.left.constant.booleanValue())
-            { // false != anything
-              // this is equivalent to the right argument inits
+            { //  false != anything
+              //  this is equivalent to the right argument inits
                result = this.right.analyseCode(currentScope, flowContext, flowInfo);
             }
             else
             { // true != anything
-              // this is equivalent to the right argument inits negated
+              //  this is equivalent to the right argument inits negated
                result = this.right.analyseCode(currentScope, flowContext, flowInfo).asNegatedCondition();
             }
          }
          else if ((this.right.constant != Constant.NotAConstant) && (this.right.constant.typeID() == T_boolean))
          {
             if (!this.right.constant.booleanValue())
-            { // anything != false
-              // this is equivalent to the right argument inits
+            { //  anything != false
+              //  this is equivalent to the right argument inits
                result = this.left.analyseCode(currentScope, flowContext, flowInfo);
             }
             else
             { // anything != true
-              // this is equivalent to the right argument inits negated
+              //  this is equivalent to the right argument inits negated
                result = this.left.analyseCode(currentScope, flowContext, flowInfo).asNegatedCondition();
             }
          }
@@ -195,6 +196,275 @@ public class EqualExpression extends BinaryExpression
       {
          this.constant = Constant.NotAConstant;
          // no optimization for null == null
+      }
+   }
+
+   /**
+    * Normal == or != code generation.
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+
+      if (this.constant != Constant.NotAConstant)
+      {
+         return;
+      }
+
+      if ((this.left.implicitConversion & COMPILE_TYPE_MASK) /*compile-time*/== T_boolean)
+      {
+         generateBooleanEqual(currentScope, valueRequired);
+      }
+      else
+      {
+         generateNonBooleanEqual(currentScope, valueRequired);
+      }
+   }
+
+   /**
+    * Boolean operator code generation
+    *	Optimized operations are: == and !=
+    */
+   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
+
+      if (this.constant != Constant.NotAConstant)
+      {
+         super.generateOptimizedBoolean(currentScope, trueLabel, falseLabel, valueRequired);
+         return;
+      }
+      if (((this.bits & OperatorMASK) >> OperatorSHIFT) == EQUAL_EQUAL)
+      {
+         if ((this.left.implicitConversion & COMPILE_TYPE_MASK) /*compile-time*/== T_boolean)
+         {
+            generateOptimizedBooleanEqual(currentScope, trueLabel, falseLabel, valueRequired);
+         }
+         else
+         {
+            generateOptimizedNonBooleanEqual(currentScope, trueLabel, falseLabel, valueRequired);
+         }
+      }
+      else
+      {
+         if ((this.left.implicitConversion & COMPILE_TYPE_MASK) /*compile-time*/== T_boolean)
+         {
+            generateOptimizedBooleanEqual(currentScope, falseLabel, trueLabel, valueRequired);
+         }
+         else
+         {
+            generateOptimizedNonBooleanEqual(currentScope, falseLabel, trueLabel, valueRequired);
+         }
+      }
+   }
+
+   /**
+    * Boolean generation for == with boolean operands
+    *
+    * Note this code does not optimize conditional constants !!!!
+    */
+   public void generateBooleanEqual(BlockScope currentScope, boolean valueRequired)
+   {
+
+      // optimized cases: <something equivalent to true> == x, <something equivalent to false> == x,
+      // optimized cases: <something equivalent to false> != x, <something equivalent to true> != x,
+      boolean isEqualOperator = ((this.bits & OperatorMASK) >> OperatorSHIFT) == EQUAL_EQUAL;
+      Constant cst = this.left.optimizedBooleanConstant();
+      if (cst != Constant.NotAConstant)
+      {
+         Constant rightCst = this.right.optimizedBooleanConstant();
+         if (rightCst != Constant.NotAConstant)
+         {
+            // <something equivalent to true> == <something equivalent to true>, <something equivalent to false> != <something equivalent to true>
+            // <something equivalent to true> == <something equivalent to false>, <something equivalent to false> != <something equivalent to false>
+            this.left.generateCode(currentScope, false);
+            this.right.generateCode(currentScope, false);
+         }
+         else if (cst.booleanValue() == isEqualOperator)
+         {
+            // <something equivalent to true> == x, <something equivalent to false> != x
+            this.left.generateCode(currentScope, false);
+            this.right.generateCode(currentScope, valueRequired);
+         }
+         else
+         {
+            // <something equivalent to false> == x, <something equivalent to true> != x
+            if (valueRequired)
+            {
+               BranchLabel falseLabel = new BranchLabel();
+               this.left.generateCode(currentScope, false);
+               this.right.generateOptimizedBoolean(currentScope, null, falseLabel, valueRequired);
+               // comparison is TRUE
+
+            }
+            else
+            {
+               this.left.generateCode(currentScope, false);
+               this.right.generateCode(currentScope, false);
+            }
+            //				left.generateCode(currentScope,  false);
+            //				right.generateCode(currentScope,  valueRequired);
+            //				if (valueRequired) {
+            //					codeStream.iconst_1();
+            //					codeStream.ixor(); // negate
+            //				}
+         }
+         return;
+      }
+      cst = this.right.optimizedBooleanConstant();
+      if (cst != Constant.NotAConstant)
+      {
+         if (cst.booleanValue() == isEqualOperator)
+         {
+            // x == <something equivalent to true>, x != <something equivalent to false>
+            this.left.generateCode(currentScope, valueRequired);
+            this.right.generateCode(currentScope, false);
+         }
+         else
+         {
+            // x == <something equivalent to false>, x != <something equivalent to true>
+            if (valueRequired)
+            {
+               BranchLabel falseLabel = new BranchLabel();
+               this.left.generateOptimizedBoolean(currentScope, null, falseLabel, valueRequired);
+               this.right.generateCode(currentScope, false);
+               // comparison is TRUE
+            }
+            else
+            {
+               this.left.generateCode(currentScope, false);
+               this.right.generateCode(currentScope, false);
+            }
+            return;
+         }
+         // default case
+         this.left.generateCode(currentScope, valueRequired);
+         this.right.generateCode(currentScope, valueRequired);
+      }
+   }
+
+   /**
+    * Boolean generation for == with boolean operands
+    *
+    * Note this code does not optimize conditional constants !!!!
+    */
+   public void generateOptimizedBooleanEqual(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
+
+      // optimized cases: true == x, false == x
+      if (this.left.constant != Constant.NotAConstant)
+      {
+         boolean inline = this.left.constant.booleanValue();
+         this.right.generateOptimizedBoolean(currentScope, (inline ? trueLabel : falseLabel), (inline ? falseLabel
+            : trueLabel), valueRequired);
+         return;
+      } // optimized cases: x == true, x == false
+      if (this.right.constant != Constant.NotAConstant)
+      {
+         boolean inline = this.right.constant.booleanValue();
+         this.left.generateOptimizedBoolean(currentScope, (inline ? trueLabel : falseLabel), (inline ? falseLabel
+            : trueLabel), valueRequired);
+         return;
+      }
+      // default case
+      this.left.generateCode(currentScope, valueRequired);
+      this.right.generateCode(currentScope, valueRequired);
+   }
+
+   /**
+    * Boolean generation for == with non-boolean operands
+    *
+    */
+   public void generateNonBooleanEqual(BlockScope currentScope, boolean valueRequired)
+   {
+
+      if (((this.left.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) == T_int)
+      {
+         Constant cst;
+         if ((cst = this.left.constant) != Constant.NotAConstant && cst.intValue() == 0)
+         {
+            // optimized case: 0 == x, 0 != x
+            this.right.generateCode(currentScope, valueRequired);
+            return;
+         }
+         if ((cst = this.right.constant) != Constant.NotAConstant && cst.intValue() == 0)
+         {
+            // optimized case: x == 0, x != 0
+            this.left.generateCode(currentScope, valueRequired);
+            return;
+         }
+      }
+
+      // null cases
+      if (this.right instanceof NullLiteral)
+      {
+         if (this.left instanceof NullLiteral)
+         {
+            // null == null, null != null
+         }
+         return;
+      }
+      else if (this.left instanceof NullLiteral)
+      {
+         // null = x, null != x
+         this.right.generateCode(currentScope, valueRequired);
+         return;
+      }
+
+      // default case
+      this.left.generateCode(currentScope, valueRequired);
+      this.right.generateCode(currentScope, valueRequired);
+   }
+
+   /**
+    * Boolean generation for == with non-boolean operands
+    *
+    */
+   public void generateOptimizedNonBooleanEqual(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
+
+      Constant inline;
+      if ((inline = this.right.constant) != Constant.NotAConstant)
+      {
+         // optimized case: x == 0
+         if ((((this.left.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) == T_int) && (inline.intValue() == 0))
+         {
+            this.left.generateCode(currentScope, valueRequired);
+            return;
+         }
+      }
+      if ((inline = this.left.constant) != Constant.NotAConstant)
+      {
+         // optimized case: 0 == x
+         if ((((this.left.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4) == T_int) && (inline.intValue() == 0))
+         {
+            this.right.generateCode(currentScope, valueRequired);
+            return;
+         }
+      }
+      // null cases
+      // optimized case: x == null
+      if (this.right instanceof NullLiteral)
+      {
+         if (this.left instanceof NullLiteral)
+         {
+            // null == null
+            return;
+         }
+         else if (this.left instanceof NullLiteral)
+         { // optimized case: null == x
+            this.right.generateCode(currentScope, valueRequired);
+            return;
+         }
+
+         // default case
+         this.left.generateCode(currentScope, valueRequired);
+         this.right.generateCode(currentScope, valueRequired);
       }
    }
 
@@ -249,9 +519,9 @@ public class EqualExpression extends BinaryExpression
          int rightTypeID = rightType.id;
 
          // the code is an int
-         // (cast) left == (cast) right --> result
-         // 0000 0000 0000 0000 0000
-         // <<16 <<12 <<8 <<4 <<0
+         // (cast)  left   == (cast)  right --> result
+         //  0000   0000       0000   0000      0000
+         //  <<16   <<12       <<8    <<4       <<0
          int operatorSignature = OperatorSignatures[EQUAL_EQUAL][(leftTypeID << 4) + rightTypeID];
          this.left.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 16) & 0x0000F),
             originalLeftType);

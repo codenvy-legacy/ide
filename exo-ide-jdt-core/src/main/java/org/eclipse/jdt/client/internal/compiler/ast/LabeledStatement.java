@@ -32,7 +32,9 @@ public class LabeledStatement extends Statement
    // for local variables table attributes
    int mergedInitStateIndex = -1;
 
-   /** LabeledStatement constructor comment. */
+   /**
+    * LabeledStatement constructor comment.
+    */
    public LabeledStatement(char[] label, Statement statement, long labelPosition, int sourceEnd)
    {
 
@@ -86,8 +88,31 @@ public class LabeledStatement extends Statement
    public ASTNode concreteStatement()
    {
 
-      // return statement.concreteStatement(); // for supporting nested labels: a:b:c: someStatement (see 21912)
+      // return statement.concreteStatement(); // for supporting nested labels:   a:b:c: someStatement (see 21912)
       return this.statement;
+   }
+
+   /**
+    * Code generation for labeled statement
+    *
+    * may not need actual source positions recording
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      if (this.targetLabel != null)
+      {
+         if (this.statement != null)
+         {
+            this.statement.generateCode(currentScope);
+         }
+      }
    }
 
    public StringBuffer printStatement(int tab, StringBuffer output)

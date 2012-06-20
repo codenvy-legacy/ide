@@ -48,6 +48,9 @@ public class BreakStatement extends BranchStatement
          return flowInfo; // pretend it did not break since no actual target
       }
 
+      this.initStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
+
+      this.targetLabel = targetContext.breakLabel();
       FlowContext traversedContext = flowContext;
       int subCount = 0;
       this.subroutines = new SubRoutineStatement[5];

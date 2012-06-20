@@ -35,8 +35,8 @@ public class SingleTypeReference extends TypeReference
 
    public TypeReference copyDims(int dim)
    {
-      // return a type reference copy of me with some dimensions
-      // warning : the new type ref has a null binding
+      //return a type reference copy of me with some dimensions
+      //warning : the new type ref has a null binding
 
       return new ArrayTypeReference(this.token, dim, (((long)this.sourceStart) << 32) + this.sourceEnd);
    }
@@ -86,9 +86,8 @@ public class SingleTypeReference extends TypeReference
       }
       if (isTypeUseDeprecated(memberType, scope))
          reportDeprecatedType(memberType, scope);
-      memberType = scope.environment().convertToRawType(memberType, false /*
-                                                                           * do not force conversion of enclosing types
-                                                                           */);
+      memberType =
+         scope.environment().convertToRawType(memberType, false /*do not force conversion of enclosing types*/);
       if (memberType.isRawType() && (this.bits & IgnoreRawTypeCheck) == 0
          && scope.compilerOptions().getSeverity(CompilerOptions.RawTypeReference) != ProblemSeverities.Ignore)
       {

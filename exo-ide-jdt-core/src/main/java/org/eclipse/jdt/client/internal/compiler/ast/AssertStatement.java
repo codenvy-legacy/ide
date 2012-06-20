@@ -13,6 +13,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo;
@@ -29,6 +30,9 @@ public class AssertStatement extends Statement
 {
 
    public Expression assertExpression, exceptionArgument;
+
+   // for local variable attribute
+   int preAssertInitStateIndex = -1;
 
    private FieldBinding assertionSyntheticFieldBinding;
 
@@ -49,6 +53,8 @@ public class AssertStatement extends Statement
 
    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
+      this.preAssertInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
+
       Constant cst = this.assertExpression.optimizedBooleanConstant();
       if ((this.assertExpression.implicitConversion & TypeIds.UNBOXING) != 0)
       {
@@ -109,6 +115,23 @@ public class AssertStatement extends Statement
             assertWhenTrueInfo.discardInitializationInfo());
          // keep the merge from the initial code for the definite assignment
          // analysis, tweak the null part to influence nulls downstream
+      }
+   }
+
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+
+      if (this.assertionSyntheticFieldBinding != null)
+      {
+         this.assertExpression.generateOptimizedBoolean(currentScope, new BranchLabel(), null, true);
+         if (this.exceptionArgument != null)
+         {
+            this.exceptionArgument.generateCode(currentScope, true);
+         }
       }
    }
 

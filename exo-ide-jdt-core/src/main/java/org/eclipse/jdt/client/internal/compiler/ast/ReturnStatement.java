@@ -34,6 +34,8 @@ public class ReturnStatement extends Statement
 
    public LocalVariableBinding saveValueVariable;
 
+   public int initStateIndex = -1;
+
    public ReturnStatement(Expression expression, int sourceStart, int sourceEnd)
    {
       this.sourceStart = sourceStart;
@@ -55,6 +57,7 @@ public class ReturnStatement extends Statement
             this.expression.checkNPE(currentScope, flowContext, flowInfo);
          }
       }
+      this.initStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
       // compute the return sequence (running the finally blocks)
       FlowContext traversedContext = flowContext;
       int subCount = 0;
@@ -102,6 +105,7 @@ public class ReturnStatement extends Statement
                      prepareSaveValueLocation(tryStatement);
                   }
                   saveValueNeeded = true;
+                  this.initStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
                }
             }
          }
@@ -137,6 +141,27 @@ public class ReturnStatement extends Statement
          }
       }
       return FlowInfo.DEAD_END;
+   }
+
+   /**
+    * Retrun statement code generation
+    *
+    *   generate the finallyInvocationSequence.
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
+         return;
+      }
+      // generate the expression
+      if (needValueStore())
+      {
+         this.expression.generateCode(currentScope, needValue()); // no value needed if non-returning subroutine
+      }
+
    }
 
    private boolean needValueStore()

@@ -7,9 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Stephan Herrmann - Contributions for
- *                          bug 332637 - Dead Code detection removing code that isn't dead
- *                          bug 358827 - [1.7] exception analysis for t-w-r spoils null analysis
+ *     Stephan Herrmann - Contribution for bug 332637 - Dead Code detection removing code that isn't dead
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
@@ -80,12 +78,18 @@ public class TryStatement extends SubRoutineStatement
 
    private static final int FINALLY_SUBROUTINE = 1; // finally is generated as a subroutine (using jsr/ret bytecodes)
 
-   private static final int FINALLY_DOES_NOT_COMPLETE = 2; // non returning finally is optimized with only one instance of finally
-                                                           // block
+   private static final int FINALLY_DOES_NOT_COMPLETE = 2; // non returning finally is optimized with only one instance of finally block
 
    private static final int FINALLY_INLINE = 3; // finally block must be inlined since cannot use jsr/ret bytecodes >1.5
 
+   // for local variables table attributes
+   int mergedInitStateIndex = -1;
+
+   int preTryInitStateIndex = -1;
+
    int[] postResourcesInitStateIndexes;
+
+   int naturalExitMergeInitStateIndex = -1;
 
    int[] catchExitInitStateIndexes;
 
@@ -104,6 +108,8 @@ public class TryStatement extends SubRoutineStatement
       // complete, then only keep this result for the rest of the analysis
 
       // process the finally block (subroutine) - create a context for the subroutine
+
+      this.preTryInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
 
       if (this.anyExceptionVariable != null)
       {
@@ -148,9 +154,7 @@ public class TryStatement extends SubRoutineStatement
             {
                ReferenceBinding binding = (ReferenceBinding)type;
                MethodBinding closeMethod =
-                  binding.getExactMethod(ConstantPool.Close, new TypeBinding[0], this.scope.compilationUnitScope()); // scope
-                                                                                                                     // needs to
-                                                                                                                     // be tighter
+                  binding.getExactMethod(ConstantPool.Close, new TypeBinding[0], this.scope.compilationUnitScope()); // scope needs to be tighter
                if (closeMethod != null && closeMethod.returnType.id == TypeIds.T_void)
                {
                   ReferenceBinding[] thrownExceptions = closeMethod.thrownExceptions;
@@ -173,6 +177,7 @@ public class TryStatement extends SubRoutineStatement
             if ((tryInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
                this.bits |= ASTNode.IsTryBlockExiting;
          }
+
          // check unreachable catch blocks
          handlingContext.complainIfUnusedExceptionHandlers(this.scope, this);
 
@@ -184,8 +189,7 @@ public class TryStatement extends SubRoutineStatement
             this.catchExitInitStateIndexes = new int[catchCount];
             for (int i = 0; i < catchCount; i++)
             {
-               // keep track of the inits that could potentially have led to this exception handler (for final assignments
-               // diagnosis)
+               // keep track of the inits that could potentially have led to this exception handler (for final assignments diagnosis)
                FlowInfo catchInfo;
                if (isUncheckedCatchBlock(i))
                {
@@ -211,11 +215,12 @@ public class TryStatement extends SubRoutineStatement
                catchInfo.markAsDefinitelyAssigned(catchArg);
                catchInfo.markAsDefinitelyNonNull(catchArg);
                /*
-                * "If we are about to consider an unchecked exception handler, potential inits may have occured inside the try
-                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2}
-                * " "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
-                * addPotentialInitializationsFrom: tryInits]."
-                */
+               "If we are about to consider an unchecked exception handler, potential inits may have occured inside
+               the try block that need to be detected , e.g.
+               try { x = 1; throwSomething();} catch(Exception e){ x = 2} "
+               "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index])
+               ifTrue: [catchInits addPotentialInitializationsFrom: tryInits]."
+               */
                if (this.tryBlock.statements == null && this.resources == NO_RESOURCES)
                { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=350579
                   catchInfo.setReachMode(FlowInfo.UNREACHABLE_OR_DEAD);
@@ -226,6 +231,7 @@ public class TryStatement extends SubRoutineStatement
                tryInfo = tryInfo.mergedWith(catchInfo.unconditionalInits());
             }
          }
+         this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(tryInfo);
 
          // chain up null info registry
          if (flowContext.initsOnFinally != null)
@@ -271,16 +277,14 @@ public class TryStatement extends SubRoutineStatement
             {
                ReferenceBinding binding = (ReferenceBinding)type;
                MethodBinding closeMethod =
-                  binding.getExactMethod(ConstantPool.Close, new TypeBinding[0], this.scope.compilationUnitScope()); // scope
-                                                                                                                     // needs to
-                                                                                                                     // be tighter
+                  binding.getExactMethod(ConstantPool.Close, new TypeBinding[0], this.scope.compilationUnitScope()); // scope needs to be tighter
                if (closeMethod != null && closeMethod.returnType.id == TypeIds.T_void)
                {
                   ReferenceBinding[] thrownExceptions = closeMethod.thrownExceptions;
                   for (int j = 0, length = thrownExceptions.length; j < length; j++)
                   {
-                     handlingContext.checkExceptionHandlers(thrownExceptions[j], this.resources[i], flowInfo,
-                        currentScope, true);
+                     handlingContext.checkExceptionHandlers(thrownExceptions[j], this.resources[j], flowInfo,
+                        currentScope);
                   }
                }
             }
@@ -296,6 +300,7 @@ public class TryStatement extends SubRoutineStatement
             if ((tryInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
                this.bits |= ASTNode.IsTryBlockExiting;
          }
+
          // check unreachable catch blocks
          handlingContext.complainIfUnusedExceptionHandlers(this.scope, this);
 
@@ -307,8 +312,7 @@ public class TryStatement extends SubRoutineStatement
             this.catchExitInitStateIndexes = new int[catchCount];
             for (int i = 0; i < catchCount; i++)
             {
-               // keep track of the inits that could potentially have led to this exception handler (for final assignments
-               // diagnosis)
+               // keep track of the inits that could potentially have led to this exception handler (for final assignments diagnosis)
                FlowInfo catchInfo;
                if (isUncheckedCatchBlock(i))
                {
@@ -334,11 +338,12 @@ public class TryStatement extends SubRoutineStatement
                catchInfo.markAsDefinitelyAssigned(catchArg);
                catchInfo.markAsDefinitelyNonNull(catchArg);
                /*
-                * "If we are about to consider an unchecked exception handler, potential inits may have occured inside the try
-                * block that need to be detected , e.g. try { x = 1; throwSomething();} catch(Exception e){ x = 2}
-                * " "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index]) ifTrue: [catchInits
-                * addPotentialInitializationsFrom: tryInits]."
-                */
+               "If we are about to consider an unchecked exception handler, potential inits may have occured inside
+               the try block that need to be detected , e.g.
+               try { x = 1; throwSomething();} catch(Exception e){ x = 2} "
+               "(uncheckedExceptionTypes notNil and: [uncheckedExceptionTypes at: index])
+               ifTrue: [catchInits addPotentialInitializationsFrom: tryInits]."
+               */
                if (this.tryBlock.statements == null && this.resources == NO_RESOURCES)
                { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=350579
                   catchInfo.setReachMode(FlowInfo.UNREACHABLE_OR_DEAD);
@@ -365,13 +370,16 @@ public class TryStatement extends SubRoutineStatement
             flowContext.initsOnFinally.add(handlingContext.initsOnFinally);
          }
 
+         this.naturalExitMergeInitStateIndex = currentScope.methodScope().recordInitializationStates(tryInfo);
          if (subInfo == FlowInfo.DEAD_END)
          {
+            this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(subInfo);
             return subInfo;
          }
          else
          {
             FlowInfo mergedInfo = tryInfo.addInitializationsFrom(subInfo);
+            this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
             return mergedInfo;
          }
       }
@@ -397,11 +405,65 @@ public class TryStatement extends SubRoutineStatement
       return false;
    }
 
-   public void exitAnyExceptionHandler()
+   private int finallyMode()
    {
       if (this.subRoutineStartLabel == null)
+      {
+         return NO_FINALLY;
+      }
+      else if (isSubRoutineEscaping())
+      {
+         return FINALLY_DOES_NOT_COMPLETE;
+      }
+      else if (this.scope.compilerOptions().inlineJsrBytecode)
+      {
+         return FINALLY_INLINE;
+      }
+      else
+      {
+         return FINALLY_SUBROUTINE;
+      }
+   }
+
+   /**
+    * Try statement code generation with or without jsr bytecode use
+    *	post 1.5 target level, cannot use jsr bytecode, must instead inline finally block
+    * returnAddress is only allocated if jsr is allowed
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
          return;
-      super.exitAnyExceptionHandler();
+      }
+      finallyMode();
+
+      // generate the try block
+      int resourceCount = this.resources.length;
+      if (resourceCount > 0)
+      {
+         // Please see https://bugs.eclipse.org/bugs/show_bug.cgi?id=338402#c16
+         for (int i = 0; i <= resourceCount; i++)
+         {
+            // put null for the exception type to treat them as any exception handlers (equivalent to a try/finally)
+            if (i < resourceCount)
+            {
+               this.resources[i].generateCode(this.scope); // Initialize resources ...
+            }
+         }
+      }
+      this.tryBlock.generateCode(this.scope);
+      // flag telling if some bytecodes were issued inside the try block
+   }
+
+   /**
+    * @see SubRoutineStatement#generateSubRoutineInvocation(BlockScope, CodeStream, Object, int, LocalVariableBinding)
+    */
+   public boolean generateSubRoutineInvocation(BlockScope currentScope, Object targetLocation, int stateIndex,
+      LocalVariableBinding secretLocal)
+   {
+
+      return false;
    }
 
    public boolean isSubRoutineEscaping()
@@ -428,7 +490,7 @@ public class TryStatement extends SubRoutineStatement
       }
       this.tryBlock.printStatement(indent + 1, output);
 
-      // catches
+      //catches
       if (this.catchBlocks != null)
          for (int i = 0; i < this.catchBlocks.length; i++)
          {
@@ -437,7 +499,7 @@ public class TryStatement extends SubRoutineStatement
             this.catchArguments[i].print(0, output).append(")\n"); //$NON-NLS-1$
             this.catchBlocks[i].printStatement(indent + 1, output);
          }
-      // finally
+      //finally
       if (this.finallyBlock != null)
       {
          output.append('\n');
@@ -480,10 +542,8 @@ public class TryStatement extends SubRoutineStatement
             TypeBinding resourceType = localVariableBinding.type;
             if (resourceType instanceof ReferenceBinding)
             {
-               if (resourceType.findSuperTypeOriginatingFrom(TypeIds.T_JavaLangAutoCloseable, false /*
-                                                                                                     * AutoCloseable is not a
-                                                                                                     * class
-                                                                                                     */) == null
+               if (resourceType
+                  .findSuperTypeOriginatingFrom(TypeIds.T_JavaLangAutoCloseable, false /*AutoCloseable is not a class*/) == null
                   && resourceType.isValidBinding())
                {
                   upperScope.problemReporter()

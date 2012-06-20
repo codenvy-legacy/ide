@@ -41,6 +41,11 @@ public class EmptyStatement extends Statement
       return super.complainIfUnreachable(flowInfo, scope, complaintLevel);
    }
 
+   public void generateCode(BlockScope currentScope)
+   {
+      // no bytecode, no need to check for reachability or recording source positions
+   }
+
    public StringBuffer printStatement(int tab, StringBuffer output)
    {
       return printIndent(tab, output).append(';');

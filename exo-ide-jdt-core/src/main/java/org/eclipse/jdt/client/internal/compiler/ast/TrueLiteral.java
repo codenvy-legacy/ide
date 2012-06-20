@@ -11,6 +11,7 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.impl.BooleanConstant;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
@@ -28,6 +29,22 @@ public class TrueLiteral extends MagicLiteral
    public void computeConstant()
    {
       this.constant = BooleanConstant.fromValue(true);
+   }
+
+   /**
+    * Code generation for the true literal
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+   }
+
+   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
    }
 
    public TypeBinding literalType(BlockScope scope)

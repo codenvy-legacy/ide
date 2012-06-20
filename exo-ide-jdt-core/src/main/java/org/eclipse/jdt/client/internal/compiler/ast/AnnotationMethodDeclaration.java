@@ -23,10 +23,16 @@ public class AnnotationMethodDeclaration extends MethodDeclaration
 
    public int extendedDimensions;
 
-   /** MethodDeclaration constructor comment. */
+   /**
+    * MethodDeclaration constructor comment.
+    */
    public AnnotationMethodDeclaration(CompilationResult compilationResult)
    {
       super(compilationResult);
+   }
+
+   public void generateCode()
+   {
    }
 
    public boolean isAnnotationMethod()

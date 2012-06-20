@@ -17,7 +17,9 @@ import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 
@@ -27,6 +29,8 @@ public class ClassLiteralAccess extends Expression
    public TypeReference type;
 
    public TypeBinding targetType;
+
+   FieldBinding syntheticField;
 
    public ClassLiteralAccess(int sourceEnd, TypeReference type)
    {
@@ -40,14 +44,25 @@ public class ClassLiteralAccess extends Expression
    {
 
       // if reachable, request the addition of a synthetic field for caching the class descriptor
-      //      SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
+      SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
       // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
-      //      if (!sourceType.isInterface() && !this.targetType.isBaseType()
-      //         && currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5)
-      //      {
-      //         this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
-      //      }
+      if (!sourceType.isInterface() && !this.targetType.isBaseType()
+         && currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5)
+      {
+         this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
+      }
       return flowInfo;
+   }
+
+   /**
+    * MessageSendDotClass code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
    }
 
    public StringBuffer printExpression(int indent, StringBuffer output)
@@ -60,19 +75,19 @@ public class ClassLiteralAccess extends Expression
    {
 
       this.constant = Constant.NotAConstant;
-      if ((this.targetType = this.type.resolveType(scope, true /* check bounds */)) == null)
+      if ((this.targetType = this.type.resolveType(scope, true /* check bounds*/)) == null)
          return null;
 
-      /*
-       * https://bugs.eclipse.org/bugs/show_bug.cgi?id=320463 https://bugs.eclipse.org/bugs/show_bug.cgi?id=312076 JLS3 15.8.2
-       * forbids the type named in the class literal expression from being a parameterized type. And the grammar in 18.1 disallows
-       * (where X and Y are some concrete types) constructs of the form Outer<X>.class, Outer<X>.Inner.class,
-       * Outer.Inner<X>.class, Outer<X>.Inner<Y>.class etc. Corollary wise, we should resolve the type of the class literal
-       * expression to be a raw type as class literals exist only for the raw underlying type.
+      /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=320463
+         https://bugs.eclipse.org/bugs/show_bug.cgi?id=312076
+         JLS3 15.8.2 forbids the type named in the class literal expression from being a parameterized type.
+         And the grammar in 18.1 disallows (where X and Y are some concrete types) constructs of the form
+         Outer<X>.class, Outer<X>.Inner.class, Outer.Inner<X>.class, Outer<X>.Inner<Y>.class etc.
+         Corollary wise, we should resolve the type of the class literal expression to be a raw type as
+         class literals exist only for the raw underlying type. 
        */
-      this.targetType = scope.environment().convertToRawType(this.targetType, true /*
-                                                                                    * force conversion of enclosing types
-                                                                                    */);
+      this.targetType =
+         scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types*/);
 
       if (this.targetType.isArrayType())
       {
@@ -107,9 +122,7 @@ public class ClassLiteralAccess extends Expression
             boxedType = scope.boxing(this.targetType);
          }
          this.resolvedType =
-            scope.environment().createParameterizedType(classType, new TypeBinding[]{boxedType}, null/*
-                                                                                                      * not a member
-                                                                                                      */);
+            scope.environment().createParameterizedType(classType, new TypeBinding[]{boxedType}, null/*not a member*/);
       }
       else
       {

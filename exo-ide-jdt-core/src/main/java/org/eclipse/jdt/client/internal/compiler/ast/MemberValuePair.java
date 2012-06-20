@@ -20,7 +20,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
-/** MemberValuePair node */
+/**
+ * MemberValuePair node
+ */
 public class MemberValuePair extends ASTNode
 {
 
@@ -30,7 +32,9 @@ public class MemberValuePair extends ASTNode
 
    public MethodBinding binding;
 
-   /** The representation of this pair in the type system. */
+   /**
+    *  The representation of this pair in the type system.
+    */
    public ElementValuePair compilerElementPair = null;
 
    public MemberValuePair(char[] token, int sourceStart, int sourceEnd, Expression value)
@@ -45,9 +49,8 @@ public class MemberValuePair extends ASTNode
       }
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#print(int, java.lang.StringBuffer)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#print(int, java.lang.StringBuffer)
     */
    public StringBuffer print(int indent, StringBuffer output)
    {

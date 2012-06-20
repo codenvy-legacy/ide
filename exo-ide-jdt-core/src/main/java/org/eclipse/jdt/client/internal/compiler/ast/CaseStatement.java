@@ -12,6 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -26,6 +27,8 @@ public class CaseStatement extends Statement
 {
 
    public Expression constantExpression;
+
+   public BranchLabel targetLabel;
 
    public CaseStatement(Expression constantExpression, int sourceEnd, int sourceStart)
    {
@@ -64,7 +67,21 @@ public class CaseStatement extends Statement
       return output;
    }
 
-   /** No-op : should use resolveCase(...) instead. */
+   /**
+    * Case code generation
+    *
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
+         return;
+      }
+   }
+
+   /**
+    * No-op : should use resolveCase(...) instead.
+    */
    public void resolve(BlockScope scope)
    {
       // no-op : should use resolveCase(...) instead.
@@ -72,10 +89,7 @@ public class CaseStatement extends Statement
 
    /**
     * Returns the constant intValue or ordinal for enum constants. If constant is NotAConstant, then answers Float.MIN_VALUE
-    * 
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Statement#resolveCase(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope,
-    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding,
-    *      org.eclipse.jdt.client.internal.compiler.ast.SwitchStatement)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Statement#resolveCase(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding, org.eclipse.jdt.client.internal.compiler.ast.SwitchStatement)
     */
    public Constant resolveCase(BlockScope scope, TypeBinding switchExpressionType, SwitchStatement switchStatement)
    {
@@ -126,8 +140,7 @@ public class CaseStatement extends Statement
                {
                   scope.problemReporter().cannotUseQualifiedEnumConstantInCaseLabel(reference, field);
                }
-               return IntConstant.fromValue(field.original().id + 1); // (ordinal value + 1) zero should not be returned see bug
-                                                                      // 141810
+               return IntConstant.fromValue(field.original().id + 1); // (ordinal value + 1) zero should not be returned see bug 141810
             }
          }
          else
@@ -137,8 +150,7 @@ public class CaseStatement extends Statement
       }
       else if (isBoxingCompatible(caseType, switchExpressionType, this.constantExpression, scope))
       {
-         // constantExpression.computeConversion(scope, caseType, switchExpressionType); - do not report boxing/unboxing
-         // conversion
+         // constantExpression.computeConversion(scope, caseType, switchExpressionType); - do not report boxing/unboxing conversion
          return this.constantExpression.constant;
       }
       scope.problemReporter().typeMismatchError(caseType, switchExpressionType, this.constantExpression,
