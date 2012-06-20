@@ -28,6 +28,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
@@ -67,7 +68,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
- *
+ * 
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
    VfsChangedHandler
@@ -215,7 +216,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   statusHandler.requestError(projectId, exception);
                   setBuildInProgress(false);
                   display.stopAnimation();
-                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
+                  if (exception instanceof ServerException && exception.getMessage() != null)
+                  {
+                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
                }
             });
       }

@@ -22,9 +22,9 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
-import org.exoplatform.ide.extension.googleappengine.client.model.Credentials;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.googleappengine.shared.User;
 
 /**
  * The interface for the {@link AutoBean} generator.
@@ -35,16 +35,11 @@ import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
  */
 public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
 {
-   /**
-    * Factory method for generating credentials bean.
-    * 
-    * @return an {@link AutoBean} of type {@link Credentials}
-    */
-   AutoBean<Credentials> credentials();
-
    AutoBean<CronEntry> cronEntry();
 
    AutoBean<Backend> backend();
+   
+   AutoBean<User> user();
 
    AutoBean<ApplicationInfo> applicationInfo();
 }

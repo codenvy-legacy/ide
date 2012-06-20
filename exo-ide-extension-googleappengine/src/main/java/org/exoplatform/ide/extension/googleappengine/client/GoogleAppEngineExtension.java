@@ -78,8 +78,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new CronsHandler();
       new BackendsHandler();
       new AccountsHandler();
-
-      new GoogleAppEnginePaaS();
    }
 
    /**

@@ -28,7 +28,6 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 
-
 public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();

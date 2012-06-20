@@ -28,6 +28,7 @@ import java.security.Principal;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -90,6 +91,7 @@ public class OAuthAuthenticatorService
 
    @GET
    @Path("user")
+   @Produces(MediaType.APPLICATION_JSON)
    public User getUser(@Context SecurityContext security) throws OAuthAuthenticationException
    {
       final Principal principal = security.getUserPrincipal();
