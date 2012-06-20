@@ -154,7 +154,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       if (appEngineSdk.exists())
       {
          LOG.error("**********************************\n"
-            + "* Google appengine SDK not found *\n"
+            + "* Google appengine Python SDK not found *\n"
             + "**********************************");
       }
    }
@@ -392,19 +392,26 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       if (appEngineSdk == null)
       {
-         throw new RuntimeException("Unable run or debug appengine project. Google appengine SDK not found. ");
+         throw new RuntimeException("Unable run appengine project. Google appengine Python SDK not found. ");
       }
       java.io.File root = createTempDirectory(null, "gae-app-");
-      // copy sdk
-      copy(appEngineSdk, new java.io.File(root, "appengine-python-sdk"), null);
-      java.io.File application = new java.io.File(root, "application");
 
+      // copy sdk
+      java.io.File sdk = new java.io.File(root, "appengine-python-sdk");
+      if (!sdk.mkdir())
+      {
+         throw new IOException("Unable create directory " + sdk.getAbsolutePath());
+      }
+      copy(appEngineSdk, sdk, null);
+
+      // copy application
+      java.io.File application = new java.io.File(root, "application");
       if (!application.mkdir())
       {
-         throw new IOException("Unable create temp directory " + application.getAbsolutePath());
+         throw new IOException("Unable create directory " + application.getAbsolutePath());
       }
-      // copy application
       copy(appDir, application, null);
+
       return root;
    }
 

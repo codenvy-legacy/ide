@@ -165,7 +165,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       if (appEngineSdk == null)
       {
          LOG.error("**********************************\n"
-            + "* Google appengine SDK not found *\n"
+            + "* Google appengine Java SDK not found *\n"
             + "**********************************");
       }
    }
@@ -209,10 +209,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private ApplicationInstance doRunApplication(URL url) throws ApplicationRunnerException
    {
+      java.io.File path = null;
       try
       {
+         path = downloadFile(null, "app-", ".war", url);
          final String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = createApplication(target, url, null);
+         CloudFoundryApplication cfApp = createApplication(target, path, null);
          final String name = cfApp.getName();
          final int port = getPort(name, target);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
@@ -241,6 +243,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          throw new ApplicationRunnerException(e.getMessage(), e);
       }
+      finally
+      {
+         if (path != null)
+         {
+            deleteRecursive(path);
+         }
+      }
    }
 
    @Override
@@ -267,10 +276,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private DebugApplicationInstance doDebugApplication(URL url, boolean suspend) throws ApplicationRunnerException
    {
+      java.io.File path = null;
       try
       {
+         path = downloadFile(null, "app-", ".war", url);
          final String target = cloudfoundry.getTarget();
-         CloudFoundryApplication cfApp = createApplication(target, url, suspend ? new DebugMode("suspend") : new DebugMode());
+         CloudFoundryApplication cfApp = createApplication(target, path, suspend ? new DebugMode("suspend") : new DebugMode());
          final String name = cfApp.getName();
          Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
          if (instances.length != 1)
@@ -304,6 +315,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       catch (IOException e)
       {
          throw new ApplicationRunnerException(e.getMessage(), e);
+      }
+      finally
+      {
+         if (path != null)
+         {
+            deleteRecursive(path);
+         }
       }
    }
 
@@ -392,44 +410,32 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       applications.clear();
    }
 
-   private CloudFoundryApplication createApplication(String target, URL url, DebugMode debug)
+   private CloudFoundryApplication createApplication(String target, java.io.File path, DebugMode debug)
       throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
    {
-      java.io.File path = null;
-      try
+      final String framework;
+      final String command;
+      if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
       {
-         path = downloadFile(null, "app-", ".war", url);
-         final String framework;
-         final String command;
-         if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
-         {
-            // Need to do some additional job to be able run google appengine application with SDK.
-            path = prepareAppEngineApplication(path);
-            framework = "standalone";
-            command = "java -ea -cp appengine-java-sdk/lib/appengine-tools-api.jar"
-               + " -javaagent:appengine-java-sdk/lib/agent/appengine-agent.jar"
-               + " $JAVA_OPTS"
-               + " com.google.appengine.tools.development.DevAppServerMain"
-               + " --port=$VCAP_APP_PORT"
-               + " --address=0.0.0.0"
-               + " --disable_update_check"
-               + " application";
-         }
-         else
-         {
-            framework = "spring"; // send 'spring' even fot 'regular' web applications
-            command = null;
-         }
-         return cloudfoundry.createApplication(target, generateAppName(16), framework, null, 1, 256, false, "java",
-            command, debug, null, null, path.toURI().toURL());
+         // Need to do some additional job to be able run google appengine application with SDK.
+         path = prepareAppEngineApplication(path);
+         framework = "standalone";
+         command = "java -ea -cp appengine-java-sdk/lib/appengine-tools-api.jar"
+            + " -javaagent:appengine-java-sdk/lib/agent/appengine-agent.jar"
+            + " $JAVA_OPTS"
+            + " com.google.appengine.tools.development.DevAppServerMain"
+            + " --port=$VCAP_APP_PORT"
+            + " --address=0.0.0.0"
+            + " --disable_update_check"
+            + " application";
       }
-      finally
+      else
       {
-         if (path != null)
-         {
-            deleteRecursive(path);
-         }
+         framework = "spring"; // send 'spring' even fot 'regular' web applications
+         command = null;
       }
+      return cloudfoundry.createApplication(target, generateAppName(16), framework, null, 1, 256, false, "java",
+         command, debug, null, null, path.toURI().toURL());
    }
 
    private enum APPLICATION_TYPE
@@ -454,13 +460,27 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       if (appEngineSdk == null)
       {
-         throw new RuntimeException("Unable run or debug appengine project. Google appengine SDK not found. ");
+         throw new RuntimeException("Unable run or debug appengine project. Google appengine Java SDK not found. ");
       }
       java.io.File root = createTempDirectory(null, "gae-app-");
-      // copy sdk and content of war file in the same directory.
-      copy(appEngineSdk, new java.io.File(root, "appengine-java-sdk"), null);
-      unzip(war, new java.io.File(root, "application"));
-      deleteRecursive(war); // Delete war file. Don't need it any more.
+
+      // copy sdk
+      java.io.File sdk = new java.io.File(root, "appengine-java-sdk");
+      if (!sdk.mkdir())
+      {
+         throw new IOException("Unable create directory " + sdk.getAbsolutePath());
+      }
+      copy(appEngineSdk, sdk, null);
+
+      // unzip content of war file
+      java.io.File application = new java.io.File(root, "application");
+      if (!application.mkdir())
+      {
+         throw new IOException("Unable create directory " + application.getAbsolutePath());
+      }
+      unzip(war, application);
+
+      war.delete(); // Delete war file. Don't need it any more.
       return root;
    }
 
