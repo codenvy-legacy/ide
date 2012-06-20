@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server.oauth;
 
+import org.exoplatform.ide.extension.googleappengine.server.UserImpl;
+import org.exoplatform.ide.extension.googleappengine.shared.User;
+
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 
@@ -32,7 +36,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  * RESTful wrapper for OAuthAuthenticator.
- * 
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -61,7 +65,7 @@ public class OAuthAuthenticatorService
       oauth.callback(uriInfo.getRequestUri().toString());
 
       String logoLocation = uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
-      
+
       return Response
          .ok(
             "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
@@ -84,4 +88,26 @@ public class OAuthAuthenticatorService
          .type(MediaType.TEXT_PLAIN).build();
    }
 
+   @GET
+   @Path("user")
+   public User getUser(@Context SecurityContext security) throws OAuthAuthenticationException
+   {
+      final Principal principal = security.getUserPrincipal();
+      if (principal == null)
+      {
+         throw new OAuthAuthenticationException("User is not logged in. ");
+      }
+      try
+      {
+         if (oauth.getToken(principal.getName()) != null)
+         {
+            return new UserImpl(principal.getName(), true, "oauth2");
+         }
+      }
+      catch (IOException ignored)
+      {
+         // Failed to update an expired token - user is not authenticated.
+      }
+      return new UserImpl(principal.getName(), false, "oauth2");
+   }
 }
