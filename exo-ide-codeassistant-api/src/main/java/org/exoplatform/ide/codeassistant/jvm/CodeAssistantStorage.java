@@ -22,6 +22,7 @@ import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -37,7 +38,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getAnnotations(String prefix, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * Find all classes by prefix.
@@ -48,7 +49,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getClasses(String prefix, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * Find JavaDoc for FQN
@@ -59,7 +60,7 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     *            if Java doc not found
     */
-   String getClassJavaDoc(String fqn) throws CodeAssistantException;
+   String getClassJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * Find all interfaces by prefix.
@@ -70,7 +71,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getInterfaces(String prefix, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * Find JavaDoc for Java Class member FQN
@@ -81,7 +82,7 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     *            if Java doc not found
     */
-   String getMemberJavaDoc(String fqn) throws CodeAssistantException;
+   String getMemberJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * Returns the Class object associated with the class or interface with the
@@ -92,7 +93,7 @@ public interface CodeAssistantStorage
     * @return {@link TypeInfo} or null if Class object not found.
     * @throws CodeAssistantException
     */
-   TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException;
+   TypeInfo getTypeByFqn(String fqn, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * sets of {@link ShortTypeInfo} matched to prefix (means FQN begin on
@@ -107,7 +108,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix, Set<String> dependencys) throws CodeAssistantException;
 
    /**
     * 
@@ -122,7 +123,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException;
+   List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix, Set<String> dependencys) throws CodeAssistantException;
    
    /**
     * 
@@ -136,7 +137,7 @@ public interface CodeAssistantStorage
     * @return {@link List<ShortTypeInfo>}
     * @throws CodeAssistantException
     */
-   List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException;
+   List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix, Set<String> dependencys) throws CodeAssistantException;
    
    /**
     * Return sets of Strings, associated with the package names
@@ -145,5 +146,5 @@ public interface CodeAssistantStorage
     * @return List of strings
     * @throws CodeAssistantException
     */
-   List<String> getPackages(String packagePrefix) throws CodeAssistantException;
+   List<String> getPackages(String packagePrefix, Set<String> dependencys) throws CodeAssistantException;
 }

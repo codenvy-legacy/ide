@@ -74,7 +74,7 @@ public class TypeInfoIndexerTest
    @Test
    public void shouldCallPredefinedSetOfFields() throws Exception
    {
-      indexer.createTypeInfoDocument(typeInfo);
+      indexer.createTypeInfoDocument(typeInfo, "rt");
       // one for fields + one for externalization
       verify(typeInfo, times(2)).getName();
       verify(typeInfo, times(2)).getModifiers();
@@ -94,7 +94,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreShortTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document document = indexer.createTypeInfoDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected, "rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       ShortTypeInfo actual = new ShortTypeInfoExtractor().getValue(reader, 5);
@@ -108,7 +108,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document document = indexer.createTypeInfoDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected, "rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);
@@ -120,7 +120,7 @@ public class TypeInfoIndexerTest
    public void shouldBeAbleToRestoreTypeInfoWithAnnotationDefaultValues() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(Bar.class));
-      Document document = indexer.createTypeInfoDocument(expected);
+      Document document = indexer.createTypeInfoDocument(expected, "rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(document);
 
       TypeInfo actual = new TypeInfoExtractor().getValue(reader, 5);

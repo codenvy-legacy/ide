@@ -65,7 +65,7 @@ public class JavaDocExtractorTest
       final String fqn = "org.exoplatform.ide.codeassistant.test";
       final String doc = "test javadoc";
 
-      Document luceneDocument = new DataIndexer().createJavaDocDocument(fqn, doc);
+      Document luceneDocument = new DataIndexer().createJavaDocDocument(fqn, doc,"rt");
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 

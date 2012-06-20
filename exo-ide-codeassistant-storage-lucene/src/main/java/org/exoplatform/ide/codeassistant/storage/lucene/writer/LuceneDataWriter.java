@@ -53,9 +53,10 @@ public class LuceneDataWriter
     * 
     * @param javaDocs
     *           - Map<fqn, doc>
+    * @param artifact 
     * @throws SaveDataIndexException
     */
-   public void addJavaDocs(Map<String, String> javaDocs) throws SaveDataIndexException
+   public void addJavaDocs(Map<String, String> javaDocs, String artifact) throws SaveDataIndexException
    {
 
       IndexWriter writer = null;
@@ -64,7 +65,7 @@ public class LuceneDataWriter
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
          for (Entry<String, String> javaDoc : javaDocs.entrySet())
          {
-            writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue()));
+            writer.addDocument(indexer.createJavaDocDocument(javaDoc.getKey(), javaDoc.getValue(), artifact));
          }
          writer.commit();
       }
@@ -91,7 +92,7 @@ public class LuceneDataWriter
     * @param typeInfos
     * @throws SaveDataIndexException
     */
-   public void addTypeInfo(List<TypeInfo> typeInfos) throws SaveDataIndexException
+   public void addTypeInfo(List<TypeInfo> typeInfos, String artifact) throws SaveDataIndexException
    {
 
       IndexWriter writer = null;
@@ -100,7 +101,7 @@ public class LuceneDataWriter
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
          for (TypeInfo typeInfo : typeInfos)
          {
-            writer.addDocument(indexer.createTypeInfoDocument(typeInfo));
+            writer.addDocument(indexer.createTypeInfoDocument(typeInfo, artifact));
          }
          
          writer.commit();
@@ -135,9 +136,10 @@ public class LuceneDataWriter
     * </pre>
     * 
     * @param packages
+    * @param artifact 
     * @throws SaveDataIndexException
     */
-   public void addPackages(Set<String> packages) throws SaveDataIndexException
+   public void addPackages(Set<String> packages, String artifact) throws SaveDataIndexException
    {
       IndexWriter writer = null;
       try
@@ -145,7 +147,7 @@ public class LuceneDataWriter
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
          for(String pack : packages)
          {
-            writer.addDocument(indexer.createPackageDocument(pack));
+            writer.addDocument(indexer.createPackageDocument(pack, artifact));
          }
          writer.commit();
       }

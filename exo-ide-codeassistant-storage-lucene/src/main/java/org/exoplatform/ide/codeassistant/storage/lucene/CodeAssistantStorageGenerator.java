@@ -18,12 +18,20 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
+import org.everrest.core.impl.provider.json.ArrayValue;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonUtils;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.container.xml.Deserializer;
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,6 +39,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -76,41 +85,29 @@ public class CodeAssistantStorageGenerator
       storageWriter.writeSourceJarsToIndex(getJarFilesList(sourceArchiveFilesList));
    }
 
-   private List<String> getJarFilesList(String jarFilesList) throws IOException
+   private Artifact[] getJarFilesList(String jarFilesList) throws IOException
    {
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
       InputStream io = contextClassLoader.getResourceAsStream(jarFilesList);
+      JsonParser p = new JsonParser();
+      if (io == null)
+         io = new FileInputStream(new File(jarFilesList));
 
-      Reader reader = null;
-      if (io != null)
-      {
-         reader = new InputStreamReader(io);
-      }
-      else
-      {
-         reader = new FileReader(new File(jarFilesList));
-      }
-      BufferedReader br = new BufferedReader(reader);
       try
       {
-         List<String> list = new ArrayList<String>();
-         String nextLine = null;
-         while ((nextLine = br.readLine()) != null)
-         {
-            nextLine = nextLine.trim();
-            if (!nextLine.isEmpty() && !nextLine.startsWith("#"))
-            {
-               String pathToJar = Deserializer.resolveVariables(nextLine);
-               list.add(pathToJar);
-            }
-         }
-         return list;
+         p.parse(io);
+         return (Artifact[])ObjectBuilder.createArray(Artifact[].class, p.getJsonObject());
 
+      }
+      catch (JsonException e)
+      {
+         e.printStackTrace();
       }
       finally
       {
-         br.close();
+         io.close();
       }
+      return null;
    }
 
    public static void main(String[] args)

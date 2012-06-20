@@ -19,7 +19,7 @@
 package org.exoplatform.ide.extension.java.server.signatures;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
@@ -118,7 +118,7 @@ public class MethodSignature extends SignatureBase
       b.append(" }\n}");
       TypeInfo type = new TypeInfoBean();
       type.setType(JavaType.CLASS.toString());
-      when(storage.getTypeByFqn(anyString())).thenReturn(type);
+      when(storage.getTypeByFqn(anyString(), anySetOf(String.class))).thenReturn(type);
       
       TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
       MethodInfo methodInfo = typeInfo.getMethods().get(0);
@@ -150,7 +150,7 @@ public class MethodSignature extends SignatureBase
       b.append(" }\n}");
       TypeInfo type = new TypeInfoBean();
       type.setType(JavaType.CLASS.toString());
-      when(storage.getTypeByFqn("java.lang.String")).thenReturn(type);
+      when(storage.getTypeByFqn(eq("java.lang.String"), anySetOf(String.class))).thenReturn(type);
       
       TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
       MethodInfo methodInfo = typeInfo.getMethods().get(0);

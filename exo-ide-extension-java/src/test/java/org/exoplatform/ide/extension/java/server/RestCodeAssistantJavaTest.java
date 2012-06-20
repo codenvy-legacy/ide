@@ -144,6 +144,7 @@ public class RestCodeAssistantJavaTest extends JavaDocBase
    }
    
    @Test
+   @Ignore
    public void findPackage() throws Exception
    {
       ContainerResponse cres =
