@@ -10,14 +10,26 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
-/** Extra behavior for statements which are generating subroutines */
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+
+/**
+ * Extra behavior for statements which are generating subroutines
+ */
 public abstract class SubRoutineStatement extends Statement
 {
 
-   public void exitAnyExceptionHandler()
-   {
-   }
+   /**
+    * Generate an invocation of a subroutine (e.g. jsr finally) in current context.
+    * @param currentScope
+    * @param codeStream
+    * @param targetLocation
+    * @param stateIndex
+    * @param secretLocal
+    * @return boolean, <code>true</code> if the generated code will abrupt completion
+    */
+   public abstract boolean generateSubRoutineInvocation(BlockScope currentScope, Object targetLocation, int stateIndex,
+      LocalVariableBinding secretLocal);
 
    public abstract boolean isSubRoutineEscaping();
-
 }

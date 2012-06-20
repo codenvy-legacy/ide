@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contribution for bug 292478 - Report potentially null across variable assignment,
- *                                          Contribution for bug 185682 - Increment/decrement operators mark local variables as read
+ *     											    Contribution for bug 185682 - Increment/decrement operators mark local variables as read
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
@@ -37,6 +37,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
+import org.eclipse.jdt.client.internal.compiler.problem.AbortMethod;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
 public class SingleNameReference extends NameReference implements OperatorIds
@@ -86,9 +87,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
                   // https://bugs.eclipse.org/bugs/show_bug.cgi?id=318682
                   currentScope.resetEnclosingMethodStaticFlag();
                }
-               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
-                                                                              * read - access
-                                                                              */);
+               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*read-access*/);
                break;
             case Binding.LOCAL : // reading a local variable
                // check if assigning a final blank field
@@ -122,9 +121,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
       switch (this.bits & ASTNode.RestrictiveFlagMASK)
       {
          case Binding.FIELD : // assigning to a field
-            manageSyntheticAccessIfNecessary(currentScope, flowInfo, false /*
-                                                                            * write- access
-                                                                            */);
+            manageSyntheticAccessIfNecessary(currentScope, flowInfo, false /*write-access*/);
 
             // check if assigning a final field
             FieldBinding fieldBinding = (FieldBinding)this.binding;
@@ -211,9 +208,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
          case Binding.FIELD : // reading a field
             if (valueRequired || currentScope.compilerOptions().complianceLevel >= ClassFileConstants.JDK1_4)
             {
-               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*
-                                                                              * read - access
-                                                                              */);
+               manageSyntheticAccessIfNecessary(currentScope, flowInfo, true /*read-access*/);
             }
             // check if reading a final blank field
             FieldBinding fieldBinding = (FieldBinding)this.binding;
@@ -308,9 +303,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
    }
 
    /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.client.internal.compiler.lookup.Scope,
-    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding,
-    *      org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#computeConversion(org.eclipse.jdt.client.internal.compiler.lookup.Scope, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding, org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
     */
    public void computeConversion(Scope scope, TypeBinding runtimeTimeType, TypeBinding compileTimeType)
    {
@@ -325,10 +318,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
          // extra cast needed if field type is type variable
          if (originalType.leafComponentType().isTypeVariable())
          {
-            TypeBinding targetType = (!compileTimeType.isBaseType() && runtimeTimeType.isBaseType()) ? compileTimeType // unboxing:
-                                                                                                                       // checkcast
-                                                                                                                       // before
-                                                                                                                       // conversion
+            TypeBinding targetType = (!compileTimeType.isBaseType() && runtimeTimeType.isBaseType()) ? compileTimeType // unboxing: checkcast before conversion
                : runtimeTimeType;
             this.genericCast = originalType.genericCast(scope.boxing(targetType));
             if (this.genericCast instanceof ReferenceBinding)
@@ -347,15 +337,325 @@ public class SingleNameReference extends NameReference implements OperatorIds
       super.computeConversion(scope, runtimeTimeType, compileTimeType);
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+   public void generateAssignment(BlockScope currentScope, Assignment assignment, boolean valueRequired)
+   {
+      // optimizing assignment like: i = i + 1 or i = 1 + i
+      if (assignment.expression.isCompactableOperation())
+      {
+         BinaryExpression operation = (BinaryExpression)assignment.expression;
+         int operator = (operation.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT;
+         SingleNameReference variableReference;
+         if ((operation.left instanceof SingleNameReference)
+            && ((variableReference = (SingleNameReference)operation.left).binding == this.binding))
+         {
+            // i = i + value, then use the variable on the right hand side, since it has the correct implicit conversion
+            variableReference.generateCompoundAssignment(currentScope, this.syntheticAccessors == null ? null
+               : this.syntheticAccessors[SingleNameReference.WRITE], operation.right, operator,
+               operation.implicitConversion, valueRequired);
+            return;
+         }
+         if ((operation.right instanceof SingleNameReference)
+            && ((operator == OperatorIds.PLUS) || (operator == OperatorIds.MULTIPLY)) // only commutative operations
+            && ((variableReference = (SingleNameReference)operation.right).binding == this.binding)
+            && (operation.left.constant != Constant.NotAConstant) // exclude non constant expressions, since could have side-effect
+            && (((operation.left.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4) != TypeIds.T_JavaLangString) // exclude string concatenation which would occur backwards
+            && (((operation.right.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4) != TypeIds.T_JavaLangString))
+         { // exclude string concatenation which would occur backwards
+           // i = value + i, then use the variable on the right hand side, since it has the correct implicit conversion
+            variableReference.generateCompoundAssignment(currentScope, this.syntheticAccessors == null ? null
+               : this.syntheticAccessors[SingleNameReference.WRITE], operation.left, operator,
+               operation.implicitConversion, valueRequired);
+            return;
+         }
+      }
+      switch (this.bits & ASTNode.RestrictiveFlagMASK)
+      {
+         case Binding.FIELD : // assigning to a field
+            FieldBinding codegenBinding = ((FieldBinding)this.binding).original();
+            assignment.expression.generateCode(currentScope, true);
+            fieldStore(currentScope, codegenBinding, this.syntheticAccessors == null ? null
+               : this.syntheticAccessors[SingleNameReference.WRITE], this.actualReceiverType, true /*implicit this*/,
+               valueRequired);
+            // no need for generic cast as value got dupped
+            return;
+         case Binding.LOCAL : // assigning to a local variable
+            LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+            if (localBinding.resolvedPosition != -1)
+            {
+               assignment.expression.generateCode(currentScope, true);
+            }
+            else
+            {
+               if (assignment.expression.constant != Constant.NotAConstant)
+               {
+                  // assigning an unused local to a constant value = no actual assignment is necessary
+               }
+               else
+               {
+                  assignment.expression.generateCode(currentScope, true);
+                  /* Even though the value may not be required, we force it to be produced, and discard it later
+                  on if it was actually not necessary, so as to provide the same behavior as JDK1.2beta3.	*/
+               }
+               return;
+            }
+      }
+   }
+
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      if (this.constant != Constant.NotAConstant)
+      {
+         return;
+      }
+      else
+      {
+         switch (this.bits & ASTNode.RestrictiveFlagMASK)
+         {
+            case Binding.FIELD : // reading a field
+               FieldBinding codegenField = ((FieldBinding)this.binding).original();
+               Constant fieldConstant = codegenField.constant();
+               if (fieldConstant != Constant.NotAConstant)
+               {
+                  return;
+               }
+               if (codegenField.isStatic())
+               {
+                  if (!valueRequired
+                     // if no valueRequired, still need possible side-effects of <clinit> invocation, if field belongs to different class
+                     && ((FieldBinding)this.binding).original().declaringClass == this.actualReceiverType.erasure()
+                     && ((this.implicitConversion & TypeIds.UNBOXING) == 0) && this.genericCast == null)
+                  {
+                     // if no valueRequired, optimize out entire gen
+                     return;
+                  }
+               }
+               else
+               {
+                  if (!valueRequired && (this.implicitConversion & TypeIds.UNBOXING) == 0 && this.genericCast == null)
+                  {
+                     // if no valueRequired, optimize out entire gen
+                     return;
+                  }
+               }
+               break;
+            case Binding.LOCAL : // reading a local
+               LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+               if (localBinding.resolvedPosition == -1)
+               {
+                  if (valueRequired)
+                  {
+                     // restart code gen
+                     localBinding.useFlag = LocalVariableBinding.USED;
+                     throw new AbortMethod(null, null);
+                  }
+                  return;
+               }
+               if (!valueRequired && (this.implicitConversion & TypeIds.UNBOXING) == 0)
+               {
+                  // if no valueRequired, optimize out entire gen
+                  return;
+               }
+               break;
+            default : // type
+               return;
+         }
+      }
+   }
+
+   /*
+    * Regular API for compound assignment, relies on the fact that there is only one reference to the
+    * variable, which carries both synthetic read/write accessors.
+    * The APIs with an extra argument is used whenever there are two references to the same variable which
+    * are optimized in one access: e.g "a = a + 1" optimized into "a++".
+    */
+   public void generateCompoundAssignment(BlockScope currentScope, Expression expression, int operator,
+      int assignmentImplicitConversion, boolean valueRequired)
+   {
+      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=185682
+      switch (this.bits & ASTNode.RestrictiveFlagMASK)
+      {
+         case Binding.LOCAL :
+            LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+            // check if compound assignment is the only usage of this local
+            Reference.reportOnlyUselesslyReadLocal(currentScope, localBinding, valueRequired);
+            break;
+         case Binding.FIELD :
+            // check if compound assignment is the only usage of a private field
+            reportOnlyUselesslyReadPrivateField(currentScope, (FieldBinding)this.binding, valueRequired);
+      }
+      this.generateCompoundAssignment(currentScope, this.syntheticAccessors == null ? null
+         : this.syntheticAccessors[SingleNameReference.WRITE], expression, operator, assignmentImplicitConversion,
+         valueRequired);
+   }
+
+   /*
+    * The APIs with an extra argument is used whenever there are two references to the same variable which
+    * are optimized in one access: e.g "a = a + 1" optimized into "a++".
+    */
+   public void generateCompoundAssignment(BlockScope currentScope, MethodBinding writeAccessor, Expression expression,
+      int operator, int assignmentImplicitConversion, boolean valueRequired)
+   {
+      switch (this.bits & ASTNode.RestrictiveFlagMASK)
+      {
+         case Binding.FIELD : // assigning to a field
+            break;
+         case Binding.LOCAL : // assigning to a local variable (cannot assign to outer local)
+            LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+            // using incr bytecode if possible
+            Constant assignConstant;
+            switch (localBinding.type.id)
+            {
+               case T_JavaLangString :
+                  return;
+               case T_int :
+                  assignConstant = expression.constant;
+                  if (localBinding.resolvedPosition == -1)
+                  {
+                     if (valueRequired)
+                     {
+                        /*
+                         * restart code gen because we either:
+                         * - need the value
+                         * - the constant can have potential side-effect
+                         */
+                        localBinding.useFlag = LocalVariableBinding.USED;
+                        throw new AbortMethod(null, null);
+                     }
+                     else if (assignConstant == Constant.NotAConstant)
+                     {
+                        // we only need to generate the value of the expression's constant if it is not a constant expression
+                        expression.generateCode(currentScope, false);
+                     }
+                     return;
+                  }
+                  if ((assignConstant != Constant.NotAConstant) && (assignConstant.typeID() != TypeIds.T_float) // only for integral types
+                     && (assignConstant.typeID() != TypeIds.T_double))
+                  { // TODO (philippe) is this test needed ?
+                     switch (operator)
+                     {
+                        case PLUS :
+                           int increment = assignConstant.intValue();
+                           if (increment != (short)increment)
+                              break; // not representable as a 16-bits value
+                           return;
+                        case MINUS :
+                           increment = -assignConstant.intValue();
+                           if (increment != (short)increment)
+                              break; // not representable as a 16-bits value
+                           return;
+                     }
+                  }
+                  //$FALL-THROUGH$
+               default :
+                  if (localBinding.resolvedPosition == -1)
+                  {
+                     assignConstant = expression.constant;
+                     if (valueRequired)
+                     {
+                        /*
+                         * restart code gen because we either:
+                         * - need the value
+                         * - the constant can have potential side-effect
+                         */
+                        localBinding.useFlag = LocalVariableBinding.USED;
+                        throw new AbortMethod(null, null);
+                     }
+                     else if (assignConstant == Constant.NotAConstant)
+                     {
+                        // we only need to generate the value of the expression's constant if it is not a constant expression
+                        expression.generateCode(currentScope, false);
+                     }
+                     return;
+                  }
+            }
+      }
+      switch ((this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
+      {
+         case T_JavaLangString :
+         case T_JavaLangObject :
+         case T_undefined :
+            // we enter here if the single name reference is a field of type java.lang.String or if the type of the
+            // operation is java.lang.Object
+            // For example: o = o + ""; // where the compiled type of o is java.lang.Object.
+            // no need for generic cast on previous #getfield since using Object string buffer methods.
+            break;
+         default :
+            // promote the array reference to the suitable operation type
+            // generate the increment value (will by itself  be promoted to the operation value)
+            if (expression != IntLiteral.One)
+            { // prefix operation
+               expression.generateCode(currentScope, true);
+            }
+      }
+      // store the result back into the variable
+      switch (this.bits & ASTNode.RestrictiveFlagMASK)
+      {
+         case Binding.FIELD : // assigning to a field
+            FieldBinding codegenField = ((FieldBinding)this.binding).original();
+            fieldStore(currentScope, codegenField, writeAccessor, this.actualReceiverType, true /* implicit this*/,
+               valueRequired);
+            // no need for generic cast as value got dupped
+            return;
+         case Binding.LOCAL : // assigning to a local variable
+            LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+            if (valueRequired)
+            {
+               switch (localBinding.type.id)
+               {
+                  case TypeIds.T_long :
+                  case TypeIds.T_double :
+                     break;
+                  default :
+                     break;
+               }
+            }
+      }
+   }
+
+   public void generatePostIncrement(BlockScope currentScope, CompoundAssignment postIncrement, boolean valueRequired)
+   {
+      switch (this.bits & ASTNode.RestrictiveFlagMASK)
+      {
+         case Binding.FIELD : // assigning to a field
+            FieldBinding fieldBinding = (FieldBinding)this.binding;
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=185682
+            // check if postIncrement is the only usage of a private field
+            reportOnlyUselesslyReadPrivateField(currentScope, fieldBinding, valueRequired);
+            FieldBinding codegenField = fieldBinding.original();
+
+            fieldStore(currentScope, codegenField, this.syntheticAccessors == null ? null
+               : this.syntheticAccessors[SingleNameReference.WRITE], this.actualReceiverType, true /*implicit this*/,
+               false);
+            // no need for generic cast 
+            return;
+         case Binding.LOCAL : // assigning to a local variable
+            LocalVariableBinding localBinding = (LocalVariableBinding)this.binding;
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=185682
+            // check if postIncrement is the only usage of this local
+            Reference.reportOnlyUselesslyReadLocal(currentScope, localBinding, valueRequired);
+            if (localBinding.resolvedPosition == -1)
+            {
+               if (valueRequired)
+               {
+                  // restart code gen
+                  localBinding.useFlag = LocalVariableBinding.USED;
+                  throw new AbortMethod(null, null);
+               }
+            }
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
    }
 
    /**
-    * Returns the local variable referenced by this node. Can be a direct reference (SingleNameReference) or thru a cast
-    * expression etc...
+    * Returns the local variable referenced by this node. Can be a direct reference (SingleNameReference)
+    * or thru a cast expression etc...
     */
    public LocalVariableBinding localVariableBinding()
    {
@@ -371,7 +671,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
 
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
    {
-      // If inlinable field, forget the access emulation, the code gen will directly target it
+      //If inlinable field, forget the access emulation, the code gen will directly target it
       if (((this.bits & ASTNode.DepthMASK) == 0) || (this.constant != Constant.NotAConstant))
       {
          return;
@@ -401,7 +701,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
       if ((flowInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
          return;
 
-      // If inlinable field, forget the access emulation, the code gen will directly target it
+      //If inlinable field, forget the access emulation, the code gen will directly target it
       if (this.constant != Constant.NotAConstant)
          return;
 
@@ -418,7 +718,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
             this.syntheticAccessors[isReadAccess ? SingleNameReference.READ : SingleNameReference.WRITE] =
                ((SourceTypeBinding)currentScope.enclosingSourceType().enclosingTypeAt(
                   (this.bits & ASTNode.DepthMASK) >> ASTNode.DepthSHIFT)).addSyntheticMethod(codegenField,
-                  isReadAccess, false /* not super access */);
+                  isReadAccess, false /*not super access*/);
             currentScope.problemReporter().needToEmulateFieldAccess(codegenField, this, isReadAccess);
             return;
          }
@@ -443,7 +743,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
       return FlowInfo.NON_NULL; // never get there
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope) */
+   /**
+   * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#postConversionType(Scope)
+   */
    public TypeBinding postConversionType(Scope scope)
    {
       TypeBinding convertedType = this.resolvedType;
@@ -492,7 +794,7 @@ public class SingleNameReference extends NameReference implements OperatorIds
 
    public TypeBinding reportError(BlockScope scope)
    {
-      // =====error cases=======
+      //=====error cases=======
       this.constant = Constant.NotAConstant;
       if (this.binding instanceof ProblemFieldBinding)
       {
@@ -520,15 +822,14 @@ public class SingleNameReference extends NameReference implements OperatorIds
       else
       {
          this.actualReceiverType = scope.enclosingSourceType();
-         this.binding =
-            scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /* resolve */);
+         this.binding = scope.getBinding(this.token, this.bits & ASTNode.RestrictiveFlagMASK, this, true /*resolve*/);
       }
       if (this.binding.isValidBinding())
       {
          switch (this.bits & ASTNode.RestrictiveFlagMASK)
          {
             case Binding.VARIABLE : // =========only variable============
-            case Binding.VARIABLE | Binding.TYPE : // ====both variable and type============
+            case Binding.VARIABLE | Binding.TYPE : //====both variable and type============
                if (this.binding instanceof VariableBinding)
                {
                   VariableBinding variable = (VariableBinding)this.binding;
@@ -574,15 +875,13 @@ public class SingleNameReference extends NameReference implements OperatorIds
                this.bits &= ~ASTNode.RestrictiveFlagMASK; // clear bits
                this.bits |= Binding.TYPE;
                //$FALL-THROUGH$
-            case Binding.TYPE : // ========only type==============
+            case Binding.TYPE : //========only type==============
                this.constant = Constant.NotAConstant;
-               // deprecated test
+               //deprecated test
                TypeBinding type = (TypeBinding)this.binding;
                if (isTypeUseDeprecated(type, scope))
                   scope.problemReporter().deprecatedType(type, this);
-               type = scope.environment().convertToRawType(type, false /*
-                                                                        * do not force conversion of enclosing types
-                                                                        */);
+               type = scope.environment().convertToRawType(type, false /*do not force conversion of enclosing types*/);
                return this.resolvedType = type;
          }
       }

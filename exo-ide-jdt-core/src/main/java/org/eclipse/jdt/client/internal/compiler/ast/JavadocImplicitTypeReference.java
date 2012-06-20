@@ -32,18 +32,16 @@ public class JavadocImplicitTypeReference extends TypeReference
       this.sourceEnd = pos;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#copyDims(int)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#copyDims(int)
     */
    public TypeReference copyDims(int dim)
    {
       return null;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeBinding(org .eclipse.jdt.internal.compiler.lookup.Scope)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
     */
    protected TypeBinding getTypeBinding(Scope scope)
    {
@@ -56,9 +54,8 @@ public class JavadocImplicitTypeReference extends TypeReference
       return this.token;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.TypeReference#getTypeName()
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.TypeReference#getTypeName()
     */
    public char[][] getTypeName()
    {
@@ -76,7 +73,8 @@ public class JavadocImplicitTypeReference extends TypeReference
    }
 
    /*
-    * Resolves type on a Block, Class or CompilationUnit scope. We need to modify resoling behavior to avoid raw type creation.
+    * Resolves type on a Block, Class or CompilationUnit scope.
+    * We need to modify resoling behavior to avoid raw type creation.
     */
    protected TypeBinding internalResolveType(Scope scope)
    {
@@ -135,9 +133,7 @@ public class JavadocImplicitTypeReference extends TypeReference
       // raw convert all enclosing types when dealing with Javadoc references
       if (type.isGenericType() || type.isParameterizedType())
       {
-         type = scope.environment().convertToRawType(type, true /*
-                                                                 * force the conversion of enclosing types
-                                                                 */);
+         type = scope.environment().convertToRawType(type, true /*force the conversion of enclosing types*/);
       }
 
       if (hasError)

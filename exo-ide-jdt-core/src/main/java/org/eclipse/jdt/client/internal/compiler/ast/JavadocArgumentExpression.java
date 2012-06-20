@@ -34,7 +34,9 @@ public class JavadocArgumentExpression extends Expression
       this.bits |= InsideJavadoc;
    }
 
-   /* Resolves type on a Block or Class scope. */
+   /*
+    * Resolves type on a Block or Class scope.
+    */
    private TypeBinding internalResolveType(Scope scope)
    {
       this.constant = Constant.NotAConstant;
@@ -91,10 +93,9 @@ public class JavadocArgumentExpression extends Expression
                scope.problemReporter().javadocDeprecatedType(this.resolvedType, typeRef,
                   scope.getDeclarationModifiers());
             }
-            return this.resolvedType = scope.environment().convertToRawType(this.resolvedType, true /*
-                                                                                                     * force the conversion of
-                                                                                                     * enclosing types
-                                                                                                     */);
+            return this.resolvedType =
+               scope.environment()
+                  .convertToRawType(this.resolvedType, true /*force the conversion of enclosing types*/);
          }
       }
       return null;
@@ -134,10 +135,9 @@ public class JavadocArgumentExpression extends Expression
       return internalResolveType(scope);
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
    {

@@ -14,6 +14,7 @@ import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
+import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
@@ -51,7 +52,27 @@ public class Initializer extends FieldDeclaration
       return flowInfo;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
+   /**
+    * Code generation for a non-static initializer:
+    *    standard block code gen
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      if (this.block != null)
+         this.block.generateCode(currentScope);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
+    */
    public int getKind()
    {
       return INITIALIZER;
@@ -66,7 +87,7 @@ public class Initializer extends FieldDeclaration
    public void parseStatements(Parser parser, TypeDeclaration typeDeclaration, CompilationUnitDeclaration unit)
    {
 
-      // fill up the method body with statement
+      //fill up the method body with statement
       parser.parse(this, typeDeclaration, unit);
    }
 

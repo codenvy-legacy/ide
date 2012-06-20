@@ -38,7 +38,9 @@ public class MethodDeclaration extends AbstractMethodDeclaration
 
    public TypeParameter[] typeParameters;
 
-   /** MethodDeclaration constructor comment. */
+   /**
+    * MethodDeclaration constructor comment.
+    */
    public MethodDeclaration(CompilationResult compilationResult)
    {
       super(compilationResult);
@@ -171,7 +173,7 @@ public class MethodDeclaration extends AbstractMethodDeclaration
 
    public void parseStatements(Parser parser, CompilationUnitDeclaration unit)
    {
-      // fill up the method body with statement
+      //fill up the method body with statement
       parser.parse(this, unit);
    }
 
@@ -230,8 +232,8 @@ public class MethodDeclaration extends AbstractMethodDeclaration
             // no static method is considered overriding
             if ((bindingModifiers & (ClassFileConstants.AccStatic | ExtraCompilerModifiers.AccOverriding)) == ExtraCompilerModifiers.AccOverriding)
                break checkOverride;
-            // in 1.5, strictly for overriding superclass method
-            // in 1.6 and above, also tolerate implementing interface method
+            //	in 1.5, strictly for overriding superclass method
+            //	in 1.6 and above, also tolerate implementing interface method
             if (complianceLevel >= ClassFileConstants.JDK1_6
                && ((bindingModifiers & (ClassFileConstants.AccStatic | ExtraCompilerModifiers.AccImplementing)) == ExtraCompilerModifiers.AccImplementing))
                break checkOverride;
@@ -240,10 +242,8 @@ public class MethodDeclaration extends AbstractMethodDeclaration
          }
          else
          {
-            // In case of a concrete class method, we have to check if it overrides(in 1.5 and above) OR implements a method(1.6
-            // and above).
-            // Also check if the method has a signature that is override-equivalent to that of any public method declared in
-            // Object.
+            //In case of  a concrete class method, we have to check if it overrides(in 1.5 and above) OR implements a method(1.6 and above).
+            //Also check if the method has a signature that is override-equivalent to that of any public method declared in Object.
             if (!this.binding.declaringClass.isInterface())
             {
                if ((bindingModifiers & (ClassFileConstants.AccStatic | ExtraCompilerModifiers.AccOverriding)) == ExtraCompilerModifiers.AccOverriding)
@@ -263,11 +263,9 @@ public class MethodDeclaration extends AbstractMethodDeclaration
                }
             }
             else
-            { // For 1.6 and above only
-              // In case of a interface class method, we have to check if it overrides a method (isImplementing returns true in
-              // case it overrides)
-              // Also check if the method has a signature that is override-equivalent to that of any public method declared in
-              // Object.
+            { //For 1.6 and above only
+               //In case of a interface class method, we have to check if it overrides a method (isImplementing returns true in case it overrides)
+               //Also check if the method has a signature that is override-equivalent to that of any public method declared in Object.
                if (complianceLevel >= ClassFileConstants.JDK1_6
                   && compilerOptions.reportMissingOverrideAnnotationForInterfaceMethodImplementation
                   && (((bindingModifiers & (ClassFileConstants.AccStatic | ExtraCompilerModifiers.AccOverriding)) == ExtraCompilerModifiers.AccOverriding) || this.binding

@@ -47,14 +47,23 @@ public class QualifiedThisReference extends ThisReference
       return flowInfo;
    }
 
+   /**
+    * Code generation for QualifiedThisReference
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+   }
+
    public TypeBinding resolveType(BlockScope scope)
    {
 
       this.constant = Constant.NotAConstant;
       // X.this is not a param/raw type as denoting enclosing instance
-      TypeBinding type = this.qualification.resolveType(scope, true /*
-                                                                     * check bounds
-                                                                     */);
+      TypeBinding type = this.qualification.resolveType(scope, true /* check bounds*/);
       if (type == null || !type.isValidBinding())
          return null;
       // X.this is not a param/raw type as denoting enclosing instance

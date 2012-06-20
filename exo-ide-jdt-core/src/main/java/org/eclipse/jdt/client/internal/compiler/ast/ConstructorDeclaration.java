@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
+import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
@@ -22,7 +23,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
 import org.eclipse.jdt.client.internal.compiler.lookup.FieldBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
@@ -48,9 +51,7 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
    }
 
    /**
-    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration#analyseCode(org.eclipse.jdt.client.internal.compiler.lookup.ClassScope,
-    *      org.eclipse.jdt.client.internal.compiler.flow.InitializationFlowContext,
-    *      org.eclipse.jdt.client.internal.compiler.flow.FlowInfo)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractMethodDeclaration#analyseCode(org.eclipse.jdt.client.internal.compiler.lookup.ClassScope, org.eclipse.jdt.client.internal.compiler.flow.InitializationFlowContext, org.eclipse.jdt.client.internal.compiler.flow.FlowInfo)
     * @deprecated use instead {@link #analyseCode(ClassScope, InitializationFlowContext, FlowInfo, int)}
     */
    public void analyseCode(ClassScope classScope, InitializationFlowContext initializerFlowContext, FlowInfo flowInfo)
@@ -59,8 +60,8 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
    }
 
    /**
-    * The flowInfo corresponds to non-static field initialization infos. It may be unreachable (155423), but still the explicit
-    * constructor call must be analysed as reachable, since it will be generated in the end.
+    * The flowInfo corresponds to non-static field initialization infos. It may be unreachable (155423), but still the explicit constructor call must be
+    * analysed as reachable, since it will be generated in the end.
     */
    public void analyseCode(ClassScope classScope, InitializationFlowContext initializerFlowContext, FlowInfo flowInfo,
       int initialReachMode)
@@ -116,7 +117,7 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
       }
 
       // check constructor recursion, once all constructor got resolved
-      if (isRecursive(null /* lazy initialized visited list */))
+      if (isRecursive(null /*lazy initialized visited list*/))
       {
          this.scope.problemReporter().recursiveConstructorInvocation(this.constructorCall);
       }
@@ -228,6 +229,135 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
       }
    }
 
+   /**
+    * Bytecode generation for a constructor
+    *
+    * @param classScope org.eclipse.jdt.client.internal.compiler.lookup.ClassScope
+    */
+   public void generateCode(ClassScope classScope)
+   {
+      int problemResetPC = 0;
+      if (this.ignoreFurtherInvestigation)
+      {
+         if (this.binding == null)
+            return; // Handle methods with invalid signature or duplicates
+         int problemsLength;
+         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getProblems();
+         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
+         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
+         return;
+      }
+      boolean restart = false;
+      boolean abort = false;
+      do
+      {
+         try
+         {
+            internalGenerateCode(classScope);
+            restart = false;
+         }
+         catch (AbortMethod e)
+         {
+         }
+      }
+      while (restart);
+      if (abort)
+      {
+         int problemsLength;
+         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getAllProblems();
+         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
+         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
+      }
+   }
+
+   private void internalGenerateCode(ClassScope classScope)
+   {
+      if ((!this.binding.isNative()) && (!this.binding.isAbstract()))
+      {
+
+         TypeDeclaration declaringType = classScope.referenceContext;
+
+         // initialize local positions - including initializer scope.
+         ReferenceBinding declaringClass = this.binding.declaringClass;
+
+         int enumOffset = declaringClass.isEnum() ? 2 : 0; // String name, int ordinal
+         int argSlotSize = 1 + enumOffset; // this==aload0
+
+         if (declaringClass.isNestedType())
+         {
+            this.scope.extraSyntheticArguments = declaringClass.syntheticOuterLocalVariables();
+            this.scope.computeLocalVariablePositions(// consider synthetic arguments if any
+               declaringClass.getEnclosingInstancesSlotSize() + 1 + enumOffset);
+            argSlotSize += declaringClass.getEnclosingInstancesSlotSize();
+            argSlotSize += declaringClass.getOuterLocalVariablesSlotSize();
+         }
+         else
+         {
+            this.scope.computeLocalVariablePositions(1 + enumOffset);
+         }
+
+         if (this.arguments != null)
+         {
+            for (int i = 0, max = this.arguments.length; i < max; i++)
+            {
+               // arguments initialization for local variable debug attributes
+               LocalVariableBinding argBinding = this.arguments[i].binding;
+               argBinding.recordInitializationStartPC(0);
+               switch (argBinding.type.id)
+               {
+                  case TypeIds.T_long :
+                  case TypeIds.T_double :
+                     argSlotSize += 2;
+                     break;
+                  default :
+                     argSlotSize++;
+                     break;
+               }
+            }
+         }
+
+         MethodScope initializerScope = declaringType.initializerScope;
+         initializerScope.computeLocalVariablePositions(argSlotSize); // offset by the argument size (since not linked to method scope)
+
+         boolean needFieldInitializations =
+            this.constructorCall == null || this.constructorCall.accessMode != ExplicitConstructorCall.This;
+
+         if (this.constructorCall != null)
+         {
+            this.constructorCall.generateCode(this.scope);
+         }
+         // generate field initialization - only if not invoking another constructor call of the same class
+         if (needFieldInitializations)
+         {
+            // generate user field initialization
+            if (declaringType.fields != null)
+            {
+               for (int i = 0, max = declaringType.fields.length; i < max; i++)
+               {
+                  FieldDeclaration fieldDecl;
+                  if (!(fieldDecl = declaringType.fields[i]).isStatic())
+                  {
+                     fieldDecl.generateCode(initializerScope);
+                  }
+               }
+            }
+         }
+         // generate statements
+         if (this.statements != null)
+         {
+            for (int i = 0, max = this.statements.length; i < max; i++)
+            {
+               this.statements[i].generateCode(this.scope);
+            }
+         }
+         // if a problem got reported during code gen, then trigger problem method creation
+         if (this.ignoreFurtherInvestigation)
+         {
+            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
+         }
+      }
+   }
+
    public boolean isConstructor()
    {
       return true;
@@ -244,8 +374,9 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
    }
 
    /*
-    * Returns true if the constructor is directly involved in a cycle. Given most constructors aren't, we only allocate the
-    * visited list lazily.
+    * Returns true if the constructor is directly involved in a cycle.
+    * Given most constructors aren't, we only allocate the visited list
+    * lazily.
     */
    public boolean isRecursive(ArrayList visited)
    {
@@ -277,7 +408,7 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
 
    public void parseStatements(Parser parser, CompilationUnitDeclaration unit)
    {
-      // fill up the constructor body with its statements
+      //fill up the constructor body with its statements
       if (((this.bits & ASTNode.IsDefaultConstructor) != 0) && this.constructorCall == null)
       {
          this.constructorCall = SuperReference.implicitSuperConstructorCall();
@@ -340,7 +471,8 @@ public class ConstructorDeclaration extends AbstractMethodDeclaration
    }
 
    /*
-    * Type checking for constructor, just another method, except for special check for recursive constructor invocations.
+    * Type checking for constructor, just another method, except for special check
+    * for recursive constructor invocations.
     */
    public void resolveStatements()
    {

@@ -8,9 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann <stephan@cs.tu-berlin.de> - Contributions for 
- *                       bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
- *                       bug 292478 - Report potentially null across variable assignment
- *                       bug 335093 - [compiler][null] minimal hook for future null annotation support
+ *     						bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
+ *     						bug 292478 - Report potentially null across variable assignment
+ *     						bug 335093 - [compiler][null] minimal hook for future null annotation support
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
@@ -117,18 +117,50 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    public void checkModifiers()
    {
 
-      // only potential valid modifier is <<final>>
+      //only potential valid modifier is <<final>>
       if (((this.modifiers & ExtraCompilerModifiers.AccJustFlag) & ~ClassFileConstants.AccFinal) != 0)
-         // AccModifierProblem -> other (non-visibility problem)
-         // AccAlternateModifierProblem -> duplicate modifier
-         // AccModifierProblem | AccAlternateModifierProblem -> visibility problem"
+         //AccModifierProblem -> other (non-visibility problem)
+         //AccAlternateModifierProblem -> duplicate modifier
+         //AccModifierProblem | AccAlternateModifierProblem -> visibility problem"
 
          this.modifiers =
             (this.modifiers & ~ExtraCompilerModifiers.AccAlternateModifierProblem)
                | ExtraCompilerModifiers.AccModifierProblem;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind() */
+   /**
+    * Code generation for a local declaration:
+    *	i.e.&nbsp;normal assignment to a local variable + unused variable handling
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+
+      // something to initialize?
+      generateInit :
+      {
+         if (this.initialization == null)
+            break generateInit;
+         // forget initializing unused or final locals set to constant value (final ones are inlined)
+         if (this.binding.resolvedPosition < 0)
+         {
+            if (this.initialization.constant != Constant.NotAConstant)
+               break generateInit;
+            // if binding unused generate then discard the value
+            this.initialization.generateCode(currentScope, false);
+            break generateInit;
+         }
+         this.initialization.generateCode(currentScope, true);
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.AbstractVariableDeclaration#getKind()
+    */
    public int getKind()
    {
       return LOCAL_VARIABLE;
@@ -138,9 +170,7 @@ public class LocalDeclaration extends AbstractVariableDeclaration
    {
 
       // create a binding and add it to the scope
-      TypeBinding variableType = this.type.resolveType(scope, true /*
-                                                                    * check bounds
-                                                                    */);
+      TypeBinding variableType = this.type.resolveType(scope, true /* check bounds*/);
 
       checkModifiers();
       if (variableType != null)
@@ -157,9 +187,8 @@ public class LocalDeclaration extends AbstractVariableDeclaration
          }
       }
 
-      Binding existingVariable = scope.getBinding(this.name, Binding.VARIABLE, this, false /*
-                                                                                            * do not resolve hidden field
-                                                                                            */);
+      Binding existingVariable =
+         scope.getBinding(this.name, Binding.VARIABLE, this, false /*do not resolve hidden field*/);
       if (existingVariable != null && existingVariable.isValidBinding())
       {
          if (existingVariable instanceof LocalVariableBinding && this.hiddenVariableDepth == 0)

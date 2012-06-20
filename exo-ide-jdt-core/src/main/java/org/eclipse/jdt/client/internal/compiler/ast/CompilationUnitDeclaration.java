@@ -40,10 +40,12 @@ import java.util.Comparator;
 public class CompilationUnitDeclaration extends ASTNode implements ProblemSeverities, ReferenceContext
 {
 
-   private static final Comparator<StringLiteral> STRING_LITERAL_COMPARATOR = new Comparator<StringLiteral>()
+   private static final Comparator STRING_LITERAL_COMPARATOR = new Comparator()
    {
-      public int compare(StringLiteral literal1, StringLiteral literal2)
+      public int compare(Object o1, Object o2)
       {
+         StringLiteral literal1 = (StringLiteral)o1;
+         StringLiteral literal2 = (StringLiteral)o2;
          return literal1.sourceStart - literal2.sourceStart;
       }
    };
@@ -97,12 +99,14 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
    {
       this.problemReporter = problemReporter;
       this.compilationResult = compilationResult;
-      // by definition of a compilation unit....
+      //by definition of a compilation unit....
       this.sourceStart = 0;
       this.sourceEnd = sourceLength - 1;
    }
 
-   /* We cause the compilation task to abort to a given extent. */
+   /*
+    *	We cause the compilation task to abort to a given extent.
+    */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
       switch (abortLevel)
@@ -116,7 +120,9 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       }
    }
 
-   /* Dispatch code analysis AND request saturation of inner emulation */
+   /*
+    * Dispatch code analysis AND request saturation of inner emulation
+    */
    public void analyseCode()
    {
       if (this.ignoreFurtherInvestigation)
@@ -141,7 +147,8 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
    }
 
    /*
-    * When unit result is about to be accepted, removed back pointers to compiler structures.
+    * When unit result is about to be accepted, removed back pointers
+    * to compiler structures.
     */
    public void cleanUp()
    {
@@ -213,22 +220,24 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       this.types[0] = declaration; // Assumes the first slot is meant for this type
    }
 
-   //   /*
-   //    * Finds the matching type amoung this compilation unit types. Returns null if no type with this name is found. The type name
-   //    * is a compound name e.g. if we're looking for X.A.B then a type name would be {X, A, B}
-   //    */
-   //   public TypeDeclaration declarationOfType(char[][] typeName)
-   //   {
-   //      for (int i = 0; i < this.types.length; i++)
-   //      {
-   //         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
-   //         if (typeDecl != null)
-   //         {
-   //            return typeDecl;
-   //         }
-   //      }
-   //      return null;
-   //   }
+   /*
+    * Finds the matching type amoung this compilation unit types.
+    * Returns null if no type with this name is found.
+    * The type name is a compound name
+    * e.g. if we're looking for X.A.B then a type name would be {X, A, B}
+    */
+   public TypeDeclaration declarationOfType(char[][] typeName)
+   {
+      for (int i = 0; i < this.types.length; i++)
+      {
+         TypeDeclaration typeDecl = this.types[i].declarationOfType(typeName);
+         if (typeDecl != null)
+         {
+            return typeDecl;
+         }
+      }
+      return null;
+   }
 
    public void finalizeProblems()
    {
@@ -412,6 +421,38 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       }
    }
 
+   /**
+    * Bytecode generation
+    */
+   public void generateCode()
+   {
+      if (this.ignoreFurtherInvestigation)
+      {
+         if (this.types != null)
+         {
+            for (int i = 0, count = this.types.length; i < count; i++)
+            {
+               this.types[i].ignoreFurtherInvestigation = true;
+               // propagate the flag to request problem type creation
+               this.types[i].generateCode(this.scope);
+            }
+         }
+         return;
+      }
+      try
+      {
+         if (this.types != null)
+         {
+            for (int i = 0, count = this.types.length; i < count; i++)
+               this.types[i].generateCode(this.scope);
+         }
+      }
+      catch (AbortCompilationUnit e)
+      {
+         // ignore
+      }
+   }
+
    public char[] getFileName()
    {
       return this.compilationResult.getFileName();
@@ -483,7 +524,9 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
       return output;
    }
 
-   /* Force inner local types to update their innerclass emulation */
+   /*
+    * Force inner local types to update their innerclass emulation
+    */
    public void propagateInnerEmulationForAllLocalTypes()
    {
       this.isPropagatingInnerClassEmulation = true;
@@ -570,7 +613,8 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
    }
 
    /*
-    * Keep track of all local types, so as to update their innerclass emulation later on.
+    * Keep track of all local types, so as to update their innerclass
+    * emulation later on.
     */
    public void record(LocalTypeBinding localType)
    {
@@ -603,9 +647,10 @@ public class CompilationUnitDeclaration extends ASTNode implements ProblemSeveri
          }
          syntheticTypeDeclaration.resolve(this.scope);
          /*
-          * resolve javadoc package if any, skip this step if we don't have a valid scope due to an earlier error (bug 252555) we
-          * do it now as the javadoc in the fake type won't be resolved. The peculiar usage of MethodScope to resolve the package
-          * level javadoc is because the CU level resolve method is a NOP to mimic Javadoc's behavior and can't be used as such.
+          * resolve javadoc package if any, skip this step if we don't have a valid scope due to an earlier error (bug 252555)
+          * we do it now as the javadoc in the fake type won't be resolved. The peculiar usage of MethodScope to resolve the
+          * package level javadoc is because the CU level resolve method	is a NOP to mimic Javadoc's behavior and can't be used
+          * as such.
           */
          if (this.javadoc != null && syntheticTypeDeclaration.staticInitializerScope != null)
          {

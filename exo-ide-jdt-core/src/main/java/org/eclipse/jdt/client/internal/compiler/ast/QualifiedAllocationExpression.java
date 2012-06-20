@@ -33,13 +33,15 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 /**
- * Variation on allocation, where can optionally be specified any of: - leading enclosing instance - trailing anonymous type -
- * generic type arguments for generic constructor invocation
+ * Variation on allocation, where can optionally be specified any of:
+ * - leading enclosing instance
+ * - trailing anonymous type
+ * - generic type arguments for generic constructor invocation
  */
 public class QualifiedAllocationExpression extends AllocationExpression
 {
 
-   // qualification may be on both side
+   //qualification may be on both side
    public Expression enclosingInstance;
 
    public TypeDeclaration anonymousType;
@@ -110,6 +112,20 @@ public class QualifiedAllocationExpression extends AllocationExpression
       return this.enclosingInstance;
    }
 
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      if (!valueRequired)
+         currentScope.problemReporter().unusedObjectAllocation(this);
+      // generate the arguments for constructor
+      generateArguments(this.binding, this.arguments, currentScope);
+      // handling innerclass instance allocation - outer local arguments
+
+      if (this.anonymousType != null)
+      {
+         this.anonymousType.generateCode(currentScope);
+      }
+   }
+
    public boolean isSuperAccess()
    {
 
@@ -117,9 +133,11 @@ public class QualifiedAllocationExpression extends AllocationExpression
       return this.anonymousType != null;
    }
 
-   /*
-    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation. Dependency
-    * mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet know their
+   /* Inner emulation consists in either recording a dependency
+    * link only, or performing one level of propagation.
+    *
+    * Dependency mechanism is used whenever dealing with source target
+    * types, since by the time we reach them, we might not yet know their
     * exact need.
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
@@ -229,7 +247,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
          }
          else
          {
-            receiverType = this.type.resolveType(scope, true /* check bounds */);
+            receiverType = this.type.resolveType(scope, true /* check bounds*/);
             checkParameterizedAllocation :
             {
                if (receiverType == null || !receiverType.isValidBinding())
@@ -274,9 +292,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
-                                                                                       * check bounds
-                                                                                       */)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
             {
                argHasError = true;
             }
@@ -327,10 +343,9 @@ public class QualifiedAllocationExpression extends AllocationExpression
       // limit of fault-tolerance
       if (hasError)
       {
-         /*
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case. No
-          * meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do not
-          * return the partially resolved type.
+         /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
+            No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
+            not return the partially resolved type.
           */
          if (isDiamond)
          {
@@ -346,8 +361,7 @@ public class QualifiedAllocationExpression extends AllocationExpression
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
                {
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
-                                                                                                  // null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
                }
                this.binding = scope.findMethod(referenceReceiver, TypeConstants.INIT, pseudoArgs, this);
                if (this.binding != null && !this.binding.isValidBinding())

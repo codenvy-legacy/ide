@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Stephan Herrmann - Contribution for Bug 342671 - ClassCastException: org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding cannot be cast to org.eclipse.jdt.internal.compiler.lookup.ArrayBinding
+ *     Stephan Herrmann - Contribution for Bug 342671 - ClassCastException: org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding cannot be cast to org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
@@ -27,7 +27,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 
 /**
- * Syntactic representation of a reference to a generic type. Note that it might also have a dimension.
+ * Syntactic representation of a reference to a generic type.
+ * Note that it might also have a dimension.
  */
 public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeReference
 {
@@ -57,7 +58,7 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
 
    public void checkBounds(ReferenceBinding type, Scope scope, int index)
    {
-      // recurse on enclosing type if any, and assuming explictly part of the reference (index>0)
+      // recurse on enclosing type if any, and assuming explictly  part of the reference (index>0)
       if (index > 0 && type.enclosingType() != null)
       {
          checkBounds(type.enclosingType(), scope, index - 1);
@@ -79,7 +80,9 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
       return new ParameterizedQualifiedTypeReference(this.tokens, this.typeArguments, dim, this.sourcePositions);
    }
 
-   /** @return char[][] */
+   /**
+    * @return char[][]
+    */
    public char[][] getParameterizedTypeName()
    {
       int length = this.tokens.length;
@@ -123,17 +126,17 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
       return qParamName;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.ArrayQualifiedTypeReference#
-    * getTypeBinding(org.eclipse.jdt.internal.compiler.lookup .Scope)
-    */
+   /* (non-Javadoc)
+     * @see org.eclipse.jdt.client.internal.compiler.ast.ArrayQualifiedTypeReference#getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.Scope)
+     */
    protected TypeBinding getTypeBinding(Scope scope)
    {
       return null; // not supported here - combined with resolveType(...)
    }
 
-   /* No need to check for reference to raw type per construction */
+   /*
+    * No need to check for reference to raw type per construction
+    */
    private TypeBinding internalResolveType(Scope scope, boolean checkBounds)
    {
       // handle the error here
@@ -239,10 +242,8 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
             {
                qualifyingType =
                   currentType.isStatic() ? (ReferenceBinding)scope.environment()
-                     .convertToRawType(qualifyingType, false /*
-                                                              * do not force conversion of enclosing types
-                                                              */) : scope.environment().convertToParameterizedType(
-                     qualifyingType);
+                     .convertToRawType(qualifyingType, false /*do not force conversion of enclosing types*/) : scope
+                     .environment().convertToParameterizedType(qualifyingType);
             }
          }
          else
@@ -259,8 +260,7 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
             ReferenceBinding enclosingType = currentType.enclosingType();
             if (enclosingType != null && enclosingType.erasure() != qualifyingType.erasure())
             { // qualifier != declaring/enclosing
-               qualifyingType = enclosingType; // inherited member type, leave it associated with its enclosing rather than
-                                               // subtype
+               qualifyingType = enclosingType; // inherited member type, leave it associated with its enclosing rather than subtype
             }
          }
 
@@ -339,8 +339,7 @@ public class ParameterizedQualifiedTypeReference extends ArrayQualifiedTypeRefer
             }
             ParameterizedTypeBinding parameterizedType =
                scope.environment().createParameterizedType(currentOriginal, argTypes, qualifyingType);
-            // check argument type compatibility for non <> cases - <> case needs no bounds check, we will scream foul if needed
-            // during inference.
+            // check argument type compatibility for non <> cases - <> case needs no bounds check, we will scream foul if needed during inference.
             if (!isDiamond)
             {
                if (checkBounds) // otherwise will do it in Scope.connectTypeVariables() or generic method resolution

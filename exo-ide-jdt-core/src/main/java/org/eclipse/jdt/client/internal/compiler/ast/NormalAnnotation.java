@@ -15,7 +15,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair;
 
-/** Normal annotation node */
+/**
+ * Normal annotation node
+ */
 public class NormalAnnotation extends Annotation
 {
 
@@ -40,7 +42,9 @@ public class NormalAnnotation extends Annotation
       return pairs;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs() */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs()
+    */
    public MemberValuePair[] memberValuePairs()
    {
       return this.memberValuePairs == null ? NoValuePairs : this.memberValuePairs;

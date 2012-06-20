@@ -12,6 +12,7 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.BooleanConstant;
@@ -49,6 +50,81 @@ public class UnaryExpression extends OperatorExpression
    {
 
       return this.optimizedBooleanConstant == null ? this.constant : this.optimizedBooleanConstant;
+   }
+
+   /**
+    * Code generation for an unary operation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+
+      BranchLabel falseLabel, endifLabel;
+      if (this.constant != Constant.NotAConstant)
+      {
+         return;
+      }
+      switch ((this.bits & OperatorMASK) >> OperatorSHIFT)
+      {
+         case NOT :
+            switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4)
+            /* runtime type */{
+               case T_boolean :
+                  // ! <boolean>
+                  // Generate code for the condition
+                  this.expression.generateOptimizedBoolean(currentScope, null, new BranchLabel(), valueRequired);
+                  break;
+            }
+            break;
+         case TWIDDLE :
+            switch ((this.expression.implicitConversion & IMPLICIT_CONVERSION_MASK) >> 4 /* runtime */)
+            {
+               case T_int :
+                  // ~int
+                  this.expression.generateCode(currentScope, valueRequired);
+                  break;
+               case T_long :
+                  this.expression.generateCode(currentScope, valueRequired);
+            }
+            break;
+         case MINUS :
+            // - <num>
+            if (this.constant != Constant.NotAConstant)
+            {
+            }
+            else
+            {
+               this.expression.generateCode(currentScope, valueRequired);
+            }
+            break;
+         case PLUS :
+            this.expression.generateCode(currentScope, valueRequired);
+      }
+   }
+
+   /**
+    * Boolean operator code generation
+    *	Optimized operations are: &&, ||, <, <=, >, >=, &, |, ^
+    */
+   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
+
+      if ((this.constant != Constant.NotAConstant) && (this.constant.typeID() == T_boolean))
+      {
+         super.generateOptimizedBoolean(currentScope, trueLabel, falseLabel, valueRequired);
+         return;
+      }
+      if (((this.bits & OperatorMASK) >> OperatorSHIFT) == NOT)
+      {
+         this.expression.generateOptimizedBoolean(currentScope, falseLabel, trueLabel, valueRequired);
+      }
+      else
+      {
+         super.generateOptimizedBoolean(currentScope, trueLabel, falseLabel, valueRequired);
+      }
    }
 
    public StringBuffer printExpressionNoParenthesis(int indent, StringBuffer output)
@@ -97,12 +173,12 @@ public class UnaryExpression extends OperatorExpression
             break;
          default :
             tableId = MINUS;
-      } // + and - cases
+      } //+ and - cases
 
       // the code is an int
-      // (cast) left Op (cast) rigth --> result
-      // 0000 0000 0000 0000 0000
-      // <<16 <<12 <<8 <<4 <<0
+      // (cast)  left   Op (cast)  rigth --> result
+      //  0000   0000       0000   0000      0000
+      //  <<16   <<12       <<8    <<4       <<0
       int operatorSignature = OperatorSignatures[tableId][(expressionTypeID << 4) + expressionTypeID];
       this.expression.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 16) & 0x0000F),
          expressionType);
@@ -130,7 +206,7 @@ public class UnaryExpression extends OperatorExpression
          case T_long :
             this.resolvedType = TypeBinding.LONG;
             break;
-         default : // error........
+         default : //error........
             this.constant = Constant.NotAConstant;
             if (expressionTypeID != T_undefined)
                scope.problemReporter().invalidOperator(this, expressionType);

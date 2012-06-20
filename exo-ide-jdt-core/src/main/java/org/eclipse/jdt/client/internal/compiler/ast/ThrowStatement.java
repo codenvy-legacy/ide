@@ -41,6 +41,19 @@ public class ThrowStatement extends Statement
       return FlowInfo.DEAD_END;
    }
 
+   /**
+    * Throw code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+         return;
+      this.exception.generateCode(currentScope, true);
+   }
+
    public StringBuffer printStatement(int indent, StringBuffer output)
    {
       printIndent(indent, output).append("throw "); //$NON-NLS-1$
