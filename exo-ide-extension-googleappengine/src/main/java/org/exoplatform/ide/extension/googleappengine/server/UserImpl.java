@@ -72,4 +72,14 @@ public class UserImpl implements User
    {
       this.type = type;
    }
+
+   @Override
+   public String toString()
+   {
+      return "UserImpl{" +
+         "name='" + name + '\'' +
+         ", authenticated=" + authenticated +
+         ", type='" + type + '\'' +
+         '}';
+   }
 }
