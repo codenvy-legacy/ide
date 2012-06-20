@@ -52,9 +52,13 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -89,6 +93,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
+   
+   private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
+
+   private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
+
 
    /**
     * Identifier of project we want to send for build.
@@ -174,7 +183,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       statusHandler = new BuildRequestStatusHandler(project.getPath());
 
-      doBuild();
+      buildApplicationIfNeed();
    }
 
    /**
@@ -225,6 +234,105 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
       }
    }
+   
+   
+   private void buildApplicationIfNeed()
+   {
+      try
+      {
+         //Going to check is need built project.
+         //Need compare to properties lastBuildTime and lastModificationTime  
+         //After check is artifact available for downloading   
+         VirtualFileSystem.getInstance().getItemById(project.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  StringProperty downloadUrlProp = (StringProperty)result.getItem().getProperty(ARTIFACT_DOWNLOAD_URL);
+                  if (downloadUrlProp != null && !downloadUrlProp.getValue().isEmpty())
+                  {
+                     if (isProjectChangedAfterLastBuild(result))
+                     {
+                        checkDownloadUrl(downloadUrlProp.getValue().get(0));
+                     }
+                     else
+                     {
+                        doBuild();
+                     }
+                  }
+                  else
+                  {
+                     doBuild();
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  exception.printStackTrace();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   private boolean isProjectChangedAfterLastBuild(ItemWrapper item)
+   {
+      long buildTime = 0;
+      long lastUpdateTime = 0;
+      StringProperty buildTimeProperty = (StringProperty)item.getItem().getProperty(LAST_SUCCESS_BUILD);
+      if (buildTimeProperty != null && !buildTimeProperty.getValue().isEmpty())
+      {
+         buildTime = Long.parseLong(buildTimeProperty.getValue().get(0));
+      }
+      StringProperty lastUpdateTimeProp = (StringProperty)item.getItem().getProperty("vfs:lastUpdateTime");
+      if (lastUpdateTimeProp == null)
+         return false;
+      lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
+      return buildTime > lastUpdateTime;
+   }
+   
+   private void checkDownloadUrl(final String url)
+   {
+      try
+      {
+         BuilderClientService.getInstance().checkArtifactUrl(url, new AsyncRequestCallback<Object>()
+         {
+
+            @Override
+            protected void onSuccess(Object result)
+            {
+//               startApplication(url);
+               BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
+               buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
+               buildStatus.setDownloadUrl(url);
+               StringBuilder message = new StringBuilder("\r\nYou can download the build result <a href=\"");
+               message.append(buildStatus.getDownloadUrl());
+               message.append("\">here</a>");
+               showBuildMessage(message.toString());
+               IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new BuildProjectEvent());
+            }
+
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
+   
 
    private void setBuildInProgress(boolean buildInProgress)
    {
@@ -352,8 +460,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          statusHandler.requestFinished(projectId);
 
+         writeBuildInfo(buildStatus);
+         startWatchingProjectChanges();
          message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">here</a>");
+         
+         
       }
       else if (buildStatus.getStatus() == Status.FAILED)
       {
@@ -374,6 +486,61 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       display.stopAnimation();
 
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
+   }
+   
+   
+   private void writeBuildInfo(BuildStatus buildStatus)
+   {
+      project.getProperties().add(new StringProperty(LAST_SUCCESS_BUILD, buildStatus.getTime()));
+      project.getProperties().add(new StringProperty(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<Object>()
+         {
+
+            @Override
+            protected void onSuccess(Object result)
+            {
+               //Nothing todo
+            }
+
+            @Override
+            protected void onFailure(Throwable ignore)
+            {
+               //Ignore this exception
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+
+   }
+   
+   private void startWatchingProjectChanges()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
+         {
+
+            @Override
+            protected void onSuccess(Object result)
+            {
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
