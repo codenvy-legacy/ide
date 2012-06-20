@@ -253,6 +253,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          AutoBeanUnmarshaller<ApplicationInfo> unmarshaller =
             new AutoBeanUnmarshaller<ApplicationInfo>(applicationInfo);
 
+         IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION
+            .deployApplicationMessage(currentProject.getName()), Type.INFO));
          GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl,
             new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller)
             {
@@ -381,7 +383,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                   {
                      paasCallback.onValidate(false);
                   }
-                  //TODO check response
+                  // TODO check response
                }
             });
       }

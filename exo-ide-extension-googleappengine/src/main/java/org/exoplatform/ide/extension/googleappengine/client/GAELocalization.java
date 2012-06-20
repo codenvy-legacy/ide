@@ -110,6 +110,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("deploy.application.success")
    String deployApplicationSuccess(String project, String link);
 
+   @Key("deploy.application.message")
+   String deployApplicationMessage(String projectName);
+   
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);
 
