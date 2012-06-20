@@ -22,7 +22,6 @@ import org.exoplatform.ide.extension.samples.server.Github;
 import org.exoplatform.ide.extension.samples.server.GithubException;
 import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -81,7 +80,7 @@ public class GithubService
    @Path("list")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public RepositoryExt[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+   public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
       VirtualFileSystemException
    {
       return github.listRepositories();

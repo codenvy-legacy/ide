@@ -43,6 +43,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.PathParam;
+
 /**
  * Class provide communication with server side of VirtualFileSystem via REST.
  * 
@@ -446,5 +448,13 @@ public class VirtualFileSystem
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(item.getProperties()).toString())
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).loader(loader).send(callback);
    }
+   
+   
+   public void startWatchUpdates(String projectId, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = workspaceURL + "/watch/start/" + projectId;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);   
+   }
+   
 
 }

@@ -16,53 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.shared;
+package org.exoplatform.ide.extension.googleappengine.shared;
 
 /**
- * Status of build.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BuildStatus
+public interface User
 {
-   public enum Status
-   {
-      IN_PROGRESS("In progress"), //
-      SUCCESSFUL("Successful"), //
-      FAILED("Failed"); //
+   String getName();
 
-      private final String value;
+   void setName(String name);
 
-      private Status(String value)
-      {
-         this.value = value;
-      }
+   boolean isAuthenticated();
 
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
+   void setAuthenticated(boolean authenticated);
 
-   Status getStatus();
+   String getAuthenticationType();
 
-   int getExitCode();
-
-   String getError();
-
-   String getDownloadUrl();
-
-   void setStatus(Status status);
-
-   void setExitCode(int exitCode);
-
-   void setError(String error);
-
-   void setDownloadUrl(String downloadUrl);
-
-   String getTime();
-
-   void setTime(String time);
+   void setAuthenticationType(String type);
 }

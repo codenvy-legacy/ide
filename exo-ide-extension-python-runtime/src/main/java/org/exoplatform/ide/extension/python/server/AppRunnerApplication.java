@@ -16,53 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.shared;
+package org.exoplatform.ide.extension.python.server;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
- * Status of build.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BuildStatus
+public class AppRunnerApplication extends Application
 {
-   public enum Status
+   private final Set<Class<?>> classes;
+
+   public AppRunnerApplication()
    {
-      IN_PROGRESS("In progress"), //
-      SUCCESSFUL("Successful"), //
-      FAILED("Failed"); //
-
-      private final String value;
-
-      private Status(String value)
-      {
-         this.value = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return value;
-      }
+      classes = new HashSet<Class<?>>(1);
+      classes.add(ApplicationRunnerService.class);
    }
 
-   Status getStatus();
-
-   int getExitCode();
-
-   String getError();
-
-   String getDownloadUrl();
-
-   void setStatus(Status status);
-
-   void setExitCode(int exitCode);
-
-   void setError(String error);
-
-   void setDownloadUrl(String downloadUrl);
-
-   String getTime();
-
-   void setTime(String time);
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      return classes;
+   }
 }

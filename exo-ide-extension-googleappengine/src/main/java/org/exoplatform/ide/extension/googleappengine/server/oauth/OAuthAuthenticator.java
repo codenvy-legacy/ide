@@ -80,6 +80,8 @@ public class OAuthAuthenticator
     * @param userId
     *    user
     * @return oauth token or <code>null</code>
+    * @throws IOException
+    *    if i/o error occurs when try to refresh expired oauth token
     */
    public final String getToken(String userId) throws IOException
    {

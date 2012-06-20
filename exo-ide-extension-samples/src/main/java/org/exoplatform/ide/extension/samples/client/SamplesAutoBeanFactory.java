@@ -23,7 +23,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
-import org.exoplatform.ide.extension.samples.shared.RepositoryExt;
 
 /**
  * The interface for the AutoBean generator.
@@ -39,14 +38,7 @@ public interface SamplesAutoBeanFactory extends AutoBeanFactory
     * 
     * @return an {@link AutoBean} of type {@link Repository}
     */
-   AutoBean<Repository> repository();
-   
-   /**
-    * A factory method for a log entry bean.
-    * 
-    * @return an {@link AutoBean} of type {@link RepositoryExt}
-    */
-   AutoBean<RepositoryExt> repositoryExt();
+   AutoBean<Repository> repositoryExt();
 
    /**
     * Factory method for GitHub credentials bean.

@@ -16,53 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.shared;
+package org.exoplatform.ide.extension.python.shared;
 
 /**
- * Status of build.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BuildStatus
+public interface ApplicationInstance
 {
-   public enum Status
-   {
-      IN_PROGRESS("In progress"), //
-      SUCCESSFUL("Successful"), //
-      FAILED("Failed"); //
+   String getName();
 
-      private final String value;
+   void setName(String name);
 
-      private Status(String value)
-      {
-         this.value = value;
-      }
+   String getHost();
 
-      @Override
-      public String toString()
-      {
-         return value;
-      }
-   }
+   void setHost(String host);
 
-   Status getStatus();
+   int getPort();
 
-   int getExitCode();
+   void setPort(int port);
 
-   String getError();
+   String getStopURL();
 
-   String getDownloadUrl();
+   void setStopURL(String url);
 
-   void setStatus(Status status);
+   /**
+    * Lifetime of application instance in minutes. After this time instance may be stopped.
+    * Method may return -1 if lifetime of instance is unknown.
+    *
+    * @return application instance lifetime in minutes
+    */
+   int getLifetime();
 
-   void setExitCode(int exitCode);
-
-   void setError(String error);
-
-   void setDownloadUrl(String downloadUrl);
-
-   String getTime();
-
-   void setTime(String time);
+   void setLifetime(int lifetime);
 }

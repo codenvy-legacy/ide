@@ -34,7 +34,7 @@ public class Project extends Folder
    public Project(String id, String name, String mimeType, String path, String parentId, long creationDate,
       List<Property> properties, Map<String, Link> links, String projectType)
    {
-      super(id, name, mimeType, path, parentId, creationDate, properties, links);
+      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
       this.projectType = projectType;
    }
 

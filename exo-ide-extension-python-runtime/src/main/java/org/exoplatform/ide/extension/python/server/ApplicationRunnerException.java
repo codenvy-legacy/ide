@@ -16,53 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.shared;
+package org.exoplatform.ide.extension.python.server;
 
 /**
- * Status of build.
+ * Thrown by {@link ApplicationRunner}.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface BuildStatus
+@SuppressWarnings("serial")
+public class ApplicationRunnerException extends Exception
 {
-   public enum Status
+   public ApplicationRunnerException(String message)
    {
-      IN_PROGRESS("In progress"), //
-      SUCCESSFUL("Successful"), //
-      FAILED("Failed"); //
-
-      private final String value;
-
-      private Status(String value)
-      {
-         this.value = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return value;
-      }
+      super(message);
    }
 
-   Status getStatus();
-
-   int getExitCode();
-
-   String getError();
-
-   String getDownloadUrl();
-
-   void setStatus(Status status);
-
-   void setExitCode(int exitCode);
-
-   void setError(String error);
-
-   void setDownloadUrl(String downloadUrl);
-
-   String getTime();
-
-   void setTime(String time);
+   public ApplicationRunnerException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

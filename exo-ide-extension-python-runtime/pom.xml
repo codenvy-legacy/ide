@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.exoplatform.ide</groupId>
+		<artifactId>exo-ide-parent</artifactId>
+		<version>1.2.0-M8-SNAPSHOT</version>
+	</parent>
+	<artifactId>exo-ide-extension-python-runtime</artifactId>
+	<name>eXo IDE :: Extension :: Python :: Runtime</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-commons</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-vfs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-extension-cloudfoundry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+</project>
