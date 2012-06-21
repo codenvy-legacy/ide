@@ -108,16 +108,16 @@ public class ChildrenUnmarshaller implements Unmarshallable<List<Item>>
          if (object.get(MIME_TYPE).isString() != null)
             mimeType = object.get(MIME_TYPE).isString().stringValue();
 
-         if (type == ItemType.FOLDER)
+         if (type == ItemType.PROJECT)
          {
             if (Project.PROJECT_MIME_TYPE.equals(mimeType))
             {
                items.add(new ProjectModel(object));
             }
-            else
-            {
-               items.add(new FolderModel(object));
-            }
+         }
+         else if(type == ItemType.FOLDER)
+         {
+             items.add(new FolderModel(object));
          }
          else
             items.add(new FileModel(object));

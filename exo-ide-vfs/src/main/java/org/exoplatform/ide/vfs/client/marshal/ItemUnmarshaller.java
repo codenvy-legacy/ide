@@ -75,16 +75,16 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
          if (object.get(MIME_TYPE).isString() != null)
             mimeType = object.get(MIME_TYPE).isString().stringValue();
 
-         if (type == ItemType.FOLDER)
+         if (type == ItemType.PROJECT)
          {
-            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
-            {
+//            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
+//            {
                wrapper.setItem(new ProjectModel(object));
-            }
-            else
-            {
+//            }
+         }
+         else if (type == ItemType.FOLDER)
+         {
                wrapper.setItem(new FolderModel(object));
-            }
          }
          else
          {

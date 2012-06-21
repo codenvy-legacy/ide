@@ -172,10 +172,10 @@ public class DebuggerClientService
    }
    
    
-   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
-   {
-      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
-      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
-   }
+//   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
+//   {
+//      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
+//      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
+//   }
 
 }

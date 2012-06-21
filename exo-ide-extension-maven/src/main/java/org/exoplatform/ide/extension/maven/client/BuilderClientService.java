@@ -18,8 +18,12 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
+import com.google.gwt.http.client.RequestBuilder;
+
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
@@ -90,4 +94,6 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   
+   public abstract void  checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
 }
