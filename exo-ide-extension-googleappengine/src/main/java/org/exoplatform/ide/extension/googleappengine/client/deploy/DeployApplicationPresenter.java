@@ -93,6 +93,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     */
    private String applicationUrl;
 
+   private ProjectModel builtProject;
+
    public DeployApplicationPresenter()
    {
       IDE.getInstance().addPaas(
@@ -182,9 +184,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel)
     */
    @Override
-   public void deploy(ProjectModel project)
+   public void deploy(final ProjectModel project)
    {
-      currentProject = project;
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -192,7 +193,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          {
             if (useExisted)
             {
-               setApplicationId(applicationId);
+               setApplicationId(applicationId, project);
             }
             else
             {
@@ -222,18 +223,18 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    /**
     * Before deploying check application type. If it is Java - build it before deploy.
     */
-   private void beforeDeploy()
+   private void beforeDeploy(ProjectModel project)
    {
       if (isAppEngineProject())
       {
          applicationUrl = null;
-         if (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()))
+         if (ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
          {
-            buildProject();
+            buildProject(project);
          }
          else
          {
-            deployApplication();
+            deployApplication(project);
          }
       }
       else
@@ -245,7 +246,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    /**
     * Perform deploying application to Google App Engine.
     */
-   public void deployApplication()
+   public void deployApplication(final ProjectModel project)
    {
       try
       {
@@ -253,9 +254,9 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          AutoBeanUnmarshaller<ApplicationInfo> unmarshaller =
             new AutoBeanUnmarshaller<ApplicationInfo>(applicationInfo);
 
-         IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION
-            .deployApplicationMessage(currentProject.getName()), Type.INFO));
-         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), currentProject, applicationUrl,
+         IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationMessage(project
+            .getName()), Type.INFO));
+         GoogleAppEngineClientService.getInstance().update(currentVfs.getId(), project, applicationUrl,
             new GoogleAppEngineAsyncRequestCallback<ApplicationInfo>(unmarshaller)
             {
 
@@ -266,7 +267,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                   link.append(result.getWebURL()).append("' target='_blank'>").append(result.getWebURL())
                      .append("</a>");
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationSuccess(
-                     currentProject.getName(), link.toString()), Type.INFO));
+                     project.getName(), link.toString()), Type.INFO));
                }
             });
       }
@@ -279,11 +280,12 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    /**
     * Build Java project before deploy.
     */
-   private void buildProject()
+   private void buildProject(ProjectModel project)
    {
       this.applicationUrl = null;
+      this.builtProject = project;
       IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildProjectEvent());
+      IDE.fireEvent(new BuildProjectEvent(project));
    }
 
    /**
@@ -296,7 +298,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       if (event.getBuildStatus().getDownloadUrl() != null)
       {
          applicationUrl = event.getBuildStatus().getDownloadUrl();
-         deployApplication();
+         deployApplication(builtProject);
       }
    }
 
@@ -305,18 +307,18 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     * 
     * @param appId application's id
     */
-   private void setApplicationId(String appId)
+   private void setApplicationId(String appId, final ProjectModel project)
    {
       try
       {
-         GoogleAppEngineClientService.getInstance().setApplicationId(currentVfs.getId(), currentProject.getId(), appId,
+         GoogleAppEngineClientService.getInstance().setApplicationId(currentVfs.getId(), project.getId(), appId,
             new GoogleAppEngineAsyncRequestCallback<Object>()
             {
 
                @Override
                protected void onSuccess(Object result)
                {
-                  beforeDeploy();
+                  beforeDeploy(project);
                }
             });
       }
@@ -368,7 +370,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                   }
                   else
                   {
-                     beforeDeploy();
+                     beforeDeploy(currentProject);
                   }
                }
 
