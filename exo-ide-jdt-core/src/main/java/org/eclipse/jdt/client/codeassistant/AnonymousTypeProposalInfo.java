@@ -39,7 +39,7 @@ public final class AnonymousTypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      return docContext + Signature.toString(new String(fProposal.getDeclarationKey())) + "&projectid=" + projectId
+      return docContext + Signature.toString(new String(Signature.getTypeErasure(fProposal.getDeclarationKey()))) + "&projectid=" + projectId
                + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
    }
 }

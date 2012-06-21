@@ -18,29 +18,17 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import org.everrest.core.impl.provider.json.ArrayValue;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonUtils;
-import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.container.xml.Deserializer;
-import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * <p>

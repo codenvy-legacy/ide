@@ -35,6 +35,8 @@ public class BuildStatusBean implements BuildStatus
    private String error;
 
    private String downloadUrl;
+   
+   private String time;
 
    /**
     * Default constructor
@@ -49,13 +51,14 @@ public class BuildStatusBean implements BuildStatus
     * @param error
     * @param downloadUrl
     */
-   public BuildStatusBean(Status status, int exitCode, String error, String downloadUrl)
+   public BuildStatusBean(Status status, int exitCode, String error, String downloadUrl, String time)
    {
       super();
       this.status = status;
       this.exitCode = exitCode;
       this.error = error;
       this.downloadUrl = downloadUrl;
+      this.time = time;
    }
 
    /**
@@ -128,6 +131,24 @@ public class BuildStatusBean implements BuildStatus
    public void setDownloadUrl(String downloadUrl)
    {
       this.downloadUrl = downloadUrl;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.shared.BuildStatus#getTime()
+    */
+   @Override
+   public String getTime()
+   {
+      return time;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.maven.shared.BuildStatus#setTime(java.lang.String)
+    */
+   @Override
+   public void setTime(String time)
+   {
+      this.time = time;
    }
 
 }
