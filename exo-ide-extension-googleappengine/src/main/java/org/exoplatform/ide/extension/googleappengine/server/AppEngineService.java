@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -255,47 +256,50 @@ public class AppEngineService
          getUserId(/*security*/));
    }
 
-   private String getUserId(/*SecurityContext security*/)
+   private String getUserId()
    {
-/*
-      Principal principal = security.getUserPrincipal();
-      if (principal != null)
-      {
-         return principal.getName();
-      }
-      return null;
-*/
       return ConversationState.getCurrent().getIdentity().getUserId();
    }
-
+   
+   
    @GET
    @Path("change-appid/{vfsid}/{projectid}")
    public Response changeApplicationId(@PathParam("vfsid") String vfsId, //
-      @PathParam("projectid") String projectId, //
-      @QueryParam("app_id") String appId, @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException
+                                       @PathParam("projectid") String projectId, //
+                                       @QueryParam("app_id") String appId,//
+                                       @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
       String path =
          item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
       appId = StringUtils.removeStart(appId, "s~");
-      if (changeAppEngXml(vfs, path, appId) || changeAppEngYaml(vfs, path, appId))
-      {
-         String logoLocation =
-            uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
-         return Response
-            .ok(
-               "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
-                  + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
-                  + "<p>Your application has been created.<br>Close this tab and use the Deploy button in Cloud IDE.</p>"
-                  + "<img src=\"" + logoLocation + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
-      }
-      else
-      {
-         return Response.serverError().entity("Unable to modify App Engine application settings.")
-            .type(MediaType.TEXT_PLAIN).build();
-      }
 
+      try
+      {
+         changeAppEngXml(vfs, path, appId);
+      }
+      catch (ItemNotFoundException e)
+      {
+         try
+         {
+            changeAppEngYaml(vfs, path, appId);
+         }
+         catch (Exception e1)
+         {
+            return Response.serverError().entity("Unable to modify App Engine application settings.")
+               .type(MediaType.TEXT_PLAIN).build();
+         }
+      }
+      URL uri =
+         new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(), uriInfo.getBaseUri().getPort(),
+            "/IDE/images/logo/exo_logo.png");
+      return Response
+         .ok(
+            "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
+               + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
+               + "<p>Your application has been created.<br>Close this tab and use the Deploy button in Cloud IDE.</p>"
+               + "<img src=\"" + uri.toString() + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
    }
 
    /**
@@ -304,28 +308,16 @@ public class AppEngineService
     * @param vfs virtual file system
     * @param path path to project's root
     * @param appId application's id
-    * @return {@link Boolean} <code>true</code> if successfully changed the appengine-web.xml
     */
-   private boolean changeAppEngXml(VirtualFileSystem vfs, String path, String appId)
+   private void changeAppEngXml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
+      IOException
    {
       String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
-      try
-      {
-         File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
-         String content = IOUtils.toString(vfs.getContent(fileAppEngXml.getId()).getStream());
-         String newContent = PATTERN_XML.matcher(content).replaceFirst("<application>" + appId + "</application>");
-         vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
-            new ByteArrayInputStream(newContent.getBytes()), null);
-         return true;
-      }
-      catch (VirtualFileSystemException e)
-      {
-         return false;
-      }
-      catch (IOException e)
-      {
-         return false;
-      }
+      File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
+      String content = IOUtils.toString(vfs.getContent(fileAppEngXml.getId()).getStream());
+      String newContent = PATTERN_XML.matcher(content).replaceFirst("<application>" + appId + "</application>");
+      vfs.updateContent(fileAppEngXml.getId(), MediaType.valueOf(fileAppEngXml.getMimeType()),
+         new ByteArrayInputStream(newContent.getBytes()), null);
    }
 
    /**
@@ -334,27 +326,16 @@ public class AppEngineService
     * @param vfs virtual file system
     * @param path path to project's root
     * @param appId application's id
-    * @return {@link Boolean} <code>true</code> if successfully changed the app.yaml
     */
-   private boolean changeAppEngYaml(VirtualFileSystem vfs, String path, String appId)
+   private void changeAppEngYaml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
+      IOException
    {
       String path2appengineYaml = path + "/app.yaml";
-      try
-      {
-         File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, PropertyFilter.NONE_FILTER);
-         String content = IOUtils.toString(vfs.getContent(fileAppEngYaml.getId()).getStream());
-         String newContent = PATTERN_YAML.matcher(content).replaceFirst("application: " + appId);
-         vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),
-            new ByteArrayInputStream(newContent.getBytes()), null);
-         return true;
-      }
-      catch (VirtualFileSystemException e)
-      {
-         return false;
-      }
-      catch (IOException e)
-      {
-         return false;
-      }
+      File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, PropertyFilter.NONE_FILTER);
+      String content = IOUtils.toString(vfs.getContent(fileAppEngYaml.getId()).getStream());
+      String newContent = PATTERN_YAML.matcher(content).replaceFirst("application: " + appId);
+      vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),
+         new ByteArrayInputStream(newContent.getBytes()), null);
    }
+
 }
