@@ -95,6 +95,12 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    String createApplicationCannotDeploy();
 
    /* Deploy application */
+   @Key("deploy.application.use.existed.id.field")
+   String deployApplicationUseExistedIdField();
+
+   @Key("deploy.application.empty.id.message")
+   String deployApplicationEmptyIdMessage();
+
    @Key("deploy.application.control.title")
    String deployApplicationControlTitle();
 
@@ -104,6 +110,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    @Key("deploy.application.success")
    String deployApplicationSuccess(String project, String link);
 
+   @Key("deploy.application.message")
+   String deployApplicationMessage(String projectName);
+   
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);
 

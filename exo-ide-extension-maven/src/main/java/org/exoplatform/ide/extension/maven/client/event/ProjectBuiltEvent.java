@@ -47,7 +47,6 @@ public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
     */
    public ProjectBuiltEvent(BuildStatus status)
    {
-      super();
       this.status = status;
    }
 

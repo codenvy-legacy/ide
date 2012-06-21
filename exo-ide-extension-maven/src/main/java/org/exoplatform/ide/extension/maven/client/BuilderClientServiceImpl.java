@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.maven.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -140,5 +141,12 @@ public class BuilderClientServiceImpl extends BuilderClientService
 
       AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+   
+   
+   public  void  checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;
+      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
    }
 }
