@@ -2417,8 +2417,12 @@ public class Cloudfoundry
 
    static CloudfoundryException fault(HttpURLConnection http) throws IOException
    {
-      final String contentType = http.getContentType();
       final int responseCode = http.getResponseCode();
+      if (responseCode == 504)
+      {
+         return new CloudfoundryException(500, -1, "Currently the server is overloaded, please try again later", "text/plain");
+      }
+      final String contentType = http.getContentType();
       final int length = http.getContentLength();
       String msg = null;
       int exitCode = -1;
