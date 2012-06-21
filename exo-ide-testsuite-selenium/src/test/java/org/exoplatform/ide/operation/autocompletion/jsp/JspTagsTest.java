@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
@@ -83,6 +84,7 @@ public class JspTagsTest extends BaseTest
       IDE.GOTOLINE.goToLine(10);
 
       IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForDocPanelOpened();
 
