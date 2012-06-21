@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.python.server;
 
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
@@ -41,7 +42,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
@@ -63,34 +64,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    public static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
-
-   //
-   private static final Random RANDOM = new Random();
-   private static final char[] CHARS = new char[36];
-
-   static
-   {
-      int i = 0;
-      for (int c = 48; c <= 57; c++)
-      {
-         CHARS[i++] = (char)c;
-      }
-      for (int c = 97; c <= 122; c++)
-      {
-         CHARS[i++] = (char)c;
-      }
-   }
-
-   private static String generateAppName(int length)
-   {
-      StringBuilder b = new StringBuilder(length + 4);
-      b.append("app-");
-      for (int i = 0; i < length; i++)
-      {
-         b.append(CHARS[RANDOM.nextInt(CHARS.length)]);
-      }
-      return b.toString();
-   }
 
    private final int applicationLifetime;
    private final long applicationLifetimeMillis;
@@ -361,7 +334,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             framework = null; // lets Cloudfoundry client determine the type of application.
             command = null;
          }
-         return cloudfoundry.createApplication(target, generateAppName(16), framework, null, 1, 128, false, "python2",
+         return cloudfoundry.createApplication(target, generate("app-", 16), framework, null, 1, 128, false, "python2",
             command, null, null, null, appDir.toURI().toURL());
       }
       finally
