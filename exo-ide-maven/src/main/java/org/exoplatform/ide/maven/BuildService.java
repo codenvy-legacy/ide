@@ -26,7 +26,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -55,8 +54,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
-import static org.exoplatform.ide.maven.BuildHelper.delete;
-import static org.exoplatform.ide.maven.BuildHelper.makeBuilderFilesFilter;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 
 /**
  * Build manager.
@@ -287,7 +288,6 @@ public class BuildService
     */
    public MavenBuildTask dependenciesCopy(InputStream data, String classifier) throws IOException
    {
-      //mdep.failOnMissingClassifierArtifact
       Properties properties = null;
       if (!(classifier == null || classifier.isEmpty()))
       {
@@ -305,8 +305,8 @@ public class BuildService
 
    private File makeProject(InputStream data) throws IOException
    {
-      File projectDirectory = BuildHelper.makeProjectDirectory(repository);
-      BuildHelper.unzip(data, projectDirectory);
+      File projectDirectory = createTempDirectory(repository, "build-");
+      unzip(data, projectDirectory);
       return projectDirectory;
    }
 
@@ -433,14 +433,25 @@ public class BuildService
 
          // Remove all build results.
          // Not need to keep any artifacts of logs since they are inaccessible after stopping BuildService.
-         for (File f : repository.listFiles(makeBuilderFilesFilter()))
+         for (File f : repository.listFiles(BUILD_FILES_FILTER))
          {
-            delete(f);
+            deleteRecursive(f);
          }
       }
    }
 
    /* ====================================================== */
+
+   private static final FilenameFilter BUILD_FILES_FILTER = new BuildFilesFilter();
+
+   private static class BuildFilesFilter implements FilenameFilter
+   {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+         return name.startsWith("build-");
+      }
+   }
 
    private static final ResultGetter WAR_FILE_GETTER = new WarFileGetter();
 
@@ -467,7 +478,6 @@ public class BuildService
 
    /* ====================================================== */
 
-   //   private static final Pattern DEPENDENCY_FORMAT = Pattern.compile("^(\\s*)(.+):(.+):(.+):(.+):(.+)$");
    private static final Pattern DEPENDENCY_LINE_SPLITTER = Pattern.compile(":");
 
    private static final ResultGetter DEPENDENCIES_LIST_GETTER = new DependenciesListGetter();
@@ -593,7 +603,7 @@ public class BuildService
          if (dependencies.exists() && dependencies.isDirectory())
          {
             File zip = new File(target, "dependencies.zip");
-            BuildHelper.zip(dependencies, zip);
+            zipDir(dependencies.getAbsolutePath(), dependencies, zip, null);
             return new Result(zip, "application/zip", zip.getName(), 0);
          }
          return null;
@@ -611,7 +621,7 @@ public class BuildService
          File f;
          while ((f = cleanerQueue.poll()) != null)
          {
-            if (!delete(f))
+            if (!deleteRecursive(f))
             {
                failToDelete.add(f);
             }
