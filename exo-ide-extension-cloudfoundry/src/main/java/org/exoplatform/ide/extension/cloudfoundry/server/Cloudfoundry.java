@@ -2453,6 +2453,10 @@ public class Cloudfoundry
                {
                   exitCode = exitCodeJson.getIntValue();
                }
+               if (exitCode == 601)
+               {
+                  msg = "Not enough resources to create new application. Max number of applications reached. ";
+               }
                return new CloudfoundryException(responseCode, exitCode, msg, "text/plain");
             }
             catch (JsonException ignored)

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.extension.python.client.run;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
@@ -27,28 +27,37 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.extension.python.client.PythonExtensionClientBundle;
+import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
+import org.exoplatform.ide.extension.python.client.run.event.StopApplicationEvent;
 
-public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler
+/**
+ * Control for stopping Python application.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jun 20, 2012 2:58:43 PM anya $
+ * 
+ */
+public class StopApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
+   ProjectOpenedHandler, ApplicationStartedHandler, ApplicationStoppedHandler
 {
-   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
+   public static final String ID = "Run/Stop Python Application";
 
-   private static final String TITLE = "Run Application";
+   private static final String TITLE = PythonRuntimeExtension.PYTHON_LOCALIZATION.stopApplicationControlTitle();
 
-   private static final String PROMPT = "Run Application";
+   private static final String PROMPT = PythonRuntimeExtension.PYTHON_LOCALIZATION.stopApplicationControlPrompt();
 
-   public RunAppControl()
+   public StopApplicationControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.runApp(), DebuggerClientBundle.INSTANCE.runAppDisabled());
-      setEvent(new RunAppEvent());
+      setImages(PythonExtensionClientBundle.INSTANCE.stopApp(), PythonExtensionClientBundle.INSTANCE.stopAppDisabled());
+      setEvent(new StopApplicationEvent());
       setGroupName(GroupNames.RUNDEBUG);
    }
 
@@ -63,8 +72,8 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(AppStartedEvent.TYPE, this);
-      IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(ApplicationStartedEvent.TYPE, this);
+      IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
    }
 
    /**
@@ -84,23 +93,27 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      boolean isJavaProject =
-         ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
-      setVisible(isJavaProject);
-      setEnabled(isJavaProject);
-      setShowInContextMenu(isJavaProject);
+      boolean isPythonProject = (ProjectResolver.APP_ENGINE_PYTHON.equals(projectType));
+      setVisible(isPythonProject);
+      setEnabled(false);
+      setShowInContextMenu(isPythonProject);
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent)
+    */
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
-   {
-      setEnabled(true);
-   }
-
-   @Override
-   public void onAppStarted(AppStartedEvent event)
+   public void onApplicationStopped(ApplicationStoppedEvent event)
    {
       setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent)
+    */
+   @Override
+   public void onApplicationStarted(ApplicationStartedEvent event)
+   {
+      setEnabled(true);
    }
 }
