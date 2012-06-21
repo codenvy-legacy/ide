@@ -22,13 +22,19 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 
-public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler
+public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler,
+   ProjectClosedHandler, ProjectOpenedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
@@ -52,11 +58,13 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
    @Override
    public void initialize()
    {
-      setVisible(true);
+      setVisible(false);
       setEnabled(false);
 
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    @Override
@@ -68,6 +76,31 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
    @Override
    public void onAppStoped(AppStopedEvent appStopedEvent)
    {
+      setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      String projectType = event.getProject().getProjectType();
+      boolean isJavaProject =
+         ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
+      setVisible(isJavaProject);
+      setEnabled(false);
+      setShowInContextMenu(isJavaProject);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      setVisible(false);
       setEnabled(false);
    }
 }
