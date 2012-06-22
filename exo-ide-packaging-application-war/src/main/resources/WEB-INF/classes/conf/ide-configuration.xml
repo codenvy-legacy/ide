@@ -379,7 +379,7 @@
             <name>CF1</name>
             <object type="org.exoplatform.ide.extension.java.jdi.server.CloudfoundryServerConfiguration">
                <field name="target">
-                  <string>http://cfet.exoplatform.org</string>
+                  <string>http://api.cfet.exoplatform.org</string>
                </field>
                <field name="user">
                   <string>support@cloud-ide.com</string>
