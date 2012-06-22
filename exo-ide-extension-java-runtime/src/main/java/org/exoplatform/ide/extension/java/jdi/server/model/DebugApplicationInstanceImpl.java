@@ -23,6 +23,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated
  */
 public class DebugApplicationInstanceImpl extends ApplicationInstanceImpl implements DebugApplicationInstance
 {

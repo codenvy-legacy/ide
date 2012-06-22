@@ -16,20 +16,56 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.extension.java.jdi.server;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated move methods to ApplicationInstance interface and remove this
  */
-public interface DebugApplicationInstance extends ApplicationInstance
+public class CloudfoundryServerConfiguration
 {
-   String getDebugHost();
+   private String target;
+   private String user;
+   private String password;
 
-   void setDebugHost(String debugHost);
+   public CloudfoundryServerConfiguration(String target, String user, String password)
+   {
+      this.target = target;
+      this.user = user;
+      this.password = password;
+   }
 
-   int getDebugPort();
+   public CloudfoundryServerConfiguration()
+   {
+   }
 
-   void setDebugPort(int debugPort);
+   public String getTarget()
+   {
+      return target;
+   }
+
+   public void setTarget(String target)
+   {
+      this.target = target;
+   }
+
+   public String getUser()
+   {
+      return user;
+   }
+
+   public void setUser(String user)
+   {
+      this.user = user;
+   }
+
+   public String getPassword()
+   {
+      return password;
+   }
+
+   public void setPassword(String password)
+   {
+      this.password = password;
+   }
 }

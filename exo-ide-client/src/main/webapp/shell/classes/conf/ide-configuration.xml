@@ -337,26 +337,27 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
-   
    <component>
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
       <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
       <init-params>
-         <value-param>
-            <name>cloudfoundry-target</name>
-            <value>http://api.cfet.exoplatform.org</value>
-         </value-param>
-         <value-param>
-            <name>cloudfoundry-user</name>
-            <value>support@cloud-ide.com</value>
-         </value-param>
-         <value-param>
-            <name>cloudfoundry-password</name>
-            <value>eXoAdmin12321</value>
-         </value-param>
+         <object-param>
+            <name>CF1</name>
+            <object type="org.exoplatform.ide.extension.java.jdi.server.CloudfoundryServerConfiguration">
+               <field name="target">
+                  <string>http://cfet.exoplatform.org</string>
+               </field>
+               <field name="user">
+                  <string>support@cloud-ide.com</string>
+               </field>
+               <field name="password">
+                  <string>eXoAdmin12321</string>
+               </field>
+            </object>
+         </object-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>

@@ -16,20 +16,53 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.shared;
+package org.exoplatform.ide.commons;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * Simple implementation of round-robin algorithm.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated move methods to ApplicationInstance interface and remove this
  */
-public interface DebugApplicationInstance extends ApplicationInstance
+public class RoundRobin<O>
 {
-   String getDebugHost();
+   private final List<O> items;
+   private final AtomicInteger position = new AtomicInteger();
 
-   void setDebugHost(String debugHost);
+   public RoundRobin(Collection<O> items)
+   {
+      this.items = new ArrayList<O>(items);
+   }
 
-   int getDebugPort();
+   /**
+    * Get next item.
+    *
+    * @return nex item
+    */
+   public O next()
+   {
+      return items.get(nextIndex());
+   }
 
-   void setDebugPort(int debugPort);
+   private int nextIndex()
+   {
+      for (; ; )
+      {
+         int current = position.get();
+         int next = current + 1;
+         if (next >= items.size())
+         {
+            next = 0;
+         }
+         if (position.compareAndSet(current, next))
+         {
+            return current;
+         }
+      }
+   }
 }
