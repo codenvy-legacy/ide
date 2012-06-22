@@ -18,13 +18,7 @@
  */
 package org.eclipse.jdt.client.core.formatter;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.HashMap;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display;
@@ -40,8 +34,13 @@ import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.text.IDocument;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -82,7 +81,6 @@ public class FormatterProfileView extends ViewImpl implements Display
          final HashMap<String, Object> params = new HashMap<String, Object>();
          params.put(EditorParameters.IS_READ_ONLY, true);
          params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
-         params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
          params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.FALSE);
          EditorProducer editorProducer = IDE.getInstance().getEditor(MimeType.APPLICATION_JAVA);
          eventBus = new HandlerManager(null);

@@ -798,16 +798,10 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
 
       for (EditorProducer supportedEditorProducer : supportedEditorProducers)
       {
-         List<String> hotKeyList = new ArrayList<String>((applicationSettings.getValueAsMap("hotkeys")).keySet());
-
          HashMap<String, Object> params = new HashMap<String, Object>();
-
          params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
          params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
-         params.put(EditorParameters.HOT_KEY_LIST, hotKeyList);
-
          Editor editor = supportedEditorProducer.createEditor(file.getContent(), IDE.eventBus(), params);
-
          supportedEditors.add(editor);
          DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
       }

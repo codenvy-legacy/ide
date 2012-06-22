@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.editor.api;
 
-import java.util.List;
-
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 
 /**
@@ -43,11 +41,6 @@ public interface EditorParameters
     * Key for {@link Boolean}, set show/hide line numbers
     */
    String IS_SHOW_LINE_NUMER = "is_show_line_number";
-
-   /**
-    * Key for {@link List} of hot keys
-    */
-   String HOT_KEY_LIST = "hot_key_list";
 
    /**
     * Key for content mime type
