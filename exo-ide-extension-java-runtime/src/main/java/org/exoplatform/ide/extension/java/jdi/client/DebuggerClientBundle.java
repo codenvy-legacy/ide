@@ -24,9 +24,10 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public interface DebuggerClientBundle extends ClientBundle
 {
    DebuggerClientBundle INSTANCE = GWT.<DebuggerClientBundle> create(DebuggerClientBundle.class);
@@ -91,6 +92,12 @@ public interface DebuggerClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/java/jdi/images/runApp_Disabled.png")
    ImageResource runAppDisabled();
 
+   @Source("org/exoplatform/ide/extension/java/jdi/images/logs.png")
+   ImageResource logs();
+
+   @Source("org/exoplatform/ide/extension/java/jdi/images/logs_Disabled.png")
+   ImageResource logsDisabled();
+
    @Source("org/exoplatform/ide/extension/java/jdi/images/variable.png")
    ImageResource variable();
 
@@ -105,10 +112,10 @@ public interface DebuggerClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint.png")
    ImageResource breakpoint();
-   
+
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint_properties.png")
    ImageResource breakpointProperties();
-   
+
    @Source("org/exoplatform/ide/extension/java/jdi/images/breakpoint_properties_Disabled.png")
    ImageResource breakpointPropertiesDisabled();
 

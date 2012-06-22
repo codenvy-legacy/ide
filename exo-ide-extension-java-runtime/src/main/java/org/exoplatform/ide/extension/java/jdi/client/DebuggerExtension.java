@@ -16,6 +16,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEv
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.LogsHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
@@ -60,6 +61,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       new ChangeValuePresenter();
       new EvaluateExpressionPresenter();
       new BreakpointPropertiesPresenter();
+      new LogsHandler();
 
       IDE.addHandler(DebuggerConnectedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebuggerDisconnectedEvent.TYPE, debuggerPresenter);
