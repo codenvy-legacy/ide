@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.extension.python.client.logs;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
@@ -27,44 +27,25 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
+import org.exoplatform.ide.extension.python.client.PythonExtensionClientBundle;
+import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
 
-public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler
+public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler
 {
-   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
+   private static final String ID = "Run/Python Logs";
 
-   private static final String TITLE = "Debug Application";
+   private static final String TITLE = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlTitle();
 
-   private static final String PROMPT = "Launch Debug";
+   private static final String PROMPT = PythonRuntimeExtension.PYTHON_LOCALIZATION.showLogsControlPrompt();
 
-   public DebugAppControl()
+   public ShowLogsControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.debugApp(), DebuggerClientBundle.INSTANCE.debugAppDisabled());
-      setEvent(new DebugAppEvent());
+      setImages(PythonExtensionClientBundle.INSTANCE.logs(), PythonExtensionClientBundle.INSTANCE.logsDisabled());
+      setEvent(new ShowLogsEvent());
       setGroupName(GroupNames.RUNDEBUG);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(false);
-      setEnabled(false);
-
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(AppStartedEvent.TYPE, this);
-      IDE.addHandler(AppStopedEvent.TYPE, this);
    }
 
    /**
@@ -84,23 +65,22 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      boolean isJavaProject =
-         ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
-      setVisible(isJavaProject);
-      setEnabled(isJavaProject);
-      setShowInContextMenu(isJavaProject);
+      boolean isPythonProject = ProjectResolver.APP_ENGINE_PYTHON.equals(projectType);
+      setVisible(isPythonProject);
+      setEnabled(isPythonProject);
+      setShowInContextMenu(isPythonProject);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
+   public void initialize()
    {
-      setEnabled(true);
-   }
-
-   @Override
-   public void onAppStarted(AppStartedEvent event)
-   {
+      setVisible(false);
       setEnabled(false);
+
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 }

@@ -27,44 +27,24 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsEvent;
 
-public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler
+public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler
 {
-   public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
+   private static final String ID = "Run/Java Logs";
 
-   private static final String TITLE = "Debug Application";
+   private static final String TITLE = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlTitle();
 
-   private static final String PROMPT = "Launch Debug";
+   private static final String PROMPT = DebuggerExtension.LOCALIZATION_CONSTANT.showLogsControlPrompt();
 
-   public DebugAppControl()
+   public ShowLogsControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(DebuggerClientBundle.INSTANCE.debugApp(), DebuggerClientBundle.INSTANCE.debugAppDisabled());
-      setEvent(new DebugAppEvent());
+      setImages(DebuggerClientBundle.INSTANCE.logs(), DebuggerClientBundle.INSTANCE.logsDisabled());
+      setEvent(new ShowLogsEvent());
       setGroupName(GroupNames.RUNDEBUG);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
-    */
-   @Override
-   public void initialize()
-   {
-      setVisible(false);
-      setEnabled(false);
-
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(AppStartedEvent.TYPE, this);
-      IDE.addHandler(AppStopedEvent.TYPE, this);
    }
 
    /**
@@ -92,15 +72,17 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
       setShowInContextMenu(isJavaProject);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    */
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
+   public void initialize()
    {
-      setEnabled(true);
-   }
-
-   @Override
-   public void onAppStarted(AppStartedEvent event)
-   {
+      System.out.println("ShowLogsControl.initialize()");
+      setVisible(false);
       setEnabled(false);
+
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 }

@@ -21,10 +21,12 @@ package org.exoplatform.ide.extension.python.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -35,7 +37,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class PythonRuntimeServiceImpl extends PythonRuntimeService
 {
-
+   private static final String LOGS = "/ide/cloudfoundry/apps/logs";
+   
    private String restContext;
 
    private static final String RUN_APPLICATION = "/ide/python/runner/run";
@@ -81,4 +84,17 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService
          .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
    }
 
+   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
+   {
+      String url = restContext + LOGS;
+      StringBuilder params = new StringBuilder("?projectid=");
+      params.append(projectId).append("&vfsid=").append(vfsId);
+
+      Loader loader = new GWTLoader();
+      loader.setMessage("Retrieving logs.... ");
+
+      AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
+   }
+  
 }

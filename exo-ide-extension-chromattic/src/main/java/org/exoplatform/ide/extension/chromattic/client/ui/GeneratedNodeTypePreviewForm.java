@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -70,7 +69,6 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
       final HashMap<String, Object> params = new HashMap<String, Object>();
       params.put(EditorParameters.IS_READ_ONLY, true);
       params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
-      params.put(EditorParameters.HOT_KEY_LIST, new ArrayList<String>());
       try
       {
          editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", IDE.eventBus(), params);

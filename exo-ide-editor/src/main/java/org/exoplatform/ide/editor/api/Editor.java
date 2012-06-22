@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.editor.api;
 
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyCalledEvent;
-import org.exoplatform.ide.editor.text.IDocument;
-
 import java.util.List;
 import java.util.Map;
+
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AbsolutePanel;
@@ -176,13 +175,6 @@ public abstract class Editor extends AbsolutePanel
    public abstract int getCursorCol();
 
    /**
-    * Set hot keys that editor must ignore, every hot keys must transport to main IDE frame via {@link EditorHotKeyCalledEvent}
-    * 
-    * @param hotKeyList
-    */
-   public abstract void setHotKeyList(List<String> hotKeyList);
-
-   /**
     * If editor support autocompletion and outline feature, this method return {@link List} of {@link Token} parsed from current
     * file
     * 
@@ -275,4 +267,5 @@ public abstract class Editor extends AbsolutePanel
     * Delete selected text in editor.
     */
    public abstract void delete();
+   
 }

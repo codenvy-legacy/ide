@@ -69,7 +69,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       }-*/;
    }
    
-   private native void registerKeyDownHandler()
+   private native void setKeyDownHandler()
    /*-{
       $doc.onkeydown = function(ev)
       { 
@@ -101,7 +101,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
       final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
       Window.addWindowClosingHandler(closeListener);
-      registerKeyDownHandler();
+      setKeyDownHandler();
 
       hotKeyMap = applicationSettings.getValueAsMap("hotkeys");
       if (hotKeyMap == null)
@@ -176,7 +176,9 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       }
    }
 
-   // This method is not unused but called by the javaScript function : WindowCloseHandlerImpl::Init
+   /**
+    * @param event
+    */
    public void onKeyDown(final Event event)
    {
       int keyCode = DOM.eventGetKeyCode(event);

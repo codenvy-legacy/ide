@@ -38,13 +38,17 @@ import com.google.gwt.http.client.RequestException;
  */
 public class ApplicationRunnerClientService
 {
+   private static final String LOGS = "/ide/cloudfoundry/apps/logs";
 
    private static String BASE_URL;
 
    private static ApplicationRunnerClientService instance;
 
+   private String restContext;
+
    public ApplicationRunnerClientService(String restContext)
    {
+      this.restContext = restContext;
       BASE_URL = restContext + "/ide/java/runner";
       instance = this;
    }
@@ -54,26 +58,42 @@ public class ApplicationRunnerClientService
       return instance;
    }
 
-   public void runApplication(String project, String war, AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
+   public void runApplication(String project, String war, AsyncRequestCallback<ApplicationInstance> callback)
+      throws RequestException
    {
       String requestUrl = BASE_URL + "/run?war=" + war;
 
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, true).requestStatusHandler(new RunningAppStatusHandler(project))
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, true)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
-   
-   
-   public void debugApplication(String project, String war, AsyncRequestCallback<DebugApplicationInstance> callback) throws RequestException
+
+   public void debugApplication(String project, String war, AsyncRequestCallback<DebugApplicationInstance> callback)
+      throws RequestException
    {
       String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, true).requestStatusHandler(new RunningAppStatusHandler(project))
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, true)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
+   }
+
+   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
+   {
+      String url = restContext + LOGS;
+      StringBuilder params = new StringBuilder("?projectid=");
+      params.append(projectId).append("&vfsid=").append(vfsId);
+
+      Loader loader = new GWTLoader();
+      loader.setMessage("Retrieving logs.... ");
+
+      AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }
 
 }

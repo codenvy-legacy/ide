@@ -307,7 +307,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             @Override
             protected void onSuccess(Object result)
             {
-//               startApplication(url);
                BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
                buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                buildStatus.setDownloadUrl(url);
@@ -321,7 +320,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             @Override
             protected void onFailure(Throwable exception)
             {
-               IDE.fireEvent(new BuildProjectEvent());
+               doBuild();
             }
 
          });

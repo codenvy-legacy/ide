@@ -66,6 +66,10 @@ public class SaveFileCommandHandler implements SaveFileHandler, EditorActiveFile
    public void onSaveFile(SaveFileEvent event)
    {
       final FileModel file = event.getFile() != null ? event.getFile() : activeFile;
+      if (file == null)
+      {
+         return;
+      }
 
       if (!file.isPersisted())
       {

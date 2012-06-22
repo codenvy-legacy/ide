@@ -1124,7 +1124,6 @@
                               <exclude name="**/LICENSE"/>
                               <exclude name="**/README"/>
                               <exclude name="**/RELEASE_NOTES"/>
-                              <exclude name="**/VERSION"/>
                            </patternset>
                         </unzip>
                         <move  file="${project.build.directory}/tomcat-ide/google_appengine" tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
