@@ -33,9 +33,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 
-
-public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler, AppStartedHandler, AppStopedHandler
+public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
+   AppStartedHandler, AppStopedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
@@ -59,7 +58,7 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    @Override
    public void initialize()
    {
-      setVisible(true);
+      setVisible(false);
       setEnabled(false);
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -75,8 +74,9 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    public void onProjectClosed(ProjectClosedEvent event)
    {
       setEnabled(false);
+      setVisible(false);
    }
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */
@@ -84,14 +84,12 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      if (ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-          || ProjectResolver.APP_ENGINE_JAVA.equals(projectType))
-      {
-         setEnabled(true);
-         setShowInContextMenu(true);
-      }
-      else
-         setShowInContextMenu(false);
+      boolean isJavaProject =
+         ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
+      setVisible(isJavaProject);
+      setEnabled(isJavaProject);
+      setShowInContextMenu(isJavaProject);
    }
 
    @Override

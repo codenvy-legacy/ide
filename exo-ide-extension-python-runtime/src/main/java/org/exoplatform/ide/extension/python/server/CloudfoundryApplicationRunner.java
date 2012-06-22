@@ -124,7 +124,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          f = f.getParentFile();
       }
       appEngineSdk = sdk;
-      if (appEngineSdk.exists())
+      if (!appEngineSdk.exists())
       {
          LOG.error("**********************************\n"
             + "* Google appengine Python SDK not found *\n"
