@@ -43,4 +43,10 @@ public interface PythonExtensionClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/python/images/runApp_Disabled.png")
    ImageResource runAppDisabled();
+   
+   @Source("org/exoplatform/ide/extension/python/images/logs.png")
+   ImageResource logs();
+
+   @Source("org/exoplatform/ide/extension/python/images/logs_Disabled.png")
+   ImageResource logsDisabled();
 }

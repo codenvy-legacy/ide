@@ -60,4 +60,10 @@ public interface PythonExtensionLocalization extends com.google.gwt.i18n.client.
 
    @Key("not.python.project")
    String notPythonProject();
+
+   @Key("show.logs.control.title")
+   String showLogsControlTitle();
+
+   @Key("show.logs.control.prompt")
+   String showLogsControlPrompt();
 }
