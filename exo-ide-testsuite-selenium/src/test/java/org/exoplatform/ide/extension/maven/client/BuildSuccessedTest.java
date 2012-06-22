@@ -51,7 +51,7 @@ public class BuildSuccessedTest extends BaseTest
          project =
             VirtualFileSystemUtils.importZipProject(PROJECT,
                "src/test/resources/org/exoplatform/ide/extension/maven/TestSpringProjectWithPOM.zip");
-
+         //need for full complete import zip folder in DavFs
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -65,7 +65,7 @@ public class BuildSuccessedTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-
+         //need for full deleting zip folder in DavFs
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -90,10 +90,11 @@ public class BuildSuccessedTest extends BaseTest
       assertTrue(builderMessage.startsWith(Build.Messages.BUILDING_PROJECT));
 
       // Wait until building is finished.
-      Thread.sleep(10000);
+      IDE.STATUSBAR.waitDiasspearBuildStatus();
 
       // check clear output button
       IDE.BUILD.clickClearButton();
+
       String emptyMessage = IDE.BUILD.getOutputMessage();
       assertEquals("", emptyMessage);
 

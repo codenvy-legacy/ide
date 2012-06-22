@@ -18,11 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.awt.print.PrinterException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,6 +45,9 @@ public class Statusbar extends AbstractTestModule
       String BUILD_FAILED_STATUS_LOCATOR =
          "div[control-id='__request-notification-control'][title='Building of project failed']";
 
+      String BUILD_DISAPPEAR =
+         "//div[@id='exoIDEStatusbar']//div[3]";
+
    }
 
    @FindBy(xpath = Locators.CURSOR_POSITION_LOCATOR)
@@ -52,6 +58,9 @@ public class Statusbar extends AbstractTestModule
 
    @FindBy(css = Locators.BUILD_FAILED_STATUS_LOCATOR)
    private WebElement buildFailStatus;
+
+   @FindBy(xpath = Locators.BUILD_DISAPPEAR)
+   private WebElement buildDissapear;
 
    /**
     * Get cursor position.
@@ -80,6 +89,30 @@ public class Statusbar extends AbstractTestModule
          public Boolean apply(WebDriver arg0)
          {
             return (cursorPosition != null && cursorPosition.isDisplayed());
+         }
+      });
+   }
+
+   /**
+    * wait while build status panel is disappear
+    */
+   public void waitDiasspearBuildStatus()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver arg0)
+         {
+            try
+            {
+              WebElement check = driver().findElement(By.xpath(Locators.BUILD_DISAPPEAR));
+               return check != null && !check.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
          }
       });
    }
