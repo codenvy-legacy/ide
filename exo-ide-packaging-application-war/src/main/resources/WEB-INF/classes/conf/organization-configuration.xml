@@ -159,6 +159,28 @@
                               </field>
                            </object>
                         </value>
+                         <value>
+                           <object type="org.exoplatform.services.organization.OrganizationConfig$User">
+                              <field name="userName">
+                                 <string>cldadmin</string>
+                              </field>
+                              <field name="password">
+                                 <string>tomcat</string>
+                              </field>
+                              <field name="firstName">
+                                 <string>John</string>
+                              </field>
+                              <field name="lastName">
+                                 <string>Anthony</string>
+                              </field>
+                              <field name="email">
+                                 <string>john@localhost</string>
+                              </field>
+                              <field name="groups">
+                                 <string>member:/ide/developers,member:/ide/users</string>
+                              </field>
+                           </object>
+                        </value>
                      </collection>
                   </field>
                </object>
