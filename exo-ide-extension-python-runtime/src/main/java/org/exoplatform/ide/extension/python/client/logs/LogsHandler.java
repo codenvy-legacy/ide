@@ -21,17 +21,16 @@ package org.exoplatform.ide.extension.python.client.logs;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeService;
 import org.exoplatform.ide.extension.python.client.StringUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -47,16 +46,6 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    private VirtualFileSystemInfo vfs;
 
    private ProjectModel project;
-
-   private LoggedInHandler loggedInHandler = new LoggedInHandler()
-   {
-
-      @Override
-      public void onLoggedIn()
-      {
-         getLogs();
-      }
-   };
 
    public LogsHandler()
    {
@@ -74,25 +63,27 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
-      Dialogs.getInstance().showInfo("Not implemented yet.");
-      // TODO getLogs();
+      getLogs();
    }
 
    private void getLogs()
    {
       try
       {
-         PythonRuntimeService.getInstance().getLogs(
-            vfs.getId(),
-            project.getId(),
-            new CloudFoundryAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()),
-               loggedInHandler, null)
+         PythonRuntimeService.getInstance().getLogs(vfs.getId(), project.getId(),
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
 
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                  IDE.fireEvent(new OutputEvent(result.toString()));
+                  IDE.fireEvent(new OutputEvent(result.toString(), Type.OUTPUT));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }

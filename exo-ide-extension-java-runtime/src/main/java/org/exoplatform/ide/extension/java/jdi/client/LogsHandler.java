@@ -18,10 +18,15 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import com.google.gwt.http.client.RequestException;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -58,16 +63,28 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
-      //TODO
-      Dialogs.getInstance().showInfo("Not implemented yet.");
-      /*
-       * try { ApplicationRunnerClientService.getInstance().getLogs(vfs.getId(), project.getId(), new
-       * AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder())) {
-       * @Override protected void onSuccess(StringBuilder result) { IDE.fireEvent(new OutputEvent(result.toString())); }
-       * @Override protected void onFailure(Throwable exception) { // TODO Auto-generated method stub System.out
-       * .println("LogsHandler.onShowLogs(...).new AsyncRequestCallback<StringBuilder>() {...}.onFailure()"); } }); } catch
-       * (RequestException e) { IDE.fireEvent(new ExceptionThrownEvent(e)); }
-       */
+      try
+      {
+         ApplicationRunnerClientService.getInstance().getLogs(vfs.getId(), project.getId(),
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  IDE.fireEvent(new OutputEvent(result.toString(), Type.OUTPUT));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

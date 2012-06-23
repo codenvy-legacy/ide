@@ -59,6 +59,6 @@ public class PythonRuntimeExtension extends Extension implements InitializeServi
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new RunApplicationManager();
-      new LogsHandler();
+      //TODO new LogsHandler();
    }
 }
