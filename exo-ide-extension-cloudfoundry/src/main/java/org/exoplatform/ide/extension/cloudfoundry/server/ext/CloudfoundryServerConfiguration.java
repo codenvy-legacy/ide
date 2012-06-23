@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.extension.cloudfoundry.server.ext;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -67,5 +67,28 @@ public class CloudfoundryServerConfiguration
    public void setPassword(String password)
    {
       this.password = password;
+   }
+
+   @Override
+   public final boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (!(o instanceof CloudfoundryServerConfiguration))
+      {
+         return false;
+      }
+      CloudfoundryServerConfiguration other = (CloudfoundryServerConfiguration)o;
+      return target == null ? other.target == null : target.equals(other.target);
+   }
+
+   @Override
+   public final int hashCode()
+   {
+      int hash = 7;
+      hash = 31 * hash + (target != null ? target.hashCode() : 0);
+      return hash;
    }
 }

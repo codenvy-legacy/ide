@@ -76,13 +76,13 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
          this.config = config;
          if (!this.config.endsWith("/"))
          {
-            this.config += "/";
+            this.config += '/';
          }
       }
    }
 
    @Override
-   public String readTarget() throws VirtualFileSystemException, IOException
+   public String getTarget() throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();

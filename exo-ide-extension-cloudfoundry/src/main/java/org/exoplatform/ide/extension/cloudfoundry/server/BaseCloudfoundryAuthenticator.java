@@ -41,13 +41,19 @@ public abstract class BaseCloudfoundryAuthenticator
     * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
     * should be used instead of username/password for any request to cloudfoundry service.
     *
-    * @param target location of Cloud Foundry REST API, e.g. http://api.cloudfoundry.com
-    * @param email email address that used when signup to cloudfoundry.com
-    * @param password password
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
+    * @param target
+    *    location of Cloud Foundry REST API, e.g. http://api.cloudfoundry.com
+    * @param email
+    *    email address that used when signup to cloudfoundry.com
+    * @param password
+    *    password
+    * @throws CloudfoundryException
+    *    if cloudfoundry server return unexpected or error status for request
+    * @throws ParsingResponseException
+    *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
-    * @throws IOException if any i/o errors occurs
+    * @throws IOException
+    *    if any i/o errors occurs
     */
    public final void login(String target, String email, String password) throws CloudfoundryException,
       ParsingResponseException, VirtualFileSystemException, IOException
@@ -111,11 +117,18 @@ public abstract class BaseCloudfoundryAuthenticator
       }
    }
 
+   public final void login() throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   {
+      login(getTarget(), getUsername(), getPassword());
+   }
+
    /**
-    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work with
+    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work
+    * with
     * remote server.
     *
-    * @param target location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
+    * @param target
+    *    location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
     * @see #login(String, String, String)
     */
    public final void logout(String target) throws VirtualFileSystemException, IOException
@@ -127,7 +140,17 @@ public abstract class BaseCloudfoundryAuthenticator
       }
    }
 
-   public abstract String readTarget() throws VirtualFileSystemException, IOException;
+   public String getUsername() throws VirtualFileSystemException, IOException
+   {
+      return null;
+   }
+
+   public String getPassword() throws VirtualFileSystemException, IOException
+   {
+      return null;
+   }
+
+   public abstract String getTarget() throws VirtualFileSystemException, IOException;
 
    public abstract CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException;
 

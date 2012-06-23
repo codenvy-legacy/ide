@@ -16,40 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.server;
+package org.exoplatform.ide.extension.python.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class DebuggerApplication extends Application
+@Provider
+public class ApplicationRunnerExceptionMapper implements ExceptionMapper<ApplicationRunnerException>
 {
-   private final Set<Class<?>> classes;
-   private final Set<Object> objects;
-
-   public DebuggerApplication()
-   {
-      classes = new HashSet<Class<?>>(2);
-      classes.add(DebuggerService.class);
-      classes.add(ApplicationRunnerService.class);
-      objects = new HashSet<Object>(1);
-      objects.add(new ApplicationRunnerExceptionMapper());
-   }
-
    @Override
-   public Set<Class<?>> getClasses()
+   public Response toResponse(ApplicationRunnerException exception)
    {
-      return classes;
-   }
-
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return objects;
+      String logs = exception.getLogs();
+      if (!(logs == null || logs.isEmpty()))
+      {
+         return Response.serverError().entity(logs).type(MediaType.TEXT_PLAIN).build();
+      }
+      return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }

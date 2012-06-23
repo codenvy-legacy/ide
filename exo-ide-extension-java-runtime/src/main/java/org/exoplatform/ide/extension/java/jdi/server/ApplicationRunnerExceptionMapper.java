@@ -16,53 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.commons;
+package org.exoplatform.ide.extension.java.jdi.server;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
- * Simple implementation of round-robin algorithm.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class RoundRobin<O>
+@Provider
+public class ApplicationRunnerExceptionMapper implements ExceptionMapper<ApplicationRunnerException>
 {
-   private final List<O> items;
-   private final AtomicInteger position = new AtomicInteger();
-
-   public RoundRobin(Collection<O> items)
+   @Override
+   public Response toResponse(ApplicationRunnerException exception)
    {
-      this.items = new ArrayList<O>(items);
-   }
-
-   /**
-    * Get next item.
-    *
-    * @return nex item
-    */
-   public O next()
-   {
-      return items.get(nextIndex());
-   }
-
-   private int nextIndex()
-   {
-      for (; ; )
+      String logs = exception.getLogs();
+      if (!(logs == null || logs.isEmpty()))
       {
-         int current = position.get();
-         int next = current + 1;
-         if (next >= items.size())
-         {
-            next = 0;
-         }
-         if (position.compareAndSet(current, next))
-         {
-            return current;
-         }
+         return Response.serverError().entity(logs).type(MediaType.TEXT_PLAIN).build();
       }
+      return Response.serverError().entity(exception.getMessage()).type(MediaType.TEXT_PLAIN).build();
    }
 }

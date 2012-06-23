@@ -19,11 +19,10 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.RoundRobin;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
-import org.exoplatform.ide.extension.cloudfoundry.server.SimpleAuthenticator;
+import org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceImpl;
@@ -36,12 +35,10 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,33 +68,15 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final int applicationLifetime;
    private final long applicationLifetimeMillis;
 
-   private final Map<String, Cloudfoundry> servers;
-   private final Map<String, CloudfoundryServerConfiguration> configs;
-   private final RoundRobin<Cloudfoundry> balancer;
+   private final CloudfoundryPool cfServers;
 
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
    private final java.io.File appEngineSdk;
 
-   public CloudfoundryApplicationRunner(InitParams initParams)
+   public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams)
    {
-      this(getConfigurations(initParams), parseApplicationLifeTime(
-         readValueParam(initParams, "cloudfoundry-application-lifetime")));
-   }
-
-   private static List<CloudfoundryServerConfiguration> getConfigurations(InitParams params)
-   {
-      List<CloudfoundryServerConfiguration> configs = new ArrayList<CloudfoundryServerConfiguration>();
-      if (params != null)
-      {
-         List<CloudfoundryServerConfiguration> objectParams =
-            params.getObjectParamValues(CloudfoundryServerConfiguration.class);
-         if (!(objectParams == null || objectParams.isEmpty()))
-         {
-            configs.addAll(objectParams);
-         }
-      }
-      return configs;
+      this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
    }
 
    private static int parseApplicationLifeTime(String str)
@@ -115,22 +94,15 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       return DEFAULT_APPLICATION_LIFETIME;
    }
 
-   protected CloudfoundryApplicationRunner(List<CloudfoundryServerConfiguration> configs, int applicationLifetime)
+   protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, int applicationLifetime)
    {
-      if (configs == null || configs.isEmpty())
+      if (applicationLifetime < 1)
       {
-         throw new IllegalArgumentException("At least one server must be configured. ");
+         throw new IllegalArgumentException("Invalid application lifetime: " + 1);
       }
-      this.servers = new HashMap<String, Cloudfoundry>();
-      this.configs = new HashMap<String, CloudfoundryServerConfiguration>();
-      for (CloudfoundryServerConfiguration config : configs)
-      {
-         this.configs.put(config.getTarget(), config);
-         this.servers.put(config.getTarget(), new Cloudfoundry(new SimpleAuthenticator(config.getTarget())));
-      }
-      this.balancer = new RoundRobin<Cloudfoundry>(servers.values());
       this.applicationLifetime = applicationLifetime;
       this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
+      this.cfServers = cfServers;
 
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
@@ -155,22 +127,20 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       appEngineSdk = lib == null ? null : lib.getParentFile();
       if (appEngineSdk == null)
       {
-         LOG.error("**********************************\n"
-            + "* Google appengine Java SDK not found *\n"
-            + "**********************************");
+         LOG.error("***** Google appengine Java SDK not found *****");
       }
    }
 
    @Override
    public ApplicationInstance runApplication(URL war) throws ApplicationRunnerException
    {
-      return startApplication(balancer.next(), generate("app-", 16), war, null);
+      return startApplication(cfServers.next(), generate("app-", 16), war, null);
    }
 
    @Override
    public DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException
    {
-      return (DebugApplicationInstance)startApplication(balancer.next(), generate("app-", 16), war,
+      return (DebugApplicationInstance)startApplication(cfServers.next(), generate("app-", 16), war,
          suspend ? new DebugMode("suspend") : new DebugMode());
    }
 
@@ -212,17 +182,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                }
                return doRunApplication(cloudfoundry, name, path);
             }
-
-            // try to remove application.
-            try
-            {
-               LOG.error("Application {} failed to start. Try delete it. ", name);
-               cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
-            }
-            catch (Exception e1)
-            {
-               LOG.error("Unable delete failed application {}", name);
-            }
          }
          throw e;
       }
@@ -235,21 +194,36 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
-   private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry, String name, File path) throws ApplicationRunnerException
+   private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry,
+                                                String name,
+                                                java.io.File path) throws ApplicationRunnerException
    {
       try
       {
          final String target = cloudfoundry.getTarget();
-         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, name, path, null);
+         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, null);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-         applications.put(cfApp.getName(), new Application(cfApp.getName(), target, expired));
-         LOG.debug("Start application {} at CF server {}", cfApp.getName(), target);
-         return new ApplicationInstanceImpl(cfApp.getName(), cfApp.getUris().get(0), null, applicationLifetime);
+         applications.put(name, new Application(name, target, expired));
+         LOG.debug("Start application {} at CF server {}", name, target);
+         return new ApplicationInstanceImpl(name, cfApp.getUris().get(0), null, applicationLifetime);
       }
       catch (Exception e)
       {
-         throw new ApplicationRunnerException(e.getMessage(), e);
+         String logs = getLogs(cloudfoundry, name);
+
+         // try to remove application.
+         try
+         {
+            LOG.error("Application {} failed to start. Try delete it. ", name);
+            cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+         }
+         catch (Exception e1)
+         {
+            LOG.error("Unable delete failed application {}", name);
+         }
+
+         throw new ApplicationRunnerException(e.getMessage(), e, logs);
       }
    }
 
@@ -261,10 +235,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       try
       {
          final String target = cloudfoundry.getTarget();
-         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, name, path, debugMode);
+         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, debugMode);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
-         Instance[] instances = cloudfoundry.applicationInstances(cloudfoundry.getTarget(), name, null, null);
+         Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
          if (instances.length != 1)
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
@@ -277,7 +251,20 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
       catch (Exception e)
       {
-         throw new ApplicationRunnerException(e.getMessage(), e);
+         String logs = getLogs(cloudfoundry, name);
+
+         // try to remove application.
+         try
+         {
+            LOG.error("Application {} failed to start. Try delete it. ", name);
+            cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+         }
+         catch (Exception e1)
+         {
+            LOG.error("Unable delete failed application {}", name);
+         }
+
+         throw new ApplicationRunnerException(e.getMessage(), e, logs);
       }
    }
 
@@ -287,7 +274,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       Application application = applications.get(name);
       if (application != null)
       {
-         Cloudfoundry cloudfoundry = servers.get(application.server);
+         Cloudfoundry cloudfoundry = cfServers.byTargetName(application.server);
          if (cloudfoundry != null)
          {
             try
@@ -310,12 +297,25 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          }
          else
          {
-            throw new ApplicationRunnerException("Server '" + application.server + "' not available. ");
+            throw new ApplicationRunnerException("Unable stop application. Server not available. ");
          }
       }
       else
       {
-         throw new ApplicationRunnerException("Application '" + name + "' not found. ");
+         throw new ApplicationRunnerException("Unable stop application. Application '" + name + "' not found. ");
+      }
+   }
+
+   private String getLogs(Cloudfoundry cloudfoundry, String name)
+   {
+      try
+      {
+         return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null);
+      }
+      catch (Exception e)
+      {
+         // Not able show log if any errors occurs.
+         return null;
       }
    }
 
@@ -323,8 +323,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       try
       {
-         cloudfoundry.stopApplication(cloudfoundry.getTarget(), name, null, null);
-         cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
+         String target = cloudfoundry.getTarget();
+         cloudfoundry.stopApplication(target, name, null, null);
+         cloudfoundry.deleteApplication(target, name, null, null, true);
          applications.remove(name);
          LOG.debug("Stop application {}.", name);
       }
@@ -357,7 +358,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       applications.clear();
    }
 
-   private CloudFoundryApplication createApplication(Cloudfoundry cloudfoundry, String name, File path, DebugMode debug)
+   private CloudFoundryApplication createApplication(Cloudfoundry cloudfoundry,
+                                                     String target,
+                                                     String name,
+                                                     java.io.File path,
+                                                     DebugMode debug)
       throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
    {
       if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
@@ -391,8 +396,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                + "com.google.appengine.tools.development.DevAppServerMain --port=$VCAP_APP_PORT --address=0.0.0.0 --disable_update_check "
                + "application";
 
-            return cloudfoundry.createApplication(cloudfoundry.getTarget(), name, "standalone", null, 1, 256, false, "java",
-               command, debug, null, null, appengineApplication.toURI().toURL());
+            return cloudfoundry.createApplication(target, name, "standalone", null, 1, 256, false, "java", command, debug,
+               null, null, appengineApplication.toURI().toURL());
          }
          finally
          {
@@ -401,8 +406,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
       else
       {
-         return cloudfoundry.createApplication(cloudfoundry.getTarget(), name, "spring", null, 1, 256, false, "java",
-            null, debug, null, null, path.toURI().toURL());
+         return cloudfoundry.createApplication(target, name, "spring", null, 1, 256, false, "java", null, debug, null, null,
+            path.toURI().toURL());
       }
    }
 
@@ -428,8 +433,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       try
       {
-         CloudfoundryServerConfiguration config = configs.get(cloudfoundry.getTarget());
-         cloudfoundry.login(cloudfoundry.getTarget(), config.getUser(), config.getPassword());
+         cloudfoundry.login();
       }
       catch (Exception e)
       {

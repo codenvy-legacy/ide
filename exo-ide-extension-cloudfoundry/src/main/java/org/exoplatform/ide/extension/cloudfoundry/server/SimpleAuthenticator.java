@@ -26,20 +26,36 @@ import java.io.IOException;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SimpleAuthenticator extends BaseCloudfoundryAuthenticator
+public final class SimpleAuthenticator extends BaseCloudfoundryAuthenticator
 {
    private final String cfTarget;
+   private final String cfUser;
+   private final String cfPassword;
 
    private CloudfoundryCredentials credentials;
 
-   public SimpleAuthenticator(String cfTarget)
+   public SimpleAuthenticator(String cfTarget, String cfUser, String cfPassword)
    {
       this.cfTarget = cfTarget;
-      credentials = new CloudfoundryCredentials();
+      this.cfUser = cfUser;
+      this.cfPassword = cfPassword;
+      this.credentials = new CloudfoundryCredentials();
    }
 
    @Override
-   public String readTarget() throws VirtualFileSystemException, IOException
+   public String getUsername() throws VirtualFileSystemException, IOException
+   {
+      return cfUser;
+   }
+
+   @Override
+   public String getPassword() throws VirtualFileSystemException, IOException
+   {
+      return cfPassword;
+   }
+
+   @Override
+   public String getTarget() throws VirtualFileSystemException, IOException
    {
       return cfTarget;
    }
@@ -62,5 +78,4 @@ public class SimpleAuthenticator extends BaseCloudfoundryAuthenticator
       this.credentials = new CloudfoundryCredentials();
       this.credentials.addToken(cfTarget, credentials.getToken(cfTarget));
    }
-
 }
