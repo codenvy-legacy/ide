@@ -19,16 +19,20 @@
 package org.exoplatform.ide.extension.googleappengine.client.login;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.extension.googleappengine.shared.User;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -40,9 +44,8 @@ public class AccountsHandler implements LogoutHandler
 
    public AccountsHandler()
    {
-      IDE.getInstance().addControl(new LogoutControl());
-
       IDE.addHandler(LogoutEvent.TYPE, this);
+      isLogged();
    }
 
    /**
@@ -60,6 +63,7 @@ public class AccountsHandler implements LogoutHandler
             protected void onSuccess(Object result)
             {
                IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutSuccess(), Type.INFO));
+               IDE.fireEvent(new SetLoggedUserStateEvent(false));
             }
 
             @Override
@@ -72,6 +76,7 @@ public class AccountsHandler implements LogoutHandler
                   {
                      IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.logoutNotLogged(),
                         Type.INFO));
+                     IDE.fireEvent(new SetLoggedUserStateEvent(false));
                      return;
                   }
                }
@@ -81,6 +86,36 @@ public class AccountsHandler implements LogoutHandler
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   public static void isLogged()
+   {
+      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      try
+      {
+         GoogleAppEngineClientService.getInstance().getLoggedUser(
+            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(User result)
+               {
+                  IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
+               }
+
+               /**
+                * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+               }
+            });
+      }
+      catch (RequestException e)
+      {
       }
    }
 

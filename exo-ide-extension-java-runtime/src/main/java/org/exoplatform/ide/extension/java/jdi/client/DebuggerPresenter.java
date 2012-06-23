@@ -824,7 +824,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   {
                      ServerException serverException = (ServerException)exception;
                      if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
-                        && "Application not found".equals(serverException.getMessage()))
+                        && serverException.getMessage() != null && serverException.getMessage().contains("not found"))
                      {
                         IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
                      }
@@ -928,7 +928,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       list.set(index, variable);
       display.setVariables(list);
    }
-
 
    private void startApplication(final String url)
    {

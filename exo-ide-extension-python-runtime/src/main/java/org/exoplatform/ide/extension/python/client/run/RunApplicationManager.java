@@ -214,7 +214,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
                {
                   ServerException serverException = (ServerException)exception;
                   if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
-                     && "Application not found".equals(serverException.getMessage()))
+                     && serverException.getMessage() != null && serverException.getMessage().contains("not found"))
                   {
                      IDE.fireEvent(new ApplicationStoppedEvent(runApplication, false));
                      runApplication = null;

@@ -154,12 +154,14 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                @Override
                protected void onSuccess(User result)
                {
+                  IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
                   if (!result.isAuthenticated())
                   {
                      if (display != null)
                      {
                         IDE.getInstance().closeView(display.asView().getId());
                      }
+                     IDE.fireEvent(new SetLoggedUserStateEvent(true));
                      Window.open(url, "_blank", null);
                   }
                }
@@ -179,6 +181,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                      IDE.fireEvent(new ExceptionThrownEvent(exception));
                      return;
                   }
+                  IDE.fireEvent(new SetLoggedUserStateEvent(true));
                   Window.open(url, "_blank", null);
                }
             });

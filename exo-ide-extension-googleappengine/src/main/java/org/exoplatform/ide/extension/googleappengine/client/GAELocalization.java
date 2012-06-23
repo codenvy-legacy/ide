@@ -112,7 +112,7 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("deploy.application.message")
    String deployApplicationMessage(String projectName);
-   
+
    @Key("deploy.application.started")
    String deployApplicationStarted(String projectName);
 
@@ -166,6 +166,12 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("login.message")
    String loginMessage();
+
+   @Key("login.control.title")
+   String loginControlTitle();
+
+   @Key("login.control.prompt")
+   String loginControlPrompt();
 
    @Key("logout.control.title")
    String logoutControlTitle();

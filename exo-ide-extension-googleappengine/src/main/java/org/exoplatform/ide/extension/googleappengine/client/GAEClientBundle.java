@@ -33,7 +33,7 @@ public interface GAEClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/gae.png")
    ImageResource googleAppEngine();
-   
+
    @Source("org/exoplatform/ide/extension/googleappengine/images/gae_logo.png")
    ImageResource googleAppEngineLogo();
 
@@ -147,16 +147,22 @@ public interface GAEClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/rollback_all_Disabled.png")
    ImageResource rollbackAllDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/googleappengine/images/resource_limits.png")
    ImageResource resourceLimits();
 
    @Source("org/exoplatform/ide/extension/googleappengine/images/resource_limits_Disabled.png")
    ImageResource resourceLimitsDisabled();
-   
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/login.png")
+   ImageResource login();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/login_Disabled.png")
+   ImageResource loginDisabled();
+
    @Source("org/exoplatform/ide/extension/googleappengine/images/logout.png")
    ImageResource logout();
-   
+
    @Source("org/exoplatform/ide/extension/googleappengine/images/logout_Disabled.png")
    ImageResource logoutDisabled();
 }

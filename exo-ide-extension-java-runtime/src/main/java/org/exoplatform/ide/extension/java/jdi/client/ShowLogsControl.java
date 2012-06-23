@@ -78,7 +78,6 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
    @Override
    public void initialize()
    {
-      System.out.println("ShowLogsControl.initialize()");
       setVisible(false);
       setEnabled(false);
 
