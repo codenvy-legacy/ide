@@ -60,6 +60,17 @@ public interface ApplicationRunner
    DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException;
 
    /**
+    * Get application logs.
+    *
+    * @param name
+    *    name of application
+    * @return logs
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to get application logs
+    */
+   String getLogs(String name) throws ApplicationRunnerException;
+
+   /**
     * Stop application.
     *
     * @param name

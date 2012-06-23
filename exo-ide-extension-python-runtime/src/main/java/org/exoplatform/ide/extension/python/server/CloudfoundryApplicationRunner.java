@@ -190,24 +190,28 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       catch (Exception e)
       {
 
-         String logs = getLogs(cloudfoundry, name);
+         String logs = safeGetLogs(cloudfoundry, name);
 
          // try to remove application.
          try
          {
-            LOG.error("Application {} failed to start. Try delete it. ", name);
+            LOG.error("Application {} failed to start, cause: {}", name, e.getMessage());
             cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
          }
          catch (Exception e1)
          {
-            LOG.error("Unable delete failed application {}", name);
+            LOG.error("Unable delete failed application {}, cause: {}", name, e.getMessage());
          }
 
          throw new ApplicationRunnerException(e.getMessage(), e, logs);
       }
    }
 
-   private String getLogs(Cloudfoundry cloudfoundry, String name)
+   /**
+    * Get applications logs and hide any errors. This method is used for getting logs of failed application to help user
+    * understand what is going wrong.
+    */
+   private String safeGetLogs(Cloudfoundry cloudfoundry, String name)
    {
       try
       {
@@ -217,6 +221,56 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          // Not able show log if any errors occurs.
          return null;
+      }
+   }
+
+   @Override
+   public String getLogs(String name) throws ApplicationRunnerException
+   {
+      Application application = applications.get(name);
+      if (application != null)
+      {
+         Cloudfoundry cloudfoundry = cfServers.byTargetName(application.server);
+         if (cloudfoundry != null)
+         {
+            try
+            {
+               return doGetLogs(cloudfoundry, name);
+            }
+            catch (ApplicationRunnerException e)
+            {
+               Throwable cause = e.getCause();
+               if (cause instanceof CloudfoundryException)
+               {
+                  if (200 == ((CloudfoundryException)cause).getExitCode())
+                  {
+                     login(cloudfoundry);
+                     return doGetLogs(cloudfoundry, name);
+                  }
+               }
+               throw e;
+            }
+         }
+         else
+         {
+            throw new ApplicationRunnerException("Unable get logs. Server not available. ");
+         }
+      }
+      else
+      {
+         throw new ApplicationRunnerException("Unable get logs. Application '" + name + "' not found. ");
+      }
+   }
+
+   private String doGetLogs(Cloudfoundry cloudfoundry, String name) throws ApplicationRunnerException
+   {
+      try
+      {
+         return cloudfoundry.getLogs(cloudfoundry.getTarget(), name, "0", null, null);
+      }
+      catch (Exception e)
+      {
+         throw new ApplicationRunnerException(e.getMessage(), e);
       }
    }
 

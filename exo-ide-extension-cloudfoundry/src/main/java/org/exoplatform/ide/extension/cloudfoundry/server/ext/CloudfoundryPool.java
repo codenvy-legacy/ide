@@ -86,11 +86,11 @@ public class CloudfoundryPool
          }
          catch (VirtualFileSystemException ignored)
          {
-            // Never happen since we do not read target value from any were.
+            // Never happen since we do not read target value from anywhere.
          }
          catch (IOException ignored)
          {
-            // Never happen since we do not read target value from any were.
+            // Never happen since we do not read target value from anywhere.
          }
 
          if (target.equals(t))
@@ -115,6 +115,11 @@ public class CloudfoundryPool
       {
          init();
       }
+   }
+
+   public CloudfoundryServerConfiguration[] getConfigurations()
+   {
+      return configs.toArray(new CloudfoundryServerConfiguration[configs.size()]);
    }
 
    private void init()

@@ -70,6 +70,14 @@ public class ApplicationRunnerService
    }
 
    @GET
+   @Path("logs")
+   @Produces(MediaType.TEXT_PLAIN)
+   public String getLogs(@QueryParam("name") String name) throws ApplicationRunnerException
+   {
+      return runner.getLogs(name);
+   }
+
+   @GET
    @Path("stop")
    public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException
    {
