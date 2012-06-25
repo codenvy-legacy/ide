@@ -91,11 +91,14 @@ public class ShowHideHiddenFilesTest extends BaseTest
       // show hidden files
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_HIDDEN_FILES);
       IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HIDDEN_FILE_NAME);
       Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + HIDDEN_FILE_NAME));
       
       // hide hidden files
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_HIDDEN_FILES);
       IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + HIDDEN_FILE_NAME);
+     //Thread.sleep(2000);
       Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + HIDDEN_FILE_NAME));
    }
 
