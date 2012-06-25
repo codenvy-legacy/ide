@@ -29,6 +29,9 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
    String googleAppEngineControl();
 
    /* Buttons */
+   @Key("authenticate.button")
+   String authenticateButton();
+
    @Key("ok.button")
    String okButton();
 

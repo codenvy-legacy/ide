@@ -47,7 +47,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    @UiField
    Label instructionLabel;
-
+   
    public CreateApplicationView()
    {
       super(ID, ViewType.MODAL, TITLE, new Image(GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT);

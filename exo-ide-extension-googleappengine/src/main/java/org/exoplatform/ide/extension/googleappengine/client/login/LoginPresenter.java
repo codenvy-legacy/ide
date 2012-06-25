@@ -57,12 +57,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        */
       HasClickHandlers getGoButton();
 
-      /**
-       * Get Cancel button click handler.
-       * 
-       * @return {@link HasClickHandlers} click handler
-       */
-      HasClickHandlers getCancelButton();
+      void setLoginLocation(String href);
    }
 
    private Display display;
@@ -81,15 +76,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    public void bindDisplay(Display d)
    {
       this.display = d;
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
 
       display.getGoButton().addClickHandler(new ClickHandler()
       {
@@ -113,10 +99,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
       }
-   }
-
-   private void doLogin()
-   {
       UrlBuilder builder = new UrlBuilder();
       builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
          .setPath(GoogleAppEngineClientService.getInstance().getAuthUrl());
@@ -126,7 +108,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       }
 
       final String url = builder.buildString();
-      isUserLogged(url);
+      display.setLoginLocation(url);
+   }
+
+   private void doLogin()
+   {
+      isUserLogged();
    }
 
    /**
@@ -141,7 +128,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       }
    }
 
-   private void isUserLogged(final String url)
+   private void isUserLogged()
    {
       AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
       AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
@@ -157,12 +144,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                   IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
                   if (!result.isAuthenticated())
                   {
+                     IDE.fireEvent(new SetLoggedUserStateEvent(true));
                      if (display != null)
                      {
                         IDE.getInstance().closeView(display.asView().getId());
                      }
-                     IDE.fireEvent(new SetLoggedUserStateEvent(true));
-                     Window.open(url, "_blank", null);
+                     // Window.open(url, "_blank", null);
                   }
                }
 
@@ -172,17 +159,17 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  if (display != null)
-                  {
-                     IDE.getInstance().closeView(display.asView().getId());
-                  }
                   if (exception instanceof UnauthorizedException)
                   {
                      IDE.fireEvent(new ExceptionThrownEvent(exception));
                      return;
                   }
                   IDE.fireEvent(new SetLoggedUserStateEvent(true));
-                  Window.open(url, "_blank", null);
+                  if (display != null)
+                  {
+                     IDE.getInstance().closeView(display.asView().getId());
+                  }
+                  // Window.open(url, "_blank", null);
                }
             });
       }
