@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -74,10 +75,11 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       /**
        * 
        */
-      void enableCreateButton(boolean enable);
+      void changeCreateButtonVisability(boolean enable);
 
       void setUserInstructions(String instructions);
 
+      void setCreateLink(String href);
    }
 
    private Display display;
@@ -123,7 +125,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          @Override
          public void onClick(ClickEvent event)
          {
-            isUserLogged();
+            startCreateApp();
          }
       });
    }
@@ -140,6 +142,17 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+      String projectId = currentProject.getId();
+      String vfsId = currentVfs.getId();
+      UrlBuilder builder = new UrlBuilder();
+      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+         .setHost(Window.Location.getHost())//
+         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
+      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+      display.setCreateLink(url);
+
+      isUserLogged();
    }
 
    /**
@@ -179,17 +192,8 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    private void startCreateApp()
    {
       display.enableDeployButton(true);
-      display.enableCreateButton(false);
+      display.changeCreateButtonVisability(false);
       display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
-      String projectId = currentProject.getId();
-      String vfsId = currentVfs.getId();
-      UrlBuilder builder = new UrlBuilder();
-      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
-         .setHost(Window.Location.getHost())//
-         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
-
-      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
-      Window.open(url, "_blank", null);
    }
 
    private void isUserLogged()
@@ -205,11 +209,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                @Override
                protected void onSuccess(User result)
                {
-                  if (result.isAuthenticated())
-                  {
-                     startCreateApp();
-                  }
-                  else
+                  if (!result.isAuthenticated())
                   {
                      IDE.fireEvent(new LoginEvent());
                   }
