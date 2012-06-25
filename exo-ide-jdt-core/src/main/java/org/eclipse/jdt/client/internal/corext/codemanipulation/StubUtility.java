@@ -121,44 +121,47 @@ public class StubUtility
       return str;
    }
 
-   //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // */
-   // public static String getGetterMethodBodyContent(IJavaProject project, String destTypeName, String methodName, String
-   // fieldName, String lineDelimiter) throws CoreException {
-   // String templateName= CodeTemplateContextType.GETTERSTUB_ID;
-   // Template template= getCodeTemplate(templateName, project);
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
-   //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // */
-   // public static String getSetterMethodBodyContent(IJavaProject project, String destTypeName, String methodName, String
-   // fieldName, String paramName, String lineDelimiter) throws CoreException {
-   // String templateName= CodeTemplateContextType.SETTERSTUB_ID;
-   // Template template= getCodeTemplate(templateName, project);
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   // context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldName);
-   // context.setVariable(CodeTemplateContextType.PARAM, paramName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   */
+   public static String getGetterMethodBodyContent(String destTypeName, String methodName, String fieldName,
+      String lineDelimiter) throws CoreException
+   {
+      String templateName = CodeTemplateContextType.GETTERSTUB_ID;
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+
+      return evaluateTemplate(context, template);
+   }
+
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   */
+   public static String getSetterMethodBodyContent(String destTypeName, String methodName, String fieldName,
+      String paramName, String lineDelimiter) throws CoreException
+   {
+      String templateName = CodeTemplateContextType.SETTERSTUB_ID;
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+      context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldName);
+      context.setVariable(CodeTemplateContextType.PARAM, paramName);
+
+      return evaluateTemplate(context, template);
+   }
 
    public static String getCatchBodyContent(String exceptionType, String variableName, ASTNode locationInAST,
       String lineDelimiter) throws CoreException
@@ -708,55 +711,55 @@ public class StubUtility
       return evaluateTemplate(context, template);
    }
 
-   //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // * @see org.eclipse.jdt.ui.CodeGeneration#getSetterComment(ICompilationUnit, String, String, String, String, String, String,
-   // String)
-   // */
-   // public static String getSetterComment(ICompilationUnit cu, String typeName, String methodName, String fieldName, String
-   // fieldType, String paramName, String bareFieldName, String lineDelimiter)
-   // throws CoreException {
-   // String templateName= CodeTemplateContextType.SETTERCOMMENT_ID;
-   // Template template= getCodeTemplate(templateName, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   //
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   // context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-   // context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
-   // context.setVariable(CodeTemplateContextType.PARAM, paramName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
-   //
-   // /*
-   // * Don't use this method directly, use CodeGeneration.
-   // * @see org.eclipse.jdt.ui.CodeGeneration#getGetterComment(ICompilationUnit, String, String, String, String, String, String)
-   // */
-   // public static String getGetterComment(ICompilationUnit cu, String typeName, String methodName, String fieldName, String
-   // fieldType, String bareFieldName, String lineDelimiter) throws CoreException {
-   // String templateName= CodeTemplateContextType.GETTERCOMMENT_ID;
-   // Template template= getCodeTemplate(templateName, cu.getJavaProject());
-   // if (template == null) {
-   // return null;
-   // }
-   // CodeTemplateContext context= new CodeTemplateContext(template.getContextTypeId(), cu.getJavaProject(), lineDelimiter);
-   // context.setCompilationUnitVariables(cu);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-   // context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-   // context.setVariable(CodeTemplateContextType.FIELD, fieldName);
-   // context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-   // context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
-   //
-   // return evaluateTemplate(context, template);
-   // }
-   //
+   /*
+   * Don't use this method directly, use CodeGeneration.
+   * @see org.eclipse.jdt.ui.CodeGeneration#getSetterComment(ICompilationUnit, String, String, String, String, String, String,
+   String)
+   */
+   public static String getSetterComment(String typeName, String methodName, String fieldName, String fieldType,
+      String paramName, String bareFieldName, String lineDelimiter) throws CoreException
+   {
+      String templateName = CodeTemplateContextType.SETTERCOMMENT_ID;
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+      context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
+      context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
+      context.setVariable(CodeTemplateContextType.PARAM, paramName);
+
+      return evaluateTemplate(context, template);
+   }
+
+   /*
+   */
+   public static String getGetterComment(String typeName, String methodName, String fieldName, String fieldType,
+      String bareFieldName, String lineDelimiter) throws CoreException
+   {
+      String templateName = CodeTemplateContextType.GETTERCOMMENT_ID;
+      Template template = getCodeTemplate(templateName);
+      if (template == null)
+      {
+         return null;
+      }
+      CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
+      context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+      context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+      context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
+      context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
+
+      return evaluateTemplate(context, template);
+   }
+
    private static String evaluateTemplate(CodeTemplateContext context, Template template) throws CoreException
    {
       TemplateBuffer buffer;
@@ -1981,10 +1984,10 @@ public class StubUtility
       TemplateStore codeTemplateStore = JdtExtension.get().getTemplateStore();
       Template orig = codeTemplateStore.findTemplateById(templateId);
       orig.setPattern(pattern);
-//      TemplatePersistenceData data = codeTemplateStore.getTemplateData(templateId);
-//      Template orig = data.getTemplate();
-//      Template copy = new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
-//      data.setTemplate(copy);
+      //      TemplatePersistenceData data = codeTemplateStore.getTemplateData(templateId);
+      //      Template orig = data.getTemplate();
+      //      Template copy = new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
+      //      data.setTemplate(copy);
    }
 
    private static Template getCodeTemplate(String id)

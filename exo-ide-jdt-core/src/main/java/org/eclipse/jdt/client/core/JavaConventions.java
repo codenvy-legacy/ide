@@ -208,10 +208,10 @@ public class JavaConventions
          return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, "Compilation unit name must not be null", null);
       }
       String message = "Compilation unit name must end with .java, or one of the registered Java-like extensions";
-//      if (!org.eclipse.jdt.client.internal.core.util.Util.isJavaLikeFileName(name))
-//      {
-//         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
-//      }
+      //      if (!org.eclipse.jdt.client.internal.core.util.Util.isJavaLikeFileName(name))
+      //      {
+      //         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
+      //      }
       String identifier;
       int index;
       index = name.lastIndexOf('.');
@@ -263,6 +263,26 @@ public class JavaConventions
       {
          return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, id + " is not a valid Java identifier", null);
       }
+   }
+
+   /**
+    * Validate the given method name for the given source and compliance levels.
+    * The special names "&lt;init&gt;" and "&lt;clinit&gt;" are not valid.
+    * <p>
+    * The syntax for a method  name is defined by Identifier
+    * of MethodDeclarator (JLS2 8.4). For example "println".
+    *
+    * @param name the name of a method
+    * @param sourceLevel the source level
+    * @param complianceLevel the compliance level
+    * @return a status object with code <code>IStatus.OK</code> if
+    *    the given name is valid as a method name, otherwise a status
+    *    object indicating what is wrong with the name
+    * @since 3.3
+    */
+   public static IStatus validateMethodName(String name, String sourceLevel, String complianceLevel)
+   {
+      return validateIdentifier(name, sourceLevel, complianceLevel);
    }
 
 }
