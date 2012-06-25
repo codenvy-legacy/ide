@@ -134,24 +134,28 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.EDITOR.typeTextIntoEditor(0, "Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitNoContentModificationMark("newCssFile.css");
       assertFalse(IDE.EDITOR.isFileContentChanged(0));
 
       IDE.EDITOR.selectTab("newHtmlFile.html");
       IDE.EDITOR.typeTextIntoEditor(1, "Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitNoContentModificationMark("newHtmlFile.html");
       assertFalse(IDE.EDITOR.isFileContentChanged(1));
 
       IDE.EDITOR.selectTab("newJavaScriptFile.js");
       IDE.EDITOR.typeTextIntoEditor(2, "Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitNoContentModificationMark("newJavaScriptFile.js");
       assertFalse(IDE.EDITOR.isFileContentChanged(2));
 
       IDE.EDITOR.selectTab("newGroovyFile.groovy");
       IDE.EDITOR.typeTextIntoEditor(4, "Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
+      IDE.EDITOR.waitNoContentModificationMark("newGroovyFile.groovy");
       assertFalse(IDE.EDITOR.isFileContentChanged(4));
 
       //step 3 close all files
