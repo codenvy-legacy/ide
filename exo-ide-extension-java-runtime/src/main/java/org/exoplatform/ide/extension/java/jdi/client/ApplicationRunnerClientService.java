@@ -38,8 +38,6 @@ import com.google.gwt.http.client.RequestException;
  */
 public class ApplicationRunnerClientService
 {
-   private static final String LOGS = "/ide/cloudfoundry/apps/logs";
-
    private static String BASE_URL;
 
    private static ApplicationRunnerClientService instance;
@@ -83,12 +81,11 @@ public class ApplicationRunnerClientService
 
    }
 
-   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
+   public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
-      String url = restContext + LOGS;
-      StringBuilder params = new StringBuilder("?projectid=");
-      params.append(projectId).append("&vfsid=").append(vfsId);
+      String url = BASE_URL + "/logs";
+      StringBuilder params = new StringBuilder("?name=");
+      params.append(name);
 
       Loader loader = new GWTLoader();
       loader.setMessage("Retrieving logs.... ");

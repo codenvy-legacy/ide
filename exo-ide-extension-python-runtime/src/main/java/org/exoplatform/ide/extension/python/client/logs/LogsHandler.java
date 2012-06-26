@@ -22,39 +22,35 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeService;
 import org.exoplatform.ide.extension.python.client.StringUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent;
+import org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler;
+import org.exoplatform.ide.extension.python.shared.ApplicationInstance;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 22, 2012 2:57:45 PM anya $
  * 
  */
-public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class LogsHandler implements ShowLogsHandler, ApplicationStartedHandler, ApplicationStoppedHandler
 {
-   private VirtualFileSystemInfo vfs;
-
-   private ProjectModel project;
+   private ApplicationInstance runApplication;
 
    public LogsHandler()
    {
       IDE.getInstance().addControl(new ShowLogsControl());
 
       IDE.addHandler(ShowLogsEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ApplicationStartedEvent.TYPE, this);
+      IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
    }
 
    /**
@@ -63,21 +59,28 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
-      getLogs();
+      if (runApplication != null)
+      {
+         getLogs();
+      }
+      else
+      {
+         Dialogs.getInstance().showInfo(PythonRuntimeExtension.PYTHON_LOCALIZATION.noRunningApplication());
+      }
    }
 
    private void getLogs()
    {
       try
       {
-         PythonRuntimeService.getInstance().getLogs(vfs.getId(), project.getId(),
+         PythonRuntimeService.getInstance().getLogs(runApplication.getName(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
 
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                  IDE.fireEvent(new OutputEvent(result.toString(), Type.OUTPUT));
+                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
                }
 
                @Override
@@ -94,29 +97,20 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedHandler#onApplicationStopped(org.exoplatform.ide.extension.python.client.run.event.ApplicationStoppedEvent)
     */
    @Override
-   public void onProjectClosed(ProjectClosedEvent event)
+   public void onApplicationStopped(ApplicationStoppedEvent event)
    {
-      this.project = null;
+      this.runApplication = null;
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    * @see org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedHandler#onApplicationStarted(org.exoplatform.ide.extension.python.client.run.event.ApplicationStartedEvent)
     */
    @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
+   public void onApplicationStarted(ApplicationStartedEvent event)
    {
-      this.project = event.getProject();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
+      this.runApplication = event.getApplication();
    }
 }
