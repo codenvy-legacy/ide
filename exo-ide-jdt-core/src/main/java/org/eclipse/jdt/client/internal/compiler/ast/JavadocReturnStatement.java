@@ -26,9 +26,8 @@ public class JavadocReturnStatement extends ReturnStatement
       this.bits |= (ASTNode.InsideJavadoc | ASTNode.Empty);
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.Statement#resolve(org.eclipse.jdt .internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Statement#resolve(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void resolve(BlockScope scope)
    {
@@ -49,9 +48,8 @@ public class JavadocReturnStatement extends ReturnStatement
       }
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.ast.Statement#printStatement(int, java.lang.StringBuffer)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Statement#printStatement(int, java.lang.StringBuffer)
     */
    public StringBuffer printStatement(int tab, StringBuffer output)
    {
@@ -61,10 +59,9 @@ public class JavadocReturnStatement extends ReturnStatement
       return output;
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {
@@ -72,10 +69,9 @@ public class JavadocReturnStatement extends ReturnStatement
       visitor.endVisit(this, scope);
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, ClassScope scope)
    {

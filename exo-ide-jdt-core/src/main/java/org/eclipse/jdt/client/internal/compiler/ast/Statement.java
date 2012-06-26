@@ -15,8 +15,10 @@ import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
+import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
@@ -24,8 +26,10 @@ public abstract class Statement extends ASTNode
 {
 
    /**
-    * Answers true if the if is identified as a known coding pattern which should be tolerated by dead code analysis. e.g. if
-    * (DEBUG) print(); // no complaint Only invoked when overall condition is known to be optimizeable into false/true.
+    * Answers true if the if is identified as a known coding pattern which
+    * should be tolerated by dead code analysis.
+    * e.g. if (DEBUG) print(); // no complaint
+    * Only invoked when overall condition is known to be optimizeable into false/true.
     */
    protected static boolean isKnowDeadCodePattern(Expression expression)
    {
@@ -38,6 +42,21 @@ public abstract class Statement extends ASTNode
       if (expression instanceof Reference)
          return true;
 
+      //		if (expression instanceof BinaryExpression) {
+      //			BinaryExpression binary = (BinaryExpression) expression;
+      //			switch ((binary.bits & ASTNode.OperatorMASK) >> ASTNode.OperatorSHIFT/* operator */) {
+      //				case OperatorIds.AND_AND :
+      //				case OperatorIds.OR_OR :
+      //					break;
+      //				default: 
+      //					// if (DEBUG_LEVEL > 0) print(); - tolerated
+      //					if ((binary.left instanceof Reference) && binary.right.constant != Constant.NotAConstant)
+      //						return true;
+      //					// if (0 < DEBUG_LEVEL) print(); - tolerated
+      //					if ((binary.right instanceof Reference) && binary.left.constant != Constant.NotAConstant)
+      //						return true;
+      //			}
+      //		}
       return false;
    }
 
@@ -49,15 +68,16 @@ public abstract class Statement extends ASTNode
 
    public static final int COMPLAINED_UNREACHABLE = 2;
 
-   /**
-    * Empty hook for checking null status against declaration using null annotations, once this will be supported.
-    */
+   /** Empty hook for checking null status against declaration using null annotations, once this will be supported. */
    protected int checkAgainstNullAnnotation(BlockScope currentScope, LocalVariableBinding local, int nullStatus)
    {
       return nullStatus;
    }
 
-   /** INTERNAL USE ONLY. This is used to redirect inter-statements jumps. */
+   /**
+    * INTERNAL USE ONLY.
+    * This is used to redirect inter-statements jumps.
+    */
    public void branchChainTo(BranchLabel label)
    {
       // do nothing by default
@@ -91,6 +111,59 @@ public abstract class Statement extends ASTNode
       return previousComplaintLevel;
    }
 
+   /**
+    * Generate invocation arguments, considering varargs methods
+    */
+   public void generateArguments(MethodBinding binding, Expression[] arguments, BlockScope currentScope)
+   {
+      if (binding.isVarargs())
+      {
+         // 5 possibilities exist for a call to the vararg method foo(int i, int ... value) :
+         //      foo(1), foo(1, null), foo(1, 2), foo(1, 2, 3, 4) & foo(1, new int[] {1, 2})
+         TypeBinding[] params = binding.parameters;
+         int paramLength = params.length;
+         int varArgIndex = paramLength - 1;
+         for (int i = 0; i < varArgIndex; i++)
+         {
+            arguments[i].generateCode(currentScope, true);
+         }
+         ArrayBinding varArgsType = (ArrayBinding)params[varArgIndex]; // parameterType has to be an array type
+         int argLength = arguments == null ? 0 : arguments.length;
+
+         if (argLength > paramLength)
+         {
+            for (int i = varArgIndex; i < argLength; i++)
+            {
+               arguments[i].generateCode(currentScope, true);
+            }
+         }
+         else if (argLength == paramLength)
+         {
+            // right number of arguments - could be inexact - pass argument as is
+            TypeBinding lastType = arguments[varArgIndex].resolvedType;
+            if (lastType == TypeBinding.NULL
+               || (varArgsType.dimensions() == lastType.dimensions() && lastType.isCompatibleWith(varArgsType)))
+            {
+               // foo(1, new int[]{2, 3}) or foo(1, null) --> last arg is passed as-is
+               arguments[varArgIndex].generateCode(currentScope, true);
+            }
+            else
+            {
+               // right number but not directly compatible or too many arguments - wrap extra into array
+               // need to gen elements into an array, then gen each remaining element into created array
+               arguments[varArgIndex].generateCode(currentScope, true);
+            }
+         }
+      }
+      else if (arguments != null)
+      { // standard generation for method arguments
+         for (int i = 0, max = arguments.length; i < max; i++)
+            arguments[i].generateCode(currentScope, true);
+      }
+   }
+
+   public abstract void generateCode(BlockScope currentScope);
+
    protected boolean isBoxingCompatible(TypeBinding expressionType, TypeBinding targetType, Expression expression,
       Scope scope)
    {
@@ -112,15 +185,15 @@ public abstract class Statement extends ASTNode
 
    public boolean isValidJavaStatement()
    {
-      // the use of this method should be avoid in most cases
-      // and is here mostly for documentation purpose.....
-      // while the parser is responsible for creating
-      // welled formed expression statement, which results
-      // in the fact that java-non-semantic-expression-used-as-statement
-      // should not be parsed...thus not being built.
-      // It sounds like the java grammar as help the compiler job in removing
-      // -by construction- some statement that would have no effect....
-      // (for example all expression that may do side-effects are valid statement
+      //the use of this method should be avoid in most cases
+      //and is here mostly for documentation purpose.....
+      //while the parser is responsible for creating
+      //welled formed expression statement, which results
+      //in the fact that java-non-semantic-expression-used-as-statement
+      //should not be parsed...thus not being built.
+      //It sounds like the java grammar as help the compiler job in removing
+      //-by construction- some statement that would have no effect....
+      //(for example all expression that may do side-effects are valid statement
       // -this is an approximative idea.....-)
 
       return true;
@@ -135,7 +208,9 @@ public abstract class Statement extends ASTNode
 
    public abstract void resolve(BlockScope scope);
 
-   /** Returns case constant associated to this statement (NotAConstant if none) */
+   /**
+    * Returns case constant associated to this statement (NotAConstant if none)
+    */
    public Constant resolveCase(BlockScope scope, TypeBinding testType, SwitchStatement switchStatement)
    {
       // statement within a switch that are not case are treated as normal statement....
@@ -143,10 +218,9 @@ public abstract class Statement extends ASTNode
       return Constant.NotAConstant;
    }
 
-   /**
-    * Implementation of {@link org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType} suitable at this
-    * level. Subclasses should override as necessary.
-    * 
+   /** 
+    * Implementation of {@link org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType}
+    * suitable at this level. Subclasses should override as necessary.
     * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType()
     */
    public TypeBinding expectedType()

@@ -26,7 +26,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
  * 
  * @see AST#getBindingResolver
  */
-class BindingResolver
+public class BindingResolver
 {
 
    /** Creates a binding resolver. */
@@ -161,7 +161,7 @@ class BindingResolver
     * @param referenceBinding the old type binding
     * @return the new type binding
     */
-   ITypeBinding getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding referenceBinding)
+   public ITypeBinding getTypeBinding(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding referenceBinding)
    {
       return null;
    }

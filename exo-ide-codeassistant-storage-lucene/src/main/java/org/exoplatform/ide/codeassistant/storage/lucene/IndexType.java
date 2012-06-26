@@ -27,7 +27,10 @@ import org.apache.lucene.search.TermQuery;
  */
 public enum IndexType {
 
-   JAVA("indexType", "java"), DOC("indexType", "doc"), PACKAGE("indexType", "package");
+   JAVA("indexType", "java"), // 
+   DOC("indexType", "doc"), //
+   PACKAGE("indexType", "package");
+
    private final String indexFieldName;
 
    private final String indexFieldValue;

@@ -50,6 +50,24 @@ public class Block extends Statement
       return flowInfo;
    }
 
+   /**
+    * Code generation for a block
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      if (this.statements != null)
+      {
+         for (int i = 0, max = this.statements.length; i < max; i++)
+         {
+            this.statements[i].generateCode(this.scope);
+         }
+      } // for local variable debug attributes
+   }
+
    public boolean isEmptyBlock()
    {
       return this.statements == null;
@@ -122,7 +140,9 @@ public class Block extends Statement
       visitor.endVisit(this, blockScope);
    }
 
-   /** Dispatch the call on its last statement. */
+   /**
+    * Dispatch the call on its last statement.
+    */
    public void branchChainTo(BranchLabel label)
    {
       if (this.statements != null)

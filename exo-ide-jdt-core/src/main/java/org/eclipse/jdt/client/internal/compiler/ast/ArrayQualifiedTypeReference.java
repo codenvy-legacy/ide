@@ -36,7 +36,9 @@ public class ArrayQualifiedTypeReference extends QualifiedTypeReference
       return this.dimensions;
    }
 
-   /** @return char[][] */
+   /**
+    * @return char[][]
+    */
    public char[][] getParameterizedTypeName()
    {
       int dim = this.dimensions;

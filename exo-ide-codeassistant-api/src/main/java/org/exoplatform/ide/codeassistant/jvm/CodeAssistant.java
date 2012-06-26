@@ -18,16 +18,29 @@
  */
 package org.exoplatform.ide.codeassistant.jvm;
 
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Base class for JVM based programming languages(Java, Groovy) codeassitant. Class contains some basic methods for using
@@ -40,14 +53,17 @@ import java.util.List;
 public abstract class CodeAssistant
 {
 
-   protected CodeAssistantStorage storage;
+   protected CodeAssistantStorageClient storage;
+
+   protected VirtualFileSystemRegistry vfsRegistry;
 
    /**
     * @param storage
     */
-   public CodeAssistant(CodeAssistantStorage storage)
+   public CodeAssistant(CodeAssistantStorageClient storage, VirtualFileSystemRegistry vfsRegistry)
    {
       this.storage = storage;
+      this.vfsRegistry = vfsRegistry;
    }
 
    /**
@@ -62,17 +78,18 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
+      Set<String> dependencys = getProjectDependencys(projectId, vfsId);
       switch (type)
       {
          case INTERFACE :
-            List<ShortTypeInfo> intefaces = storage.getInterfaces(prefix);
+            List<ShortTypeInfo> intefaces = storage.getInterfaces(prefix, dependencys);
             if (intefaces != null)
             {
                result.addAll(intefaces);
             }
             break;
          case ANNOTATION :
-            List<ShortTypeInfo> annotations = storage.getAnnotations(prefix);
+            List<ShortTypeInfo> annotations = storage.getAnnotations(prefix, dependencys);
             if (annotations != null)
             {
                result.addAll(annotations);
@@ -80,7 +97,7 @@ public abstract class CodeAssistant
             break;
          case CLASS :
          case ENUM :
-            List<ShortTypeInfo> classes = storage.getClasses(prefix);
+            List<ShortTypeInfo> classes = storage.getClasses(prefix, dependencys);
             if (classes != null)
             {
                result.addAll(classes);
@@ -105,6 +122,61 @@ public abstract class CodeAssistant
    }
 
    /**
+    * @param projectId
+    * @return
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    */
+   protected Set<String> getProjectDependencys(String projectId, String vfsId) throws VirtualFileSystemException,
+      CodeAssistantException
+   {
+      Set<String> set = new HashSet<String>();
+      //add rt.jar as dependency
+      set.add("java:rt:1.6:jar");
+      if( projectId == null)
+      {
+         return set;
+      }
+      Project project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
+      String classpath = (String)project.getPropertyValue("exoide:classpath");
+      JsonParser parser = new JsonParser();
+      try
+      {
+         parser.parse(new ByteArrayInputStream(classpath.getBytes()));
+         Dependency[] dependencys = (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
+         for (Dependency d : dependencys)
+            set.add(d.toString());
+         return set;
+      }
+      catch (JsonException e)
+      {
+
+         throw new CodeAssistantException(500, "Can't parse dependencys for project: " + projectId);
+      }
+   }
+
+   /**
+    * @param projectId
+    * @param vfs
+    * @return
+    * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    * @throws CodeAssistantException
+    */
+   protected Project getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
+      PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
+   {
+      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+      Project project = null;
+      if (item instanceof Project)
+         project = (Project)item;
+      else
+         throw new CodeAssistantException(400, "'projectId' is not project Id");
+      return project;
+   }
+
+   /**
     * Returns the Class object associated with the class or interface with the given string name.
     * 
     * @param fqn the Full Qualified Name
@@ -116,7 +188,8 @@ public abstract class CodeAssistant
    public TypeInfo getClassByFQN(String fqn, String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      TypeInfo clazz = storage.getTypeByFqn(fqn);
+      Set<String> dependencys = getProjectDependencys(projectId, vfsId);
+      TypeInfo clazz = storage.getTypeByFqn(fqn, dependencys);
       if (clazz != null)
       {
          return clazz;
@@ -166,7 +239,7 @@ public abstract class CodeAssistant
    {
       try
       {
-         return storage.getClassJavaDoc(fqn);
+         return storage.getClassJavaDoc(fqn, getProjectDependencys(projectId, vfsId));
       }
       catch (CodeAssistantException e)
       {
@@ -197,7 +270,7 @@ public abstract class CodeAssistant
    {
       try
       {
-         return storage.getMemberJavaDoc(fqn);
+         return storage.getMemberJavaDoc(fqn, getProjectDependencys(projectId, vfsId));
       }
       catch (CodeAssistantException e)
       {
@@ -246,7 +319,7 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.getTypesByFqnPrefix(prefix);
+      List<ShortTypeInfo> list = storage.getTypesByFqnPrefix(prefix, getProjectDependencys(projectId, vfsId));
       if (list != null)
       {
          result.addAll(list);
@@ -283,7 +356,7 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<ShortTypeInfo> result = new ArrayList<ShortTypeInfo>();
-      List<ShortTypeInfo> list = storage.getTypesByNamePrefix(className);
+      List<ShortTypeInfo> list = storage.getTypesByNamePrefix(className, getProjectDependencys(projectId, vfsId));
       if (list != null)
       {
          result.addAll(list);
@@ -319,7 +392,8 @@ public abstract class CodeAssistant
    public List<TypeInfo> getTypeInfoByNamePrefix(String namePrefix, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      List<TypeInfo> searchResult = storage.getTypesInfoByNamePrefix(namePrefix);
+      List<TypeInfo> searchResult =
+         storage.getTypesInfoByNamePrefix(namePrefix, getProjectDependencys(projectId, vfsId));
       List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
       if (list != null)
          searchResult.addAll(list);
@@ -338,7 +412,7 @@ public abstract class CodeAssistant
    public List<String> getPackagesByPrefix(String prefix, String projectId, String vfsId)
       throws CodeAssistantException, VirtualFileSystemException
    {
-      List<String> packages = storage.getPackages(prefix);
+      List<String> packages = storage.getPackages(prefix, getProjectDependencys(projectId, vfsId));
       List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
       if (packagesFromProject != null)
       {
@@ -356,7 +430,8 @@ public abstract class CodeAssistant
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException
     */
-   protected abstract List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException;
+   protected abstract List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Return sets of {@link TypeInfo} object associated with the class or interface matched to name. (means Class simple name

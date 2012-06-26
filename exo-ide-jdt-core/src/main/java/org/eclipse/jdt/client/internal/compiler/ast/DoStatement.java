@@ -31,6 +31,11 @@ public class DoStatement extends Statement
 
    private BranchLabel breakLabel, continueLabel;
 
+   // for local variables table attributes
+   int mergedInitStateIndex = -1;
+
+   int preConditionInitStateIndex = -1;
+
    public DoStatement(Expression condition, Statement action, int sourceStart, int sourceEnd)
    {
 
@@ -84,9 +89,10 @@ public class DoStatement extends Statement
       {
          this.condition.checkNPE(currentScope, flowContext, initsOnCondition);
       }
-      /*
-       * Reset reach mode, to address following scenario. final blank; do { if (true) break; else blank = 0; } while(false); blank
-       * = 1; // may be initialized already
+      /* Reset reach mode, to address following scenario.
+       *   final blank;
+       *   do { if (true) break; else blank = 0; } while(false);
+       *   blank = 1; // may be initialized already
        */
       actionInfo.setReachMode(previousMode);
 
@@ -95,6 +101,7 @@ public class DoStatement extends Statement
          this.condition.analyseCode(currentScope, (condLoopContext =
             new LoopingFlowContext(flowContext, flowInfo, this, null, null, currentScope)), (this.action == null
             ? actionInfo : (actionInfo.mergedWith(loopingContext.initsOnContinue))).copy());
+      this.preConditionInitStateIndex = currentScope.methodScope().recordInitializationStates(actionInfo);
       if (!isConditionOptimizedFalse && this.continueLabel != null)
       {
          loopingContext.complainOnDeferredFinalChecks(currentScope, condInfo);
@@ -121,8 +128,49 @@ public class DoStatement extends Statement
                : condInfo,
             // recover null inits from before condition analysis
             false, // never consider opt false case for DO loop, since break can always occur (47776)
-            !isConditionTrue /* do{}while(true); unreachable(); */);
+            !isConditionTrue /*do{}while(true); unreachable(); */);
+      this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
+   }
+
+   /**
+    * Do statement code generation
+    *
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
+         return;
+      }
+
+      // labels management
+      BranchLabel actionLabel = new BranchLabel();
+      if (this.action != null)
+         actionLabel.tagBits |= BranchLabel.USED;
+      boolean hasContinueLabel = this.continueLabel != null;
+
+      // generate action
+      if (this.action != null)
+      {
+         this.action.generateCode(currentScope);
+      }
+      // continue label (135602)
+      if (hasContinueLabel)
+      {
+         // May loose some local variable initializations : affecting the local variable attributes
+         // generate condition
+         Constant cst = this.condition.optimizedBooleanConstant();
+         boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
+         if (isConditionOptimizedFalse)
+         {
+            this.condition.generateCode(currentScope, false);
+         }
+         else
+         {
+            this.condition.generateOptimizedBoolean(currentScope, actionLabel, null, true);
+         }
+      }
    }
 
    public StringBuffer printStatement(int indent, StringBuffer output)

@@ -53,23 +53,25 @@ public class DataStorageWriter
     * @throws IOException
     * @throws SaveDataIndexException
     */
-   public void writeBinaryJarsToIndex(List<String> jars) throws IOException, SaveDataIndexException
+   public void writeBinaryJarsToIndex(Artifact[] artifacts) throws IOException, SaveDataIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;
+      if (artifacts == null)
+         return;
       try
       {
          luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneDataWriter writer = new LuceneDataWriter(luceneInfoStorage);
 
-         Set<String> packages = new TreeSet<String>();
-         for (String jar : jars)
+         for (Artifact artifact : artifacts)
          {
-            File jarFile = new File(jar);
+            Set<String> packages = new TreeSet<String>();
+            File jarFile = new File(artifact.getPath());
             List<TypeInfo> typeInfos = JarParser.parse(jarFile);
             packages.addAll(PackageParser.parse(jarFile));
-            writer.addTypeInfo(typeInfos);
+            writer.addTypeInfo(typeInfos, artifact.getArtifactString());
+            writer.addPackages(packages, artifact.getArtifactString());
          }
-         writer.addPackages(packages);
       }
       finally
       {
@@ -87,23 +89,25 @@ public class DataStorageWriter
     * @throws IOException
     * @throws SaveDataIndexException
     */
-   public void writeSourceJarsToIndex(List<String> sourceJars) throws IOException, SaveDataIndexException
+   public void writeSourceJarsToIndex(Artifact[] artifacts) throws IOException, SaveDataIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;
+      if (artifacts == null)
+         return;
       try
       {
          luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
          LuceneDataWriter writer = new LuceneDataWriter(luceneInfoStorage);
 
          QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
-         for (String jar : sourceJars)
+         for (Artifact artifact : artifacts)
          {
-            File jarFile = new File(jar);
+            File jarFile = new File(artifact.getPath());
             InputStream zipStream = new FileInputStream(jarFile);
             try
             {
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
-               writer.addJavaDocs(javaDocs);
+               writer.addJavaDocs(javaDocs, artifact.getArtifactString());
             }
             finally
             {

@@ -50,7 +50,7 @@ public class LucenePackageWriterTest
    @Test
    public void shouldAddPackage() throws Exception
    {
-      writer.addPackages(new TreeSet<String>(Arrays.asList("java", "java.lang","org","org.exoplatform","org.exoplatform.ide")));
+      writer.addPackages(new TreeSet<String>(Arrays.asList("java", "java.lang","org","org.exoplatform","org.exoplatform.ide")),"rt");
       IndexReader reader = luceneInfoStorage.getTypeInfoIndexSearcher().getIndexReader();
       assertEquals(5, reader.numDocs());
       reader.close();

@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.groovy.server;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistant;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
@@ -51,7 +51,6 @@ import java.util.List;
  */
 public class GroovyCodeAssistant extends CodeAssistant
 {
-   private VirtualFileSystemRegistry vfsRegistry;
 
    private IDEGroovyClassLoaderProvider groovyClassLoaderProvider;
 
@@ -61,12 +60,10 @@ public class GroovyCodeAssistant extends CodeAssistant
    /**
     * @param storage
     */
-   public GroovyCodeAssistant(CodeAssistantStorage storage,
-                              VirtualFileSystemRegistry vfsRegistry,
-                              IDEGroovyClassLoaderProvider groovyClassLoaderProvider)
+   public GroovyCodeAssistant(CodeAssistantStorageClient storage, VirtualFileSystemRegistry vfsRegistry,
+      IDEGroovyClassLoaderProvider groovyClassLoaderProvider)
    {
-      super(storage);
-      this.vfsRegistry = vfsRegistry;
+      super(storage, vfsRegistry);
       this.groovyClassLoaderProvider = groovyClassLoaderProvider;
    }
 
@@ -88,7 +85,8 @@ public class GroovyCodeAssistant extends CodeAssistant
          GroovyClassPath groovyClassPath = GroovyClassPathHelper.getGroovyClassPath(projectId, vfs);
          if (null != groovyClassPath)
          {
-            TypeInfo classInfo = new GroovyClassNamesExtractor(vfs, groovyClassLoaderProvider).getClassInfo(fqn, groovyClassPath);
+            TypeInfo classInfo =
+               new GroovyClassNamesExtractor(vfs, groovyClassLoaderProvider).getClassInfo(fqn, groovyClassPath);
             return classInfo;
          }
       }
@@ -126,8 +124,9 @@ public class GroovyCodeAssistant extends CodeAssistant
          GroovyClassPath groovyClassPath = GroovyClassPathHelper.getGroovyClassPath(projectId, vfs);
          if (null != groovyClassPath)
          {
-            types = new GroovyClassNamesExtractor(vfs, groovyClassLoaderProvider)
-               .getClassNames(className, GroovyClassPathHelper.getGroovyClassPath(projectId, vfs));
+            types =
+               new GroovyClassNamesExtractor(vfs, groovyClassLoaderProvider).getClassNames(className,
+                  GroovyClassPathHelper.getGroovyClassPath(projectId, vfs));
          }
       }
       catch (JsonException e)
@@ -198,7 +197,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       //we don't support this feature now
       throw new CodeAssistantException(404, "Not found");
    }
-   
+
    /**
     * Find classes in package
     * 
@@ -224,7 +223,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       }
       return classes;
    }
-   
+
    /**
     * Return word until first point like "ClassName" on file name "ClassName.java"
     * 

@@ -8,8 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Stephan Herrmann - Contributions for 
- *                       bug 236385 - [compiler] Warn for potential programming problem if an object is created but not used
- *                       bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
+ *     						bug 236385 - [compiler] Warn for potential programming problem if an object is created but not used
+ *     						bug 319201 - [null] no warning when unboxing SingleNameReference causes NPE
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
@@ -132,7 +132,18 @@ public class AllocationExpression extends Expression implements InvocationSite
       return null;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      if (!valueRequired)
+         currentScope.problemReporter().unusedObjectAllocation(this);
+
+      // generate the arguments for constructor
+      generateArguments(this.binding, this.arguments, currentScope);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -148,9 +159,11 @@ public class AllocationExpression extends Expression implements InvocationSite
       return true;
    }
 
-   /*
-    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation. Dependency
-    * mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet know their
+   /* Inner emulation consists in either recording a dependency
+    * link only, or performing one level of propagation.
+    *
+    * Dependency mechanism is used whenever dealing with source target
+    * types, since by the time we reach them, we might not yet know their
     * exact need.
     */
    public void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
@@ -251,7 +264,7 @@ public class AllocationExpression extends Expression implements InvocationSite
       }
       else
       {
-         this.resolvedType = this.type.resolveType(scope, true /* check bounds */);
+         this.resolvedType = this.type.resolveType(scope, true /* check bounds*/);
          checkParameterizedAllocation :
          {
             if (this.type instanceof ParameterizedQualifiedTypeReference)
@@ -292,9 +305,7 @@ public class AllocationExpression extends Expression implements InvocationSite
          for (int i = 0; i < length; i++)
          {
             TypeReference typeReference = this.typeArguments[i];
-            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
-                                                                                       * check bounds
-                                                                                       */)) == null)
+            if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
             {
                argHasError = true;
             }
@@ -344,10 +355,9 @@ public class AllocationExpression extends Expression implements InvocationSite
          }
          if (argHasError)
          {
-            /*
-             * https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
-             * No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
-             * not return the partially resolved type.
+            /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=345359, if arguments have errors, completely bail out in the <> case.
+               No meaningful type resolution is possible since inference of the elided types is fully tied to argument types. Do
+               not return the partially resolved type.
              */
             if (isDiamond)
             {
@@ -359,8 +369,7 @@ public class AllocationExpression extends Expression implements InvocationSite
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
                {
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
-                                                                                                  // null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
                }
                this.binding =
                   scope.findMethod((ReferenceBinding)this.resolvedType, TypeConstants.INIT, pseudoArgs, this);
@@ -456,11 +465,10 @@ public class AllocationExpression extends Expression implements InvocationSite
    public TypeBinding[] inferElidedTypes(ReferenceBinding allocationType, ReferenceBinding enclosingType,
       TypeBinding[] argumentTypes, final BlockScope scope)
    {
-      /*
-       * Given the allocation type and the arguments to the constructor, see if we can synthesize a generic static factory method
-       * that would, given the argument types and the invocation site, manufacture a parameterized object of type allocationType.
-       * If we are successful then by design and construction, the parameterization of the return type of the factory method is
-       * identical to the types elided in the <>.
+      /* Given the allocation type and the arguments to the constructor, see if we can synthesize a generic static factory
+         method that would, given the argument types and the invocation site, manufacture a parameterized object of type allocationType.
+         If we are successful then by design and construction, the parameterization of the return type of the factory method is identical
+         to the types elided in the <>.
        */
       MethodBinding factory = scope.getStaticFactory(allocationType, enclosingType, argumentTypes, this);
       if (factory instanceof ParameterizedGenericMethodBinding && factory.isValidBinding())
@@ -555,13 +563,17 @@ public class AllocationExpression extends Expression implements InvocationSite
       visitor.endVisit(this, scope);
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding) */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Expression#setExpectedType(org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding)
+    */
    public void setExpectedType(TypeBinding expectedType)
    {
       this.typeExpected = expectedType;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType() */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#expectedType()
+    */
    public TypeBinding expectedType()
    {
       return this.typeExpected;

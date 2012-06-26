@@ -25,13 +25,15 @@ public class CompoundAssignment extends Assignment implements OperatorIds
 {
    public int operator;
 
-   // var op exp is equivalent to var = (varType) var op exp
+   public int preAssignImplicitConversion;
+
+   //  var op exp is equivalent to var = (varType) var op exp
    // assignmentImplicitConversion stores the cast needed for the assignment
 
    public CompoundAssignment(Expression lhs, Expression expression, int operator, int sourceEnd)
    {
-      // lhs is always a reference by construction ,
-      // but is build as an expression ==> the checkcast cannot fail
+      //lhs is always a reference by construction ,
+      //but is build as an expression ==> the checkcast cannot fail
 
       super(lhs, expression, sourceEnd);
       lhs.bits &= ~IsStrictlyAssigned; // tag lhs as NON assigned - it is also a read access
@@ -70,22 +72,16 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       return true;
    }
 
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
-   // {
-   //
-   // // various scenarii are possible, setting an array reference,
-   // // a field reference, a blank final field reference, a field of an enclosing instance or
-   // // just a local variable.
-   //
-   // int pc = codeStream.position;
-   // ((Reference)this.lhs).generateCompoundAssignment(currentScope, codeStream, this.expression, this.operator,
-   // this.preAssignImplicitConversion, valueRequired);
-   // if (valueRequired)
-   // {
-   // codeStream.generateImplicitConversion(this.implicitConversion);
-   // }
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+
+      // various scenarii are possible, setting an array reference,
+      // a field reference, a blank final field reference, a field of an enclosing instance or
+      // just a local variable.
+
+      ((Reference)this.lhs).generateCompoundAssignment(currentScope, this.expression, this.operator,
+         this.preAssignImplicitConversion, valueRequired);
+   }
 
    public int nullStatus(FlowInfo flowInfo)
    {
@@ -182,7 +178,7 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       if (lhsID > 15 || expressionID > 15)
       {
          if (lhsID != T_JavaLangString)
-         { // String += Thread is valid whereas Thread += String is not
+         { // String += Thread is valid whereas Thread += String  is not
             scope.problemReporter().invalidOperator(this, lhsType, expressionType);
             return null;
          }
@@ -190,9 +186,9 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       }
 
       // the code is an int
-      // (cast) left Op (cast) rigth --> result
-      // 0000 0000 0000 0000 0000
-      // <<16 <<12 <<8 <<4 <<0
+      // (cast)  left   Op (cast)  rigth --> result
+      //  0000   0000       0000   0000      0000
+      //  <<16   <<12       <<8     <<4        <<0
 
       // the conversion is stored INTO the reference (info needed for the code gen)
       int result = OperatorExpression.OperatorSignatures[this.operator][(lhsID << 4) + expressionID];
@@ -234,6 +230,7 @@ public class CompoundAssignment extends Assignment implements OperatorIds
       this.lhs.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 16) & 0x0000F), originalLhsType);
       this.expression.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 8) & 0x0000F),
          originalExpressionType);
+      this.preAssignImplicitConversion = (unboxedLhs ? BOXING : 0) | (lhsID << 4) | (result & 0x0000F);
       if (unboxedLhs)
          scope.problemReporter().autoboxing(this, lhsType, originalLhsType);
       if (expressionIsCast)

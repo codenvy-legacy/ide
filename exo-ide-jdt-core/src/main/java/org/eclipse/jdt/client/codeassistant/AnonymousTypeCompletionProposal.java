@@ -10,26 +10,55 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
+
+import org.eclipse.jdt.client.JavaCodeController;
+import org.eclipse.jdt.client.JavaPreferencesSettings;
+import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
 import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.eclipse.jdt.client.core.ISourceRange;
+import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.core.dom.AST;
+import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.ASTParser;
+import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.IMethodBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.Modifier;
+import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
+import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ITrackedNodePosition;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.CodeGenerationSettings;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.editor.text.TextUtilities;
+import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal implements
@@ -44,10 +73,12 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 
    private ImportRewrite fImportRewrite;
 
-   private TypeDeclaration fSuperType;
+   private ITypeBinding fSuperType;
+
+   private CompilationUnit fCompilationUnit;
 
    public AnonymousTypeCompletionProposal(JavaContentAssistInvocationContext invocationContext, int start, int length,
-      String constructorCompletion, StyledString displayName, String declarationSignature, TypeDeclaration superType,
+      String constructorCompletion, StyledString displayName, String declarationSignature, ITypeBinding superType,
       int relevance)
    {
       super(constructorCompletion, start, length, null, displayName, relevance, null, invocationContext);
@@ -56,8 +87,9 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 
       fDeclarationSignature = declarationSignature;
       fSuperType = superType;
+      fCompilationUnit = invocationContext.getCompilationUnit();
 
-      // setImage(getImageForType(fSuperType));
+      setImage(getImageForType(fSuperType));
       setCursorPosition(constructorCompletion.indexOf('(') + 1);
    }
 
@@ -75,7 +107,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
       if (fDeclarationSignature != null)
          buffer.append(Signature.toString(fDeclarationSignature));
       else
-         buffer.append(fSuperType.getName().getFullyQualifiedName());
+         buffer.append(fSuperType.getQualifiedName());
       buffer.append(" {"); //$NON-NLS-1$
       buffer.append("\n"); // Using newline is ok since source is used in dummy compilation unit //$NON-NLS-1$
       buffer.append("}"); //$NON-NLS-1$
@@ -87,181 +119,186 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
       if (importRewrite == null)
          return null;
 
-      // try
-      // {
-      String name = "Type" + System.currentTimeMillis(); //$NON-NLS-1$
-      //
-      // boolean sameUnit = range != null && fCompilationUnit.equals(fSuperType.getCompilationUnit());
-      //
-      // // creates a type that extends the super type
-      String dummyClassContent = createDummyType(name);
-      //
-      // StringBuffer workingCopyContents = new StringBuffer(fCompilationUnit.getSource());
-      // int insertPosition;
-      // if (sameUnit)
-      // {
-      // insertPosition = .getOffset() + range.getLength();
-      // }
-      // else
-      // {
-      // ISourceRange firstTypeRange = fCompilationUnit.getTypes()[0].getSourceRange();
-      // insertPosition = firstTypeRange.getOffset();
-      // }
-      // if (fSuperType.isLocal())
-      // {
-      // // add an extra block: helps the AST to recover
-      // workingCopyContents.insert(insertPosition, '{' + dummyClassContent + '}');
-      // insertPosition++;
-      // }
-      // else
-      // {
-      // /*
-      // * The two empty lines are added because the trackedDeclaration uses the covered range and hence would also included
-      // * comments that directly follow the dummy class.
-      // */
-      //            workingCopyContents.insert(insertPosition, dummyClassContent + "\n\n"); //$NON-NLS-1$
-      // }
-      //
-      //
-      // ASTParser parser = ASTParser.newParser(AST.JLS3);
-      // parser.setResolveBindings(true);
-      // parser.setStatementsRecovery(true);
-      // parser.setSource(workingCopyContents.toString());
-      //
-      // CompilationUnit astRoot = (CompilationUnit)parser.createAST(new NullProgressMonitor());
-      // ASTNode newType = NodeFinder.perform(astRoot, insertPosition, dummyClassContent.length());
-      // if (!(newType instanceof AbstractTypeDeclaration))
-      // return null;
-      //
-      // AbstractTypeDeclaration declaration = (AbstractTypeDeclaration)newType;
-      // ITypeBinding dummyTypeBinding = declaration.resolveBinding();
-      // if (dummyTypeBinding == null)
-      // return null;
-      //
-      // IMethodBinding[] bindings = StubUtility2.getOverridableMethods(astRoot.getAST(), dummyTypeBinding, true);
-      //
-      // if (fSuperType.isInterface())
-      // {
-      // ITypeBinding[] dummySuperInterfaces = dummyTypeBinding.getInterfaces();
-      // if (dummySuperInterfaces.length == 0 || dummySuperInterfaces.length == 1
-      // && dummySuperInterfaces[0].isRawType())
-      // bindings = new IMethodBinding[0];
-      // }
-      // else
-      // {
-      // ITypeBinding dummySuperclass = dummyTypeBinding.getSuperclass();
-      // if (dummySuperclass == null || dummySuperclass.isRawType())
-      // bindings = new IMethodBinding[0];
-      // }
-      //
-      // CodeGenerationSettings settings =
-      // JavaPreferencesSettings.getCodeGenerationSettings(fSuperType.getJavaProject());
-      //
-      // IMethodBinding[] methodsToOverride = null;
-      //
-      // IType type = null;
-      // if (!fSuperType.isInterface() && !fSuperType.isAnnotation())
-      // {
-      // IJavaElement typeElement = dummyTypeBinding.getJavaElement();
-      // // add extra checks here as the recovered code is fragile
-      // if (typeElement instanceof IType && name.equals(typeElement.getElementName()) && typeElement.exists())
-      // {
-      // type = (IType)typeElement;
-      // }
-      // }
-      //
-      // if (type != null)
-      // {
-      // OverrideMethodDialog dialog =
-      // new OverrideMethodDialog(JavaPlugin.getActiveWorkbenchShell(), null, type, true);
-      // dialog.setGenerateComment(false);
-      // dialog.setElementPositionEnabled(false);
-      // if (dialog.open() == Window.OK)
-      // {
-      // Object[] selection = dialog.getResult();
-      // ArrayList<Object> result = new ArrayList<Object>(selection.length);
-      // for (int i = 0; i < selection.length; i++)
-      // {
-      // if (selection[i] instanceof IMethodBinding)
-      // result.add(selection[i]);
-      // }
-      // methodsToOverride = result.toArray(new IMethodBinding[result.size()]);
-      // settings.createComments = dialog.getGenerateComment();
-      // }
-      // else
-      // {
-      // // cancelled
-      //               setReplacementString(""); //$NON-NLS-1$
-      // setReplacementLength(0);
-      // return null;
-      // }
-      // }
-      // else
-      // {
-      // settings.createComments = false;
-      // List<IMethodBinding> result = new ArrayList<IMethodBinding>();
-      // for (int i = 0; i < bindings.length; i++)
-      // {
-      // IMethodBinding curr = bindings[i];
-      // if (Modifier.isAbstract(curr.getModifiers()))
-      // result.add(curr);
-      // }
-      // methodsToOverride = result.toArray(new IMethodBinding[result.size()]);
-      // }
-      // ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
-      // ITrackedNodePosition trackedDeclaration = rewrite.track(declaration);
-      //
-      // ListRewrite rewriter = rewrite.getListRewrite(declaration, declaration.getBodyDeclarationsProperty());
-      // for (int i = 0; i < methodsToOverride.length; i++)
-      // {
-      // IMethodBinding curr = methodsToOverride[i];
-      // MethodDeclaration stub =
-      // StubUtility2.createImplementationStub(workingCopy, rewrite, importRewrite, null, curr,
-      // dummyTypeBinding.getName(), settings, dummyTypeBinding.isInterface());
-      // rewriter.insertFirst(stub, null);
-      // }
-      //
-      // IDocument document = new Document(workingCopy.getSource());
-      // try
-      // {
-      // rewrite.rewriteAST(document, JavaCore.getOptions()).apply(document);
-      //
-      // int bodyStart = trackedDeclaration.getStartPosition() + dummyClassContent.indexOf('{');
-      // int bodyEnd = trackedDeclaration.getStartPosition() + trackedDeclaration.getLength();
-      // return document.get(bodyStart, bodyEnd - bodyStart);
-      // }
-      // catch (MalformedTreeException e)
-      // {
-      // // TODO log exception
-      // e.printStackTrace();
-      // }
-      // catch (BadLocationException e)
-      // {
-      // // TODO log exception
-      // e.printStackTrace();
-      // }
-      return null;
-      // }
-      // finally
-      // {
-      // if (workingCopy != null)
-      // workingCopy.discardWorkingCopy();
-      // }
+      try
+      {
+         String name = "Type" + System.currentTimeMillis(); //$NON-NLS-1$
+
+         ISourceRange range = null; //fSuperType.getSourceRange();
+         boolean sameUnit =
+            range != null
+               && ((TypeDeclaration)fCompilationUnit.types().get(0)).getName().getFullyQualifiedName()
+                  .equals(fSuperType.getQualifiedName());
+
+         // creates a type that extends the super type
+         String dummyClassContent = createDummyType(name);
+
+         StringBuffer workingCopyContents = new StringBuffer(fInvocationContext.getDocument().get());
+         int insertPosition;
+         if (sameUnit)
+         {
+            insertPosition = range.getOffset() + range.getLength();
+         }
+         else
+         {
+            //            ISourceRange firstTypeRange = ((TypeDeclaration)fInvocationContext.getCompilationUnit().types().get(0)).getSourceRange();
+            //            insertPosition = firstTypeRange.getOffset();
+            insertPosition =
+               ((TypeDeclaration)fInvocationContext.getCompilationUnit().types().get(0)).getStartPosition();
+         }
+
+         if (fSuperType.isLocal())
+         {
+            // add an extra block: helps the AST to recover
+            workingCopyContents.insert(insertPosition, '{' + dummyClassContent + '}');
+            insertPosition++;
+         }
+         else
+         {
+            /*
+             * The two empty lines are added because the trackedDeclaration uses the covered range
+             * and hence would also included comments that directly follow the dummy class.
+             */
+            workingCopyContents.insert(insertPosition, dummyClassContent + "\n\n"); //$NON-NLS-1$
+         }
+
+         ASTParser parser = ASTParser.newParser(AST.JLS3);
+         parser.setResolveBindings(true);
+         parser.setStatementsRecovery(true);
+         parser.setSource(workingCopyContents.toString().toCharArray());
+         parser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
+
+         CompilationUnit astRoot = (CompilationUnit)parser.createAST(new NullProgressMonitor());
+         ASTNode newType = NodeFinder.perform(astRoot, insertPosition, dummyClassContent.length());
+         if (!(newType instanceof AbstractTypeDeclaration))
+            return null;
+
+         AbstractTypeDeclaration declaration = (AbstractTypeDeclaration)newType;
+         ITypeBinding dummyTypeBinding = declaration.resolveBinding();
+         if (dummyTypeBinding == null)
+            return null;
+
+         IMethodBinding[] bindings = StubUtility2.getOverridableMethods(astRoot.getAST(), dummyTypeBinding, true);
+
+         if (fSuperType.isInterface())
+         {
+            ITypeBinding[] dummySuperInterfaces = dummyTypeBinding.getInterfaces();
+            if (dummySuperInterfaces.length == 0 || dummySuperInterfaces.length == 1
+               && dummySuperInterfaces[0].isRawType())
+               bindings = new IMethodBinding[0];
+         }
+         else
+         {
+            ITypeBinding dummySuperclass = dummyTypeBinding.getSuperclass();
+            if (dummySuperclass == null || dummySuperclass.isRawType())
+               bindings = new IMethodBinding[0];
+         }
+
+         CodeGenerationSettings settings = JavaPreferencesSettings.getCodeGenerationSettings();
+
+         IMethodBinding[] methodsToOverride = null;
+
+         IType type = null;
+         //TODO
+         //         if (!fSuperType.isInterface() && !fSuperType.isAnnotation())
+         //         {
+         //            IJavaElement typeElement = dummyTypeBinding.getJavaElement();
+         //            // add extra checks here as the recovered code is fragile
+         //            if (typeElement instanceof IType && name.equals(typeElement.getElementName()) && typeElement.exists())
+         //            {
+         //               type = (IType)typeElement;
+         //            }
+         //         }
+
+         if (type != null)
+         {
+            //TODO
+            //            OverrideMethodDialog dialog =
+            //               new OverrideMethodDialog(JavaPlugin.getActiveWorkbenchShell(), null, type, true);
+            //            dialog.setGenerateComment(false);
+            //            dialog.setElementPositionEnabled(false);
+            //            if (dialog.open() == Window.OK)
+            //            {
+            //               Object[] selection = dialog.getResult();
+            //               ArrayList<Object> result = new ArrayList<Object>(selection.length);
+            //               for (int i = 0; i < selection.length; i++)
+            //               {
+            //                  if (selection[i] instanceof IMethodBinding)
+            //                     result.add(selection[i]);
+            //               }
+            //               methodsToOverride = result.toArray(new IMethodBinding[result.size()]);
+            //               settings.createComments = dialog.getGenerateComment();
+            //            }
+            //            else
+            //            {
+            //               // cancelled
+            //               setReplacementString(""); //$NON-NLS-1$
+            //               setReplacementLength(0);
+            return null;
+            //            }
+         }
+         else
+         {
+            settings.createComments = false;
+            List<IMethodBinding> result = new ArrayList<IMethodBinding>();
+            for (int i = 0; i < bindings.length; i++)
+            {
+               IMethodBinding curr = bindings[i];
+               if (Modifier.isAbstract(curr.getModifiers()))
+                  result.add(curr);
+            }
+            methodsToOverride = result.toArray(new IMethodBinding[result.size()]);
+         }
+         ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
+         ITrackedNodePosition trackedDeclaration = rewrite.track(declaration);
+
+         ListRewrite rewriter = rewrite.getListRewrite(declaration, declaration.getBodyDeclarationsProperty());
+         for (int i = 0; i < methodsToOverride.length; i++)
+         {
+            IMethodBinding curr = methodsToOverride[i];
+            MethodDeclaration stub =
+               StubUtility2.createImplementationStub(rewrite, importRewrite, null, curr, dummyTypeBinding.getName(),
+                  settings, dummyTypeBinding.isInterface());
+            rewriter.insertFirst(stub, null);
+         }
+         IDocument document = new Document(workingCopyContents.toString());
+         try
+         {
+            rewrite.rewriteAST(document, JdtExtension.get().getOptions()).apply(document);
+
+            int bodyStart = trackedDeclaration.getStartPosition() + dummyClassContent.indexOf('{');
+            int bodyEnd = trackedDeclaration.getStartPosition() + trackedDeclaration.getLength();
+            return document.get(bodyStart, bodyEnd - bodyStart);
+         }
+         catch (MalformedTreeException exception)
+         {
+            exception.printStackTrace();
+         }
+         catch (BadLocationException exception)
+         {
+            exception.printStackTrace();
+         }
+         return null;
+      }
+      finally
+      {
+      }
    }
 
-   // private Image getImageForType(IType type) {
-   // String imageName= JavaPluginImages.IMG_OBJS_CLASS; // default
-   // try {
-   // if (type.isAnnotation()) {
-   // imageName= JavaPluginImages.IMG_OBJS_ANNOTATION;
-   // } else if (type.isInterface()) {
-   // imageName= JavaPluginImages.IMG_OBJS_INTERFACE;
-   // }
-   // } catch (JavaModelException e) {
-   // JavaPlugin.log(e);
-   // }
-   // return JavaPluginImages.get(imageName);
-   // }
+   private Image getImageForType(ITypeBinding type)
+   {
+      ImageResource image = JavaClientBundle.INSTANCE.classDefaultItem(); // default
+
+      if (type.isAnnotation())
+      {
+         image = JavaClientBundle.INSTANCE.annotationItem();
+      }
+      else if (type.isInterface())
+      {
+         image = JavaClientBundle.INSTANCE.interfaceItem();
+      }
+
+      return new Image(image);
+   }
 
    /*
     * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension4#isAutoInsertable()
@@ -343,18 +380,19 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 
    }
 
-   // /*
-   // * @see org.eclipse.jdt.internal.ui.text.java.JavaTypeCompletionProposal#isValidPrefix(java.lang.String)
-   // * @since 3.5
-   // */
-   // @Override
-   // protected boolean isValidPrefix(String prefix) {
-   // CompletionProposal coreProposal= ((MemberProposalInfo)getProposalInfo()).fProposal;
-   // if (coreProposal.getKind() != CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION)
-   // return super.isValidPrefix(prefix);
+   //   /*
+   //   * @see org.eclipse.jdt.internal.ui.text.java.JavaTypeCompletionProposal#isValidPrefix(java.lang.String)
+   //   * @since 3.5
+   //   */
+   //   @Override
+   //   protected boolean isValidPrefix(String prefix)
+   //   {
+   //      CompletionProposal coreProposal = ((MemberProposalInfo)getProposalInfo()).fProposal;
+   //      if (coreProposal.getKind() != CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION)
+   //         return super.isValidPrefix(prefix);
    //
-   // return super.isValidPrefix(prefix) || isPrefix(prefix, String.valueOf(coreProposal.getName()));
-   // }
+   //      return super.isValidPrefix(prefix) || isPrefix(prefix, String.valueOf(coreProposal.getName()));
+   //   }
 
    /*
     * @see org.eclipse.jdt.internal.ui.text.java.JavaTypeCompletionProposal#apply(org.eclipse.jface.text.IDocument, char, int)

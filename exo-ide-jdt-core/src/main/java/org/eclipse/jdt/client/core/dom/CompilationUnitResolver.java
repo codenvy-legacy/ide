@@ -1325,8 +1325,8 @@ class CompilationUnitResolver extends Compiler
                unit.analyseCode();
 
             // // code generation
-            // if (generateCode)
-            // unit.generateCode();
+            if (generateCode)
+               unit.generateCode();
 
             // finalize problems (suppressWarnings)
             unit.finalizeProblems();

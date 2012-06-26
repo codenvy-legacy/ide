@@ -34,14 +34,15 @@ public class JavadocQualifiedTypeReference extends QualifiedTypeReference
       this.bits |= ASTNode.InsideJavadoc;
    }
 
-   /* We need to modify resolving behavior to handle package references */
+   /*
+    * We need to modify resolving behavior to handle package references
+    */
    private TypeBinding internalResolveType(Scope scope, boolean checkBounds)
    {
       // handle the error here
       this.constant = Constant.NotAConstant;
       if (this.resolvedType != null) // is a shared type reference which was already resolved
-         return this.resolvedType.isValidBinding() ? this.resolvedType : this.resolvedType.closestMatch(); // already reported
-                                                                                                           // error
+         return this.resolvedType.isValidBinding() ? this.resolvedType : this.resolvedType.closestMatch(); // already reported error
 
       TypeBinding type = this.resolvedType = getTypeBinding(scope);
       // End resolution when getTypeBinding(scope) returns null. This may happen in
@@ -67,9 +68,8 @@ public class JavadocQualifiedTypeReference extends QualifiedTypeReference
       // raw convert all enclosing types when dealing with Javadoc references
       if (type.isGenericType() || type.isParameterizedType())
       {
-         this.resolvedType = scope.environment().convertToRawType(type, true /*
-                                                                              * force the conversion of enclosing types
-                                                                              */);
+         this.resolvedType =
+            scope.environment().convertToRawType(type, true /*force the conversion of enclosing types*/);
       }
       return this.resolvedType;
    }
@@ -99,10 +99,9 @@ public class JavadocQualifiedTypeReference extends QualifiedTypeReference
       return internalResolveType(classScope, false);
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

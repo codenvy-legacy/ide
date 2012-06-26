@@ -16,7 +16,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 public class ExtendedStringLiteral extends StringLiteral
 {
 
-   /** Build a string+char literal */
+   /**
+    *  Build a string+char literal
+    */
    public ExtendedStringLiteral(StringLiteral str, CharLiteral character)
    {
 
@@ -24,7 +26,9 @@ public class ExtendedStringLiteral extends StringLiteral
       extendWith(character);
    }
 
-   /** Build a two-strings literal */
+   /**
+    * Build a two-strings literal
+    * */
    public ExtendedStringLiteral(StringLiteral str1, StringLiteral str2)
    {
 
@@ -32,28 +36,32 @@ public class ExtendedStringLiteral extends StringLiteral
       extendWith(str2);
    }
 
-   /** Add the lit source to mine, just as if it was mine */
+   /**
+    * Add the lit source to mine, just as if it was mine
+    */
    public ExtendedStringLiteral extendWith(CharLiteral lit)
    {
 
-      // update the source
+      //update the source
       int length = this.source.length;
       System.arraycopy(this.source, 0, (this.source = new char[length + 1]), 0, length);
       this.source[length] = lit.value;
-      // position at the end of all literals
+      //position at the end of all literals
       this.sourceEnd = lit.sourceEnd;
       return this;
    }
 
-   /** Add the lit source to mine, just as if it was mine */
+   /**
+    *  Add the lit source to mine, just as if it was mine
+    */
    public ExtendedStringLiteral extendWith(StringLiteral lit)
    {
 
-      // uddate the source
+      //uddate the source
       int length = this.source.length;
       System.arraycopy(this.source, 0, this.source = new char[length + lit.source.length], 0, length);
       System.arraycopy(lit.source, 0, this.source, length, lit.source.length);
-      // position at the end of all literals
+      //position at the end of all literals
       this.sourceEnd = lit.sourceEnd;
       return this;
    }

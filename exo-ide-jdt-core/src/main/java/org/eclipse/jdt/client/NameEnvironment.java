@@ -27,11 +27,13 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
+import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.client.env.BinaryTypeImpl;
 import org.eclipse.jdt.client.internal.codeassist.ISearchRequestor;
+import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
 import org.eclipse.jdt.client.internal.compiler.env.IBinaryMethod;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.client.internal.compiler.env.NameEnvironmentAnswer;
@@ -69,6 +71,8 @@ public class NameEnvironment implements INameEnvironment
    private String projectId;
 
    private static Set<String> blackSet = new HashSet<String>();
+
+   private static Set<String> packages = new HashSet<String>();
 
    static
    {
@@ -240,13 +244,38 @@ public class NameEnvironment implements INameEnvironment
    @Override
    public boolean isPackage(char[][] parentPackageName, char[] packageName)
    {
-      if (parentPackageName == null)
-         return true;
+      try
+      {
+         StringBuilder p = new StringBuilder();
+         if (parentPackageName != null)
+         {
+            for (char[] seg : parentPackageName)
+            {
+               p.append(seg).append('.');
+            }
+         }
+         p.append(packageName);
+         if (packages.contains(p.toString()))
+         {
+            return true;
+         }
+         String url =
+            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + p.toString()
+               + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+         String findPackage = runSyncReques(url);
+         JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
+         for (int i = 0; i < jsonArray.size(); i++)
+         {
+            packages.add(jsonArray.get(i).isString().stringValue());
+         }
+         return jsonArray.size() > 0;
 
-      if (Character.isUpperCase(packageName[0]))
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
          return false;
-      else
-         return true;
+      }
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
@@ -331,8 +360,13 @@ public class NameEnvironment implements INameEnvironment
    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor)
    {
       IBinaryMethod[] methods = type.getMethods();
-      if (methods == null)
-         return;
+//      if((type.getModifiers() & IModifierConstants.ACC_INTERFACE) != 0 )
+//      {
+//         requestor.acceptConstructor(0, type.getSourceName(), 0, "()V;".toCharArray(), null, null, type.getModifiers(), Signature.getQualifier(type.getFqn()), ExtraFlags.HasNonPrivateStaticMemberTypes, new String(type.getSourceName()), null);
+//      }
+      boolean hasConstructor = false;
+      if (methods != null)
+      {
       for (IBinaryMethod method : methods)
       {
          if (!method.isConstructor())
@@ -342,7 +376,23 @@ public class NameEnvironment implements INameEnvironment
          requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
             method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
             Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
+         hasConstructor = true;
       }
+      }
+      if(!hasConstructor)
+      requestor.acceptConstructor(
+         Flags.AccPublic,
+         type.getSourceName(),
+         -1,
+         null, // signature is not used for source type
+         CharOperation.NO_CHAR_CHAR,
+         CharOperation.NO_CHAR_CHAR,
+         type.getModifiers(),
+         Signature.getQualifier(type.getFqn()),
+         0,
+         new String(type.getSourceName()),
+         null);
+      
    }
 
    /**
@@ -459,16 +509,44 @@ public class NameEnvironment implements INameEnvironment
    }
 
    /**
-    * @param missingSimpleName
-    * @param b
-    * @param type
-    * @param storage
+    * Find the top-level types that are defined
+    * in the current environment and whose simple name matches the given name.
+    *
+    * The types found are passed to one of the following methods (if additional
+    * information is known about the types):
+    *    ISearchRequestor.acceptType(char[][] packageName, char[] typeName)
+    *    ISearchRequestor.acceptClass(char[][] packageName, char[] typeName, int modifiers)
+    *    ISearchRequestor.acceptInterface(char[][] packageName, char[] typeName, int modifiers)
+    *
+    * This method can not be used to find member types... member
+    * types are found relative to their enclosing type.
     */
    @Override
-   public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
+   public void findExactTypes(final char[] missingSimpleName, boolean b, int type, final ISearchRequestor storage)
    {
-      // TODO Auto-generated method stub
-      System.out.println("NameEnvironment.findExactTypes()");
+      findTypes(missingSimpleName, b, false, type, new ISearchRequestor()
+      {
+         
+         @Override
+         public void acceptType(char[] packageName, char[] typeName, char[][] enclosingTypeNames, int modifiers,
+            AccessRestriction accessRestriction)
+         {
+            if(CharOperation.equals(missingSimpleName, typeName))
+               storage.acceptType(packageName, typeName, enclosingTypeNames, modifiers, accessRestriction);
+         }
+         
+         @Override
+         public void acceptPackage(char[] packageName)
+         {
+         }
+         
+         @Override
+         public void acceptConstructor(int modifiers, char[] simpleTypeName, int parameterCount, char[] signature,
+            char[][] parameterTypes, char[][] parameterNames, int typeModifiers, char[] packageName, int extraFlags,
+            String path, AccessRestriction access)
+         {
+         }
+      }, null);
    }
 
    public static class JSONTypesInfoUnmarshaller implements Unmarshallable<TypesInfoList>

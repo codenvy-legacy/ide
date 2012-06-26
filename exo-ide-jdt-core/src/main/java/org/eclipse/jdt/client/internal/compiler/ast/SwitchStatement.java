@@ -29,6 +29,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
 
+import java.util.Arrays;
+
 public class SwitchStatement extends Statement
 {
 
@@ -171,6 +173,216 @@ public class SwitchStatement extends Statement
       }
    }
 
+   /**
+    * Switch on String code generation
+    * This assumes that hashCode() specification for java.lang.String is API
+    * and is stable.
+    * @see "http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html"
+    * @see "http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/api/java/lang/String.html"
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCodeForStringSwitch(BlockScope currentScope)
+   {
+
+      try
+      {
+         if ((this.bits & IsReachable) == 0)
+         {
+            return;
+         }
+
+         class StringSwitchCase implements Comparable
+         {
+            int hashCode;
+
+            String string;
+
+            public StringSwitchCase(int hashCode, String string)
+            {
+               this.hashCode = hashCode;
+               this.string = string;
+            }
+
+            public int compareTo(Object o)
+            {
+               StringSwitchCase that = (StringSwitchCase)o;
+               if (this.hashCode == that.hashCode)
+               {
+                  return 0;
+               }
+               if (this.hashCode > that.hashCode)
+               {
+                  return 1;
+               }
+               return -1;
+            }
+
+            public String toString()
+            {
+               return "StringSwitchCase :\n" + //$NON-NLS-1$
+                  "case " + this.hashCode + ":(" + this.string + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$	       
+            }
+         }
+
+         final boolean hasCases = this.caseCount != 0;
+
+         StringSwitchCase[] stringCases = new StringSwitchCase[this.caseCount]; // may have to shrink later if multiple strings hash to same code.
+         BranchLabel[] sourceCaseLabels = new BranchLabel[this.caseCount];
+         this.constants = new int[this.caseCount]; // hashCode() values.
+         for (int i = 0, max = this.caseCount; i < max; i++)
+         {
+            this.cases[i].targetLabel = (sourceCaseLabels[i] = new BranchLabel()); // A branch label, not a case label.
+            sourceCaseLabels[i].tagBits |= BranchLabel.USED;
+            stringCases[i] = new StringSwitchCase(this.stringConstants[i].hashCode(), this.stringConstants[i]);
+
+         }
+         Arrays.sort(stringCases);
+
+         int uniqHashCount = 0;
+         int lastHashCode = 0;
+         for (int i = 0, length = this.caseCount; i < length; ++i)
+         {
+            int hashCode = stringCases[i].hashCode;
+            if (i == 0 || hashCode != lastHashCode)
+            {
+               lastHashCode = this.constants[uniqHashCount++] = hashCode;
+            }
+         }
+
+         if (uniqHashCount != this.caseCount)
+         { // multiple keys hashed to the same value.
+            System.arraycopy(this.constants, 0, this.constants = new int[uniqHashCount], 0, uniqHashCount);
+         }
+         int[] sortedIndexes = new int[uniqHashCount]; // hash code are sorted already anyways.
+         for (int i = 0; i < uniqHashCount; i++)
+         {
+            sortedIndexes[i] = i;
+         }
+
+         BranchLabel defaultBranchLabel = new BranchLabel();
+         if (hasCases)
+            defaultBranchLabel.tagBits |= BranchLabel.USED;
+         if (this.defaultCase != null)
+         {
+            this.defaultCase.targetLabel = defaultBranchLabel;
+         }
+         // generate expression
+         this.expression.generateCode(currentScope, true);
+
+         // generate the switch block statements
+         if (this.statements != null)
+         {
+            for (int i = 0, maxCases = this.statements.length; i < maxCases; i++)
+            {
+               Statement statement = this.statements[i];
+               statement.generateCode(this.scope);
+            }
+         }
+
+         // place the trailing labels (for break and default case)
+      }
+      catch (Throwable e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         if (this.scope != null)
+            this.scope.enclosingCase = null; // no longer inside switch case block
+      }
+   }
+
+   /**
+    * Switch code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if (this.expression.resolvedType.id == TypeIds.T_JavaLangString)
+      {
+         generateCodeForStringSwitch(currentScope);
+         return;
+      }
+      try
+      {
+         if ((this.bits & IsReachable) == 0)
+         {
+            return;
+         }
+
+         final boolean hasCases = this.caseCount != 0;
+
+         final TypeBinding resolvedType = this.expression.resolvedType;
+         boolean valueRequired = false;
+         if (resolvedType.isEnum())
+         {
+            // go through the translation table
+            this.expression.generateCode(currentScope, true);
+            // get enum constant ordinal()
+         }
+         else
+         {
+            valueRequired = this.expression.constant == Constant.NotAConstant || hasCases;
+            // generate expression
+            this.expression.generateCode(currentScope, valueRequired);
+         }
+         // generate the appropriate switch table/lookup bytecode
+         if (hasCases)
+         {
+            int[] sortedIndexes = new int[this.caseCount];
+            // we sort the keys to be able to generate the code for tableswitch or lookupswitch
+            for (int i = 0; i < this.caseCount; i++)
+            {
+               sortedIndexes[i] = i;
+            }
+            int[] localKeysCopy;
+            System.arraycopy(this.constants, 0, (localKeysCopy = new int[this.caseCount]), 0, this.caseCount);
+
+            int max = localKeysCopy[this.caseCount - 1];
+            int min = localKeysCopy[0];
+            if ((long)(this.caseCount * 2.5) > ((long)max - (long)min))
+            {
+
+               // work-around 1.3 VM bug, if max>0x7FFF0000, must use lookup bytecode
+               // see http://dev.eclipse.org/bugs/show_bug.cgi?id=21557
+            }
+         }
+
+         // generate the switch block statements
+         int caseIndex = 0;
+         if (this.statements != null)
+         {
+            for (int i = 0, maxCases = this.statements.length; i < maxCases; i++)
+            {
+               Statement statement = this.statements[i];
+               if ((caseIndex < this.caseCount) && (statement == this.cases[caseIndex]))
+               { // statements[i] is a case
+                  this.scope.enclosingCase = this.cases[caseIndex]; // record entering in a switch case block
+                  if (this.preSwitchInitStateIndex != -1)
+                  {
+                  }
+                  caseIndex++;
+               }
+               else
+               {
+                  if (statement == this.defaultCase)
+                  { // statements[i] is a case or a default case
+                     this.scope.enclosingCase = this.defaultCase; // record entering in a switch case block
+                  }
+               }
+               statement.generateCode(this.scope);
+            }
+         }
+      }
+      finally
+      {
+         if (this.scope != null)
+            this.scope.enclosingCase = null; // no longer inside switch case block
+      }
+   }
+
    public StringBuffer printStatement(int indent, StringBuffer output)
    {
 
@@ -275,7 +487,7 @@ public class SwitchStatement extends Statement
                   if (!isStringSwitch)
                   {
                      int key = constant.intValue();
-                     // ----check for duplicate case statement------------
+                     //----check for duplicate case statement------------
                      for (int j = 0; j < counter; j++)
                      {
                         if (this.constants[j] == key)
@@ -288,7 +500,7 @@ public class SwitchStatement extends Statement
                   else
                   {
                      String key = constant.stringValue();
-                     // ----check for duplicate case statement------------
+                     //----check for duplicate case statement------------
                      for (int j = 0; j < counter; j++)
                      {
                         if (this.stringConstants[j].equals(key))
@@ -400,7 +612,9 @@ public class SwitchStatement extends Statement
       visitor.endVisit(this, blockScope);
    }
 
-   /** Dispatch the call on its last statement. */
+   /**
+    * Dispatch the call on its last statement.
+    */
    public void branchChainTo(BranchLabel label)
    {
 

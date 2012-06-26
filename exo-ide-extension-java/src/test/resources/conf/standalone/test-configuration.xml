@@ -57,6 +57,10 @@
          </properties-param>
       </init-params>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+   </component>   
 
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication
@@ -126,7 +130,7 @@
                                                                                                                                                                                                                
    <component>                                                                                                                                                                                                 
      <key>org.exoplatform.ide.codeassistant.api.CodeAssistantStorage</key>                                                                                                                                     
-     <type>org.exoplatform.ide.codeassistant.storage.lucene.LuceneCodeAssistantStorage</type>                                                                                                                  
+     <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>                                                                                                                  
    </component>        
 
    <component>

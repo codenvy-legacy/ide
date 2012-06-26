@@ -53,6 +53,9 @@ public class ContinueStatement extends BranchStatement
          currentScope.problemReporter().invalidContinue(this);
          return flowInfo; // pretend it did not continue since no actual target
       }
+      this.initStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
+
+      this.targetLabel = targetContext.continueLabel();
       FlowContext traversedContext = flowContext;
       int subCount = 0;
       this.subroutines = new SubRoutineStatement[5];

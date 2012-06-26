@@ -14,7 +14,9 @@ import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ElementValuePair;
 
-/** SingleMemberAnnotation node */
+/**
+ * SingleMemberAnnotation node
+ */
 public class SingleMemberAnnotation extends Annotation
 {
 
@@ -34,7 +36,9 @@ public class SingleMemberAnnotation extends Annotation
       return new ElementValuePair[]{memberValuePairs()[0].compilerElementPair};
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs() */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Annotation#memberValuePairs()
+    */
    public MemberValuePair[] memberValuePairs()
    {
       if (this.singlePairs == null)

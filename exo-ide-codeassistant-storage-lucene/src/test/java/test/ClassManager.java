@@ -81,7 +81,7 @@ public class ClassManager
          typeInfos.add(ClassParser.parse(ClassParser.getClassFile(classToIndex)));
       }
 
-      typeWriter.addTypeInfo(typeInfos);
+      typeWriter.addTypeInfo(typeInfos, "rt");
    }
 
    public static void createIndexForSources(LuceneDataWriter dataWriter, String... sources) throws IOException,
@@ -94,7 +94,7 @@ public class ClassManager
          javaDocs.putAll(javaDocExtractor.extractSource(new FileInputStream(source)));
       }
 
-      dataWriter.addJavaDocs(javaDocs);
+      dataWriter.addJavaDocs(javaDocs, "rt");
    }
 
 }

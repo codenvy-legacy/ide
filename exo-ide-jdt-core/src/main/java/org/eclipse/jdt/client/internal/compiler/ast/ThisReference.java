@@ -37,7 +37,9 @@ public class ThisReference extends Reference
       this.sourceEnd = sourceEnd;
    }
 
-   /* @see Reference#analyseAssignment(...) */
+   /*
+    * @see Reference#analyseAssignment(...)
+    */
    public FlowInfo analyseAssignment(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
       Assignment assignment, boolean isCompound)
    {
@@ -62,6 +64,38 @@ public class ThisReference extends Reference
          return false;
       }
       return true;
+   }
+
+   /*
+    * @see Reference#generateAssignment(...)
+    */
+   public void generateAssignment(BlockScope currentScope, Assignment assignment, boolean valueRequired)
+   {
+
+      // this cannot be assigned
+   }
+
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+   }
+
+   /*
+    * @see Reference#generateCompoundAssignment(...)
+    */
+   public void generateCompoundAssignment(BlockScope currentScope, Expression expression, int operator,
+      int assignmentImplicitConversion, boolean valueRequired)
+   {
+
+      // this cannot be assigned
+   }
+
+   /*
+    * @see org.eclipse.jdt.client.internal.compiler.ast.Reference#generatePostIncrement()
+    */
+   public void generatePostIncrement(BlockScope currentScope, CompoundAssignment postIncrement, boolean valueRequired)
+   {
+
+      // this cannot be assigned
    }
 
    public boolean isImplicitThis()

@@ -30,7 +30,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.parser.JavadocTagConstants;
 
-/** Node representing a structured Javadoc comment */
+/**
+ * Node representing a structured Javadoc comment
+ */
 public class Javadoc extends ASTNode
 {
 
@@ -63,7 +65,7 @@ public class Javadoc extends ASTNode
 
    /**
     * Returns whether a type can be seen at a given visibility level or not.
-    * 
+    *
     * @param visibility Level of visiblity allowed to see references
     * @param modifiers modifiers of java element to be seen
     * @return true if the type can be seen, false otherwise
@@ -86,7 +88,9 @@ public class Javadoc extends ASTNode
       return true;
    }
 
-   /* Search node with a given staring position in javadoc objects arrays. */
+   /*
+    * Search node with a given staring position in javadoc objects arrays.
+    */
    public ASTNode getNodeStartingAt(int start)
    {
       int length = 0;
@@ -195,7 +199,7 @@ public class Javadoc extends ASTNode
    }
 
    /*
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#print(int, java.lang.StringBuffer)
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#print(int, java.lang.StringBuffer)
     */
    public StringBuffer print(int indent, StringBuffer output)
    {
@@ -241,7 +245,9 @@ public class Javadoc extends ASTNode
       return output;
    }
 
-   /* Resolve type javadoc */
+   /*
+    * Resolve type javadoc
+    */
    public void resolve(ClassScope scope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -316,7 +322,9 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /* Resolve compilation unit javadoc */
+   /*
+    * Resolve compilation unit javadoc
+    */
    public void resolve(CompilationUnitScope unitScope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -324,11 +332,13 @@ public class Javadoc extends ASTNode
          return;
       }
       // Do nothing - This is to mimic the SDK's javadoc tool behavior, which neither
-      // sanity checks nor generates documentation using comments at the CU scope
-      // (unless the unit happens to be package-info.java - in which case we don't come here.)
+      // sanity checks nor generates documentation using comments at the CU scope 
+      // (unless the unit happens to be package-info.java - in which case we don't come here.) 
    }
 
-   /* Resolve method javadoc */
+   /*
+    * Resolve method javadoc
+    */
    public void resolve(MethodScope methScope)
    {
       if ((this.bits & ASTNode.ResolveJavadoc) == 0)
@@ -338,9 +348,7 @@ public class Javadoc extends ASTNode
       // get method declaration
       AbstractMethodDeclaration methDecl = methScope.referenceMethod();
       boolean overriding =
-         methDecl == null /* field declaration */|| methDecl.binding == null /*
-                                                                                * compiler error
-                                                                                */
+         methDecl == null /* field declaration */|| methDecl.binding == null /* compiler error */
             ? false
             : !methDecl.binding.isStatic()
                && ((methDecl.binding.modifiers & (ExtraCompilerModifiers.AccImplementing | ExtraCompilerModifiers.AccOverriding)) != 0);
@@ -436,7 +444,7 @@ public class Javadoc extends ASTNode
 
       // @param tags
       CompilerOptions compilerOptions = methScope.compilerOptions();
-      resolveParamTags(methScope, reportMissing, compilerOptions.reportUnusedParameterIncludeDocCommentReference /* considerParamRefAsUsage */);
+      resolveParamTags(methScope, reportMissing, compilerOptions.reportUnusedParameterIncludeDocCommentReference /* considerParamRefAsUsage*/);
       resolveTypeParameterTags(methScope, reportMissing && compilerOptions.reportMissingJavadocTagsMethodTypeParameters);
 
       // @return tags
@@ -618,7 +626,9 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /* Resolve @param tags while method scope */
+   /*
+    * Resolve @param tags while method scope
+    */
    private void resolveParamTags(MethodScope scope, boolean reportMissing, boolean considerParamRefAsUsage)
    {
       AbstractMethodDeclaration methodDecl = scope.referenceMethod();
@@ -704,7 +714,9 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /* Resolve @param tags for type parameters */
+   /*
+    * Resolve @param tags for type parameters
+    */
    private void resolveTypeParameterTags(Scope scope, boolean reportMissing)
    {
       int paramTypeParamLength = this.paramTypeParameters == null ? 0 : this.paramTypeParameters.length;
@@ -753,7 +765,7 @@ public class Javadoc extends ASTNode
       // If no param tags then report a problem for each declaration type parameter
       if (parameters != null)
       {
-         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, avoid secondary errors when <= 1.4
+         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=324850, avoid secondary errors when <= 1.4 
          reportMissing = reportMissing && scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5;
          int typeParametersLength = parameters.length;
          if (paramTypeParamLength == 0)
@@ -840,7 +852,9 @@ public class Javadoc extends ASTNode
       }
    }
 
-   /* Resolve @throws/@exception tags while method scope */
+   /*
+    * Resolve @throws/@exception tags while method scope
+    */
    private void resolveThrowsTags(MethodScope methScope, boolean reportMissing)
    {
       AbstractMethodDeclaration md = methScope.referenceMethod();
@@ -962,7 +976,7 @@ public class Javadoc extends ASTNode
                   }
                }
 
-               // If not compatible only complain on unchecked exception
+               //  If not compatible only complain on unchecked exception
                if (!compatible && !typeRef.resolvedType.isUncheckedException(false))
                {
                   methScope.problemReporter().javadocInvalidThrowsClassName(typeRef, md.binding.modifiers);
@@ -1127,9 +1141,10 @@ public class Javadoc extends ASTNode
             }
          }
          /*
-          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=286918 We are concerned only about the Single type references (i.e.
-          * without any package) If they are not in default package, then report an error. References with qualified yet incorrect
-          * names would have already been taken care of.
+          * https://bugs.eclipse.org/bugs/show_bug.cgi?id=286918
+          *
+          * We are concerned only about the Single type references (i.e. without any package) If they are not in default package,
+          * then report an error. References with qualified yet incorrect names would have already been taken care of.
           */
          if (scope.referenceCompilationUnit().isPackageInfo() && typeReference instanceof JavadocSingleTypeReference)
          {
