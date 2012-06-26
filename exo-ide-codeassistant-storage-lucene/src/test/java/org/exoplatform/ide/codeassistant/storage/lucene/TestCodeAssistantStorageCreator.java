@@ -47,7 +47,7 @@ public class TestCodeAssistantStorageCreator
       String pathToIndex = "target/index";
 
       DataStorageWriter storageWriter = new DataStorageWriter(pathToIndex);
-      storageWriter.writeBinaryJarsToIndex(jars);
+//      storageWriter.writeBinaryJarsToIndex(jars);
 
       LuceneInfoStorage luceneInfoStorage = new LuceneInfoStorage(pathToIndex);
       LuceneCodeAssistantStorage storage = new LuceneCodeAssistantStorage(luceneInfoStorage);

@@ -43,8 +43,8 @@ public class QualifiedTypeReference extends TypeReference
 
    public TypeReference copyDims(int dim)
    {
-      // return a type reference copy of me with some dimensions
-      // warning : the new type ref has a null binding
+      //return a type reference copy of me with some dimensions
+      //warning : the new type ref has a null binding
       return new ArrayQualifiedTypeReference(this.tokens, dim, this.sourcePositions);
    }
 
@@ -125,8 +125,7 @@ public class QualifiedTypeReference extends TypeReference
             reportDeprecatedType(this.resolvedType, scope, i);
          }
          if (isClassScope)
-            if (((ClassScope)scope).detectHierarchyCycle(this.resolvedType, this)) // must connect hierarchy to find inherited
-                                                                                   // member types
+            if (((ClassScope)scope).detectHierarchyCycle(this.resolvedType, this)) // must connect hierarchy to find inherited member types
                return null;
          ReferenceBinding currentType = (ReferenceBinding)this.resolvedType;
          if (qualifiedType != null)
@@ -162,9 +161,7 @@ public class QualifiedTypeReference extends TypeReference
          {
             qualifiedType =
                currentType.isGenericType() ? (ReferenceBinding)scope.environment()
-                  .convertToRawType(currentType, false /*
-                                                        * do not force conversion of enclosing types
-                                                        */) : currentType;
+                  .convertToRawType(currentType, false /*do not force conversion of enclosing types*/) : currentType;
          }
       }
       this.resolvedType = qualifiedType;

@@ -82,6 +82,10 @@
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
 
+   <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList
+      </type>
+   </component>
 
    <component>
       <key>org.exoplatform.services.jcr.RepositoryService</key>

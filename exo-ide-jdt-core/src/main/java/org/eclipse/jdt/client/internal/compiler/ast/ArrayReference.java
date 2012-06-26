@@ -17,6 +17,7 @@ import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.lookup.ArrayBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
 public class ArrayReference extends Reference
 {
@@ -35,6 +36,7 @@ public class ArrayReference extends Reference
    public FlowInfo analyseAssignment(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo,
       Assignment assignment, boolean compoundAssignment)
    {
+      // TODO (maxime) optimization: unconditionalInits is applied to all existing calls
       if (assignment.expression == null)
       {
          return analyseCode(currentScope, flowContext, flowInfo);
@@ -48,6 +50,70 @@ public class ArrayReference extends Reference
       this.receiver.checkNPE(currentScope, flowContext, flowInfo);
       flowInfo = this.receiver.analyseCode(currentScope, flowContext, flowInfo);
       return this.position.analyseCode(currentScope, flowContext, flowInfo);
+   }
+
+   public void generateAssignment(BlockScope currentScope, Assignment assignment, boolean valueRequired)
+   {
+      this.receiver.generateCode(currentScope, true);
+      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+      {
+      }
+      this.position.generateCode(currentScope, true);
+      assignment.expression.generateCode(currentScope, true);
+
+   }
+
+   /**
+    * Code generation for a array reference
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      this.receiver.generateCode(currentScope, true);
+      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+      {
+      }
+      this.position.generateCode(currentScope, true);
+   }
+
+   public void generateCompoundAssignment(BlockScope currentScope, Expression expression, int operator,
+      int assignmentImplicitConversion, boolean valueRequired)
+   {
+      this.receiver.generateCode(currentScope, true);
+      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+      {
+      }
+      this.position.generateCode(currentScope, true);
+      int operationTypeID;
+      switch (operationTypeID = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4)
+      {
+         case T_JavaLangString :
+         case T_JavaLangObject :
+         case T_undefined :
+            break;
+         default :
+            // promote the array reference to the suitable operation type
+            // generate the increment value (will by itself  be promoted to the operation value)
+            if (expression == IntLiteral.One)
+            { // prefix operation
+            }
+            else
+            {
+               expression.generateCode(currentScope, true);
+            }
+      }
+   }
+
+   public void generatePostIncrement(BlockScope currentScope, CompoundAssignment postIncrement, boolean valueRequired)
+   {
+      this.receiver.generateCode(currentScope, true);
+      if (this.receiver instanceof CastExpression // ((type[])null)[0]
+         && ((CastExpression)this.receiver).innermostCastedExpression().resolvedType == TypeBinding.NULL)
+      {
+      }
+      this.position.generateCode(currentScope, true);
    }
 
    public int nullStatus(FlowInfo flowInfo)

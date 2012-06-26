@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>exo-ide-parent</artifactId>
 		<groupId>org.exoplatform.ide</groupId>
-		<version>1.2.0-M8-SNAPSHOT</version>
+		<version>1.2.0-M9-SNAPSHOT</version>
 	</parent>
 	<artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
 	<packaging>jar</packaging>
@@ -86,6 +86,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>libs/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
 							<mainClass>org.exoplatform.ide.codeassistant.storage.lucene.CodeAssistantStorageGenerator</mainClass>
 						</manifest>
 					</archive>

@@ -20,7 +20,6 @@ import org.eclipse.jdt.client.internal.compiler.flow.LoopingFlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
-import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 
@@ -35,11 +34,20 @@ public class ForStatement extends Statement
 
    public Statement action;
 
-   // when there is no local declaration, there is no need of a new scope
-   // scope is positioned either to a new scope, or to the "upper"scope (see resolveType)
+   //when there is no local declaration, there is no need of a new scope
+   //scope is positioned either to a new scope, or to the "upper"scope (see resolveType)
    public BlockScope scope;
 
    private BranchLabel breakLabel, continueLabel;
+
+   // for local variables table attributes
+   int preCondInitStateIndex = -1;
+
+   int preIncrementsInitStateIndex = -1;
+
+   int condIfTrueInitStateIndex = -1;
+
+   int mergedInitStateIndex = -1;
 
    public ForStatement(Statement[] initializations, Expression condition, Statement[] increments, Statement action,
       boolean neededScope, int s, int e)
@@ -76,6 +84,8 @@ public class ForStatement extends Statement
             flowInfo = this.initializations[i].analyseCode(this.scope, flowContext, flowInfo);
          }
       }
+      this.preCondInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
+
       Constant cst = this.condition == null ? null : this.condition.constant;
       boolean isConditionTrue = cst == null || (cst != Constant.NotAConstant && cst.booleanValue() == true);
       boolean isConditionFalse = cst != null && (cst != Constant.NotAConstant && cst.booleanValue() == false);
@@ -133,6 +143,7 @@ public class ForStatement extends Statement
          loopingContext =
             new LoopingFlowContext(flowContext, flowInfo, this, this.breakLabel, this.continueLabel, this.scope);
          FlowInfo initsWhenTrue = condInfo.initsWhenTrue();
+         this.condIfTrueInitStateIndex = currentScope.methodScope().recordInitializationStates(initsWhenTrue);
 
          if (isConditionFalse)
          {
@@ -176,6 +187,7 @@ public class ForStatement extends Statement
          {
             incrementContext = new LoopingFlowContext(flowContext, flowInfo, this, null, null, this.scope);
             FlowInfo incrementInfo = actionInfo;
+            this.preIncrementsInitStateIndex = currentScope.methodScope().recordInitializationStates(incrementInfo);
             for (int i = 0, count = this.increments.length; i < count; i++)
             {
                incrementInfo = this.increments[i].analyseCode(this.scope, incrementContext, incrementInfo);
@@ -209,58 +221,113 @@ public class ForStatement extends Statement
       { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
          FlowInfo loopbackFlowInfo = flowInfo.copy();
          if (this.continueLabel != null)
-         { // we do get to the bottom
+         { // we do get to the bottom 
             loopbackFlowInfo.mergedWith(actionInfo.unconditionalCopy());
          }
          loopingContext.simulateThrowAfterLoopBack(loopbackFlowInfo);
       }
-      // end of loop
+      //end of loop
       FlowInfo mergedInfo =
-         FlowInfo.mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
-            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null
-                                                                                                          // info
-            isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*
-                                                                                               * for ( ; ; ) { } while ( true ) ;
-                                                                                               * unreachable ( ) ;
-                                                                                               */);
-      // Variables initialized only for the purpose of the for loop can be removed for further flow info
-      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=359495
+         FlowInfo
+            .mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
+               ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null info
+               isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*for(;;){}while(true); unreachable(); */);
+      this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
+      return mergedInfo;
+   }
+
+   /**
+    * For statement code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+
+      // generate the initializations
       if (this.initializations != null)
       {
-         for (int i = 0; i < this.initializations.length; i++)
+         for (int i = 0, max = this.initializations.length; i < max; i++)
          {
-            Statement init = this.initializations[i];
-            if (init instanceof LocalDeclaration)
+            this.initializations[i].generateCode(this.scope);
+         }
+      }
+      Constant cst = this.condition == null ? null : this.condition.optimizedBooleanConstant();
+      boolean isConditionOptimizedFalse = cst != null && (cst != Constant.NotAConstant && cst.booleanValue() == false);
+      if (isConditionOptimizedFalse)
+      {
+         this.condition.generateCode(this.scope, false);
+         // May loose some local variable initializations : affecting the local variable attributes
+         return;
+      }
+
+      // label management
+      BranchLabel actionLabel = new BranchLabel();
+      actionLabel.tagBits |= BranchLabel.USED;
+      BranchLabel conditionLabel = new BranchLabel();
+      if (this.continueLabel == null)
+      {
+         if ((this.condition != null) && (this.condition.constant == Constant.NotAConstant))
+         {
+            this.condition.generateOptimizedBoolean(this.scope, null, this.breakLabel, true);
+         }
+      }
+      else
+      {
+         // jump over the actionBlock
+         if ((this.condition != null) && (this.condition.constant == Constant.NotAConstant)
+            && !((this.action == null || this.action.isEmptyBlock()) && (this.increments == null)))
+         {
+            conditionLabel.tagBits |= BranchLabel.USED;
+         }
+      }
+
+      // generate the loop action
+      if (this.action != null)
+      {
+         this.action.generateCode(this.scope);
+      }
+      // continuation point
+      if (this.continueLabel != null)
+      {
+         // generate the increments for next iteration
+         if (this.increments != null)
+         {
+            for (int i = 0, max = this.increments.length; i < max; i++)
             {
-               LocalVariableBinding binding = ((LocalDeclaration)init).binding;
-               mergedInfo.resetAssignmentInfo(binding);
+               this.increments[i].generateCode(this.scope);
             }
          }
       }
-      return mergedInfo;
+
    }
 
    public StringBuffer printStatement(int tab, StringBuffer output)
    {
 
       printIndent(tab, output).append("for ("); //$NON-NLS-1$
-      // inits
+      //inits
       if (this.initializations != null)
       {
          for (int i = 0; i < this.initializations.length; i++)
          {
-            // nice only with expressions
+            //nice only with expressions
             if (i > 0)
                output.append(", "); //$NON-NLS-1$
             this.initializations[i].print(0, output);
          }
       }
       output.append("; "); //$NON-NLS-1$
-      // cond
+      //cond
       if (this.condition != null)
          this.condition.printExpression(0, output);
       output.append("; "); //$NON-NLS-1$
-      // updates
+      //updates
       if (this.increments != null)
       {
          for (int i = 0; i < this.increments.length; i++)
@@ -271,7 +338,7 @@ public class ForStatement extends Statement
          }
       }
       output.append(") "); //$NON-NLS-1$
-      // block
+      //block
       if (this.action == null)
          output.append(';');
       else

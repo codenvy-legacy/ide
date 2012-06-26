@@ -28,6 +28,22 @@ public class PostfixExpression extends CompoundAssignment
       return false;
    }
 
+   /**
+    * Code generation for PostfixExpression
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      // various scenarii are possible, setting an array reference,
+      // a field reference, a blank final field reference, a field of an enclosing instance or
+      // just a local variable.
+
+      ((Reference)this.lhs).generatePostIncrement(currentScope, this, valueRequired);
+   }
+
    public String operatorToString()
    {
       switch (this.operator)

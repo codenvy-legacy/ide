@@ -7,6 +7,9 @@
       	display: block;
       	margin-left: auto;
       	margin-right: auto;
+      	font-size: 11px;
+      	font-weight: bold;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       }
       
       .left-float {
@@ -35,11 +38,7 @@
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:FlowPanel width="190px" styleName="{style.center}">
-            <f:ImageButton ui:field="goButton" width="90" height="22" text="{locale.okButton}" imageName="yes" addStyleNames="{style.left-float}"></f:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.left-float}"></f:ImageButton>
-         </g:FlowPanel>
+         <g:Anchor ui:field="goButton" width="90px" height="22px" target="_blank" text="{locale.authenticateButton}" addStyleNames="{style.center}"></g:Anchor>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 

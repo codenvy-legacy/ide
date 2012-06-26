@@ -242,6 +242,7 @@ public class TypeSignatureTest extends SignatureBase
       assertThat(typeInfo.getSignature()).isNotNull().isEqualTo("Ljava/lang/Object;Ljava/util/List<Ljava/lang/Integer;>;");
    }
    
+   @SuppressWarnings("unchecked")
    @Test
    public void externalClassAsTypeBound() throws Exception
    {
@@ -252,7 +253,7 @@ public class TypeSignatureTest extends SignatureBase
       b.append("public class GenericClass<T extends Controller>{}");
       TypeInfo type = new TypeInfoBean();
       type.setType(JavaType.INTERFACE.toString());
-      when(storage.getTypeByFqn(anyString())).thenReturn(type);
+      when(storage.getTypeByFqn(anyString(), anySet())).thenReturn(type);
       TypeInfo typeInfo = getTypeInfo(b, "test.GenericClass");
       assertThat(typeInfo.getSignature()).isNotNull().isEqualTo("<T::Lorg/springframework/web/servlet/mvc/Controller;>Ljava/lang/Object;");
    }

@@ -21,8 +21,4 @@ public abstract class Label
    {
       // for creating labels ahead of code generation
    }
-
-   /* Place the label target position. */
-   public abstract void place();
-
 }

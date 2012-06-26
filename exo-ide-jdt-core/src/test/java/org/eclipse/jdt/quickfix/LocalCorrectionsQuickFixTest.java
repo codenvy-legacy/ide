@@ -3406,7 +3406,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3461,7 +3460,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable1() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3512,7 +3510,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable2() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3561,7 +3558,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable4() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3616,7 +3612,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       Document cu = new Document(buf.toString());
-      CompilationUnit astRoot = getASTRoot(cu, "E");
+      CompilationUnit astRoot = getASTRoot(cu, "B");
       ArrayList<?> proposals = collectCorrections(cu, astRoot);
 
       assertCorrectLabels(proposals);
@@ -3661,7 +3657,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       Document cu = new Document(buf.toString());
-      CompilationUnit astRoot = getASTRoot(cu, "E");
+      CompilationUnit astRoot = getASTRoot(cu, "B");
       ArrayList<?> proposals = collectCorrections(cu, astRoot);
 
       assertCorrectLabels(proposals);
@@ -3694,7 +3690,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable7() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3714,7 +3709,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       buf.append("}\n");
 
       Document cu = new Document(buf.toString());
-      CompilationUnit astRoot = getASTRoot(cu, "E");
+      CompilationUnit astRoot = getASTRoot(cu, "B");
       ArrayList<?> proposals = collectCorrections(cu, astRoot, 2);
 
       assertCorrectLabels(proposals);
@@ -3748,7 +3743,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariable8() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();
@@ -3807,7 +3801,6 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
    }
 
    @Test
-   @Ignore
    public void testUnusedVariableAsSwitchStatement() throws Exception
    {
       HashMap<String, String> hashtable = JdtExtension.get().getOptions();

@@ -44,11 +44,6 @@ import java.util.List;
 public class TypeInfoExtractor
 {
 
-   public static class V
-   {
-
-   }
-
    /**
     * @param clazz
     * @return

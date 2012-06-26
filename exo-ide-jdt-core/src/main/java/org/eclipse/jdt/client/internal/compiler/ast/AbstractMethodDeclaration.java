@@ -23,10 +23,13 @@ import org.eclipse.jdt.client.internal.compiler.lookup.AnnotationBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.Binding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.lookup.LocalVariableBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 import org.eclipse.jdt.client.internal.compiler.parser.Parser;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilation;
 import org.eclipse.jdt.client.internal.compiler.problem.AbortCompilationUnit;
@@ -41,8 +44,8 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
 
    public MethodScope scope;
 
-   // it is not relevent for constructor but it helps to have the name of the constructor here
-   // which is always the name of the class.....parsing do extra work to fill it up while it do not have to....
+   //it is not relevent for constructor but it helps to have the name of the constructor here
+   //which is always the name of the class.....parsing do extra work to fill it up while it do not have to....
    public char[] selector;
 
    public int declarationSourceStart;
@@ -80,7 +83,9 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
       this.compilationResult = compilationResult;
    }
 
-   /* We cause the compilation task to abort to a given extent. */
+   /*
+    *	We cause the compilation task to abort to a given extent.
+    */
    public void abort(int abortLevel, CategorizedProblem problem)
    {
 
@@ -100,7 +105,9 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
    public abstract void analyseCode(ClassScope classScope, InitializationFlowContext initializationContext,
       FlowInfo info);
 
-   /** Bind and add argument's binding into the scope of the method */
+   /**
+    * Bind and add argument's binding into the scope of the method
+    */
    public void bindArguments()
    {
 
@@ -201,6 +208,119 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
       return this.compilationResult;
    }
 
+   /**
+    * Bytecode generation for a method
+    * @param classScope
+    */
+   public void generateCode(ClassScope classScope)
+   {
+
+      if (this.ignoreFurtherInvestigation)
+      {
+         // method is known to have errors, dump a problem method
+         if (this.binding == null)
+            return; // handle methods with invalid signature or duplicates
+         int problemsLength;
+         CategorizedProblem[] problems = this.scope.referenceCompilationUnit().compilationResult.getProblems();
+         CategorizedProblem[] problemsCopy = new CategorizedProblem[problemsLength = problems.length];
+         System.arraycopy(problems, 0, problemsCopy, 0, problemsLength);
+         return;
+      }
+      //		boolean restart = false;
+      // regular code generation
+      //		do {
+      try
+      {
+         this.generateCode();
+         //				restart = false;
+      }
+      catch (AbortMethod e)
+      {
+         // a fatal error was detected during code generation, need to restart code gen if possible
+         //				if (e.compilationResult == CodeStream.RESTART_IN_WIDE_MODE) {
+         //					// a branch target required a goto_w, restart code gen in wide mode.
+         //					if (!restart) {
+         //						classFile.contentsOffset = problemResetPC;
+         //						classFile.methodCount--;
+         //						classFile.codeStream.resetInWideMode(); // request wide mode
+         //						restart = true;
+         //					} else {
+         //						// after restarting in wide mode, code generation failed again
+         //						// report a problem
+         //						restart = false;
+         //						abort = true;
+         //					}
+         //				} else if (e.compilationResult == CodeStream.RESTART_CODE_GEN_FOR_UNUSED_LOCALS_MODE) {
+         //					classFile.contentsOffset = problemResetPC;
+         //					classFile.methodCount--;
+         //					classFile.codeStream.resetForCodeGenUnusedLocals();
+         //					restart = true;
+         //				} else {
+         //					restart = false;
+         //				}
+      }
+      //		} while (restart);
+      // produce a problem method accounting for this fatal error
+   }
+
+   public void generateCode()
+   {
+
+      if ((!this.binding.isNative()) && (!this.binding.isAbstract()))
+      {
+         // initialize local positions
+         this.scope.computeLocalVariablePositions(this.binding.isStatic() ? 0 : 1);
+
+         // arguments initialization for local variable debug attributes
+         if (this.arguments != null)
+         {
+            for (int i = 0, max = this.arguments.length; i < max; i++)
+            {
+               LocalVariableBinding argBinding = this.arguments[i].binding;
+               argBinding.recordInitializationStartPC(0);
+            }
+         }
+         if (this.statements != null)
+         {
+            for (int i = 0, max = this.statements.length; i < max; i++)
+               this.statements[i].generateCode(this.scope);
+         }
+         // if a problem got reported during code gen, then trigger problem method creation
+         if (this.ignoreFurtherInvestigation)
+         {
+            throw new AbortMethod(this.scope.referenceCompilationUnit().compilationResult, null);
+         }
+      }
+      else
+      {
+         checkArgumentsSize();
+      }
+   }
+
+   private void checkArgumentsSize()
+   {
+      TypeBinding[] parameters = this.binding.parameters;
+      int size = 1; // an abstract method or a native method cannot be static
+      for (int i = 0, max = parameters.length; i < max; i++)
+      {
+         switch (parameters[i].id)
+         {
+            case TypeIds.T_long :
+            case TypeIds.T_double :
+               size += 2;
+               break;
+            default :
+               size++;
+               break;
+         }
+         if (size > 0xFF)
+         {
+            this.scope.problemReporter().noMoreAvailableSpaceForArgument(this.scope.locals[i],
+               this.scope.locals[i].declaration);
+         }
+      }
+   }
+
    public boolean hasErrors()
    {
       return this.ignoreFurtherInvestigation;
@@ -268,7 +388,6 @@ public abstract class AbstractMethodDeclaration extends ASTNode implements Probl
 
    /**
     * Fill up the method body with statement
-    * 
     * @param parser
     * @param unit
     */

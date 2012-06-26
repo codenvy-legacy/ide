@@ -33,6 +33,11 @@ public class SynchronizedStatement extends SubRoutineStatement
 
    static final char[] SecretLocalDeclarationName = " syncValue".toCharArray(); //$NON-NLS-1$
 
+   // for local variables table attributes
+   int preSynchronizedInitStateIndex = -1;
+
+   int mergedSynchronizedInitStateIndex = -1;
+
    public SynchronizedStatement(Expression expression, Block statement, int s, int e)
    {
 
@@ -45,6 +50,7 @@ public class SynchronizedStatement extends SubRoutineStatement
    public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
    {
 
+      this.preSynchronizedInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
       // TODO (philippe) shouldn't it be protected by a check whether reachable statement ?
 
       // mark the synthetic variable as being used
@@ -54,6 +60,8 @@ public class SynchronizedStatement extends SubRoutineStatement
       flowInfo =
          this.block.analyseCode(this.scope, new InsideSubRoutineFlowContext(flowContext, this),
             this.expression.analyseCode(this.scope, flowContext, flowInfo));
+
+      this.mergedSynchronizedInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
 
       // optimizing code gen
       if ((flowInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
@@ -65,6 +73,39 @@ public class SynchronizedStatement extends SubRoutineStatement
    }
 
    public boolean isSubRoutineEscaping()
+   {
+      return false;
+   }
+
+   /**
+    * Synchronized statement code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      // in case the labels needs to be reinitialized
+      // when the code generation is restarted in wide mode
+
+      // generate the synchronization expression
+      this.expression.generateCode(this.scope, true);
+      if (!this.block.isEmptyBlock())
+      {
+         // generate  the body of the synchronized block
+         this.block.generateCode(this.scope);
+      }
+   }
+
+   /**
+    * @see SubRoutineStatement#generateSubRoutineInvocation(BlockScope, CodeStream, Object, int, LocalVariableBinding)
+    */
+   public boolean generateSubRoutineInvocation(BlockScope currentScope, Object targetLocation, int stateIndex,
+      LocalVariableBinding secretLocal)
    {
       return false;
    }
@@ -95,7 +136,7 @@ public class SynchronizedStatement extends SubRoutineStatement
             this.scope.problemReporter().invalidNullToSynchronize(this.expression);
             break;
       }
-      // continue even on errors in order to have the TC done into the statements
+      //continue even on errors in order to have the TC done into the statements
       this.synchroVariable =
          new LocalVariableBinding(SecretLocalDeclarationName, type, ClassFileConstants.AccDefault, false);
       this.scope.addLocalVariable(this.synchroVariable);

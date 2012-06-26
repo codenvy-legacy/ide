@@ -311,6 +311,11 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
             .getId(), JdtExtension.DOC_CONTEXT);
       collector
          .setAllowsRequiredProposals(CompletionProposal.CONSTRUCTOR_INVOCATION, CompletionProposal.TYPE_REF, true);
+      collector.setAllowsRequiredProposals(CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION,
+         CompletionProposal.TYPE_REF, true);
+      collector.setAllowsRequiredProposals(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, CompletionProposal.TYPE_REF,
+         true);
+
       collector.setIgnored(CompletionProposal.ANNOTATION_ATTRIBUTE_REF, false);
       collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_DECLARATION, false);
       collector.setIgnored(CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION, false);

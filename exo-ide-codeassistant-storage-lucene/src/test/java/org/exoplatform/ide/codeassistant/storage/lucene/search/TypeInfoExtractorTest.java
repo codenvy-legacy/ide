@@ -64,7 +64,7 @@ public class TypeInfoExtractorTest
    public void shouldReconstructTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected);
+      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected, "rt");
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
@@ -77,7 +77,7 @@ public class TypeInfoExtractorTest
    public void shouldGetDocumentFromReaderWithPredefinedSetOfFields() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(ATestClass2.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected);
+      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected,"rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 
       extractor.getValue(reader, 5);

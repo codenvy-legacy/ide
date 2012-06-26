@@ -119,7 +119,7 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal
 
          super.apply(document, trigger, offset);
 
-         if (impRewrite != null)
+         if (impRewrite != null && impRewrite.getCreatedImports() == null)
          {
             int oldLen = document.getLength();
             impRewrite.rewriteImports(new NullProgressMonitor()).apply(document, TextEdit.UPDATE_REGIONS);

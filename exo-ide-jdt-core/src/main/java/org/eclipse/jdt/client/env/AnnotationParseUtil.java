@@ -47,20 +47,20 @@ public class AnnotationParseUtil
    public static Object getValue(JSONObject value)
    {
 
-      if (value.get("primitiveType").isNull() == null)
+      if (value.get("primitiveType").isNull() == null && value.get("primitiveType").isArray().size() != 0)
       {
          JSONArray array = value.get("primitiveType").isArray();
          String type = array.get(0).isString().stringValue();
          String val = array.get(1).isString().stringValue();
          return getConstant(type, val);
       }
-      else if (value.get("enumConstant").isNull() == null)
+      else if (value.get("enumConstant").isNull() == null && value.get("enumConstant").isArray().size() != 0)
       {
          JSONArray array = value.get("enumConstant").isArray();
          return new EnumConstantSignature(array.get(0).isString().stringValue().toCharArray(), array.get(1).isString()
             .stringValue().toCharArray());
       }
-      else if (value.get("arrayType").isNull() == null)
+      else if (value.get("arrayType").isNull() == null && value.get("arrayType").isArray().size() != 0)
       {
          JSONArray array = value.get("arrayType").isArray();
          if (array.size() >= 1)

@@ -13,7 +13,9 @@ package org.eclipse.jdt.client.internal.compiler.ast;
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
-/** Flatten string literal */
+/**
+ * Flatten string literal
+ */
 public class StringLiteralConcatenation extends StringLiteral
 {
    private static final int INITIAL_SIZE = 5;
@@ -22,7 +24,9 @@ public class StringLiteralConcatenation extends StringLiteral
 
    public int counter;
 
-   /** Build a two-strings literal */
+   /**
+    * Build a two-strings literal
+    * */
    public StringLiteralConcatenation(StringLiteral str1, StringLiteral str2)
    {
       super(str1.sourceStart, str1.sourceEnd);
@@ -33,7 +37,9 @@ public class StringLiteralConcatenation extends StringLiteral
       extendsWith(str2);
    }
 
-   /** Add the lit source to mine, just as if it was mine */
+   /**
+    *  Add the lit source to mine, just as if it was mine
+    */
    public StringLiteralConcatenation extendsWith(StringLiteral lit)
    {
       this.sourceEnd = lit.sourceEnd;
@@ -44,7 +50,7 @@ public class StringLiteralConcatenation extends StringLiteral
          System.arraycopy(this.literals, 0, this.literals = new StringLiteral[literalsLength + INITIAL_SIZE], 0,
             literalsLength);
       }
-      // uddate the source
+      //uddate the source
       int length = this.source.length;
       System.arraycopy(this.source, 0, this.source = new char[length + lit.source.length], 0, length);
       System.arraycopy(lit.source, 0, this.source, length, lit.source.length);

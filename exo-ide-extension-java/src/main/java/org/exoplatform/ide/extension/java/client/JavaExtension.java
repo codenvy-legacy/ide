@@ -18,13 +18,9 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Java extention for IDE.
@@ -37,19 +33,11 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
 {
 
    /**
-    * The generator for an {@link AutoBean}
-    */
-   public static final JavaAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(JavaAutoBeanFactory.class);
-
-   public static final JavaLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(JavaLocalizationConstant.class);
-
-   /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new JavaClientService(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    /**
@@ -58,11 +46,6 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void initialize()
    {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-
-      // IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.WEB));
-      // IDE.getInstance().addControl(new CreateJavaProjectControl(ProjectType.SPRING));
-      // new CreateJavaProjectPresenter(eventBus);
    }
 
 }

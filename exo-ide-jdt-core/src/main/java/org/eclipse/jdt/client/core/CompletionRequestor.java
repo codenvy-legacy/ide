@@ -11,6 +11,7 @@
 package org.eclipse.jdt.client.core;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
+import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
 
 /**
  * Abstract base class for a completion requestor which is passed completion proposals as they are generated in response to a code
@@ -68,6 +69,8 @@ public abstract class CompletionRequestor
    private int requiredProposalAllowSet[] = null;
 
    private boolean requireExtendedContext = false;
+
+   protected LookupEnvironment lookupEnvironment;
 
    /**
     * Creates a new completion requestor. The requestor is interested in all kinds of completion proposals; none will be ignored.
@@ -345,5 +348,13 @@ public abstract class CompletionRequestor
    public void setRequireExtendedContext(boolean require)
    {
       this.requireExtendedContext = require;
+   }
+
+   /**
+    * @param lookupEnvironment the lookupEnvironment to set
+    */
+   public void setLookupEnvironment(LookupEnvironment lookupEnvironment)
+   {
+      this.lookupEnvironment = lookupEnvironment;
    }
 }

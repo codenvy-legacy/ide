@@ -12,6 +12,7 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -22,14 +23,21 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 public class IfStatement extends Statement
 {
 
-   // this class represents the case of only one statement in
-   // either else and/or then branches.
+   //this class represents the case of only one statement in
+   //either else and/or then branches.
 
    public Expression condition;
 
    public Statement thenStatement;
 
    public Statement elseStatement;
+
+   // for local variables table attributes
+   int thenInitStateIndex = -1;
+
+   int elseInitStateIndex = -1;
+
+   int mergedInitStateIndex = -1;
 
    public IfStatement(Expression condition, Statement thenStatement, int sourceStart, int sourceEnd)
    {
@@ -100,6 +108,8 @@ public class IfStatement extends Statement
       }
       if (this.thenStatement != null)
       {
+         // Save info for code gen
+         this.thenInitStateIndex = currentScope.methodScope().recordInitializationStates(thenFlowInfo);
          if (isConditionOptimizedFalse || ((this.bits & ASTNode.IsThenStatementUnreachable) != 0))
          {
             if (!isKnowDeadCodePattern(this.condition)
@@ -131,6 +141,8 @@ public class IfStatement extends Statement
          {
             currentScope.problemReporter().unnecessaryElse(this.elseStatement);
          }
+         // Save info for code gen
+         this.elseInitStateIndex = currentScope.methodScope().recordInitializationStates(elseFlowInfo);
          if (isConditionOptimizedTrue || ((this.bits & ASTNode.IsElseStatementUnreachable) != 0))
          {
             if (!isKnowDeadCodePattern(this.condition)
@@ -150,10 +162,77 @@ public class IfStatement extends Statement
       // merge THEN & ELSE initializations
       FlowInfo mergedInfo =
          FlowInfo.mergedOptimizedBranchesIfElse(thenFlowInfo, isConditionOptimizedTrue, elseFlowInfo,
-            isConditionOptimizedFalse, true /*
-                                             * if(true){ return; } fake-reachable();
-                                             */, flowInfo, this);
+            isConditionOptimizedFalse, true /*if(true){ return; }  fake-reachable(); */, flowInfo, this);
+      this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
+   }
+
+   /**
+    * If code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      BranchLabel endifLabel = new BranchLabel();
+
+      // optimizing the then/else part code gen
+      Constant cst;
+      boolean hasThenPart =
+         !(((cst = this.condition.optimizedBooleanConstant()) != Constant.NotAConstant && cst.booleanValue() == false)
+            || this.thenStatement == null || this.thenStatement.isEmptyBlock());
+      boolean hasElsePart =
+         !((cst != Constant.NotAConstant && cst.booleanValue() == true) || this.elseStatement == null || this.elseStatement
+            .isEmptyBlock());
+      if (hasThenPart)
+      {
+         BranchLabel falseLabel = null;
+         // generate boolean condition only if needed
+         if (cst != Constant.NotAConstant && cst.booleanValue() == true)
+         {
+            this.condition.generateCode(currentScope, false);
+         }
+         else
+         {
+            this.condition.generateOptimizedBoolean(currentScope, null, hasElsePart ? (falseLabel = new BranchLabel())
+               : endifLabel, true/*cst == Constant.NotAConstant*/);
+         }
+         // generate then statement
+         this.thenStatement.generateCode(currentScope);
+         // jump around the else statement
+         if (hasElsePart)
+         {
+            if ((this.bits & ASTNode.ThenExit) == 0)
+            {
+               this.thenStatement.branchChainTo(endifLabel);
+            }
+            this.elseStatement.generateCode(currentScope);
+         }
+      }
+      else if (hasElsePart)
+      {
+         // generate boolean condition only if needed
+         if (cst != Constant.NotAConstant && cst.booleanValue() == false)
+         {
+            this.condition.generateCode(currentScope, false);
+         }
+         else
+         {
+            this.condition
+               .generateOptimizedBoolean(currentScope, endifLabel, null, true/*cst == Constant.NotAConstant*/);
+         }
+         // generate else statement
+         this.elseStatement.generateCode(currentScope);
+      }
+      else
+      {
+         // generate condition side-effects
+         this.condition.generateCode(currentScope, false);
+      }
    }
 
    public StringBuffer printStatement(int indent, StringBuffer output)

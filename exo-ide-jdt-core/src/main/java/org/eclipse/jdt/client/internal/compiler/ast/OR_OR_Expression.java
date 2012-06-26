@@ -12,6 +12,7 @@
 package org.eclipse.jdt.client.internal.compiler.ast;
 
 import org.eclipse.jdt.client.internal.compiler.ASTVisitor;
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowContext;
 import org.eclipse.jdt.client.internal.compiler.flow.FlowInfo;
 import org.eclipse.jdt.client.internal.compiler.impl.Constant;
@@ -23,6 +24,10 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
 //dedicated treatment for the ||
 public class OR_OR_Expression extends BinaryExpression
 {
+
+   int rightInitStateIndex = -1;
+
+   int mergedInitStateIndex = -1;
 
    public OR_OR_Expression(Expression left, Expression right, int operator)
    {
@@ -40,17 +45,19 @@ public class OR_OR_Expression extends BinaryExpression
       {
          // FALSE || anything
          // need to be careful of scenario:
-         // (x || y) || !z, if passing the left info to the right, it would be swapped by the !
+         //		(x || y) || !z, if passing the left info to the right, it would be swapped by the !
          FlowInfo mergedInfo = this.left.analyseCode(currentScope, flowContext, flowInfo).unconditionalInits();
          mergedInfo = this.right.analyseCode(currentScope, flowContext, mergedInfo);
+         this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
          return mergedInfo;
       }
 
       FlowInfo leftInfo = this.left.analyseCode(currentScope, flowContext, flowInfo);
 
       // need to be careful of scenario:
-      // (x || y) || !z, if passing the left info to the right, it would be swapped by the !
+      //		(x || y) || !z, if passing the left info to the right, it would be swapped by the !
       FlowInfo rightInfo = leftInfo.initsWhenFalse().unconditionalCopy();
+      this.rightInitStateIndex = currentScope.methodScope().recordInitializationStates(rightInfo);
 
       int previousMode = rightInfo.reachMode();
       if (isLeftOptimizedTrue)
@@ -77,12 +84,135 @@ public class OR_OR_Expression extends BinaryExpression
             .addPotentialInitializationsFrom(rightInfo.unconditionalInitsWithoutSideEffect());
       FlowInfo mergedInfo =
          FlowInfo.conditional(
-            // merging two true initInfos for such a negative case: if ((t && (b = t)) || f) r = b; // b may not have been
-            // initialized
+            // merging two true initInfos for such a negative case: if ((t && (b = t)) || f) r = b; // b may not have been initialized
             leftInfoWhenTrueForMerging.unconditionalInits().mergedWith(
                rightInfo.safeInitsWhenTrue().setReachMode(previousMode).unconditionalInits()),
             rightInfo.initsWhenFalse());
+      this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
+   }
+
+   /**
+    * Code generation for a binary operation
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+      if (this.constant != Constant.NotAConstant)
+      {
+         // inlined value
+         return;
+      }
+      Constant cst = this.right.constant;
+      if (cst != Constant.NotAConstant)
+      {
+         // <expr> || true --> true
+         if (cst.booleanValue() == true)
+         {
+            this.left.generateCode(currentScope, false);
+         }
+         else
+         {
+            // <expr>|| false --> <expr>
+            this.left.generateCode(currentScope, valueRequired);
+         }
+         return;
+      }
+
+      BranchLabel trueLabel = new BranchLabel();
+      cst = this.left.optimizedBooleanConstant();
+      boolean leftIsConst = cst != Constant.NotAConstant;
+      boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
+
+      cst = this.right.optimizedBooleanConstant();
+      boolean rightIsConst = cst != Constant.NotAConstant;
+
+      generateOperands :
+      {
+         if (leftIsConst)
+         {
+            this.left.generateCode(currentScope, false);
+            if (leftIsTrue)
+            {
+               break generateOperands; // no need to generate right operand
+            }
+         }
+         else
+         {
+            this.left.generateOptimizedBoolean(currentScope, trueLabel, null, true);
+            // need value, e.g. if (a == 1 || ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a==1
+         }
+
+         if (rightIsConst)
+         {
+            this.right.generateCode(currentScope, false);
+         }
+         else
+         {
+            this.right.generateOptimizedBoolean(currentScope, trueLabel, null, valueRequired);
+         }
+      }
+   }
+
+   /**
+    * Boolean operator code generation Optimized operations are: ||
+    */
+   public void generateOptimizedBoolean(BlockScope currentScope, BranchLabel trueLabel, BranchLabel falseLabel,
+      boolean valueRequired)
+   {
+      if (this.constant != Constant.NotAConstant)
+      {
+         super.generateOptimizedBoolean(currentScope, trueLabel, falseLabel, valueRequired);
+         return;
+      }
+
+      // <expr> || false --> <expr>
+      Constant cst = this.right.constant;
+      if (cst != Constant.NotAConstant && cst.booleanValue() == false)
+      {
+         this.left.generateOptimizedBoolean(currentScope, trueLabel, falseLabel, valueRequired);
+         return;
+      }
+
+      cst = this.left.optimizedBooleanConstant();
+      boolean leftIsConst = cst != Constant.NotAConstant;
+      boolean leftIsTrue = leftIsConst && cst.booleanValue() == true;
+
+      cst = this.right.optimizedBooleanConstant();
+      boolean rightIsConst = cst != Constant.NotAConstant;
+
+      // default case
+      generateOperands :
+      {
+         if (falseLabel == null)
+         {
+            if (trueLabel != null)
+            {
+               // implicit falling through the FALSE case
+               this.left.generateOptimizedBoolean(currentScope, trueLabel, null, !leftIsConst);
+               // need value, e.g. if (a == 1 || ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a==1
+               if (leftIsTrue)
+               {
+                  break generateOperands; // no need to generate right operand
+               }
+               this.right.generateOptimizedBoolean(currentScope, trueLabel, null, valueRequired && !rightIsConst);
+            }
+         }
+         else
+         {
+            // implicit falling through the TRUE case
+            if (trueLabel == null)
+            {
+               BranchLabel internalTrueLabel = new BranchLabel();
+               this.left.generateOptimizedBoolean(currentScope, internalTrueLabel, null, !leftIsConst);
+               // need value, e.g. if (a == 1 || ((b = 2) > 0)) {} -> shouldn't initialize 'b' if a==1
+               if (leftIsTrue)
+               {
+                  break generateOperands; // no need to generate right operand
+               }
+               this.right.generateOptimizedBoolean(currentScope, null, falseLabel, valueRequired && !rightIsConst);
+            }
+         }
+      }
    }
 
    public boolean isCompactableOperation()
@@ -90,7 +220,9 @@ public class OR_OR_Expression extends BinaryExpression
       return false;
    }
 
-   /** @see org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression#resolveType(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope) */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.ast.BinaryExpression#resolveType(org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
+    */
    public TypeBinding resolveType(BlockScope scope)
    {
       TypeBinding result = super.resolveType(scope);

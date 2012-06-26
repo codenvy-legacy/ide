@@ -26,6 +26,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.junit.AfterClass;
@@ -57,7 +58,8 @@ public abstract class JavaDocBase extends Base
    public static void init() throws VirtualFileSystemException, IOException, InterruptedException
    {
       vfsRegistry = (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
-      vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, null);
+      EventListenerList eventListenerList = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
+      vfs = vfsRegistry.getProvider(VFS_ID).newInstance(null, eventListenerList);
       try
       {
          project =

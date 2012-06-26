@@ -51,13 +51,16 @@ public class VfsCommandTest extends BaseTest
       folderLinks =
          VfsUtils.importZipProject(MAIN_FOLDER, "src/test/resources/org/exoplatform/ide/shell/test-project.zip");
       //add for davFs delay
-      Thread.sleep(3000);
+      Thread.sleep(10000);
+      
    }
 
    @AfterClass
-   public static void deleteFolders() throws IOException
+   public static void deleteFolders() throws IOException, InterruptedException
    {
       VfsUtils.deleteFolder(folderLinks.get(Link.REL_DELETE));
+      Thread.sleep(3000);
+      
    }
 
    @Test

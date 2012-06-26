@@ -77,7 +77,7 @@ public class ShortTypeInfoExtractorTest
    public void shouldReconstructShortTypeInfo() throws Exception
    {
       TypeInfo expected = ClassParser.parse(ClassParser.getClassFile(CTestClass.class));
-      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected);
+      Document luceneDocument = new DataIndexer().createTypeInfoDocument(expected,"rt");
 
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
 

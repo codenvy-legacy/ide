@@ -25,7 +25,6 @@ public class ArrayTypeReference extends SingleTypeReference
 
    /**
     * ArrayTypeReference constructor comment.
-    * 
     * @param source char[]
     * @param dimensions int
     * @param pos int
@@ -44,7 +43,9 @@ public class ArrayTypeReference extends SingleTypeReference
       return this.dimensions;
    }
 
-   /** @return char[][] */
+   /**
+    * @return char[][]
+    */
    public char[][] getParameterizedTypeName()
    {
       int dim = this.dimensions;

@@ -120,7 +120,7 @@ public class ForeachStatement extends Statement
          }
 
          // code generation can be optimized when no need to continue in the loop
-         exitBranch = flowInfo.unconditionalCopy().addNullInfoFrom(condInfo.initsWhenFalse());
+         exitBranch = flowInfo.unconditionalCopy().addInitializationsFrom(condInfo.initsWhenFalse());
          // TODO (maxime) no need to test when false: can optimize (same for action being unreachable above)
          if ((actionInfo.tagBits & loopingContext.initsOnContinue.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
          {
@@ -161,18 +161,61 @@ public class ForeachStatement extends Statement
             this.indexVariable.useFlag = LocalVariableBinding.USED;
             break;
       }
-      // end of loop
+      //end of loop
       loopingContext.complainOnDeferredNullChecks(currentScope, actionInfo);
 
       FlowInfo mergedInfo =
          FlowInfo.mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
-            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null
-                                                                                                          // info
-            false, exitBranch, false, true /*
-                                            * for(;;){}while(true); unreachable();
-                                            */);
+            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null info
+            false, exitBranch, false, true /*for(;;){}while(true); unreachable(); */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
+   }
+
+   /**
+    * For statement code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param codeStream org.eclipse.jdt.client.internal.compiler.codegen.CodeStream
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      final boolean hasEmptyAction =
+         this.action == null || this.action.isEmptyBlock() || ((this.action.bits & IsUsefulEmptyStatement) != 0);
+
+      if (hasEmptyAction && this.elementVariable.binding.resolvedPosition == -1 && this.kind == ARRAY)
+      {
+         this.collection.generateCode(this.scope, false);
+         return;
+      }
+
+      // generate the initializations
+      switch (this.kind)
+      {
+         case ARRAY :
+            this.collection.generateCode(this.scope, true);
+            break;
+         case RAW_ITERABLE :
+         case GENERIC_ITERABLE :
+            this.collection.generateCode(this.scope, true);
+            break;
+      }
+      // label management
+      BranchLabel actionLabel = new BranchLabel();
+      actionLabel.tagBits |= BranchLabel.USED;
+      BranchLabel conditionLabel = new BranchLabel();
+      conditionLabel.tagBits |= BranchLabel.USED;
+
+
+      if (!hasEmptyAction)
+      {
+         this.action.generateCode(this.scope);
+      }
    }
 
    public StringBuffer printStatement(int indent, StringBuffer output)
@@ -189,7 +232,7 @@ public class ForeachStatement extends Statement
       {
          output.append(')');
       }
-      // block
+      //block
       if (this.action == null)
       {
          output.append(';');
@@ -253,9 +296,7 @@ public class ForeachStatement extends Statement
             {
                this.collection.computeConversion(this.scope, collectionType, collectionType);
                int boxedID = this.scope.environment().computeBoxingType(this.collectionElementType).id;
-               this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type
-                                                                                                             // in implicit
-                                                                                                             // conversion
+               this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type in implicit conversion
                compileTimeTypeID = boxedID;
                this.scope.problemReporter().autoboxing(this.collection, this.collectionElementType, elementType);
             }
@@ -268,17 +309,13 @@ public class ForeachStatement extends Statement
          else if (collectionType instanceof ReferenceBinding)
          {
             ReferenceBinding iterableType =
-               ((ReferenceBinding)collectionType).findSuperTypeOriginatingFrom(T_JavaLangIterable, false /*
-                                                                                                          * Iterable is not a
-                                                                                                          * class
-                                                                                                          */);
+               ((ReferenceBinding)collectionType)
+                  .findSuperTypeOriginatingFrom(T_JavaLangIterable, false /*Iterable is not a class*/);
             if (iterableType == null && isTargetJsr14)
             {
                iterableType =
-                  ((ReferenceBinding)collectionType).findSuperTypeOriginatingFrom(T_JavaUtilCollection, false /*
-                                                                                                               * Iterable is not a
-                                                                                                               * class
-                                                                                                               */);
+                  ((ReferenceBinding)collectionType)
+                     .findSuperTypeOriginatingFrom(T_JavaUtilCollection, false /*Iterable is not a class*/);
             }
             checkIterable :
             {
@@ -370,11 +407,7 @@ public class ForeachStatement extends Statement
                {
                   if (this.collectionElementType.isBaseType())
                   {
-                     this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use
-                                                                                                                   // primitive
-                                                                                                                   // type in
-                                                                                                                   // implicit
-                                                                                                                   // conversion
+                     this.elementVariableImplicitWidening = BOXING | (compileTimeTypeID << 4) | compileTimeTypeID; // use primitive type in implicit conversion
                   }
                }
             }

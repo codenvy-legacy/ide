@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.mockito.Mock;
 
 import java.io.StringReader;
+import java.util.HashSet;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -65,7 +66,7 @@ public class SignatureBase
       StringReader reader = new StringReader(b.toString());
       javaDocBuilderVfs.addSource(reader);
       JavaClass clazz = javaDocBuilderVfs.getClassByName(classFqn);
-      TypeInfo typeInfo = new JavaTypeToTypeInfoConverter(storage).convert(clazz);
+      TypeInfo typeInfo = new JavaTypeToTypeInfoConverter(storage, new HashSet<String>()).convert(clazz);
       return typeInfo;
    }
 
