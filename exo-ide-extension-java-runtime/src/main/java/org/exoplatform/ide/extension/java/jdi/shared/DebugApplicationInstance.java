@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.java.jdi.shared;
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated move methods to ApplicationInstance interface and remove this
  */
 public interface DebugApplicationInstance extends ApplicationInstance
 {

@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.googleappengine.client.login;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
@@ -28,7 +29,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @version $Id: Jun 14, 2012 11:34:04 AM anya $
  * 
  */
-public class LogoutControl extends SimpleControl implements IDEControl
+public class LogoutControl extends SimpleControl implements IDEControl, SetLoggedUserStateHandler
 {
    private static final String ID = "PaaS/Google App Engine/Logout";
 
@@ -41,10 +42,9 @@ public class LogoutControl extends SimpleControl implements IDEControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(GAEClientBundle.INSTANCE.logout(),
-         GAEClientBundle.INSTANCE.logoutDisabled());
+      setImages(GAEClientBundle.INSTANCE.logout(), GAEClientBundle.INSTANCE.logoutDisabled());
       setEvent(new LogoutEvent());
-
+      IDE.addHandler(SetLoggedUserStateEvent.TYPE, this);
    }
 
    /**
@@ -53,7 +53,17 @@ public class LogoutControl extends SimpleControl implements IDEControl
    @Override
    public void initialize()
    {
-      setVisible(true);
-      setEnabled(true);
+      setVisible(false);
+      setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.SetLoggedUserStateHandler#onSetLoggedUserState(org.exoplatform.ide.extension.googleappengine.client.login.SetLoggedUserStateEvent)
+    */
+   @Override
+   public void onSetLoggedUserState(SetLoggedUserStateEvent event)
+   {
+      setVisible(event.isLogged());
+      setEnabled(event.isLogged());
    }
 }

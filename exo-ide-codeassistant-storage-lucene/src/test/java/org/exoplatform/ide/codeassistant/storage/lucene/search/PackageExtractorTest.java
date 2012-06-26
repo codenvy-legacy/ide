@@ -49,7 +49,7 @@ public class PackageExtractorTest
    public void shouldReconstructPackage() throws Exception
    {
       String pack = "org.exoplatform";
-      Document luceneDocument = new DataIndexer().createPackageDocument(pack);
+      Document luceneDocument = new DataIndexer().createPackageDocument(pack, "rt");
       when(reader.document(anyInt(), (FieldSelector)anyObject())).thenReturn(luceneDocument);
       String value = extractor.getValue(reader, 3);
       assertEquals(pack, value);

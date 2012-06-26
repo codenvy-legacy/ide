@@ -31,7 +31,9 @@ import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VaccumIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.login.AccountsHandler;
+import org.exoplatform.ide.extension.googleappengine.client.login.LoginControl;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter;
+import org.exoplatform.ide.extension.googleappengine.client.login.LogoutControl;
 import org.exoplatform.ide.extension.googleappengine.client.logs.LogsPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
@@ -77,7 +79,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new DosHandler();
       new CronsHandler();
       new BackendsHandler();
-      new AccountsHandler();
+      IDE.getInstance().addControl(new LoginControl());
+      IDE.getInstance().addControl(new LogoutControl());
    }
 
    /**
@@ -88,5 +91,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    {
       new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
+      new AccountsHandler();
    }
 }

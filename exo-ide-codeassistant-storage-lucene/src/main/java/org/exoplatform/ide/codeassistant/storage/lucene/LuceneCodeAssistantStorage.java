@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Implementation of CodeAssistantStorage based on Lucene
  */
-public class LuceneCodeAssistantStorage implements CodeAssistantStorage
+public class LuceneCodeAssistantStorage
 {
    private final int DEFAULT_RESULT_LIMIT = 200;
 
@@ -59,7 +59,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAnnotations(java.lang.String)
     */
-   @Override
    public List<ShortTypeInfo> getAnnotations(String prefix) throws CodeAssistantException
    {
 
@@ -72,7 +71,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClasses(java.lang.String)
     */
-   @Override
    public List<ShortTypeInfo> getClasses(String prefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
@@ -83,7 +81,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getClassJavaDoc(java.lang.String)
     */
-   @Override
    public String getClassJavaDoc(String fqn) throws CodeAssistantException
    {
       return getMemberJavaDoc(fqn);
@@ -93,7 +90,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getInterfaces(java.lang.String)
     */
-   @Override
    public List<ShortTypeInfo> getInterfaces(String prefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
@@ -105,7 +101,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getMemberJavaDoc(java.lang.String)
     */
-   @Override
    public String getMemberJavaDoc(String fqn) throws CodeAssistantException
    {
       List<String> searchResult =
@@ -121,7 +116,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypeByFqn(java.lang.String)
     */
-   @Override
    public TypeInfo getTypeByFqn(String fqn) throws CodeAssistantException
    {
 
@@ -135,7 +129,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByFqnPrefix(java.lang.String)
     */
-   @Override
    public List<ShortTypeInfo> getTypesByFqnPrefix(String fqnPrefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new ShortTypeInfoExtractor(), IndexType.JAVA,
@@ -146,7 +139,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
     * 
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesByFqnPrefix(java.lang.String)
     */
-   @Override
    public List<ShortTypeInfo> getTypesByNamePrefix(String namePrefix) throws CodeAssistantException
    {
 
@@ -157,7 +149,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getTypesInfoByNamePrefix(java.lang.String)
     */
-   @Override
    public List<TypeInfo> getTypesInfoByNamePrefix(String namePrefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new TypeInfoExtractor(), IndexType.JAVA,
@@ -167,7 +158,6 @@ public class LuceneCodeAssistantStorage implements CodeAssistantStorage
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getPackages(java.lang.String)
     */
-   @Override
    public List<String> getPackages(String packagePrefix) throws CodeAssistantException
    {
       return queryExecutor.executeQuery(new PackageExtractor(), IndexType.PACKAGE,

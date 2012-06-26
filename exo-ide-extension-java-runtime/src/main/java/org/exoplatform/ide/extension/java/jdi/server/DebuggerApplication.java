@@ -30,17 +30,26 @@ import javax.ws.rs.core.Application;
 public class DebuggerApplication extends Application
 {
    private final Set<Class<?>> classes;
+   private final Set<Object> objects;
 
    public DebuggerApplication()
    {
       classes = new HashSet<Class<?>>(2);
       classes.add(DebuggerService.class);
       classes.add(ApplicationRunnerService.class);
+      objects = new HashSet<Object>(1);
+      objects.add(new ApplicationRunnerExceptionMapper());
    }
 
    @Override
    public Set<Class<?>> getClasses()
    {
       return classes;
+   }
+
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return objects;
    }
 }

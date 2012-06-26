@@ -33,6 +33,17 @@ public class NullLiteral extends MagicLiteral
       this.constant = Constant.NotAConstant;
    }
 
+   /**
+    * Code generation for the null literal
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
+
+   }
+
    public TypeBinding literalType(BlockScope scope)
    {
       return TypeBinding.NULL;

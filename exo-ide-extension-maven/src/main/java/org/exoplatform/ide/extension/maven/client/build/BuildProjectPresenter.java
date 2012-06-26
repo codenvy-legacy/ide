@@ -283,12 +283,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                @Override
                protected void onFailure(Throwable exception)
                {
+                  doBuild();
                   exception.printStackTrace();
                }
             });
       }
       catch (RequestException e)
       {
+         doBuild();
          e.printStackTrace();
       }
    }
@@ -339,6 +341,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
       catch (RequestException e)
       {
+         doBuild();
          e.printStackTrace();
       }
    }

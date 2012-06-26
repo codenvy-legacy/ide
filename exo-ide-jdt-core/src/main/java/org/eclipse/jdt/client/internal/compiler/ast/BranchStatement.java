@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.compiler.ast;
 
+import org.eclipse.jdt.client.internal.compiler.codegen.BranchLabel;
 import org.eclipse.jdt.client.internal.compiler.lookup.BlockScope;
 
 public abstract class BranchStatement extends Statement
@@ -17,14 +18,30 @@ public abstract class BranchStatement extends Statement
 
    public char[] label;
 
+   public BranchLabel targetLabel;
+
    public SubRoutineStatement[] subroutines;
 
-   /** BranchStatement constructor comment. */
+   public int initStateIndex = -1;
+
+   /**
+    * BranchStatement constructor comment.
+    */
    public BranchStatement(char[] label, int sourceStart, int sourceEnd)
    {
       this.label = label;
       this.sourceStart = sourceStart;
       this.sourceEnd = sourceEnd;
+   }
+
+   /**
+    * Branch code generation
+    *
+    *   generate the finallyInvocationSequence.
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
    }
 
    public void resolve(BlockScope scope)

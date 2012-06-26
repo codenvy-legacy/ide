@@ -19,10 +19,13 @@ import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.CompletionRequestor;
 import org.eclipse.jdt.client.core.Signature;
+import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
+import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
@@ -424,7 +427,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          case CompletionProposal.ANONYMOUS_CLASS_CONSTRUCTOR_INVOCATION :
             return createAnonymousTypeProposal(proposal, getInvocationContext());
          case CompletionProposal.ANONYMOUS_CLASS_DECLARATION :
-            return createAnonymousTypeProposal(proposal, null);
+            return createAnonymousTypeProposal(proposal, getInvocationContext());
          case CompletionProposal.LABEL_REF :
             return createLabelProposal(proposal);
          case CompletionProposal.LOCAL_VARIABLE_REF :
@@ -673,25 +676,33 @@ public class CompletionProposalCollector extends CompletionRequestor
       if (declarationKey == null)
          return null;
 
-      return null;
       // IJavaElement element = fJavaProject.findElement(new String(declarationKey), null);
       // if (!(element instanceof IType))
       // return null;
       //
       // IType type = (IType)element;
-//      String completion = String.valueOf(proposal.getCompletion());
-//      int start = proposal.getReplaceStart();
-//      int length = getLength(proposal);
-//      int relevance = computeRelevance(proposal);
-//
-//      StyledString label = fLabelProvider.createAnonymousTypeLabel(proposal);
+      
+      String completion = String.valueOf(proposal.getCompletion());
+      int start = proposal.getReplaceStart();
+      int length = getLength(proposal);
+      int relevance = computeRelevance(proposal);
 
-//      // TODO find super type
-//      JavaCompletionProposal javaProposal =
-//         new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
-//            String.valueOf(proposal.getDeclarationSignature()), (TypeDeclaration)null, relevance);
-//      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
-//      return javaProposal;
+      StyledString label = fLabelProvider.createAnonymousTypeLabel(proposal);
+
+      char[] typeErasure = Signature.getTypeErasure(declarationKey);
+      CharOperation.replace(typeErasure, '/', '.');
+      ReferenceBinding referenceBinding =
+         lookupEnvironment.askForType(CharOperation.splitOn('.', Signature.toCharArray(typeErasure)));
+      if (referenceBinding == null)
+         return null;
+      ITypeBinding typeBinding = fCompilationUnit.getAST().getBindingResolver().getTypeBinding(referenceBinding);
+      if (typeBinding == null)
+         return null;
+      JavaCompletionProposal javaProposal =
+         new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
+            String.valueOf(proposal.getDeclarationSignature()), typeBinding, relevance);
+      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
+      return javaProposal;
    }
 
    private IJavaCompletionProposal createFieldProposal(CompletionProposal proposal)

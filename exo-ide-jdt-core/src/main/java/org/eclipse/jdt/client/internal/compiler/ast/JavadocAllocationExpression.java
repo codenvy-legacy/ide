@@ -27,7 +27,8 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 
 public class JavadocAllocationExpression extends AllocationExpression
 {
-   public int tagSourceStart;
+
+   public int tagSourceStart, tagSourceEnd;
 
    public int tagValue, memberStart;
 
@@ -60,9 +61,7 @@ public class JavadocAllocationExpression extends AllocationExpression
       }
       else
       {
-         this.resolvedType = this.type.resolveType((BlockScope)scope, true /*
-                                                                            * check bounds
-                                                                            */);
+         this.resolvedType = this.type.resolveType((BlockScope)scope, true /* check bounds*/);
       }
 
       // buffering the arguments' types
@@ -104,10 +103,9 @@ public class JavadocAllocationExpression extends AllocationExpression
       {
          return null;
       }
-      this.resolvedType = scope.environment().convertToRawType(this.type.resolvedType, true /*
-                                                                                             * force the conversion of enclosing
-                                                                                             * types
-                                                                                             */);
+      this.resolvedType =
+         scope.environment()
+            .convertToRawType(this.type.resolvedType, true /*force the conversion of enclosing types*/);
       SourceTypeBinding enclosingType = scope.enclosingSourceType();
       if (enclosingType == null ? false : enclosingType.isCompatibleWith(this.resolvedType))
       {

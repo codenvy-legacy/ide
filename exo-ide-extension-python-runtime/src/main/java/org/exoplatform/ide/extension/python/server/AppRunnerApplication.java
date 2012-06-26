@@ -30,16 +30,25 @@ import javax.ws.rs.core.Application;
 public class AppRunnerApplication extends Application
 {
    private final Set<Class<?>> classes;
+   private final Set<Object> objects;
 
    public AppRunnerApplication()
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(ApplicationRunnerService.class);
+      objects = new HashSet<Object>(1);
+      objects.add(new ApplicationRunnerExceptionMapper());
    }
 
    @Override
    public Set<Class<?>> getClasses()
    {
       return classes;
+   }
+
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return objects;
    }
 }

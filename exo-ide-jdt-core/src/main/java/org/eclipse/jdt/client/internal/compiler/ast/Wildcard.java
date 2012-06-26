@@ -19,7 +19,9 @@ import org.eclipse.jdt.client.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
 
-/** Node to represent Wildcard */
+/**
+ * Node to represent Wildcard
+ */
 public class Wildcard extends SingleTypeReference
 {
 
@@ -76,16 +78,15 @@ public class Wildcard extends SingleTypeReference
       {
          boundType =
             scope.kind == Scope.CLASS_SCOPE ? this.bound.resolveType((ClassScope)scope) : this.bound.resolveType(
-               (BlockScope)scope, true /* check bounds */);
+               (BlockScope)scope, true /* check bounds*/);
 
          if (boundType == null)
          {
             return null;
          }
       }
-      WildcardBinding wildcard = scope.environment().createWildcard(genericType, rank, boundType, null /*
-                                                                                                        * no extra bound
-                                                                                                        */, this.kind);
+      WildcardBinding wildcard =
+         scope.environment().createWildcard(genericType, rank, boundType, null /*no extra bound*/, this.kind);
       return this.resolvedType = wildcard;
    }
 

@@ -34,7 +34,9 @@ public class IntLiteral extends NumberLiteral
 
    private char[] reducedForm; // no underscores
 
-   // used for ++ and --
+   public int value;
+
+   //used for ++ and --
    public static final IntLiteral One = new IntLiteral(new char[]{'1'}, null, 0, 0, 1, IntConstant.fromValue(1));
 
    public static IntLiteral buildIntLiteral(char[] token, int s, int e)
@@ -71,6 +73,7 @@ public class IntLiteral extends NumberLiteral
    {
       super(token, start, end);
       this.reducedForm = reducedForm;
+      this.value = value;
       this.constant = constant;
    }
 
@@ -109,7 +112,7 @@ public class IntLiteral extends NumberLiteral
             if ((tokenLength - 2) > 32)
             {
                // remove 0b or 0B
-               return; /* constant stays null */
+               return; /*constant stays null*/
             }
             computeValue(token, tokenLength, radix, j);
             return;
@@ -129,7 +132,7 @@ public class IntLiteral extends NumberLiteral
             if (tokenLength > DECIMAL_MAX_VALUE.length
                || (tokenLength == DECIMAL_MAX_VALUE.length && CharOperation.compareTo(token, DECIMAL_MAX_VALUE) > 0))
             {
-               return; /* constant stays null */
+               return; /*constant stays null*/
             }
             computeValue(token, tokenLength, radix, j);
             break;
@@ -138,7 +141,7 @@ public class IntLiteral extends NumberLiteral
             {
                if (tokenLength == 12 && token[j] > '4')
                {
-                  return; /* constant stays null */
+                  return; /*constant stays null*/
                }
                if (CharOperation.equals(token, OCTAL_MINUS_ONE_VALUE))
                {
@@ -160,7 +163,7 @@ public class IntLiteral extends NumberLiteral
       {
          if ((digitValue = ScannerHelper.digit(token[j++], radix)) < 0)
          {
-            return; /* constant stays null */
+            return; /*constant stays null*/
          }
          computedValue = (computedValue * radix) + digitValue;
       }
@@ -185,6 +188,16 @@ public class IntLiteral extends NumberLiteral
             break;
       }
       return this;
+   }
+
+   /**
+    * Code generation for long literal
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, boolean valueRequired)
+   {
    }
 
    public TypeBinding literalType(BlockScope scope)

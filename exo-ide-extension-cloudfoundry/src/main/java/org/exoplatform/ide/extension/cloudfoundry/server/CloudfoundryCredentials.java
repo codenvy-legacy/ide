@@ -66,19 +66,21 @@ public final class CloudfoundryCredentials
    public void writeTo(Writer out) throws IOException
    {
       StringBuilder body = new StringBuilder();
-      body.append('{'); //
+      body.append('{');
       int i = 0;
       for (Map.Entry<String, String> e : tokens.entrySet())
       {
          if (i > 0)
+         {
             body.append(',');
-         body.append('"') //
-            .append(e.getKey()) //
-            .append('"') //
-            .append(':') //
-            .append('"') //
-            .append(e.getValue()) //
-            .append('"');
+         }
+         body.append('"');
+         body.append(e.getKey());
+         body.append('"');
+         body.append(':');
+         body.append('"');
+         body.append(e.getValue());
+         body.append('"');
          i++;
       }
       body.append('}');

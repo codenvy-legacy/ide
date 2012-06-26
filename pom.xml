@@ -8,7 +8,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M8-SNAPSHOT</version>
+   <version>1.2.0-M9-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
@@ -162,6 +162,11 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-codeassistant-storage</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -812,6 +817,7 @@
       <module>exo-ide-codeassistant-api</module>
       <module>exo-ide-codeassistant-asm</module>
       <module>exo-ide-codeassistant-storage-lucene</module>
+      <module>exo-ide-codeassistant-storage</module>
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-editor-ckeditor</module>

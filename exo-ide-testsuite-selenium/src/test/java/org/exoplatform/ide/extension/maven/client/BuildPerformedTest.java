@@ -27,6 +27,7 @@ import org.exoplatform.ide.core.Build;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -73,6 +74,7 @@ public class BuildPerformedTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testBuildPerformed() throws Exception
    {

@@ -35,7 +35,9 @@ public class JavadocSingleTypeReference extends SingleTypeReference
       this.bits |= ASTNode.InsideJavadoc;
    }
 
-   /* We need to modify resolving behavior to handle package references */
+   /*
+    * We need to modify resolving behavior to handle package references
+    */
    protected TypeBinding internalResolveType(Scope scope)
    {
       // handle the error here
@@ -97,10 +99,8 @@ public class JavadocSingleTypeReference extends SingleTypeReference
       // raw convert all enclosing types when dealing with Javadoc references
       if (this.resolvedType.isGenericType() || this.resolvedType.isParameterizedType())
       {
-         this.resolvedType = scope.environment().convertToRawType(this.resolvedType, true /*
-                                                                                           * force the conversion of enclosing
-                                                                                           * types
-                                                                                           */);
+         this.resolvedType =
+            scope.environment().convertToRawType(this.resolvedType, true /*force the conversion of enclosing types*/);
       }
       return this.resolvedType;
    }
@@ -115,10 +115,9 @@ public class JavadocSingleTypeReference extends SingleTypeReference
       scope.problemReporter().javadocInvalidType(this, this.resolvedType, scope.getDeclarationModifiers());
    }
 
-   /*
-    * (non-Javadoc) Redefine to capture javadoc specific signatures
-    * @see org.eclipse.jdt.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt .internal.compiler.ASTVisitor,
-    * org.eclipse.jdt.internal.compiler.lookup.BlockScope)
+   /* (non-Javadoc)
+    * Redefine to capture javadoc specific signatures
+    * @see org.eclipse.jdt.client.internal.compiler.ast.ASTNode#traverse(org.eclipse.jdt.client.internal.compiler.ASTVisitor, org.eclipse.jdt.client.internal.compiler.lookup.BlockScope)
     */
    public void traverse(ASTVisitor visitor, BlockScope scope)
    {

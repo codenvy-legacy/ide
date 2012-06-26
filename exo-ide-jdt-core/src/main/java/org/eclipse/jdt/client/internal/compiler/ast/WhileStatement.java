@@ -31,6 +31,10 @@ public class WhileStatement extends Statement
 
    private BranchLabel breakLabel, continueLabel;
 
+   int preCondInitStateIndex = -1;
+
+   int condIfTrueInitStateIndex = -1;
+
    int mergedInitStateIndex = -1;
 
    public WhileStatement(Expression condition, Statement action, int s, int e)
@@ -62,6 +66,7 @@ public class WhileStatement extends Statement
       boolean isConditionOptimizedTrue = cst != Constant.NotAConstant && cst.booleanValue() == true;
       boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
 
+      this.preCondInitStateIndex = currentScope.methodScope().recordInitializationStates(flowInfo);
       LoopingFlowContext condLoopContext;
       FlowInfo condInfo = flowInfo.nullInfoLessUnconditionalCopy();
 
@@ -118,6 +123,10 @@ public class WhileStatement extends Statement
             }
          }
 
+         // for computing local var attributes
+         this.condIfTrueInitStateIndex =
+            currentScope.methodScope().recordInitializationStates(condInfo.initsWhenTrue());
+
          if (this.action.complainIfUnreachable(actionInfo, currentScope, initialComplaintLevel) < Statement.COMPLAINED_UNREACHABLE)
          {
             actionInfo = this.action.analyseCode(currentScope, loopingContext, actionInfo);
@@ -147,7 +156,7 @@ public class WhileStatement extends Statement
          { // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321926
             FlowInfo loopbackFlowInfo = flowInfo.copy();
             if (this.continueLabel != null)
-            { // we do get to the bottom
+            { // we do get to the bottom 
                loopbackFlowInfo.mergedWith(actionInfo.unconditionalCopy());
             }
             loopingContext.simulateThrowAfterLoopBack(loopbackFlowInfo);
@@ -156,15 +165,62 @@ public class WhileStatement extends Statement
 
       // end of loop
       FlowInfo mergedInfo =
-         FlowInfo.mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
-            ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream
-                                                                                                          // null info
-            isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*
-                                                                                               * while ( true ) ; unreachable ( )
-                                                                                               * ;
-                                                                                               */);
+         FlowInfo
+            .mergedOptimizedBranches((loopingContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) != 0
+               ? loopingContext.initsOnBreak : flowInfo.addInitializationsFrom(loopingContext.initsOnBreak), // recover upstream null info
+               isConditionOptimizedTrue, exitBranch, isConditionOptimizedFalse, !isConditionTrue /*while(true); unreachable(); */);
       this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
       return mergedInfo;
+   }
+
+   /**
+    * While code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      Constant cst = this.condition.optimizedBooleanConstant();
+      boolean isConditionOptimizedFalse = cst != Constant.NotAConstant && cst.booleanValue() == false;
+      if (isConditionOptimizedFalse)
+      {
+         this.condition.generateCode(currentScope, false);
+         // May loose some local variable initializations : affecting the local variable attributes
+         return;
+      }
+
+      // generate condition
+      if (this.continueLabel == null)
+      {
+         // no need to reverse condition
+         if (this.condition.constant == Constant.NotAConstant)
+         {
+            this.condition.generateOptimizedBoolean(currentScope, null, this.breakLabel, true);
+         }
+      }
+      // generate the action
+      BranchLabel actionLabel = new BranchLabel();
+      if (this.action != null)
+      {
+         actionLabel.tagBits |= BranchLabel.USED;
+         // Required to fix 1PR0XVS: LFRE:WINNT - Compiler: variable table for method appears incorrect
+         if (this.condIfTrueInitStateIndex != -1)
+         {
+            // insert all locals initialized inside the condition into the action generated prior to the condition
+         }
+         this.action.generateCode(currentScope);
+         // May loose some local variable initializations : affecting the local variable attributes
+      }
+      // output condition and branch back to the beginning of the repeated action
+      if (this.continueLabel != null)
+      {
+         this.condition.generateOptimizedBoolean(currentScope, actionLabel, null, true);
+      }
    }
 
    public void resolve(BlockScope scope)

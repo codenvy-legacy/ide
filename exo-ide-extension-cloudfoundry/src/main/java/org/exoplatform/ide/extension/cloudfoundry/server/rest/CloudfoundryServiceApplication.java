@@ -34,8 +34,9 @@ public class CloudfoundryServiceApplication extends Application
 
    public CloudfoundryServiceApplication()
    {
-      classes = new HashSet<Class<?>>(1);
+      classes = new HashSet<Class<?>>(2);
       classes.add(CloudfoundryService.class);
+      classes.add(CloudfoundryPoolService.class);
       singletons = new HashSet<Object>(1);
       singletons.add(new CloudfoundryExceptionMapper());
    }

@@ -91,15 +91,15 @@ public class ProjectsListGridTest extends BaseTest
       assertFalse(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
 
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CLOSE_PROJECT);
-
+      IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT1);
       assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
-
+      
       // delete project1
       VirtualFileSystemUtils.delete(WS_URL + PROJECT1 + "/");
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
-
+      IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT2);
       assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
       assertEquals(countOfProjects - 1, IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid());
    }

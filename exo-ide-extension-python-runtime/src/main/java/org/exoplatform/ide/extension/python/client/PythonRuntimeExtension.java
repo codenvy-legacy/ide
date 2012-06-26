@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.python.client.logs.LogsHandler;
 import org.exoplatform.ide.extension.python.client.run.RunApplicationManager;
 
 /**
@@ -58,5 +59,6 @@ public class PythonRuntimeExtension extends Extension implements InitializeServi
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new RunApplicationManager();
+      //TODO new LogsHandler();
    }
 }

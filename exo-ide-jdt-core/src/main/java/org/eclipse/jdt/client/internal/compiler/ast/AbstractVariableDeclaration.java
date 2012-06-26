@@ -22,8 +22,9 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
    public int declarationEnd;
 
    /**
-    * For local declarations (outside of for statement initialization) and field declarations, the declarationSourceEnd covers
-    * multiple locals if any. For local declarations inside for statement initialization, this is not the case.
+    * For local declarations (outside of for statement initialization) and field declarations,
+    * the declarationSourceEnd covers multiple locals if any.
+    * For local declarations inside for statement initialization, this is not the case.
     */
    public int declarationSourceEnd;
 
@@ -60,27 +61,29 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
 
    public static final int TYPE_PARAMETER = 6;
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    */
    public TypeBinding[] genericTypeArguments()
    {
       return null;
    }
 
-   /** Returns the constant kind of this variable declaration */
+   /**
+    * Returns the constant kind of this variable declaration
+    */
    public abstract int getKind();
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isSuperAccess()
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#isSuperAccess()
     */
    public boolean isSuperAccess()
    {
       return false;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#isTypeAccess()
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#isTypeAccess()
     */
    public boolean isTypeAccess()
    {
@@ -134,19 +137,16 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
       // do nothing by default (redefined for local variables)
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setActualReceiverType
-    * (org.eclipse.jdt.internal.compiler.lookup. ReferenceBinding)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#setActualReceiverType(org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding)
     */
    public void setActualReceiverType(ReferenceBinding receiverType)
    {
       // do nothing by default
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setDepth(int)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#setDepth(int)
     */
    public void setDepth(int depth)
    {
@@ -154,9 +154,8 @@ public abstract class AbstractVariableDeclaration extends Statement implements I
       this.hiddenVariableDepth = depth;
    }
 
-   /*
-    * (non-Javadoc)
-    * @see org.eclipse.jdt.internal.compiler.lookup.InvocationSite#setFieldIndex(int)
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#setFieldIndex(int)
     */
    public void setFieldIndex(int depth)
    {

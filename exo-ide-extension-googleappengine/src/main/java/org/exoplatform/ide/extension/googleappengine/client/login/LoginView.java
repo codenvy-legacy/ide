@@ -22,10 +22,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -45,7 +45,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 
    private static final int WIDTH = 440;
 
-   private static final int HEIGHT = 180;
+   private static final int HEIGHT = 170;
 
    private static final String LABEL_ID = "ideLoginViewLabel";
 
@@ -69,32 +69,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Go button.
     */
    @UiField
-   ImageButton goButton;
-
-   /**
-    * Cancel button.
-    */
-   @UiField
-   ImageButton cancelButton;
+   Anchor goButton;
 
    public LoginView()
    {
       super(ID, ViewType.MODAL, GoogleAppEngineExtension.GAE_LOCALIZATION.loginViewTitle(), new Image(
          GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT, true);
       add(uiBinder.createAndBindUi(this));
-
-      goButton.setButtonId(GO_BUTTON_ID);
-      cancelButton.setButtonId(CANCEL_BUTTON_ID);
       label.setID(LABEL_ID);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
    }
 
    /**
@@ -104,5 +86,14 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    public HasClickHandlers getGoButton()
    {
       return goButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.googleappengine.client.login.LoginPresenter.Display#setLoginLocation(java.lang.String)
+    */
+   @Override
+   public void setLoginLocation(String href)
+   {
+      goButton.setHref(href);
    }
 }

@@ -18,13 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -41,23 +36,21 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class CloudfoundryAuthenticator
+public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
 {
    private static final String defaultTarget = "http://api.cloudfoundry.com";
    
@@ -83,116 +76,13 @@ public class CloudfoundryAuthenticator
          this.config = config;
          if (!this.config.endsWith("/"))
          {
-            this.config += "/";
+            this.config += '/';
          }
       }
    }
 
-   private static String readValueParam(InitParams initParams, String paramName)
-   {
-      if (initParams != null)
-      {
-         ValueParam vp = initParams.getValueParam(paramName);
-         if (vp != null)
-         {
-            return vp.getValue();
-         }
-      }
-      return null;
-   }
-
-   /**
-    * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
-    * should be used instead of username/password for any request to cloudfoundry service.
-    * 
-    * @param target location of Cloud Foundry REST API, e.g. http://api.cloudfoundry.com
-    * @param email email address that used when signup to cloudfoundry.com
-    * @param password password
-    * @throws CloudfoundryException if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    * @throws IOException if any i/o errors occurs
-    */
-   public final void login(String target, String email, String password) throws CloudfoundryException,
-      ParsingResponseException, VirtualFileSystemException, IOException
-   {
-      HttpURLConnection http = null;
-      try
-      {
-         URL url = new URL(target + "/users/" + email + "/tokens");
-         http = (HttpURLConnection)url.openConnection();
-         http.setRequestMethod("POST");
-         http.setRequestProperty("Accept", "application/json, */*");
-         http.setRequestProperty("Content-type", "application/json");
-         http.setDoOutput(true);
-         OutputStream output = http.getOutputStream();
-         try
-         {
-            output.write(("{\"password\":\"" + password + "\"}").getBytes());
-            output.flush();
-         }
-         finally
-         {
-            output.close();
-         }
-
-         if (http.getResponseCode() != 200)
-         {
-            throw Cloudfoundry.fault(http);
-         }
-
-         InputStream input = http.getInputStream();
-         JsonValue jsonValue;
-         try
-         {
-            JsonParser jsonParser = new JsonParser();
-            jsonParser.parse(input);
-            jsonValue = jsonParser.getJsonObject();
-         }
-         finally
-         {
-            input.close();
-         }
-
-         CloudfoundryCredentials credentials = readCredentials();
-         credentials.addToken(target, jsonValue.getElement("token").getStringValue());
-         writeCredentials(credentials);
-      }
-      catch (JsonException jsone)
-      {
-         throw new ParsingResponseException(jsone.getMessage(), jsone);
-      }
-      catch (UnknownHostException exc)
-      {
-         throw new CloudfoundryException(500, "Can't access target.\n", "text/plain");
-      }
-      
-      finally
-      {
-         if (http != null)
-         {
-            http.disconnect();
-         }
-      }
-   }
-
-   /**
-    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work with
-    * remote server.
-    * 
-    * @param target location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
-    * @see #login(String, String, String)
-    */
-   public final void logout(String target) throws VirtualFileSystemException, IOException
-   {
-      CloudfoundryCredentials credentials = readCredentials();
-      if (credentials.removeToken(target))
-      {
-         writeCredentials(credentials);
-      }
-   }
-
-   public String readTarget() throws VirtualFileSystemException, IOException
+   @Override
+   public String getTarget() throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
@@ -205,6 +95,7 @@ public class CloudfoundryAuthenticator
       return target;
    }
 
+   @Override
    public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
@@ -232,12 +123,14 @@ public class CloudfoundryAuthenticator
       return credentials;
    }
 
+   @Override
    public void writeTarget(String target) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       writeFile(vfs, getConfigParent(vfs), "vmc_target", target);
    }
 
+   @Override
    public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
@@ -273,9 +166,9 @@ public class CloudfoundryAuthenticator
       try
       {
          Item credentialsFile =
-            vfs.getItemByPath(parent.getPath() + "/" + file, null, PropertyFilter.NONE_FILTER);
-         InputStream newcontent = new ByteArrayInputStream(data.getBytes());
-         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
+            vfs.getItemByPath(parent.getPath() + '/' + file, null, PropertyFilter.NONE_FILTER);
+         InputStream newContent = new ByteArrayInputStream(data.getBytes());
+         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
       catch (ItemNotFoundException e)
       {

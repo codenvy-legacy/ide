@@ -25,10 +25,12 @@ import org.eclipse.jdt.client.internal.compiler.lookup.MethodScope;
 import org.eclipse.jdt.client.internal.compiler.lookup.ProblemMethodBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.RawTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
+import org.eclipse.jdt.client.internal.compiler.lookup.SourceTypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TagBits;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeIds;
+import org.eclipse.jdt.client.internal.compiler.lookup.VariableBinding;
 
 public class ExplicitConstructorCall extends Statement implements InvocationSite
 {
@@ -38,6 +40,8 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
    public Expression qualification;
 
    public MethodBinding binding; // exact binding resulting from lookup
+
+   MethodBinding syntheticAccessor; // synthetic accessor for inner-emulation
 
    public int accessMode;
 
@@ -50,6 +54,8 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
    public final static int Super = 2;
 
    public final static int This = 3;
+
+   public VariableBinding[][] implicitArguments;
 
    // TODO Remove once DOMParser is activated
    public int typeArgumentsSourceStart;
@@ -109,71 +115,33 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
       }
    }
 
-   // /**
-   // * Constructor call code generation
-   // *
-   // * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-   // * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-   // */
-   // public void generateCode(BlockScope currentScope, CodeStream codeStream)
-   // {
-   // if ((this.bits & ASTNode.IsReachable) == 0)
-   // {
-   // return;
-   // }
-   // try
-   // {
-   // ((MethodScope)currentScope).isConstructorCall = true;
-   //
-   // int pc = codeStream.position;
-   // codeStream.aload_0();
-   //
-   // MethodBinding codegenBinding = this.binding.original();
-   // ReferenceBinding targetType = codegenBinding.declaringClass;
-   //
-   // // special name&ordinal argument generation for enum constructors
-   // if (targetType.erasure().id == TypeIds.T_JavaLangEnum || targetType.isEnum())
-   // {
-   // codeStream.aload_1(); // pass along name param as name arg
-   // codeStream.iload_2(); // pass along ordinal param as ordinal arg
-   // }
-   // // handling innerclass constructor invocation
-   // // handling innerclass instance allocation - enclosing instance arguments
-   // if (targetType.isNestedType())
-   // {
-   // codeStream.generateSyntheticEnclosingInstanceValues(currentScope, targetType,
-   // (this.bits & ASTNode.DiscardEnclosingInstance) != 0 ? null : this.qualification, this);
-   // }
-   // // generate arguments
-   // generateArguments(this.binding, this.arguments, currentScope, codeStream);
-   //
-   // // handling innerclass instance allocation - outer local arguments
-   // if (targetType.isNestedType())
-   // {
-   // codeStream.generateSyntheticOuterArgumentValues(currentScope, targetType, this);
-   // }
-   // if (this.syntheticAccessor != null)
-   // {
-   // // synthetic accessor got some extra arguments appended to its signature, which need values
-   // for (int i = 0, max = this.syntheticAccessor.parameters.length - codegenBinding.parameters.length; i < max; i++)
-   // {
-   // codeStream.aconst_null();
-   // }
-   // codeStream.invoke(Opcodes.OPC_invokespecial, this.syntheticAccessor, null /* default declaringClass */);
-   // }
-   // else
-   // {
-   // codeStream.invoke(Opcodes.OPC_invokespecial, codegenBinding, null /* default declaringClass */);
-   // }
-   // codeStream.recordPositionsFrom(pc, this.sourceStart);
-   // }
-   // finally
-   // {
-   // ((MethodScope)currentScope).isConstructorCall = false;
-   // }
-   // }
+   /**
+    * Constructor call code generation
+    *
+    * @param currentScope org.eclipse.jdt.client.internal.compiler.lookup.BlockScope
+    */
+   public void generateCode(BlockScope currentScope)
+   {
+      if ((this.bits & ASTNode.IsReachable) == 0)
+      {
+         return;
+      }
+      try
+      {
+         ((MethodScope)currentScope).isConstructorCall = true;
+         // generate arguments
+         generateArguments(this.binding, this.arguments, currentScope);
 
-   /** @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments() */
+      }
+      finally
+      {
+         ((MethodScope)currentScope).isConstructorCall = false;
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.internal.compiler.lookup.InvocationSite#genericTypeArguments()
+    */
    public TypeBinding[] genericTypeArguments()
    {
       return this.genericTypeArguments;
@@ -194,9 +162,11 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
       return true;
    }
 
-   /*
-    * Inner emulation consists in either recording a dependency link only, or performing one level of propagation. Dependency
-    * mechanism is used whenever dealing with source target types, since by the time we reach them, we might not yet know their
+   /* Inner emulation consists in either recording a dependency
+    * link only, or performing one level of propagation.
+    *
+    * Dependency mechanism is used whenever dealing with source target
+    * types, since by the time we reach them, we might not yet know their
     * exact need.
     */
    void manageEnclosingInstanceAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo)
@@ -243,8 +213,8 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             }
             else
             {
-               //               this.syntheticAccessor =
-               //                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
+               this.syntheticAccessor =
+                  ((SourceTypeBinding)declaringClass).addSyntheticMethod(codegenBinding, isSuperAccess());
                currentScope.problemReporter().needToEmulateMethodAccess(codegenBinding, this);
             }
          }
@@ -312,7 +282,7 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             {
                for (int i = 0, max = this.typeArguments.length; i < max; i++)
                {
-                  this.typeArguments[i].resolveType(scope, true /* check bounds */);
+                  this.typeArguments[i].resolveType(scope, true /* check bounds*/);
                }
             }
             if (this.arguments != null)
@@ -377,9 +347,7 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
             for (int i = 0; i < length; i++)
             {
                TypeReference typeReference = this.typeArguments[i];
-               if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /*
-                                                                                          * check bounds
-                                                                                          */)) == null)
+               if ((this.genericTypeArguments[i] = typeReference.resolveType(scope, true /* check bounds*/)) == null)
                {
                   argHasError = true;
                }
@@ -431,8 +399,7 @@ public class ExplicitConstructorCall extends Statement implements InvocationSite
                TypeBinding[] pseudoArgs = new TypeBinding[length];
                for (int i = length; --i >= 0;)
                {
-                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with
-                                                                                                  // null type
+                  pseudoArgs[i] = argumentTypes[i] == null ? TypeBinding.NULL : argumentTypes[i]; // replace args with errors with null type
                }
                this.binding = scope.findMethod(receiverType, TypeConstants.INIT, pseudoArgs, this);
                if (this.binding != null && !this.binding.isValidBinding())

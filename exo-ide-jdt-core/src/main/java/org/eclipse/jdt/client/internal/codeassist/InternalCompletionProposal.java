@@ -175,8 +175,8 @@ public class InternalCompletionProposal extends CompletionProposal
       {
          NameEnvironmentAnswer answer =
             this.nameLookup.findType(declaringTypeName, CharOperation.splitOn('.', declaringTypePackageName));
-
-         if (answer.getBinaryType() != null)
+         
+         if (answer != null && answer.getBinaryType() != null)
          {
             type = answer.getBinaryType();
             this.completionEngine.typeCache.put(tName, type);
@@ -275,7 +275,10 @@ public class InternalCompletionProposal extends CompletionProposal
 
    private IBinaryMethod findMethod(IBinaryType type, char[] selector, char[][] paramTypeNames)
    {
-      go : for (IBinaryMethod method : type.getMethods())
+      IBinaryMethod[] methods = type.getMethods();
+      if(methods == null)
+         return null;
+      go : for (IBinaryMethod method : methods)
       {
 
          char[] methodSelector = null;

@@ -13,7 +13,15 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Run/Run")
    @Key("control.runAppControlId")
    String runAppControlId();
-
+   
+   @DefaultMessage("Show Logs...")
+   @Key("control.show.logs.title")
+   String showLogsControlTitle();
+   
+   @DefaultMessage("Show Application Logs...")
+   @Key("control.show.logs.prompt")
+   String showLogsControlPrompt();
+   
    @DefaultMessage("Run/Stop")
    @Key("control.stopAppControlId")
    String stopAppControlId();
@@ -220,6 +228,10 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Debugger is disconnected.")
    @Key("debugger.disconnected")
    String debuggeDisconnected();
+   
+   @DefaultMessage("Failed to retrieve logs.")
+   @Key("get.logs.error.message")
+   String getLogsErrorMessage();
 
    /*************************************************************************
     * Change value view

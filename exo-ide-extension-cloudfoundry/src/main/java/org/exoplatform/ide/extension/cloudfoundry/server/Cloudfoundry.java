@@ -71,7 +71,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -82,6 +81,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 import static org.exoplatform.ide.helper.JsonHelper.*;
@@ -128,18 +128,9 @@ public class Cloudfoundry
 
    private static final Log LOG = ExoLogger.getLogger(Cloudfoundry.class);
 
-   private static final Random gen = new Random();
+   private final BaseCloudfoundryAuthenticator authenticator;
 
-   private static String generateServiceName(String service)
-   {
-      byte[] b = new byte[3];
-      gen.nextBytes(b);
-      return service + '-' + Utils.toHex(b);
-   }
-
-   private final CloudfoundryAuthenticator authenticator;
-
-   public Cloudfoundry(CloudfoundryAuthenticator authenticator)
+   public Cloudfoundry(BaseCloudfoundryAuthenticator authenticator)
    {
       this.authenticator = authenticator;
       // Create a trust manager that does not validate certificate chains
@@ -170,14 +161,14 @@ public class Cloudfoundry
       }
    }
 
-   public void setTarget(String server) throws CloudfoundryException, VirtualFileSystemException, IOException
+   public void setTarget(String server) throws VirtualFileSystemException, IOException
    {
       authenticator.writeTarget(server);
    }
 
-   public String getTarget() throws CloudfoundryException, VirtualFileSystemException, IOException
+   public String getTarget() throws VirtualFileSystemException, IOException
    {
-      return authenticator.readTarget();
+      return authenticator.getTarget();
    }
 
    public Collection<String> getTargets() throws CloudfoundryException, VirtualFileSystemException, IOException
@@ -187,8 +178,7 @@ public class Cloudfoundry
 
    /**
     * Log in with specified email/password. If login is successful then authentication token from cloudfoundry.com
-    * saved
-    * locally and used instead email/password in all next requests.
+    * saved locally and used instead email/password in all next requests.
     *
     * @param server
     *    location of Cloud Foundry instance for login, e.g. http://api.cloudfoundry.com
@@ -211,9 +201,14 @@ public class Cloudfoundry
    {
       if (server == null)
       {
-         server = authenticator.readTarget();
+         server = authenticator.getTarget();
       }
       authenticator.login(server, email, password);
+   }
+
+   public void login() throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   {
+      authenticator.login();
    }
 
    /**
@@ -253,7 +248,7 @@ public class Cloudfoundry
    public SystemInfo systemInfo(String server) throws CloudfoundryException, ParsingResponseException,
       VirtualFileSystemException, IOException
    {
-      return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.readTarget() : server));
+      return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server));
    }
 
    private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
@@ -328,7 +323,7 @@ public class Cloudfoundry
     * @param server
     *    location of Cloud Foundry instance where application must be created, e.g.
     *    http://api.cloudfoundry.com. If not specified then try determine server. If can't determine server from
-    *    user context ({@link CloudfoundryAuthenticator#readTarget()}) then use default server location, see
+    *    user context ({@link CloudfoundryAuthenticator#getTarget()}) then use default server location, see
     *    {@link CloudfoundryAuthenticator#defaultTarget} .
     * @param app
     *    application name. This parameter is mandatory
@@ -1486,7 +1481,7 @@ public class Cloudfoundry
    public CloudFoundryApplication[] listApplications(String server) throws ParsingResponseException,
       CloudfoundryException, VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.readTarget() : server);
+      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server);
       return fromJson(getJson(credential.target + "/apps", credential.token, 200), CloudFoundryApplication[].class, null);
    }
 
@@ -1511,7 +1506,7 @@ public class Cloudfoundry
    public CloudfoundryServices services(String server) throws CloudfoundryException, ParsingResponseException,
       VirtualFileSystemException, IOException
    {
-      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.readTarget() : server);
+      Credential credential = getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server);
       return new CloudfoundryServicesImpl(systemServices(credential), provisionedServices(credential));
    }
 
@@ -1597,7 +1592,7 @@ public class Cloudfoundry
       // Generate service name if not specified.
       if (name == null || name.isEmpty())
       {
-         name = generateServiceName(service);
+         name = generate(service + '-', 8);
       }
 
       CreateService req = new CreateService(name, target.getType(), service, target.getVersion());
@@ -1640,7 +1635,7 @@ public class Cloudfoundry
       {
          throw new IllegalArgumentException("Service name required. ");
       }
-      deleteService(getCredential(server == null || server.isEmpty() ? authenticator.readTarget() : server), name);
+      deleteService(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server), name);
    }
 
    private void deleteService(Credential credential, String name) throws IOException, ParsingResponseException,
@@ -2120,7 +2115,7 @@ public class Cloudfoundry
       }
       if (server == null)
       {
-         server = authenticator.readTarget();
+         server = authenticator.getTarget();
       }
       return server;
    }
@@ -2420,7 +2415,8 @@ public class Cloudfoundry
       final int responseCode = http.getResponseCode();
       if (responseCode == 504)
       {
-         return new CloudfoundryException(500, -1, "Currently the server is overloaded, please try again later", "text/plain");
+         return new CloudfoundryException(
+            504, -1, "Currently the server is overloaded, please try again later", "text/plain");
       }
       final String contentType = http.getContentType();
       final int length = http.getContentLength();
@@ -2457,9 +2453,22 @@ public class Cloudfoundry
                {
                   exitCode = exitCodeJson.getIntValue();
                }
-               if (exitCode == 601)
+               switch (exitCode)
                {
-                  msg = "Not enough resources to create new application. Max number of applications reached. ";
+                  // Change message for known error codes, we don't like to see something like "you're allowed ...."
+                  // in error messages.
+                  case 504:
+                     msg = "Max number of allowed Provisioned services reached. ";
+                     break;
+                  case 600:
+                     msg = "Not enough resources to create new application. Not enough memory capacity. ";
+                     break;
+                  case 601:
+                     msg = "Not enough resources to create new application. Max number of applications reached. ";
+                     break;
+                  case 602:
+                     msg = "Too many URIs mapped for application. ";
+                     break;
                }
                return new CloudfoundryException(responseCode, exitCode, msg, "text/plain");
             }

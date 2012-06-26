@@ -84,13 +84,16 @@ public class JavaTypeToTypeInfoConverter
 
    private CodeAssistantStorage storage;
 
+   private final Set<String> dependency;
+
    /**
     * @param storage
     */
-   public JavaTypeToTypeInfoConverter(CodeAssistantStorage storage)
+   public JavaTypeToTypeInfoConverter(CodeAssistantStorage storage, Set<String> dependency)
    {
       super();
       this.storage = storage;
+      this.dependency = dependency;
    }
 
    public TypeInfo convert(JavaClass clazz)
@@ -191,7 +194,7 @@ public class JavaTypeToTypeInfoConverter
                {
                   try
                   {
-                     TypeInfo typeInfo = storage.getTypeByFqn(type.getJavaClass().getFullyQualifiedName());
+                     TypeInfo typeInfo = storage.getTypeByFqn(type.getJavaClass().getFullyQualifiedName(), dependency);
                      if (typeInfo != null && JavaType.valueOf(typeInfo.getType()) == JavaType.INTERFACE)
                         signature.append(':');
                   }

@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
+import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.MimeTypeFilter;
+import org.exoplatform.ide.vfs.server.observation.TypeFilter;
+import org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
+import org.exoplatform.ide.vfs.shared.Project;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,13 +39,27 @@ import javax.ws.rs.core.Application;
 public class GroovyScriptServiceApplication extends Application
 {
    private final Set<Object> objects = new HashSet<Object>();
+
    private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public GroovyScriptServiceApplication()
+   public GroovyScriptServiceApplication(EventListenerList listenerList)
    {
       classes.add(GroovyTemplateService.class);
       classes.add(RestCodeAssistantGroovy.class);
       classes.add(GroovyScriptService.class);
+
+      ProjectCreationListener listener = new ProjectCreationListener();
+      listenerList.addEventListener(ChangeEventFilter.createAndFilter(//
+         new MimeTypeFilter(Project.PROJECT_MIME_TYPE), new TypeFilter(ChangeType.RENAMED)),//
+         listener);
+
+      listenerList.addEventListener(ChangeEventFilter.createAndFilter(//
+         new MimeTypeFilter(Project.PROJECT_MIME_TYPE), new TypeFilter(ChangeType.CREATED)),//
+         listener);
+      
+      listenerList.addEventListener(ChangeEventFilter.createAndFilter(//
+         new MimeTypeFilter(Project.PROJECT_MIME_TYPE), new TypeFilter(ChangeType.PROPERTIES_UPDATED)),//
+         listener);
    }
 
    public Set<Class<?>> getClasses()
