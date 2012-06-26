@@ -48,6 +48,8 @@
 
    <logger name="org.exoplatform" level="INFO"/>
    <logger name="exo" level="INFO"/>
+   
+   <logger name="org.everrest.core.impl.method.DefaultMethodInvoker" level="DEBUG"/>
 
    <root level="INFO">
       <appender-ref ref="FILE"/>
