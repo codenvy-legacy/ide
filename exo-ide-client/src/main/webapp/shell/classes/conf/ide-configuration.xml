@@ -383,5 +383,9 @@
    <component>
       <type>org.exoplatform.ide.extension.python.server.AppRunnerApplication</type>
    </component>
-   
+
+   <component>
+      <type>org.exoplatform.ide.websocket.IDEWebSocketDispatcher</type>
+   </component>
+
 </configuration>

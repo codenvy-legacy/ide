@@ -23,6 +23,10 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -31,6 +35,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Client to remote build server.
@@ -44,9 +50,13 @@ public class BuilderClient
 
    private final String baseURL;
 
-   public BuilderClient(InitParams initParams)
+   private final IDEWebSocketDispatcher wsDispatcher;
+
+   private static final Log LOG = ExoLogger.getLogger(IDEWebSocketDispatcher.class);
+
+   public BuilderClient(InitParams initParams, IDEWebSocketDispatcher wsDispatcher)
    {
-      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)));
+      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)), wsDispatcher);
    }
 
    private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
@@ -62,13 +72,14 @@ public class BuilderClient
       return defaultValue;
    }
 
-   protected BuilderClient(String baseURL)
+   protected BuilderClient(String baseURL, IDEWebSocketDispatcher wsDispatcher)
    {
       if (baseURL == null || baseURL.isEmpty())
       {
          throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
       }
       this.baseURL = baseURL;
+      this.wsDispatcher = wsDispatcher;
    }
 
    /**
@@ -130,6 +141,9 @@ public class BuilderClient
     *    virtual file system
     * @param projectId
     *    identifier of project we want to send for build
+    * @param ws
+    *    if <code>true</code> - build status will be sent to client via WebSocket;
+    *    if <code>false</code> - build status will not be checked automatically
     * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
     * @throws IOException
     *    if any i/o errors occur
@@ -138,11 +152,78 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String build(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+   public String build(VirtualFileSystem vfs, String projectId, boolean ws) throws IOException, BuilderException,
       VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/build");
-      return run(url, vfs.exportZip(projectId));
+      String buildId = run(url, vfs.exportZip(projectId));
+      if (ws)
+      {
+         checkBuildStatusEvery(2000, buildId);
+      }
+      return buildId;
+   }
+
+   /**
+    * Checks status of previously launched job.
+    * 
+    * @param period
+    *    time in milliseconds between sending requests for check job status
+    * @param buildId
+    *    ID of build need to check
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
+    */
+   public void checkBuildStatusEvery(long period, final String buildId) throws IOException, BuilderException
+   {
+      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+      new Timer().schedule(new TimerTask()
+      {
+         @Override
+         public void run()
+         {
+            String status = null;
+            try
+            {
+               status = status(buildId);
+            }
+            catch (IOException e)
+            {
+               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
+            }
+            catch (BuilderException e)
+            {
+               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
+            }
+
+            if (!status.contains("\"status\":\"IN_PROGRESS\""))
+            {
+               cancel();
+               sendWebSocketMessage(userId, status);
+            }
+         }
+      }, 0, period);
+   }
+
+   /**
+    * Sends the message to the client via WebSocket connection.
+    * 
+    * @param userId user identifier
+    * @param message a text string to send to the client
+    */
+   private void sendWebSocketMessage(String userId, String message)
+   {
+      try
+      {
+         wsDispatcher.sendMessageToClient(userId, message, "buildStatus");
+      }
+      catch(IOException e)
+      {
+         LOG.error("An error occurs writing data to the client (userId " + userId + "). " + e.getMessage(), e);
+      }
    }
 
    private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,

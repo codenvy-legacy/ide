@@ -18,12 +18,8 @@
  */
 package org.exoplatform.ide.extension.maven.client;
 
-import com.google.gwt.http.client.RequestBuilder;
-
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
@@ -60,13 +56,15 @@ public abstract class BuilderClientService
    /**
     * Start new build.
     * 
-    * @param projectId identifier of project we want to send for build
-    * @param vfsId identifier of virtual file system
+    * @param projectId identifier of the project we want to send for build
+    * @param vfsId identifier of the virtual file system
+    * @param isWebSocketSupported if <code>true</code> - build status will be sent to client via WebSocket;
+    *                             if <code>false</code> - build status will not be checked automatically
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException;
+   public abstract void build(String projectId, String vfsId, boolean isWebSocketSupported,
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
    /**
     * Cancel previously launched build.
@@ -94,6 +92,13 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-   
-   public abstract void  checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
+
+   /**
+    * Check is URL for download artifact is valid.
+    * 
+    * @param url URL for checking
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
 }

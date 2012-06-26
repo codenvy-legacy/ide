@@ -58,6 +58,9 @@ public class BuilderService
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for build
+    * @param ws
+    *    if <code>true</code> - build status will be sent to client via WebSocket;
+    *    if <code>false</code> - build status will not be checked automatically
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to
@@ -74,10 +77,11 @@ public class BuilderService
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
+                         @QueryParam("ws") boolean ws, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
-      final String buildID = builder.build(vfs, projectId);
+      final String buildID = builder.build(vfs, projectId, ws);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }

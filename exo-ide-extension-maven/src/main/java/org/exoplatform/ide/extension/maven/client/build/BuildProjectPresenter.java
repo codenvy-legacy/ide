@@ -26,6 +26,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -44,6 +45,9 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
@@ -52,6 +56,7 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
+import org.exoplatform.ide.extension.maven.shared.BuildStatusWS;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -71,7 +76,7 @@ import java.util.List;
  * 
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, WebSocketMessageHandler
 {
    public interface Display extends IsView
    {
@@ -154,6 +159,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -194,9 +200,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       projectId = project.getId();
       statusHandler.requestInProgress(projectId);
 
+      final boolean isWebSocketSupported = WebSocket.isSupported();
+
       try
       {
-         BuilderClientService.getInstance().build(projectId, vfs.getId(),
+         BuilderClientService.getInstance().build(projectId, vfs.getId(), isWebSocketSupported,
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -207,7 +215,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-                  refreshBuildStatusTimer.schedule(delay);
+
+                  if (!isWebSocketSupported)
+                  {
+                     refreshBuildStatusTimer.schedule(delay);
+                  }
                }
 
                @Override
@@ -218,7 +230,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.stopAnimation();
                   if (exception instanceof ServerException && exception.getMessage() != null)
                   {
-                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
+                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
                   }
                   else
                   {
@@ -231,7 +243,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          setBuildInProgress(false);
          display.stopAnimation();
-         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
+         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
       }
    }
    
@@ -634,6 +646,21 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    }
 
    /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    */
+   @Override
+   public void onWebSocketMessage(WebSocketMessageEvent event)
+   {
+      String message = event.getMessage();
+      if (!message.contains("{\"event\":\"buildStatus"))
+         return;
+
+      AutoBean<BuildStatusWS> websocketMessage =
+         AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatusWS.class, message);
+      afterBuildFinished(websocketMessage.as().getData());
+   }
+
+   /**
     * Deserializer for response's body.
     */
    private class StringUnmarshaller implements Unmarshallable<StringBuilder>
@@ -664,4 +691,5 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          return builder;
       }
    }
+
 }

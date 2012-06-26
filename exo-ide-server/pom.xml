@@ -235,12 +235,16 @@
          <artifactId>guava</artifactId>
          <version>r09</version>
       </dependency>
-      
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-         		<artifactId>exo-ide-vfs-jcr</artifactId>
-            </dependency>      
-      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs-jcr</artifactId>
+      </dependency>      
+      <dependency>
+         <groupId>org.apache.geronimo.ext.tomcat</groupId>
+         <artifactId>catalina</artifactId>
+         <version>7.0.27.1</version>
+         <scope>provided</scope>
+      </dependency>
    </dependencies>
    <build>
       <resources>
