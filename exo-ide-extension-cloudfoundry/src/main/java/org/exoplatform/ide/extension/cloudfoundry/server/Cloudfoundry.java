@@ -257,6 +257,11 @@ public class Cloudfoundry
       SystemInfoImpl systemInfo = fromJson(
          getJson(credential.target + "/info", credential.token, 200), SystemInfoImpl.class, null);
 
+      if (systemInfo.getUser() == null)
+      {
+         throw new CloudfoundryException(200, 200, "Authentication required.\n", "text/plain");
+      }
+
       for (Framework framework : systemInfo.getFrameworks().values())
       {
          // If known framework - try to add some additional info.
