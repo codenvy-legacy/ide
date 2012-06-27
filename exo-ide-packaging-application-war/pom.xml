@@ -377,6 +377,5 @@
 
       </plugins>
       <sourceDirectory>target/share</sourceDirectory>
-      <!-- outputDirectory>target/war/classes</outputDirectory -->
    </build>
 </project>
