@@ -19,6 +19,9 @@
 
 -->
 <module rename-to="IDE">
+
+  <set-property name="user.agent" value="gecko1_8"/>
+  
 	<inherits name='com.google.gwt.user.User' />
 
 	<inherits name="org.exoplatform.ide.IDECore" />
