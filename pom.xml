@@ -741,6 +741,9 @@
                <validHeaders>
                   <validHeader>dev-resources/src/main/resources/licences/header2010.txt</validHeader>
                   <validHeader>dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2011.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2012.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/headerEclipse.txt</validHeader>
                </validHeaders>
                <failIfMissing>false</failIfMissing>
                <aggregate>true</aggregate>
@@ -785,6 +788,7 @@
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>
+                  <java>JAVADOC_STYLE</java>
                </mapping>
             </configuration>
             <executions>
