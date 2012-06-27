@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
+import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.NamingConventions;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
@@ -28,6 +29,9 @@ import org.eclipse.jdt.client.core.dom.PrimitiveType;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
+import org.eclipse.jdt.client.internal.corext.util.JdtFlags;
+import org.eclipse.jdt.client.runtime.CoreException;
+import org.eclipse.jdt.client.core.Signature;
 
 public class GetterSetterUtil
 {
@@ -39,21 +43,26 @@ public class GetterSetterUtil
    {
    }
 
-   //	public static String getGetterName(IField field, String[] excludedNames) throws JavaModelException {
-   //		boolean useIs= StubUtility.useIsForBooleanGetters(field.getJavaProject());
-   //		return getGetterName(field, excludedNames, useIs);
-   //	}
+   public static String getGetterName(IVariableBinding field, String[] excludedNames)
+   {
+      boolean useIs = StubUtility.useIsForBooleanGetters();
+      return getGetterName(field, excludedNames, useIs);
+   }
+
    //
-   //	private static String getGetterName(IField field, String[] excludedNames, boolean useIsForBoolGetters) throws JavaModelException {
-   //		if (excludedNames == null) {
-   //			excludedNames= EMPTY;
-   //		}
-   //		return getGetterName(field.getJavaProject(), field.getElementName(), field.getFlags(), useIsForBoolGetters && JavaModelUtil.isBoolean(field), excludedNames);
-   //	}
+   //   private static String getGetterName(IField field, String[] excludedNames, boolean useIsForBoolGetters)
+   //   {
+   //      if (excludedNames == null)
+   //      {
+   //         excludedNames = EMPTY;
+   //      }
+   //      return getGetterName(field.getJavaProject(), field.getElementName(), field.getFlags(), useIsForBoolGetters
+   //         && JavaModelUtil.isBoolean(field), excludedNames);
+   //   }
 
    public static String getGetterName(IVariableBinding variableType, String[] excludedNames, boolean isBoolean)
    {
-      boolean useIs = StubUtility.useIsForBooleanGetters() && isBoolean;
+      boolean useIs = isBoolean(variableType) && isBoolean;
       return getGetterName(variableType.getName(), variableType.getModifiers(), useIs, excludedNames);
    }
 
@@ -73,13 +82,25 @@ public class GetterSetterUtil
       return NamingConventions.suggestSetterName(fieldName, flags, useIs && isBoolean, excludedNames);
    }
 
-   //
-   //	public static String getSetterName(IField field, String[] excludedNames) throws JavaModelException {
-   //		if (excludedNames == null) {
-   //			excludedNames= EMPTY;
-   //		}
-   //		return getSetterName(field.getJavaProject(), field.getElementName(), field.getFlags(), JavaModelUtil.isBoolean(field), excludedNames);
-   //	}
+   public static String getSetterName(IVariableBinding field, String[] excludedNames)
+   {
+      if (excludedNames == null)
+      {
+         excludedNames = EMPTY;
+      }
+      return getSetterName(field.getName(), field.getModifiers(), isBoolean(field), excludedNames);
+   }
+
+   /**
+    * Checks if the field is boolean.
+    * @param field the field
+    * @return returns <code>true</code> if the field returns a boolean
+    * @throws JavaModelException thrown when the field can not be accessed
+    */
+   public static boolean isBoolean(IVariableBinding field)
+   {
+      return field.getType().getBinaryName().equals(Signature.SIG_BOOLEAN);
+   }
 
    //	public static IMethod getGetter(IField field) throws JavaModelException{
    //		String getterName= getGetterName(field, EMPTY, true);
@@ -96,135 +117,152 @@ public class GetterSetterUtil
    //		return JavaModelUtil.findMethod(getSetterName(field, EMPTY), args, false, field.getDeclaringType());
    //	}
 
-   //	/**
-   //	 * Create a stub for a getter of the given field using getter/setter templates. The resulting code
-   //	 * has to be formatted and indented.
-   //	 * @param field The field to create a getter for
-   //	 * @param setterName The chosen name for the setter
-   //	 * @param addComments If <code>true</code>, comments will be added.
-   //	 * @param flags The flags signaling visibility, if static, synchronized or final
-   //	 * @return Returns the generated stub.
-   //	 * @throws CoreException when stub creation failed
-   //	 */
-   //	public static String getSetterStub(IField field, String setterName, boolean addComments, int flags) throws CoreException {
-   //
-   //		String fieldName= field.getElementName();
-   //		IType parentType= field.getDeclaringType();
-   //
-   //		String returnSig= field.getTypeSignature();
-   //		String typeName= Signature.toString(returnSig);
-   //
-   //		IJavaProject project= field.getJavaProject();
-   //
-   //		String accessorName= StubUtility.getBaseName(field);
-   //		String argname= StubUtility.suggestArgumentName(project, accessorName, EMPTY);
-   //
-   //		boolean isStatic= Flags.isStatic(flags);
-   //		boolean isSync= Flags.isSynchronized(flags);
-   //		boolean isFinal= Flags.isFinal(flags);
-   //
-   //		String lineDelim= "\n"; // Use default line delimiter, as generated stub has to be formatted anyway //$NON-NLS-1$
-   //		StringBuffer buf= new StringBuffer();
-   //		if (addComments) {
-   //			String comment= CodeGeneration.getSetterComment(field.getCompilationUnit(), parentType.getTypeQualifiedName('.'), setterName, field.getElementName(), typeName, argname, accessorName, lineDelim);
-   //			if (comment != null) {
-   //				buf.append(comment);
-   //				buf.append(lineDelim);
-   //			}
-   //		}
-   //		buf.append(JdtFlags.getVisibilityString(flags));
-   //		buf.append(' ');
-   //		if (isStatic)
-   //			buf.append("static "); //$NON-NLS-1$
-   //		if (isSync)
-   //			buf.append("synchronized "); //$NON-NLS-1$
-   //		if (isFinal)
-   //			buf.append("final "); //$NON-NLS-1$
-   //
-   //		buf.append("void "); //$NON-NLS-1$
-   //		buf.append(setterName);
-   //		buf.append('(');
-   //		buf.append(typeName);
-   //		buf.append(' ');
-   //		buf.append(argname);
-   //		buf.append(") {"); //$NON-NLS-1$
-   //		buf.append(lineDelim);
-   //
-   //		boolean useThis= StubUtility.useThisForFieldAccess(project);
-   //		if (argname.equals(fieldName) || (useThis && !isStatic)) {
-   //			if (isStatic)
-   //				fieldName= parentType.getElementName() + '.' + fieldName;
-   //			else
-   //				fieldName= "this." + fieldName; //$NON-NLS-1$
-   //		}
-   //		String body= CodeGeneration.getSetterMethodBodyContent(field.getCompilationUnit(), parentType.getTypeQualifiedName('.'), setterName, fieldName, argname, lineDelim);
-   //		if (body != null) {
-   //			buf.append(body);
-   //		}
-   //		buf.append("}"); //$NON-NLS-1$
-   //		buf.append(lineDelim);
-   //		return buf.toString();
-   //	}
-   //
-   //	/**
-   //	 * Create a stub for a getter of the given field using getter/setter templates. The resulting code
-   //	 * has to be formatted and indented.
-   //	 * @param field The field to create a getter for
-   //	 * @param getterName The chosen name for the getter
-   //	 * @param addComments If <code>true</code>, comments will be added.
-   //	 * @param flags The flags signaling visibility, if static, synchronized or final
-   //	 * @return Returns the generated stub.
-   //	 * @throws CoreException when stub creation failed
-   //	 */
-   //	public static String getGetterStub(IField field, String getterName, boolean addComments, int flags) throws CoreException {
-   //		String fieldName= field.getElementName();
-   //		IType parentType= field.getDeclaringType();
-   //
-   //		boolean isStatic= Flags.isStatic(flags);
-   //		boolean isSync= Flags.isSynchronized(flags);
-   //		boolean isFinal= Flags.isFinal(flags);
-   //
-   //		String typeName= Signature.toString(field.getTypeSignature());
-   //		String accessorName= StubUtility.getBaseName(field);
-   //
-   //		String lineDelim= "\n"; // Use default line delimiter, as generated stub has to be formatted anyway //$NON-NLS-1$
-   //		StringBuffer buf= new StringBuffer();
-   //		if (addComments) {
-   //			String comment= CodeGeneration.getGetterComment(field.getCompilationUnit(), parentType.getTypeQualifiedName('.'), getterName, field.getElementName(), typeName, accessorName, lineDelim);
-   //			if (comment != null) {
-   //				buf.append(comment);
-   //				buf.append(lineDelim);
-   //			}
-   //		}
-   //
-   //		buf.append(JdtFlags.getVisibilityString(flags));
-   //		buf.append(' ');
-   //		if (isStatic)
-   //			buf.append("static "); //$NON-NLS-1$
-   //		if (isSync)
-   //			buf.append("synchronized "); //$NON-NLS-1$
-   //		if (isFinal)
-   //			buf.append("final "); //$NON-NLS-1$
-   //
-   //		buf.append(typeName);
-   //		buf.append(' ');
-   //		buf.append(getterName);
-   //		buf.append("() {"); //$NON-NLS-1$
-   //		buf.append(lineDelim);
-   //
-   //		boolean useThis= StubUtility.useThisForFieldAccess(field.getJavaProject());
-   //		if (useThis && !isStatic) {
-   //			fieldName= "this." + fieldName; //$NON-NLS-1$
-   //		}
-   //
-   //		String body= CodeGeneration.getGetterMethodBodyContent(field.getCompilationUnit(), parentType.getTypeQualifiedName('.'), getterName, fieldName, lineDelim);
-   //		if (body != null) {
-   //			buf.append(body);
-   //		}
-   //		buf.append("}"); //$NON-NLS-1$
-   //		buf.append(lineDelim);
-   //		return buf.toString();
-   //	}
+   /**
+    * Create a stub for a getter of the given field using getter/setter templates. The resulting code
+    * has to be formatted and indented.
+    * @param field The field to create a getter for
+    * @param setterName The chosen name for the setter
+    * @param addComments If <code>true</code>, comments will be added.
+    * @param flags The flags signaling visibility, if static, synchronized or final
+    * @return Returns the generated stub.
+    * @throws CoreException when stub creation failed
+    */
+   public static String getSetterStub(IVariableBinding field, String setterName, boolean addComments, int flags)
+      throws CoreException
+   {
+
+      String fieldName = field.getName();
+      ITypeBinding parentType = field.getDeclaringClass();
+
+      String returnSig = field.getType().getKey().replaceAll("/", ".");
+      String typeName = Signature.getSimpleName(Signature.toString(returnSig));
+
+      String accessorName = StubUtility.getBaseName(field);
+      String argname = StubUtility.suggestArgumentName(accessorName, EMPTY);
+
+      boolean isStatic = Flags.isStatic(flags);
+      boolean isSync = Flags.isSynchronized(flags);
+      boolean isFinal = Flags.isFinal(flags);
+
+      String lineDelim = "\n"; // Use default line delimiter, as generated stub has to be formatted anyway //$NON-NLS-1$
+      StringBuffer buf = new StringBuffer();
+      if (addComments)
+      {
+         String comment =
+            StubUtility.getSetterComment(parentType.getQualifiedName(), setterName, field.getName(), typeName, argname,
+               accessorName, lineDelim);
+         if (comment != null)
+         {
+            buf.append(comment);
+            buf.append(lineDelim);
+         }
+      }
+      buf.append(JdtFlags.getVisibilityString(flags));
+      buf.append(' ');
+      if (isStatic)
+         buf.append("static "); //$NON-NLS-1$
+      if (isSync)
+         buf.append("synchronized "); //$NON-NLS-1$
+      if (isFinal)
+         buf.append("final "); //$NON-NLS-1$
+
+      buf.append("void "); //$NON-NLS-1$
+      buf.append(setterName);
+      buf.append('(');
+      buf.append(typeName);
+      buf.append(' ');
+      buf.append(argname);
+      buf.append(") {"); //$NON-NLS-1$
+      buf.append(lineDelim);
+
+      boolean useThis = StubUtility.useThisForFieldAccess();
+      if (argname.equals(fieldName) || (useThis && !isStatic))
+      {
+         if (isStatic)
+            fieldName = parentType.getName() + '.' + fieldName;
+         else
+            fieldName = "this." + fieldName; //$NON-NLS-1$
+      }
+      String body =
+         StubUtility.getSetterMethodBodyContent(parentType.getQualifiedName(), setterName, fieldName, argname,
+            lineDelim);
+      if (body != null)
+      {
+         buf.append(body);
+      }
+      buf.append("}"); //$NON-NLS-1$
+      buf.append(lineDelim);
+      return buf.toString();
+   }
+
+   /**
+    * Create a stub for a getter of the given field using getter/setter templates. The resulting code
+    * has to be formatted and indented.
+    * @param field The field to create a getter for
+    * @param getterName The chosen name for the getter
+    * @param addComments If <code>true</code>, comments will be added.
+    * @param flags The flags signaling visibility, if static, synchronized or final
+    * @return Returns the generated stub.
+    * @throws CoreException when stub creation failed
+    */
+   public static String getGetterStub(IVariableBinding field, String getterName, boolean addComments, int flags)
+      throws CoreException
+   {
+      String fieldName = field.getName();
+      ITypeBinding parentType = field.getDeclaringClass();
+
+      boolean isStatic = Flags.isStatic(flags);
+      boolean isSync = Flags.isSynchronized(flags);
+      boolean isFinal = Flags.isFinal(flags);
+
+      String typeName = Signature.getSimpleName(Signature.toString(field.getType().getKey().replaceAll("/", ".")));
+      String accessorName = StubUtility.getBaseName(field);
+
+      String lineDelim = "\n"; // Use default line delimiter, as generated stub has to be formatted anyway //$NON-NLS-1$
+      StringBuffer buf = new StringBuffer();
+      if (addComments)
+      {
+         String comment =
+            StubUtility.getGetterComment(parentType.getQualifiedName(), getterName, field.getName(), typeName,
+               accessorName, lineDelim);
+         if (comment != null)
+         {
+            buf.append(comment);
+            buf.append(lineDelim);
+         }
+      }
+
+      buf.append(JdtFlags.getVisibilityString(flags));
+      buf.append(' ');
+      if (isStatic)
+         buf.append("static "); //$NON-NLS-1$
+      if (isSync)
+         buf.append("synchronized "); //$NON-NLS-1$
+      if (isFinal)
+         buf.append("final "); //$NON-NLS-1$
+
+      buf.append(typeName);
+      buf.append(' ');
+      buf.append(getterName);
+      buf.append("() {"); //$NON-NLS-1$
+      buf.append(lineDelim);
+
+      boolean useThis = StubUtility.useThisForFieldAccess();
+      if (useThis && !isStatic)
+      {
+         fieldName = "this." + fieldName; //$NON-NLS-1$
+      }
+
+      String body =
+         StubUtility.getGetterMethodBodyContent(parentType.getQualifiedName(), getterName, fieldName, lineDelim);
+      if (body != null)
+      {
+         buf.append(body);
+      }
+      buf.append("}"); //$NON-NLS-1$
+      buf.append(lineDelim);
+      return buf.toString();
+   }
 
    /**
     * Converts an assignment, postfix expression or prefix expression into an assignable equivalent expression using the getter.
