@@ -58,12 +58,12 @@ public abstract class BuilderClientService
     * 
     * @param projectId identifier of the project we want to send for build
     * @param vfsId identifier of the virtual file system
-    * @param isWebSocketSupported if <code>true</code> - build status will be sent to client via WebSocket;
-    *                             if <code>false</code> - build status will not be checked automatically
+    * @param sessionId identifier of the WebSocket session which will be used for sending the status of build
+    *                   or <code>null</code> if the WebSocket connection is not supported
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String projectId, String vfsId, boolean isWebSocketSupported,
+   public abstract void build(String projectId, String vfsId, String sessionId,
       AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 
    /**
@@ -78,7 +78,7 @@ public abstract class BuilderClientService
    /**
     * Check current status of previously launched build.
     * 
-    * @param buildid ID of build
+    * @param buildid identifier of build
     * @param callback callback
     * @throws RequestException
     */
@@ -87,7 +87,7 @@ public abstract class BuilderClientService
    /**
     * Get build log.
     * 
-    * @param buildid ID of build
+    * @param buildid identifier of build
     * @param callback callback
     * @throws RequestException
     */

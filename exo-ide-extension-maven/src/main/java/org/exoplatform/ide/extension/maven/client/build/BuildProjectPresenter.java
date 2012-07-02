@@ -98,11 +98,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
-   
+
    private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
 
    private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
-
 
    /**
     * Identifier of project we want to send for build.
@@ -199,12 +198,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       projectId = project.getId();
       statusHandler.requestInProgress(projectId);
-
-      final boolean isWebSocketSupported = WebSocket.isSupported();
+      final boolean isWebSocketSupported = WebSocket.getInstance().isSupported();
 
       try
       {
-         BuilderClientService.getInstance().build(projectId, vfs.getId(), isWebSocketSupported,
+         String sessionId = null;
+         if (isWebSocketSupported)
+         {
+            sessionId = WebSocket.getInstance().getSessionId();
+         }
+
+         BuilderClientService.getInstance().build(projectId, vfs.getId(), sessionId,
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -246,8 +250,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
       }
    }
-   
-   
+
    private void buildApplicationIfNeed()
    {
       try
@@ -294,7 +297,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
    }
-   
+
    private boolean isProjectChangedAfterLastBuild(ItemWrapper item)
    {
       long buildTime = 0;
@@ -310,7 +313,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
       return buildTime > lastUpdateTime;
    }
-   
+
    private void checkDownloadUrl(final String url)
    {
       try
@@ -345,8 +348,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
    }
-   
-   
 
    private void setBuildInProgress(boolean buildInProgress)
    {
@@ -377,10 +378,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   if (status == Status.IN_PROGRESS)
                   {
                      schedule(delay);
-                  }
-                  else if (status == Status.FAILED)
-                  {
-                     showLog();
                   }
                }
 
@@ -478,8 +475,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          startWatchingProjectChanges();
          message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">here</a>");
-         
-         
       }
       else if (buildStatus.getStatus() == Status.FAILED)
       {
@@ -499,10 +494,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       showBuildMessage(message.toString());
       display.stopAnimation();
 
+      if (buildStatus.getStatus() == Status.FAILED)
+      {
+         showLog();
+      }
+
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
-   
-   
+
    private void writeBuildInfo(BuildStatus buildStatus)
    {
       project.getProperties().add(new StringProperty(LAST_SUCCESS_BUILD, buildStatus.getTime()));
@@ -531,7 +530,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
 
    }
-   
+
    private void startWatchingProjectChanges()
    {
       try
@@ -547,7 +546,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             @Override
             protected void onFailure(Throwable exception)
             {
-               
+
             }
          });
       }
@@ -656,11 +655,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       String message = event.getMessage();
       if (!message.contains("{\"event\":\"buildStatus"))
+      {
          return;
+      }
 
-      AutoBean<BuildStatusWS> websocketMessage =
+      AutoBean<BuildStatusWS> webSocketMessageBean =
          AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatusWS.class, message);
-      afterBuildFinished(websocketMessage.as().getData());
+
+      afterBuildFinished(webSocketMessageBean.as().getData());
    }
 
    /**

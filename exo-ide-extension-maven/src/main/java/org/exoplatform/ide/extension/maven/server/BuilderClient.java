@@ -26,7 +26,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -141,10 +140,10 @@ public class BuilderClient
     *    virtual file system
     * @param projectId
     *    identifier of project we want to send for build
-    * @param ws
-    *    if <code>true</code> - build status will be sent to client via WebSocket;
-    *    if <code>false</code> - build status will not be checked automatically
-    * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
+    * @param sessionId
+    *    identifier of the WebSocket session which will be used for sending the status of build
+    *    or <code>null</code> if the WebSocket connection is not supported
+    * @return ID of build task. It may be used as parameter for method {@link #status(String)}.
     * @throws IOException
     *    if any i/o errors occur
     * @throws BuilderException
@@ -152,14 +151,14 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String build(VirtualFileSystem vfs, String projectId, boolean ws) throws IOException, BuilderException,
-      VirtualFileSystemException
+   public String build(VirtualFileSystem vfs, String projectId, String sessionId) throws IOException,
+      BuilderException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/build");
       String buildId = run(url, vfs.exportZip(projectId));
-      if (ws)
+      if (sessionId != null)
       {
-         checkBuildStatusEvery(2000, buildId);
+         checkBuildStatusEvery(2000, buildId, sessionId);
       }
       return buildId;
    }
@@ -171,15 +170,15 @@ public class BuilderClient
     *    time in milliseconds between sending requests for check job status
     * @param buildId
     *    ID of build need to check
+    * @param sessionId
+    *    identifier of WebSocket session which will be used for sending the status of build
     * @throws IOException
     *    if any i/o errors occur
     * @throws BuilderException
     *    any other errors related to build server internal state or parameter of client request
     */
-   public void checkBuildStatusEvery(long period, final String buildId) throws IOException, BuilderException
+   public void checkBuildStatusEvery(long period, final String buildId, final String sessionId) throws IOException, BuilderException
    {
-      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
-
       new Timer().schedule(new TimerTask()
       {
          @Override
@@ -202,7 +201,7 @@ public class BuilderClient
             if (!status.contains("\"status\":\"IN_PROGRESS\""))
             {
                cancel();
-               sendWebSocketMessage(userId, status);
+               sendWebSocketMessage(sessionId, status);
             }
          }
       }, 0, period);
@@ -211,18 +210,18 @@ public class BuilderClient
    /**
     * Sends the message to the client via WebSocket connection.
     * 
-    * @param userId user identifier
+    * @param sessionId identifier of the WebSocket session
     * @param message a text string to send to the client
     */
-   private void sendWebSocketMessage(String userId, String message)
+   private void sendWebSocketMessage(String sessionId, String message)
    {
       try
       {
-         wsDispatcher.sendMessageToClient(userId, message, "buildStatus");
+         wsDispatcher.sendMessageToClient(sessionId, message, "buildStatus");
       }
       catch(IOException e)
       {
-         LOG.error("An error occurs writing data to the client (userId " + userId + "). " + e.getMessage(), e);
+         LOG.error("An error occurs writing data to the client (sessionId " + sessionId + "). " + e.getMessage(), e);
       }
    }
 

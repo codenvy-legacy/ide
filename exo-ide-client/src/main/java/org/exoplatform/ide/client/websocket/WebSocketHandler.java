@@ -18,12 +18,20 @@
  */
 package org.exoplatform.ide.client.websocket;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketSessionID;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 
 /**
  * Handler for opening websocket connections and closing it in a \"clean\"
@@ -33,13 +41,15 @@ import org.exoplatform.ide.client.framework.websocket.WebSocket;
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $
  *
  */
-public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler
+public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler,
+   WebSocketMessageHandler
 {
 
    public WebSocketHandler()
    {
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ApplicationClosedEvent.TYPE, this);
+      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -58,6 +68,21 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    public void onApplicationClosed(ApplicationClosedEvent event)
    {
       WebSocket.getInstance().close();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    */
+   @Override
+   public void onWebSocketMessage(WebSocketMessageEvent event)
+   {
+      String message = event.getMessage();
+      if (message.startsWith("{\"sessionId\":"))
+      {
+         AutoBean<WebSocketSessionID> sessionIdBean =
+            AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, WebSocketSessionID.class, message);
+         WebSocket.getInstance().setSessionId(sessionIdBean.as().getSessionId());
+      }
    }
 
 }

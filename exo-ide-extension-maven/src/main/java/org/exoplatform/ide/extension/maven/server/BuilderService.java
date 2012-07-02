@@ -58,9 +58,9 @@ public class BuilderService
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for build
-    * @param ws
-    *    if <code>true</code> - build status will be sent to client via WebSocket;
-    *    if <code>false</code> - build status will not be checked automatically
+    * @param sessionId
+    *    identifier of the WebSocket session which will be used for sending the status of build
+    *    or empty string if the WebSocket connection is not supported
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to
@@ -71,17 +71,21 @@ public class BuilderService
     *    if any i/o errors occur
     * @throws VirtualFileSystemException
     *    if any error in VFS
-    * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
+    * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String, String)
     */
    @GET
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
-                         @QueryParam("ws") boolean ws, //
+                         @QueryParam("sessionid") String sessionId, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
+      if (sessionId.trim().length() == 0)
+      {
+         sessionId = null;
+      }
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
-      final String buildID = builder.build(vfs, projectId, ws);
+      final String buildID = builder.build(vfs, projectId, sessionId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }

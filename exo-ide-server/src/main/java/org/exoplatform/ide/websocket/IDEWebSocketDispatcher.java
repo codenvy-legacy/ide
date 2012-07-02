@@ -24,13 +24,13 @@ import org.apache.catalina.websocket.WsOutbound;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Component used for sending messages to client via WebSocket connections.
- * Stores user WebSocket-connections.
+ * Class used for sending messages to client via WebSocket connections.
+ * Stores user WebSocket connections.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: IDEWebSocketDispatcher.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
@@ -41,17 +41,17 @@ public class IDEWebSocketDispatcher
    /**
     * Stores user connections.
     */
-   private Map<String, List<MessageInbound>> connections = new HashMap<String, List<MessageInbound>>();
+   private Map<String, List<MessageInbound>> connections = new ConcurrentHashMap<String, List<MessageInbound>>();
 
    /**
-    * Add user connection.
+    * Register user connection in active connection list.
     * 
-    * @param userName connected user name
+    * @param sessionId identifier of the WebSocket session
     * @param inbound inbound connection
     */
-   public void addConnection(String userName, MessageInbound inbound)
+   public void registerConnection(String sessionId, MessageInbound inbound)
    {
-      List<MessageInbound> userConnectionsList = connections.get(userName);
+      List<MessageInbound> userConnectionsList = connections.get(sessionId);
       if (userConnectionsList != null)
       {
          userConnectionsList.add(inbound);
@@ -60,43 +60,45 @@ public class IDEWebSocketDispatcher
       {
          userConnectionsList = new ArrayList<MessageInbound>();
          userConnectionsList.add(inbound);
-         connections.put(userName, userConnectionsList);
+         connections.put(sessionId, userConnectionsList);
       }
    }
 
    /**
-    * Remove user's connection.
+    * Remove user connection from registered connection list.
     * 
-    * @param userName disconnected user name
+    * @param sessionId identifier of the WebSocket session
     * @param inbound inbound connection
     */
-   public void removeConnection(String userName, MessageInbound inbound)
+   public void unregisterConnection(String sessionId, MessageInbound inbound)
    {
-      List<MessageInbound> userConnectionsList = connections.get(userName);
-      if (userConnectionsList != null)
+      List<MessageInbound> userConnectionsList = connections.get(sessionId);
+      if (userConnectionsList == null)
       {
-         userConnectionsList.remove(inbound);
+         return;
       }
+
+      userConnectionsList.remove(inbound);
       if (userConnectionsList.isEmpty())
       {
-         connections.remove(userName);
+         connections.remove(sessionId);
       }
    }
 
    /**
-    * Sends the text message to the client.
+    * Sends the text message to client.
     * <p>NOTE: if user has more than one active connections then message will be sent to all connections.
     * 
-    * @param userId identifier of the connected user
+    * @param sessionId identifier of the WebSocket session
     * @param message text message for sending
     * @param eventType event type
     * @throws IOException if an error occurs writing to the client
     */
-   public void sendMessageToClient(String userId, String message, String eventType) throws IOException
+   public void sendMessageToClient(String sessionId, String message, String eventType) throws IOException
    {
       String wsMessage = "{\"event\":\"" + eventType + "\"," + "\"data\":" + message + "}";
 
-      List<MessageInbound> userConnectionsList = connections.get(userId);
+      List<MessageInbound> userConnectionsList = connections.get(sessionId);
       if (userConnectionsList == null)
       {
          // TODO
@@ -110,4 +112,5 @@ public class IDEWebSocketDispatcher
          wsOut.flush();
       }
    }
+
 }

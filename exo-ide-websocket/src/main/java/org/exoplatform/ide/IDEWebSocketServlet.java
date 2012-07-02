@@ -24,11 +24,14 @@ import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet used for processing WebSocket connections.
@@ -44,13 +47,27 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private static IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
       .getCurrentContainer().getComponentInstanceOfType(IDEWebSocketDispatcher.class);
 
+   private String lastConnectedSessionId;
+
+   /**
+    * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+    */
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+   {
+      lastConnectedSessionId = req.getSession().getId();
+      super.doGet(req, resp);
+   }
+
    /**
     * @see org.apache.catalina.websocket.WebSocketServlet#createWebSocketInbound(java.lang.String)
     */
    @Override
    protected StreamInbound createWebSocketInbound(String subProtocol)
    {
-      return new WSMessageInbound(ConversationState.getCurrent().getIdentity().getUserId());
+      // TODO use code below when Tomcat 7.0.29 will be released
+      // return new WSMessageInbound(req.getSession().getId());
+      return new WSMessageInbound(lastConnectedSessionId);
    }
 
    /**
@@ -74,9 +91,15 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onOpen(WsOutbound outbound)
       {
-         if (userId != null)
+         wsDispatcher.registerConnection(userId, this);
+         try
          {
-            wsDispatcher.addConnection(userId, this);
+            outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + userId + "\"}"));
+         }
+         catch (IOException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
          }
       }
 
@@ -86,7 +109,13 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onClose(int status)
       {
-         wsDispatcher.removeConnection(userId, this);
+         // 8 - OPCODE_CLOSE
+         // 1002 indicates that an endpoint is terminating the connection due to a protocol error
+         // TODO 
+         if (status == 8)
+         {
+            wsDispatcher.unregisterConnection(userId, this);
+         }
       }
 
       /**

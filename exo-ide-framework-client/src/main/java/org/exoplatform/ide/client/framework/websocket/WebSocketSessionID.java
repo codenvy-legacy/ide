@@ -16,22 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.shared;
+package org.exoplatform.ide.client.framework.websocket;
 
 /**
- * WebSocket message that contains status of build.
+ * Interface represents WebSocket session identifier.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuildStatusWS.java Jun 23, 2012 12:56:28 PM azatsarynnyy $
+ * @version $Id: WebSocketSessionID.java Jun 27, 2012 12:56:28 PM azatsarynnyy $
  *
  */
-public interface BuildStatusWS
+public interface WebSocketSessionID
 {
-   String getEvent();
+   /**
+    * Returns session identifier.
+    * 
+    * @return session identifier
+    */
+   String getSessionId();
 
-   void setEvent(String event);
-
-   BuildStatus getData();
-
-   void setData(BuildStatus buildStatus);
+   /**
+    * Changes session identifier.
+    * 
+    * @param sessionId session identifier
+    */
+   void setSessionId(String sessionId);
 }
