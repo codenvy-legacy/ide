@@ -96,7 +96,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       // call configure classpath form
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);
       IDE.PROJECT.CLASSPATH.waitOpened();
-
+      IDE.LOADER.waitClosed();
       /*
        * "Configure classpath" dialog appeared
        */
@@ -104,6 +104,8 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertTrue(IDE.PROJECT.CLASSPATH.isCancelButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH.isAddButtonEnabled());
       assertFalse(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
+
+      IDE.PROJECT.CLASSPATH.waitPathPresent(WS_NAME + "#/" + PROJECT + "/");
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
 
       /*
@@ -115,6 +117,9 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertFalse(IDE.PROJECT.CLASSPATH_SOURCE.isOkButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isCancelButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isTreeVisible());
+
+      IDE.PROJECT.CLASSPATH_SOURCE.waitAppearContentInChoosePathForm(PROJECT);
+      IDE.PROJECT.CLASSPATH_SOURCE.waitAppearContentInChoosePathForm(PROJECT_2);
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT));
       assertTrue(IDE.PROJECT.CLASSPATH_SOURCE.isPathPresent(PROJECT_2));
       // select not root item
@@ -130,6 +135,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT + "/"));
 
       // Select folder path and check, that remove button is enabled
+
       IDE.PROJECT.CLASSPATH.selectPath(WS_NAME + "#/" + PROJECT_2 + "/");
       assertTrue(IDE.PROJECT.CLASSPATH.isRemoveButtonEnabled());
       assertTrue(IDE.PROJECT.CLASSPATH.isSaveButtonEnabled());
@@ -144,10 +150,16 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
       IDE.LOADER.waitClosed();
+      IDE.PROJECT.CLASSPATH_SOURCE.waitAppearContentInChoosePathForm(PROJECT_2);
+      //this delay need for full  reparse all elements in the classpath source form
+      Thread.sleep(500);
       IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();
+
       IDE.PROJECT.CLASSPATH_SOURCE.waitClosed();
+
+      IDE.PROJECT.CLASSPATH.waitPathPresent(WS_NAME + "#/" + PROJECT_2 + "/");
       assertTrue(IDE.PROJECT.CLASSPATH.isPathPresent(WS_NAME + "#/" + PROJECT_2 + "/"));
       IDE.PROJECT.CLASSPATH.clickCancelButton();
       IDE.PROJECT.CLASSPATH.waitClosed();
@@ -167,6 +179,9 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.CLASSPATH.clickAddButton();
       IDE.PROJECT.CLASSPATH_SOURCE.waitOpened();
       IDE.LOADER.waitClosed();
+      //this delay need for full  reparse all elements in the classpath source form  
+      Thread.sleep(500);
+      IDE.PROJECT.CLASSPATH_SOURCE.waitAppearContentInChoosePathForm(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.selectItem(PROJECT_2);
       IDE.PROJECT.CLASSPATH_SOURCE.waitOkButtonEnabled(true);
       IDE.PROJECT.CLASSPATH_SOURCE.clickOkButton();

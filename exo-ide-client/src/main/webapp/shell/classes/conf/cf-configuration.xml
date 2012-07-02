@@ -221,7 +221,7 @@
             <values-param>
                <name>autoCreatedInNewRepository</name>
                <description>Node types configuration file</description>
-               <value>war:/conf/ext-nodetypes-config.xml</value>
+               <value>war:/conf/ide-nodetypes-config.xml</value>
                <value>jar:/conf/organization-nodetypes.xml</value>
                <value>jar:/conf/vfs-node-types.xml</value>
             </values-param>

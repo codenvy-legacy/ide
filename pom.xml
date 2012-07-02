@@ -25,9 +25,9 @@
       <org.exoplatform.kernel.version>2.3.7-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.7-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.7-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M8-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M9-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
-      <ide.codeassistant.lucene.index.version>20120612</ide.codeassistant.lucene.index.version>
+      <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
       <gwt.version>2.4.0</gwt.version>
       <shindig.version>1.0-r790473-Patch02</shindig.version>
@@ -54,6 +54,8 @@
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
       <appengine.version>1.6.5</appengine.version>
+      <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
+      <crash.version>1.0.0-beta21</crash.version>
    </properties>
 
 
@@ -745,6 +747,9 @@
                <validHeaders>
                   <validHeader>dev-resources/src/main/resources/licences/header2010.txt</validHeader>
                   <validHeader>dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2011.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/header2012.txt</validHeader>
+                  <validHeader>dev-resources/src/main/resources/licences/headerEclipse.txt</validHeader>
                </validHeaders>
                <failIfMissing>false</failIfMissing>
                <aggregate>true</aggregate>
@@ -789,6 +794,7 @@
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>
+                  <java>JAVADOC_STYLE</java>
                </mapping>
             </configuration>
             <executions>

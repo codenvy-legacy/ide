@@ -121,7 +121,7 @@
                                  <string>root</string>
                               </field>
                               <field name="password">
-                                 <string>gtn</string>
+                                 <string>WBTTeam</string>
                               </field>
                               <field name="firstName">
                                  <string>Root</string>
@@ -140,10 +140,10 @@
                         <value>
                            <object type="org.exoplatform.services.organization.OrganizationConfig$User">
                               <field name="userName">
-                                 <string>john</string>
+                                 <string>exo</string>
                               </field>
                               <field name="password">
-                                 <string>gtn</string>
+                                 <string>exo</string>
                               </field>
                               <field name="firstName">
                                  <string>John</string>
@@ -165,7 +165,7 @@
                                  <string>demo</string>
                               </field>
                               <field name="password">
-                                 <string>gtn</string>
+                                 <string>exo</string>
                               </field>
                               <field name="firstName">
                                  <string>Demo</string>
