@@ -45,8 +45,7 @@ public class Statusbar extends AbstractTestModule
       String BUILD_FAILED_STATUS_LOCATOR =
          "div[control-id='__request-notification-control'][title='Building of project failed']";
 
-      String BUILD_DISAPPEAR =
-         "//div[@id='exoIDEStatusbar']//div[3]";
+      String BUILD_DISAPPEAR = "//div[@id='exoIDEStatusbar']//div[3]";
 
    }
 
@@ -106,8 +105,8 @@ public class Statusbar extends AbstractTestModule
          {
             try
             {
-              WebElement check = driver().findElement(By.xpath(Locators.BUILD_DISAPPEAR));
-               return check != null && !check.isDisplayed();
+               WebElement check = driver().findElement(By.xpath(Locators.BUILD_DISAPPEAR));
+               return !(check.isDisplayed()) && check != null;
             }
             catch (Exception e)
             {

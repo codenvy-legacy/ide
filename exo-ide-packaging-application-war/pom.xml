@@ -211,13 +211,6 @@
       <resources>
          <resource>
             <directory>src/main/resources</directory>
-            <excludes>
-            	<exclude>**/*</exclude>
-            <!-- 
-               <exclude>**/META-INF/*</exclude>
-               <exclude>**/WEB-INF/*</exclude>
-                -->
-            </excludes>
          </resource>
       </resources>
 
@@ -329,7 +322,6 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
-            <version>${gwt.maven.plugin.version}</version>
             <configuration>
                <module>org.exoplatform.ide.Application</module>
                <runTarget>org.exoplatform.ide.Application/Application.html</runTarget>
@@ -351,27 +343,14 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <configuration>
-               <webXml>src/main/resources/WEB-INF/web.xml</webXml>
                <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
-               <packagingExcludes>**/classes/org/**,**/classes/gadget/**,
+               <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/lib/**,
                   **/classes/default/**,**/classes/ide/**,
                   **/Commons.css,
                   **/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
                   **/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
-                  **/preloadIDE.js,**/init_smartgwt_for_gadget.js,
-                  **/exo-gwtframework-commons*.jar,**/exo-gwtframework-ui*.jar,**/exo-ide-*-client*.jar,**/exo.portal*.jar,
-                  **/chromattic*tests.jar,**/servlet-api*.jar,**/exo-ide-client*.jar,**/portlet-api*.jar,**/jsf-api*.jar,**/xstream-1.0.2.jar
+                  **/preloadIDE.js
                </packagingExcludes>
-               <webResources>
-                  <resource>
-                     <directory>src/main/resources/META-INF</directory>
-                     <targetPath>META-INF</targetPath>
-                  </resource>
-                  <resource>
-                     <directory>src/main/resources/WEB-INF</directory>
-                     <targetPath>WEB-INF</targetPath>
-                  </resource>
-               </webResources>
             </configuration>
          </plugin>
 
@@ -389,6 +368,5 @@
 
       </plugins>
       <sourceDirectory>target/share</sourceDirectory>
-      <!-- outputDirectory>target/war/classes</outputDirectory -->
    </build>
 </project>

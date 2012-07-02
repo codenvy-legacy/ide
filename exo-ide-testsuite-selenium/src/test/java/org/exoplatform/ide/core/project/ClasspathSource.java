@@ -48,6 +48,8 @@ public class ClasspathSource extends AbstractTestModule
 
    private static final String TREE_ID = "ideChooseSourcePathViewTreeGrid";
 
+   private static final String LIST_CHOOSE_SOURCE_PATH = "//div[@view-id='ideChooseSourcePathView']//div[@class='ide-Tree-label' and text()='%s']";
+
    @FindBy(id = OK_BUTTON_ID)
    private WebElement okButton;
 
@@ -92,6 +94,24 @@ public class ClasspathSource extends AbstractTestModule
          }
       });
    }
+   
+   
+   
+   public void waitAppearContentInChoosePathForm(final String content)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            WebElement value = driver().findElement(By.xpath(String.format(LIST_CHOOSE_SOURCE_PATH, content)));
+            return value!=null && value.isDisplayed();
+         }
+      });
+   }
+   
+   
 
    public void waitClosed()
    {

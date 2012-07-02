@@ -52,10 +52,15 @@ public class Build extends AbstractTestModule
       String OUTPUT_PANEL_ID = "ide.builder.buildOutput";
 
       String CLEAR_BUTTON_SELECTOR = "div[view-id='" + VIEW_ID + "'] div[title='Clear Output']>img";
+
+      String LINK_ON_BUILT_RESULT = "//pre[@id='ide.builder.buildOutput']//a[text()='here']";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
+
+   @FindBy(xpath = Locators.LINK_ON_BUILT_RESULT)
+   private WebElement buildResultLink;
 
    @FindBy(id = Locators.OUTPUT_PANEL_ID)
    private WebElement outputPanel;
@@ -76,6 +81,40 @@ public class Build extends AbstractTestModule
          public Boolean apply(WebDriver input)
          {
             return view != null && view.isDisplayed();
+         }
+      });
+   }
+
+   /**
+    * Wait build output panel project opened.
+    * 
+    * @throws Exception
+    */
+   public void waitBuildResultLink() throws Exception
+   {
+      new WebDriverWait(driver(), 20).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return buildResultLink != null && buildResultLink.isDisplayed();
+         }
+      });
+   }
+
+   /**
+    * Wait build output panel project opened.
+    * 
+    * @throws Exception
+    */
+   public void waitBuildOutputPanel() throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return outputPanel != null && outputPanel.isDisplayed();
          }
       });
    }
