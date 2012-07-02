@@ -88,8 +88,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.versioning.event.VersionRestoredEvent;
-import org.exoplatform.ide.client.versioning.event.VersionRestoredHandler;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.EditorProducer;
@@ -121,7 +119,7 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
    EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
    EditorContextMenuHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
-   ClosingViewHandler, EditorFocusReceivedHandler, VersionRestoredHandler, EditorSelectAllHandler,
+   ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler,
    EditorCutTextHandler, EditorCopyTextHandler, EditorPasteTextHandler, EditorDeleteTextHandler
 
 {
@@ -185,7 +183,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ClosingViewEvent.TYPE, this);
       IDE.addHandler(EditorFocusReceivedEvent.TYPE, this);
-      IDE.addHandler(VersionRestoredEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -834,21 +831,6 @@ public class EditorController implements EditorContentChangedHandler, EditorSave
       return 1;
    }
 
-   public void onVersionRestored(VersionRestoredEvent event)
-   {
-      FileModel oldVersionFile = event.getFile();
-      Editor editor = getEditorFromView(oldVersionFile.getId());
-
-      // ignore changing of non-opened or non-active file
-      if (editor == null || !oldVersionFile.getId().equals(activeFile.getId()))
-      {
-         return;
-      }
-
-      // file changing should be finished in time of handling EditorContentChangedEvent
-      ignoreContentChangedList.add(oldVersionFile.getId());
-      editor.setText(oldVersionFile.getContent());
-   }
 
    /**
     * @see org.exoplatform.ide.editor.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.api.event.EditorContextMenuEvent)
