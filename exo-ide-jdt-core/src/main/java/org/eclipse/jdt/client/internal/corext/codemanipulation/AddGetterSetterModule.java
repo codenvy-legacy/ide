@@ -18,28 +18,38 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+public class AddGetterSetterModule extends AbstractGinModule
 {
 
    /**
-    * @param id
+    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
     */
-   public OrganizeImportsControl()
+   @Override
+   protected void configure()
    {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
+      bind(AddGetterSetterPresenter.Display.class).to(AddGetterSetterView.class);
+      bind(new TypeLiteral<MultiSelectionModel<Object>>()
+      {
+      }).in(Singleton.class);
+      bind(GetterSetterTreeModel.class);
+
    }
 
+   @Provides
+   @Singleton
+   GetterSetterEntryProvider provide()
+   {
+      return AddGetterSetterPresenter.get();
+   }
 }

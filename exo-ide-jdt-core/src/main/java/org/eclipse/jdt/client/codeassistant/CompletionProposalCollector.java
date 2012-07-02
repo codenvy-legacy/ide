@@ -689,7 +689,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
       StyledString label = fLabelProvider.createStyledLabel(proposal);
-      Image image = getImage(fLabelProvider.createFieldImageDescriptor(proposal));
+      Image image = getImage(CompletionProposalLabelProvider.createFieldImageDescriptor(proposal.getFlags()));
       int relevance = computeRelevance(proposal);
 
       JavaCompletionProposal javaProposal =
@@ -717,7 +717,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
       StyledString label = fLabelProvider.createStyledLabel(proposal);
-      Image image = getImage(fLabelProvider.createFieldImageDescriptor(proposal));
+      Image image = getImage(CompletionProposalLabelProvider.createFieldImageDescriptor(proposal.getFlags()));
       int relevance = computeRelevance(proposal);
 
       JavaCompletionProposal javaProposal =

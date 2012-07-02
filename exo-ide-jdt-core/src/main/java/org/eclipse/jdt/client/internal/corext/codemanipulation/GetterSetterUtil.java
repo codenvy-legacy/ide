@@ -12,26 +12,32 @@ package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
 import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.NamingConventions;
+import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Assignment;
 import org.eclipse.jdt.client.core.dom.Assignment.Operator;
 import org.eclipse.jdt.client.core.dom.CastExpression;
 import org.eclipse.jdt.client.core.dom.Expression;
+import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
 import org.eclipse.jdt.client.core.dom.InfixExpression;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.NumberLiteral;
 import org.eclipse.jdt.client.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.client.core.dom.PostfixExpression;
 import org.eclipse.jdt.client.core.dom.PrefixExpression;
 import org.eclipse.jdt.client.core.dom.PrimitiveType;
+import org.eclipse.jdt.client.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
 import org.eclipse.jdt.client.internal.corext.util.JdtFlags;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.core.Signature;
+
+import java.util.List;
 
 public class GetterSetterUtil
 {
@@ -102,20 +108,147 @@ public class GetterSetterUtil
       return field.getType().getBinaryName().equals(Signature.SIG_BOOLEAN);
    }
 
-   //	public static IMethod getGetter(IField field) throws JavaModelException{
-   //		String getterName= getGetterName(field, EMPTY, true);
-   //		IMethod primaryCandidate= JavaModelUtil.findMethod(getterName, new String[0], false, field.getDeclaringType());
-   //		if (! JavaModelUtil.isBoolean(field) || (primaryCandidate != null && primaryCandidate.exists()))
-   //			return primaryCandidate;
-   //		//bug 30906 describes why we need to look for other alternatives here (try with get... for booleans)
-   //		String secondCandidateName= getGetterName(field, EMPTY, false);
-   //		return JavaModelUtil.findMethod(secondCandidateName, new String[0], false, field.getDeclaringType());
-   //	}
+   public static IMethodBinding getGetter(IVariableBinding field)
+   {
+      String getterName = getGetterName(field, EMPTY, true);
+      IMethodBinding primaryCandidate = findMethod(getterName, new String[0], false, field.getDeclaringClass());
+      if (!isBoolean(field) || (primaryCandidate != null))
+         return primaryCandidate;
+      //bug 30906 describes why we need to look for other alternatives here (try with get... for booleans)
+      String secondCandidateName = getGetterName(field, EMPTY, false);
+      return findMethod(secondCandidateName, new String[0], false, field.getDeclaringClass());
+   }
 
-   //	public static IMethod getSetter(IField field) throws JavaModelException{
-   //		String[] args= new String[] { field.getTypeSignature() };
-   //		return JavaModelUtil.findMethod(getSetterName(field, EMPTY), args, false, field.getDeclaringType());
-   //	}
+   public static IMethodBinding getSetter(IVariableBinding field)
+   {
+      String[] args = new String[]{field.getType().getKey().replaceAll("/", ".")};
+      return findMethod(getSetterName(field, EMPTY), args, false, field.getDeclaringClass());
+   }
+
+   /**
+    * Finds a method in a type.
+    * This searches for a method with the same name and signature. Parameter types are only
+    * compared by the simple name, no resolving for the fully qualified type name is done.
+    * Constructors are only compared by parameters, not the name.
+    * @param name The name of the method to find
+    * @param paramTypes The type signatures of the parameters e.g. <code>{"QString;","I"}</code>
+    * @param isConstructor If the method is a constructor
+    * @param type the type
+    * @return The first found method or <code>null</code>, if nothing foun
+    * @throws JavaModelException thrown when the type can not be accessed
+    */
+   public static IMethodBinding findMethod(String name, String[] paramTypes, boolean isConstructor, ITypeBinding type)
+   {
+      IMethodBinding[] methods = type.getDeclaredMethods();
+      for (int i = 0; i < methods.length; i++)
+      {
+         if (isSameMethodSignature(name, paramTypes, isConstructor, methods[i]))
+         {
+            return methods[i];
+         }
+      }
+      return null;
+   }
+   /**
+    * Finds a method in a type.
+    * This searches for a method with the same name and signature. Parameter types are only
+    * compared by the simple name, no resolving for the fully qualified type name is done.
+    * Constructors are only compared by parameters, not the name.
+    * @param name The name of the method to find
+    * @param paramTypes The type signatures of the parameters e.g. <code>{"QString;","I"}</code>
+    * @param isConstructor If the method is a constructor
+    * @param type the type
+    * @return The first found method or <code>null</code>, if nothing foun
+    * @throws JavaModelException thrown when the type can not be accessed
+    */
+   public static MethodDeclaration findMethod(String name, String[] paramTypes, boolean isConstructor, TypeDeclaration type)
+   {
+      MethodDeclaration[] methods = type.getMethods();
+      for (int i = 0; i < methods.length; i++)
+      {
+         if (isSameMethodSignature(name, paramTypes, isConstructor, methods[i]))
+         {
+            return methods[i];
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Tests if a method equals to the given signature.
+    * Parameter types are only compared by the simple name, no resolving for
+    * the fully qualified type name is done. Constructors are only compared by
+    * parameters, not the name.
+    * @param name Name of the method
+    * @param paramTypes The type signatures of the parameters e.g. <code>{"QString;","I"}</code>
+    * @param isConstructor Specifies if the method is a constructor
+    * @param curr the method
+    * @return Returns <code>true</code> if the method has the given name and parameter types and constructor state.
+    * @throws JavaModelException thrown when the method can not be accessed
+    */
+   public static boolean isSameMethodSignature(String name, String[] paramTypes, boolean isConstructor,
+      IMethodBinding curr)
+   {
+      if (isConstructor || name.equals(curr.getName()))
+      {
+         if (isConstructor == curr.isConstructor())
+         {
+            ITypeBinding[] currParamTypes = curr.getParameterTypes();
+            if (paramTypes.length == currParamTypes.length)
+            {
+               for (int i = 0; i < paramTypes.length; i++)
+               {
+                  String t1 = Signature.getSimpleName(Signature.toString(paramTypes[i]));
+                  String t2 = Signature.getSimpleName(currParamTypes[i].getQualifiedName());
+                  if (!t1.equals(t2))
+                  {
+                     return false;
+                  }
+               }
+               return true;
+            }
+         }
+      }
+      return false;
+   }
+   
+   /**
+    * Tests if a method equals to the given signature.
+    * Parameter types are only compared by the simple name, no resolving for
+    * the fully qualified type name is done. Constructors are only compared by
+    * parameters, not the name.
+    * @param name Name of the method
+    * @param paramTypes The type signatures of the parameters e.g. <code>{"QString;","I"}</code>
+    * @param isConstructor Specifies if the method is a constructor
+    * @param curr the method
+    * @return Returns <code>true</code> if the method has the given name and parameter types and constructor state.
+    * @throws JavaModelException thrown when the method can not be accessed
+    */
+   public static boolean isSameMethodSignature(String name, String[] paramTypes, boolean isConstructor,
+      MethodDeclaration curr)
+   {
+      if (isConstructor || name.equals(curr.getName()))
+      {
+         if (isConstructor == curr.isConstructor())
+         {
+            List<SingleVariableDeclaration> currParamTypes = curr.parameters();
+            if (paramTypes.length == currParamTypes.size())
+            {
+               for (int i = 0; i < paramTypes.length; i++)
+               {
+                  String t1 = Signature.getSimpleName(Signature.toString(paramTypes[i]));
+                  String t2 = Signature.getSimpleName(currParamTypes.get(i).getName().getFullyQualifiedName());
+                  if (!t1.equals(t2))
+                  {
+                     return false;
+                  }
+               }
+               return true;
+            }
+         }
+      }
+      return false;
+   }
 
    /**
     * Create a stub for a getter of the given field using getter/setter templates. The resulting code

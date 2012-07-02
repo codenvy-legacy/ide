@@ -18,28 +18,19 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import com.google.gwt.inject.client.GinModules;
+
+import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display;
+
+import com.google.gwt.inject.client.Ginjector;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+@GinModules(AddGetterSetterModule.class)
+public interface JdtGinjector extends Ginjector
 {
-
-   /**
-    * @param id
-    */
-   public OrganizeImportsControl()
-   {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
-   }
-
+   Display getView();
 }

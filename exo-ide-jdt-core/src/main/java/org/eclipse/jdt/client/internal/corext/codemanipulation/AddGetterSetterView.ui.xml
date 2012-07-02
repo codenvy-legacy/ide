@@ -1,0 +1,99 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+   xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+   <ui:style>
+      /* Add CSS here. See the GWT docs on UI Binder for more details */
+   </ui:style>
+   <f:Border borderColor="transparent" margin="5">
+   	<f:layer left="0px" width="252px" top="0px" height="14px">
+   		<g:Label text="Select Getterts and Setters to create:"/>
+   	</f:layer>
+   	<f:layer left="0px" width="409px" top="20px" height="199px">
+   		<g:ScrollPanel width="100%" height="100%">
+   			<p1:CellTree width="100%" height="100%" ui:field="fieldTree"/>
+   		</g:ScrollPanel>
+   	</f:layer>
+   	<f:layer width="95px" top="20px" height="100px" right="12px">
+   		<g:DockLayoutPanel unit="PX" width="100px" height="100px">
+   			<g:north size="25.0">
+   				<f:ImageButton text="SelectAll" ui:field="selectAll" width="93px"/>
+   			</g:north>
+   			<g:north size="25.0">
+   				<f:ImageButton text="DeselectAll" ui:field="deselectAll" width="93px"/>
+   			</g:north>
+   			<g:north size="25.0">
+   				<f:ImageButton text="Select Getters" ui:field="selectGetters"/>
+   			</g:north>
+   			<g:north size="25.0">
+   				<f:ImageButton text="Select Setters" ui:field="selectSetters" width="93px"/>
+   			</g:north>
+   		</g:DockLayoutPanel>
+   	</f:layer>
+   	<f:layer left="0px" height="224px" right="0px" top="247px">
+   		<g:DockLayoutPanel unit="PX" width="100%" height="100%">
+   			<g:south size="34.0">
+   				<g:AbsolutePanel>
+   					<g:at left="418" top="0">
+   						<f:ImageButton text="Ok" ui:field="okButton"/>
+   					</g:at>
+   					<g:at left="308" top="0">
+   						<f:ImageButton text="Cancel" ui:field="cancelButton"/>
+   					</g:at>
+   				</g:AbsolutePanel>
+   			</g:south>
+   			<g:north size="27.0">
+   				<g:AbsolutePanel>
+   					<g:at left="10" top="5">
+   						<g:SimpleCheckBox ui:field="allowFinalBox"/>
+   					</g:at>
+   					<g:at left="39" top="10">
+   						<g:Label text="Allow setters for final fields (remove &apos;final&apos; modifier from fields)"/>
+   					</g:at>
+   				</g:AbsolutePanel>
+   			</g:north>
+   			<g:north size="157.0">
+   				<g:AbsolutePanel>
+   					<g:at left="10" top="6">
+   						<g:Label text="Sort by:"/>
+   					</g:at>
+   					<g:at left="10" top="20">
+   						<g:ListBox width="495px" height="27px" ui:field="sortTypeBox"/>
+   					</g:at>
+   					<g:at left="10" top="130">
+   						<g:SimpleCheckBox ui:field="generateComent" checked="true"/>
+   					</g:at>
+   					<g:at left="39" top="134">
+   						<g:Label text="Generate methods comnents"/>
+   					</g:at>
+   					<g:at left="10" top="72">
+   						<f:Border width="493px" height="50px" borderSize="1">
+   							<f:layer left="0px" width="71px" top="0px" height="21px">
+   								<g:RadioButton name="new name" text="public" checked="true" ui:field="publicRadio"/>
+   							</f:layer>
+   							<f:layer left="68px" width="95px" top="0px" height="21px">
+   								<g:RadioButton name="new name" text="protected" ui:field="protectedRadio"/>
+   							</f:layer>
+   							<f:layer left="169px" width="78px" top="0px" height="21px">
+   								<g:RadioButton name="new name" text="default" ui:field="defaultRadio"/>
+   							</f:layer>
+   							<f:layer left="253px" width="78px" top="0px" height="21px">
+   								<g:RadioButton name="new name" text="private" ui:field="privateRadio"/>
+   							</f:layer>
+   							<f:layer left="0px" width="71px" top="27px" height="21px">
+   								<g:CheckBox text="final" ui:field="finalBox"/>
+   							</f:layer>
+   							<f:layer left="68px" width="107px" top="27px" height="21px">
+   								<g:CheckBox text="synchronized" ui:field="syncBox"/>
+   							</f:layer>
+   						</f:Border>
+   					</g:at>
+   					<g:at left="10" top="53">
+   						<g:Label text="Access modifier"/>
+   					</g:at>
+   				</g:AbsolutePanel>
+   			</g:north>
+   		</g:DockLayoutPanel>
+   	</f:layer>
+      
+   </f:Border>
+</ui:UiBinder> 

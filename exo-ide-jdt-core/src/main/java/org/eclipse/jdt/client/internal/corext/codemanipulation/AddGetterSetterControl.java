@@ -18,28 +18,28 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import org.eclipse.jdt.client.event.AddGetterSetterEvent;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+public class AddGetterSetterControl extends JavaControl
 {
 
    /**
     * @param id
     */
-   public OrganizeImportsControl()
+   public AddGetterSetterControl()
    {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
+      super("Edit/Source/Generate Getters and Setters");
+      setTitle("Generate Getters and Setters");
+      setPrompt("Generate Getters and Setters");
+      setEvent(new AddGetterSetterEvent());
+      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
+      setShowInContextMenu(true);
    }
 
 }

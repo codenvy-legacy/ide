@@ -16,30 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.internal.corext.codemanipulation;
+package org.eclipse.jdt.client.event;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+public class AddGetterSetterEvent extends GwtEvent<AddGetterSetterHandler>
 {
 
+   public static final GwtEvent.Type<AddGetterSetterHandler> TYPE = new Type<AddGetterSetterHandler>();
+
    /**
-    * @param id
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public OrganizeImportsControl()
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<AddGetterSetterHandler> getAssociatedType()
    {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(AddGetterSetterHandler handler)
+   {
+      handler.onAddGetterSetter(this);
    }
 
 }

@@ -16,30 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.internal.corext.codemanipulation;
+package org.eclipse.jdt.client.event;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+public interface AddGetterSetterHandler extends EventHandler
 {
 
-   /**
-    * @param id
-    */
-   public OrganizeImportsControl()
-   {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
-   }
+   void onAddGetterSetter(AddGetterSetterEvent event);
 
 }

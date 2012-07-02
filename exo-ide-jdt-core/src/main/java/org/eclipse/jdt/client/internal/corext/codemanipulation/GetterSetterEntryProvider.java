@@ -18,28 +18,16 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
+
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsControl extends JavaControl
+public interface GetterSetterEntryProvider
 {
-
-   /**
-    * @param id
-    */
-   public OrganizeImportsControl()
-   {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
-   }
-
+   Map<IVariableBinding, GetterSetterEntry[]> getFields();
 }

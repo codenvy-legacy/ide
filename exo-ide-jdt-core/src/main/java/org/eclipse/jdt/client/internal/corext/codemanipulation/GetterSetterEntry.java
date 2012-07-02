@@ -18,28 +18,45 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.event.OrganizeImportsEvent;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
 
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
- */
-public class OrganizeImportsControl extends JavaControl
+public class GetterSetterEntry
 {
+   private final IVariableBinding field;
+
+   private final boolean isGetter;
+
+   private final boolean isFinal;
+
+   GetterSetterEntry(IVariableBinding field, boolean isGetterEntry, boolean isFinal)
+   {
+      this.field = field;
+      this.isGetter = isGetterEntry;
+      this.isFinal = isFinal;
+   }
 
    /**
-    * @param id
+    * @return the field
     */
-   public OrganizeImportsControl()
+   public IVariableBinding getField()
    {
-      super("Edit/Organize Imports");
-      setTitle("Organize Imports");
-      setPrompt("Organize Imports");
-      setEvent(new OrganizeImportsEvent());
-      setHotKey("Ctrl+Shift+O");
-      setImages(JdtClientBundle.INSTANCE.organizeImports(), JdtClientBundle.INSTANCE.organizeImportsDisabled());
+      return field;
+   }
+
+   /**
+    * @return the isGetter
+    */
+   public boolean isGetter()
+   {
+      return isGetter;
+   }
+
+   /**
+    * @return the isFinal
+    */
+   public boolean isFinal()
+   {
+      return isFinal;
    }
 
 }
