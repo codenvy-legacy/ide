@@ -19,6 +19,7 @@
 
 -->
 <module rename-to="IDE">
+
 	<inherits name='com.google.gwt.user.User' />
 
 	<inherits name="org.exoplatform.ide.IDECore" />
