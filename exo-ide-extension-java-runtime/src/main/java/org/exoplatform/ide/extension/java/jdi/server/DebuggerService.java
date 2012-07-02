@@ -52,9 +52,15 @@ public class DebuggerService
    @Path("connect")
    @Produces(MediaType.APPLICATION_JSON)
    public DebuggerInfo create(@QueryParam("host") String host,
-                              @QueryParam("port") int port) throws DebuggerException
+                              @QueryParam("port") int port,
+                              @QueryParam("sessionid") String sessionId) throws DebuggerException
    {
-      Debugger d = Debugger.newInstance(host, port);
+      if (sessionId.trim().length() == 0)
+      {
+         sessionId = null;
+      }
+
+      Debugger d = Debugger.newInstance(host, port, sessionId);
       return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
    }
 

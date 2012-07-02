@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import static org.exoplatform.ide.helper.JsonHelper.toJson;
+
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.ClassNotPreparedException;
@@ -35,6 +37,8 @@ import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
+
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
@@ -51,6 +55,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
+import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -61,6 +66,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -79,11 +86,45 @@ public class Debugger implements EventsHandler
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
 
-   public static Debugger newInstance(String host, int port) throws VMConnectException
+   private static final IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
+      .getCurrentContainer().getComponentInstancesOfType(IDEWebSocketDispatcher.class);
+   private Timer checkEventsTimer;
+
+   public static Debugger newInstance(String host, int port, String sessionId) throws VMConnectException
    {
       Debugger d = new Debugger(host, port);
       instances.put(d.id, d);
+      if (sessionId != null)
+      {
+         d.checkEventsEvery(2000, d.id, sessionId);
+      }
       return d;
+   }
+
+   private void checkEventsEvery(long period, final String debuggerId, final String sessionId)
+   {
+      checkEventsTimer = new Timer();
+      checkEventsTimer.schedule(new TimerTask()
+      {
+         @Override
+         public void run()
+         {
+            try
+            {
+               List<DebuggerEvent> debuggerEvents = getInstance(debuggerId).getEvents();
+               wsDispatcher.sendMessageToClient(sessionId, toJson(debuggerEvents), "debuggerEvents");
+            }
+            catch (DebuggerException e)
+            {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+               LOG.error("An error occurs writing data to the client (sessionId " + sessionId + "). " + e.getMessage(), e);
+            }
+         }
+      }, 0, period);
    }
 
    public static Debugger getInstance(String name)
@@ -182,6 +223,11 @@ public class Debugger implements EventsHandler
    {
       resume();
       vm.dispose();
+      if (checkEventsTimer != null)
+      {
+         checkEventsTimer.cancel();
+         checkEventsTimer = null;
+      }
       LOG.debug("Close connection to {}:{}", host, port);
    }
 

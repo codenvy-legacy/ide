@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
@@ -100,7 +101,13 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(),
+         String sessionId = null;
+         if (WebSocket.isSupported())
+         {
+            sessionId = WebSocket.getInstance().getSessionId();
+         }
+
+         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(), sessionId,
             new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
                @Override

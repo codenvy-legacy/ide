@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.framework.websocket;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -101,6 +102,11 @@ public class WebSocket
     */
    private String sessionId;
 
+   /**
+    * Counter of connection attempts.
+    */
+   private static int counterConnectionAttempts;
+
    private WebSocket()
    {
       instance = this;
@@ -111,6 +117,7 @@ public class WebSocket
          @Override
          public void onWebSocketOpened(WebSocketOpenedEvent event)
          {
+            counterConnectionAttempts = 0;
             IDE.fireEvent(event);
          }
       });
@@ -120,15 +127,16 @@ public class WebSocket
          @Override
          public void onWebSocketClosed(WebSocketClosedEvent event)
          {
+            instance = null;
+            socket = null;
+
             if (closedByUser)
             {
-               instance = null;
                IDE.fireEvent(event);
             }
-            else
+            else if (counterConnectionAttempts < 10)
             {
-               // TODO reconnect WebSocket if it has been closed unexpectedly
-               getInstance();
+               reconnectWebSocketTimer.schedule(5000);
             }
          }
       });
@@ -162,7 +170,7 @@ public class WebSocket
       // TODO Exceptions (throw new IllegalStateException("Not connected"))
       // - check WebSocket are supported
       // - connection established successfully
-      // - sessionId receiving
+      // - sessionId received
 
       if (instance == null)
       {
@@ -172,15 +180,49 @@ public class WebSocket
    }
 
    /**
-    * Checks whether WebSocket are supported in the current browser.
+    * Timer for reconnecting WebSocket.
+    */
+   private Timer reconnectWebSocketTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         counterConnectionAttempts++;
+         getInstance();
+      }
+   };
+
+   /**
+    * Checks whether WebSocket are supported in the current web-browser.
     * 
     * @return <code>true</code> if WebSockets are supported;
     *         <code>false</code> if they are not.
     */
-   @SuppressWarnings("static-access")
-   public boolean isSupported()
+   public static boolean isSupported()
    {
-      return socket.isSupported();
+      return WebSocketImpl.isSupported();
+   }
+
+   /**
+    * Returns the state of the WebSocket connection.
+    * 
+    * @return {@link ReadyState} value
+    */
+   public ReadyState getReadyState()
+   {
+      switch (socket.getReadyState())
+      {
+         case 0:
+            return ReadyState.CONNECTING;
+         case 1:
+            return ReadyState.OPEN;
+         case 2:
+            return ReadyState.CLOSING;
+         case 3:
+            return ReadyState.CLOSED;
+         default :
+            return ReadyState.CLOSED;
+      }
    }
 
    /**
@@ -198,10 +240,10 @@ public class WebSocket
     */
    public void close()
    {
-      // TODO
-      //if (webSocket == null) {
-      //   throw new IllegalStateException("Not connected");
-
+      if (getReadyState() != ReadyState.OPEN)
+      {
+         return;
+      }
       socket.close();
       closedByUser = true;
    }
@@ -231,6 +273,10 @@ public class WebSocket
     */
    private final static class WebSocketImpl extends JavaScriptObject
    {
+      protected WebSocketImpl()
+      {
+      }
+
       /**
        * Creates a WebSocket object.
        * WebSocket attempt to connect to their URL immediately upon creation.

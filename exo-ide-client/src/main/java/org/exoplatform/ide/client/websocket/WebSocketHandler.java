@@ -24,8 +24,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
@@ -34,8 +32,7 @@ import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEven
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 
 /**
- * Handler for opening websocket connections and closing it in a \"clean\"
- * manner (a handshake has been completed over TCP).
+ * Handler for WebSocket connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $

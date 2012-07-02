@@ -101,8 +101,7 @@ public class IDEWebSocketDispatcher
       List<MessageInbound> userConnectionsList = connections.get(sessionId);
       if (userConnectionsList == null)
       {
-         // TODO
-         return;
+         throw new IllegalArgumentException("WebSocket session " + sessionId + " not found.");
       }
 
       for (MessageInbound messageInbound : userConnectionsList)

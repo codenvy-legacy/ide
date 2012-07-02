@@ -47,6 +47,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -443,7 +444,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          display = new DebuggerView(debuggerInfo);
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-         checkDebugEventsTimer.scheduleRepeating(3000);
+         
+         if (!WebSocket.isSupported())
+         {
+            checkDebugEventsTimer.scheduleRepeating(3000);
+         }
       }
    }
 
@@ -718,8 +723,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
+         String sessionId = null;
+         if (WebSocket.isSupported())
+         {
+            sessionId = WebSocket.getInstance().getSessionId();
+         }
+
          DebuggerClientService.getInstance().create(debugApplicationInstance.getDebugHost(),
-            debugApplicationInstance.getDebugPort(), new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
+            debugApplicationInstance.getDebugPort(), sessionId, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
                @Override
                public void onSuccess(DebuggerInfo result)

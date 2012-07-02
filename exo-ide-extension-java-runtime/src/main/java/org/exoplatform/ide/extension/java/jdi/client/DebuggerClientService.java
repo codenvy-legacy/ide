@@ -68,9 +68,12 @@ public class DebuggerClientService
       return instance;
    }
 
-   public void create(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException
+   public void create(String host, int port, String sessionId, AsyncRequestCallback<DebuggerInfo> callback)
+      throws RequestException
    {
-      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?host=" + host + "&port=" + port)
+      AsyncRequest
+         .build(RequestBuilder.GET,
+            BASE_URL + "/connect?host=" + host + "&port=" + port + "&sessionid=" + sessionId == null ? "" : sessionId)
          .loader(new EmptyLoader()).send(callback);
    }
 
