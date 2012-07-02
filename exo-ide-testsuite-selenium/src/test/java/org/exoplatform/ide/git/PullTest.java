@@ -62,7 +62,9 @@ public class PullTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REMOTE, REMOTE_ZIP_PATH);
+         Thread.sleep(2000);
          VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -75,8 +77,9 @@ public class PullTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + REMOTE);
+         Thread.sleep(1500);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         Thread.sleep(2000);
+         Thread.sleep(1500);
       }
       catch (Exception e)
       {
@@ -176,6 +179,8 @@ public class PullTest extends BaseTest
       IDE.GIT.PULL.typeToLocalBranch(BRANCH);
 
       IDE.GIT.PULL.waitPullButtonEnabled();
+      //add for reparse on DAV-fs
+      Thread.sleep(2000);
       IDE.GIT.PULL.clickPullButton();
       IDE.GIT.PULL.waitClosed();
 
