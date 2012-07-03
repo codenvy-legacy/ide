@@ -8,7 +8,6 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-resources</artifactId>
-
    <name>eXo IDE :: Dev Resources</name>
    <description>Development Resources for eXo IDE</description>
 </project>

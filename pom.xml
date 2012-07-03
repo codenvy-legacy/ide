@@ -176,6 +176,12 @@
             <artifactId>exo-ide-codeassistant-asm</artifactId>
             <version>${project.version}</version>
          </dependency>
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <version>${ide.codeassistant.lucene.index.version}</version>
+            <type>zip</type>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jdt-core</artifactId>
@@ -456,18 +462,6 @@
             <artifactId>exo-ide-client-framework</artifactId>
             <version>${project.version}</version>
          </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>ide-codeassistant-lucene-index</artifactId>
-            <version>${ide.codeassistant.lucene.index.version}</version>
-            <type>zip</type>
-         </dependency>
-
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
@@ -759,54 +753,30 @@
                   <year>2012</year>
                </properties>
                <excludes>
-                  <exclude>**/src/test/resources/**</exclude>
-                  <exclude>**/.gwt/**</exclude>
+		  <exclude>exo-ide-docs/**</exclude>
+                  <exclude>exo-ide-jdt-core/**</exclude>
+		  <exclude>exo-ide-dev-resources/**</exclude>
+		  
+		  <exclude>**/src/test/resources/**</exclude>
                   
-                  <exclude>**/LICENSE</exclude>
-                  <exclude>README</exclude>
-                  <exclude>**/codemirror/css/*.css</exclude>
+		  <exclude>**/codemirror/css/*.css</exclude>
                   <exclude>**/codemirror2/**/*.css</exclude>
                   <exclude>**/codemirror/js/*.js</exclude>
                   <exclude>**/codemirror2/**/*.js</exclude>
                   
-                  <exclude>**/ckeditor/**/*.css</exclude>
+		  <exclude>**/ckeditor/**/*.css</exclude>
                   <exclude>**/ckeditor/**/*.html</exclude>
                   <exclude>**/ckeditor/**/*.js</exclude>
-                  
-                  <exclude>**/*.txt</exclude>
-                  
-                  <!--exclude>**/*.js</exclude-->
-                  <exclude>**/*.jsp</exclude>
-                  <exclude>**/*.properties</exclude>
-                  <exclude>**/*.sh</exclude>
-                  <exclude>**/catalina.policy</exclude>
-                  <exclude>**/server.xml</exclude>
-                  <exclude>**/login.config</exclude>
-                  <exclude>**/web.xml</exclude>
-                  <exclude>**/*.svg</exclude>
-                  <exclude>**/*RELEASE*</exclude>
-                  <exclude>**/jquery/**</exclude>
-                  <exclude>**/bin/**</exclude>
-                  <exclude>**/copy/**</exclude>
-                  <exclude>**/*.cmd</exclude>
-                  <exclude>**/*jquery*</exclude>
-                  <exclude>**/*.htc</exclude>
-                  <exclude>**/*.wiki</exclude>
-                  <exclude>**/*.gtmpl</exclude>
-                  <exclude>**/*.gadget</exclude>
-                  <exclude>**/*.groovy</exclude>
-                  <exclude>**/*.json</exclude>
-                  <exclude>**/*.ext</exclude>
-                  <exclude>**/*.grs</exclude>
-                  
+                 
                   <exclude>exo-ide-editor-codemirror2/src/main/resources/org/exoplatform/ide/editor/public/codemirror2/mode/xml/index.html</exclude>
-                  <exclude>exo-ide-client/src/main/resources/org/exoplatform/ide/client/samples/**</exclude>
+		  
+		  <exclude>exo-ide-editor-ruby/src/main/resources/org/exoplatform/ide/editor/ruby/client/hello.rb</exclude>
                   
-                  
+		  <exclude>exo-ide-client/src/main/resources/org/exoplatform/ide/client/samples/**</exclude>
+                                    
                   <exclude>exo-ide-packaging-shell-war/src/main/resources/WEB-INF/crash/ssh/hostkey.pem</exclude>
-                  <exclude>exo-ide-editor-ruby/src/main/resources/org/exoplatform/ide/editor/ruby/client/hello.rb</exclude>
-                  <exclude>exo-ide-packaging-maven-builder/src/main/resources/tomcat/setenv.bat</exclude>
-                  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutResult_Copy.java</exclude>
+                  
+		  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutResult_Copy.java</exclude>
                   <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutCommand_Copy.java</exclude>
                   <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/DirCacheCheckout_Copy.java</exclude>
                   
@@ -814,13 +784,22 @@
                   <exclude>exo-ide-extension-java-runtime/src/main/java/JavaTreeParser.tokens</exclude>
                   <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g</exclude>
                   <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/Java.g</exclude>
-                  
                   <exclude>exo-ide-extension-java/src/main/resources/pom.xslt</exclude>
                   <exclude>exo-ide-extension-jenkins/src/main/resources/jenkins-config.xslt</exclude>
                   
-                  <exclude>exo-ide-jdt-core/**</exclude>
-                  <exclude>**/org/exoplatform/ide/shell/client/cli/**</exclude>
-                  <exclude>exo-ide-dev-resources/**</exclude>
+                  <exclude>exo-ide-shell/src/main/java/org/exoplatform/ide/shell/client/cli/**</exclude>
+		  
+		  <exclude>**/catalina.policy</exclude>
+                  <exclude>**/server.xml</exclude>
+                  <exclude>**/jaas.conf</exclude>
+                  
+		  <exclude>**/*.txt</exclude>
+		  <exclude>**/*.json</exclude>
+		  <exclude>**/.gwt/**</exclude>
+		  <exclude>**/LICENSE</exclude>
+                  <exclude>.idea/**</exclude>
+                  <exclude>README</exclude>
+		  <exclude>.gitignore</exclude>
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>

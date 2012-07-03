@@ -325,11 +325,6 @@
          <version>${chromattic.version}</version>
       </dependency>
       <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.dataobject</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-git</artifactId>
          <exclusions>
