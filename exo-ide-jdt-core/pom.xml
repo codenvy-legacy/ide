@@ -42,12 +42,20 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>aopalliance</groupId>
+         <artifactId>aopalliance</artifactId>
+         <version>1.0</version>
+      </dependency>
 
       <dependency>
          <groupId>com.google.gwt.inject</groupId>
          <artifactId>gin</artifactId>
          <version>1.5.0</version>
+         <classifier/>
       </dependency>
+            
 
       <dependency>
          <groupId>junit</groupId>
