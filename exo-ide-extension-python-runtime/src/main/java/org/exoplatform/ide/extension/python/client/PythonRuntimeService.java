@@ -69,11 +69,9 @@ public abstract class PythonRuntimeService
    public abstract void stop(String name, AsyncRequestCallback<Object> callback) throws RequestException;
 
    /**
-    * @param vfsId virtual file system id
-    * @param projectId projectId project's id
+    * @param name application's name
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException;
+   public abstract void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

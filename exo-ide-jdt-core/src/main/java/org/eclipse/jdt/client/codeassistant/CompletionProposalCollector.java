@@ -23,8 +23,8 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
-import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
+import org.eclipse.jdt.client.core.util.TypeFinder;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.exoplatform.ide.editor.runtime.Assert;
@@ -617,39 +617,23 @@ public class CompletionProposalCollector extends CompletionRequestor
 
    private void acceptPotentialMethodDeclaration(CompletionProposal proposal)
    {
-      // TODO
-      // try
-      // {
-      // IJavaElement enclosingElement = null;
-      // if (getContext().isExtended())
-      // {
-      // enclosingElement = getContext().getEnclosingElement();
-      // }
-      // else if (fCompilationUnit != null)
-      // {
-      // // kept for backward compatibility: CU is not reconciled at this moment, information is missing (bug 70005)
-      // enclosingElement = fCompilationUnit.getElementAt(proposal.getCompletionLocation() + 1);
-      // }
-      // if (enclosingElement == null)
-      // return;
-      // IType type = (IType)enclosingElement.getAncestor(IJavaElement.TYPE);
-      // if (type != null)
-      // {
-      // String prefix = String.valueOf(proposal.getName());
-      // int completionStart = proposal.getReplaceStart();
-      // int completionEnd = proposal.getReplaceEnd();
-      // int relevance = computeRelevance(proposal);
-      //
-      // GetterSetterCompletionProposal.evaluateProposals(type, prefix, completionStart, completionEnd
-      // - completionStart, relevance + 2, fSuggestedMethodNames, fJavaProposals);
-      // MethodDeclarationCompletionProposal.evaluateProposals(type, prefix, completionStart, completionEnd
-      // - completionStart, relevance, fSuggestedMethodNames, fJavaProposals);
-      // }
-      // }
-      // catch (CoreException e)
-      // {
-      // JavaPlugin.log(e);
-      // }
+
+      TypeFinder finder = new TypeFinder(proposal.getCompletionLocation());
+      fCompilationUnit.accept(finder);
+      if (finder.type != null)
+      {
+         ITypeBinding type = finder.type.resolveBinding();
+         String prefix = String.valueOf(proposal.getName());
+         int completionStart = proposal.getReplaceStart();
+         int completionEnd = proposal.getReplaceEnd();
+         int relevance = computeRelevance(proposal);
+
+         GetterSetterCompletionProposal.evaluateProposals(type, prefix, completionStart, completionEnd
+            - completionStart, relevance + 2, fSuggestedMethodNames, fJavaProposals, getInvocationContext());
+         MethodDeclarationCompletionProposal.evaluateProposals(finder.type, prefix, completionStart, completionEnd
+            - completionStart, relevance, fSuggestedMethodNames, fJavaProposals, getInvocationContext());
+      }
+
    }
 
    private IJavaCompletionProposal createAnnotationAttributeReferenceProposal(CompletionProposal proposal)
@@ -676,12 +660,6 @@ public class CompletionProposalCollector extends CompletionRequestor
       if (declarationKey == null)
          return null;
 
-      // IJavaElement element = fJavaProject.findElement(new String(declarationKey), null);
-      // if (!(element instanceof IType))
-      // return null;
-      //
-      // IType type = (IType)element;
-      
       String completion = String.valueOf(proposal.getCompletion());
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
@@ -711,7 +689,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
       StyledString label = fLabelProvider.createStyledLabel(proposal);
-      Image image = getImage(fLabelProvider.createFieldImageDescriptor(proposal));
+      Image image = getImage(CompletionProposalLabelProvider.createFieldImageDescriptor(proposal.getFlags()));
       int relevance = computeRelevance(proposal);
 
       JavaCompletionProposal javaProposal =
@@ -739,7 +717,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       int start = proposal.getReplaceStart();
       int length = getLength(proposal);
       StyledString label = fLabelProvider.createStyledLabel(proposal);
-      Image image = getImage(fLabelProvider.createFieldImageDescriptor(proposal));
+      Image image = getImage(CompletionProposalLabelProvider.createFieldImageDescriptor(proposal.getFlags()));
       int relevance = computeRelevance(proposal);
 
       JavaCompletionProposal javaProposal =

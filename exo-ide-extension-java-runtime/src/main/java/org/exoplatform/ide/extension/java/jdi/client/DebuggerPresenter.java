@@ -692,7 +692,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                            getAppUrlsAsString(result));
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   doRunDebugger(result);
-                  IDE.fireEvent(new AppStartedEvent());
+                  IDE.fireEvent(new AppStartedEvent(result));
                   runningApp = result;
                }
 
@@ -761,7 +761,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                         + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
                            getAppUrlsAsString(result));
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  IDE.fireEvent(new AppStartedEvent());
+                  IDE.fireEvent(new AppStartedEvent(result));
                   runningApp = result;
                }
 

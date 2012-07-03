@@ -39,4 +39,8 @@
    <replace-with class="org.eclipse.jdt.client.create.CreatePackageView">
       <when-type-is class="org.eclipse.jdt.client.create.CreatePackagePresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterView">
+      <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display" />
+   </replace-with>
 </module>
