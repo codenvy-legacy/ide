@@ -730,21 +730,14 @@
             <groupId>com.mycila.maven-license-plugin</groupId>
             <artifactId>maven-license-plugin</artifactId>
             <version>1.9.0</version>
-            <dependencies>
-                    <dependency>
-                        <groupId>org.exoplatform.ide</groupId>
-                        <artifactId>exo-ide-dev-resources</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
             <configuration>
-               <header>licences/header.txt</header>
+               <header>exo-ide-dev-resources/src/main/resources/licences/header.txt</header>
                <validHeaders>
-                  <validHeader>licences/header2010.txt</validHeader>
-                  <validHeader>licences/header2010_now.txt</validHeader>
-                  <validHeader>licences/header2011.txt</validHeader>
-                  <validHeader>licences/header2012.txt</validHeader>
-                  <validHeader>licences/headerApache.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2011.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2012.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/headerApache.txt</validHeader>
                </validHeaders>
                <failIfMissing>false</failIfMissing>
                <aggregate>true</aggregate>
