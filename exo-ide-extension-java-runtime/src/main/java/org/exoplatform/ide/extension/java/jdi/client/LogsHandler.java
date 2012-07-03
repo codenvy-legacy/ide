@@ -22,39 +22,34 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsHandler;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 22, 2012 2:57:45 PM anya $
  * 
  */
-public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class LogsHandler implements ShowLogsHandler, AppStartedHandler, AppStopedHandler
 {
-   private VirtualFileSystemInfo vfs;
-
-   private ProjectModel project;
+   private ApplicationInstance application;
 
    public LogsHandler()
    {
       IDE.getInstance().addControl(new ShowLogsControl());
 
       IDE.addHandler(ShowLogsEvent.TYPE, this);
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(AppStartedEvent.TYPE, this);
+      IDE.addHandler(AppStopedEvent.TYPE, this);
    }
 
    /**
@@ -63,15 +58,27 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    @Override
    public void onShowLogs(ShowLogsEvent event)
    {
+      if (application != null)
+      {
+         getLogs();
+      }
+      else
+      {
+         Dialogs.getInstance().showInfo(DebuggerExtension.LOCALIZATION_CONSTANT.noRunningApplicationMessage());
+      }
+   }
+
+   private void getLogs()
+   {
       try
       {
-         ApplicationRunnerClientService.getInstance().getLogs(vfs.getId(), project.getId(),
+         ApplicationRunnerClientService.getInstance().getLogs(application.getName(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                  IDE.fireEvent(new OutputEvent(result.toString(), Type.OUTPUT));
+                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
                }
 
                @Override
@@ -88,29 +95,20 @@ public class LogsHandler implements ShowLogsHandler, VfsChangedHandler, ProjectO
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler#onAppStoped(org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent)
     */
    @Override
-   public void onProjectClosed(ProjectClosedEvent event)
+   public void onAppStoped(AppStopedEvent appStopedEvent)
    {
-      this.project = null;
+      this.application = null;
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler#onAppStarted(org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent)
     */
    @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
+   public void onAppStarted(AppStartedEvent event)
    {
-      this.project = event.getProject();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
-    */
-   @Override
-   public void onVfsChanged(VfsChangedEvent event)
-   {
-      this.vfs = event.getVfsInfo();
+      this.application = event.getApplication();
    }
 }

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.python.client;
 
-
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jun 21, 2012 9:51:19 AM anya $
@@ -61,6 +60,9 @@ public interface PythonExtensionLocalization extends com.google.gwt.i18n.client.
 
    @Key("not.python.project")
    String notPythonProject();
+
+   @Key("no.run.application")
+   String noRunningApplication();
 
    @Key("show.logs.control.title")
    String showLogsControlTitle();
