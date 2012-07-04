@@ -4,12 +4,8 @@
    <ui:with field='locale' type='org.exoplatform.ide.extension.googleappengine.client.GAELocalization' />
    <ui:style>
       .center {
-      	display: block;
       	margin-left: auto;
       	margin-right: auto;
-      	font-size: 11px;
-      	font-weight: bold;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       }
       
       .left-float {
@@ -38,7 +34,7 @@
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:Anchor ui:field="goButton" width="90px" height="22px" target="_blank" text="{locale.authenticateButton}" addStyleNames="{style.center}"></g:Anchor>
+         <f:LinkButton ui:field="goButton" target="_blank" text="{locale.authenticateButton}" addStyleNames="{style.center}"></f:LinkButton>
       </f:layer>
    </f:Border>
 </ui:UiBinder> 
