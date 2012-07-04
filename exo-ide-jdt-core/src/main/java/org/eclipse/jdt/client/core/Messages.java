@@ -66,4 +66,12 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
     */
    String convention_package_uppercaseName();
 
+   String GetterSetterCompletionProposal_getter_label(String str);
+
+   String GetterSetterCompletionProposal_setter_label(String str);
+
+   String MethodCompletionProposal_constructor_label();
+
+   String MethodCompletionProposal_method_label();
+
 }

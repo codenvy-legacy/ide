@@ -38,6 +38,7 @@ import org.eclipse.jdt.client.core.dom.TypeParameter;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContext;
+import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
@@ -931,38 +932,38 @@ public final class StubUtility2
       return constructorMethods.toArray(new IMethodBinding[constructorMethods.size()]);
    }
 
-   //   /**
-   //    * Evaluates the insertion position of a new node.
-   //    * 
-   //    * @param listRewrite The list rewriter to which the new node will be added
-   //    * @param sibling The Java element before which the new element should be added.
-   //    * @return the AST node of the list to insert before or null to insert as last.
-   //    * @throws JavaModelException thrown if accessing the Java element failed
-   //    */
-   //
-   //   public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, IJavaElement sibling) throws JavaModelException
-   //   {
-   //      if (sibling instanceof IMember)
-   //      {
-   //         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
-   //         if (sourceRange == null)
-   //         {
-   //            return null;
-   //         }
-   //         int insertPos = sourceRange.getOffset();
-   //
-   //         List<? extends ASTNode> members = listRewrite.getOriginalList();
-   //         for (int i = 0; i < members.size(); i++)
-   //         {
-   //            ASTNode curr = members.get(i);
-   //            if (curr.getStartPosition() >= insertPos)
-   //            {
-   //               return curr;
-   //            }
-   //         }
-   //      }
-   //      return null;
-   //   }
+   /**
+    * Evaluates the insertion position of a new node.
+    * 
+    * @param listRewrite The list rewriter to which the new node will be added
+    * @param sibling The Java element before which the new element should be added.
+    * @return the AST node of the list to insert before or null to insert as last.
+    * @throws JavaModelException thrown if accessing the Java element failed
+    */
+
+   public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, int insertPos)
+   {
+//      if (sibling instanceof IMember)
+//      {
+//         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
+//         if (sourceRange == null)
+//         {
+//            return null;
+//         }
+//         int insertPos = sourceRange.getOffset();
+
+         List<? extends ASTNode> members = listRewrite.getOriginalList();
+         for (int i = 0; i < members.size(); i++)
+         {
+            ASTNode curr = members.get(i);
+            if (curr.getStartPosition() >= insertPos)
+            {
+               return curr;
+            }
+         }
+//      }
+      return null;
+   }
 
    /**
     * Creates a new stub utility.

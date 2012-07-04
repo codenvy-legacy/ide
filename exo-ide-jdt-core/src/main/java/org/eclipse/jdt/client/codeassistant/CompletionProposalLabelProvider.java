@@ -711,7 +711,7 @@ public class CompletionProposalLabelProvider
             break;
          case CompletionProposal.FIELD_REF :
          case CompletionProposal.FIELD_REF_WITH_CASTED_RECEIVER :
-            descriptor = createFieldImageDescriptor(proposal);
+            descriptor = createFieldImageDescriptor(proposal.getFlags());
             break;
          case CompletionProposal.LOCAL_VARIABLE_REF :
          case CompletionProposal.VARIABLE_DECLARATION :
@@ -780,9 +780,8 @@ public class CompletionProposalLabelProvider
          return JavaClientBundle.INSTANCE.classItem();
    }
 
-   ImageResource createFieldImageDescriptor(CompletionProposal proposal)
+   public static ImageResource createFieldImageDescriptor(int flags)
    {
-      final int flags = proposal.getFlags();
       if (Modifier.isPublic(flags))
          return JavaClientBundle.INSTANCE.publicField();
       else if (Modifier.isProtected(flags))

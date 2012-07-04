@@ -176,6 +176,12 @@
             <artifactId>exo-ide-codeassistant-asm</artifactId>
             <version>${project.version}</version>
          </dependency>
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>ide-codeassistant-lucene-index</artifactId>
+            <version>${ide.codeassistant.lucene.index.version}</version>
+            <type>zip</type>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jdt-core</artifactId>
@@ -458,18 +464,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>ide-codeassistant-lucene-index</artifactId>
-            <version>${ide.codeassistant.lucene.index.version}</version>
-            <type>zip</type>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-git-server</artifactId>
             <type>war</type>
             <version>${project.version}</version> 
@@ -737,58 +731,71 @@
             <artifactId>maven-license-plugin</artifactId>
             <version>1.9.0</version>
             <configuration>
-               <header>dev-resources/src/main/resources/licences/header.txt</header>
+               <header>exo-ide-dev-resources/src/main/resources/licences/header.txt</header>
                <validHeaders>
-                  <validHeader>dev-resources/src/main/resources/licences/header2010.txt</validHeader>
-                  <validHeader>dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
-                  <validHeader>dev-resources/src/main/resources/licences/header2011.txt</validHeader>
-                  <validHeader>dev-resources/src/main/resources/licences/header2012.txt</validHeader>
-                  <validHeader>dev-resources/src/main/resources/licences/headerEclipse.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2011.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2012.txt</validHeader>
+                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/headerApache.txt</validHeader>
                </validHeaders>
                <failIfMissing>false</failIfMissing>
                <aggregate>true</aggregate>
                <strictCheck>true</strictCheck>
                <properties>
-                  <year>2011</year>
+                  <year>2012</year>
                </properties>
                <excludes>
-                  <exclude>**/firefoxProfile/**</exclude>
-                  <exclude>dev-resources/**</exclude>
-                  <exclude>**/template/samples/**</exclude>
-                  <exclude>**/src/test/resources/**</exclude>
-                  <exclude>**/*.log</exclude>
-                  <exclude>**/*.txt</exclude>
-                  <exclude>**/*.conf</exclude>
-                  <exclude>**/*.sql</exclude>
-                  <exclude>**/*.html</exclude>
-                  <exclude>**/*.html</exclude>
-                  <exclude>**/*.css</exclude>
-                  <exclude>**/*.js</exclude>
-                  <exclude>**/*.jsp</exclude>
-                  <exclude>**/*.properties</exclude>
-                  <exclude>**/*.sh</exclude>
-                  <exclude>**/catalina.policy</exclude>
+		  <exclude>exo-ide-docs/**</exclude>
+                  <exclude>exo-ide-jdt-core/**</exclude>
+		  <exclude>exo-ide-dev-resources/**</exclude>
+		  
+		  <exclude>**/src/test/resources/**</exclude>
+                  
+		  <exclude>**/codemirror/css/*.css</exclude>
+                  <exclude>**/codemirror2/**/*.css</exclude>
+                  <exclude>**/codemirror/js/*.js</exclude>
+                  <exclude>**/codemirror2/**/*.js</exclude>
+                  
+		  <exclude>**/ckeditor/**/*.css</exclude>
+                  <exclude>**/ckeditor/**/*.html</exclude>
+                  <exclude>**/ckeditor/**/*.js</exclude>
+                 
+                  <exclude>exo-ide-editor-codemirror2/src/main/resources/org/exoplatform/ide/editor/public/codemirror2/mode/xml/index.html</exclude>
+		  
+		  <exclude>exo-ide-editor-ruby/src/main/resources/org/exoplatform/ide/editor/ruby/client/hello.rb</exclude>
+                  
+		  <exclude>exo-ide-client/src/main/resources/org/exoplatform/ide/client/samples/**</exclude>
+                                    
+                  <exclude>exo-ide-packaging-shell-war/src/main/resources/WEB-INF/crash/ssh/hostkey.pem</exclude>
+                  
+		  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutResult_Copy.java</exclude>
+                  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutCommand_Copy.java</exclude>
+                  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/DirCacheCheckout_Copy.java</exclude>
+                  
+                  <exclude>exo-ide-extension-java-runtime/src/main/java/Java.tokens</exclude>
+                  <exclude>exo-ide-extension-java-runtime/src/main/java/JavaTreeParser.tokens</exclude>
+                  <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g</exclude>
+                  <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/Java.g</exclude>
+                  <exclude>exo-ide-extension-java/src/main/resources/pom.xslt</exclude>
+                  <exclude>exo-ide-extension-jenkins/src/main/resources/jenkins-config.xslt</exclude>
+                  
+                  <exclude>exo-ide-shell/src/main/java/org/exoplatform/ide/shell/client/cli/**</exclude>
+		  
+		  <exclude>**/catalina.policy</exclude>
                   <exclude>**/server.xml</exclude>
-                  <exclude>**/login.config</exclude>
-                  <exclude>**/web.xml</exclude>
-                  <exclude>**/*.svg</exclude>
-                  <exclude>**/*RELEASE*</exclude>
-                  <exclude>**/jquery/**</exclude>
-                  <exclude>**/bin/**</exclude>
-                  <exclude>**/copy/**</exclude>
-                  <exclude>**/*.cmd</exclude>
-                  <exclude>**/*jquery*</exclude>
-                  <exclude>**/*.htc</exclude>
-                  <exclude>**/*.wiki</exclude>
-                  <exclude>**/*.gtmpl</exclude>
-                  <exclude>**/*.gadget</exclude>
-                  <exclude>**/*.json</exclude>
-                  <exclude>**/*.ext</exclude>
-                  <exclude>**/*.grs</exclude>
+                  <exclude>**/jaas.conf</exclude>
+                  
+		  <exclude>**/*.txt</exclude>
+		  <exclude>**/*.json</exclude>
+		  <exclude>**/.gwt/**</exclude>
+		  <exclude>**/LICENSE</exclude>
+                  <exclude>.idea/**</exclude>
+                  <exclude>README</exclude>
+		  <exclude>.gitignore</exclude>
                </excludes>
                <mapping>
                   <java>SLASHSTAR_STYLE</java>
-                  <java>JAVADOC_STYLE</java>
                </mapping>
             </configuration>
             <executions>
@@ -804,7 +811,7 @@
       </plugins>
    </build>
    <modules>
-      <module>dev-resources</module>
+      <module>exo-ide-dev-resources</module>
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-jcr</module>

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.util;
 
+import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.BodyDeclaration;
 import org.eclipse.jdt.client.core.dom.IBinding;
@@ -48,6 +49,11 @@ public class JdtFlags
       return Modifier.isAbstract(member.getModifiers());
    }
 
+   public static boolean isEnum(IBinding member)
+   {
+      return Flags.isEnum(member.getModifiers());
+   }
+
    public static boolean isPackageVisible(BodyDeclaration bodyDeclaration)
    {
       return (!isPrivate(bodyDeclaration) && !isProtected(bodyDeclaration) && !isPublic(bodyDeclaration));
@@ -83,6 +89,32 @@ public class JdtFlags
       if (isInterfaceOrAnnotationMember(binding))
          return true;
       return Modifier.isPublic(binding.getModifiers());
+   }
+
+   public static boolean isFinal(IBinding member)
+   {
+      if (isInterfaceOrAnnotationField(member))
+         return true;
+      if (isAnonymousType(member))
+         return true;
+      if (isEnumConstant(member))
+         return true;
+      return Flags.isFinal(member.getModifiers());
+   }
+
+   private static boolean isInterfaceOrAnnotationField(IBinding member)
+   {
+      return member.getKind() == IBinding.VARIABLE && isInterfaceOrAnnotationMember(member);
+   }
+
+   private static boolean isAnonymousType(IBinding member)
+   {
+      return member.getKind() == IBinding.TYPE && ((ITypeBinding)member).isAnonymous();
+   }
+
+   private static boolean isEnumConstant(IBinding member)
+   {
+      return member.getKind() == IBinding.VARIABLE && isEnum(member);
    }
 
    public static boolean isPublic(BodyDeclaration bodyDeclaration)
