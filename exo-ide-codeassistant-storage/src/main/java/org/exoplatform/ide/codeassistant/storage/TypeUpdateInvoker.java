@@ -57,7 +57,8 @@ public class TypeUpdateInvoker implements UpdateInvoker
     * @param dependencyFolder
     * @param queue 
     */
-   public TypeUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue, List<Dependency> dependencies, File dependencyFolder)
+   public TypeUpdateInvoker(InfoStorage infoStorage, BlockingQueue<WriterTask> writerQueue,
+      List<Dependency> dependencies, File dependencyFolder)
    {
       this.infoStorage = infoStorage;
       this.writerQueue = writerQueue;
@@ -97,8 +98,13 @@ public class TypeUpdateInvoker implements UpdateInvoker
             }
             catch (InterruptedException e)
             {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
+               if (LOG.isDebugEnabled())
+                  LOG.debug("Interrupted:", e);
+            }
+            catch (Exception e)
+            {
+               if (LOG.isDebugEnabled())
+                  LOG.debug("Can't add artifact: " + jarName, e);
             }
          }
       }
