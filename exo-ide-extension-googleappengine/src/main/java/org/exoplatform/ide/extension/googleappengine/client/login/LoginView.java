@@ -22,11 +22,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.LinkButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
@@ -69,7 +69,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Go button.
     */
    @UiField
-   Anchor goButton;
+   LinkButton goButton;
 
    public LoginView()
    {
@@ -77,6 +77,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
          GAEClientBundle.INSTANCE.googleAppEngine()), WIDTH, HEIGHT, true);
       add(uiBinder.createAndBindUi(this));
       label.setID(LABEL_ID);
+      goButton.setId(GO_BUTTON_ID);
    }
 
    /**

@@ -48,6 +48,12 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-storage</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>
          <exclusions>
@@ -328,11 +334,6 @@
       <dependency>
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.groovy</artifactId>
-         <version>${chromattic.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.chromattic</groupId>
-         <artifactId>chromattic.dataobject</artifactId>
          <version>${chromattic.version}</version>
       </dependency>
       <dependency>
@@ -846,6 +847,8 @@
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war"
                            overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/storage.war"
+                           overwrite="true" />   
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                            <patternset>

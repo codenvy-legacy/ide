@@ -75,7 +75,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       /**
        * 
        */
-      void changeCreateButtonVisability(boolean enable);
+      void enableCreateButton(boolean enable);
 
       void setUserInstructions(String instructions);
 
@@ -192,7 +192,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    private void startCreateApp()
    {
       display.enableDeployButton(true);
-      display.changeCreateButtonVisability(false);
+      display.enableCreateButton(false);
       display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
    }
 

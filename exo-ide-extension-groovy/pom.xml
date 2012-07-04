@@ -6,9 +6,7 @@
       <artifactId>exo-ide-parent</artifactId>
       <version>1.2.0-M9-SNAPSHOT</version>
    </parent>
-   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-groovy</artifactId>
-   <packaging>jar</packaging>
    <name>eXo IDE :: Extension :: Groovy</name>
    <dependencies>
       <dependency>
@@ -173,18 +171,8 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId><!--
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.jcr</groupId>
-               <artifactId>exo.jcr.component.webdav</artifactId>
-            </exclusion>
-         </exclusions>
-      --></dependency>
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-      </dependency>
+         <artifactId>exo-ide-server</artifactId>
+       </dependency>
    </dependencies>
    <build>
 

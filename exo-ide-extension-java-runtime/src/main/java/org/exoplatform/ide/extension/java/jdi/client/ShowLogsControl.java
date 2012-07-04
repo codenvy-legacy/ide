@@ -27,9 +27,14 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsEvent;
 
-public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler
+public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
+   AppStartedHandler, AppStopedHandler
 {
    private static final String ID = "Run/Java Logs";
 
@@ -68,7 +73,7 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
       setVisible(isJavaProject);
-      setEnabled(isJavaProject);
+      setEnabled(false);
       setShowInContextMenu(isJavaProject);
    }
 
@@ -81,7 +86,21 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
       setVisible(false);
       setEnabled(false);
 
+      IDE.addHandler(AppStartedEvent.TYPE, this);
+      IDE.addHandler(AppStopedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+   }
+
+   @Override
+   public void onAppStarted(AppStartedEvent event)
+   {
+      setEnabled(true);
+   }
+
+   @Override
+   public void onAppStoped(AppStopedEvent appStopedEvent)
+   {
+      setEnabled(false);
    }
 }

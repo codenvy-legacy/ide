@@ -27,6 +27,8 @@ import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterControl;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsControl;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
@@ -149,11 +151,13 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new CreatePackageControl());
       IDE.getInstance().addControl(new QuickFixControl());
       IDE.getInstance().addControl(new ShowQuickOutlineControl());
+      IDE.getInstance().addControl(new AddGetterSetterControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
       new QuickFixPresenter(IDE.eventBus());
       new QuickOutlinePresenter(IDE.eventBus());
+      new AddGetterSetterPresenter(IDE.eventBus(), IDE.getInstance());
       TypeInfoStorage.get().clear();
    }
 

@@ -37,8 +37,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  */
 public class PythonRuntimeServiceImpl extends PythonRuntimeService
 {
-   private static final String LOGS = "/ide/cloudfoundry/apps/logs";
-   
+   private static final String LOGS = "/ide/python/runner/logs";
+
    private String restContext;
 
    private static final String RUN_APPLICATION = "/ide/python/runner/run";
@@ -84,17 +84,16 @@ public class PythonRuntimeServiceImpl extends PythonRuntimeService
          .requestStatusHandler(new StopApplicationStatusHandler(name)).send(callback);
    }
 
-   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
+   public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = restContext + LOGS;
-      StringBuilder params = new StringBuilder("?projectid=");
-      params.append(projectId).append("&vfsid=").append(vfsId);
+      StringBuilder params = new StringBuilder("?name=");
+      params.append(name);
 
       Loader loader = new GWTLoader();
       loader.setMessage("Retrieving logs.... ");
 
       AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }
-  
+
 }

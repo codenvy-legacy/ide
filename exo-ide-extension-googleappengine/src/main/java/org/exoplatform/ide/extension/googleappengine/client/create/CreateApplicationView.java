@@ -1,15 +1,34 @@
+/*
+ * Copyright (C) 2011 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.LinkButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
@@ -29,8 +48,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int HEIGHT = 180;
 
-   private static final String GOOGLE_APP_ENGINE_URL = "https://appengine.google.com/start/createapp";
-
    private static CreateApplicationViewUiBinder uiBinder = GWT.create(CreateApplicationViewUiBinder.class);
 
    interface CreateApplicationViewUiBinder extends UiBinder<Widget, CreateApplicationView>
@@ -44,7 +61,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    ImageButton cancelButton;
 
    @UiField
-   Anchor createButton;
+   LinkButton createButton;
 
    @UiField
    Label instructionLabel;
@@ -55,6 +72,8 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       add(uiBinder.createAndBindUi(this));
       deployButton.setButtonId(DEPLOY_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+
+      createButton.setHTML(getCreateButtonImage(true).toString() + GoogleAppEngineExtension.GAE_LOCALIZATION.createButton());
    }
 
    /**
@@ -88,9 +107,10 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    @Override
-   public void changeCreateButtonVisability(boolean visible)
+   public void enableCreateButton(boolean enable)
    {
-      createButton.setVisible(visible);
+      createButton.setHTML(getCreateButtonImage(enable).toString() + GoogleAppEngineExtension.GAE_LOCALIZATION.createButton());
+      createButton.setEnabled(enable);
    }
 
    @Override
@@ -106,5 +126,15 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void setCreateLink(String href)
    {
       createButton.setHref(href);
+   }
+
+   private Image getCreateButtonImage(boolean enabled)
+   {
+      Image image =
+         (enabled) ? new Image(GAEClientBundle.INSTANCE.googleAppEngine()) : new Image(
+            GAEClientBundle.INSTANCE.googleAppEngineDisabled());
+      DOM.setStyleAttribute(image.getElement(), "marginTop", "4px");
+      DOM.setStyleAttribute(image.getElement(), "marginRight", "4px");
+      return image;
    }
 }
