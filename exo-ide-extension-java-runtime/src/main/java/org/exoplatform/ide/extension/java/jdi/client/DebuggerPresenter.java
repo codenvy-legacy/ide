@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -48,6 +49,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -75,6 +78,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventListWS;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
@@ -104,7 +108,8 @@ import java.util.Set;
  */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
-   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
+   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler,
+   WebSocketMessageHandler
 {
 
    private Display display;
@@ -489,39 +494,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(DebuggerEventList result)
                   {
-                     String filePath = null;
-                     if (result != null && result.getEvents().size() > 0)
-                     {
-                        Location location;
-                        for (DebuggerEvent event : result.getEvents())
-                        {
-                           if (event instanceof StepEvent)
-                           {
-                              StepEvent stepEvent = (StepEvent)event;
-                              location = stepEvent.getLocation();
-                              filePath = resolveFilePath(location);
-                              if (!filePath.equalsIgnoreCase(activeFile.getPath()))
-                                 openFile(location);
-                              currentBreakPoint =
-                                 new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
-                           }
-                           else if (event instanceof BreakPointEvent)
-                           {
-                              BreakPointEvent breakPointEvent = (BreakPointEvent)event;
-                              location = breakPointEvent.getBreakPoint().getLocation();
-                              filePath = resolveFilePath(location);
-                              if (!filePath.equalsIgnoreCase(activeFile.getPath()))
-                                 openFile(location);
-                              currentBreakPoint =
-                                 new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
-                              currentBreakPoint.setLine(location.getLineNumber());
-                           }
-                           doGetDump();
-                           enabelButtons();
-                        }
-                        if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
-                           breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
-                     }
+                     processEventList(result);
                   }
 
                   @Override
@@ -555,6 +528,43 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       }
    };
+
+   private void processEventList(DebuggerEventList eventList)
+   {
+      String filePath = null;
+      if (eventList != null && eventList.getEvents().size() > 0)
+      {
+         Location location;
+         for (DebuggerEvent event : eventList.getEvents())
+         {
+            if (event instanceof StepEvent)
+            {
+               StepEvent stepEvent = (StepEvent)event;
+               location = stepEvent.getLocation();
+               filePath = resolveFilePath(location);
+               if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+                  openFile(location);
+               currentBreakPoint =
+                  new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+            }
+            else if (event instanceof BreakPointEvent)
+            {
+               BreakPointEvent breakPointEvent = (BreakPointEvent)event;
+               location = breakPointEvent.getBreakPoint().getLocation();
+               filePath = resolveFilePath(location);
+               if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+                  openFile(location);
+               currentBreakPoint =
+                  new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+               currentBreakPoint.setLine(location.getLineNumber());
+            }
+            doGetDump();
+            enabelButtons();
+         }
+         if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
+            breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+      }
+   }
 
    private void openFile(final Location location)
    {
@@ -948,6 +958,24 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          debugApplication(url);
       else
          runApplication(url);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    */
+   @Override
+   public void onWebSocketMessage(WebSocketMessageEvent event)
+   {
+      String message = event.getMessage();
+      if (!message.contains("{\"event\":\"debuggerEvents"))
+      {
+         return;
+      }
+
+      AutoBean<DebuggerEventListWS> webSocketEventList =
+         AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, DebuggerEventListWS.class, message);
+
+      processEventList(webSocketEventList.as().getEvents());
    }
 
 }

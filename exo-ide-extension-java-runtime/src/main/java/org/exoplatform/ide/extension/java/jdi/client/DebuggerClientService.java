@@ -73,7 +73,7 @@ public class DebuggerClientService
    {
       AsyncRequest
          .build(RequestBuilder.GET,
-            BASE_URL + "/connect?host=" + host + "&port=" + port + "&sessionid=" + sessionId == null ? "" : sessionId)
+            BASE_URL + "/connect?host=" + host + "&port=" + port + "&sessionid=" + (sessionId == null ? "" : sessionId))
          .loader(new EmptyLoader()).send(callback);
    }
 

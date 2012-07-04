@@ -110,12 +110,9 @@ public class IDEWebSocketServlet extends WebSocketServlet
       protected void onClose(int status)
       {
          // 8 - OPCODE_CLOSE
-         // 1002 indicates that an endpoint is terminating the connection due to a protocol error
-         // TODO 
-         if (status == 8)
-         {
-            wsDispatcher.unregisterConnection(userId, this);
-         }
+         // Status code 1002 indicates that an endpoint is terminating the connection due to a protocol error.
+         // (Browser close connection with status 1002 every 1 min. for inactive state).
+         wsDispatcher.unregisterConnection(userId, this);
       }
 
       /**

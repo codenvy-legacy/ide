@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
+
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
@@ -25,6 +28,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
+import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventListWS;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
@@ -33,9 +37,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.Variable;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
  * Created by The eXo Platform SAS.
@@ -78,5 +79,7 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
    AutoBean<DebugApplicationInstance> debugApplicationInstance();
 
    AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
+
+   AutoBean<DebuggerEventListWS> debuggerEventListWS();
 
 }

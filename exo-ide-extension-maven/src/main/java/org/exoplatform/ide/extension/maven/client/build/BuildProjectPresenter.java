@@ -202,7 +202,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       try
       {
          String sessionId = null;
-         if (WebSocket.isSupported())
+         //if (WebSocket.isSupported())
+         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
          {
             sessionId = WebSocket.getInstance().getSessionId();
          }
@@ -219,7 +220,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.startAnimation();
                   previousStatus = null;
 
-                  if (!WebSocket.isSupported())
+                  //if (!WebSocket.isSupported())
+                  if (WebSocket.getInstance().getReadyState() != WebSocket.ReadyState.OPEN)
                   {
                      refreshBuildStatusTimer.schedule(delay);
                   }

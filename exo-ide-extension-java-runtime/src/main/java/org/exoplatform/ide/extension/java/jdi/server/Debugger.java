@@ -43,6 +43,7 @@ import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerEventListImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.LocationImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
@@ -55,6 +56,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
+import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -72,6 +74,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.inject.Inject;
+
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws
  * DebuggerException. Typically such exception caused by errors in underlying JDI (Java Debug Interface), e.g.
@@ -86,8 +90,10 @@ public class Debugger implements EventsHandler
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
 
-   private static final IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
-      .getCurrentContainer().getComponentInstancesOfType(IDEWebSocketDispatcher.class);
+//   private static final IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
+//      .getCurrentContainer().getComponentInstancesOfType(IDEWebSocketDispatcher.class);
+   @Inject
+   private static IDEWebSocketDispatcher wsDispatcher;
    private Timer checkEventsTimer;
 
    public static Debugger newInstance(String host, int port, String sessionId) throws VMConnectException
@@ -96,12 +102,22 @@ public class Debugger implements EventsHandler
       instances.put(d.id, d);
       if (sessionId != null)
       {
-         d.checkEventsEvery(2000, d.id, sessionId);
+         d.checkEvents(2000, d.id, sessionId);
       }
       return d;
    }
 
-   private void checkEventsEvery(long period, final String debuggerId, final String sessionId)
+   /**
+    * Periodically checks for the new debugger events.
+    * 
+    * @param period
+    *    time in milliseconds between checking
+    * @param debuggerId
+    *    ID of debugger instance
+    * @param sessionId
+    *    identifier of WebSocket session which will be used for sending the debugger events
+    */
+   private void checkEvents(long period, final String debuggerId, final String sessionId)
    {
       checkEventsTimer = new Timer();
       checkEventsTimer.schedule(new TimerTask()
@@ -111,7 +127,7 @@ public class Debugger implements EventsHandler
          {
             try
             {
-               List<DebuggerEvent> debuggerEvents = getInstance(debuggerId).getEvents();
+               DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(getInstance(debuggerId).getEvents());
                wsDispatcher.sendMessageToClient(sessionId, toJson(debuggerEvents), "debuggerEvents");
             }
             catch (DebuggerException e)

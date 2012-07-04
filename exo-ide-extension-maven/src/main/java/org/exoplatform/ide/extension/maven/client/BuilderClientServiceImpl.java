@@ -95,7 +95,8 @@ public class BuilderClientServiceImpl extends BuilderClientService
    {
       final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&sessionid=" + sessionId==null?"":sessionId;
+      String params =
+         "vfsid=" + vfsId + "&projectid=" + projectId + "&sessionid=" + (sessionId == null ? "" : sessionId);
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);

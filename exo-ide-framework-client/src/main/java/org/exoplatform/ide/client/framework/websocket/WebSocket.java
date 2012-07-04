@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorEvent;
@@ -82,12 +83,6 @@ public class WebSocket
    }
 
    /**
-    * If <code>true</code> - indicates that the connection has been closed by user;
-    * if <code>false</code> - indicates that the connection has been closed unexpectedly.
-    */
-   private boolean closedByUser;
-
-   /**
     * The native WebSocket object.
     */
    private WebSocketImpl socket;
@@ -117,6 +112,7 @@ public class WebSocket
          @Override
          public void onWebSocketOpened(WebSocketOpenedEvent event)
          {
+            IDE.fireEvent(new OutputEvent("WS OPENED"));
             counterConnectionAttempts = 0;
             IDE.fireEvent(event);
          }
@@ -127,10 +123,11 @@ public class WebSocket
          @Override
          public void onWebSocketClosed(WebSocketClosedEvent event)
          {
+            IDE.fireEvent(new OutputEvent("WS CLOSED. Code:" + event.getCode() + " Reason:" + event.getReason() + " WasClean:" + event.wasClean()));
             instance = null;
             socket = null;
 
-            if (closedByUser)
+            if (event.wasClean())
             {
                IDE.fireEvent(event);
             }
@@ -146,6 +143,7 @@ public class WebSocket
          @Override
          public void onWebSocketError(WebSocketErrorEvent event)
          {
+            IDE.fireEvent(new OutputEvent("WS ERROR"));
             IDE.fireEvent(event);
          }
       });
@@ -155,6 +153,7 @@ public class WebSocket
          @Override
          public void onWebSocketMessage(WebSocketMessageEvent event)
          {
+            IDE.fireEvent(new OutputEvent("WS MESSAGE: " + event.getMessage()));
             IDE.fireEvent(event);
          }
       });
@@ -167,6 +166,11 @@ public class WebSocket
     */
    public static WebSocket getInstance()
    {
+      if (!isSupported())
+      {
+         return null;
+      }
+
       // TODO Exceptions (throw new IllegalStateException("Not connected"))
       // - check WebSocket are supported
       // - connection established successfully
@@ -196,7 +200,7 @@ public class WebSocket
     * Checks whether WebSocket are supported in the current web-browser.
     * 
     * @return <code>true</code> if WebSockets are supported;
-    *         <code>false</code> if they are not.
+    *         <code>false</code> if they are not
     */
    public static boolean isSupported()
    {
@@ -245,7 +249,6 @@ public class WebSocket
          return;
       }
       socket.close();
-      closedByUser = true;
    }
 
    /**
@@ -374,7 +377,7 @@ public class WebSocket
       public final native void setOnCloseHandler(WebSocketClosedHandler handler)
       /*-{
          this.onclose = $entry(function() {
-            var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent::new()();
+            var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
             handler.@org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler::onWebSocketClosed(Lorg/exoplatform/ide/client/framework/websocket/event/WebSocketClosedEvent;)(webSocketClosedEventInstance);
          });
       }-*/;

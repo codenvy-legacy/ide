@@ -158,13 +158,13 @@ public class BuilderClient
       String buildId = run(url, vfs.exportZip(projectId));
       if (sessionId != null)
       {
-         checkBuildStatusEvery(2000, buildId, sessionId);
+         checkBuildStatus(2000, buildId, sessionId);
       }
       return buildId;
    }
 
    /**
-    * Checks status of previously launched job.
+    * Periodically checks the status of previously launched job.
     * 
     * @param period
     *    time in milliseconds between sending requests for check job status
@@ -177,7 +177,7 @@ public class BuilderClient
     * @throws BuilderException
     *    any other errors related to build server internal state or parameter of client request
     */
-   public void checkBuildStatusEvery(long period, final String buildId, final String sessionId) throws IOException, BuilderException
+   public void checkBuildStatus(long period, final String buildId, final String sessionId) throws IOException, BuilderException
    {
       new Timer().schedule(new TimerTask()
       {

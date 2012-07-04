@@ -30,6 +30,30 @@ import com.google.gwt.event.shared.GwtEvent;
 public class WebSocketClosedEvent extends GwtEvent<WebSocketClosedHandler>
 {
    /**
+    * The WebSocket connection close code provided by the server.
+    * 
+    * @see https://developer.mozilla.org/en/WebSockets/WebSockets_reference/CloseEvent#Close_codes
+    */
+   private int code;
+
+   /**
+    * A string indicating the reason the server closed the connection. This is specific to the particular server and sub-protocol.
+    */
+   private String reason;
+
+   /**
+    * Indicates whether or not the connection was cleanly closed.
+    */
+   private boolean wasClean;
+
+   public WebSocketClosedEvent(int code, String reason, boolean wasClean)
+   {
+      this.code = code;
+      this.reason = reason;
+      this.wasClean = wasClean;
+   }
+
+   /**
     * Type, used to register event.
     */
    public static final GwtEvent.Type<WebSocketClosedHandler> TYPE = new GwtEvent.Type<WebSocketClosedHandler>();
@@ -51,4 +75,36 @@ public class WebSocketClosedEvent extends GwtEvent<WebSocketClosedHandler>
    {
       handler.onWebSocketClosed(this);
    }
+
+   /**
+    * Returns close code.
+    * 
+    * @return close code
+    */
+   public int getCode()
+   {
+      return code;
+   }
+
+   /**
+    * Returns the reason closed the connection.
+    * 
+    * @return reason
+    */
+   public String getReason()
+   {
+      return reason;
+   }
+
+   /**
+    * Checks weather the connection was cleanly closed.
+    * 
+    * @return <code>true</code> when WebSocket connection was cleanly closed;
+    *         <code>false</code> when WebSocket connection was not cleanly closed
+    */
+   public boolean wasClean()
+   {
+      return wasClean;
+   }
+
 }
