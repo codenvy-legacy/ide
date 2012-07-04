@@ -43,9 +43,11 @@
    
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    
-      <inherits name="org.exoplatform.ide.editor.Editor" />
+   <inherits name="org.exoplatform.ide.editor.Editor" />
    <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
    <inherits name="org.eclipse.jdt.IdeJdt" />
+   <inherits name="org.exoplatform.ide.extension.maven.BuilderExtension"/>
+   
 
    <inherits name='org.exoplatform.ide.extension.java.jdi.Views' />
 
