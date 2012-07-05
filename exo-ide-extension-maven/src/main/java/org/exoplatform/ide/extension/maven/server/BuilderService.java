@@ -51,16 +51,18 @@ public class BuilderService
    private VirtualFileSystemRegistry virtualFileSystemRegistry;
 
    /**
-    * Start new build at remote build server. Job may be started immediately or add in queue. Client should check
-    * location given in response header to current get status of job.
+    * Start new build at remote build server. Job may be started immediately or add in queue.
+    * If WebSocket session identifier was provided then status of job will be sent to client
+    * automatically when job will be finished. Otherwise client should check location given in
+    * response header to current get status of job.
     *
     * @param vfsId
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for build
-    * @param sessionId
-    *    identifier of the WebSocket session which will be used for sending the status of build
-    *    or empty string if the WebSocket connection is not supported
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session which will be used for sending the status of build job
+    *    or empty string if an automatic status checking is not required
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to
@@ -71,22 +73,23 @@ public class BuilderService
     *    if any i/o errors occur
     * @throws VirtualFileSystemException
     *    if any error in VFS
-    * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String, String)
+    * @see BuilderClient#build(org.exoplatform.ide.vfs.server.VirtualFileSystem, String)
     */
    @GET
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
-                         @QueryParam("sessionid") String sessionId, //
+                         @QueryParam("sessionid") String webSocketSessionId, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
-      if (sessionId.trim().length() == 0)
-      {
-         sessionId = null;
-      }
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
-      final String buildID = builder.build(vfs, projectId, sessionId);
+      final String buildID = builder.build(vfs, projectId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+      if (!webSocketSessionId.trim().isEmpty())
+      {
+         // start checking build status asynchronously
+         builder.startCheckingBuildStatus(buildID, webSocketSessionId);
+      }
       return Response.status(202).location(location).entity(location.toString()).build();
    }
 

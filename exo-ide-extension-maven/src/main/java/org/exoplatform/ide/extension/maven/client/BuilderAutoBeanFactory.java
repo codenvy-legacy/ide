@@ -21,8 +21,8 @@ package org.exoplatform.ide.extension.maven.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.ide.extension.maven.client.build.WebSocketEventBuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-import org.exoplatform.ide.extension.maven.shared.BuildStatusWS;
 
 /**
  * The interface for the AutoBean generator.
@@ -43,7 +43,7 @@ public interface BuilderAutoBeanFactory extends AutoBeanFactory
    /**
     * A factory method for a WebSocket message bean.
     * 
-    * @return an {@link AutoBean} of type {@link BuildStatusWS}
+    * @return an {@link AutoBean} of type {@link WebSocketEventBuildStatus}
     */
-   AutoBean<BuildStatusWS> webSocketMessage();
+   AutoBean<WebSocketEventBuildStatus> webSocketMessage();
 }

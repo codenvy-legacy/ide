@@ -28,7 +28,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventListWS;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Field;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
@@ -80,6 +79,6 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
 
    AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
 
-   AutoBean<DebuggerEventListWS> debuggerEventListWS();
+   AutoBean<WebSocketEventDebuggerEventList> webSocketEventDebuggerEventList();
 
 }

@@ -78,7 +78,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventListWS;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
@@ -450,7 +449,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
          
-         if (!WebSocket.isSupported())
+         if (WebSocket.ReadyState.OPEN != WebSocket.getInstance().getReadyState())
          {
             checkDebugEventsTimer.scheduleRepeating(3000);
          }
@@ -494,7 +493,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   @Override
                   protected void onSuccess(DebuggerEventList result)
                   {
-                     processEventList(result);
+                     eventListReceived(result);
                   }
 
                   @Override
@@ -529,7 +528,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    };
 
-   private void processEventList(DebuggerEventList eventList)
+   /**
+    * Performs actions when event list was received.
+    * 
+    * @param eventList debugger event list
+    */
+   private void eventListReceived(DebuggerEventList eventList)
    {
       String filePath = null;
       if (eventList != null && eventList.getEvents().size() > 0)
@@ -544,8 +548,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
                   openFile(location);
-               currentBreakPoint =
-                  new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+               currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             else if (event instanceof BreakPointEvent)
             {
@@ -554,8 +557,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
                   openFile(location);
-               currentBreakPoint =
-                  new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
+               currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
                currentBreakPoint.setLine(location.getLineNumber());
             }
             doGetDump();
@@ -734,7 +736,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       try
       {
          String sessionId = null;
-         if (WebSocket.isSupported())
+         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
          {
             sessionId = WebSocket.getInstance().getSessionId();
          }
@@ -972,10 +974,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          return;
       }
 
-      AutoBean<DebuggerEventListWS> webSocketEventList =
-         AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, DebuggerEventListWS.class, message);
+      AutoBean<WebSocketEventDebuggerEventList> webSocketMessageBean =
+         AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, WebSocketEventDebuggerEventList.class, message);
 
-      processEventList(webSocketEventList.as().getEvents());
+      eventListReceived(webSocketMessageBean.as().getData());
    }
 
 }

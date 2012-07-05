@@ -102,7 +102,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       try
       {
          String sessionId = null;
-         if (WebSocket.isSupported())
+         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
          {
             sessionId = WebSocket.getInstance().getSessionId();
          }

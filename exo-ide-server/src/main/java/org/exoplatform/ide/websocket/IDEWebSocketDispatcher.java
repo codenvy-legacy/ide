@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class used for sending messages to client via WebSocket connections.
- * Stores user WebSocket connections.
+ * Stores WebSocket connections.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: IDEWebSocketDispatcher.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
@@ -38,6 +38,32 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class IDEWebSocketDispatcher
 {
+   public enum EventType
+   {
+      /**
+       * Maven build job status.
+       */
+      BUILD_STATUS("buildStatus"),
+
+      /**
+       * Debugger events.
+       */
+      DEBUGGER_EVENTS("debuggerEvents");
+
+      private final String eventTypeValue;
+
+      private EventType(String value)
+      {
+         this.eventTypeValue = value;
+      }
+
+      @Override
+      public String toString()
+      {
+         return eventTypeValue;
+      }
+   }
+
    /**
     * Stores user connections.
     */
@@ -87,14 +113,14 @@ public class IDEWebSocketDispatcher
 
    /**
     * Sends the text message to client.
-    * <p>NOTE: if user has more than one active connections then message will be sent to all connections.
+    * <p><strong>Note:</strong> if user has more than one active connections then message will be sent to all connections.
     * 
     * @param sessionId identifier of the WebSocket session
     * @param message text message for sending
     * @param eventType event type
     * @throws IOException if an error occurs writing to the client
     */
-   public void sendMessageToClient(String sessionId, String message, String eventType) throws IOException
+   public void sendEventMessage(String sessionId, String message, EventType eventType) throws IOException
    {
       String wsMessage = "{\"event\":\"" + eventType + "\"," + "\"data\":" + message + "}";
 

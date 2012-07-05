@@ -49,8 +49,14 @@ public class BuilderClient
 
    private final String baseURL;
 
-   private final IDEWebSocketDispatcher wsDispatcher;
+   /**
+    * Component for sending message to client via WebSocket connection.
+    */
+   private final IDEWebSocketDispatcher webSocketDispatcher;
 
+   /**
+    * Exo logger.
+    */
    private static final Log LOG = ExoLogger.getLogger(IDEWebSocketDispatcher.class);
 
    public BuilderClient(InitParams initParams, IDEWebSocketDispatcher wsDispatcher)
@@ -78,7 +84,7 @@ public class BuilderClient
          throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
       }
       this.baseURL = baseURL;
-      this.wsDispatcher = wsDispatcher;
+      this.webSocketDispatcher = wsDispatcher;
    }
 
    /**
@@ -140,9 +146,6 @@ public class BuilderClient
     *    virtual file system
     * @param projectId
     *    identifier of project we want to send for build
-    * @param sessionId
-    *    identifier of the WebSocket session which will be used for sending the status of build
-    *    or <code>null</code> if the WebSocket connection is not supported
     * @return ID of build task. It may be used as parameter for method {@link #status(String)}.
     * @throws IOException
     *    if any i/o errors occur
@@ -151,78 +154,11 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String build(VirtualFileSystem vfs, String projectId, String sessionId) throws IOException,
+   public String build(VirtualFileSystem vfs, String projectId) throws IOException,
       BuilderException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/build");
-      String buildId = run(url, vfs.exportZip(projectId));
-      if (sessionId != null)
-      {
-         checkBuildStatus(2000, buildId, sessionId);
-      }
-      return buildId;
-   }
-
-   /**
-    * Periodically checks the status of previously launched job.
-    * 
-    * @param period
-    *    time in milliseconds between sending requests for check job status
-    * @param buildId
-    *    ID of build need to check
-    * @param sessionId
-    *    identifier of WebSocket session which will be used for sending the status of build
-    * @throws IOException
-    *    if any i/o errors occur
-    * @throws BuilderException
-    *    any other errors related to build server internal state or parameter of client request
-    */
-   public void checkBuildStatus(long period, final String buildId, final String sessionId) throws IOException, BuilderException
-   {
-      new Timer().schedule(new TimerTask()
-      {
-         @Override
-         public void run()
-         {
-            String status = null;
-            try
-            {
-               status = status(buildId);
-            }
-            catch (IOException e)
-            {
-               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
-            }
-            catch (BuilderException e)
-            {
-               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
-            }
-
-            if (!status.contains("\"status\":\"IN_PROGRESS\""))
-            {
-               cancel();
-               sendWebSocketMessage(sessionId, status);
-            }
-         }
-      }, 0, period);
-   }
-
-   /**
-    * Sends the message to the client via WebSocket connection.
-    * 
-    * @param sessionId identifier of the WebSocket session
-    * @param message a text string to send to the client
-    */
-   private void sendWebSocketMessage(String sessionId, String message)
-   {
-      try
-      {
-         wsDispatcher.sendMessageToClient(sessionId, message, "buildStatus");
-      }
-      catch(IOException e)
-      {
-         LOG.error("An error occurs writing data to the client (sessionId " + sessionId + "). " + e.getMessage(), e);
-      }
+      return run(url, vfs.exportZip(projectId));
    }
 
    private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,
@@ -320,6 +256,67 @@ public class BuilderClient
          {
             http.disconnect();
          }
+      }
+   }
+
+   /**
+    * Periodically checks the status of previously launched job and sends
+    * the status to WebSocket connection when build job will be finished.
+    * 
+    * @param buildId
+    *    identifier of the build job need to check
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session which will be used for sending the status of build job
+    */
+   public void startCheckingBuildStatus(final String buildId, final String webSocketSessionId)
+   {
+      new Timer().schedule(new TimerTask()
+      {
+         @Override
+         public void run()
+         {
+            String status = null;
+            try
+            {
+               status = status(buildId);
+            }
+            catch (IOException e)
+            {
+               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
+            }
+            catch (BuilderException e)
+            {
+               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
+            }
+
+            if (!status.contains("\"status\":\"IN_PROGRESS\""))
+            {
+               cancel();
+               sendWebSocketMessage(webSocketSessionId, status);
+            }
+         }
+      }, 0, 2000);
+   }
+
+   /**
+    * Sends the message to the client via WebSocket connection.
+    * 
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session
+    * @param message
+    *    a text string to send to the client
+    */
+   private void sendWebSocketMessage(String webSocketSessionId, String message)
+   {
+      try
+      {
+         webSocketDispatcher.sendEventMessage(webSocketSessionId, message,
+            IDEWebSocketDispatcher.EventType.BUILD_STATUS);
+      }
+      catch (IOException e)
+      {
+         LOG.error(
+            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + e.getMessage(), e);
       }
    }
 

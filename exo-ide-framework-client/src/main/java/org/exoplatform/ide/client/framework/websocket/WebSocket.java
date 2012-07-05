@@ -123,7 +123,9 @@ public class WebSocket
          @Override
          public void onWebSocketClosed(WebSocketClosedEvent event)
          {
-            IDE.fireEvent(new OutputEvent("WS CLOSED. Code:" + event.getCode() + " Reason:" + event.getReason() + " WasClean:" + event.wasClean()));
+            IDE.fireEvent(new OutputEvent("WS CLOSED. Code:" + event.getCode()
+                                                + " Reason:" + event.getReason()
+                                                + " WasClean:" + event.wasClean()));
             instance = null;
             socket = null;
 
@@ -153,7 +155,7 @@ public class WebSocket
          @Override
          public void onWebSocketMessage(WebSocketMessageEvent event)
          {
-            IDE.fireEvent(new OutputEvent("WS MESSAGE: " + event.getMessage()));
+            //IDE.fireEvent(new OutputEvent("WS MESSAGE: " + event.getMessage()));
             IDE.fireEvent(event);
          }
       });
@@ -166,11 +168,6 @@ public class WebSocket
     */
    public static WebSocket getInstance()
    {
-      if (!isSupported())
-      {
-         return null;
-      }
-
       // TODO Exceptions (throw new IllegalStateException("Not connected"))
       // - check WebSocket are supported
       // - connection established successfully
@@ -214,6 +211,11 @@ public class WebSocket
     */
    public ReadyState getReadyState()
    {
+      if (socket == null)
+      {
+         return ReadyState.CLOSED;
+      }
+
       switch (socket.getReadyState())
       {
          case 0:

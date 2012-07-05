@@ -56,7 +56,6 @@ import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
-import org.exoplatform.ide.extension.maven.shared.BuildStatusWS;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -114,7 +113,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private String buildID = null;
 
    /**
-    * Delay in millisecond between build status request.
+    * Delay in millisecond between requests for build job status.
     */
    private static final int delay = 3000;
 
@@ -126,12 +125,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    /**
     * Build of another project is performed.
     */
-   private boolean buildInProgress = false;
+   private boolean isBuildInProgress = false;
 
    /**
     * View closed flag.
     */
-   private boolean closed = true;
+   private boolean isViewClosed = true;
 
    /**
     * Selected items in browser tree.
@@ -167,7 +166,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    @Override
    public void onBuildProject(BuildProjectEvent event)
    {
-      if (buildInProgress)
+      if (isBuildInProgress)
       {
          String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath().substring(1));
          Dialogs.getInstance().showError(message);
@@ -202,7 +201,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       try
       {
          String sessionId = null;
-         //if (WebSocket.isSupported())
          if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
          {
             sessionId = WebSocket.getInstance().getSessionId();
@@ -220,7 +218,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.startAnimation();
                   previousStatus = null;
 
-                  //if (!WebSocket.isSupported())
                   if (WebSocket.getInstance().getReadyState() != WebSocket.ReadyState.OPEN)
                   {
                      refreshBuildStatusTimer.schedule(delay);
@@ -352,7 +349,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    private void setBuildInProgress(boolean buildInProgress)
    {
-      this.buildInProgress = buildInProgress;
+      this.isBuildInProgress = buildInProgress;
       display.setClearOutputButtonEnabled(!buildInProgress);
    }
 
@@ -455,7 +452,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    /**
     * Perform actions after build is finished.
     * 
-    * @param buildStatus status of build
+    * @param buildStatus status of build job
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
@@ -566,10 +563,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       if (display != null)
       {
-         if (closed)
+         if (isViewClosed)
          {
             IDE.getInstance().openView(display.asView());
-            closed = false;
+            isViewClosed = false;
          }
          else
          {
@@ -581,7 +578,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
          bindDisplay();
-         closed = false;
+         isViewClosed = false;
       }
 
       display.showMessageInOutput(message);
@@ -609,7 +606,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       if (event.getView() instanceof Display)
       {
-         closed = true;
+         isViewClosed = true;
       }
    }
 
@@ -660,8 +657,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          return;
       }
 
-      AutoBean<BuildStatusWS> webSocketMessageBean =
-         AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatusWS.class, message);
+      AutoBean<WebSocketEventBuildStatus> webSocketMessageBean =
+         AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, WebSocketEventBuildStatus.class, message);
 
       afterBuildFinished(webSocketMessageBean.as().getData());
    }

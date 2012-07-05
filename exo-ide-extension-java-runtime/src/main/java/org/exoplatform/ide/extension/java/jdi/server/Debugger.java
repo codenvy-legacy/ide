@@ -38,7 +38,6 @@ import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
@@ -56,7 +55,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -74,8 +72,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.inject.Inject;
-
 /**
  * Connects to JVM over Java Debug Wire Protocol handle its events. All methods of this class may throws
  * DebuggerException. Typically such exception caused by errors in underlying JDI (Java Debug Interface), e.g.
@@ -89,37 +85,27 @@ public class Debugger implements EventsHandler
    private static final Log LOG = ExoLogger.getLogger(Debugger.class);
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
+   private Timer checkEventsTimer = new Timer();
 
-//   private static final IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
-//      .getCurrentContainer().getComponentInstancesOfType(IDEWebSocketDispatcher.class);
-   @Inject
-   private static IDEWebSocketDispatcher wsDispatcher;
-   private Timer checkEventsTimer;
-
-   public static Debugger newInstance(String host, int port, String sessionId) throws VMConnectException
+   public static Debugger newInstance(String host, int port) throws VMConnectException
    {
       Debugger d = new Debugger(host, port);
       instances.put(d.id, d);
-      if (sessionId != null)
-      {
-         d.checkEvents(2000, d.id, sessionId);
-      }
       return d;
    }
 
    /**
-    * Periodically checks for the new debugger events.
+    * Periodically checks for the new debugger events and sends the events
+    * to the WebSocket connection when the events is appeared.
     * 
-    * @param period
-    *    time in milliseconds between checking
     * @param debuggerId
     *    ID of debugger instance
-    * @param sessionId
+    * @param webSocketSessionId
     *    identifier of WebSocket session which will be used for sending the debugger events
     */
-   private void checkEvents(long period, final String debuggerId, final String sessionId)
+   public void startCheckingEvents(final String debuggerId, final String webSocketSessionId,
+      final IDEWebSocketDispatcher wsDispatcher)
    {
-      checkEventsTimer = new Timer();
       checkEventsTimer.schedule(new TimerTask()
       {
          @Override
@@ -127,20 +113,27 @@ public class Debugger implements EventsHandler
          {
             try
             {
-               DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(getInstance(debuggerId).getEvents());
-               wsDispatcher.sendMessageToClient(sessionId, toJson(debuggerEvents), "debuggerEvents");
+               List<DebuggerEvent> eventsList = getInstance(debuggerId).getEvents();
+               if (!eventsList.isEmpty())
+               {
+                  DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
+                  wsDispatcher.sendEventMessage(webSocketSessionId, toJson(debuggerEvents),
+                     IDEWebSocketDispatcher.EventType.DEBUGGER_EVENTS);
+               }
             }
             catch (DebuggerException e)
             {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
+               // TODO send exception to client via WebSocket connection
+               LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
             }
             catch (IOException e)
             {
-               LOG.error("An error occurs writing data to the client (sessionId " + sessionId + "). " + e.getMessage(), e);
+               LOG.error(
+                  "An error occurs writing data to the client (sessionId " + webSocketSessionId + ")."
+                     + e.getMessage(), e);
             }
          }
-      }, 0, period);
+      }, 0, 2000);
    }
 
    public static Debugger getInstance(String name)
@@ -239,11 +232,7 @@ public class Debugger implements EventsHandler
    {
       resume();
       vm.dispose();
-      if (checkEventsTimer != null)
-      {
-         checkEventsTimer.cancel();
-         checkEventsTimer = null;
-      }
+      checkEventsTimer.cancel();
       LOG.debug("Close connection to {}:{}", host, port);
    }
 
