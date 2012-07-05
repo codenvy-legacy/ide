@@ -60,9 +60,11 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REPOSITORY, ZIP_PATH);
-         Thread.sleep(1000);
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(3000);
+         VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -75,7 +77,11 @@ public class CloneRepositoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
          VirtualFileSystemUtils.delete(WS_URL + REPOSITORY);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -153,7 +159,7 @@ public class CloneRepositoryTest extends BaseTest
       Thread.sleep(3000);
 
       driver.navigate().to(WS_URL + PROJECT);
-      
+
       new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>()
       {
          @Override

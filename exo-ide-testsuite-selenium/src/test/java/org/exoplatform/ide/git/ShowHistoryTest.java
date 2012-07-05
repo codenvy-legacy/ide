@@ -57,6 +57,9 @@ public class ShowHistoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(2000);
+
       }
       catch (Exception e)
       {
@@ -69,6 +72,8 @@ public class ShowHistoryTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -322,7 +327,7 @@ public class ShowHistoryTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
-      
+
       createFileAndCommit(TEST_FILE1, COMMIT1);
       createFileAndCommit(TEST_FILE2, COMMIT2);
 
@@ -451,6 +456,8 @@ public class ShowHistoryTest extends BaseTest
 
       // Add to index:
       IDE.GIT.ADD.addToIndex();
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(5000);
       IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertEquals(GIT.Messages.ADD_SUCCESS, message);
