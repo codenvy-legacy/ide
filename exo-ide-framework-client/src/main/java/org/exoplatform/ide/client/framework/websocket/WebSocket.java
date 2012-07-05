@@ -112,7 +112,6 @@ public class WebSocket
          @Override
          public void onWebSocketOpened(WebSocketOpenedEvent event)
          {
-            IDE.fireEvent(new OutputEvent("WS OPENED"));
             counterConnectionAttempts = 0;
             IDE.fireEvent(event);
          }
@@ -133,9 +132,9 @@ public class WebSocket
             {
                IDE.fireEvent(event);
             }
-            else if (counterConnectionAttempts < 10)
+            else if (counterConnectionAttempts < 5)
             {
-               reconnectWebSocketTimer.schedule(5000);
+               reconnectWebSocketTimer.schedule(10000);
             }
          }
       });
@@ -145,7 +144,6 @@ public class WebSocket
          @Override
          public void onWebSocketError(WebSocketErrorEvent event)
          {
-            IDE.fireEvent(new OutputEvent("WS ERROR"));
             IDE.fireEvent(event);
          }
       });
@@ -155,7 +153,6 @@ public class WebSocket
          @Override
          public void onWebSocketMessage(WebSocketMessageEvent event)
          {
-            //IDE.fireEvent(new OutputEvent("WS MESSAGE: " + event.getMessage()));
             IDE.fireEvent(event);
          }
       });
