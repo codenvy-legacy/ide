@@ -21,8 +21,6 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.util.ModelUtil;
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
@@ -202,7 +200,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
          if (fImportRewrite != null && fImportRewrite.hasRecordedChanges())
          {
             int oldLen = document.getLength();
-            fImportRewrite.rewriteImports(new NullProgressMonitor()).apply(document, TextEdit.UPDATE_REGIONS);
+            fImportRewrite.rewriteImports().apply(document, TextEdit.UPDATE_REGIONS);
             setReplacementOffset(getReplacementOffset() + document.getLength() - oldLen);
          }
 
@@ -210,11 +208,6 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
             setUpLinkedMode(document, ')');
 
          rememberSelection();
-      }
-      catch (CoreException e)
-      {
-         // TODO Log exception
-         e.printStackTrace(); //NOSONAR
       }
       catch (BadLocationException e)
       {

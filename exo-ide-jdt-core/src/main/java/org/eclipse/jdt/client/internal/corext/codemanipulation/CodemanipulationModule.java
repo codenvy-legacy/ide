@@ -29,7 +29,7 @@ import com.google.inject.TypeLiteral;
  * @version $Id:
  *
  */
-public class AddGetterSetterModule extends AbstractGinModule
+public class CodemanipulationModule extends AbstractGinModule
 {
 
    /**
@@ -43,7 +43,7 @@ public class AddGetterSetterModule extends AbstractGinModule
       {
       }).in(Singleton.class);
       bind(GetterSetterTreeModel.class);
-
+      bind(GenerateNewConstructorUsingFieldsPresenter.Display.class).to(GenerateNewConstructorUsingFieldsView.class).in(Singleton.class);
    }
 
    @Provides

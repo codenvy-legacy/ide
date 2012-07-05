@@ -292,6 +292,9 @@ public class InternalCompletionProposal extends CompletionProposal
             char[] methodDescriptor = method.getMethodDescriptor();
             CharOperation.replace(methodDescriptor, '/', '.');
             char[][] parameterTypes = Signature.getParameterTypes(methodDescriptor);
+            if(parameterTypes.length != paramTypeNames.length)
+               break go;
+            
             for (int i = 0; i < parameterTypes.length; i++)
             {
                if (!Arrays.equals(paramTypeNames[i], parameterTypes[i]))
@@ -1609,26 +1612,26 @@ public class InternalCompletionProposal extends CompletionProposal
          return false;
       if (coreContext instanceof InternalCompletionContext)
       {
-         InternalCompletionContext internalCompletionContext = (InternalCompletionContext)coreContext;
-         // if (internalCompletionContext.extendedContext == null) return false;
-         char[] name1 = this.declarationPackageName;
-         char[] name2 = this.declarationTypeName;
-         char[] declarationType = CharOperation.concat(name1, name2, '.'); // fully qualified name
-         // even if the type arguments used in the method have been substituted,
-         // extract the original type arguments only, since thats what we want to compare with the class
-         // type variables (Substitution might have happened when the constructor is coming from another
-         // CU and not the current one).
-         char[] sign = (this.originalSignature != null) ? this.originalSignature : getSignature();
-         if (!(sign == null || sign.length < 2))
-         {
-            sign = Signature.removeCapture(sign);
-         }
-         char[][] types = Signature.getParameterTypes(sign);
-         String[] paramTypeNames = new String[types.length];
-         for (int i = 0; i < types.length; i++)
-         {
-            paramTypeNames[i] = new String(Signature.toCharArray(types[i]));
-         }
+//         InternalCompletionContext internalCompletionContext = (InternalCompletionContext)coreContext;
+//         // if (internalCompletionContext.extendedContext == null) return false;
+//         char[] name1 = this.declarationPackageName;
+//         char[] name2 = this.declarationTypeName;
+//         char[] declarationType = CharOperation.concat(name1, name2, '.'); // fully qualified name
+//         // even if the type arguments used in the method have been substituted,
+//         // extract the original type arguments only, since thats what we want to compare with the class
+//         // type variables (Substitution might have happened when the constructor is coming from another
+//         // CU and not the current one).
+//         char[] sign = (this.originalSignature != null) ? this.originalSignature : getSignature();
+//         if (!(sign == null || sign.length < 2))
+//         {
+//            sign = Signature.removeCapture(sign);
+//         }
+//         char[][] types = Signature.getParameterTypes(sign);
+//         String[] paramTypeNames = new String[types.length];
+//         for (int i = 0; i < types.length; i++)
+//         {
+//            paramTypeNames[i] = new String(Signature.toCharArray(types[i]));
+//         }
          // TODO
          return false;
          // return internalCompletionContext.extendedContext.canUseDiamond(paramTypeNames,declarationType);

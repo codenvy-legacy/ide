@@ -24,13 +24,15 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
+public class JavaControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler, ViewActivatedHandler
 {
 
    /**
@@ -48,6 +50,7 @@ public class JavaControl extends SimpleControl implements IDEControl, EditorActi
    public void initialize()
    {
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
    }
 
    /**
@@ -74,6 +77,15 @@ public class JavaControl extends SimpleControl implements IDEControl, EditorActi
             setVisible(false);
          }
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler#onViewActivated(org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent)
+    */
+   @Override
+   public void onViewActivated(ViewActivatedEvent event)
+   {
+      setVisible(event.getView().getId().contains("editor"));
    }
 
 }

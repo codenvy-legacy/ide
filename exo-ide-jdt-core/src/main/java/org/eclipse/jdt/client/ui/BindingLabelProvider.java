@@ -642,17 +642,17 @@ public class BindingLabelProvider
    //		return fRegistry;
    //	}
 
-   //   /*
-   //    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   //    */
-   //   public String getText(Object element)
-   //   {
-   //      if (element instanceof IBinding)
-   //      {
-   //         return getBindingLabel((IBinding)element, fTextFlags);
-   //      }
-   //      //TODO
-   //      //		return super.getText(element);
-   //      return "";
-   //   }
+      /*
+       * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+       */
+      public String getText(Object element)
+      {
+         if (element instanceof IBinding)
+         {
+            return getBindingLabel((IBinding)element, fTextFlags);
+         }
+         //TODO
+//         		return super.getText(element);
+         return element.toString();
+      }
 }

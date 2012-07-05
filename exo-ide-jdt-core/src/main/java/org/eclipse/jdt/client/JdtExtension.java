@@ -28,7 +28,7 @@ import org.eclipse.jdt.client.create.CreatePackagePresenter;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterControl;
-import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.GenerateNewConstructorUsingFieldsControl;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsControl;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPresenter;
 import org.eclipse.jdt.client.outline.OutlinePresenter;
@@ -103,6 +103,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private FormatterProfilePresenter formatterProfileManager;
 
+   private JdtGinjector injector;
+
    private void initOptions()
    {
       options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
@@ -152,12 +154,15 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new QuickFixControl());
       IDE.getInstance().addControl(new ShowQuickOutlineControl());
       IDE.getInstance().addControl(new AddGetterSetterControl());
+      IDE.getInstance().addControl(new GenerateNewConstructorUsingFieldsControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
       new QuickFixPresenter(IDE.eventBus());
       new QuickOutlinePresenter(IDE.eventBus());
-      new AddGetterSetterPresenter(IDE.eventBus(), IDE.getInstance());
+      injector = GWT.create(JdtGinjector.class);
+      injector.getNewConstructorUsingFields();
+      injector.getSetterGetterPresenter();
       TypeInfoStorage.get().clear();
    }
 

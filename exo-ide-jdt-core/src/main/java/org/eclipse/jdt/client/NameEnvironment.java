@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -360,39 +362,31 @@ public class NameEnvironment implements INameEnvironment
    private void addConstructor(BinaryTypeImpl type, final ISearchRequestor requestor)
    {
       IBinaryMethod[] methods = type.getMethods();
-//      if((type.getModifiers() & IModifierConstants.ACC_INTERFACE) != 0 )
-//      {
-//         requestor.acceptConstructor(0, type.getSourceName(), 0, "()V;".toCharArray(), null, null, type.getModifiers(), Signature.getQualifier(type.getFqn()), ExtraFlags.HasNonPrivateStaticMemberTypes, new String(type.getSourceName()), null);
-//      }
+      //      if((type.getModifiers() & IModifierConstants.ACC_INTERFACE) != 0 )
+      //      {
+      //         requestor.acceptConstructor(0, type.getSourceName(), 0, "()V;".toCharArray(), null, null, type.getModifiers(), Signature.getQualifier(type.getFqn()), ExtraFlags.HasNonPrivateStaticMemberTypes, new String(type.getSourceName()), null);
+      //      }
       boolean hasConstructor = false;
       if (methods != null)
       {
-      for (IBinaryMethod method : methods)
-      {
-         if (!method.isConstructor())
-            continue;
-         int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
-         char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
-         requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
-            method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
+         for (IBinaryMethod method : methods)
+         {
+            if (!method.isConstructor())
+               continue;
+            int parameterCount = Signature.getParameterCount(method.getMethodDescriptor());
+            char[][] parameterTypes = Signature.getParameterTypes(method.getMethodDescriptor());
+            requestor.acceptConstructor(method.getModifiers(), type.getSourceName(), parameterCount,
+               method.getMethodDescriptor(), parameterTypes, method.getArgumentNames(), type.getModifiers(),
+               Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
+            hasConstructor = true;
+         }
+      }
+      if (!hasConstructor)
+         requestor.acceptConstructor(Flags.AccPublic, type.getSourceName(), -1,
+            null, // signature is not used for source type
+            CharOperation.NO_CHAR_CHAR, CharOperation.NO_CHAR_CHAR, type.getModifiers(),
             Signature.getQualifier(type.getFqn()), 0, new String(type.getSourceName()), null);
-         hasConstructor = true;
-      }
-      }
-      if(!hasConstructor)
-      requestor.acceptConstructor(
-         Flags.AccPublic,
-         type.getSourceName(),
-         -1,
-         null, // signature is not used for source type
-         CharOperation.NO_CHAR_CHAR,
-         CharOperation.NO_CHAR_CHAR,
-         type.getModifiers(),
-         Signature.getQualifier(type.getFqn()),
-         0,
-         new String(type.getSourceName()),
-         null);
-      
+
    }
 
    /**
@@ -414,12 +408,22 @@ public class NameEnvironment implements INameEnvironment
 
    }
 
-   private native String runSyncReques(String url)/*-{
-                                                  var xmlhttp = new XMLHttpRequest();
-                                                  xmlhttp.open("GET", url, false);
-                                                  xmlhttp.send();
-                                                  return xmlhttp.responseText;
-                                                  }-*/;
+   private String runSyncReques(String url)
+   {
+      XmlHttpWraper xmlhttp = nativeRunSyncReques(url);
+      int status = xmlhttp.getStatusCode();
+      if (status == 200)
+         return xmlhttp.getResponseText();
+      else
+         throw new RuntimeException("Server return " + xmlhttp.getResponseText());
+   }
+
+   private native XmlHttpWraper nativeRunSyncReques(String url)/*-{
+                                                                  var xmlhttp = new XMLHttpRequest();
+                                                                  xmlhttp.open("GET", url, false);
+                                                                  xmlhttp.send();
+                                                                  return xmlhttp;
+                                                                  }-*/;
 
    /**
     * Must be used only by CompletionEngine. The progress monitor is used to be able to cancel completion operations
@@ -526,20 +530,20 @@ public class NameEnvironment implements INameEnvironment
    {
       findTypes(missingSimpleName, b, false, type, new ISearchRequestor()
       {
-         
+
          @Override
          public void acceptType(char[] packageName, char[] typeName, char[][] enclosingTypeNames, int modifiers,
             AccessRestriction accessRestriction)
          {
-            if(CharOperation.equals(missingSimpleName, typeName))
+            if (CharOperation.equals(missingSimpleName, typeName))
                storage.acceptType(packageName, typeName, enclosingTypeNames, modifiers, accessRestriction);
          }
-         
+
          @Override
          public void acceptPackage(char[] packageName)
          {
          }
-         
+
          @Override
          public void acceptConstructor(int modifiers, char[] simpleTypeName, int parameterCount, char[] signature,
             char[][] parameterTypes, char[][] parameterNames, int typeModifiers, char[] packageName, int extraFlags,
@@ -594,5 +598,23 @@ public class NameEnvironment implements INameEnvironment
       {
          return null;
       }
+   }
+
+   private static final class XmlHttpWraper extends JavaScriptObject
+   {
+      /**
+       * 
+       */
+      protected XmlHttpWraper()
+      {
+      }
+      public native int getStatusCode()/*-{
+                                       return this.status;
+                                       }-*/;
+
+      public native String getResponseText()/*-{
+                                            return this.responseText;
+                                            }-*/;
+
    }
 }
