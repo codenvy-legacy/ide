@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.TextArea;
@@ -31,8 +30,6 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
-import org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant;
 import org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display;
 
 /**
@@ -61,21 +58,11 @@ public class SshPublicKeyView extends ViewImpl implements Display
 
    public SshPublicKeyView()
    {
-      super(ID, ViewType.MODAL, TITLE, null, 400, 300);
+      super(ID, ViewType.MODAL, TITLE, null, 400, 350, false);
       add(uiBinder.createAndBindUi(this));
       UIHelper.setAsReadOnly("exoSshPublicKeyField");
    }
 
-   /**
-    * Factory method, uses for UiBinder
-    * 
-    * @return instance of {@link SshLocalizationConstant}
-    */
-   @UiFactory
-   public SshLocalizationConstant getSshLocalizationConstant()
-   {
-      return SshKeyExtension.CONSTANTS;
-   }
 
    /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshPublicKeyPresenter.Display#getCloseButton()

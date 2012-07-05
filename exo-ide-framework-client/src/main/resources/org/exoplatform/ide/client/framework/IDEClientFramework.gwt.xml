@@ -41,6 +41,7 @@
    <source path="annotation" />
    <source path="application" />
    <source path="configuration" />
+   <source path="contextmenu" />
    <source path="control" />
    <source path="discovery" />
    <source path="documentation" />

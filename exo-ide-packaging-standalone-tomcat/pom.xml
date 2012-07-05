@@ -54,6 +54,12 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-codeassistant-asm</artifactId>
+         <version>${project.version}</version>
+         <type>jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-shell</artifactId>
          <version>${project.version}</version>
          <exclusions>
