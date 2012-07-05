@@ -36,25 +36,25 @@
    <g:LayoutPanel>
       <g:layer top="0" bottom="40px">
          <c:Border margin="5">
-            <c:layer>
+            <c:layer top="0px" bottom="0px">
                <ssh:SshKeysGrid ID="ideSshKeysGrid" ui:field="keysGrid" width="100%"></ssh:SshKeysGrid>
             </c:layer>
          </c:Border>
       </g:layer>
-      <g:layer height="40px" bottom="0">
-         <g:FlowPanel width="273px" styleName="{style.center}">
-
-            <c:ImageButton text='{con.managerUploadButton}' styleName="{style.left-float}" ui:field="uploadButton"
+      <g:layer left="0px" right="0px" bottom="0px" height="40px">
+      	<g:AbsolutePanel >
+      		<g:at left="260" top="10">
+      			<c:ImageButton text='{con.closeButton}' ui:field="closeButton" buttonId="ideSshKeyManagerCloseButton"></c:ImageButton>
+      		</g:at>
+      		<g:at left="152" top="10">
+      			<c:ImageButton text='{con.managerUploadButton}' styleName="{style.left-float}" ui:field="uploadButton"
                buttonId="ideSshKeyManagerUploadButton"></c:ImageButton>
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-
-            <c:ImageButton text='{con.managerGenerateButton}' ui:field="generateButton" styleName="{style.left-float}"
+      		</g:at>
+      		<g:at left="29" top="10">
+      			<c:ImageButton text='{con.managerGenerateButton}' ui:field="generateButton" styleName="{style.left-float}"
                buttonId="ideSshKeyManagerCloseButton"></c:ImageButton>
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-
-            <c:ImageButton text='{con.closeButton}' ui:field="closeButton" buttonId="ideSshKeyManagerCloseButton"></c:ImageButton>
-
-         </g:FlowPanel>
+      		</g:at>
+      	</g:AbsolutePanel>
       </g:layer>
    </g:LayoutPanel>
 

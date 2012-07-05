@@ -18,25 +18,22 @@
  */
 package org.exoplatform.ide.extension.ssh.client.keymanager.ui;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.client.framework.ui.upload.FileUploadInput;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-import org.exoplatform.ide.extension.ssh.client.SshKeyExtension;
-import org.exoplatform.ide.extension.ssh.client.SshLocalizationConstant;
 import org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiFactory;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This view represent upload private ssh key. It's contains two fields:
@@ -97,17 +94,6 @@ public class UploadSshKeyView extends ViewImpl implements Display
    }
 
    /**
-    * Factory method, uses for UiBinder
-    * 
-    * @return instance of {@link SshLocalizationConstant}
-    */
-   @UiFactory
-   public SshLocalizationConstant getSshLocalizationConstant()
-   {
-      return SshKeyExtension.CONSTANTS;
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getHostField()
     */
    @Override
@@ -124,16 +110,6 @@ public class UploadSshKeyView extends ViewImpl implements Display
    {
       return cancelButton;
    }
-
-   // /**
-   // * @see
-   // org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#setFileSelectedHandler(org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler)
-   // */
-   // @Override
-   // public void setFileSelectedHandler(FileSelectedHandler fileSelectedHandler)
-   // {
-   // fileField. setFileSelectedHandler(fileSelectedHandler);
-   // }
 
    /**
     * @see org.exoplatform.ide.extension.ssh.client.keymanager.UploadSshKeyPresenter.Display#getFileNameField()
