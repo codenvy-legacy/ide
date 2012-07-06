@@ -225,7 +225,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
                @Override
                protected void onSuccess(RakeCommandResult result)
                {
-                  String message = formMessage(result.getResult());
+                  String message = "<pre>" + result.getResult() + "</pre>";
                   IDE.fireEvent(new OutputEvent(message, Type.OUTPUT));
                }
             });
@@ -250,7 +250,7 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
             @Override
             protected void onSuccess(RakeCommandResult result)
             {
-               String message = formMessage(result.getResult());
+               String message = "<pre>" + result.getResult() + "</pre>";
                IDE.fireEvent(new OutputEvent(message, Type.INFO));
             }
          });
@@ -280,21 +280,4 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
          }
       }
    }
-
-   /**
-    * Form message to display in output - replace spaces and ends of line.
-    * 
-    * @param text
-    * @return {@link String}
-    */
-   private String formMessage(String text)
-   {
-      if (text == null || text.isEmpty())
-         return "";
-
-      String message = text.replaceAll("\n", "<br>");
-      message = message.replaceAll(" ", "&nbsp;");
-      return message;
-   }
-
 }
