@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.heroku.server.rest;
 
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
-import org.exoplatform.ide.extension.heroku.server.HttpChunkReader;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -33,7 +32,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +45,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 /**
  * REST interface to {@link Heroku}.
@@ -228,49 +224,11 @@ public class HerokuService
    @POST
    @Consumes(MediaType.TEXT_PLAIN)
    @Produces(MediaType.TEXT_PLAIN)
-   public StreamingOutput run(final String command) throws HerokuException, IOException, ParsingResponseException,
-      LocalPathResolveException, VirtualFileSystemException
+   public byte[] run(final String command) throws HerokuException, IOException, ParsingResponseException,
+      LocalPathResolveException, VirtualFileSystemException, GeneralSecurityException, InterruptedException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      final HttpChunkReader chunkReader =
-         heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null, command);
-      return new StreamingOutput()
-      {
-         @Override
-         public void write(OutputStream output) throws IOException, WebApplicationException
-         {
-            output.write(command.getBytes());
-            output.write('\n');
-            output.write('\n');
-            while (!chunkReader.eof())
-            {
-               byte[] b;
-               try
-               {
-                  b = chunkReader.next();
-               }
-               catch (HerokuException he)
-               {
-                  throw new WebApplicationException(Response.status(he.getResponseStatus())
-                     .header("JAXRS-Body-Provided", "Error-Message").entity(he.getMessage()).type(he.getContentType())
-                     .build());
-               }
-               if (b.length > 0)
-               {
-                  output.write(b);
-               }
-               else
-               {
-                  try
-                  {
-                     Thread.sleep(2000); // Wait time as in original ruby based tool from Heroku.
-                  }
-                  catch (InterruptedException ignored)
-                  {
-                  }
-               }
-            }
-         }
-      };
+      return heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
+         command);
    }
 }
