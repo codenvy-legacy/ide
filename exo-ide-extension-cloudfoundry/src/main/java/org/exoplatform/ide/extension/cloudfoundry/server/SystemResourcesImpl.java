@@ -85,4 +85,14 @@ public class SystemResourcesImpl implements SystemResources
    {
       this.memory = memory;
    }
+
+   @Override
+   public String toString()
+   {
+      return "SystemResourcesImpl{" +
+         "services=" + services +
+         ", apps=" + apps +
+         ", memory=" + memory +
+         '}';
+   }
 }

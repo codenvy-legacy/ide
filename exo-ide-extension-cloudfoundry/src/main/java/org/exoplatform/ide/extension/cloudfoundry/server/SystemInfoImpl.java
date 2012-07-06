@@ -156,4 +156,19 @@ public class SystemInfoImpl implements SystemInfo
    {
       this.frameworks = frameworks;
    }
+
+   @Override
+   public String toString()
+   {
+      return "SystemInfoImpl{" +
+         "limits=" + limits +
+         ", usage=" + usage +
+         ", description='" + description + '\'' +
+         ", user='" + user + '\'' +
+         ", version='" + version + '\'' +
+         ", name='" + name + '\'' +
+         ", support='" + support + '\'' +
+         ", frameworks=" + frameworks +
+         '}';
+   }
 }

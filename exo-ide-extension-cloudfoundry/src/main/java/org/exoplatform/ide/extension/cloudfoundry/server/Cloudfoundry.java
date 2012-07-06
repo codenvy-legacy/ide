@@ -755,56 +755,6 @@ public class Cloudfoundry
    }
 
    /**
-    * Rename application.
-    *
-    * @param server
-    *    location of Cloud Foundry instance where application deployed, e.g. http://api.cloudfoundry.com. If
-    *    not specified then try determine server. If can't determine server from application or user context then
-    *    use default server location, see {@link CloudfoundryAuthenticator#defaultTarget}
-    * @param app
-    *    application name. If <code>null</code> then try to determine application name. To be able determine
-    *    application name <code>projectId</code> and <code>vfs</code> must not be <code>null</code> at least. If
-    *    name not specified and cannot be determined RuntimeException thrown
-    * @param vfs
-    *    VirtualFileSystem
-    * @param projectId
-    *    IDE project identifier. May be <code>null</code> if command executed out of project directory in
-    *    this case <code>app</code> parameter must be not <code>null</code>
-    * @param newname
-    *    new name for application
-    * @throws CloudfoundryException
-    *    if cloudfoundry server return unexpected or error status for request
-    * @throws ParsingResponseException
-    *    if any error occurs when parse response body
-    * @throws VirtualFileSystemException
-    *    any virtual file system error. It may happen if <code>server</code> or <code>app</code>
-    *    name is not provided and we try to determine it from IDE project properties
-    * @throws IOException
-    *    if any i/o errors occurs
-    */
-   public void renameApplication(String server, String app, VirtualFileSystem vfs, String projectId, String newname)
-      throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
-   {
-      // XXX NOTE : Rename does not work AT THE MOMENT even from command line tool (vmc) provided by Cloud Foundry.
-      // Command 'vmc rename appname newname' HAS NOT any effects for application. 
-      if (newname == null || newname.isEmpty())
-      {
-         throw new IllegalArgumentException("New application name may not be null or empty. ");
-      }
-      renameApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
-         app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
-         newname);
-   }
-
-   private void renameApplication(Credential credential, String app, String newname) throws IOException,
-      ParsingResponseException, CloudfoundryException
-   {
-      CloudFoundryApplication appInfo = applicationInfo(credential, app);
-      appInfo.setName(newname);
-      putJson(credential.target + "/apps/" + app, credential.token, toJson(appInfo), 200);
-   }
-
-   /**
     * Update application. Upload all files that has changes to cloud controller.
     *
     * @param server

@@ -222,20 +222,6 @@ public class CloudfoundryService
          projectId);
    }
 
-   /*@Path("apps/rename")
-   @POST
-   public void renameApplication( //
-      @QueryParam("server") String server, //
-      @QueryParam("name") String app, //
-      @QueryParam("newname") String newname, //
-      @QueryParam("vfsid") String vfsId, //
-      @QueryParam("projectid") String projectId //
-   ) throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
-   {
-      cloudfoundry.renameApplication(server, app, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null)
-         : null, newname, projectId);
-   }*/
-
    @Path("apps/update")
    @POST
    public void updateApplication(
