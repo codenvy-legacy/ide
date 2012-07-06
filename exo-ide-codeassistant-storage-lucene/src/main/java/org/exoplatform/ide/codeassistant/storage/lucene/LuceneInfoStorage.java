@@ -94,7 +94,7 @@ public class LuceneInfoStorage
     * @throws CorruptIndexException
     * @throws IOException
     */
-   private void reopenReaderWhenNeed() throws IOException
+   private synchronized void reopenReaderWhenNeed() throws IOException
    {
       if (typeInfoIndexReader == null)
       {
