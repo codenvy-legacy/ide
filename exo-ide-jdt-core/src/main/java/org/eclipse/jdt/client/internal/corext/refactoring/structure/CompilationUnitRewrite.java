@@ -309,7 +309,7 @@ public class CompilationUnitRewrite
          }
          if (needsImportRewrite)
          {
-            TextEdit importsEdit = fImportRewrite.rewriteImports(monitor);
+            TextEdit importsEdit = fImportRewrite.rewriteImports();
             if (!isEmptyEdit(importsEdit))
             {
                multiEdit.addChild(importsEdit);

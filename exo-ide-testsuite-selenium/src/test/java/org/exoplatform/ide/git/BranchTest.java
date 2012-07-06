@@ -59,6 +59,7 @@ public class BranchTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(3000);
       }
       catch (Exception e)
@@ -72,6 +73,7 @@ public class BranchTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(1000);
       }
       catch (Exception e)
@@ -193,7 +195,7 @@ public class BranchTest extends BaseTest
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
       IDE.GIT.BRANCHES.waitOpened();
-      
+      Thread.sleep(2000);
       // System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       Assert.assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
@@ -290,6 +292,8 @@ public class BranchTest extends BaseTest
       //Open Branches view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.BRANCHES);
       IDE.GIT.BRANCHES.waitOpened();
+      Thread.sleep(1000);
+
       assertEquals(3, IDE.GIT.BRANCHES.getBranchesCount());
       assertTrue(IDE.GIT.BRANCHES.isBranchChecked("master"));
 

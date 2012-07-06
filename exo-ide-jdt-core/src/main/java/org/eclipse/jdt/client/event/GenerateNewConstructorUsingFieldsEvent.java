@@ -16,21 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.internal.corext.codemanipulation;
+package org.eclipse.jdt.client.event;
 
-import com.google.gwt.inject.client.GinModules;
-
-import org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display;
-
-import com.google.gwt.inject.client.Ginjector;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-@GinModules(AddGetterSetterModule.class)
-public interface JdtGinjector extends Ginjector
+public class GenerateNewConstructorUsingFieldsEvent extends GwtEvent<GenerateNewConstructorUsingFieldsHandler>
 {
-   Display getView();
+
+   public static final Type<GenerateNewConstructorUsingFieldsHandler> TYPE =
+      new Type<GenerateNewConstructorUsingFieldsHandler>();
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<GenerateNewConstructorUsingFieldsHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(GenerateNewConstructorUsingFieldsHandler handler)
+   {
+      handler.onGenerateNewConstructorUsingFields(this);
+   }
+
 }

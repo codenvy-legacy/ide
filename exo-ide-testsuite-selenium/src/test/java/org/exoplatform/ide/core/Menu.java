@@ -186,7 +186,7 @@ public class Menu extends AbstractTestModule
     */
    protected void waitMenuPopUp()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

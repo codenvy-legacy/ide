@@ -73,6 +73,8 @@ public class ResetToCommitTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {

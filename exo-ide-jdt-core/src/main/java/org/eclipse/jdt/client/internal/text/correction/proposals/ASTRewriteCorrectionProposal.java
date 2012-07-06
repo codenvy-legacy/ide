@@ -20,7 +20,6 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.JavaUIStatus;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 
@@ -107,7 +106,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal
       }
       if (fImportRewrite != null)
       {
-         editRoot.addChild(fImportRewrite.rewriteImports(new NullProgressMonitor()));
+         editRoot.addChild(fImportRewrite.rewriteImports());
       }
    }
 

@@ -51,6 +51,7 @@ public class CommitTest extends BaseTest
    public static void setUp() throws Exception
    {
       VirtualFileSystemUtils.createDefaultProject(PROJECT);
+      //Sleep is necessary for files to appear in Davfs:
       Thread.sleep(3000);
    }
 
@@ -60,6 +61,8 @@ public class CommitTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -176,12 +179,16 @@ public class CommitTest extends BaseTest
 
       //Open Commit view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.COMMIT);
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(3000);
       IDE.GIT.COMMIT.waitOpened();
 
       //Commit:
       String commitMessage = "First commit";
       IDE.GIT.COMMIT.typeToMessageField(commitMessage);
       IDE.GIT.COMMIT.clickCommitButton();
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(3000);
       IDE.GIT.COMMIT.waitClosed();
 
       IDE.OUTPUT.waitForMessageShow(3, 5);
