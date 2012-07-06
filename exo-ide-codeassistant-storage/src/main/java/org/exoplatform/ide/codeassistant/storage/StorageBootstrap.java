@@ -24,7 +24,6 @@ import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +44,11 @@ public class StorageBootstrap implements ServletContextListener
 
    public static final String STORAGE_PATH_NAME = "storage-path";
 
-   private LuceneInfoStorage luceneStorage;
+   private LuceneInfoStorage luceneStorageWriter;
 
    private String storagePath;
+
+   private LuceneInfoStorage luceneStorageReader;
 
    /**
     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
@@ -71,9 +72,10 @@ public class StorageBootstrap implements ServletContextListener
          getNumber(ctx.getInitParameter(UpdateStorageService.UPDATE_QUEUE_SIZE)));
       try
       {
-         luceneStorage = new LuceneInfoStorage(storagePath);
+         luceneStorageWriter = new LuceneInfoStorage(storagePath);
+         luceneStorageReader = new LuceneInfoStorage(storagePath);
 
-         InfoStorage infoStorage = new LocalInfoStorage(luceneStorage);
+         InfoStorage infoStorage = new LocalInfoStorage(luceneStorageWriter);
 
          options.put(UpdateStorageService.INFO_STORAGE, infoStorage);
 
@@ -84,7 +86,7 @@ public class StorageBootstrap implements ServletContextListener
       }
 
       UpdateStorageService updateService = new UpdateStorageService(options);
-      CodeAssistantStorage storage = new StorageService(luceneStorage);
+      CodeAssistantStorage storage = new StorageService(luceneStorageReader);
       ctx.setAttribute(UpdateStorageService.class.getName(), updateService);
       ctx.setAttribute(CodeAssistantStorage.class.getName(), storage);
 
@@ -115,8 +117,10 @@ public class StorageBootstrap implements ServletContextListener
          (UpdateStorageService)sce.getServletContext().getAttribute(UpdateStorageService.class.getName());
       if (updateStorageService != null)
          updateStorageService.shutdown();
-      if (luceneStorage != null)
-         luceneStorage.closeIndexes();
+      if (luceneStorageWriter != null)
+         luceneStorageWriter.closeIndexes();
+      if (luceneStorageReader != null)
+         luceneStorageReader.closeIndexes();
    }
 
 }

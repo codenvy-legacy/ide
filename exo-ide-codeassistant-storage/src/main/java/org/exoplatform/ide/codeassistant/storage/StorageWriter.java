@@ -73,20 +73,28 @@ public class StorageWriter implements Runnable
                LOG.error("Can't get Data Writer", e);
                continue;
             }
-            if (task.getTypesInfo() != null && !infoStorage.isArtifactExist(task.getArtifact()))
+            try
             {
-               dataWriter.addTypeInfo(task.getTypesInfo(), task.getArtifact());
-               dataWriter.addPackages(task.getPackages(), task.getArtifact());
+               if (task.getTypesInfo() != null && !infoStorage.isArtifactExist(task.getArtifact()))
+               {
+                  dataWriter.addTypeInfo(task.getTypesInfo(), task.getArtifact());
+                  dataWriter.addPackages(task.getPackages(), task.getArtifact());
+               }
+               if (task.getJavaDock() != null && !infoStorage.isJavaDockForArtifactExist(task.getArtifact()))
+               {
+                  dataWriter.addJavaDocs(task.getJavaDock(), task.getArtifact());
+               }
             }
-            if (task.getJavaDock() != null && !infoStorage.isJavaDockForArtifactExist(task.getArtifact()))
+            catch (Exception e)
             {
-               dataWriter.addJavaDocs(task.getJavaDock(), task.getArtifact());
+               LOG.error("Can't write artifact: " + task.getArtifact(), e);
             }
+
          }
       }
       catch (InterruptedException e)
       {
-         e.printStackTrace();
+         LOG.error("Writer thread interripted", e);
       }
    }
 
