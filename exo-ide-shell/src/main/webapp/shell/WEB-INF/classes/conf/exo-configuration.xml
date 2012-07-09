@@ -90,6 +90,10 @@
    <component>
       <type>org.everrest.exoplatform.ExoDependencySupplier</type>
    </component>
+   
+   <component>
+      <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
+   </component>
 
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
