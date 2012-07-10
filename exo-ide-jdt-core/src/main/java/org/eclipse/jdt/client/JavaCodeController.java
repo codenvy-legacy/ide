@@ -22,6 +22,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -34,7 +37,12 @@ import org.eclipse.jdt.client.event.CancelParseHandler;
 import org.eclipse.jdt.client.event.ParseActiveFileEvent;
 import org.eclipse.jdt.client.event.ParseActiveFileHandler;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
@@ -45,8 +53,15 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +76,12 @@ import java.util.Map;
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
    CancelParseHandler, EditorFileOpenedHandler, ParseActiveFileHandler
 {
+
+   /**
+    * Get build log method's path.
+    */
+   private static final String LOG = "/ide/maven/log";
+
    /**
     * Active file in editor.
     */
@@ -190,10 +211,15 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             if (unit.getProblems().length == 0 || editor == null)
                return;
 
+            boolean hasError = false;
             for (IProblem p : unit.getProblems())
             {
                editor.markProblem(new ProblemImpl(p));
+               if (p.isError())
+                  hasError = true;
             }
+            if (hasError)
+               checkBuildStatus();
          }
 
          /**
@@ -215,6 +241,80 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             reason.printStackTrace();
          }
       });
+   }
+
+   /**
+    * 
+    */
+   private void checkBuildStatus()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemById(activeFile.getProject().getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(activeFile.getProject())))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  Item item = result.getItem();
+                  if (item instanceof ProjectModel)
+                  {
+                     ProjectModel project = (ProjectModel)item;
+                     if (project.hasProperty("exoide:build_error"))
+                     {
+                        getBuildLog((String)project.getPropertyValue("exoide:build_error"));
+                     }
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @param buildid
+    */
+   private void getBuildLog(String buildid)
+   {
+      final String requestUrl = JdtExtension.REST_CONTEXT + LOG + "/" + buildid;
+
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+            .send(new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            {
+
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  IDE.eventBus()
+                     .fireEvent(
+                        new OutputEvent("Can't build classpath:<br>" + "<pre>" + result.toString() + "</pre>",
+                           Type.ERROR));
+                  IDE.eventBus().fireEvent(new OutputEvent("After you fix error, do clean project", Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -266,7 +366,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
    {
-      if(activeFile == null)
+      if (activeFile == null)
          return;
       timer.cancel();
       needReparse = false;
@@ -307,5 +407,34 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    public INameEnvironment getNameEnvironment()
    {
       return NAME_ENVIRONMENT;
+   }
+
+   private class StringUnmarshaller implements Unmarshallable<StringBuilder>
+   {
+
+      protected StringBuilder builder;
+
+      /**
+       * @param callback
+       */
+      public StringUnmarshaller(StringBuilder builder)
+      {
+         this.builder = builder;
+      }
+
+      /**
+       * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+       */
+      @Override
+      public void unmarshal(Response response)
+      {
+         builder.append(response.getText());
+      }
+
+      @Override
+      public StringBuilder getPayload()
+      {
+         return builder;
+      }
    }
 }
