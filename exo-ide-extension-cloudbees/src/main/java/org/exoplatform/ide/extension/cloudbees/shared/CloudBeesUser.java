@@ -18,41 +18,49 @@
  */
 package org.exoplatform.ide.extension.cloudbees.shared;
 
-/**
- * Authentication credentials.
- *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
- */
-public interface Credentials
-{
+import java.util.List;
 
-   /**
-    * Returns the e-mail.
-    *
-    * @return e-mail.
-    */
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public interface CloudBeesUser
+{
    String getEmail();
 
-   /**
-    * Set the e-mail.
-    *
-    * @param email
-    */
    void setEmail(String email);
 
-   /**
-    * Returns the password.
-    *
-    * @return password.
-    */
+   String getFirst_name();
+
+   void setFirst_name(String name);
+
+   String getLast_name();
+
+   void setLast_name(String name);
+
+   String getName();
+
+   void setName(String name);
+
    String getPassword();
 
-   /**
-    * Set the password.
-    *
-    * @param password
-    *    password.
-    */
    void setPassword(String password);
+
+   //
+
+   String getId();
+
+   void setId(String id);
+
+   //
+
+   List<CloudBeesAccount> getAccounts();
+
+   void setAccounts(List<CloudBeesAccount> accounts);
+
+   //
+
+   List<CloudBeesSshKey> getSsh_keys();
+
+   void setSsh_keys(List<CloudBeesSshKey> keys);
 }

@@ -16,43 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.shared;
+package org.exoplatform.ide.extension.cloudbees.server;
+
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 
 /**
- * Authentication credentials.
+ * Thrown if user with the same email already registered.
  *
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Credentials.java Mar 20, 2012 9:17:20 AM azatsarynnyy $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ * @see CloudBees#createUser(String, org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser)
  */
-public interface Credentials
+@SuppressWarnings("serial")
+public final class UserAlreadyExistsException extends Exception
 {
-
-   /**
-    * Returns the e-mail.
-    *
-    * @return e-mail.
-    */
-   String getEmail();
-
-   /**
-    * Set the e-mail.
-    *
-    * @param email
-    */
-   void setEmail(String email);
-
-   /**
-    * Returns the password.
-    *
-    * @return password.
-    */
-   String getPassword();
-
-   /**
-    * Set the password.
-    *
-    * @param password
-    *    password.
-    */
-   void setPassword(String password);
+   public UserAlreadyExistsException(CloudBeesUser user)
+   {
+      super("Email address " + user.getEmail() + " already registered. ");
+   }
 }

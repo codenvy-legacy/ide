@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.cloudbees.server.rest;
 
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 
 import java.net.URL;
@@ -30,11 +32,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -86,8 +87,7 @@ public class CloudBeesService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> createApplication( //
       @QueryParam("message") String message, // Optional
-      @QueryParam("war") URL war, //
-      @Context UriInfo uriInfo //
+      @QueryParam("war") URL war //
    ) throws Exception
    {
       return cloudbees.createApplication(appId, message,
@@ -99,8 +99,7 @@ public class CloudBeesService
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, String> updateApplication( //
       @QueryParam("message") String message, // Optional
-      @QueryParam("war") URL war, //
-      @Context UriInfo uriInfo //
+      @QueryParam("war") URL war //
    ) throws Exception
    {
       return cloudbees.updateApplication(appId, message,
@@ -130,5 +129,25 @@ public class CloudBeesService
    public List<Map<String, String>> getAllApplications() throws Exception
    {
       return cloudbees.listApplications();
+   }
+
+   /*===== Account provisioning =====*/
+
+   @Path("accounts")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public CloudBeesAccount createAccount(CloudBeesAccount account) throws Exception
+   {
+      return cloudbees.createAccount(account);
+   }
+
+   @Path("accounts/{account}/users")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public CloudBeesUser addUserToAccount(@PathParam("account") String account, CloudBeesUser user) throws Exception
+   {
+      return cloudbees.createUser(account, user);
    }
 }
