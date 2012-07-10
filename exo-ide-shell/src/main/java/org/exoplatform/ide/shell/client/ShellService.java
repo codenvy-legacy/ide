@@ -115,59 +115,77 @@ public class ShellService
    public void processCommand(String cmd, AsyncRequestCallback<StringBuilder> callback)
    {
       List<CLIResource> appropriateCommands = findAppropriateCommands(cmd);
-      if (appropriateCommands.size() <= 0)
+      CLIResource resource = null;
+      if (appropriateCommands.size() == 0)
       {
          CloudShell.console().print(CloudShell.messages.noAppropriateCommandError(cmd));
       }
       else if (appropriateCommands.size() == 1)
       {
-         try
-         {
-            CLIResource resource = appropriateCommands.get(0);
-            if (resource instanceof ClientCommand)
-            {
-               ClientCommand command = (ClientCommand)resource;
-               Parser parser = new GnuParser();
-               String[] arguments = Util.translateCommandline(cmd);
-               CommandLine commandLine = parser.parse(command.getOptions(), arguments);
-               command.execute(commandLine);
-            }
-            else
-            {
-               String url =
-                  (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
-                     + resource.getPath();
-
-               AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
-               if (canParseOptions(resource, cmd, asyncRequest))
-               {
-                  CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
-                  String query = formQueryString(resource, commandLine, cmd);
-                  url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
-                  boolean runAsync = commandLine.hasOption("&");
-                  // Recreate, because of the URL:
-                  asyncRequest = createAsyncRequest(resource.getMethod(), url, runAsync);
-
-                  setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
-                  setBody(resource, commandLine, cmd, asyncRequest);
-               }
-               setAcceptTypes(resource, asyncRequest);
-               setContentType(resource, asyncRequest);
-               asyncRequest.send(callback);
-            }
-         }
-         catch (MandatoryParameterNotFoundException me)
-         {
-            CloudShell.console().print(me.getMessage() + "\n");
-         }
-         catch (Exception e)
-         {
-            CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
-         }
+         resource = appropriateCommands.get(0);
       }
       else
       {
-         // TODO multiply commands:
+         cmd = cmd.trim();
+         for (int i = 0; i < appropriateCommands.size(); i++)
+         {
+            CLIResource res = appropriateCommands.get(i);
+            for (String command : res.getCommand())
+            {
+               if (cmd.equals(command))
+               {
+                  resource = res;
+                  break;
+               }
+            }
+         }
+         if (resource == null)
+         {
+            CloudShell.console().print("Can't select command to execute.");
+            return;
+         }
+      }
+      try
+      {
+         if (resource instanceof ClientCommand)
+         {
+            ClientCommand command = (ClientCommand)resource;
+            Parser parser = new GnuParser();
+            String[] arguments = Util.translateCommandline(cmd);
+            CommandLine commandLine = parser.parse(command.getOptions(), arguments);
+            command.execute(commandLine);
+         }
+         else
+         {
+            String url =
+               (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
+                  + resource.getPath();
+
+            AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
+            if (canParseOptions(resource, cmd, asyncRequest))
+            {
+               CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
+               String query = formQueryString(resource, commandLine, cmd);
+               url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
+               boolean runAsync = commandLine.hasOption("&");
+               // Recreate, because of the URL:
+               asyncRequest = createAsyncRequest(resource.getMethod(), url, runAsync);
+
+               setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
+               setBody(resource, commandLine, cmd, asyncRequest);
+            }
+            setAcceptTypes(resource, asyncRequest);
+            setContentType(resource, asyncRequest);
+            asyncRequest.send(callback);
+         }
+      }
+      catch (MandatoryParameterNotFoundException me)
+      {
+         CloudShell.console().print(me.getMessage() + "\n");
+      }
+      catch (Exception e)
+      {
+         CloudShell.console().print(CloudShell.messages.syntaxtError(cmd));
       }
 
    }
@@ -339,10 +357,10 @@ public class ShellService
          }
       }
 
-    /*  TODO if (jsonObject.keySet().size() > 0)
-      {*/
-         asyncRequest.data(jsonObject.toString());
-   /*   }*/
+      /*  TODO if (jsonObject.keySet().size() > 0)
+        {*/
+      asyncRequest.data(jsonObject.toString());
+      /*   }*/
    }
 
    /**
