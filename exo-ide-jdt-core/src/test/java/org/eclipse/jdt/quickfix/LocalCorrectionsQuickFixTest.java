@@ -15,6 +15,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 import org.eclipse.jdt.client.JavaCodeController;
 import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.SupportedProjectResolver;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
@@ -57,7 +58,15 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       new JdtExtension();
       JavaCodeController.NAME_ENVIRONMENT =
          new FileSystem(new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8");
-      new JavaCodeController();
+      new JavaCodeController(new SupportedProjectResolver()
+      {
+         
+         @Override
+         public boolean isProjectSupported(String projectType)
+         {
+            return true;
+         }
+      });
       FolderModel parent = new FolderModel();
       parent.setPath("/MyProject/src/main/java/my/test");
       FileModel file = new FileModel("TestClass.java", MimeType.APPLICATION_JAVA, "", parent);
