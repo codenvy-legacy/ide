@@ -20,8 +20,6 @@ package org.eclipse.jdt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
@@ -34,8 +32,8 @@ import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.event.CancelParseHandler;
-import org.eclipse.jdt.client.event.ParseActiveFileEvent;
-import org.eclipse.jdt.client.event.ParseActiveFileHandler;
+import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
+import org.eclipse.jdt.client.event.ReparseOpenedFilesHandler;
 import org.eclipse.jdt.client.internal.compiler.env.INameEnvironment;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -45,6 +43,8 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -64,7 +64,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Java code controller is used for getting AST and updating all modules, that depend on the received AST.
@@ -74,7 +76,7 @@ import java.util.Map;
  * 
  */
 public class JavaCodeController implements EditorFileContentChangedHandler, EditorActiveFileChangedHandler,
-   CancelParseHandler, EditorFileOpenedHandler, ParseActiveFileHandler
+   CancelParseHandler, EditorFileOpenedHandler, ReparseOpenedFilesHandler, EditorFileClosedHandler
 {
 
    /**
@@ -87,11 +89,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     */
    private FileModel activeFile;
 
-   private boolean needReparse = false;
+   private Set<String> needReparse = new HashSet<String>();
 
-   private CodeMirror editor;
+   private Map<String, Timer> workingParsers = new HashMap<String, Timer>();
 
-   private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
+   private Map<String, CodeMirror> editors = new HashMap<String, CodeMirror>();
 
    public static INameEnvironment NAME_ENVIRONMENT;
 
@@ -105,7 +107,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
       IDE.addHandler(CancelParseEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(ParseActiveFileEvent.TYPE, this);
+      IDE.addHandler(ReparseOpenedFilesEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
 
    }
 
@@ -115,14 +118,14 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    }
 
    /** @return */
-   private CompilationUnit parseFile()
+   private CompilationUnit parseFile(FileModel file)
    {
-      if (editor == null)
+      if (!editors.containsKey(file.getId()))
          return null;
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(editor.getText());
+      parser.setSource(editors.get(file.getId()).getText());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
-      parser.setUnitName(activeFile.getName().substring(0, activeFile.getName().lastIndexOf('.')));
+      parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
       parser.setResolveBindings(true);
       parser.setNameEnvironment(NAME_ENVIRONMENT);
       ASTNode ast = parser.createAST(null);
@@ -142,34 +145,20 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
          if (event.getEditor() instanceof CodeMirror)
          {
-            editor = (CodeMirror)event.getEditor();
-            if (needReparse)
+            editors.put(activeFile.getId(), (CodeMirror)event.getEditor());
+            if (needReparse.contains(activeFile.getId()))
             {
-               timer.cancel();
-               timer.schedule(2000);
+               startParsing();
             }
          }
-         else
-            editor = null;
       }
       else
       {
          activeFile = null;
-         editor = null;
       }
    }
 
-   private Timer timer = new Timer()
-   {
-
-      @Override
-      public void run()
-      {
-         Scheduler.get().scheduleIncremental(com);
-      }
-   };
-
-   private void asyncParse()
+   private void asyncParse(final FileModel file, final Timer timer, final Map<Integer, IProblem> problemMap)
    {
       GWT.runAsync(new RunAsyncCallback()
       {
@@ -177,27 +166,26 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          @Override
          public void onSuccess()
          {
-            CompilationUnit unit = parseFile();
+            CompilationUnit unit = parseFile(file);
             if (unit == null)
             {
                return;
             }
-            if (needReparse)
+            if (needReparse.contains(file.getId()))
             {
                IProblem[] problems = unit.getProblems();
-               if (problems.length == JavaCodeController.this.problems.size())
+               if (problems.length == problemMap.size())
                {
                   for (IProblem problem : problems)
                   {
-                     if (!JavaCodeController.this.problems.containsKey(problem.hashCode()))
+                     if (!problemMap.containsKey(problem.hashCode()))
                      {
                         reparse(problems);
                         return;
                      }
                   }
-                  needReparse = false;
-                  JavaCodeController.this.problems.clear();
-                  finishJob();
+                  needReparse.remove(file.getId());
+                  problemMap.clear();
                }
                else
                {
@@ -206,8 +194,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                }
 
             }
+            finishJob(file);
+            CodeMirror editor = editors.get(file.getId());
             editor.unmarkAllProblems();
-            IDE.fireEvent(new UpdateOutlineEvent(unit, activeFile));
+            IDE.fireEvent(new UpdateOutlineEvent(unit, file));
             if (unit.getProblems().length == 0 || editor == null)
                return;
 
@@ -227,11 +217,12 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
           */
          private void reparse(IProblem[] problems)
          {
-            JavaCodeController.this.problems.clear();
+            problemMap.clear();
             for (IProblem problem : problems)
             {
-               JavaCodeController.this.problems.put(problem.hashCode(), problem);
+               problemMap.put(problem.hashCode(), problem);
             }
+            startJob(file);
             timer.schedule(2000);
          }
 
@@ -323,9 +314,9 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
-      needReparse = true;
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
+         needReparse.add(event.getFile().getId());
          startJob(event.getFile());
       }
    }
@@ -346,19 +337,22 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onCancelParse(CancelParseEvent event)
    {
-      timer.cancel();
+      if (workingParsers.containsKey(activeFile.getId()))
+      {
+         workingParsers.get(activeFile.getId()).cancel();
+      }
    }
 
-   RepeatingCommand com = new RepeatingCommand()
-   {
-
-      @Override
-      public boolean execute()
-      {
-         asyncParse();
-         return false;
-      }
-   };
+   //   RepeatingCommand com = new RepeatingCommand()
+   //   {
+   //
+   //      @Override
+   //      public boolean execute()
+   //      {
+   //         asyncParse(activeFile);
+   //         return false;
+   //      }
+   //   };
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
@@ -368,35 +362,80 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    {
       if (activeFile == null)
          return;
-      timer.cancel();
-      needReparse = false;
-      finishJob();
-      if (editor != null)
+      needReparse.remove(event.getFile().getId());
+      finishJob(activeFile);
+      if (editors.containsKey(activeFile.getId()))
       {
-         timer.schedule(2000);
+         startParsing();
       }
    }
 
    /**
     * 
     */
-   private void finishJob()
+   private void startParsing()
    {
-      Job job = new Job(activeFile.getId(), JobStatus.FINISHED);
-      job.setFinishMessage("Java Tooling initialized  for " + activeFile.getName());
+      if (workingParsers.containsKey(activeFile.getId()))
+      {
+         workingParsers.get(activeFile.getId()).cancel();
+         workingParsers.get(activeFile.getId()).schedule(2000);
+      }
+      else
+      {
+         Timer t = new Timer()
+         {
+            private final FileModel currentFile;
+
+            private Map<Integer, IProblem> problems = new HashMap<Integer, IProblem>();
+
+            {
+               currentFile = activeFile;
+            }
+
+            @Override
+            public void run()
+            {
+               asyncParse(currentFile, this, problems);
+            }
+         };
+         workingParsers.put(activeFile.getId(), t);
+         t.schedule(2000);
+      }
+   }
+
+   /**
+    * 
+    */
+   private void finishJob(FileModel file)
+   {
+      Job job = new Job(file.getId(), JobStatus.FINISHED);
+      job.setFinishMessage("Java Tooling initialized  for " + file.getName());
       IDE.fireEvent(new JobChangeEvent(job));
    }
 
    /**
-    * @see org.eclipse.jdt.client.event.ParseActiveFileHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ParseActiveFileEvent)
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
     */
    @Override
-   public void onParseActiveFile(ParseActiveFileEvent event)
+   public void onEditorFileClosed(EditorFileClosedEvent event)
    {
-      needReparse = true;
+      String id = event.getFile().getId();
+      editors.remove(id);
+      workingParsers.remove(id);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.event.ReparseOpenedFilesHandler#onPaerseActiveFile(org.eclipse.jdt.client.event.ReparseOpenedFilesEvent)
+    */
+   @Override
+   public void onReparseOpenedFiles(ReparseOpenedFilesEvent event)
+   {
+      for (String id : editors.keySet())
+      {
+         needReparse.add(id);
+      }
       startJob(activeFile);
-      timer.cancel();
-      timer.schedule(2000);
+      startParsing();
    }
 
    public FileModel getActiveFile()
@@ -437,4 +476,5 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          return builder;
       }
    }
+
 }

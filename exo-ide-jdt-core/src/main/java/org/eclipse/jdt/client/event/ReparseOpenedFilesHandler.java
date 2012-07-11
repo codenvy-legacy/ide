@@ -25,9 +25,9 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id:  10:57:15 AM Mar 5, 2012 evgen $
  *
  */
-public interface ParseActiveFileHandler extends EventHandler
+public interface ReparseOpenedFilesHandler extends EventHandler
 {
 
-   void onParseActiveFile(ParseActiveFileEvent event);
+   void onReparseOpenedFiles(ReparseOpenedFilesEvent event);
 
 }

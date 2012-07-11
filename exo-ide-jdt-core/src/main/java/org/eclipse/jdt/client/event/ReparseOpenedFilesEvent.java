@@ -25,16 +25,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $Id: 10:56:59 AM Mar 5, 2012 evgen $
  * 
  */
-public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
+public class ReparseOpenedFilesEvent extends GwtEvent<ReparseOpenedFilesHandler>
 {
 
-   public static final GwtEvent.Type<ParseActiveFileHandler> TYPE = new Type<ParseActiveFileHandler>();
+   public static final GwtEvent.Type<ReparseOpenedFilesHandler> TYPE = new Type<ReparseOpenedFilesHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ParseActiveFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ReparseOpenedFilesHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -43,9 +43,9 @@ public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ParseActiveFileHandler handler)
+   protected void dispatch(ReparseOpenedFilesHandler handler)
    {
-      handler.onParseActiveFile(this);
+      handler.onReparseOpenedFiles(this);
    }
 
 }
