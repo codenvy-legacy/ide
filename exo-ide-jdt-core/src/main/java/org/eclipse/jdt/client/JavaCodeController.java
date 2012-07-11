@@ -99,8 +99,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    private static JavaCodeController instance;
 
-   public JavaCodeController()
+   private final SupportedProjectResolver resolver;
+
+   public JavaCodeController(SupportedProjectResolver resolver)
    {
+      this.resolver = resolver;
       instance = this;
       IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
@@ -142,6 +145,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
          activeFile = event.getFile();
+         if (!resolver.isProjectSupported(activeFile.getProject().getProjectType()))
+            return;
          NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
          if (event.getEditor() instanceof CodeMirror)
          {
@@ -316,8 +321,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    {
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
-         needReparse.add(event.getFile().getId());
-         startJob(event.getFile());
+         if (resolver.isProjectSupported(event.getFile().getProject().getProjectType()))
+         {
+            needReparse.add(event.getFile().getId());
+            startJob(event.getFile());
+         }
       }
    }
 

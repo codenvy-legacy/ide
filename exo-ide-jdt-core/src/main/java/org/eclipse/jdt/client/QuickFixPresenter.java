@@ -95,12 +95,15 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
 
    private final HandlerManager eventBus;
 
+   private final SupportedProjectResolver resolver;
+
    /**
     * 
     */
-   public QuickFixPresenter(HandlerManager eventBus)
+   public QuickFixPresenter(HandlerManager eventBus, SupportedProjectResolver resolver)
    {
       this.eventBus = eventBus;
+      this.resolver = resolver;
       correctionProcessor = new JavaCorrectionProcessor();
       eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       eventBus.addHandler(ShowQuickFixEvent.TYPE, this);
@@ -181,6 +184,8 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    public void onShowQuickFix(ShowQuickFixEvent event)
    {
       if (editor == null || compilationUnit == null)
+         return;
+      if (!resolver.isProjectSupported(file.getProject().getProjectType()))
          return;
       IProblem[] problems = compilationUnit.getProblems();
       new String();
