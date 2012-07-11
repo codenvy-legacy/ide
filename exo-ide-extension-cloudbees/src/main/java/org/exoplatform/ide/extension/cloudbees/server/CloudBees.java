@@ -155,29 +155,24 @@ public class CloudBees extends JenkinsClient
 
    /*===== Account provisioning =====*/
 
-   private static class AccountAPIResponse<T>
+   private static class AccountAPIResponse
    {
-      static <T> AccountAPIResponse<T> newInstance(T object, int status)
-      {
-         return new AccountAPIResponse<T>(object, status);
-      }
-
-      final T object;
       final int status;
+      final String body;
+
+      private AccountAPIResponse(String body, int status)
+      {
+         this.status = status;
+         this.body = body;
+      }
 
       @Override
       public String toString()
       {
          return "AccountAPIResponse{" +
-            "object=" + object +
-            ", status=" + status +
+            "status=" + status +
+            ", body='" + body + '\'' +
             '}';
-      }
-
-      private AccountAPIResponse(T object, int status)
-      {
-         this.object = object;
-         this.status = status;
       }
    }
 
@@ -226,13 +221,14 @@ public class CloudBees extends JenkinsClient
       throws IOException, ParsingResponseException, AccountAlreadyExistsException
    {
       validateAccount(account);
-      AccountAPIResponse<CloudBeesUser> response = makeRequest(
-         accountProvisioningAPIEndpoint + "/users/" + userID + "/accounts", "POST", JsonHelper.toJson(account), CloudBeesUser.class);
+      AccountAPIResponse response = makeRequest(
+         accountProvisioningAPIEndpoint + "/users/" + userID + "/accounts", "POST", JsonHelper.toJson(account));
       if (response.status == 200)
       {
          throw new AccountAlreadyExistsException(account);
       }
-      for (CloudBeesAccount _account : response.object.getAccounts())
+      final CloudBeesUser user = JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
+      for (CloudBeesAccount _account : user.getAccounts())
       {
          if (_account.getName().equals(account.getName()))
          {
@@ -274,24 +270,14 @@ public class CloudBees extends JenkinsClient
       throws IOException, ParsingResponseException, UserAlreadyExistsException
    {
       validateUser(user);
-      AccountAPIResponse<CloudBeesUser> response = makeRequest(
-         accountProvisioningAPIEndpoint + "/accounts/" + account + "/users", "POST", JsonHelper.toJson(user), CloudBeesUser.class);
+      AccountAPIResponse response = makeRequest(
+         accountProvisioningAPIEndpoint + "/accounts/" + account + "/users", "POST", JsonHelper.toJson(user));
       if (response.status == 200)
       {
          throw new UserAlreadyExistsException(user);
       }
-      return response.object;
+      return JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
    }
-
-//   public void deleteUser(String userID) throws IOException, ParsingResponseException
-//   {
-//      makeRequest(accountProvisioningAPIEndpoint + "/users/" + userID, "DELETE", null, null);
-//   }
-//
-//   public CloudBeesUser getUser(String userID) throws IOException, ParsingResponseException
-//   {
-//      return makeRequest(accountProvisioningAPIEndpoint + "/users/" + userID, "GET", null, CloudBeesUser.class).object;
-//   }
 
    /** Prevent creation partial user. */
    private void validateUser(CloudBeesUser user)
@@ -334,8 +320,7 @@ public class CloudBees extends JenkinsClient
       }
    }
 
-   private <T> AccountAPIResponse<T> makeRequest(String url, String method, String body, Class<T> clazz)
-      throws IOException, ParsingResponseException
+   private AccountAPIResponse makeRequest(String url, String method, String body) throws IOException
    {
       HttpURLConnection http = null;
       try
@@ -376,11 +361,7 @@ public class CloudBees extends JenkinsClient
             {
                input.close();
             }
-            if (clazz == null || result == null)
-            {
-               return AccountAPIResponse.newInstance(null, status);
-            }
-            return AccountAPIResponse.newInstance(JsonHelper.fromJson(result, clazz, null), status);
+            return new AccountAPIResponse(result, status);
          }
          catch (IOException e)
          {
