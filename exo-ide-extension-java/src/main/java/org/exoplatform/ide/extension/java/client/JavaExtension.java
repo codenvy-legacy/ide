@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.java.client;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Java extention for IDE.
@@ -38,6 +39,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
+      new JavaClasspathCreator(IDE.eventBus(), event.getApplicationConfiguration().getContext());
    }
 
    /**
@@ -46,6 +48,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void initialize()
    {
+      IDE.eventBus().addHandler(InitializeServicesEvent.TYPE, this);
    }
 
 }

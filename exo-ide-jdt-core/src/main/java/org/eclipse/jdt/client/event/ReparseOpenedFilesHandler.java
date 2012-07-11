@@ -16,38 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client;
+package org.eclipse.jdt.client.event;
 
-import org.eclipse.jdt.client.event.CleanProjectEvent;
-import org.eclipse.jdt.client.event.CleanProjectHandler;
-import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
+ * @version $Id:  10:57:15 AM Mar 5, 2012 evgen $
  *
  */
-public class CleanProjectCommandHandler implements CleanProjectHandler
+public interface ReparseOpenedFilesHandler extends EventHandler
 {
 
-   /**
-    * 
-    */
-   public CleanProjectCommandHandler()
-   {
-      IDE.addHandler(CleanProjectEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.event.CleanProjectHandler#onCleanProject(org.eclipse.jdt.client.event.CleanProjectEvent)
-    */
-   @Override
-   public void onCleanProject(CleanProjectEvent event)
-   {
-      TypeInfoStorage.get().clear();
-      IDE.fireEvent(new ReparseOpenedFilesEvent());
-      NameEnvironment.clearFQNBlackList();
-   }
+   void onReparseOpenedFiles(ReparseOpenedFilesEvent event);
 
 }

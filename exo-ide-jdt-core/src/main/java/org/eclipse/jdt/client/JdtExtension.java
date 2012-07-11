@@ -66,16 +66,19 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
 public class JdtExtension extends Extension implements InitializeServicesHandler, UserInfoReceivedHandler,
-   ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler
+   ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler, SupportedProjectResolver
 {
 
    static String DOC_CONTEXT;
@@ -86,7 +89,15 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
 
    private static JdtExtension instance;
 
+   private static final Set<String> projectTypes = new HashSet<String>();
+
    private ContentAssistHistory contentAssistHistory;
+
+   static
+   {
+      projectTypes.add(ProjectResolver.SERVLET_JSP);
+      projectTypes.add(ProjectResolver.SPRING);
+   }
 
    /**
     * The code template context type registry for the java editor.
@@ -141,8 +152,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ApplicationClosedEvent.TYPE, this);
-      new CodeAssistantPresenter();
-      new JavaCodeController();
+      new CodeAssistantPresenter(this);
+      new JavaCodeController(this);
       new OutlinePresenter();
       new TypeInfoUpdater();
       new CleanProjectCommandHandler();
@@ -158,7 +169,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
-      new QuickFixPresenter(IDE.eventBus());
+      new QuickFixPresenter(IDE.eventBus(), this);
       new QuickOutlinePresenter(IDE.eventBus());
       injector = GWT.create(JdtGinjector.class);
       injector.getNewConstructorUsingFields();
@@ -329,6 +340,15 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
             Preferences.CODEASSIST_LRU_HISTORY + userInfo.getName());
          QualifiedTypeNameHistory.getDefault().save();
       }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.SupportedProjectResolver#isProjectSupported(java.lang.String)
+    */
+   @Override
+   public boolean isProjectSupported(String projectType)
+   {
+      return projectTypes.contains(projectType);
    }
 
 }

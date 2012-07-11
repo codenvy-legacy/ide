@@ -16,36 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.event;
+package org.eclipse.jdt.client;
 
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 10:56:59 AM Mar 5, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
+public interface SupportedProjectResolver
 {
-
-   public static final GwtEvent.Type<ParseActiveFileHandler> TYPE = new Type<ParseActiveFileHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ParseActiveFileHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(ParseActiveFileHandler handler)
-   {
-      handler.onParseActiveFile(this);
-   }
-
+   
+   boolean isProjectSupported(String projectType);
+   
 }
