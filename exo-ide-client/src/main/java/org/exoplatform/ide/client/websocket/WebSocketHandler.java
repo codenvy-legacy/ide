@@ -55,6 +55,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
+      // prepare WebSocket connection on start IDE
       WebSocket.getInstance();
    }
 
@@ -64,7 +65,11 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationClosed(ApplicationClosedEvent event)
    {
-      WebSocket.getInstance().close();
+      WebSocket ws = WebSocket.getInstance();
+      if (ws != null)
+      {
+         ws.close();
+      }
    }
 
    /**
@@ -78,7 +83,11 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
       {
          AutoBean<WebSocketSessionID> sessionIdBean =
             AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, WebSocketSessionID.class, message);
-         WebSocket.getInstance().setSessionId(sessionIdBean.as().getSessionId());
+         WebSocket ws = WebSocket.getInstance();
+         if (ws != null)
+         {
+            ws.setSessionId(sessionIdBean.as().getSessionId());
+         }
       }
    }
 

@@ -124,11 +124,9 @@ public class WebSocket
             instance = null;
             socket = null;
 
-            if (event.wasClean())
-            {
-               IDE.fireEvent(event);
-            }
-            else if (counterConnectionAttempts < 5)
+            IDE.fireEvent(event);
+
+            if (!event.wasClean() && counterConnectionAttempts < 5)
             {
                reconnectWebSocketTimer.schedule(10000);
             }
@@ -141,6 +139,7 @@ public class WebSocket
          public void onWebSocketError(WebSocketErrorEvent event)
          {
             IDE.fireEvent(event);
+            close();
          }
       });
 
@@ -155,21 +154,23 @@ public class WebSocket
    }
 
    /**
-    * Returns the instance of the {@link WebSocket}.
+    * Returns the instance of the {@link WebSocket} or <code>null</code>
+    * if WebSocket not supported in the current web-browser.
     * 
     * @return instance of {@link WebSocket}
     */
    public static WebSocket getInstance()
    {
-      // TODO Exceptions (throw new IllegalStateException("Not connected"))
-      // - check WebSocket are supported
-      // - connection established successfully
-      // - sessionId received
+      if (!isSupported())
+      {
+         return null;
+      }
 
       if (instance == null)
       {
          instance = new WebSocket();
       }
+
       return instance;
    }
 

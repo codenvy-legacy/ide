@@ -132,6 +132,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private ProjectModel project;
 
+   private WebSocket ws = WebSocket.getInstance();
+
    public interface Display extends IsView
    {
 
@@ -454,7 +456,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
          
-         if (WebSocket.ReadyState.OPEN != WebSocket.getInstance().getReadyState())
+         if (ws != null && WebSocket.ReadyState.OPEN != ws.getReadyState())
          {
             checkDebugEventsTimer.scheduleRepeating(3000);
          }
@@ -741,9 +743,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       try
       {
          String sessionId = null;
-         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = WebSocket.getInstance().getSessionId();
+            sessionId = ws.getSessionId();
          }
 
          DebuggerClientService.getInstance().create(debugApplicationInstance.getDebugHost(),

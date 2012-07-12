@@ -102,9 +102,10 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       try
       {
          String sessionId = null;
-         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
+         WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = WebSocket.getInstance().getSessionId();
+            sessionId = ws.getSessionId();
          }
 
          DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(), sessionId,

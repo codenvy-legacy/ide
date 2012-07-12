@@ -71,13 +71,13 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private final class WSMessageInbound extends MessageInbound
    {
       /**
-       * Identifier of a connected user.
+       * Session identifier of a connected user.
        */
-      private String userId;
+      private String sessionId;
 
-      public WSMessageInbound(String userId)
+      public WSMessageInbound(String sessionId)
       {
-         this.userId = userId;
+         this.sessionId = sessionId;
       }
 
       /**
@@ -86,14 +86,14 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onOpen(WsOutbound outbound)
       {
-         webSocketDispatcher.registerConnection(userId, this);
+         webSocketDispatcher.registerConnection(sessionId, this);
          try
          {
-            outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + userId + "\"}"));
+            outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + sessionId + "\"}"));
          }
          catch (IOException e)
          {
-            LOG.error("An error occurs writing data to the client (sessionId " + userId + ")." + e.getMessage(), e);
+            LOG.error("An error occurs writing data to the client (sessionId " + sessionId + ")." + e.getMessage(), e);
          }
       }
 
@@ -105,9 +105,9 @@ public class IDEWebSocketServlet extends WebSocketServlet
       {
          if (status != Constants.OPCODE_CLOSE)
          {
-            LOG.error("WebSocket connection was closed abnormally with status code " + status + " (sessionId " + userId + ").");
+            LOG.error("WebSocket connection was closed abnormally with status code " + status + " (sessionId " + sessionId + ").");
          }
-         webSocketDispatcher.unregisterConnection(userId, this);
+         webSocketDispatcher.unregisterConnection(sessionId, this);
       }
 
       /**

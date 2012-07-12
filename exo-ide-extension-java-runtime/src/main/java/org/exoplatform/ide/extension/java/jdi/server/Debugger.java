@@ -123,7 +123,6 @@ public class Debugger implements EventsHandler
             }
             catch (DebuggerException e)
             {
-               // TODO send exception to client via WebSocket connection
                LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
             }
             catch (IOException e)

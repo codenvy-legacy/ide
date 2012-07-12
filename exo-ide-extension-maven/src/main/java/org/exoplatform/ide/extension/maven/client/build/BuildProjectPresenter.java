@@ -201,9 +201,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       try
       {
          String sessionId = null;
-         if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = WebSocket.getInstance().getSessionId();
+            sessionId = ws.getSessionId();
          }
 
          BuilderClientService.getInstance().build(projectId, vfs.getId(), sessionId,
@@ -218,7 +219,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.startAnimation();
                   previousStatus = null;
 
-                  if (WebSocket.getInstance().getReadyState() != WebSocket.ReadyState.OPEN)
+                  if (ws.getReadyState() != WebSocket.ReadyState.OPEN)
                   {
                      refreshBuildStatusTimer.schedule(delay);
                   }
