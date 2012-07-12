@@ -724,9 +724,14 @@
                   <artifactId>gwt-maven-plugin</artifactId>
                   <version>${gwt.maven.plugin.version}</version>
                   <configuration>
-                     <!-- <noServer>true</noServer>
-                     <runTarget>http://127.0.0.1:8080/IDE/Shell.html</runTarget> -->
-                     <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
+                     <!-- Embedded Jetty 6 (without WebSocket support) -->
+                     <!-- <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget> -->
+
+                     <!-- Tomcat 7 (with WebSocket support) -->
+                     <noServer>true</noServer>
+                     <runTarget>/IDE/Shell.html</runTarget>
+                     <port>8080</port>
+
                      <logLevel>INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>

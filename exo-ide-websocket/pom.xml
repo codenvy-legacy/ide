@@ -20,22 +20,15 @@
          <artifactId>everrest-core</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
+         <groupId>org.apache.tomcat</groupId>
+         <artifactId>tomcat-catalina</artifactId>
+         <version>7.0.29</version>
+         <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-extension-maven</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>javax.inject</groupId>
-         <artifactId>javax.inject</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.geronimo.ext.tomcat</groupId>
-         <artifactId>catalina</artifactId>
-         <version>7.0.27.1</version>
+         <groupId>org.apache.tomcat</groupId>
+         <artifactId>tomcat-coyote</artifactId>
+         <version>7.0.29</version>
          <scope>provided</scope>
       </dependency>
       <dependency>

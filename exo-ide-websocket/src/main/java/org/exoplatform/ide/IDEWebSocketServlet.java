@@ -18,20 +18,21 @@
  */
 package org.exoplatform.ide;
 
+import org.apache.catalina.websocket.Constants;
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet used for processing WebSocket connections.
@@ -44,30 +45,24 @@ public class IDEWebSocketServlet extends WebSocketServlet
 {
    private static final long serialVersionUID = 1L;
 
-   private static IDEWebSocketDispatcher wsDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
-      .getCurrentContainer().getComponentInstanceOfType(IDEWebSocketDispatcher.class);
-
-   private String lastConnectedSessionId;
+   /**
+    * Exo logger.
+    */
+   private static final Log LOG = ExoLogger.getLogger(IDEWebSocketServlet.class);
 
    /**
-    * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+    * WebSocket dispatcher that used for register/unregister client connections.
     */
-   @Override
-   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-   {
-      lastConnectedSessionId = req.getSession().getId();
-      super.doGet(req, resp);
-   }
+   private static IDEWebSocketDispatcher webSocketDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
+      .getCurrentContainer().getComponentInstanceOfType(IDEWebSocketDispatcher.class);
 
    /**
     * @see org.apache.catalina.websocket.WebSocketServlet#createWebSocketInbound(java.lang.String)
     */
    @Override
-   protected StreamInbound createWebSocketInbound(String subProtocol)
+   protected StreamInbound createWebSocketInbound(String subProtocol, HttpServletRequest request)
    {
-      // TODO use code below when Tomcat 7.0.29 will be released
-      // return new WSMessageInbound(req.getSession().getId());
-      return new WSMessageInbound(lastConnectedSessionId);
+      return new WSMessageInbound(request.getSession().getId());
    }
 
    /**
@@ -91,15 +86,14 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onOpen(WsOutbound outbound)
       {
-         wsDispatcher.registerConnection(userId, this);
+         webSocketDispatcher.registerConnection(userId, this);
          try
          {
             outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + userId + "\"}"));
          }
          catch (IOException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("An error occurs writing data to the client (sessionId " + userId + ")." + e.getMessage(), e);
          }
       }
 
@@ -109,10 +103,11 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onClose(int status)
       {
-         // 8 - OPCODE_CLOSE
-         // Status code 1002 indicates that an endpoint is terminating the connection due to a protocol error.
-         // (Browser close connection with status 1002 every 1 min. for inactive state).
-         wsDispatcher.unregisterConnection(userId, this);
+         if (status != Constants.OPCODE_CLOSE)
+         {
+            LOG.error("WebSocket connection was closed abnormally with status code " + status + " (sessionId " + userId + ").");
+         }
+         webSocketDispatcher.unregisterConnection(userId, this);
       }
 
       /**

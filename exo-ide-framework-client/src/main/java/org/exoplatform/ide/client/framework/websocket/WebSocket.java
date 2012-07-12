@@ -23,7 +23,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorEvent;
@@ -51,11 +50,11 @@ public class WebSocket
        * The WebSocket object is created but connection has not yet been established.
        */
       CONNECTING(0),
+
       /**
        * Connection is established and communication is possible.
        * A WebSocket must be in the open state in order to send and receive data over the network.
        */
-
       OPEN(1),
 
       /**
@@ -93,7 +92,7 @@ public class WebSocket
    private static WebSocket instance;
 
    /**
-    * Session identifier of the current connection.
+    * Session identifier of the current WebSocket connection.
     */
    private String sessionId;
 
@@ -122,9 +121,6 @@ public class WebSocket
          @Override
          public void onWebSocketClosed(WebSocketClosedEvent event)
          {
-            IDE.fireEvent(new OutputEvent("WS CLOSED. Code:" + event.getCode()
-                                                + " Reason:" + event.getReason()
-                                                + " WasClean:" + event.wasClean()));
             instance = null;
             socket = null;
 
@@ -215,13 +211,13 @@ public class WebSocket
 
       switch (socket.getReadyState())
       {
-         case 0:
+         case 0 :
             return ReadyState.CONNECTING;
-         case 1:
+         case 1 :
             return ReadyState.OPEN;
-         case 2:
+         case 2 :
             return ReadyState.CLOSING;
-         case 3:
+         case 3 :
             return ReadyState.CLOSED;
          default :
             return ReadyState.CLOSED;
@@ -235,6 +231,10 @@ public class WebSocket
     */
    public void send(String data)
    {
+      if (getReadyState() != ReadyState.OPEN)
+      {
+         throw new IllegalStateException("Failed to send data. WebSocket connection not opened");
+      }
       socket.send(data);
    }
 

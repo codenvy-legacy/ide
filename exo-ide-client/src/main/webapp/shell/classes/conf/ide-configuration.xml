@@ -373,13 +373,16 @@
             <name>CF1</name>
             <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
                <field name="target">
-                  <string>http://api.cfet.exoplatform.org</string>
+                  <!-- <string>http://api.cfet.exoplatform.org</string> -->
+                  <string>http://api.javarun2.exoplatform.com</string>
                </field>
                <field name="user">
-                  <string>support@cloud-ide.com</string>
+                  <!-- <string>support@cloud-ide.com</string> -->
+                  <string>exoidedev@exoplatform.com</string>
                </field>
                <field name="password">
-                  <string>eXoAdmin12321</string>
+                  <!-- <string>eXoAdmin12321</string> -->
+                  <string>1234qwer</string>
                </field>
             </object>
          </object-param>

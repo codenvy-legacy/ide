@@ -191,6 +191,7 @@
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>commons-io</groupId>
@@ -240,9 +241,15 @@
          <artifactId>exo-ide-vfs-jcr</artifactId>
       </dependency>      
       <dependency>
-         <groupId>org.apache.geronimo.ext.tomcat</groupId>
-         <artifactId>catalina</artifactId>
-         <version>7.0.27.1</version>
+         <groupId>org.apache.tomcat</groupId>
+         <artifactId>tomcat-catalina</artifactId>
+         <version>7.0.29</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.tomcat</groupId>
+         <artifactId>tomcat-coyote</artifactId>
+         <version>7.0.29</version>
          <scope>provided</scope>
       </dependency>
    </dependencies>

@@ -23,9 +23,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -974,10 +979,61 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          return;
       }
 
-      AutoBean<WebSocketEventDebuggerEventList> webSocketMessageBean =
-         AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, WebSocketEventDebuggerEventList.class, message);
+      WebSocketEventDebuggerEventList wsDebuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(WebSocketEventDebuggerEventList.class).as();
+      DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
+      wsDebuggerEventList.setData(debuggerEventList);
+      parseDebuggerEvents(wsDebuggerEventList, message);
+      eventListReceived(wsDebuggerEventList.getData());
+   }
 
-      eventListReceived(webSocketMessageBean.as().getData());
+   /**
+    * Parses data in JSON format to {@link WebSocketEventDebuggerEventList} object.
+    * 
+    * @param wsDebuggerEventList
+    * @param jsonData data in JSON format
+    */
+   private void parseDebuggerEvents(WebSocketEventDebuggerEventList wsDebuggerEventList, String jsonData)
+   {
+      JSONObject jObj = JSONParser.parseStrict(jsonData).isObject();
+      if (jObj == null)
+      {
+         return;
+      }
+
+      List<DebuggerEvent> eventList = new ArrayList<DebuggerEvent>();
+      wsDebuggerEventList.getData().setEvents(eventList);
+
+      if (jObj.containsKey("data"))
+      {
+         JSONObject debuggerEventList = jObj.get("data").isObject();
+
+         if (debuggerEventList.containsKey("events"))
+         {
+            JSONArray jEvent = debuggerEventList.get("events").isArray();
+            for (int i = 0; i < jEvent.size(); i++)
+            {
+               JSONObject je = jEvent.get(i).isObject();
+               if (je.containsKey("type"))
+               {
+                  int type = (int)je.get("type").isNumber().doubleValue();
+                  if (type == DebuggerEvent.BREAKPOINT)
+                  {
+                     AutoBean<BreakPointEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoinEvent();
+                     Splittable data = StringQuoter.split(je.toString());
+                     AutoBeanCodex.decodeInto(data, bean);
+                     eventList.add(bean.as());
+                  }
+                  else if (type == DebuggerEvent.STEP)
+                  {
+                     AutoBean<StepEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.stepEvent();
+                     Splittable data = StringQuoter.split(je.toString());
+                     AutoBeanCodex.decodeInto(data, bean);
+                     eventList.add(bean.as());
+                  }
+               }
+            }
+         }
+      }
    }
 
 }

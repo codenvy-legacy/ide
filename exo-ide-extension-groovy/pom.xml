@@ -78,6 +78,12 @@
       <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.core</groupId>
@@ -90,6 +96,12 @@
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-test</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
@@ -136,11 +148,13 @@
          <groupId>javax.jcr</groupId>
          <artifactId>jcr</artifactId>
       </dependency>
+      <!--
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
          <scope>runtime</scope>
       </dependency>
+      -->
 
       <dependency>
          <groupId>com.google.gwt</groupId>

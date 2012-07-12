@@ -185,7 +185,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          project = ((ItemContext)selectedItems.get(0)).getProject();
       }
 
-      statusHandler = new BuildRequestStatusHandler(project.getPath());
+      statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1));
 
       buildApplicationIfNeed();
    }
