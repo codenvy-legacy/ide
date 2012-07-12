@@ -99,6 +99,15 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("control.appList.prompt")
    String controlAppListPrompt();
 
+   @Key("control.createAccount.id")
+   String controlCreateAccountId();
+
+   @Key("control.createAccount.title")
+   String controlCreateAccountTitle();
+
+   @Key("control.createAccount.prompt")
+   String controlCreateAccountPrompt();
+
    /*
     * LoginView.
     */
@@ -269,4 +278,52 @@ public interface CloudBeesLocalizationConstant extends Messages
 
    @Key("manageProject.application.actions")
    String manageProjectApplicationActions();
+
+   /*
+    * Create account view.
+    */
+   @Key("create.account.view.title")
+   String createAccountViewTitle();
+
+   @Key("create.account.email.field")
+   String createAccountEmailField();
+
+   @Key("create.account.company.field")
+   String createAccountCompanyField();
+
+   @Key("create.account.first.name.field")
+   String createAccountFirstNameField();
+
+   @Key("create.account.last.name.field")
+   String createAccountLastNameField();
+
+   @Key("create.account.password.field")
+   String createAccountPasswordField();
+
+   @Key("create.account.confirm.password.field")
+   String createAccountConfirmPasswordField();
+
+   @Key("create.account.domain.field")
+   String createAccountDomainField();
+
+   @Key("create.account.user.name.field")
+   String createAccountUserNameField();
+
+   @Key("create.account.optional")
+   String createAccountOptional();
+
+   @Key("create.account.passwords.do.not.match")
+   String createAccountPasswordsDoNotMatch();
+
+   @Key("create.account.short.password")
+   String createAccountShortPassword();
+
+   @Key("create.account.short.domain")
+   String createAccountShortDomain();
+
+   @Key("create.account.empty.required.fields")
+   String createAccountEmptyRequiredFields();
+
+   @Key("create.account.success")
+   String createAccountSuccess(String account);
 }
