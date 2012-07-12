@@ -148,6 +148,8 @@ public class GetterSetterTreeModel implements TreeViewModel
                   boolean selected = set.contains(o);
 
                   GetterSetterEntry[] entries = fields.get(o);
+                  if(entries == null)
+                     return;
                   for (GetterSetterEntry e : entries)
                   {
                      selectionModel.setSelected(e, selected);

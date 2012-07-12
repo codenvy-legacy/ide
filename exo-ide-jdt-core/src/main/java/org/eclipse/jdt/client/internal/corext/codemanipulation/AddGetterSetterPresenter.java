@@ -18,15 +18,15 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.TakesValue;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.eclipse.jdt.client.JavaPreferencesSettings;
 import org.eclipse.jdt.client.UpdateOutlineEvent;
@@ -111,8 +111,6 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
 
    private static GetterSetterEntryProvider instance;
 
-   private HandlerManager eventBus;
-
    private Display display;
 
    private final IDE ide;
@@ -133,14 +131,17 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
 
    private boolean fSort;
 
+   private final Provider<Display> displayProvider;
+
    /**
     * @param eventBus
     */
-   public AddGetterSetterPresenter(HandlerManager eventBus, IDE ide)
+   @Inject
+   public AddGetterSetterPresenter(HandlerManager eventBus, IDE ide, Provider<Display> displayProvider)
    {
       super();
+      this.displayProvider = displayProvider;
       instance = this;
-      this.eventBus = eventBus;
       this.ide = ide;
       eventBus.addHandler(AddGetterSetterEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
@@ -190,8 +191,7 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
       this.typeDeclaration = (TypeDeclaration)typeDeclaration;
       if (display == null)
       {
-         JdtGinjector injector = GWT.create(JdtGinjector.class);
-         display = injector.getView();
+         display = displayProvider.get();
          bind();
          ide.openView(display.asView());
       }

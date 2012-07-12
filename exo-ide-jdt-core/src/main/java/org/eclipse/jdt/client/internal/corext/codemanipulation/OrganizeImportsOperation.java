@@ -33,7 +33,6 @@ import org.eclipse.jdt.client.env.PackageFragment;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
-import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
 
@@ -593,16 +592,7 @@ public class OrganizeImportsOperation
       final Set<String> oldSingleImports, final Set<String> oldDemandImports)
    {
       TextEdit result = null;
-      try
-      {
-         result = importsRewrite.rewriteImports(null);
-      }
-      catch (CoreException e)
-      {
-         e.printStackTrace();
-         callback.textEditCreated(null);
-         return;
-      }
+      result = importsRewrite.rewriteImports();
 
       determineImportDifferences(importsRewrite, oldSingleImports, oldDemandImports);
 

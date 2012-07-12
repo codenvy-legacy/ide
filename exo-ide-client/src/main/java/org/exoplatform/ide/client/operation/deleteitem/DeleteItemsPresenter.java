@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
+import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -178,12 +179,12 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
          return;
       }
 
-      if (items.size() == 1 && items.get(0) instanceof ProjectModel && currentProject != null
-         && currentProject.getId().equals(items.get(0).getId()))
-      {
-         Dialogs.getInstance().showInfo("Project must be closed before deleting.");
-         return;
-      }
+      //      if (items.size() == 1 && items.get(0) instanceof ProjectModel && currentProject != null
+      //         && currentProject.getId().equals(items.get(0).getId()))
+      //      {
+      //         Dialogs.getInstance().showInfo("Project must be closed before deleting.");
+      //         return;
+      //      }
 
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
@@ -298,9 +299,19 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
 
          if (files > 0)
          {
-            final String msg =
-               org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
-                  item.getName(), copy.size());
+
+            String msg;
+            if (item instanceof ProjectModel)
+            {
+               msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+                     .deleteItemsAskDeleteProjectWithModifiedFiles(item.getName(), copy.size());
+            }
+            else
+               msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
+                     item.getName(), copy.size());
+
             showDialog(item, msg);
             return;
          }
@@ -384,6 +395,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                         IDE.fireEvent(new EditorCloseFileEvent(file, true));
                      }
                   }
+                  if (item instanceof ProjectModel)
+                     IDE.fireEvent(new CloseProjectEvent());
                }
                lastDeletedItem = item;
                deleteNextItem();

@@ -18,16 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.extension.maven.server.BuilderException;
-import org.exoplatform.ide.extension.maven.shared.BuildStatus;
-import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.utils.ExoConfigurationHelper;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -43,21 +38,10 @@ import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 import org.picocontainer.Startable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.ws.rs.core.MediaType;
 
@@ -110,33 +94,8 @@ public class PomListener implements Startable
          try
          {
             final String buildId = client.dependenciesList(vfs, parent.getId());
-            timer.schedule(new TimerTask()
-            {
-
-               @Override
-               public void run()
-               {
-                  try
-                  {
-                     String status = client.status(buildId);
-                     JsonParser parser = new JsonParser();
-                     parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
-                     BuildStatusBean buildStatus =
-                        ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
-                     if (Status.IN_PROGRESS != buildStatus.getStatus())
-                     {
-                        cancel();
-                        buildFinished(buildStatus, vfs, parent);
-                     }
-
-                  }
-                  catch (Exception e)
-                  {
-                     cancel();
-                     LOG.error("Project build '" + parent.getPath() + " failed", e);
-                  }
-               }
-            }, DELAY, DELAY);
+            timer.schedule(new GenerateDependencysTask(parent, vfs, buildId, client, storageClient, timer, DELAY),
+               DELAY, DELAY);
          }
          catch (IOException e)
          {
@@ -148,89 +107,6 @@ public class PomListener implements Startable
          }
       }
 
-      private void buildFinished(BuildStatus buildStatus, VirtualFileSystem vfs, Item project)
-      {
-         if (buildStatus.getStatus() == Status.FAILED)
-         {
-            LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-            return;
-         }
-         HttpURLConnection http = null;
-         try
-         {
-            URL url = new URL(buildStatus.getDownloadUrl());
-            http = (HttpURLConnection)url.openConnection();
-            http.setRequestMethod("GET");
-            int responseCode = http.getResponseCode();
-            if (responseCode != 200)
-            {
-               LOG.error("Can't dowload dependency list from: " + buildStatus.getDownloadUrl());
-            }
-
-            InputStream data = http.getInputStream();
-            try
-            {
-               ConversationState.setCurrent(new ConversationState(new Identity("__system")));
-               String dependencys = readBody(data, http.getContentLength());
-               List<ConvertibleProperty> properties =
-                  Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:classpath", dependencys)});
-               vfs.updateItem(project.getId(), properties, null);
-               copyDependencys(project, vfs, dependencys);
-            }
-            catch (VirtualFileSystemException e)
-            {
-               LOG.error("Can't set classpath property, for project: " + project.getPath(), e);
-            }
-            catch (Exception e)
-            {
-               LOG.error("Error", e);
-            }
-            finally
-            {
-               data.close();
-               ConversationState.setCurrent(null);
-            }
-         }
-         catch (MalformedURLException e)
-         {
-            LOG.error("Invalid URL", e);
-         }
-         catch (IOException e)
-         {
-            LOG.error("Error", e);
-         }
-         finally
-         {
-            if (http != null)
-            {
-               http.disconnect();
-            }
-         }
-
-      }
-
-      private void copyDependencys(final Item project, final VirtualFileSystem vfs, final String dependencyList)
-      {
-         try
-         {
-            final String copyId = client.dependenciesCopy(vfs, project.getId(), null);
-            timer.schedule(new BuildDependencyTask(client, storageClient, vfs, timer, dependencyList, project, copyId,
-               DELAY), DELAY, DELAY);
-
-         }
-         catch (IOException e)
-         {
-            LOG.error("Error with project " + project.getPath(), e);
-         }
-         catch (BuilderException e)
-         {
-            LOG.error("Error when build project: " + project.getPath(), e);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error("Error when build project: " + project.getPath(), e);
-         }
-      }
    };
 
    /**
@@ -249,39 +125,6 @@ public class PomListener implements Startable
          idFilter, //
          new TypeFilter(ChangeType.CONTENT_UPDATED),//
          mimeTypeFilter, pathFilter), updateListener);
-
-      listenerList.addEventListener(ChangeEventFilter.createAndFilter(//
-         idFilter, //
-         new TypeFilter(ChangeType.CREATED),//
-         mimeTypeFilter, pathFilter), updateListener);
-   }
-
-   private String readBody(InputStream input, int contentLength) throws IOException
-   {
-      String body = null;
-      if (contentLength > 0)
-      {
-         byte[] b = new byte[contentLength];
-         int off = 0;
-         int i;
-         while ((i = input.read(b, off, contentLength - off)) > 0)
-         {
-            off += i;
-         }
-         body = new String(b);
-      }
-      else if (contentLength < 0)
-      {
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         byte[] buf = new byte[1024];
-         int i;
-         while ((i = input.read(buf)) != -1)
-         {
-            bout.write(buf, 0, i);
-         }
-         body = bout.toString();
-      }
-      return body;
    }
 
    /**

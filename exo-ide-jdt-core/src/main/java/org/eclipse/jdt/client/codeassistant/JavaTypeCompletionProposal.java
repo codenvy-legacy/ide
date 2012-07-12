@@ -18,7 +18,6 @@ import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
@@ -122,7 +121,7 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal
          if (impRewrite != null && impRewrite.getCreatedImports() == null)
          {
             int oldLen = document.getLength();
-            impRewrite.rewriteImports(new NullProgressMonitor()).apply(document, TextEdit.UPDATE_REGIONS);
+            impRewrite.rewriteImports().apply(document, TextEdit.UPDATE_REGIONS);
             setReplacementOffset(getReplacementOffset() + document.getLength() - oldLen);
          }
       }

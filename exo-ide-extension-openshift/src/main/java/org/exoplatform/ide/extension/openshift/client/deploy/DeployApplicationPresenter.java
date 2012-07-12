@@ -18,9 +18,15 @@
  */
 package org.exoplatform.ide.extension.openshift.client.deploy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -55,14 +61,9 @@ import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -174,6 +175,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    public void getView(String projectName, PaasCallback paasCallback)
    {
       this.paasCallback = paasCallback;
+      this.applicationName = projectName;
       if (display == null)
       {
          display = GWT.create(Display.class);
@@ -248,8 +250,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                {
                   display.setTypeValues(result.toArray(new String[result.size()]));
                   applicationType = display.getTypeField().getValue();
-                  display.getApplicationNameField().setValue("");
-                  applicationName = null;
+                  display.getApplicationNameField().setValue(applicationName);
 
                   if (paasCallback != null)
                   {
@@ -282,14 +283,15 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                {
                   IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
 
-                  new Timer()
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
                   {
+
                      @Override
-                     public void run()
+                     public void execute()
                      {
                         updateSSHPublicKey();
                      }
-                  }.schedule(1000);
+                  });
                }
 
                /**
@@ -333,14 +335,15 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                return;
             }
 
-            new Timer()
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
             {
+
                @Override
-               public void run()
+               public void execute()
                {
                   pullAppSources();
                }
-            }.schedule(1000);
+            });
          }
       });
    }
@@ -352,13 +355,10 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
          @Override
          public void onPullComplete(boolean success)
          {
-            if (success)
+            paasCallback.onProjectCreated(project);
+            if (!success)
             {
-               paasCallback.onProjectCreated(project);
-            }
-            else
-            {
-               paasCallback.projectCreationFailed();
+               Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.pullSourceFailed());
             }
          }
       });

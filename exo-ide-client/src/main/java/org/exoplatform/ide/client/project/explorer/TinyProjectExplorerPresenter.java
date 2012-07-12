@@ -165,7 +165,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private ApplicationSettings applicationSettings;
 
    private boolean ideLoadComplete = false;
-   
+
    public TinyProjectExplorerPresenter()
    {
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
@@ -479,7 +479,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private void folderContentReceived(Folder folder, List<Item> result)
    {
-//      loader.hide();
+      //      loader.hide();
       for (Item i : result)
       {
          if (i instanceof ItemContext)

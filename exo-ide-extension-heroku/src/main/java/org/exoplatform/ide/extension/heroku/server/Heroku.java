@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import static org.apache.commons.codec.binary.Base64.encodeBase64;
+
 import org.eclipse.jgit.transport.URIish;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
@@ -48,6 +50,7 @@ import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +60,8 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
@@ -66,8 +71,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -109,7 +112,7 @@ public class Heroku
    /**
     * Log in with specified email/password. Result of command execution is saved 'heroku API key', see
     * {@link HerokuAuthenticator#login(String, String)} for details.
-    *
+    * 
     * @param email email address that used when create account at heroku.com
     * @param password password
     * @throws HerokuException if heroku server return unexpected or error status for request
@@ -124,7 +127,7 @@ public class Heroku
 
    /**
     * Remove locally save authentication credentials, see {@link HerokuAuthenticator#logout()} for details.
-    *
+    * 
     * @throws IOException id any i/o errors occurs
     * @throws VirtualFileSystemException
     */
@@ -134,9 +137,9 @@ public class Heroku
    }
 
    /**
-    * Add SSH key for current user. Uppload SSH key to heroku.com. {@link SshKeyProvider} must have registered public
-    * key for host' hiroku.com', see method {@link SshKeyProvider#getPublicKey(String)}
-    *
+    * Add SSH key for current user. Uppload SSH key to heroku.com. {@link SshKeyProvider} must have registered public key for
+    * host' heroku.com', see method {@link SshKeyProvider#getPublicKey(String)}
+    * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
     * @throws VirtualFileSystemException
@@ -198,9 +201,9 @@ public class Heroku
 
    /**
     * Remove SSH key for current user.
-    *
-    * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for
-    * current user removed
+    * 
+    * @param keyName key name to remove typically in form 'user@host'. NOTE: If <code>null</code> then all keys for current user
+    *           removed
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws VirtualFileSystemException
     * @throws IOException id any i/o errors occurs
@@ -244,9 +247,9 @@ public class Heroku
 
    /**
     * Get SSH keys for current user.
-    *
-    * @param inLongFormat if <code>true</code> then display info about each key in long format. In other words full
-    * content of public key provided. By default public key displayed in truncated form
+    * 
+    * @param inLongFormat if <code>true</code> then display info about each key in long format. In other words full content of
+    *           public key provided. By default public key displayed in truncated form
     * @return List with all SSH keys for current user
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
@@ -351,7 +354,7 @@ public class Heroku
 
    /**
     * Remove all SSH keys for current user.
-    *
+    * 
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
     * @throws VirtualFileSystemException
@@ -393,11 +396,11 @@ public class Heroku
 
    /**
     * Create new application.
-    *
+    * 
     * @param name application name. If <code>null</code> then application got random name
     * @param remote git remote name, default 'heroku'
     * @param workDir git working directory. May be <code>null</code> if command executed out of git repository. If
-    * <code>workDir</code> exists and is git repository folder then remote configuration added
+    *           <code>workDir</code> exists and is git repository folder then remote configuration added
     * @return Map with information about newly created application. Minimal set of application attributes:
     *         <ul>
     *         <li>Name</li>
@@ -421,7 +424,7 @@ public class Heroku
    }
 
    private Map<String, String> createApplication(HerokuCredentials herokuCredentials, String name, String remote,
-                                                 File workDir) throws HerokuException, ParsingResponseException, IOException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (remote == null || remote.isEmpty())
       {
@@ -529,12 +532,12 @@ public class Heroku
 
    /**
     * Permanently destroy an application.
-    *
-    * @param name application name to destroy. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>
-    * at least. If name not specified and cannot be determined IllegalStateException thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>
+    * 
+    * @param name application name to destroy. If <code>null</code> then try to determine application name from git configuration.
+    *           To be able determine application name <code>workDir</code> must not be <code>null</code> at least. If name not
+    *           specified and cannot be determined IllegalStateException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException id any i/o errors occurs
     * @throws VirtualFileSystemException
@@ -583,17 +586,17 @@ public class Heroku
 
    /**
     * Provide detailed information about application.
-    *
-    * @param name application name to get information. If <code>null</code> then try to determine application name from
-    * git configuration. To be able determine application name <code>workDir</code> must not be
-    * <code>null</code> at least. If name not specified and cannot be determined IllegalStateException thrown
-    * @param inRawFormat if <code>true</code> then get result as raw Map. If <code>false</code> (default) result is Map
-    * that contains predefined set of key-value pair
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>
+    * 
+    * @param name application name to get information. If <code>null</code> then try to determine application name from git
+    *           configuration. To be able determine application name <code>workDir</code> must not be <code>null</code> at least.
+    *           If name not specified and cannot be determined IllegalStateException thrown
+    * @param inRawFormat if <code>true</code> then get result as raw Map. If <code>false</code> (default) result is Map that
+    *           contains predefined set of key-value pair
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>
     * @return result of execution of depends to <code>inRawFormat</code> parameter. If <code>inRawFormat</code> is
-    *         <code>false</code> (default) then method returns with predefined set of attributes
-    *         otherwise method returns raw Map that contains all attributes
+    *         <code>false</code> (default) then method returns with predefined set of attributes otherwise method returns raw Map
+    *         that contains all attributes
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws IOException id any i/o errors occurs
@@ -611,7 +614,7 @@ public class Heroku
    }
 
    private Map<String, String> applicationInfo(HerokuCredentials herokuCredentials, String name, boolean inRawFormat,
-                                               File workDir) throws HerokuException, ParsingResponseException, IOException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (name == null || name.isEmpty())
       {
@@ -701,14 +704,14 @@ public class Heroku
 
    /**
     * Rename application.
-    *
-    * @param name current application name. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
-    * If name not specified and cannot be determined IllegalStateException thrown
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
+    *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
+    *           cannot be determined IllegalStateException thrown
     * @param newname new name for application. If <code>null</code> IllegalStateException thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>. If not <code>null</code> and is git
-    * folder then remote configuration update
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>. If not <code>null</code> and is git folder then remote
+    *           configuration update
     * @return information about renamed application. Minimal set of application attributes:
     *         <ul>
     *         <li>New name</li>
@@ -732,7 +735,7 @@ public class Heroku
    }
 
    private Map<String, String> renameApplication(HerokuCredentials herokuCredentials, String name, String newname,
-                                                 File workDir) throws HerokuException, ParsingResponseException, IOException
+      File workDir) throws HerokuException, ParsingResponseException, IOException
    {
       if (newname == null || newname.isEmpty())
       {
@@ -811,12 +814,12 @@ public class Heroku
 
    /**
     * Get the list of Heroku application's available stacks.
-    *
-    * @param name current application name. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
-    * If name not specified and cannot be determined {@link IllegalStateException} thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
+    *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
+    *           cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>.
     * @return {@link List} list of available application's stacks
     * @throws IOException if any i/o errors occurs
     * @throws HerokuException if heroku server return unexpected or error status for request
@@ -874,7 +877,8 @@ public class Heroku
             Node stackElement = stackList.item(i);
             String stackName = (String)xpath.evaluate("name", stackElement, XPathConstants.STRING);
             boolean current = Boolean.valueOf((String)xpath.evaluate("current", stackElement, XPathConstants.STRING));
-            boolean requested = Boolean.valueOf((String)xpath.evaluate("requested", stackElement, XPathConstants.STRING));
+            boolean requested =
+               Boolean.valueOf((String)xpath.evaluate("requested", stackElement, XPathConstants.STRING));
             boolean beta = Boolean.valueOf((String)xpath.evaluate("beta", stackElement, XPathConstants.STRING));
             stacks.add(new StackBean(stackName, current, beta, requested));
          }
@@ -903,12 +907,12 @@ public class Heroku
 
    /**
     * Migrate from current application's stack (deployment environment) to pointed one.
-    *
-    * @param name current application name. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
-    * If name not specified and cannot be determined {@link IllegalStateException} thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
+    *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
+    *           cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>.
     * @param stack stack name to migrate to. If <code>null</code> IllegalStateException thrown
     * @return {@link String} output of the migration operation
     * @throws IOException if any i/o errors occurs
@@ -989,7 +993,7 @@ public class Heroku
 
    /**
     * List of heroku applications for current user.
-    *
+    * 
     * @return List of names of applications for current user
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
@@ -1069,26 +1073,28 @@ public class Heroku
 
    /**
     * Run heroku rake command.
-    *
-    * @param name application name. If <code>null</code> then try to determine application name from git configuration.
-    * To be able determine application name <code>workDir</code> must not be <code>null</code> at least. If
-    * name not specified and cannot be determined IllegalStateException thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>
+    * 
+    * @param name application name. If <code>null</code> then try to determine application name from git configuration. To be able
+    *           determine application name <code>workDir</code> must not be <code>null</code> at least. If name not specified and
+    *           cannot be determined IllegalStateException thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>
     * @param command command, in form: rake {command} {options}
-    * <p/>
-    * Examples:
-    * <ul>
-    * <li>rake db:create</li>
-    * <li>rake db:version</li>
-    * <ul>
+    *           <p/>
+    *           Examples:
+    *           <ul>
+    *           <li>rake db:create</li>
+    *           <li>rake db:version</li>
+    *           <ul>
     * @return LazyHttpChunkReader to read result of running command
     * @throws HerokuException if heroku server return unexpected or error status for request
     * @throws IOException if any i/o occurs
     * @throws VirtualFileSystemException
+    * @throws ParsingResponseException
+    * @throws GeneralSecurityException
     */
-   public HttpChunkReader run(String name, File workDir, String command) throws HerokuException, IOException,
-      VirtualFileSystemException
+   public byte[] run(String name, File workDir, String command) throws HerokuException, IOException,
+      VirtualFileSystemException, ParsingResponseException, GeneralSecurityException
    {
       HerokuCredentials herokuCredentials = authenticator.readCredentials();
       if (herokuCredentials == null)
@@ -1098,8 +1104,8 @@ public class Heroku
       return run(herokuCredentials, name, workDir, command);
    }
 
-   private HttpChunkReader run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
-      throws HerokuException, IOException
+   private byte[] run(HerokuCredentials herokuCredentials, String name, File workDir, String command)
+      throws HerokuException, IOException, ParsingResponseException, GeneralSecurityException
    {
       if (command == null || command.isEmpty())
       {
@@ -1111,14 +1117,34 @@ public class Heroku
          name = detectAppName(workDir);
       }
 
+      String rendezvousLocation = runAttachedProcess(name, command, herokuCredentials);
+      return accessStdInOut(rendezvousLocation);
+   }
+
+   /**
+    * Run one-off process in Heroku.
+    * 
+    * @param appName application name
+    * @param command command to run
+    * @param herokuCredentials user's credentials
+    * @return {@link String} rendezvous location
+    * @throws IOException
+    * @throws HerokuException
+    * @throws ParsingResponseException
+    */
+   private String runAttachedProcess(String appName, String command, HerokuCredentials herokuCredentials)
+      throws IOException, HerokuException, ParsingResponseException
+   {
       HttpURLConnection http = null;
       try
       {
-         URL url = new URL(HEROKU_API + "/apps/" + name + "/services");
+         // "attach" parameter points to use rendezvous to access stdin/stdout or
+         // to stream process output to the application log:
+         URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps?attach=true");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
+         http.setRequestProperty("Content-type", "application/xml, */*");
          http.setRequestProperty("Accept", "application/xml, */*");
-         http.setRequestProperty("Content-type", "text/plain");
 
          authenticate(herokuCredentials, http);
 
@@ -1126,7 +1152,7 @@ public class Heroku
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(command.getBytes());
+            output.write(("<?xml version='1.0' encoding='UTF-8'?><command>" + command + "</command>").getBytes());
             output.flush();
          }
          finally
@@ -1140,38 +1166,32 @@ public class Heroku
          }
 
          InputStream input = http.getInputStream();
-         URL firstChunk = null;
+         Document xmlDoc;
          try
          {
-            int length = http.getContentLength();
-            if (length > 0)
-            {
-               byte[] b = new byte[length];
-               int point, off = 0;
-               while ((point = input.read(b, off, length - off)) > 0)
-               {
-                  off += point;
-               }
-               firstChunk = new URL(new String(b));
-            }
-            else if (length < 0)
-            {
-               byte[] buf = new byte[128];
-               ByteArrayOutputStream bout = new ByteArrayOutputStream();
-               int point;
-               while ((point = input.read(buf)) != -1)
-               {
-                  bout.write(buf, 0, point);
-               }
-               firstChunk = new URL(bout.toString());
-            }
+            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
          }
          finally
          {
             input.close();
          }
 
-         return new HttpChunkReader(firstChunk);
+         XPath xpath = XPathFactory.newInstance().newXPath();
+
+         String rendezvousUrl = (String)xpath.evaluate("/process/rendezvous_url", xmlDoc, XPathConstants.STRING);
+         return rendezvousUrl;
+      }
+      catch (ParserConfigurationException pce)
+      {
+         throw new ParsingResponseException(pce.getMessage(), pce);
+      }
+      catch (SAXException sae)
+      {
+         throw new ParsingResponseException(sae.getMessage(), sae);
+      }
+      catch (XPathExpressionException xpe)
+      {
+         throw new ParsingResponseException(xpe.getMessage(), xpe);
       }
       finally
       {
@@ -1183,13 +1203,64 @@ public class Heroku
    }
 
    /**
+    * Access to stdin/stdout using rendezvous.
+    * 
+    * @param rendezvousLocation
+    * @return
+    * @throws IOException
+    * @throws java.security.GeneralSecurityException
+    * @throws HerokuException
+    */
+   private byte[] accessStdInOut(String rendezvousLocation) throws IOException, java.security.GeneralSecurityException,
+      HerokuException
+   {
+      rendezvousLocation = rendezvousLocation.replace("rendezvous://", "http://");
+      URL rendezvousUrl = new URL(rendezvousLocation);
+      SSLSocketFactory sslsocketfactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+      SSLSocket sslsocket = null;
+      try
+      {
+         sslsocket = (SSLSocket)sslsocketfactory.createSocket(rendezvousUrl.getHost(), rendezvousUrl.getPort());
+
+         OutputStream output = sslsocket.getOutputStream();
+         InputStream input = sslsocket.getInputStream();
+         try
+         {
+            output.write((rendezvousUrl.getPath().replaceFirst("/", "")).getBytes());
+            output.flush();
+
+            return readBody(input, -1);
+         }
+         finally
+         {
+            if (output != null)
+            {
+               output.close();
+            }
+
+            if (input != null)
+            {
+               input.close();
+            }
+         }
+      }
+      finally
+      {
+         if (sslsocket != null)
+         {
+            sslsocket.close();
+         }
+      }
+   }
+
+   /**
     * Get the application's logs.
-    *
-    * @param name current application name. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
-    * If name not specified and cannot be determined {@link IllegalStateException} thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>.
+    * 
+    * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
+    *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
+    *           cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>.
     * @param logLines max number of log lines to be returned
     * @return {@link String} logs content
     * @throws IOException if any i/o errors occurs
@@ -1210,13 +1281,13 @@ public class Heroku
 
    /**
     * Get the location of the logs stream.
-    *
+    * 
     * @param herokuCredentials user's credentials
-    * @param name current application name. If <code>null</code> then try to determine application name from git
-    * configuration. To be able determine application name <code>workDir</code> must not be <code>null</code>.
-    * If name not specified and cannot be determined {@link IllegalStateException} thrown
-    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this
-    * case <code>name</code> parameter must be not <code>null</code>.
+    * @param name current application name. If <code>null</code> then try to determine application name from git configuration. To
+    *           be able determine application name <code>workDir</code> must not be <code>null</code>. If name not specified and
+    *           cannot be determined {@link IllegalStateException} thrown
+    * @param workDir git working directory. May be <code>null</code> if command executed out of git repository in this case
+    *           <code>name</code> parameter must be not <code>null</code>.
     * @param logLines max number of log lines to be returned
     * @return {@link String} location of logs stream
     * @throws IOException
@@ -1234,7 +1305,7 @@ public class Heroku
       try
       {
          String query = (logLines > 0) ? "&num=" + logLines : "";
-         //"logplex" query parameter must be true:
+         // "logplex" query parameter must be true:
          URL url = new URL(HEROKU_API + "/apps/" + name + "/logs?logplex=true" + query);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
@@ -1318,7 +1389,7 @@ public class Heroku
 
    /**
     * Add Basic authentication headers to HttpURLConnection.
-    *
+    * 
     * @param herokuCredentials heroku account credentials
     * @param http HttpURLConnection
     * @throws IOException if any i/o errors occurs
@@ -1331,11 +1402,10 @@ public class Heroku
    }
 
    /**
-    * Extract heroku application name from git configuration. If <code>workDir</code> is <code>null</code> or does not
-    * contain <code>.git<code> sub-directory method always return <code>null</code>.
-    *
-    * @return application name or <code>null</code> if name can't be determined since command invoked outside of git
-    *         repository
+    * Extract heroku application name from git configuration. If <code>workDir</code> is <code>null</code> or does not contain
+    * <code>.git<code> sub-directory method always return <code>null</code>.
+    * 
+    * @return application name or <code>null</code> if name can't be determined since command invoked outside of git repository
     */
    private static String detectAppName(File workDir)
    {
@@ -1360,7 +1430,7 @@ public class Heroku
                git.close();
             }
          }
-         for (Iterator<Remote> iter = remotes.iterator(); iter.hasNext() && app == null; )
+         for (Iterator<Remote> iter = remotes.iterator(); iter.hasNext() && app == null;)
          {
             Remote r = iter.next();
             if (r.getUrl().startsWith("git@heroku.com:"))
@@ -1412,8 +1482,8 @@ public class Heroku
             else
             {
                String message = new String(body);
-               //On invalid credentials the login form is sent (HTML).
-               //Check body contains action with login path and element with id "login".
+               // On invalid credentials the login form is sent (HTML).
+               // Check body contains action with login path and element with id "login".
                error =
                   (404 == http.getResponseCode() && (message.contains("action=\"/login\"") || message
                      .contains("id=\"login\""))) //

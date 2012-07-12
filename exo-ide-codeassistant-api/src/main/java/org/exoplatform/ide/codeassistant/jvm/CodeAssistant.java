@@ -37,7 +37,6 @@ import org.exoplatform.ide.vfs.shared.Project;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -133,26 +132,30 @@ public abstract class CodeAssistant
       Set<String> set = new HashSet<String>();
       //add rt.jar as dependency
       set.add("java:rt:1.6:jar");
-      if( projectId == null)
+      if (projectId == null)
       {
          return set;
       }
       Project project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
-      String classpath = (String)project.getPropertyValue("exoide:classpath");
-      JsonParser parser = new JsonParser();
-      try
+      if (project.hasProperty("exoide:classpath"))
       {
-         parser.parse(new ByteArrayInputStream(classpath.getBytes()));
-         Dependency[] dependencys = (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
-         for (Dependency d : dependencys)
-            set.add(d.toString());
-         return set;
-      }
-      catch (JsonException e)
-      {
+         String classpath = (String)project.getPropertyValue("exoide:classpath");
+         JsonParser parser = new JsonParser();
+         try
+         {
+            parser.parse(new ByteArrayInputStream(classpath.getBytes()));
+            Dependency[] dependencys =
+               (Dependency[])ObjectBuilder.createArray(Dependency[].class, parser.getJsonObject());
+            for (Dependency d : dependencys)
+               set.add(d.toString());
+         }
+         catch (JsonException e)
+         {
 
-         throw new CodeAssistantException(500, "Can't parse dependencys for project: " + projectId);
+            throw new CodeAssistantException(500, "Can't parse dependencys for project: " + projectId);
+         }
       }
+      return set;
    }
 
    /**

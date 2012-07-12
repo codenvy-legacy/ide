@@ -18,8 +18,6 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.client.runtime.CoreException;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
@@ -148,14 +146,9 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal
          if (fImportRewrite != null && fImportRewrite.hasRecordedChanges())
          {
             int oldLen = document.getLength();
-            fImportRewrite.rewriteImports(new NullProgressMonitor()).apply(document, TextEdit.UPDATE_REGIONS);
+            fImportRewrite.rewriteImports().apply(document, TextEdit.UPDATE_REGIONS);
             setReplacementOffset(getReplacementOffset() + document.getLength() - oldLen);
          }
-      }
-      catch (CoreException e)
-      {
-         // TODO log error
-         e.printStackTrace(); //NOSONAR
       }
       catch (BadLocationException e)
       {

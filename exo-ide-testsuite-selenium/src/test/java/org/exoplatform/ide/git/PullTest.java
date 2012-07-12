@@ -62,8 +62,10 @@ public class PullTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REMOTE, REMOTE_ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(2000);
          VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -77,8 +79,10 @@ public class PullTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + REMOTE);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(1500);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(1500);
       }
       catch (Exception e)
@@ -187,7 +191,8 @@ public class PullTest extends BaseTest
       //Check pulled message:
       IDE.OUTPUT.waitForMessageShow(1, 15);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      assertEquals(String.format(GIT.Messages.PULL_SUCCESS, GIT_PATH  + "/"+ REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
+      assertEquals(String.format(GIT.Messages.PULL_SUCCESS, GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE),
+         message);
 
       //Check file in browser tree
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);

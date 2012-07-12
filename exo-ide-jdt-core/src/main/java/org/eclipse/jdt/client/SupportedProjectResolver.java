@@ -16,40 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.internal.corext.codemanipulation;
+package org.eclipse.jdt.client;
 
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.gwt.view.client.MultiSelectionModel;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class AddGetterSetterModule extends AbstractGinModule
+public interface SupportedProjectResolver
 {
-
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
-   {
-      bind(AddGetterSetterPresenter.Display.class).to(AddGetterSetterView.class);
-      bind(new TypeLiteral<MultiSelectionModel<Object>>()
-      {
-      }).in(Singleton.class);
-      bind(GetterSetterTreeModel.class);
-
-   }
-
-   @Provides
-   @Singleton
-   GetterSetterEntryProvider provide()
-   {
-      return AddGetterSetterPresenter.get();
-   }
+   
+   boolean isProjectSupported(String projectType);
+   
 }

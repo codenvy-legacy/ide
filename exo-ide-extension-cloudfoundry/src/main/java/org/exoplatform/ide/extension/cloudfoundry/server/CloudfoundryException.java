@@ -69,4 +69,15 @@ public class CloudfoundryException extends Exception
    {
       return exitCode;
    }
+
+   @Override
+   public String toString()
+   {
+      return "CloudfoundryException{" +
+         "responseStatus=" + responseStatus +
+         ", message='" + getMessage() + '\'' +
+         ", contentType='" + contentType + '\'' +
+         ", exitCode=" + exitCode +
+         '}';
+   }
 }

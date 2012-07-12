@@ -16,18 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.cloudbees.shared;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:  10:57:15 AM Mar 5, 2012 evgen $
- *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public interface ParseActiveFileHandler extends EventHandler
+public interface CloudBeesSshKey
 {
+   String getName();
 
-   void onParseActiveFile(ParseActiveFileEvent event);
+   void setName(String name);
 
+   String getContent();
+
+   void setContent(String content);
+
+   String getFingerprint();
+
+   void setFingerprint(String fingerprint);
 }

@@ -162,7 +162,7 @@ public final class StubUtility2
 
    public static MethodDeclaration createConstructorStub(ASTRewrite rewrite, ImportRewrite imports,
       ImportRewriteContext context, ITypeBinding typeBinding, IMethodBinding superConstructor,
-      IVariableBinding[] variableBindings, int modifiers, CodeGenerationSettings settings) throws CoreException
+      IVariableBinding[] variableBindings, int modifiers, CodeGenerationSettings settings)
    {
       AST ast = rewrite.getAST();
 

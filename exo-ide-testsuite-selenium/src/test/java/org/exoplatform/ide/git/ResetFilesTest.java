@@ -58,7 +58,11 @@ public class ResetFilesTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(PROJECT, EMPTY_ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(2000);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + SRC_FOLDER);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -71,6 +75,8 @@ public class ResetFilesTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
       }
       catch (Exception e)
       {
@@ -90,7 +96,7 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
       IDE.LOADER.waitClosed();
-      
+
       //Check Reset files is available:
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES));
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
@@ -117,12 +123,15 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
       IDE.LOADER.waitClosed();
-      
+
       //Create new file:
       createFile(TEST_FILE1);
-
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(2000);
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(2000);
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       Assert.assertEquals(GIT.Messages.ADD_SUCCESS, message);
@@ -153,7 +162,7 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
       IDE.LOADER.waitClosed();
-      
+
       createFile(TEST_FILE1);
       createFile(TEST_FILE2);
 
@@ -167,7 +176,7 @@ public class ResetFilesTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
+
       //Add folder to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1, 10);
@@ -218,7 +227,7 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
       IDE.LOADER.waitClosed();
-      
+
       createFile(TEST_FILE1);
       createFile(TEST_FILE2);
 
@@ -230,14 +239,14 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER + "/" + TEST_FILE3);
       IDE.EDITOR.closeFile(TEST_FILE3);
       IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
-      
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       //Add to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
       assertEquals(GIT.Messages.ADD_SUCCESS, message);
-      
+
       //Open Reset files view:
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.RESET_FILES);
       IDE.GIT.RESET_FILES.waitOpened();
@@ -277,7 +286,7 @@ public class ResetFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + SRC_FOLDER);
       IDE.LOADER.waitClosed();
-      
+
       createFile(TEST_FILE1);
       createFile(TEST_FILE2);
 
@@ -291,7 +300,7 @@ public class ResetFilesTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent(TEST_FILE3);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
+
       //Add to index
       IDE.GIT.ADD.addToIndex();
       IDE.OUTPUT.waitForMessageShow(1, 10);

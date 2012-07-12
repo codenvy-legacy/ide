@@ -179,7 +179,7 @@ public interface OpenShiftLocalizationConstant extends Messages
 
    @Key("control.switchAccount.switch.prompt")
    String switchAccountControlSwitchPrompt();
-   
+
    /*
     * Login view
     */
@@ -280,6 +280,9 @@ public interface OpenShiftLocalizationConstant extends Messages
 
    @Key("updatePublicKeyFailed")
    String updatePublicKeyFailed();
+   
+   @Key("pullSourceFailed")
+   String pullSourceFailed();
 
    @DefaultMessage("OpenShift application information")
    @Key("applicationInfoView.title")

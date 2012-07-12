@@ -20,121 +20,109 @@ package org.exoplatform.ide.extension.cloudbees.shared;
 
 /**
  * Application info.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ApplicationInfo.java Mar 15, 2012 9:25:11 AM azatsarynnyy $
- *
  */
 public interface ApplicationInfo
 {
 
-   /**
-    * @return the id
-    */
-   public String getId();
+   /** @return the id */
+   String getId();
 
    /**
-    * @param id the id to set
+    * @param id
+    *    the id to set
     */
-   public void setId(String id);
+   void setId(String id);
+
+   /** @return the title */
+   String getTitle();
 
    /**
-    * @return the title
+    * @param title
+    *    the title to set
     */
-   public String getTitle();
+   void setTitle(String title);
+
+   /** @return the status */
+   String getStatus();
 
    /**
-    * @param title the title to set
+    * @param status
+    *    the status to set
     */
-   public void setTitle(String title);
+   void setStatus(String status);
+
+   /** @return the url */
+   String getUrl();
 
    /**
-    * @return the status
+    * @param url
+    *    the url to set
     */
-   public String getStatus();
+   void setUrl(String url);
+
+   /** @return the instances */
+   String getInstances();
 
    /**
-    * @param status the status to set
+    * @param instances
+    *    the instances to set
     */
-   public void setStatus(String status);
+   void setInstances(String instances);
+
+   /** @return the securityMode */
+   String getSecurityMode();
 
    /**
-    * @return the url
+    * @param securityMode
+    *    the securityMode to set
     */
-   public String getUrl();
+   void setSecurityMode(String securityMode);
+
+   /** @return the maxMemory */
+   String getMaxMemory();
 
    /**
-    * @param url the url to set
+    * @param maxMemory
+    *    the maxMemory to set
     */
-   public void setUrl(String url);
+   void setMaxMemory(String maxMemory);
+
+   /** @return the idleTimeout */
+   String getIdleTimeout();
 
    /**
-    * @return the instances
+    * @param idleTimeout
+    *    the idleTimeout to set
     */
-   public String getInstances();
+   void setIdleTimeout(String idleTimeout);
+
+   /** @return the serverPull */
+   String getServerPool();
 
    /**
-    * @param instances the instances to set
+    * @param serverPool
+    *    the serverPull to set
     */
-   public void setInstances(String instances);
+   void setServerPool(String serverPool);
+
+   /** @return the container */
+   String getContainer();
 
    /**
-    * @return the securityMode
+    * @param container
+    *    the container to set
     */
-   public String getSecurityMode();
+   void setContainer(String container);
+
+   /** @return size of the cluster */
+   String getClusterSize();
 
    /**
-    * @param securityMode the securityMode to set
+    * @param clusterSize
+    *    size of the cluster to set
     */
-   public void setSecurityMode(String securityMode);
-
-   /**
-    * @return the maxMemory
-    */
-   public String getMaxMemory();
-
-   /**
-    * @param maxMemory the maxMemory to set
-    */
-   public void setMaxMemory(String maxMemory);
-
-   /**
-    * @return the idleTimeout
-    */
-   public String getIdleTimeout();
-
-   /**
-    * @param idleTimeout the idleTimeout to set
-    */
-   public void setIdleTimeout(String idleTimeout);
-
-   /**
-    * @return the serverPull
-    */
-   public String getServerPool();
-
-   /**
-    * @param serverPool the serverPull to set
-    */
-   public void setServerPool(String serverPool);
-
-   /**
-    * @return the container
-    */
-   public String getContainer();
-
-   /**
-    * @param container the container to set
-    */
-   public void setContainer(String container);
-   
-   /**
-    * @return size of the cluster
-    */
-   public String getClusterSize();
-
-   /**
-    * @param clusterSize size of the cluster to set
-    */
-   public void setClusterSize(String clusterSize);
+   void setClusterSize(String clusterSize);
 }

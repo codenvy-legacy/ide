@@ -20,7 +20,7 @@ package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.event.CleanProjectEvent;
 import org.eclipse.jdt.client.event.CleanProjectHandler;
-import org.eclipse.jdt.client.event.ParseActiveFileEvent;
+import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
@@ -46,7 +46,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler
    public void onCleanProject(CleanProjectEvent event)
    {
       TypeInfoStorage.get().clear();
-      IDE.fireEvent(new ParseActiveFileEvent());
+      IDE.fireEvent(new ReparseOpenedFilesEvent());
       NameEnvironment.clearFQNBlackList();
    }
 

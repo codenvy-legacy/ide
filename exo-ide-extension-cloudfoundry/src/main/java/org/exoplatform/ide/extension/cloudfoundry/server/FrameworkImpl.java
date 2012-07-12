@@ -107,4 +107,16 @@ public class FrameworkImpl implements Framework
    {
       this.displayName = displayName;
    }
+
+   @Override
+   public String toString()
+   {
+      return "FrameworkImpl{" +
+         "name='" + name + '\'' +
+         ", runtimes=" + runtimes +
+         ", description='" + description + '\'' +
+         ", memory=" + memory +
+         ", displayName='" + displayName + '\'' +
+         '}';
+   }
 }

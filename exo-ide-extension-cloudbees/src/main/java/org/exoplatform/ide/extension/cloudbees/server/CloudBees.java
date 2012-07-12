@@ -18,17 +18,26 @@
  */
 package org.exoplatform.ide.extension.cloudbees.server;
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64;
-
+import com.cloudbees.api.AccountInfo;
+import com.cloudbees.api.AccountKeysResponse;
+import com.cloudbees.api.ApplicationDeleteResponse;
+import com.cloudbees.api.ApplicationInfo;
+import com.cloudbees.api.BeesClient;
+import com.cloudbees.api.BeesClientConfiguration;
+import com.cloudbees.api.UploadProgress;
+import org.apache.commons.codec.binary.Base64;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.commons.ContainerUtils;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
+import org.exoplatform.ide.helper.JsonHelper;
+import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
@@ -39,12 +48,14 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -54,15 +65,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.ws.rs.core.MediaType;
-
-import com.cloudbees.api.AccountInfo;
-import com.cloudbees.api.AccountKeysResponse;
-import com.cloudbees.api.ApplicationDeleteResponse;
-import com.cloudbees.api.ApplicationInfo;
-import com.cloudbees.api.BeesClient;
-import com.cloudbees.api.BeesClientConfiguration;
-import com.cloudbees.api.UploadProgress;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -70,9 +75,6 @@ import com.cloudbees.api.UploadProgress;
  */
 public class CloudBees extends JenkinsClient
 {
-
-   private final String credentials;
-
    private static class DummyUploadProgress implements UploadProgress
    {
       @Override
@@ -81,34 +83,49 @@ public class CloudBees extends JenkinsClient
       }
    }
 
-   private static UploadProgress UPLOAD_PROGRESS = new DummyUploadProgress();
+   private static final UploadProgress UPLOAD_PROGRESS = new DummyUploadProgress();
+
+   private final String jenkinsCredentials;
+
+   private final String accountProvisioningAPIEndpoint;
+   private final String accountProvisioningUserID;
+   private final String accountProvisioningCredentials;
 
    private final String workspace;
-
+   private final VirtualFileSystemRegistry vfsRegistry;
    private String config = "/ide-home/users/";
 
-   private final VirtualFileSystemRegistry vfsRegistry;
-
-   public CloudBees(VirtualFileSystemRegistry vfsRegistry, InitParams initParams) throws UnsupportedEncodingException
+   public CloudBees(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
    {
       this(vfsRegistry,//
-         readValueParam(initParams, "workspace", null), //
-         readValueParam(initParams, "user-config", null),//
-         readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
-         readValueParam(initParams, "jenkins-user", null), //
-         readValueParam(initParams, "jenkins-password", null) //
+         ContainerUtils.readValueParam(initParams, "workspace"), //
+         ContainerUtils.readValueParam(initParams, "user-config"),//
+         ContainerUtils.readValueParam(initParams, "jenkins-base-url", "https://exoplatform.ci.cloudbees.com"), //
+         ContainerUtils.readValueParam(initParams, "jenkins-user"), //
+         ContainerUtils.readValueParam(initParams, "jenkins-password"),
+         ContainerUtils.readValueParam(initParams, "api-url"), //
+         ContainerUtils.readValueParam(initParams, "api-user"), //
+         ContainerUtils.readValueParam(initParams, "api-key"), //
+         ContainerUtils.readValueParam(initParams, "api-secret")
       );
    }
 
    public CloudBees(VirtualFileSystemRegistry vfsRegistry,//
-      String workspace, //
-      String config, //
-      String baseURL, //
-      String user, //
-      String password) throws UnsupportedEncodingException
+                    String workspace, //
+                    String config, //
+                    String jenkinsBaseURL, //
+                    String jenkinsUser, //
+                    String jenkinsPassword, //
+                    String apiURL, //
+                    String apiUserID, //
+                    String apiKey, //
+                    String apiSecret)
    {
-      super(baseURL);
-      credentials = "Basic " + new String(encodeBase64((user + ":" + password).getBytes("ISO-8859-1")), "ISO-8859-1");
+      super(jenkinsBaseURL);
+      this.accountProvisioningAPIEndpoint = apiURL;
+      this.accountProvisioningUserID = apiUserID;
+      this.jenkinsCredentials = "Basic " + new String(Base64.encodeBase64((jenkinsUser + ':' + jenkinsPassword).getBytes()));
+      this.accountProvisioningCredentials = "Basic " + new String(Base64.encodeBase64((apiKey + ':' + apiSecret).getBytes()));
       this.vfsRegistry = vfsRegistry;
       this.workspace = workspace;
       if (config != null)
@@ -120,30 +137,291 @@ public class CloudBees extends JenkinsClient
          this.config = config;
          if (!this.config.endsWith("/"))
          {
-            this.config += "/";
+            this.config += '/';
          }
       }
    }
 
-   private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
-   {
-      if (initParams != null)
-      {
-         ValueParam vp = initParams.getValueParam(paramName);
-         if (vp != null)
-            return vp.getValue();
-      }
-      return defaultValue;
-   }
+   /*===== JenkinsClient =====*/
 
-   /**
-    * @see org.exoplatform.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection)
-    */
+   /** @see org.exoplatform.ide.extension.jenkins.server.JenkinsClient#authenticate(java.net.HttpURLConnection) */
    @Override
    protected void authenticate(HttpURLConnection http) throws IOException
    {
-      http.setRequestProperty("Authorization", credentials);
+      http.setRequestProperty("Authorization", jenkinsCredentials);
    }
+
+   /*=========================*/
+
+   /*===== Account provisioning =====*/
+
+   private static class AccountAPIResponse
+   {
+      final int status;
+      final String body;
+
+      private AccountAPIResponse(String body, int status)
+      {
+         this.status = status;
+         this.body = body;
+      }
+
+      @Override
+      public String toString()
+      {
+         return "AccountAPIResponse{" +
+            "status=" + status +
+            ", body='" + body + '\'' +
+            '}';
+      }
+   }
+
+   /**
+    * Create new Cloud Bees account.
+    *
+    * @param account
+    *    account info. Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount#getName()} must
+    *    return not <code>null</code> or empty value.
+    *    Method  {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount#getCompany()} may return
+    *    <code>null</code>. All other methods should return <code>null</code>.
+    * @return new account info
+    * @throws IOException
+    *    if any i/o error occurs
+    * @throws ParsingResponseException
+    *    if error occurs when try to parse JSON response from CB server
+    * @throws AccountAlreadyExistsException
+    *    if account already exists
+    * @see #createAccount(String, org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount)
+    */
+   public CloudBeesAccount createAccount(CloudBeesAccount account)
+      throws IOException, ParsingResponseException, AccountAlreadyExistsException
+   {
+      return createAccount(accountProvisioningUserID, account);
+   }
+
+   /**
+    * Create new Cloud Bees account.
+    *
+    * @param userID
+    *    identifier of user that has privileges to create accounts
+    * @param account
+    *    account info. Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount#getName()} must
+    *    return not <code>null</code> or empty value.
+    *    Method  {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount#getCompany()} may return
+    *    <code>null</code>. All other methods should return <code>null</code>.
+    * @return new account info
+    * @throws IOException
+    *    if any i/o error occurs
+    * @throws ParsingResponseException
+    *    if error occurs when try to parse JSON response from CB server
+    * @throws AccountAlreadyExistsException
+    *    if account already exists
+    */
+   public CloudBeesAccount createAccount(String userID, CloudBeesAccount account)
+      throws IOException, ParsingResponseException, AccountAlreadyExistsException
+   {
+      validateAccount(account);
+      AccountAPIResponse response = makeRequest(
+         accountProvisioningAPIEndpoint + "/users/" + userID + "/accounts", "POST", JsonHelper.toJson(account));
+      if (response.status == 200)
+      {
+         throw new AccountAlreadyExistsException(account);
+      }
+      final CloudBeesUser user = JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
+      for (CloudBeesAccount _account : user.getAccounts())
+      {
+         if (_account.getName().equals(account.getName()))
+         {
+            return _account;
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Create user and add it to account.
+    *
+    * @param account
+    *    account for new user
+    * @param user
+    *    user.
+    *    Requirements:
+    *    <ul>
+    *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getEmail()} must return valid
+    *    email address</li>
+    *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getName()} may not return
+    *    <code>null</code> or empty value</li>
+    *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getFirst_name()} may not return
+    *    <code>null</code> or empty value</li>
+    *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getLast_name()} may not return
+    *    <code>null</code> or empty value</li>
+    *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getPassword()} must return
+    *    String 8 characters long at least</li>
+    *    </ul>
+    * @return user info
+    * @throws IOException
+    *    if any i/o error occurs
+    * @throws ParsingResponseException
+    *    if error occurs when try to parse JSON response from CB server
+    * @throws UserAlreadyExistsException
+    *    if user already exists
+    */
+   public CloudBeesUser createUser(String account, CloudBeesUser user)
+      throws IOException, ParsingResponseException, UserAlreadyExistsException
+   {
+      validateUser(user);
+      AccountAPIResponse response = makeRequest(
+         accountProvisioningAPIEndpoint + "/accounts/" + account + "/users", "POST", JsonHelper.toJson(user));
+      if (response.status == 200)
+      {
+         throw new UserAlreadyExistsException(user);
+      }
+      return JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
+   }
+
+   /** Prevent creation partial user. */
+   private void validateUser(CloudBeesUser user)
+   {
+      if (user.getEmail() == null || user.getEmail().isEmpty())
+      {
+         throw new IllegalArgumentException("Email may not be null or empty. ");
+      }
+      try
+      {
+         new InternetAddress(user.getEmail()).validate();
+      }
+      catch (AddressException e)
+      {
+         throw new IllegalArgumentException("Invalid email. " + e.getMessage());
+      }
+      if (user.getName() == null || user.getName().isEmpty())
+      {
+         throw new IllegalArgumentException("User name may not be null or empty. ");
+      }
+      if (user.getFirst_name() == null || user.getFirst_name().isEmpty())
+      {
+         throw new IllegalArgumentException("User first name may not be null or empty. ");
+      }
+      if (user.getLast_name() == null || user.getLast_name().isEmpty())
+      {
+         throw new IllegalArgumentException("User last name may not be null or empty. ");
+      }
+      if (user.getPassword() == null || user.getPassword().length() < 8)
+      {
+         throw new IllegalArgumentException("User password must have 8 characters at least. ");
+      }
+   }
+
+   private void validateAccount(CloudBeesAccount account)
+   {
+      if (account.getName() == null || account.getName().isEmpty())
+      {
+         throw new IllegalArgumentException("Account name may not be null or empty. ");
+      }
+   }
+
+   private AccountAPIResponse makeRequest(String url, String method, String body) throws IOException
+   {
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)new URL(url).openConnection();
+         http.setRequestMethod(method);
+         http.setRequestProperty("Authorization", accountProvisioningCredentials);
+         http.setRequestProperty("Accept", "application/json");
+         if (!(body == null || body.isEmpty()))
+         {
+            http.setRequestProperty("Content-type", "application/json");
+            http.setDoOutput(true);
+            BufferedWriter writer = null;
+            try
+            {
+               writer = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
+               writer.write(body);
+            }
+            finally
+            {
+               if (writer != null)
+               {
+                  writer.close();
+               }
+            }
+         }
+
+         final int status = http.getResponseCode();
+         try
+         {
+            InputStream input = http.getInputStream();
+            String result;
+            try
+            {
+               result = readBody(input, http.getContentLength());
+            }
+            finally
+            {
+               input.close();
+            }
+            return new AccountAPIResponse(result, status);
+         }
+         catch (IOException e)
+         {
+            String error = "";
+            InputStream errorInput = http.getErrorStream();
+            if (errorInput != null)
+            {
+               int length = http.getContentLength();
+               try
+               {
+                  error = readBody(errorInput, length);
+               }
+               catch (IOException ignored)
+               {
+               }
+               finally
+               {
+                  errorInput.close();
+               }
+            }
+            throw new IOException(String.format("Failed request to %s : status=%d, response=%s", url, status, error), e);
+         }
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
+      }
+   }
+
+   private static String readBody(InputStream input, int contentLength) throws IOException
+   {
+      String body = null;
+      if (contentLength > 0)
+      {
+         byte[] b = new byte[contentLength];
+         int point, off = 0;
+         while ((point = input.read(b, off, contentLength - off)) > 0)
+         {
+            off += point;
+         }
+         body = new String(b);
+      }
+      else if (contentLength < 0)
+      {
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         byte[] buf = new byte[1024];
+         int point;
+         while ((point = input.read(buf)) != -1)
+         {
+            bout.write(buf, 0, point);
+         }
+         body = bout.toString();
+      }
+      return body;
+   }
+
+   /*================================*/
 
    public void login(String domain, String email, String password) throws Exception
    {
@@ -163,21 +441,29 @@ public class CloudBees extends JenkinsClient
       List<AccountInfo> accounts = beesClient.accountList().getAccounts();
       List<String> domains = new ArrayList<String>(accounts.size());
       for (AccountInfo i : accounts)
+      {
          domains.add(i.getName());
+      }
       return domains;
    }
 
    /**
-    * @param appId id of application
-    * @param message message that describes application
-    * @param vfs VirtualFileSystem
-    * @param projectId identifier of project directory that contains source code
-    * @param war URL to pre-builded war file
-    * @return
-    * @throws Exception any error from BeesClient
+    * @param appId
+    *    id of application
+    * @param message
+    *    message that describes application
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    identifier of project directory that contains source code
+    * @param war
+    *    URL to pre-build war file
+    * @return application info
+    * @throws Exception
+    *    any error from BeesClient
     */
    public Map<String, String> createApplication(String appId, String message, VirtualFileSystem vfs, String projectId,
-      URL war) throws Exception
+                                                URL war) throws Exception
    {
       if (appId == null || appId.isEmpty())
       {
@@ -190,8 +476,8 @@ public class CloudBees extends JenkinsClient
       java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
       beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
-      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
-      Map<String, String> info = toMap(ainfo);
+      ApplicationInfo appInfo = beesClient.applicationInfo(appId);
+      Map<String, String> info = toMap(appInfo);
       if (vfs != null && projectId != null)
       {
          writeApplicationId(vfs, projectId, appId);
@@ -204,16 +490,22 @@ public class CloudBees extends JenkinsClient
    }
 
    /**
-    * @param appId id of application
-    * @param message message that describes update
-    * @param vfs VirtualFileSystem
-    * @param projectId identifier of project directory that contains source code
-    * @param war URL to pre-builded war file
-    * @return
-    * @throws Exception any error from BeesClient
+    * @param appId
+    *    id of application
+    * @param message
+    *    message that describes update
+    * @param vfs
+    *    VirtualFileSystem
+    * @param projectId
+    *    identifier of project directory that contains source code
+    * @param war
+    *    URL to pre-build war file
+    * @return updated info about application
+    * @throws Exception
+    *    any error from BeesClient
     */
    public Map<String, String> updateApplication(String appId, String message, VirtualFileSystem vfs, String projectId,
-      URL war) throws Exception
+                                                URL war) throws Exception
    {
       if (war == null)
       {
@@ -226,8 +518,8 @@ public class CloudBees extends JenkinsClient
       java.io.File warFile = downloadWarFile(appId, war);
       BeesClient beesClient = getBeesClient();
       beesClient.applicationDeployWar(appId, null, message, warFile.getAbsolutePath(), null, false, UPLOAD_PROGRESS);
-      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
-      Map<String, String> info = toMap(ainfo);
+      ApplicationInfo appInfo = beesClient.applicationInfo(appId);
+      Map<String, String> info = toMap(appInfo);
       if (warFile.exists())
       {
          warFile.delete();
@@ -242,8 +534,8 @@ public class CloudBees extends JenkinsClient
          appId = detectApplicationId(vfs, projectId, true);
       }
       BeesClient beesClient = getBeesClient();
-      ApplicationInfo ainfo = beesClient.applicationInfo(appId);
-      return toMap(ainfo);
+      ApplicationInfo appInfo = beesClient.applicationInfo(appId);
+      return toMap(appInfo);
    }
 
    public void deleteApplication(String appId, VirtualFileSystem vfs, String projectId) throws Exception
@@ -267,10 +559,12 @@ public class CloudBees extends JenkinsClient
    public List<Map<String, String>> listApplications() throws Exception
    {
       BeesClient beesClient = getBeesClient();
-      List<ApplicationInfo> ainfos = beesClient.applicationList().getApplications();
-      List<Map<String, String>> ids = new ArrayList<Map<String, String>>(ainfos.size());
-      for (ApplicationInfo i : ainfos)
+      List<ApplicationInfo> appInfos = beesClient.applicationList().getApplications();
+      List<Map<String, String>> ids = new ArrayList<Map<String, String>>(appInfos.size());
+      for (ApplicationInfo i : appInfos)
+      {
          ids.add(toMap(i));
+      }
       return ids;
    }
 
@@ -300,7 +594,7 @@ public class CloudBees extends JenkinsClient
    {
       java.io.File war = java.io.File.createTempFile("bees_" + app.replace('/', '_'), ".war");
       URLConnection conn = null;
-      String protocol = url.getProtocol().toLowerCase();
+      final String protocol = url.getProtocol().toLowerCase();
       try
       {
          conn = url.openConnection();
@@ -312,24 +606,24 @@ public class CloudBees extends JenkinsClient
             authenticate(http);
          }
          InputStream input = conn.getInputStream();
-         FileOutputStream foutput = null;
+         FileOutputStream fOutput = null;
          try
          {
-            foutput = new FileOutputStream(war);
+            fOutput = new FileOutputStream(war);
             byte[] b = new byte[1024];
             int r;
             while ((r = input.read(b)) != -1)
             {
-               foutput.write(b, 0, r);
+               fOutput.write(b, 0, r);
             }
          }
          finally
          {
             try
             {
-               if (foutput != null)
+               if (fOutput != null)
                {
-                  foutput.close();
+                  fOutput.close();
                }
             }
             finally
@@ -348,16 +642,18 @@ public class CloudBees extends JenkinsClient
       return war;
    }
 
-   private Map<String, String> toMap(ApplicationInfo ainfo)
+   private Map<String, String> toMap(ApplicationInfo appInfo)
    {
       Map<String, String> info = new HashMap<String, String>();
-      info.put("id", ainfo.getId());
-      info.put("title", ainfo.getTitle());
-      info.put("status", ainfo.getStatus());
-      info.put("url", "http://" + ainfo.getUrls()[0] /* CloudBees client gives URL without schema!? */);
-      Map<String, String> settings = ainfo.getSettings();
+      info.put("id", appInfo.getId());
+      info.put("title", appInfo.getTitle());
+      info.put("status", appInfo.getStatus());
+      info.put("url", "http://" + appInfo.getUrls()[0] /* CloudBees client gives URL without schema!? */);
+      Map<String, String> settings = appInfo.getSettings();
       if (settings != null)
+      {
          info.putAll(settings);
+      }
       return info;
    }
 
@@ -367,73 +663,17 @@ public class CloudBees extends JenkinsClient
       ConvertibleProperty p = new ConvertibleProperty("cloudbees-application", appId);
       List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
       properties.add(p);
-      try
-      {
-         vfs.updateItem(projectId, properties, null);
-      }
-      catch (ConstraintException e)
-      {
-         // TODO : Remove in future versions.
-         // We do not create new projects in regular folders (folder MUST be a Project).
-         // But still need need have possibility to delete existed Cloud Bees projects.
-         // If cannot update property of project try to remove file with application name.
-         if (appId == null)
-         {
-            Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
-            try
-            {
-               Item file =
-                  vfs.getItemByPath(project.getPath() + "/.cloudbees-application", null, PropertyFilter.NONE_FILTER);
-               vfs.delete(file.getId(), null);
-            }
-            catch (ItemNotFoundException ignored)
-            {
-            }
-         }
-         else
-         {
-            // If property value is not null it must be saved as property of IDE Project!!!
-            throw e;
-         }
-      }
+      vfs.updateItem(projectId, properties, null);
    }
 
    private String detectApplicationId(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
-      throws VirtualFileSystemException, IOException
+      throws VirtualFileSystemException
    {
       String app = null;
       if (vfs != null && projectId != null)
       {
          Item project = vfs.getItem(projectId, PropertyFilter.valueOf("cloudbees-application"));
          app = (String)project.getPropertyValue("cloudbees-application");
-         /* TODO : remove in future versions.
-          * Need it to back compatibility with existed projects which have configuration in plain files. */
-         if (app == null)
-         {
-            InputStream in = null;
-            BufferedReader r = null;
-            try
-            {
-               ContentStream content = vfs.getContent(project.getPath() + "/.cloudbees-application", null);
-               in = content.getStream();
-               r = new BufferedReader(new InputStreamReader(in));
-               app = r.readLine();
-            }
-            catch (ItemNotFoundException e)
-            {
-            }
-            finally
-            {
-               if (r != null)
-               {
-                  r.close();
-               }
-               if (in != null)
-               {
-                  in.close();
-               }
-            }
-         }
       }
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {
@@ -447,13 +687,13 @@ public class CloudBees extends JenkinsClient
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String keyPath = config + user + "/cloud_bees/cloudbees-credentials";
-      ContentStream content = null;
+      ContentStream content;
       try
       {
          content = vfs.getContent(keyPath, null);
          return readCredentials(content);
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
       return null;
@@ -492,14 +732,14 @@ public class CloudBees extends JenkinsClient
       {
          Item credentialsFile =
             vfs.getItemByPath(cloudBees.createPath("cloudbees-credentials"), null, PropertyFilter.NONE_FILTER);
-         InputStream newcontent =
-            new ByteArrayInputStream((credentials.getApiKey() + "\n" + credentials.getSecret()).getBytes());
-         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newcontent, null);
+         InputStream newContent =
+            new ByteArrayInputStream((credentials.getApiKey() + '\n' + credentials.getSecret()).getBytes());
+         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
       catch (ItemNotFoundException e)
       {
          InputStream content =
-            new ByteArrayInputStream((credentials.getApiKey() + "\n" + credentials.getSecret()).getBytes());
+            new ByteArrayInputStream((credentials.getApiKey() + '\n' + credentials.getSecret()).getBytes());
          Item credentialsFile =
             vfs.createFile(cloudBees.getId(), "cloudbees-credentials", MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
@@ -523,7 +763,7 @@ public class CloudBees extends JenkinsClient
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String cloudBeesPath = config + user + "/cloud_bees";
       VirtualFileSystemInfo info = vfs.getInfo();
-      Folder cloudBees = null;
+      Folder cloudBees;
       try
       {
          Item item = vfs.getItemByPath(cloudBeesPath, null, PropertyFilter.NONE_FILTER);

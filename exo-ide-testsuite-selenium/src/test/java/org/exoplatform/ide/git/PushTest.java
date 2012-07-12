@@ -57,7 +57,10 @@ public class PushTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.importZipProject(REMOTE, EMPTY_ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
          VirtualFileSystemUtils.importZipProject(PROJECT, ZIP_PATH);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -71,7 +74,10 @@ public class PushTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         //Sleep is necessary for files to appear in Davfs:
+         Thread.sleep(1000);
          VirtualFileSystemUtils.delete(WS_URL + REMOTE);
+         //Sleep is necessary for files to appear in Davfs:
          Thread.sleep(2000);
       }
       catch (Exception e)
@@ -164,15 +170,18 @@ public class PushTest extends BaseTest
 
       //Push to test branch:
       IDE.GIT.PUSH.setRemoteBranch(TEST_BRANCH);
-
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(3000);
       IDE.GIT.PUSH.clickPushButton();
-
+      //Sleep is necessary for files to appear in Davfs:
+      Thread.sleep(3000);
       IDE.GIT.PUSH.waitClosed();
 
       //Check pushed message:
       IDE.OUTPUT.waitForMessageShow(1, 10);
       String message = IDE.OUTPUT.getOutputMessage(1);
-      assertEquals(String.format(GIT.Messages.PUSH_SUCCESS, GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE), message);
+      assertEquals(String.format(GIT.Messages.PUSH_SUCCESS, GIT_PATH + "/" + REPO_NAME + "/" + WS_NAME + "/" + REMOTE),
+         message);
 
       //Open project with remote repository
       IDE.PROJECT.OPEN.openProject(REMOTE);
@@ -180,7 +189,7 @@ public class PushTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.GIT.BRANCHES.switchBranch(TEST_BRANCH);
-      
+
       //Necessary for refreshing davfs:
       //Thread.sleep(3000);
 

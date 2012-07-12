@@ -143,12 +143,6 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
          return;
       }
 
-      if (activeView instanceof ProjectExplorerDisplay && selectedItems.get(0) instanceof ProjectModel)
-      {
-         setEnabled(false);
-         return;
-      }
-
       setEnabled(navigatorSelected);
    }
 

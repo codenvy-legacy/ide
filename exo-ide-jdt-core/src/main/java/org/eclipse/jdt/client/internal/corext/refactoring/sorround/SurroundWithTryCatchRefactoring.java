@@ -241,7 +241,7 @@ public class SurroundWithTryCatchRefactoring extends Refactoring
 
          if (fImportRewrite.hasRecordedChanges())
          {
-            TextEdit edit = fImportRewrite.rewriteImports(null);
+            TextEdit edit = fImportRewrite.rewriteImports();
             root.addChild(edit);
             result.addTextEditGroup(new TextEditGroup(NN, new TextEdit[]{edit}));
          }

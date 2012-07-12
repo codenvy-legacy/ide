@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
 
+import java.util.Arrays;
+
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -196,5 +198,24 @@ public class CloudfoundryApplicationStatisticsImpl implements CloudfoundryApplic
    public void setDiskLimit(int diskLimit)
    {
       this.diskLimit = diskLimit;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "CloudfoundryApplicationStatisticsImpl{" +
+         "name='" + name + '\'' +
+         ", state='" + state + '\'' +
+         ", host='" + host + '\'' +
+         ", port=" + port +
+         ", uris=" + (uris == null ? null : Arrays.asList(uris)) +
+         ", uptime='" + uptime + '\'' +
+         ", cpuCores=" + cpuCores +
+         ", cpu=" + cpu +
+         ", mem=" + mem +
+         ", disk=" + disk +
+         ", memLimit=" + memLimit +
+         ", diskLimit=" + diskLimit +
+         '}';
    }
 }

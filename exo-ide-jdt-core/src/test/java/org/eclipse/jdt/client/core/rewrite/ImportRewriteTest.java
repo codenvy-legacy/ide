@@ -1126,7 +1126,7 @@ public class ImportRewriteTest extends BaseTest
 
    private void apply(ImportRewrite rewrite) throws CoreException, MalformedTreeException, BadLocationException
    {
-      TextEdit edit = rewrite.rewriteImports(null);
+      TextEdit edit = rewrite.rewriteImports();
 
       IDocument document = rewrite.getDocument();
       edit.apply(document);

@@ -22,19 +22,20 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 10:56:59 AM Mar 5, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
+public class GenerateNewConstructorUsingFieldsEvent extends GwtEvent<GenerateNewConstructorUsingFieldsHandler>
 {
 
-   public static final GwtEvent.Type<ParseActiveFileHandler> TYPE = new Type<ParseActiveFileHandler>();
+   public static final Type<GenerateNewConstructorUsingFieldsHandler> TYPE =
+      new Type<GenerateNewConstructorUsingFieldsHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ParseActiveFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<GenerateNewConstructorUsingFieldsHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -43,9 +44,9 @@ public class ParseActiveFileEvent extends GwtEvent<ParseActiveFileHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ParseActiveFileHandler handler)
+   protected void dispatch(GenerateNewConstructorUsingFieldsHandler handler)
    {
-      handler.onParseActiveFile(this);
+      handler.onGenerateNewConstructorUsingFields(this);
    }
 
 }

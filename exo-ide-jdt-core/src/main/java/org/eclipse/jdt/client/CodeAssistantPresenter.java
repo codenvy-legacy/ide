@@ -46,7 +46,7 @@ import org.eclipse.jdt.client.core.dom.ASTParser;
 import org.eclipse.jdt.client.event.CancelParseEvent;
 import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo.AssertionFailedException;
-import org.eclipse.jdt.client.runtime.IProgressMonitor;
+import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateProposal;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -78,53 +78,6 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    ProposalSelectedHandler, EditorHotKeyPressedHandler
 {
 
-   private static final class ProgressMonitor implements IProgressMonitor
-   {
-      private final static int TIMEOUT = 60000; // ms
-
-      private long endTime;
-
-      public void beginTask(String name, int totalWork)
-      {
-         endTime = System.currentTimeMillis() + TIMEOUT;
-      }
-
-      public boolean isCanceled()
-      {
-         return false;// endTime <= System.currentTimeMillis();
-      }
-
-      @Override
-      public void done()
-      {
-      }
-
-      @Override
-      public void internalWorked(double work)
-      {
-      }
-
-      @Override
-      public void setCanceled(boolean value)
-      {
-      }
-
-      @Override
-      public void setTaskName(String name)
-      {
-      }
-
-      @Override
-      public void subTask(String name)
-      {
-      }
-
-      @Override
-      public void worked(int work)
-      {
-      }
-   }
-
    private FileModel currentFile;
 
    private CodeMirror currentEditor;
@@ -138,11 +91,14 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    private AssistDisplay display;
 
+   private final SupportedProjectResolver resolver;
+
    /**
     * 
     */
-   public CodeAssistantPresenter()
+   public CodeAssistantPresenter(SupportedProjectResolver resolver)
    {
+      this.resolver = resolver;
       IDE.addHandler(RunCodeAssistantEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
@@ -153,6 +109,10 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    {
       if (currentFile == null || currentEditor == null)
          return;
+
+      if (!resolver.isProjectSupported(currentFile.getProject().getProjectType()))
+         return;
+      
       IDE.fireEvent(new CancelParseEvent());
       GWT.runAsync(new RunAsyncCallback()
       {
@@ -200,7 +160,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       char[] fileContent = document.get().toCharArray();
       CompletionEngine e =
          new CompletionEngine(new NameEnvironment(currentFile.getProject().getId()), collector, JavaCore.getOptions(),
-            new ProgressMonitor());
+            new NullProgressMonitor());
       try
       {
          e.complete(

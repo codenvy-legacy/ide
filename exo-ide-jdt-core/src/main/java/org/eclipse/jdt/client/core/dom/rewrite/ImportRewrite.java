@@ -1156,78 +1156,64 @@ public final class ImportRewrite
     * effect of all those changes.
     * </p>
     * 
-    * @param monitor the progress monitor or <code>null</code>
     * @return text edit object describing the changes to the document corresponding to the changes recorded by this rewriter
     * @throws CoreException the exception is thrown if the rewrite fails.
     */
-   public final TextEdit rewriteImports(IProgressMonitor monitor) throws CoreException
+   public final TextEdit rewriteImports()
    {
-      if (monitor == null)
+      if (!hasRecordedChanges())
       {
-         monitor = new NullProgressMonitor();
+         this.createdImports = CharOperation.NO_STRINGS;
+         this.createdStaticImports = CharOperation.NO_STRINGS;
+         return new MultiTextEdit();
       }
 
+      CompilationUnit usedAstRoot = this.astRoot;
+      if (usedAstRoot == null)
+      {
+         ASTParser parser = ASTParser.newParser(AST.JLS4);
+         parser.setSource(document.get().toCharArray());
+         parser.setFocalPosition(0); // reduced AST
+         parser.setResolveBindings(false);
+         usedAstRoot = (CompilationUnit)parser.createAST(null);
+      }
+
+      ImportRewriteAnalyzer computer =
+         new ImportRewriteAnalyzer(document, usedAstRoot, this.importOrder, this.importOnDemandThreshold,
+            this.staticImportOnDemandThreshold, this.restoreExistingImports, this.useContextToFilterImplicitImports);
+      computer.setFilterImplicitImports(this.filterImplicitImports);
+
+      if (this.addedImports != null)
+      {
+         for (int i = 0; i < this.addedImports.size(); i++)
+         {
+            String curr = (String)this.addedImports.get(i);
+            computer.addImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
+         }
+      }
+
+      if (this.removedImports != null)
+      {
+         for (int i = 0; i < this.removedImports.size(); i++)
+         {
+            String curr = (String)this.removedImports.get(i);
+            computer.removeImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
+         }
+      }
+
+      TextEdit result = null;
       try
       {
-         monitor.beginTask("Updating imports", 2);
-         if (!hasRecordedChanges())
-         {
-            this.createdImports = CharOperation.NO_STRINGS;
-            this.createdStaticImports = CharOperation.NO_STRINGS;
-            return new MultiTextEdit();
-         }
-
-         CompilationUnit usedAstRoot = this.astRoot;
-         if (usedAstRoot == null)
-         {
-            ASTParser parser = ASTParser.newParser(AST.JLS4);
-            parser.setSource(document.get().toCharArray());
-            parser.setFocalPosition(0); // reduced AST
-            parser.setResolveBindings(false);
-            usedAstRoot = (CompilationUnit)parser.createAST(null);
-         }
-
-         ImportRewriteAnalyzer computer =
-            new ImportRewriteAnalyzer(document, usedAstRoot, this.importOrder, this.importOnDemandThreshold,
-               this.staticImportOnDemandThreshold, this.restoreExistingImports, this.useContextToFilterImplicitImports);
-         computer.setFilterImplicitImports(this.filterImplicitImports);
-
-         if (this.addedImports != null)
-         {
-            for (int i = 0; i < this.addedImports.size(); i++)
-            {
-               String curr = (String)this.addedImports.get(i);
-               computer.addImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
-            }
-         }
-
-         if (this.removedImports != null)
-         {
-            for (int i = 0; i < this.removedImports.size(); i++)
-            {
-               String curr = (String)this.removedImports.get(i);
-               computer.removeImport(curr.substring(1), STATIC_PREFIX == curr.charAt(0));
-            }
-         }
-
-         TextEdit result = null;
-         try
-         {
-            result = computer.getResultingEdits(new NullProgressMonitor());
-         }
-         catch (BadLocationException e)
-         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         }
-         this.createdImports = computer.getCreatedImports();
-         this.createdStaticImports = computer.getCreatedStaticImports();
-         return result;
+         result = computer.getResultingEdits(new NullProgressMonitor());
       }
-      finally
+      catch (BadLocationException e)
       {
-         monitor.done();
+         // TODO Auto-generated catch block
+         e.printStackTrace();
       }
+      this.createdImports = computer.getCreatedImports();
+      this.createdStaticImports = computer.getCreatedStaticImports();
+      return result;
    }
 
    /**
