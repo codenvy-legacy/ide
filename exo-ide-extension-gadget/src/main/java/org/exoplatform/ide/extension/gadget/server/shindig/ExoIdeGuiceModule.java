@@ -38,6 +38,6 @@ public class ExoIdeGuiceModule extends DefaultGuiceModule
    protected void configure()
    {
       bind(ContainerConfig.class).to(ExoContainerConfig.class);
-      bind(HttpFetcher.class).to(ExoIdeHttpFetcher.class);
+//      bind(HttpFetcher.class).to(ExoIdeHttpFetcher.class);
    }
 }

@@ -123,17 +123,12 @@ public class TemplatesRestService
 
    private final EventListenerList listenerList;
 
-   public TemplatesRestService(String workspace, String templateConfig, VirtualFileSystemRegistry vfsRegistry, EventListenerList listenerList)
+   public TemplatesRestService(String workspace, String templateConfig, VirtualFileSystemRegistry vfsRegistry,
+      EventListenerList listenerList)
    {
       this.workspace = workspace;
       this.vfsRegistry = vfsRegistry;
       this.listenerList = listenerList;
-      if (templateConfig != null)
-      {
-         this.config = templateConfig;
-         if (config.endsWith("/"))
-            config = config.substring(0, config.length() - 1);
-      }
    }
 
    @GET
@@ -350,11 +345,26 @@ public class TemplatesRestService
 
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(context, listenerList);
       Folder projectFolder = vfs.createFolder(parentId, name);
-      InputStream templateStream =
-         Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
-      if (templateStream == null)
-         throw new InvalidArgumentException("Can't find " + templateName + ".zip");
-      vfs.importZip(projectFolder.getId(), templateStream, true);
+      InputStream templateStream = null;
+      try
+      {
+         templateStream =
+                  Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
+         if (templateStream == null)
+            throw new InvalidArgumentException("Can't find " + templateName + ".zip");
+         vfs.importZip(projectFolder.getId(), templateStream, true);
+      }
+      catch (IOException e)
+      {
+         if (log.isDebugEnabled())
+            log.error("Cant create project", e);
+         throw e;
+      }
+      finally
+      {
+         if (templateStream != null)
+            templateStream.close();
+      }
       org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
       if (projectItem instanceof Project)
       {

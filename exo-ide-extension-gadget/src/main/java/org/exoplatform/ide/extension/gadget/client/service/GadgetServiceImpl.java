@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -58,7 +60,7 @@ public class GadgetServiceImpl extends GadgetService
       throws RequestException
    {
       String data =
-         "{\"context\":{\"country\":\"" + "us" + "\",\"language\":\"" + "en" + "\"},\"gadgets\":[" + "{\"moduleId\":"
+               "{\"context\":{\"country\":\"default\",\"language\":\"default\",\"view\":\"default\",\"container\":\"default\"},\"gadgets\":[" + "{\"moduleId\":"
             + (long)tokenResponse.getModuleId() + ",\"url\":\"" + tokenResponse.getGadgetURL() + "\",\"prefs\":[]}]}";
 
       String url = gadgetServer + "metadata";

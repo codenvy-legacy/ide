@@ -109,17 +109,9 @@ public class GadgetPreviewPane extends ViewImpl
    {
 
       String url = metadata.getIframeUrl();
-      url = url.replace("?container=", "?container=default");
-      url = url.replace("&view=", "&view=canvas");
-      url = configuration.getGadgetServer() + "ifr" + url; // Configuration.getInstance().getGadgetServer() + "ifr" + url;
-      if (isGadget())
-      {
-         url = url + "&parent=" + getGadgetParent() + "&nocache=1&st=" + getST();
-      }
-      else
-      {
-         url = url + "&parent=" + Location.getHref() + "&nocache=1";
-      }
+      
+
+      url = url.replace("&view=%view%", "&view=canvas");
       final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");

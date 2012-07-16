@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.gadget.server.shindig.oauth;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.shindig.auth.BlobCrypterSecurityToken;
-import org.apache.shindig.common.crypto.BasicBlobCrypter;
 import org.apache.shindig.common.crypto.BlobCrypterException;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,15 +36,17 @@ public class SecurityTokenGenerator
    public static TokenResponse createToken(TokenRequest tokenRequest, String keyFile) throws IOException,
       BlobCrypterException
    {
-      BasicBlobCrypter crypter = new BasicBlobCrypter(new File(keyFile));
+//      BasicBlobCrypter crypter = new BasicBlobCrypter(new File(keyFile));
 
-      BlobCrypterSecurityToken t = new BlobCrypterSecurityToken(crypter, tokenRequest.getContainer(), null);
-      t.setAppUrl(tokenRequest.getGadgetURL());
-      t.setModuleId(tokenRequest.getModuleId());
-      t.setOwnerId(tokenRequest.getOwner());
-      t.setViewerId(tokenRequest.getViewer());
-      t.setTrustedJson("trusted");
-      String securityToken = t.encrypt();
+//      BlobCrypterSecurityTokenCodec codec = new  
+      BlobCrypterSecurityToken t = new BlobCrypterSecurityToken(tokenRequest.getContainer(),tokenRequest.getDomain(),tokenRequest.getGadgetURL(), new HashMap<String, String>());
+//      t.setAppUrl(tokenRequest.getGadgetURL());
+//      t.setModuleId(tokenRequest.getModuleId());
+//      t.setOwnerId(tokenRequest.getOwner());
+//      t.setViewerId(tokenRequest.getViewer());
+//      t.setTrustedJson("trusted");
+      t.getTrustedJson();
+      String securityToken = t.getTrustedJson();
       TokenResponse tokenResponse =
          new TokenResponse(securityToken, tokenRequest.getGadgetURL(), tokenRequest.getModuleId());
       return tokenResponse;

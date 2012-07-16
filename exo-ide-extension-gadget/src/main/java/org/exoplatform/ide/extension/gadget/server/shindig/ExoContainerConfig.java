@@ -19,7 +19,7 @@
 
 package org.exoplatform.ide.extension.gadget.server.shindig;
 
-import org.apache.shindig.auth.BlobCrypterSecurityTokenDecoder;
+import org.apache.shindig.auth.BlobCrypterSecurityTokenCodec;
 import org.apache.shindig.config.ContainerConfigException;
 import org.apache.shindig.config.JsonContainerConfig;
 import org.apache.shindig.expressions.Expressions;
@@ -67,7 +67,7 @@ public class ExoContainerConfig extends JsonContainerConfig
    @Override
    public Object getProperty(String container, String property)
    {
-      if (property.equals(BlobCrypterSecurityTokenDecoder.SECURITY_TOKEN_KEY_FILE)
+      if (property.equals(BlobCrypterSecurityTokenCodec.SECURITY_TOKEN_KEY)
          && KeyCreator.getKeyFilePath() != null)
       {
          return KeyCreator.getKeyFilePath();
