@@ -39,8 +39,6 @@ import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
 import org.exoplatform.ide.extension.gadget.shared.Gadget;
 import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
-import org.exoplatform.ide.extension.gadget.shared.TokenRequest;
-import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
 
@@ -88,61 +86,20 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
    @Override
    public void onPreviewGadget(PreviewGadgetEvent event)
    {
-      String owner = "root";
-      String viewer = "root";
-      Long moduleId = 0L;
-      String container = "default";
-      String domain = null;
-
       String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
-
-      TokenRequest tokenRequestBean = GadgetExtension.AUTO_BEAN_FACTORY.tokenRequest().as();
-      tokenRequestBean.setGadgetURL(href);
-      tokenRequestBean.setOwner(owner);
-      tokenRequestBean.setViewer(viewer);
-      tokenRequestBean.setModuleId(moduleId);
-      tokenRequestBean.setContainer(container);
-      tokenRequestBean.setDomain(domain);
-
-      try
-      {
-         AutoBean<TokenResponse> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.tokenResponse();
-         AutoBeanUnmarshaller<TokenResponse> unmarshaller = new AutoBeanUnmarshaller<TokenResponse>(autoBean);
-         GadgetService.getInstance().getSecurityToken(tokenRequestBean,
-            new AsyncRequestCallback<TokenResponse>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(TokenResponse result)
-               {
-                  getGadgetMetadata(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+      getGadgetMetadata(href);
    }
 
-   /**
-    * @param tokenResponse
-    */
-   private void getGadgetMetadata(TokenResponse tokenResponse)
+   
+   private void getGadgetMetadata(String gadgetUrl)
    {
       try
       {
          AutoBean<Gadget> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.gadget();
          AutoBeanUnmarshaller<Gadget> unmarshaller = new AutoBeanUnmarshaller<Gadget>(autoBean);
 
-         GadgetService.getInstance().getGadgetMetadata(tokenResponse, new AsyncRequestCallback<Gadget>(unmarshaller)
+         GadgetService.getInstance().getGadgetMetadata(gadgetUrl, new AsyncRequestCallback<Gadget>(unmarshaller)
          {
             @Override
             protected void onSuccess(Gadget result)
@@ -184,6 +141,7 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
+
 
    /**
     * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)

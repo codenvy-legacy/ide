@@ -18,21 +18,27 @@
  */
 package org.exoplatform.ide.extension.gadget.client.service;
 
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.gadget.shared.Gadget;
 import org.exoplatform.ide.extension.gadget.shared.TokenRequest;
 import org.exoplatform.ide.extension.gadget.shared.TokenResponse;
 
 /**
- * Created by The eXo Platform SAS .
+ * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
+ * @version $Id: $
  */
-
-public abstract class GadgetService
+public class GadgetService
 {
 
    private static GadgetService instance;
@@ -42,23 +48,39 @@ public abstract class GadgetService
       return instance;
    }
 
-   protected GadgetService()
+   private Loader loader;
+
+   private String restServiceContext;
+
+   private String gadgetServer;
+
+   public GadgetService(Loader loader, String restServiceContext, String gadgetServer, String publicContext)
    {
+      this.loader = loader;
+      this.restServiceContext = restServiceContext;
+      this.gadgetServer = gadgetServer;
       instance = this;
    }
 
-   /**
-    * @param tokenResponse
-    * @param callback
-    */
-   public abstract void getGadgetMetadata(TokenResponse tokenResponse, AsyncRequestCallback<Gadget> callback)
-      throws RequestException;
+   public void getGadgetMetadata(String gadgetUrl, AsyncRequestCallback<Gadget> callback) throws RequestException
+   {
+      String data =
+         "{\"context\":{\"country\":\"default\",\"language\":\"default\",\"view\":\"default\",\"container\":\"default\"},\"gadgets\":["
+            + "{\"moduleId\":" + 0L + ",\"url\":\"" + gadgetUrl + "\",\"prefs\":[]}]}";
 
-   /**
-    * @param request
-    * @param callback
-    */
-   public abstract void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
-      throws RequestException;
+      String url = gadgetServer + "metadata";
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(data).send(callback);
+   }
+
+   //TODO : temporary don't call this method 
+   public void getSecurityToken(TokenRequest request, AsyncRequestCallback<TokenResponse> callback)
+      throws RequestException
+   {
+      String tokenRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
+
+      String url = restServiceContext + "/ide/shindig/securitytoken/createToken";
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(tokenRequest).send(callback);
+   }
 
 }

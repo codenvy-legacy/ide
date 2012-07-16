@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.gadget.client.controls.ShowGadgetPreviewControl;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetServiceImpl;
+import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -54,7 +54,7 @@ public class GadgetExtension extends Extension implements InitializeServicesHand
 
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new GadgetServiceImpl(event.getLoader(), event.getApplicationConfiguration().getContext(), event
+      new GadgetService(event.getLoader(), event.getApplicationConfiguration().getContext(), event
          .getApplicationConfiguration().getGadgetServer(), event.getApplicationConfiguration().getPublicContext());
    }
 

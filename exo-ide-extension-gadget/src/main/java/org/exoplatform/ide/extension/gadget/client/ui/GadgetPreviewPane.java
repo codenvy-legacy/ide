@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -109,9 +110,7 @@ public class GadgetPreviewPane extends ViewImpl
    {
 
       String url = metadata.getIframeUrl();
-      
-
-      url = url.replace("&view=%view%", "&view=canvas");
+      url = url.replace("&view=%25view%25", "&view=canvas");
       final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
