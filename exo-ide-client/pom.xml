@@ -479,6 +479,7 @@
                <artifactId>hsqldb</artifactId>
                <scope>runtime</scope>
             </dependency>
+            <!-- 
             <dependency>
                <groupId>org.gatein.shindig</groupId>
                <artifactId>shindig-common</artifactId>
@@ -509,6 +510,7 @@
                <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
+             -->
             <dependency>
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-api</artifactId>

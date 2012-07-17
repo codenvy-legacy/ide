@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.client.websocket;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.ide.client.IDE;
@@ -27,7 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.ApplicationClosedH
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketSessionID;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 
@@ -79,14 +78,15 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    public void onWebSocketMessage(WebSocketMessageEvent event)
    {
       String message = event.getMessage();
-      if (message.startsWith("{\"sessionId\":"))
+
+      WebSocketMessage webSocketMessage =
+         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
+      if (webSocketMessage.getEvent().equals("welcome"))
       {
-         AutoBean<WebSocketSessionID> sessionIdBean =
-            AutoBeanCodex.decode(IDE.AUTO_BEAN_FACTORY, WebSocketSessionID.class, message);
          WebSocket ws = WebSocket.getInstance();
          if (ws != null)
          {
-            ws.setSessionId(sessionIdBean.as().getSessionId());
+            ws.setSessionId(webSocketMessage.getData().asString());
          }
       }
    }
