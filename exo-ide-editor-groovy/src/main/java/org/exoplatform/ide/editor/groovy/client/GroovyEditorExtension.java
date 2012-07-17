@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.editor.groovy.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -40,7 +43,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.GroovyCodeAssistant;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.groovy.client.codemirror.GroovyAutocompleteHelper;
@@ -54,9 +56,6 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.Fin
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -112,20 +111,46 @@ public class GroovyEditorExtension extends Extension implements InitializeServic
             + "/ide/code-assistant/groovy/class-doc?fqn=");
       groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
       groovyCodeValidator = new GroovyCodeValidator();
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE
-            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+      
+      
+      
+      
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", 
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
-            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
-
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE
-            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+            .setParser(new GroovyParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new GroovyAutocompleteHelper())
+            .setCodeAssistant(groovyCodeAssistant)
+            .setCodeValidator(groovyCodeValidator)
+      ));
+      
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs",
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
-            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
-
+            .setParser(new GroovyParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new GroovyAutocompleteHelper())
+            .setCodeAssistant(groovyCodeAssistant)
+            .setCodeValidator(groovyCodeValidator)      
+         ));
+      
+//      IDE.getInstance().addEditor(
+//         new CodeMirrorProducer(MimeType.APPLICATION_GROOVY, "CodeMirror POJO editor", "groovy", Images.INSTANCE
+//            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+//            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
+//            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
+//
+//      IDE.getInstance().addEditor(
+//         new CodeMirrorProducer(MimeType.GROOVY_SERVICE, "CodeMirror REST Service editor", "grs", Images.INSTANCE
+//            .groovy(), true, new CodeMirrorConfiguration().setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+//            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
+//            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
+      
       GroovyOutlineItemCreator groovyOutlineItemCreator = new GroovyOutlineItemCreator();
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_GROOVY, groovyOutlineItemCreator);
       IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_SERVICE, groovyOutlineItemCreator);

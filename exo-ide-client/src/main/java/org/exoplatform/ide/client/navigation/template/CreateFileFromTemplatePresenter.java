@@ -18,18 +18,13 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -65,20 +60,25 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * Presenter for form "Create file from template"
@@ -524,8 +524,9 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       {
          String defaultEditorDescription = defaultEditors.get(contentType);
          // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         EditorProducer producer = EditorFactory.getEditorProducer(contentType, defaultEditorDescription);
-         IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
+         //EditorProducer producer = EditorFactory.getEditorProducer(contentType, defaultEditorDescription);
+         Editor editor = EditorFactory.getEditor(contentType, defaultEditorDescription);
+         IDE.fireEvent(new EditorOpenFileEvent(newFile, editor));
       }
       catch (EditorNotFoundException e)
       {

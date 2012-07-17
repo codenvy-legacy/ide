@@ -69,7 +69,7 @@ public class CodeMirrorConfiguration
       this.codeParsers = "['parsexml.js']";
       this.codeStyles = "['" + PATH + "css/xmlcolors.css']";
    }
-
+   
    public String getCodeParsers()
    {
       return codeParsers;

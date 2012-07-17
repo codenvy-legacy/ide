@@ -71,7 +71,7 @@ public class XmlCodeAssistant extends CodeAssistant implements TokenWidgetFactor
       this.posY = cursorOffsetY;
       try
       {
-         parseTokenLine(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
+         parseTokenLine(editor.getLineText(editor.getCursorRow()), editor.getCursorColumn());
          if (tokenToComplete.endsWith(" "))
          {
             beforeToken += tokenToComplete;

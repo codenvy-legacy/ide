@@ -18,20 +18,16 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.ToggleButton;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -40,11 +36,16 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -65,24 +66,14 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    private EditorType currentEditorType = EditorType.DEFAULT;
 
    private List<Editor> supportedEditors;
+   
+   private Map<Editor, EditorEventHandler> editorEventHandlers = new HashMap<Editor, EditorEventHandler>();
 
    private FileModel file;
-
-   private HandlerManager eventBus;
 
    private LayoutPanel editorArea;
 
    int lastEditorHeight = 0;
-
-   /**
-    * Uses for storing row index of the cursor when Editor View lose focus.
-    */
-   private int frozenCursorRow;
-
-   /**
-    * Uses for storing column index of the cursor when Editor View lose focus.
-    */
-   private int frozenCursorColumn;
 
    private static final String FILE_IS_READ_ONLY = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
       .editorControllerFileIsReadOnly();
@@ -94,60 +85,62 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    private static final int EDITOR_SWITCHER_OFFSET = Math.round(BUTTON_HEIGHT / 4);
 
    private static final String BUTTON_LABEL_FONT_SIZE = "11px";
-
+   
    /**
     * @param title
     * @param supportedEditors
     */
-   public EditorView(FileModel file, boolean isFileReadOnly, HandlerManager eventBus, List<Editor> supportedEditors,
-      int currentEditorIndex)
+   public EditorView(FileModel file, boolean isFileReadOnly, List<Editor> supportedEditors, int currentEditorIndex)
    {
       super("editor-" + i++, "editor", getFileTitle(file, isFileReadOnly), new Image(ImageUtil.getIcon(file
          .getMimeType())));
       setCanShowContextMenu(true);
       
       if (supportedEditors == null)
+      {
          return;
+      }
 
       this.file = file;
-      this.eventBus = eventBus;
       this.supportedEditors = supportedEditors;
 
-      eventBus.addHandler(ViewActivatedEvent.TYPE, this);
+      IDE.addHandler(ViewActivatedEvent.TYPE, this);
 
       AbsolutePanel editorSwitcherContainer = new AbsolutePanel();
-      DOM.setStyleAttribute(editorSwitcherContainer.getElement(), "background", "#FFFFFF url("
-         + EDITOR_SWITCHER_BACKGROUND + ") repeat-x");
+      DOM.setStyleAttribute(editorSwitcherContainer.getElement(), "background", "#FFFFFF url(" + EDITOR_SWITCHER_BACKGROUND + ") repeat-x");
 
       HorizontalPanel editorSwitcher = new HorizontalPanel();
 
       this.editorArea = new LayoutPanel();
 
       // to respect of button position
-      EditorType[] editorSequence = new EditorType[this.supportedEditors.size()];
-
+      EditorType[] editorSequence = new EditorType[supportedEditors.size()];
+      
+      if (supportedEditors.size() == 1) 
+      {
+         Editor editor = supportedEditors.get(0);
+         EditorType editorType = EditorType.getType(editor.getClass().getName());
+         currentEditorType = editorType;
+         editors.put(editorType, editor);
+         editor.asWidget().setHeight("100%");
+         editorSequence[editorType.getPosition()] = editorType;         
+         editorEventHandlers.put(editor, new EditorEventHandler(editor));
+         add(editor);
+         editor.setText(file.getContent());
+         return;
+      }
+      
       for (Editor editor : this.supportedEditors)
       {
          EditorType editorType = EditorType.getType(editor.getClass().getName());
          editors.put(editorType, editor);
-         editor.setHeight("100%");
+         editor.asWidget().setHeight("100%");
 
          editorSequence[editorType.getPosition()] = editorType;
 
-         // add editor switcher only if there are several supported editors
-         if (this.supportedEditors.size() > 1)
-         {
-            ToggleButton button =
-               createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
-            buttons.put(editorType, button);
-            editor.setHeight("100%");
-         }
-         else
-         {
-            add(this.supportedEditors.get(currentEditorIndex));
-            currentEditorType = editorType;
-            return;
-         }
+         ToggleButton button = createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
+         buttons.put(editorType, button);
+         editor.asWidget().setHeight("100%");         
       }
 
       // to respect of button sequence
@@ -155,15 +148,18 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       {
          EditorType editorType = editorSequence[i];
          editorSwitcher.add(buttons.get(editorType));
+         
          Editor editor = editors.get(editorType);
+         editorEventHandlers.put(editor, new EditorEventHandler(editor));         
          editorArea.add(editor);
          editorArea.setWidgetTopBottom(editor, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
-         editor.setHeight("100%");
+         editor.asWidget().setHeight("100%");
          if (editors.get(editorType) == this.supportedEditors.get(currentEditorIndex))
          {
             currentEditorType = editorType;
             showEditor(editorType);
             downButton(buttons.get(editorType));
+            editors.get(editorType).setText(file.getContent());
          }
          else
          {
@@ -180,7 +176,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
       add(editorArea);
    }
-
+   
    private void showEditor(final EditorType editorType)
    {
       editorArea.setWidgetVisible(editorArea.getWidget(editorType.getPosition()), true);
@@ -219,7 +215,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
       for (Editor editor : editorList)
       {
-         if (editor.getEditorId().equals(editorId))
+         if (editor.getId().equals(editorId))
          {
             return editor;
          }
@@ -261,7 +257,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    ClickHandler buttonClickHandler = new ClickHandler()
    {
-
       public void onClick(ClickEvent event)
       {
          EditorType nextEditorType = getFirstKeyByValue(buttons, (ToggleButton)event.getSource());
@@ -275,10 +270,8 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
             downButton(buttons.get(currentEditorType));
             return;
          }
-
          switchToEditor(nextEditorType);
       }
-
    };
 
    private void upButton(ToggleButton button)
@@ -332,7 +325,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
    public void onViewInnerEditorSwitched(Editor editor)
    {
-      this.eventBus.fireEvent(new EditorActiveFileChangedEvent(file, editor));
+      IDE.fireEvent(new EditorActiveFileChangedEvent(file, editor));
    }
 
    public FileModel getFile()
@@ -398,14 +391,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       onViewInnerEditorSwitched(nextEditor);
    }
 
-   // @Override
-   // public void resize(int width, int height)
-   // {
-   // super.resize(width, height);
-   //
-   // restoreEditorHeight(currentEditorType);
-   // }
-
    /**
     * restore CKEditor height on resize
     **/
@@ -416,13 +401,13 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
          if (this.supportedEditors.size() == 1)
          {
             lastEditorHeight = editorArea.getOffsetHeight();
-            editors.get(editorType).setHeight(String.valueOf(lastEditorHeight));
+            editors.get(editorType).asWidget().setHeight(String.valueOf(lastEditorHeight));
          }
 
          else if (getEditorAreaHeight() > BUTTON_HEIGHT + EDITOR_SWITCHER_OFFSET)
          {
             lastEditorHeight = getEditorAreaHeight();
-            editors.get(editorType)
+            editors.get(editorType).asWidget()
                .setHeight(String.valueOf(lastEditorHeight - BUTTON_HEIGHT - EDITOR_SWITCHER_OFFSET));
          }
       }
@@ -450,6 +435,19 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
             currentEditor.setFocus();
          }
       }.schedule(100);
+   }
+
+   @Override
+   protected void onUnload()
+   {
+      super.onUnload();
+
+      for (EditorEventHandler editorEventHandler : editorEventHandlers.values())
+      {
+         editorEventHandler.removeHandlers();
+      }
+      
+      editorEventHandlers.clear();
    }
 
 }

@@ -20,7 +20,7 @@ package org.exoplatform.ide.editor.php.client.codemirror;
 
 import java.util.List;
 
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.php.client.PhpClientBundle;

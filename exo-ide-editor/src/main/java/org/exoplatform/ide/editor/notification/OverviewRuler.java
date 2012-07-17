@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.editor.notification;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
+import org.exoplatform.ide.editor.marking.Marker;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -28,13 +35,6 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
-
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
-import org.exoplatform.ide.editor.problem.Problem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -47,20 +47,24 @@ public class OverviewRuler extends Composite implements MouseDownHandler
 
    private LayoutPanel ruler;
 
-   private CodeMirror codeMirror;
+   //private CodeMirror codeMirror;
+   
+   private Editor editor;
 
    private Mark bottomMark;
 
-   private List<Problem> errors = new ArrayList<Problem>();
+   private List<Marker> errors = new ArrayList<Marker>();
 
-   private List<Problem> warnings = new ArrayList<Problem>();
+   private List<Marker> warnings = new ArrayList<Marker>();
 
    /**
     * 
     */
-   public OverviewRuler(CodeMirror codeMirror)
+   public OverviewRuler(Editor editor)
    {
-      this.codeMirror = codeMirror;
+      //this.codeMirror = codeMirror;
+      this.editor = editor;
+      
       panel = new LayoutPanel();
       ruler = new LayoutPanel();
       initWidget(panel);
@@ -79,12 +83,12 @@ public class OverviewRuler extends Composite implements MouseDownHandler
     * @param problem
     * @param message
     */
-   public void addProblem(Problem problem, String message)
+   public void addProblem(Marker problem, String message)
    {
       if (!(problem.isError() || problem.isWarning()))
          return;
 
-      int lastLineNumber = codeMirror.getNumberOfLines();
+      int lastLineNumber = editor.getNumberOfLines();
       int problemY = (100 * problem.getLineNumber()) / lastLineNumber;
 
       Mark mark = new Mark(message, getStyleName(problem), problem.getLineNumber());
@@ -93,9 +97,14 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       ruler.setWidgetTopHeight(mark, problemY, Unit.PCT, 5, Unit.PX);
       ruler.setWidgetLeftRight(mark, 2, Unit.PX, 2, Unit.PX);
       if (problem.isError())
+      {
          errors.add(problem);
+      }
+      
       if (problem.isWarning())
+      {
          warnings.add(problem);
+      }
 
       if (!errors.isEmpty())
       {
@@ -107,7 +116,6 @@ public class OverviewRuler extends Composite implements MouseDownHandler
          bottomMark.setMessage("Warnings: " + warnings.size());
          bottomMark.setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewBottomMarkWarning());
       }
-
    }
 
    /**
@@ -116,21 +124,26 @@ public class OverviewRuler extends Composite implements MouseDownHandler
    @Override
    public void onMouseDown(MouseDownEvent event)
    {
-      codeMirror.goToPosition(((Mark)event.getSource()).lineNumber, 1);
-      codeMirror.setFocus();
+      editor.setCursorPosition(((Mark)event.getSource()).lineNumber, 1);
+      editor.setFocus();
    }
 
    /**
     * @param problem
     * @return
     */
-   private String getStyleName(Problem problem)
+   private String getStyleName(Marker problem)
    {
       if (problem.isError())
+      {
          return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
+      }
+      
       if (problem.isWarning())
+      {
          return CodeMirrorClientBundle.INSTANCE.css().overviewMarkWarning();
-
+      }
+      
       // default
       return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
    }
@@ -151,7 +164,7 @@ public class OverviewRuler extends Composite implements MouseDownHandler
    {
       private HTML widget;
 
-      private Notification notification;
+      private NotificationWidget notification;
 
       private int lineNumber;
 
@@ -194,7 +207,7 @@ public class OverviewRuler extends Composite implements MouseDownHandler
          if (widget.getElement().hasAttribute("title") && widget.getElement().getAttribute("title").isEmpty())
             return;
          if (notification == null)
-            notification = new Notification(getElement());
+            notification = new NotificationWidget(getElement());
       }
 
       /**

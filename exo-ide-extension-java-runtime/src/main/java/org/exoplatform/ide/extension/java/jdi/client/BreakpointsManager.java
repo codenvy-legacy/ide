@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -34,12 +33,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
-import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.problem.Markable;
-import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -52,19 +51,19 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:36:51 PM Mar 26, 2012 evgen $
  * 
  */
-public class BreakpointsManager implements EditorActiveFileChangedHandler, LineNumberDoubleClickHandler,
+public class BreakpointsManager implements EditorActiveFileChangedHandler, EditorLineNumberDoubleClickHandler,
    DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler,
-   LineNumberContextMenuHandler
+   EditorLineNumberContextMenuHandler
 {
 
    private HandlerManager eventBus;
@@ -105,7 +104,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.addHandler(DebuggerConnectedEvent.TYPE, this);
       eventBus.addHandler(DebuggerDisconnectedEvent.TYPE, this);
       eventBus.addHandler(EditorFileOpenedEvent.TYPE, this);
-      eventBus.addHandler(LineNumberContextMenuEvent.TYPE, this);
+      eventBus.addHandler(EditorLineNumberContextMenuEvent.TYPE, this);
       eventBus.addHandler(BreakPointsUpdatedEvent.TYPE, this);
    }
 
@@ -155,13 +154,13 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
       eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
 
-   public void markCurrentBreakPoint(Problem problem)
+   public void markCurrentBreakPoint(Marker problem)
    {
       if (problem != null)
          markable.markProblem(problem);
    }
 
-   public void unmarkCurrentBreakPoint(Problem problem)
+   public void unmarkCurrentBreakPoint(Marker problem)
    {
       if (problem != null)
          markable.unmarkProblem(problem);
@@ -171,7 +170,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
     * @see org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler#onLineNumberDoubleClick(org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent)
     */
    @Override
-   public void onLineNumberDoubleClick(final LineNumberDoubleClickEvent event)
+   public void onEditorLineNumberDoubleClick(final EditorLineNumberDoubleClickEvent event)
    {
       if (debuggerInfo == null)
          return;
@@ -366,7 +365,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, LineN
     * @see org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler#onLineNumberContextMenu(org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent)
     */
    @Override
-   public void onLineNumberContextMenu(LineNumberContextMenuEvent event)
+   public void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event)
    {
       if (debuggerInfo == null)
          return;

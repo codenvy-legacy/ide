@@ -45,10 +45,14 @@
 	
 
 	<c:Border margin="5">
-		<c:layer top="0px" bottom="35px">
-			<g:ScrollPanel width="100%" height="100%">
-				<g:Grid ui:field="imagesGrid" width="100%" height="100%"></g:Grid>
-			</g:ScrollPanel>
+		<c:layer>
+			<c:Border margin="0">
+				<c:layer top="0px" bottom="35px">
+					<g:ScrollPanel width="100%" height="100%">
+						<g:Grid ui:field="imagesGrid" width="100%" height="100%"></g:Grid>
+					</g:ScrollPanel>
+				</c:layer>
+			</c:Border>
 		</c:layer>
 		
 		<c:layer height="30px" bottom="0px">

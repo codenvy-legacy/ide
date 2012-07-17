@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.exoplatform.ide.codeassistant.jvm.shared.FieldInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
@@ -29,15 +36,8 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
+import org.exoplatform.ide.editor.codeassistant.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *

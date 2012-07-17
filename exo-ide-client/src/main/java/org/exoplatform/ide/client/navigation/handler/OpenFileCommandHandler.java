@@ -35,9 +35,8 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.http.client.RequestException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -57,15 +56,16 @@ import org.exoplatform.ide.client.framework.event.OpenFileHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Handlers events for opening files.
@@ -198,14 +198,15 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
             }
          }
 
-         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
+         //EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
+         Editor editor = EditorFactory.getEditor(file.getMimeType(), selectedEditor);
          if (cursorPosition != null)
          {
-            IDE.fireEvent(new EditorOpenFileEvent(file, producer, cursorPosition));
+            IDE.fireEvent(new EditorOpenFileEvent(file, editor, cursorPosition));
          }
          else
          {
-            IDE.fireEvent(new EditorOpenFileEvent(file, producer));
+            IDE.fireEvent(new EditorOpenFileEvent(file, editor));
          }
       }
       catch (EditorNotFoundException e)

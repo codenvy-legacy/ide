@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.editor.ruby.client.codeassistant;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
@@ -38,20 +37,21 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.ClassMetaclass;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.Metaclass;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.MethodInfo;
 import org.exoplatform.ide.editor.ruby.client.codeassistant.model.BuiltinMethodsDatabase.ModuleMetaclass;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -108,7 +108,7 @@ public class RubyCodeAssistant extends CodeAssistant implements Comparator<Token
             openForm(new ArrayList<Token>(), widgetFactory, this);
             return;
          }
-         parseTokenLine(lineContent, editor.getCursorCol());
+         parseTokenLine(lineContent, editor.getCursorColumn());
 
          if (defaultTokens == null)
          {

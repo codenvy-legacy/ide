@@ -29,4 +29,45 @@ package org.exoplatform.ide.client.framework.editor;
 public class EditorNotFoundException extends Exception
 {
 
+   /**
+    * Media type
+    */
+   private String mimeType;
+
+   /**
+    * Editor description
+    */
+   private String editorDescription;
+
+   public EditorNotFoundException(String mimeType)
+   {
+      this(mimeType, null);
+   }
+
+   public EditorNotFoundException(String mimeType, String editorDescription)
+   {
+      this.mimeType = mimeType;
+      this.editorDescription = editorDescription;
+   }
+
+   /**
+    * Returns media type.
+    * 
+    * @return
+    */
+   public String getMimeType()
+   {
+      return mimeType;
+   }
+
+   /**
+    * Returns editor description.
+    * 
+    * @return
+    */
+   public String getEditorDescription()
+   {
+      return editorDescription;
+   }
+
 }

@@ -22,14 +22,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.api.Parser;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.event.shared.HandlerManager;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
@@ -60,10 +60,12 @@ public class CodeMirrorParserImpl extends Parser
    }
 
    @Override
-   public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor, HandlerManager eventBus)
+   public List<TokenBeenImpl> getTokenList(String editorId, JavaScriptObject editor)
    {
       if (editor == null)
-         return null;
+      {
+         return new ArrayList<TokenBeenImpl>();
+      }
 
       if (buildCommand.isBusy())
       {
@@ -101,9 +103,10 @@ public class CodeMirrorParserImpl extends Parser
          }
       }
 
-      if (buildCommand.isBusy())
+      if (buildCommand.isBusy() && tokenListPreparedHandler != null)
       {
-         eventBus.fireEvent(new EditorTokenListPreparedEvent(editorId, rootToken.getSubTokenList()));
+         tokenListPreparedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(editorId, rootToken.getSubTokenList()));
+         //eventBus.fireEvent(new EditorTokenListPreparedEvent(editorId, rootToken.getSubTokenList()));
       }
 
       return rootToken.getSubTokenList();
@@ -180,8 +183,6 @@ public class CodeMirrorParserImpl extends Parser
       boolean isBusy = false;
 
       boolean shouldStop = false;
-
-      private HandlerManager eventBus;
 
       LinkedList<JavaScriptObject> lineNodeList;
 
@@ -294,6 +295,9 @@ public class CodeMirrorParserImpl extends Parser
          return lineNodeList;
       }
 
+      /**
+       * @see com.google.gwt.core.client.Scheduler.RepeatingCommand#execute()
+       */
       public boolean execute()
       {
          if (shouldStop == true)
@@ -347,7 +351,10 @@ public class CodeMirrorParserImpl extends Parser
       {
          preparedTokenList = rootToken.getSubTokenList();
          interrupt();
-         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, preparedTokenList));
+         if (tokenListPreparedHandler != null)
+         {
+            tokenListPreparedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(editorId, preparedTokenList));
+         }
       }
 
       /**
@@ -392,24 +399,23 @@ public class CodeMirrorParserImpl extends Parser
          }
       }
 
-      public void setEventBus(HandlerManager eventBus)
-      {
-         this.eventBus = eventBus;
-      }
-
       public void setEditorId(String editorId)
       {
          this.editorId = editorId;
       }
    }
+   
+   private EditorTokenListPreparedHandler tokenListPreparedHandler;   
 
-   public void getTokenListInBackground(String editorId, JavaScriptObject editor, HandlerManager eventBus)
+   public void getTokenListInBackground(String editorId, JavaScriptObject editor, EditorTokenListPreparedHandler tokenListPreparedHandler)
    {
       if (editor == null)
+      {
          return;
+      }
 
-      buildCommand.setEventBus(eventBus);
       buildCommand.setEditorId(editorId);
+      this.tokenListPreparedHandler = tokenListPreparedHandler;
 
       if (!buildCommand.isBusy())
       {
@@ -429,5 +435,5 @@ public class CodeMirrorParserImpl extends Parser
          buildCommand.stop();
       }
    }
-
+      
 }

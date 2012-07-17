@@ -19,18 +19,8 @@
 
 package org.exoplatform.ide.client.operation.openbyurl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -49,12 +39,22 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.URL;
 
 /**
  * Presenter for opening file by URL.
@@ -284,8 +284,9 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
    {
       try
       {
-         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
-         IDE.fireEvent(new EditorOpenFileEvent(file, editorProducer));
+         Editor editor = IDE.getInstance().getEditors(file.getMimeType())[0];
+         //EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
+         IDE.fireEvent(new EditorOpenFileEvent(file, editor));
          IDE.getInstance().closeView(display.asView().getId());
       }
       catch (EditorNotFoundException e)

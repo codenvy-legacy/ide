@@ -42,7 +42,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.Settings;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
@@ -301,7 +301,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
       openNextFileInEditor();
    }
-
+   
    private void openNextFileInEditor()
    {
       if (filesToOpen.size() == 0)
@@ -327,9 +327,12 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       file.setProject(restoredProject);
       try
       {
-         String editorDescription = defaultEditors.get(file.getMimeType());
-         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), editorDescription);
-         eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
+         //String editorDescription = defaultEditors.get(file.getMimeType());
+//         Editor editor = EditorFactory.getEditor(file.getMimeType(), description) IDE.getInstance().gete
+//         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), editorDescription);
+
+         Editor editor = EditorFactory.getEditor(file.getMimeType());
+         eventBus.fireEvent(new EditorOpenFileEvent(file, editor));
       }
       catch (EditorNotFoundException e)
       {

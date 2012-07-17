@@ -148,7 +148,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       try
       {
          completionPosition =
-            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1) + currentEditor.getCursorCol()
+            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1) + currentEditor.getCursorColumn()
                - 1;
       }
       catch (BadLocationException e1)
@@ -360,7 +360,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
          }
          String string = document.get(0, replacementOffset + cursorPosition);
          String[] split = string.split("\n");
-         currentEditor.goToPosition(split.length, split[split.length - 1].length() + 1);
+         currentEditor.setCursorPosition(split.length, split[split.length - 1].length() + 1);
       }
       catch (Exception e)
       {
@@ -438,14 +438,14 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
             break;
 
          case KeyCodes.KEY_RIGHT :
-            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineText(currentEditor.getCursorRow()).length())
+            if (currentEditor.getCursorColumn() + 1 > currentEditor.getLineText(currentEditor.getCursorRow()).length())
                display.cancelCodeAssistant();
             else
                generateNewProposals();
             break;
 
          case KeyCodes.KEY_LEFT :
-            if (currentEditor.getCursorCol() - 1 <= 0)
+            if (currentEditor.getCursorColumn() - 1 <= 0)
                display.cancelCodeAssistant();
             else
                generateNewProposals();

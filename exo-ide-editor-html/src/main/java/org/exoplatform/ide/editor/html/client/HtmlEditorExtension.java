@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.editor.html.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
-import org.exoplatform.ide.editor.ckeditor.CKEditorProducer;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlParser;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -59,20 +57,21 @@ public class HtmlEditorExtension extends Extension
          new NewItemControl("File/New/New HTML", MESSAGES.controlNewHtmlTitle(), MESSAGES.controlNewHtmlPrompt(),
             Images.HTML, MimeType.TEXT_HTML).setGroupName(GroupNames.NEW_FILE));
 
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html", Images.INSTANCE.html(),
-            true, new CodeMirrorConfiguration()
-               .setGenericParsers(
-                  "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
-               .setGenericStyles(
-                  "['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
                      + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-               .setParser(new HtmlParser()).setCanBeOutlined(true).setAutocompleteHelper(new HtmlAutocompleteHelper())
-               .setCodeAssistant(new HtmlCodeAssistant()).setCanHaveSeveralMimeTypes(true)));
+            .setParser(new HtmlParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new HtmlAutocompleteHelper())
+            .setCodeAssistant(new HtmlCodeAssistant())
+            .setCanHaveSeveralMimeTypes(true)
+               ));
 
-      IDE.getInstance().addEditor(
-         new CKEditorProducer(MimeType.TEXT_HTML, MESSAGES.ckEditorHtmlEditor(), "html", Images.INSTANCE.html(), false,
-            new CKEditorConfiguration()));
+//      IDE.getInstance().addEditor(
+//         new CKEditorProducer(MimeType.TEXT_HTML, MESSAGES.ckEditorHtmlEditor(), "html", Images.INSTANCE.html(), false,
+//            new CKEditorConfiguration()));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_HTML, new HtmlOutlineItemCreator());
 

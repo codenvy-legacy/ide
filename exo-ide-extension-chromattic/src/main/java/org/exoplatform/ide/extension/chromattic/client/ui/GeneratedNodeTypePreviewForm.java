@@ -21,10 +21,10 @@ package org.exoplatform.ide.extension.chromattic.client.ui;
 import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
@@ -66,16 +66,34 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
     */
    private void createEditor()
    {
-      final HashMap<String, Object> params = new HashMap<String, Object>();
-      params.put(EditorParameters.IS_READ_ONLY, true);
-      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
       try
       {
-         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", IDE.eventBus(), params);
+         Editor []editors = IDE.getInstance().getEditors(MimeType.APPLICATION_XML);
+         if (editors.length == 0)
+         {
+            return;
+         }
+         
+         editor = editors[0].newInstance();
+         editor.setReadOnly(true);
+         editor.showLineNumbers(true);
       }
-      catch (Exception e)
+      catch (EditorNotFoundException e)
       {
+         
       }
+      
+//      
+//      final HashMap<String, Object> params = new HashMap<String, Object>();
+//      params.put(EditorParameters.IS_READ_ONLY, true);
+//      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
+//      try
+//      {
+//         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", IDE.eventBus(), params);
+//      }
+//      catch (Exception e)
+//      {
+//      }
       add(editor);
 
       new Timer()
@@ -84,7 +102,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
          @Override
          public void run()
          {
-            Element editorWraper = Document.get().getElementById(editor.getEditorId());
+            Element editorWraper = Document.get().getElementById(editor.getId());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)

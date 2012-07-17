@@ -30,8 +30,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorParameters;
-import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.GWT;
@@ -79,14 +77,21 @@ public class FormatterProfileView extends ViewImpl implements Display
       try
       {
          final HashMap<String, Object> params = new HashMap<String, Object>();
-         params.put(EditorParameters.IS_READ_ONLY, true);
-         params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
-         params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.FALSE);
-         EditorProducer editorProducer = IDE.getInstance().getEditor(MimeType.APPLICATION_JAVA);
-         eventBus = new HandlerManager(null);
-         editor = editorProducer.createEditor(JdtClientBundle.INSTANCE.formatterSample().getText(), eventBus, params);
-         editor.setSize("100%", "100%");
+//         params.put(EditorParameters.IS_READ_ONLY, true);
+//         params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
+//         params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.FALSE);
+
+         Editor[] editors = IDE.getInstance().getEditors(MimeType.APPLICATION_JAVA);         
+         Editor editor = editors[0];
+         editor.asWidget().setSize("100%", "100%");
          editorPanel.add(editor);
+         editor.setText(JdtClientBundle.INSTANCE.formatterSample().getText());
+
+//         EditorProducer editorProducer = IDE.getInstance().getEditor(MimeType.APPLICATION_JAVA);         
+//         eventBus = new HandlerManager(null);
+//         editor = editorProducer.createEditor(JdtClientBundle.INSTANCE.formatterSample().getText(), eventBus, params);
+//         editor.setSize("100%", "100%");
+//         editorPanel.add(editor);
       }
       catch (EditorNotFoundException e)
       {

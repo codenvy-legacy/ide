@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 /**
@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
  * 
  */
-public class EditorBreakPoint implements Problem
+public class EditorBreakPoint implements Marker
 {
 
    private String message;

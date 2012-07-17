@@ -35,8 +35,8 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.groovy.client.codeassistant.service.GroovyCodeAssistantService;
 import org.exoplatform.ide.editor.gtmpl.client.codeassistant.GroovyTemplateCodeAssistant;
 import org.exoplatform.ide.editor.gtmpl.client.codemirror.GroovyTemplateAutocompleteHelper;
@@ -96,6 +96,22 @@ public class GtmplEditorExtension extends Extension implements InitializeService
             + "/ide/code-assistant/groovy/class-doc?fqn=");
       templateCodeAssistant = new GroovyTemplateCodeAssistant(service, factory, this);
 
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.GROOVY_TEMPLATE, "CodeMirror Groovy Template editor", "gtmpl",
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['parsegtmpl.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizegroovy.js', 'parsegroovy.js', 'parsegtmplmixed.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/gtmplcolors.css', '" + CodeMirrorConfiguration.PATH
+                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+                        + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+            .setParser(new GroovyTemplateParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new GroovyTemplateAutocompleteHelper())
+            .setCodeAssistant(templateCodeAssistant)
+            .setCodeValidator(new GroovyTemplateCodeValidator())
+            .setCanHaveSeveralMimeTypes(true)
+               ));      
+      
+      
+      /*
       IDE.getInstance()
          .addEditor(
             new CodeMirrorProducer(
@@ -115,7 +131,8 @@ public class GtmplEditorExtension extends Extension implements InitializeService
                   .setAutocompleteHelper(new GroovyTemplateAutocompleteHelper())
                   .setCodeAssistant(templateCodeAssistant).setCodeValidator(new GroovyTemplateCodeValidator())
                   .setCanHaveSeveralMimeTypes(true)));
-
+       */
+      
       IDE.getInstance().addOutlineItemCreator(MimeType.GROOVY_TEMPLATE, new HtmlOutlineItemCreator());
    }
 

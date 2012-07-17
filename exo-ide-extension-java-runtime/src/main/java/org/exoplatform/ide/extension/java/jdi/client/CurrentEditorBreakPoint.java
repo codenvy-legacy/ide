@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.problem.Problem;
-import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.editor.marking.Marker;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
  * 
  */
-public class CurrentEditorBreakPoint implements Problem
+public class CurrentEditorBreakPoint implements Marker
 {
 
    private String message;
