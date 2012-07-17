@@ -1,7 +1,7 @@
 .lineNumber {
   font-family: alternativeFontFamily;
   font-weight: 600;
-  font-size: 9px;
+  font-size: 12px;
   right: 0px;
   position: absolute;
 }
@@ -23,4 +23,8 @@
 }
 
 .scrollable {
+}
+
+.activeline {
+  background: #E8F2FF !important;
 }

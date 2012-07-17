@@ -98,6 +98,8 @@ public class Buffer extends UiComponent<Buffer.View>
     String root();
 
     String columnMarkerLine();
+    
+    String currentLine();
   }
 
   /**

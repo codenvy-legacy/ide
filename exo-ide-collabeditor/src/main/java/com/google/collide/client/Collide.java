@@ -177,7 +177,7 @@ public class Collide implements EntryPoint {
     contentArea.setContent(editorBundle);
     
     Elements.getBody().appendChild(v.getElement());
-    editorBundle.setDocument(Document.createFromString("Hello!!!\n\n sdlkfg;lsdf \n"), new PathUtil("test.js"), "");
+    editorBundle.setDocument(Document.createFromString("package test;\n public class MMM extends Object implements Abb{\n private static final String ds;}"), new PathUtil("test.java"), "");
     
     
     

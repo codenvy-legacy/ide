@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.editor.renderer.CurrentLineHighlighter;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.parenmatch.ParenMatchHighlighter;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
@@ -312,6 +314,7 @@ public class Editor extends UiComponent<Editor.View> {
   private ViewportModel viewport;
   private boolean isReadOnly;
   private final RenderTimeExecutor renderTimeExecutor;
+  private CurrentLineHighlighter currentLineHighlighter;
 
   private Editor(AppContext appContext, View view, Buffer buffer, InputController input,
       FocusManager focusManager, FontDimensionsCalculator editorFontDimensionsCalculator,
@@ -506,6 +509,7 @@ public class Editor extends UiComponent<Editor.View> {
       localCursorController.teardown();
       editorUndoManager.teardown();
       searchModel.teardown();
+      currentLineHighlighter.teardown();
     }
 
     this.document = document;
@@ -553,6 +557,8 @@ public class Editor extends UiComponent<Editor.View> {
         editorDocumentMutator);
     localCursorController =
         LocalCursorController.create(appContext, focusManager, selection, buffer, this);
+    
+    this.currentLineHighlighter = new CurrentLineHighlighter(buffer, selection, appContext.getResources());
 
     documentListenerManager.dispatch(new Dispatcher<Editor.DocumentListener>() {
       @Override

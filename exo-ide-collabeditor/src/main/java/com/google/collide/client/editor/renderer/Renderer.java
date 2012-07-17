@@ -96,6 +96,7 @@ public class Renderer {
             document, buffer, viewport, editor.getView(), lineLifecycleListenerManager);
     this.lineNumberRenderer = new LineNumberRenderer(buffer, res, leftGutter, viewport, selection,
         editor);
+    
   }
 
   public void addLineRenderer(LineRenderer lineRenderer) {

@@ -43,7 +43,7 @@ public class LineNumberRenderer {
   /**
    * Current editor instance.
    *
-   * Used to track if current fie can be edited (i.e. is not readonly).
+   * Used to track if current file can be edited (i.e. is not readonly).
    *
    * TODO: add new abstraction to avoid editor passing.
    */
@@ -111,6 +111,8 @@ public class LineNumberRenderer {
     String lineNumber();
 
     String activeLineNumber();
+    
+    String activeline();
   }
 
   /**
