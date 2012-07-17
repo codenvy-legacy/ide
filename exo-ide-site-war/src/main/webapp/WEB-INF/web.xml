@@ -19,12 +19,19 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-"http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app id="ide_site_app" version="2.5" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd">
 
-<web-app>
+  <display-name>site</display-name>
 
-	<display-name>site</display-name>
+   <servlet>
+      <servlet-name>EverrestServlet</servlet-name>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>EverrestServlet</servlet-name>
+      <url-pattern>/rest/*</url-pattern>
+   </servlet-mapping>
 
   <security-constraint>
     <web-resource-collection>
