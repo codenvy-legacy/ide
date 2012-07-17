@@ -25,21 +25,22 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Class used for sending messages to client via WebSocket connections.
- * Stores WebSocket connections.
+ * Class used for managing WebSocket connections and sending messages to clients.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: IDEWebSocketDispatcher.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
+ * @version $Id: WebSocketManager.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
  *
  */
-public class IDEWebSocketDispatcher
+public class WebSocketManager
 {
-   public enum EventType
-   {
+   /**
+    * Enumeration describing the WebSocket message event types.
+    */
+   public enum EventType {
       /**
        * Maven build job status.
        */
@@ -48,7 +49,17 @@ public class IDEWebSocketDispatcher
       /**
        * Debugger events.
        */
-      DEBUGGER_EVENTS("debuggerEvents");
+      DEBUGGER_EVENTS("debuggerEvents"),
+
+      /**
+       * Indicates that the git-repository has been initialized.
+       */
+      GIT_REPO_INITIALIZED("gitRepoInitialized"),
+
+      /**
+       * Indicates that the git-repository has been cloned.
+       */
+      GIT_REPO_CLONED("gitRepoCloned");
 
       private final String eventTypeValue;
 
@@ -67,7 +78,7 @@ public class IDEWebSocketDispatcher
    /**
     * Stores user connections.
     */
-   private Map<String, List<MessageInbound>> connections = new ConcurrentHashMap<String, List<MessageInbound>>();
+   private ConcurrentMap<String, List<MessageInbound>> connections = new ConcurrentHashMap<String, List<MessageInbound>>();
 
    /**
     * Register user connection in active connection list.
@@ -112,22 +123,37 @@ public class IDEWebSocketDispatcher
    }
 
    /**
-    * Sends the text message to client.
-    * <p><strong>Note:</strong> if user has more than one active connections then message will be sent to all connections.
+    * Sends the message to client.
+    * <p><strong>Note:</strong> if user has more than one active
+    * connections with the same session identifier then message
+    * will be sent to all connections.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param message text message for sending
-    * @param eventType event type
+    * @param eventType {@link EventType}
+    * @param data the data to be sent to the client
+    * @param e an exception to be sent to the client
     * @throws IOException if an error occurs writing to the client
     */
-   public void sendEventMessage(String sessionId, String message, EventType eventType) throws IOException
+   public void send(String sessionId, EventType eventType, String data, Exception e) throws IOException
    {
-      String wsMessage = "{\"event\":\"" + eventType + "\"," + "\"data\":" + message + "}";
+      String exception = null;
+      if (e != null)
+      {
+         exception = "{\"type\":\"" + e.getClass().getSimpleName() + "\",\"message\":\"" + e.getMessage() + "\"}";
+      }
+
+      if (data == null || data.trim().isEmpty())
+      {
+         data = "{}";
+      }
+
+      String wsMessage =
+         "{\"event\":\"" + eventType + "\", \"data\":" + data + ", " + "\"exception\":" + exception + "}";
 
       List<MessageInbound> userConnectionsList = connections.get(sessionId);
       if (userConnectionsList == null)
       {
-         throw new IllegalArgumentException("WebSocket session with ID " + sessionId + " not found.");
+         throw new IllegalArgumentException("WebSocket session with ID: " + sessionId + " not found.");
       }
 
       for (MessageInbound messageInbound : userConnectionsList)
@@ -137,5 +163,4 @@ public class IDEWebSocketDispatcher
          wsOut.flush();
       }
    }
-
 }

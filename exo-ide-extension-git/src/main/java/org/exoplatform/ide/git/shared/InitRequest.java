@@ -37,6 +37,11 @@ public class InitRequest extends GitRequest
    private boolean bare;
 
    /**
+    * WebSocket session identifier.
+    */
+   private String sessionId;
+
+   /**
     * @param workingDir working directory for new git repository
     * @param bare <code>true</code> then bare repository created
     */
@@ -44,6 +49,18 @@ public class InitRequest extends GitRequest
    {
       this.workingDir = workingDir;
       this.bare = bare;
+   }
+
+   /**
+    * @param workingDir working directory for new git repository
+    * @param bare <code>true</code> then bare repository created
+    * @param sessionId WebSocket session identifier
+    */
+   public InitRequest(String workingDir, boolean bare, String sessionId)
+   {
+      this.workingDir = workingDir;
+      this.bare = bare;
+      this.sessionId = sessionId;
    }
 
    /**
@@ -84,5 +101,21 @@ public class InitRequest extends GitRequest
    public void setBare(boolean bare)
    {
       this.bare = bare;
+   }
+
+   /**
+    * @return WebSocket session identifier
+    */
+   public String getSessionId()
+   {
+      return sessionId;
+   }
+
+   /**
+    * @param sessionId WebSocket session identifier to set
+    */
+   public void setSessionId(String sessionId)
+   {
+      this.sessionId = sessionId;
    }
 }

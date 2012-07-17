@@ -18,11 +18,21 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.deploy;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -36,25 +46,23 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for deploying samples imported from GitHub.
@@ -63,7 +71,8 @@ import com.google.gwt.user.client.ui.HasValue;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler
+public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler,
+   WebSocketMessageHandler
 {
 
    public interface Display extends IsView
@@ -106,11 +115,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    //-----new----------------
    private Paas paas;
-   
+
    private List<String> paases;
 
    private List<Paas> paasList;
-   
+
+   private RequestStatusHandler cloneStatusHandler;
+
+   private ProjectModel project;
+
    private PaasCallback paasCallback = new PaasCallback()
    {
       @Override
@@ -160,6 +173,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    private void bindDisplay()
@@ -204,7 +218,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            
+
             String value = event.getValue();
             if ("None".equals(value))
             {
@@ -222,7 +236,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   }
                }
             }
-            
+
          }
       });
 
@@ -247,6 +261,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    public void onOpen(ProjectData value)
    {
       this.data = value;
+      project = null;
       if (display == null)
       {
          display = GWT.create(Display.class);
@@ -265,7 +280,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
    }
-   
+
    private List<String> getPaasValues()
    {
       List<String> paases = new ArrayList<String>();
@@ -327,15 +342,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       model.setParent(parent);
       try
       {
-         VirtualFileSystem.getInstance().createProject(
-            parent,
-            new AsyncRequestCallback<ProjectModel>(
-               new ProjectUnmarshaller(model))
+         VirtualFileSystem.getInstance().createProject(parent,
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(model))
             {
                @Override
                protected void onSuccess(ProjectModel result)
                {
-                  cloneRepository(data, result);
+                  project = result;
+                  cloneRepository(data);
                   closeView();
                }
 
@@ -352,7 +366,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
-   private void cloneRepository(ProjectData repo, final ProjectModel project)
+   private void cloneRepository(ProjectData repo)
    {
       String remoteUri = repo.getRepositoryUrl();
       if (!remoteUri.endsWith(".git"))
@@ -363,32 +377,27 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       try
       {
          JobManager.get().showJobSeparated();
-         
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
+
+         String sessionId = null;
+         WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            sessionId = ws.getSessionId();
+            cloneStatusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
+            cloneStatusHandler.requestInProgress(project.getId());
+         }
+         final String webSocketSessionId = sessionId;
+
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null, webSocketSessionId,
             new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new ProjectCreatedEvent(project));
-                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-
-                  if (paas != null)
+                  if (webSocketSessionId == null)
                   {
-                     // FIXME
-                     // timer for allowing project to create fully
-                     // find better solution!!!!!!!!!
-                     new Timer()
-                     {
-                        @Override
-                        public void run()
-                        {
-                           paas.deploy(project);
-                        }
-                     }.schedule(2000);
+                     onRepositoryCloned();
                   }
-                  
                }
 
                @Override
@@ -401,6 +410,31 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       catch (RequestException e)
       {
          handleError(e);
+      }
+   }
+
+   /**
+    * Perform actions on project repository was cloned successfully.
+    */
+   private void onRepositoryCloned()
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      IDE.fireEvent(new ProjectCreatedEvent(project));
+      IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
+
+      if (paas != null)
+      {
+         // FIXME
+         // timer for allowing project to create fully
+         // find better solution!!!!!!!!!
+         new Timer()
+         {
+            @Override
+            public void run()
+            {
+               paas.deploy(project);
+            }
+         }.schedule(2000);
       }
    }
 
@@ -420,4 +454,34 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       this.vfs = event.getVfsInfo();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    */
+   @Override
+   public void onWebSocketMessage(WebSocketMessageEvent event)
+   {
+      String message = event.getMessage();
+
+      WebSocketMessage webSocketMessage =
+         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
+      if (!webSocketMessage.getEvent().equals("gitRepoCloned"))
+      {
+         return;
+      }
+
+      if (!project.getId().equals(webSocketMessage.getData().asString()))
+      {
+         return;
+      }
+
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         cloneStatusHandler.requestFinished(project.getId());
+         onRepositoryCloned();
+         return;
+      }
+      handleError(new Exception(webSocketException.getMessage()));
+      cloneStatusHandler.requestError(project.getId(), new Exception(webSocketException.getMessage()));
+   }
 }

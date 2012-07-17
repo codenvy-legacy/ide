@@ -24,10 +24,12 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +41,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -52,6 +59,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.init.InitRequestStatusHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -68,7 +76,7 @@ import java.util.List;
  * 
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, ViewClosedHandler
+   UserInfoReceivedHandler, ViewClosedHandler, WebSocketMessageHandler
 {
 
    public interface Display extends IsView
@@ -108,6 +116,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private ProjectModel project;
 
+   private RequestStatusHandler gitInitStatusHandler;
+
    /**
     *
     */
@@ -116,6 +126,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       IDE.addHandler(BuildApplicationEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -475,15 +486,28 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
+         String sessionId = null;
+         WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            sessionId = ws.getSessionId();
+            gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
+            gitInitStatusHandler.requestInProgress(project.getId());
+         }
+         final String webSocketSessionId = sessionId;
+
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false, webSocketSessionId,
             new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  IDE.fireEvent(new RefreshBrowserEvent());
-                  createJob();
+                  if (webSocketSessionId == null)
+                  {
+                     showBuildMessage(GitExtension.MESSAGES.initSuccess());
+                     IDE.fireEvent(new RefreshBrowserEvent());
+                     createJob();
+                  }
                }
 
                @Override
@@ -532,5 +556,47 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          closed = true;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    */
+   @Override
+   public void onWebSocketMessage(WebSocketMessageEvent event)
+   {
+      String message = event.getMessage();
+
+      WebSocketMessage webSocketMessage =
+         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
+      if (!webSocketMessage.getEvent().equals("gitRepoInitialized"))
+      {
+         return;
+      }
+
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      if (!project.getId().equals(webSocketMessage.getData().asString()))
+      {
+         return;
+      }
+
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         gitInitStatusHandler.requestFinished(project.getId());
+         showBuildMessage(GitExtension.MESSAGES.initSuccess());
+         IDE.fireEvent(new RefreshBrowserEvent());
+         createJob();
+         return;
+      }
+
+      String exceptionMessage = null;
+      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      {
+         exceptionMessage = webSocketException.getMessage();
+      }
+
+      gitInitStatusHandler.requestError(project.getId(), new Exception(exceptionMessage));
+      String errorMessage = (exceptionMessage != null) ? exceptionMessage : GitExtension.MESSAGES.initFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 }

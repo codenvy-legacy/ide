@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.framework.websocket.event;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when websocket-message has received.
+ * Event is fired, when WebSocket message was received.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $

@@ -16,24 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
-
-import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
+package org.exoplatform.ide.client.framework.websocket;
 
 /**
- * Interface represents the WebSocket message that contains the debugger event list.
+ * WebSocket exception. 
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: DebuggerEventListWS.java Jul 2, 2012 6:07:14 PM azatsarynnyy $
- *
+ * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
  */
-public interface WebSocketEventDebuggerEventList
+public class WebSocketException extends Exception
 {
-   String getEvent();
 
-   void setEvent(String event);
+   public WebSocketException()
+   {
+      super();
+   }
 
-   DebuggerEventList getData();
+   public WebSocketException(String message)
+   {
+      super(message);
+   }
 
-   void setData(DebuggerEventList events);
+   public WebSocketException(Throwable cause)
+   {
+      super(cause);
+   }
+
+   public WebSocketException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

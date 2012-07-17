@@ -217,10 +217,12 @@ public abstract class GitClientService
     * @param projectid project's id (root of GIT repository)
     * @param projectName
     * @param bare to create bare repository or not
+    * @param webSocketSessionId identifier of the WebSocket session which will be used for sending the status of build
+    *                            or <code>null</code> if the WebSocket connection is not supported
     * @param callback callback
     */
    public abstract void init(String vfsId, String projectid, String projectName, boolean bare,
-      AsyncRequestCallback<String> callback) throws RequestException;
+      String webSocketSessionId, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.
@@ -265,11 +267,13 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
+    * @param webSocketSessionId identifier of the WebSocket session which will be used for sending the status of build
+    *                            or <code>null</code> if the WebSocket connection is not supported
     * @param callback callback
     * @throws RequestException
     */
    public abstract void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException;
+      String webSocketSessionId, AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is

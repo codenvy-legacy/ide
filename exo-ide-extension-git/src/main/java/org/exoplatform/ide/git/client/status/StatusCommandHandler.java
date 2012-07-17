@@ -175,7 +175,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       try
       {
-         GitClientService.getInstance().status(vfs.getId(), project.getId(), new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
+         GitClientService.getInstance().status(vfs.getId(), project.getId(),
+            new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
          {
             @Override
             protected void onSuccess(StatusResponse result)

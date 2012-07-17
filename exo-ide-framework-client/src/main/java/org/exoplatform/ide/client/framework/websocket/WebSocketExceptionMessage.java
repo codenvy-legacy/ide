@@ -16,24 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.maven.client.build;
-
-import org.exoplatform.ide.extension.maven.shared.BuildStatus;
+package org.exoplatform.ide.client.framework.websocket;
 
 /**
- * Interface represents the WebSocket message that contains the status of build job.
+ * Interface represents the WebSocket message that contains description of the exception.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuildStatusWS.java Jun 23, 2012 12:56:28 PM azatsarynnyy $
+ * @version $Id: WebSocketExceptionMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketEventBuildStatus
+public interface WebSocketExceptionMessage
 {
-   String getEvent();
+   String getType();
 
-   void setEvent(String event);
+   void setType(String type);
 
-   BuildStatus getData();
+   String getMessage();
 
-   void setData(BuildStatus buildStatus);
+   void setMessage(String message);
 }

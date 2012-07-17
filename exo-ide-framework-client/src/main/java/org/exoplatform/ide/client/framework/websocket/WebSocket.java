@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.websocket;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -81,6 +83,8 @@ public class WebSocket
       }
    }
 
+   public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
+
    /**
     * The native WebSocket object.
     */
@@ -92,6 +96,11 @@ public class WebSocket
    private static WebSocket instance;
 
    /**
+    * WebSocket server URL.
+    */
+   private String url;
+
+   /**
     * Session identifier of the current WebSocket connection.
     */
    private String sessionId;
@@ -101,10 +110,14 @@ public class WebSocket
     */
    private static int counterConnectionAttempts;
 
+   /**
+    * Creates a new WebSocket instance and connects to the remote socket location.
+    */
    private WebSocket()
    {
       instance = this;
-      socket = WebSocketImpl.create("ws://" + Window.Location.getHost() + "/websocket");
+      url = "ws://" + Window.Location.getHost() + "/websocket";
+      socket = WebSocketImpl.create(url);
 
       socket.setOnOpenHandler(new WebSocketOpenedHandler()
       {
@@ -228,15 +241,23 @@ public class WebSocket
    /**
     * Transmits data to the server over the WebSocket connection.
     * 
-    * @param data a text string to send to the server.
+    * @param data the data to be sent to the server
     */
-   public void send(String data)
+   public void send(String data) throws WebSocketException
    {
       if (getReadyState() != ReadyState.OPEN)
       {
          throw new IllegalStateException("Failed to send data. WebSocket connection not opened");
       }
-      socket.send(data);
+
+      try
+      {
+         socket.send(data);
+      }
+      catch (JavaScriptException e)
+      {
+         throw new WebSocketException(e.getMessage());
+      }
    }
 
    /**
@@ -249,6 +270,16 @@ public class WebSocket
          return;
       }
       socket.close();
+   }
+
+   /**
+    * Returns the URL of the WebSocket server.
+    * 
+    * @return url WebSocket server's URL
+    */
+   public String getUrl()
+   {
+      return url;
    }
 
    /**
@@ -281,7 +312,7 @@ public class WebSocket
       }
 
       /**
-       * Creates a WebSocket object.
+       * Creates a new WebSocket instance.
        * WebSocket attempt to connect to their URL immediately upon creation.
        * 
        * @param url WebSocket server URL
@@ -349,7 +380,7 @@ public class WebSocket
       /**
        * Transmits data to the server over the WebSocket connection.
        * 
-       * @param data a text string to send to the server.
+       * @param data the data to be sent to the server
        */
       public final native void send(String data)
       /*-{
@@ -357,7 +388,8 @@ public class WebSocket
       }-*/;
 
       /**
-       * This event occurs when socket connection is established.
+       * Sets the {@link WebSocketOpenedHandler} to be
+       * notified when the WebSocket connection is established.
        * 
        * @param handler WebSocket open handler
        */
@@ -370,7 +402,7 @@ public class WebSocket
       }-*/;
 
       /**
-       * This event occurs when connection is closed.
+       * Sets the {@link WebSocketClosedHandler} to be notified when the WebSocket close.
        * 
        * @param handler WebSocket close handler
        */
@@ -383,7 +415,8 @@ public class WebSocket
       }-*/;
 
       /**
-       * This event occurs when there is any error in communication.
+       * Sets the {@link setOnErrorHandler} to be notified when
+       * there is any error in communication.
        * 
        * @param handler WebSocket error handler
        */
@@ -396,7 +429,8 @@ public class WebSocket
       }-*/;
 
       /**
-       * This event occurs when client receives data from server.
+       * Sets the {@link WebSocketMessageHandler} to be notified when
+       * client receives data from the WebSocket server.
        * 
        * @param handler WebSocket message handler
        */
@@ -408,5 +442,4 @@ public class WebSocket
          });
       }-*/;
    }
-
 }

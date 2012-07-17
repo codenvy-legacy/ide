@@ -60,8 +60,12 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -94,11 +98,22 @@ public class GitService
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
 
+   /**
+    * Component for sending message to client over WebSocket connection.
+    */
+   @Inject
+   private WebSocketManager webSocketManager;
+
    @QueryParam("vfsid")
    private String vfsId;
 
    @QueryParam("projectid")
    private String projectId;
+
+   /**
+    * Exo logger.
+    */
+   private static final Log LOG = ExoLogger.getLogger(GitService.class);
 
    @Path("add")
    @POST
@@ -191,17 +206,31 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+   public void clone(final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
-      GitConnection gitConnection = getGitConnection();
-      try
+      if (request.getSessionId() == null)
       {
-         gitConnection.clone(request);
+         doClone(request);
       }
-      finally
+      else
       {
-         gitConnection.close();
+         new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               try
+               {
+                  doClone(request);
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, null);
+               }
+               catch (Exception e)
+               {
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+               }
+            }
+         }.run();
       }
    }
 
@@ -260,16 +289,34 @@ public class GitService
    @Path("init")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void init(InitRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
+   public void init(final InitRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
    {
-      GitConnection gitConnection = getGitConnection();
-      try
+      if (request.getSessionId() == null)
       {
-         gitConnection.init(request);
+         doInit(request);
       }
-      finally
+      else
       {
-         gitConnection.close();
+         new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               try
+               {
+                  doInit(request);
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, null);
+               }
+               catch (GitException e)
+               {
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+               }
+               catch (VirtualFileSystemException e)
+               {
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+               }
+            }
+         }.run();
       }
    }
 
@@ -556,5 +603,55 @@ public class GitService
             "Can't resolve path on the Local File System : Virtual file system not initialized");
       }
       return GitConnectionFactory.getInstance().getConnection(localPathResolver.resolve(vfs, projectId), gituser);
+   }
+
+   private void doInit(InitRequest request) throws LocalPathResolveException, GitException, VirtualFileSystemException
+   {
+      GitConnection gitConnection = getGitConnection();
+      try
+      {
+         gitConnection.init(request);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   private void doClone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+      VirtualFileSystemException
+   {
+      GitConnection gitConnection = getGitConnection();
+      try
+      {
+         gitConnection.clone(request);
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
+
+   /**
+    * Sends the message to the client over WebSocket connection.
+    * 
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session
+    * @param eventType
+    *    WebSocket event type
+    * @param e
+    *    an exception to be sent to the client
+    */
+   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, Exception e)
+   {
+      try
+      {
+         webSocketManager.send(webSocketSessionId, eventType, "\"" + projectId + "\"", e);
+      }
+      catch (IOException ex)
+      {
+         LOG.error(
+            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+      }
    }
 }

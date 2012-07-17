@@ -24,7 +24,7 @@ import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
+import org.exoplatform.ide.websocket.WebSocketManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -51,10 +51,10 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private static final Log LOG = ExoLogger.getLogger(IDEWebSocketServlet.class);
 
    /**
-    * WebSocket dispatcher that used for register/unregister client connections.
+    * WebSocket manager that used for managing client connections.
     */
-   private static IDEWebSocketDispatcher webSocketDispatcher = (IDEWebSocketDispatcher)ExoContainerContext
-      .getCurrentContainer().getComponentInstanceOfType(IDEWebSocketDispatcher.class);
+   private static WebSocketManager webSocketManager = (WebSocketManager)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(WebSocketManager.class);
 
    /**
     * @see org.apache.catalina.websocket.WebSocketServlet#createWebSocketInbound(java.lang.String)
@@ -86,7 +86,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onOpen(WsOutbound outbound)
       {
-         webSocketDispatcher.registerConnection(sessionId, this);
+         webSocketManager.registerConnection(sessionId, this);
          try
          {
             outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + sessionId + "\"}"));
@@ -105,9 +105,10 @@ public class IDEWebSocketServlet extends WebSocketServlet
       {
          if (status != Constants.OPCODE_CLOSE)
          {
-            LOG.error("WebSocket connection was closed abnormally with status code " + status + " (sessionId " + sessionId + ").");
+            LOG.info("WebSocket connection was closed abnormally with status code " + status + " (session ID: "
+               + sessionId + ").");
          }
-         webSocketDispatcher.unregisterConnection(sessionId, this);
+         webSocketManager.unregisterConnection(sessionId, this);
       }
 
       /**
