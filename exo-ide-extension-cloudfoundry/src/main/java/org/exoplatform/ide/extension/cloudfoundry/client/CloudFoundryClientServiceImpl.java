@@ -29,9 +29,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.List;
@@ -87,7 +89,17 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    private static final String TARGETS = BASE_URL + "/target/all";
 
    private static final String TARGET = BASE_URL + "/target";
-   
+
+   private static final String SERVICES = BASE_URL + "/services";
+
+   private static final String SERVICES_CREATE = SERVICES + "/create";
+
+   private static final String SERVICES_DELETE = SERVICES + "/delete";
+
+   private static final String SERVICES_BIND = SERVICES + "/bind";
+
+   private static final String SERVICES_UNBIND = SERVICES + "/unbind";
+
    private static final String LOGS = BASE_URL + "/apps/logs";
 
    /**
@@ -138,7 +150,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, requestUrl).loader(loader).data(data)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, true).requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
@@ -547,7 +559,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -558,6 +570,135 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#services(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void services(String server, AsyncRequestCallback<CloudfoundryServices> callback) throws RequestException
+   {
+      String url = restServiceContext + SERVICES;
+      String params = (server != null) ? "?server=" + server : "";
+
+      AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#createService(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void createService(String server, String type, String name, String application, String vfsId,
+      String projectId, CloudFoundryAsyncRequestCallback<ProvisionedService> callback) throws RequestException
+   {
+      String url = restServiceContext + SERVICES_CREATE;
+      StringBuilder params = new StringBuilder("?");
+      params.append("type=").append(type).append("&");
+      if (server != null && !server.isEmpty())
+      {
+         params.append("server=").append(server).append("&");
+      }
+      if (application != null && !application.isEmpty())
+      {
+         params.append("app=").append(application).append("&");
+      }
+      if (vfsId != null && !vfsId.isEmpty())
+      {
+         params.append("vfsid=").append(vfsId).append("&");
+      }
+      if (projectId != null && !projectId.isEmpty())
+      {
+         params.append("projectid=").append(projectId).append("&");
+      }
+      params.append("name=").append(name);
+
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteService(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + SERVICES_DELETE + "/" + name;
+      String params = (server != null) ? "?server=" + server : "";
+
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#bindService(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void bindService(String server, String name, String application, String vfsId, String projectId,
+      CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = restServiceContext + SERVICES_BIND + "/" + name;
+      StringBuilder params = new StringBuilder("?");
+      if (server != null && !server.isEmpty())
+      {
+         params.append("server=").append(server).append("&");
+      }
+      if (application != null && !application.isEmpty())
+      {
+         params.append("app=").append(application).append("&");
+      }
+      if (vfsId != null && !vfsId.isEmpty())
+      {
+         params.append("vfsid=").append(vfsId).append("&");
+      }
+      if (projectId != null && !projectId.isEmpty())
+      {
+         params.append("projectid=").append(projectId).append("&");
+      }
+      params.append("name=").append(name);
+
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#unbindService(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+    *      org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    */
+   @Override
+   public void unbindService(String server, String name, String application, String vfsId, String projectId,
+      CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = restServiceContext + SERVICES_UNBIND + "/" + name;
+      StringBuilder params = new StringBuilder("?");
+      if (server != null && !server.isEmpty())
+      {
+         params.append("server=").append(server).append("&");
+      }
+      if (application != null && !application.isEmpty())
+      {
+         params.append("app=").append(application).append("&");
+      }
+      if (vfsId != null && !vfsId.isEmpty())
+      {
+         params.append("vfsid=").append(vfsId).append("&");
+      }
+      if (projectId != null && !projectId.isEmpty())
+      {
+         params.append("projectid=").append(projectId).append("&");
+      }
+      params.append("name=").append(name);
+
+      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
 }
