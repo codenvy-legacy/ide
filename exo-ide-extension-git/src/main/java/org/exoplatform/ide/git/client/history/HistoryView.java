@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client.history;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -27,14 +26,11 @@ import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorParameters;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.RevisionGrid;
@@ -150,13 +146,6 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
    private IconButton diffWithPrevCommitButton;
 
    /**
-    * Editor's producer.
-    */
-   private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff",
-      null, true, new CodeMirrorConfiguration().setGenericParsers("['parsediff.js']").setGenericStyles(
-         "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
-
-   /**
     * UI binder for this view.
     */
    private static HistoryViewUiBinder uiBinder = GWT.create(HistoryViewUiBinder.class);
@@ -234,10 +223,26 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     */
    public Editor createEditor(String content)
    {
-      final HashMap<String, Object> params = new HashMap<String, Object>();
-      params.put(EditorParameters.IS_READ_ONLY, true);
-      params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
-      editor = editorProducer.createEditor(content, IDE.eventBus(), params);
+      Editor diffEditor =
+         new CodeMirror(MimeType.DIFF, "CodeMirror diff editor", "diff", new CodeMirrorConfiguration()
+            .setGenericParsers("['parsediff.js']").setGenericStyles(
+               "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
+
+      //      /**
+      //       * Editor's producer.
+      //       */
+      //      private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff",
+      //         null, true, new CodeMirrorConfiguration().setGenericParsers("['parsediff.js']").setGenericStyles(
+      //            "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
+
+      diffEditor.setReadOnly(true);
+      diffEditor.showLineNumbers(false);      
+      diffEditor.asWidget().setSize("100%", "100%");
+//      final HashMap<String, Object> params = new HashMap<String, Object>();
+//      params.put(EditorParameters.IS_READ_ONLY, true);
+//      params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
+//      editor = editorProducer.createEditor(content, IDE.eventBus(), params);
+      
       editorPanel.add(editor);
       return editor;
    }

@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.editor.jsp.client.codeassistant;
 
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.util.Log;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
+import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
@@ -26,13 +33,6 @@ import com.google.gwt.resources.client.ExternalTextResource;
 import com.google.gwt.resources.client.ResourceCallback;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.resources.client.TextResource;
-
-import org.exoplatform.gwtframework.commons.util.Log;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
-import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

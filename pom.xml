@@ -828,9 +828,11 @@
       <module>exo-ide-codeassistant-storage</module>
 
       <module>exo-ide-editor-api</module>
+      <!--
       <module>exo-ide-editor-ckeditor</module>
       <module>exo-ide-editor-codemirror</module>
       <module>exo-ide-editor-codemirror2</module>
+      -->
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>

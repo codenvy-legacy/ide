@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.editor.EditorFactory;
@@ -36,21 +44,13 @@ import org.exoplatform.ide.client.model.template.FileTemplates;
 import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -144,8 +144,9 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       {
          String defaultEditorDescription = defaultEditors.get(event.getMimeType());
          // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
-         IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
+         //EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
+         Editor editor = EditorFactory.getEditor(event.getMimeType(), defaultEditorDescription);
+         IDE.fireEvent(new EditorOpenFileEvent(newFile, editor));
       }
       catch (EditorNotFoundException e)
       {

@@ -24,8 +24,8 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.javascript.client.codeassistant.JavaScriptCodeAssistant;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleteHelper;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptOutlineItemCreator;
@@ -58,28 +58,33 @@ public class JavaScriptEditorExtension extends Extension
             .controlNewJavascriptPrompt(), Images.JAVA_SCRIPT, MimeType.APPLICATION_JAVASCRIPT).setGroupName(GroupNames.NEW_FILE));
 
       JavaScriptCodeAssistant javaScriptCodeAssistant = new JavaScriptCodeAssistant();
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js", RESOURCES
-            .javaScript(), true, new CodeMirrorConfiguration()
+      
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
+         new CodeMirrorConfiguration()
             .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-            .setParser(new JavaScriptParser()).setCanBeOutlined(true)
-            .setAutocompleteHelper(new JavaScriptAutocompleteHelper()).setCodeAssistant(javaScriptCodeAssistant)));
+            .setParser(new JavaScriptParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
+            .setCodeAssistant(javaScriptCodeAssistant)));
 
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.TEXT_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js", RESOURCES.javaScript(),
-            true, new CodeMirrorConfiguration().setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
-               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-               .setParser(new JavaScriptParser()).setCanBeOutlined(true)
-               .setAutocompleteHelper(new JavaScriptAutocompleteHelper()).setCodeAssistant(javaScriptCodeAssistant)));
-
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.APPLICATION_X_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js", RESOURCES
-            .javaScript(), true, new CodeMirrorConfiguration()
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
+         new CodeMirrorConfiguration()
             .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
-            .setParser(new JavaScriptParser()).setCanBeOutlined(true)
-            .setAutocompleteHelper(new JavaScriptAutocompleteHelper()).setCodeAssistant(javaScriptCodeAssistant)));
+            .setParser(new JavaScriptParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
+            .setCodeAssistant(javaScriptCodeAssistant)));
+
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_X_JAVASCRIPT, MESSAGES.javaScriptEditor(), "js",
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['tokenizejavascript.js', 'parsejavascript.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jscolors.css']")
+            .setParser(new JavaScriptParser())
+            .setCanBeOutlined(true)
+            .setAutocompleteHelper(new JavaScriptAutocompleteHelper())
+            .setCodeAssistant(javaScriptCodeAssistant)));
 
       JavaScriptOutlineItemCreator javaScriptOutlineItemCreator = new JavaScriptOutlineItemCreator();
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JAVASCRIPT, javaScriptOutlineItemCreator);
@@ -90,7 +95,6 @@ public class JavaScriptEditorExtension extends Extension
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_JAVASCRIPT, commentsModifier));
-
    }
-
+   
 }

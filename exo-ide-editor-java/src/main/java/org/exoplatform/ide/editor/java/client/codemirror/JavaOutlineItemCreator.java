@@ -21,10 +21,10 @@ package org.exoplatform.ide.editor.java.client.codemirror;
 import java.util.List;
 
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
-import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
+import org.exoplatform.gwtframework.commons.util.StringEscapeUtils;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;

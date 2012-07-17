@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.editor.event;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 import org.exoplatform.ide.client.framework.event.CursorPosition;
-import org.exoplatform.ide.editor.api.EditorProducer;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,19 +37,19 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
 
    private FileModel file;
 
-   private EditorProducer editorProducer;
+   private Editor editor;
    
    private CursorPosition cursorPosition;
 
-   public EditorOpenFileEvent(FileModel file, EditorProducer editorProducer)
+   public EditorOpenFileEvent(FileModel file, Editor editor)
    {
-      this(file, editorProducer, new CursorPosition(1,1));
+      this(file, editor, new CursorPosition(1,1));
    }
    
-   public EditorOpenFileEvent(FileModel file, EditorProducer editorProducer, CursorPosition cursorPosition)
+   public EditorOpenFileEvent(FileModel file, Editor editor, CursorPosition cursorPosition)
    {
       this.file = file;
-      this.editorProducer = editorProducer;
+      this.editor= editor;
       this.cursorPosition = cursorPosition;
    }
 
@@ -59,13 +59,13 @@ public class EditorOpenFileEvent extends GwtEvent<EditorOpenFileHandler>
    }
 
    /**
-    * @return the editorProducer
+    * @return the editor
     */
-   public EditorProducer getEditorProducer()
+   public Editor getEditor()
    {
-      return editorProducer;
+      return editor;
    }
-   
+
    public CursorPosition getCursorPosition()
    {
       return cursorPosition;

@@ -18,22 +18,20 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.util.ImageUtil;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
+import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -42,82 +40,139 @@ import java.util.Map;
  */
 public class EditorFactory
 {
-   private static Map<String, List<EditorProducer>> editors = new HashMap<String, List<EditorProducer>>();
 
+   private static Map<String, List<Editor>> editorsMap = new HashMap<String, List<Editor>>();
+
+   /*
+    * Add default editors
+    */
    static
    {
-
-      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
-         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
-
-      addEditor(new CodeMirrorProducer("application/x-ruby+html", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
-         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
+      addEditor(new CodeMirror(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt", 
+         new CodeMirrorConfiguration()));
+      
+      //      addEditor(new CodeMirrorProducer(MimeType.TEXT_PLAIN, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
+      //         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
+      //
+      //      addEditor(new CodeMirrorProducer("application/x-ruby+html", IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "txt",
+      //         IDEImageBundle.INSTANCE.textFile(), true, new CodeMirrorConfiguration()));
 
       // To initialize client bundle
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
       CodeMirrorClientBundle.INSTANCE.css().ensureInjected();
    }
 
-   public static void addEditor(EditorProducer producer)
+   public static Map<String, List<Editor>> getEditorMap()
    {
-      if (editors.containsKey(producer.getMimeType()))
-         editors.get(producer.getMimeType()).add(producer);
-      else
+      return editorsMap;
+   }
+   
+   public static void addEditor(Editor editor)
+   {
+      List<Editor> editorList = editorsMap.get(editor.getMimeType());
+      if (editorList == null)
       {
-         ArrayList<EditorProducer> producers = new ArrayList<EditorProducer>();
-         producers.add(producer);
-         editors.put(producer.getMimeType(), producers);
+         editorList = new ArrayList<Editor>();
+         editorsMap.put(editor.getMimeType(), editorList);
       }
-      IDEMimeTypes.addExtension(producer.getDefaultFileExtension(), producer.getMimeType());
-      ImageUtil.putIcon(producer.getMimeType(), producer.getIcon());
+      editorList.add(editor);
+
+      IDEMimeTypes.addExtension(editor.getFileExtension(), editor.getMimeType());
+
+      //ImageUtil.putIcon(producer.getMimeType(), producer.getIcon());
    }
 
-   public static EditorProducer getEditorProducer(String mimeType, String description) throws EditorNotFoundException
+   //   public static EditorProducer getEditorProducer(String mimeType, String description) throws EditorNotFoundException
+   //   {
+   //      if (description == null)
+   //      {
+   //         return getDefaultEditor(mimeType);
+   //      }
+   //      if (editors.containsKey(mimeType))
+   //      {
+   //         for (EditorProducer p : editors.get(mimeType))
+   //         {
+   //            if (p.getDescription().equals(description))
+   //               return p;
+   //         }
+   //      }
+   //      throw new EditorNotFoundException();
+   //   }
+
+   public static Editor getEditor(String mimeType) throws EditorNotFoundException
    {
-      if (description == null)
+      return getEditors(mimeType)[0];
+   }
+
+   public static Editor getEditor(String mimeType, String description) throws EditorNotFoundException
+   {
+      Editor[] editors = getEditors(mimeType);
+
+      if (description == null || description.isEmpty())
       {
-         return getDefaultEditor(mimeType);
+         return editors[0].newInstance();
       }
-      if (editors.containsKey(mimeType))
+
+      for (Editor editor : editors)
       {
-         for (EditorProducer p : editors.get(mimeType))
+         if (description.equals(editor.getDescription()))
          {
-            if (p.getDescription().equals(description))
-               return p;
+            return editor.newInstance();
          }
       }
-      throw new EditorNotFoundException();
+
+      throw new EditorNotFoundException(mimeType, description);
    }
 
-   public static EditorProducer getDefaultEditor(String mimeType) throws EditorNotFoundException
+   public static Editor[] getEditors(String mimeType) throws EditorNotFoundException
    {
-      // add editor for files with unknown mime-type and preset configuration of plain text
-      if (!editors.containsKey(mimeType))
+      if (!editorsMap.containsKey(mimeType))
       {
-         addEditor(new CodeMirrorProducer(mimeType, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "",
-            IDEImageBundle.INSTANCE.defaultFile(), true, new CodeMirrorConfiguration()));
+         throw new EditorNotFoundException(mimeType);
       }
 
-      if (editors.containsKey(mimeType))
+      List<Editor> editorList = editorsMap.get(mimeType);
+      Editor[] editors = new Editor[editorList.size()];
+
+      for (int i = 0; i < editorList.size(); i++)
       {
-         for (EditorProducer p : editors.get(mimeType))
-         {
-            if (p.isDefault())
-               return p;
-         }
+         Editor editor = editorList.get(i);
+         editors[i] = editor.newInstance();
       }
-      throw new EditorNotFoundException();
+
+      return editors;
    }
 
-   /**
-    * @param mimeType
-    * @return
-    */
-   public static List<EditorProducer> getEditors(String mimeType) throws EditorNotFoundException
-   {
-      List<EditorProducer> editorProducers = editors.get(mimeType);
-      if (editorProducers == null)
-         throw new EditorNotFoundException();
-      return editorProducers;
-   }
+   //   public static EditorP getDefaultEditor(String mimeType) throws EditorNotFoundException
+   //   {
+   //      // add editor for files with unknown mime-type and preset configuration of plain text
+   //      if (!editors.containsKey(mimeType))
+   //      {
+   //         addEditor(new CodeMirrorProducer(mimeType, IDE.EDITOR_CONSTANT.codeMirrorTextEditor(), "",
+   //            IDEImageBundle.INSTANCE.defaultFile(), true, new CodeMirrorConfiguration()));
+   //      }
+   //
+   //      if (editors.containsKey(mimeType))
+   //      {
+   //         for (EditorProducer p : editors.get(mimeType))
+   //         {
+   //            if (p.isDefault())
+   //               return p;
+   //         }
+   //      }
+   //      throw new EditorNotFoundException();
+   //   }
+
+   //   /**
+   //    * @param mimeType
+   //    * @return
+   //    */
+   //   public static List<EditorProducer> getEditors(String mimeType) throws EditorNotFoundException
+   //   {
+   //      List<EditorProducer> editorProducers = editors.get(mimeType);
+   //      if (editorProducers == null)
+   //         throw new EditorNotFoundException();
+   //      return editorProducers;
+   //   }
+
 }

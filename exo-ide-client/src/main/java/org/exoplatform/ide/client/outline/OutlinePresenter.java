@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -33,9 +27,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
-import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
-import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineHandler;
+import org.exoplatform.ide.client.framework.outline.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ShowOutlineEvent;
+import org.exoplatform.ide.client.framework.outline.ShowOutlineHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -48,17 +42,23 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
-import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Presenter for Outline Panel.
@@ -295,7 +295,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       {
          return;
       }
-      activeEditor.getTokenListInBackground();
+      
+      //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      //activeEditor.getTokenListInBackground();
    }
 
    public void onEditorContentChanged(EditorContentChangedEvent event)
@@ -318,7 +320,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return false;
       }
 
-      return activeEditor.isCapable(EditorCapability.CAN_BE_OUTLINED);
+      return activeEditor.isCapable(EditorCapability.OUTLINE);
    }
 
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
@@ -434,7 +436,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    @SuppressWarnings("unchecked")
    public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
    {
-      if (event.getTokenList() == null || display == null || !activeEditor.getEditorId().equals(event.getEditorId()))
+      if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId()))
       {
          return;
       }

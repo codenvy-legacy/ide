@@ -25,8 +25,8 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.codemirror.TabMode;
 
 /**
@@ -62,9 +62,13 @@ public class PythonEditorExtension extends Extension implements InitializeServic
          new CodeMirrorConfiguration().setGenericParsers("['parsepython.js']").setGenericStyles(
             "['" + CodeMirrorConfiguration.PATH + "css/pythoncolors.css']").setTabMode(TabMode.INDENT);
 
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
-            Images.INSTANCE.pythonImage(), true, pythonCodeMirrorConfiguration));
+      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
+         pythonCodeMirrorConfiguration));
+      
+//      IDE.getInstance().addEditor(
+//         new CodeMirrorProducer(MimeType.TEXT_X_PYTHON, "CodeMirror Python editor", "py",
+//            Images.INSTANCE.pythonImage(), true, pythonCodeMirrorConfiguration));
+      
    }
 
 }

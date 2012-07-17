@@ -25,7 +25,7 @@ import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -85,7 +85,7 @@ public class CssCodeAssistant extends CodeAssistant
                   JSONTokenParser parser = new JSONTokenParser();
                   JSONArray tokenArray = new JSONArray(parseJson(resource.getText()));
                   cssProperty = parser.getTokens(tokenArray);
-                  fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
+                  fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorColumn());
                }
 
                @Override
@@ -96,7 +96,7 @@ public class CssCodeAssistant extends CodeAssistant
             });
             return;
          }
-         fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
+         fillTokens(editor.getLineText(editor.getCursorRow()), editor.getCursorColumn());
       }
       catch (Exception e)
       {

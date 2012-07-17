@@ -25,10 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.googlecode.gwt.test.GwtTestWithMockito;
-import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+import java.util.Collections;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -36,8 +33,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.editor.ckeditor.CKEditor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
-import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
+import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.extension.java.jdi.client.BreakpointsManager;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerAutoBeanFactory;
 import org.exoplatform.ide.extension.java.jdi.client.DebuggerClientService;
@@ -59,7 +56,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
-import java.util.Collections;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -153,7 +153,7 @@ public class BreakpointManagerTest extends GwtTestWithMockito
    {
       initManager();
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
       verify(service, only()).addBreakPoint(anyString(), Mockito.<BreakPoint> any(),
          Mockito.<AsyncRequestCallback<BreakPoint>> any());
    }
@@ -163,7 +163,7 @@ public class BreakpointManagerTest extends GwtTestWithMockito
    {
       initManager();
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
       ArgumentCaptor<String> fqnCaptor = ArgumentCaptor.forClass(String.class);
       verify(location).setClassName(fqnCaptor.capture());
       Assert.assertEquals("my.test.TestClass", fqnCaptor.getValue());
@@ -175,13 +175,13 @@ public class BreakpointManagerTest extends GwtTestWithMockito
    {
       initManager();
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
       ArgumentCaptor<AsyncRequestCallback> asyncCaptor = ArgumentCaptor.forClass(AsyncRequestCallback.class);
       verify(service).addBreakPoint(anyString(), Mockito.<BreakPoint> any(), asyncCaptor.capture());
       when(breakPoint.getLocation()).thenReturn(location);
       when(location.getLineNumber()).thenReturn(2);
       GwtReflectionUtils.callPrivateMethod(asyncCaptor.getValue(), "onSuccess", breakPoint);
-      ArgumentCaptor<Problem> problemCaptor = ArgumentCaptor.forClass(Problem.class);
+      ArgumentCaptor<Marker> problemCaptor = ArgumentCaptor.forClass(Marker.class);
       verify(codeMirror).markProblem(problemCaptor.capture());
       Assert.assertEquals(2, problemCaptor.getValue().getLineNumber());
    }
@@ -191,7 +191,7 @@ public class BreakpointManagerTest extends GwtTestWithMockito
    {
       initManager();
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
       ArgumentCaptor<AsyncRequestCallback> asyncCaptor = ArgumentCaptor.forClass(AsyncRequestCallback.class);
       verify(service).addBreakPoint(anyString(), Mockito.<BreakPoint> any(), asyncCaptor.capture());
       GwtReflectionUtils.callPrivateMethod(asyncCaptor.getValue(), "onFailure", new Exception());
@@ -205,15 +205,15 @@ public class BreakpointManagerTest extends GwtTestWithMockito
    {
       initManager();
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
       ArgumentCaptor<AsyncRequestCallback> asyncCaptor = ArgumentCaptor.forClass(AsyncRequestCallback.class);
       verify(service).addBreakPoint(anyString(), Mockito.<BreakPoint> any(), asyncCaptor.capture());
       when(breakPoint.getLocation()).thenReturn(location);
       when(location.getLineNumber()).thenReturn(2);
       GwtReflectionUtils.callPrivateMethod(asyncCaptor.getValue(), "onSuccess", breakPoint);
 
-      manager.onLineNumberDoubleClick(new LineNumberDoubleClickEvent(2));
-      ArgumentCaptor<Problem> problemCaptor = ArgumentCaptor.forClass(Problem.class);
+      manager.onEditorLineNumberDoubleClick(new EditorLineNumberDoubleClickEvent(2));
+      ArgumentCaptor<Marker> problemCaptor = ArgumentCaptor.forClass(Marker.class);
 
       verify(codeMirror).unmarkProblem(problemCaptor.capture());
       Assert.assertEquals(2, problemCaptor.getValue().getLineNumber());
