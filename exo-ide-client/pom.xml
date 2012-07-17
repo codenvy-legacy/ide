@@ -170,7 +170,7 @@
                <artifactId>exo-ide-jdt-core</artifactId>
             </dependency>
 
-            <dependency>
+            <!--dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-gadget</artifactId>
             </dependency>
@@ -184,7 +184,7 @@
                      <artifactId>xstream</artifactId>
                   </exclusion>
                </exclusions>
-            </dependency>
+            </dependency-->
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -518,12 +518,12 @@
                <artifactId>slf4j-log4j12</artifactId>
             </dependency>
             <dependency>
-               <groupId>com.google.code.guice</groupId>
+               <groupId>com.google.inject</groupId>
                <artifactId>guice</artifactId>
                <scope>runtime</scope>
             </dependency>
             <dependency>
-               <groupId>com.google.code.guice</groupId>
+               <groupId>com.google.inject.extensions</groupId>
                <artifactId>guice-jmx</artifactId>
                <scope>runtime</scope>
             </dependency>
