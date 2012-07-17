@@ -178,6 +178,10 @@
                <artifactId>gwt-user</artifactId>
                <groupId>com.google.gwt</groupId>
             </exclusion>
+            <exclusion>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -666,8 +670,9 @@
          </exclusions>
       </dependency>
 
-      <dependency>
-         <groupId>org.gatein.shindig</groupId>
+
+      <!--dependency>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-common</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
@@ -678,23 +683,31 @@
             </exclusion>
          </exclusions>
       </dependency>
+      
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-features</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-gadgets</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-social-api</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
+      </dependency-->
+      
+      <dependency>
+         <groupId>org.apache.shindig</groupId>
+         <artifactId>shindig-server</artifactId>
+         <version>${shindig.version}</version>
+         <type>war</type>
       </dependency>
 
       <dependency>
@@ -874,6 +887,8 @@
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war"
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/storage.war"
+                           overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/shindig-server-${shindig.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shindig.war"
                            overwrite="true" />   
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">

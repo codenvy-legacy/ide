@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
 
 import java.util.ArrayList;
@@ -48,6 +50,10 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    private static final String DOMAINS = BASE_URL + "/domains";
 
    private static final String DEPLOY_WAR = BASE_URL + "/apps/create";
+
+   private static final String ACCOUNTS = BASE_URL + "/accounts";
+
+   private static final String USERS = "/users";
 
    private static final String APPS_INFO = BASE_URL + "/apps/info";
 
@@ -100,7 +106,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getDomains(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -113,7 +119,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#login(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -132,7 +138,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -144,7 +150,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#getApplicationInfo(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
@@ -163,7 +169,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#deleteApplication(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
@@ -203,7 +209,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplication(java.lang.String,
     *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
@@ -225,7 +231,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#applicationList(org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
     */
    @Override
@@ -237,7 +243,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#updateApplication(java.lang.String,
     *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
     *      org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback)
@@ -257,6 +263,39 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#createAccount(org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void createAccount(CloudBeesAccount account, AsyncRequestCallback<CloudBeesAccount> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + ACCOUNTS;
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(account)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#addUserToAccount(java.lang.String,
+    *      org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void addUserToAccount(String account, CloudBeesUser user, AsyncRequestCallback<CloudBeesUser> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + ACCOUNTS + "/" + account + USERS;
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(user)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
 }

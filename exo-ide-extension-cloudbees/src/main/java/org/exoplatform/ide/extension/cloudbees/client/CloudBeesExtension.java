@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
@@ -84,6 +85,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
       new DeployApplicationPresenter();
+      new CreateAccountPresenter();
    }
 
 }

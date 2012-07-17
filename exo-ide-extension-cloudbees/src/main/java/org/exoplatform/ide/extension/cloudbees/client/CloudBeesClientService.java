@@ -22,6 +22,8 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 
 import java.util.List;
 import java.util.Map;
@@ -137,4 +139,24 @@ public abstract class CloudBeesClientService
    public abstract void applicationList(CloudBeesAsyncRequestCallback<List<ApplicationInfo>> callback)
       throws RequestException;
 
+   /**
+    * Create new CloudBees account/domain.
+    * 
+    * @param account CloudBees account
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void createAccount(CloudBeesAccount account, AsyncRequestCallback<CloudBeesAccount> callback)
+      throws RequestException;
+
+   /**
+    * Adds new user to CloudBees account.
+    * 
+    * @param account account's name
+    * @param user user's data
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void addUserToAccount(String account, CloudBeesUser user,
+      AsyncRequestCallback<CloudBeesUser> callback) throws RequestException;
 }

@@ -18,21 +18,13 @@
  */
 package org.exoplatform.ide.extension.gadget.server.rest;
 
-import org.apache.shindig.common.crypto.BlobCrypterException;
-import org.exoplatform.ide.extension.gadget.server.shindig.KeyCreator;
-import org.exoplatform.ide.extension.gadget.server.shindig.oauth.SecurityTokenGenerator;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenRequest;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenResponse;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
-import java.io.IOException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -44,34 +36,20 @@ import javax.ws.rs.core.MediaType;
 @Path("/ide/shindig/securitytoken")
 public class RestSecurityTokenGenerator
 {
-   /**
-    * Class logger.
-    */
-   private final Log log = ExoLogger.getLogger("rest.RestSecurityTokenGenerator");
-
+  
    @POST
    @Path("/createToken")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_JSON)
    public TokenResponse createToken(TokenRequest tokenRequest)
    {
-      try
-      {
-         return SecurityTokenGenerator.createToken(tokenRequest, KeyCreator.getKeyFilePath());
-      }
-      catch (IOException e)
-      {
-         if (log.isDebugEnabled())
-            log.error(e.getMessage(), e);
-         throw new WebApplicationException(e);
-      }
-      catch (BlobCrypterException e)
-      {
-         if (log.isDebugEnabled())
-            log.error(e.getMessage(), e);
-         throw new WebApplicationException(e);
-      }
-
+      
+      //TODO : need study more detail hoe to work with token in 2.5.x version
+      // currently allow anonymous access (tokens don't check)
+      TokenResponse response = new TokenResponse();
+      response.setModuleId(tokenRequest.getModuleId());
+      response.setGadgetURL(tokenRequest.getGadgetURL());
+      return new TokenResponse();
    }
 
 }

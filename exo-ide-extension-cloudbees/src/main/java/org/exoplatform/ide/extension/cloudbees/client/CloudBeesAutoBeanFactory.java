@@ -22,6 +22,8 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
+import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
 
 /**
@@ -29,7 +31,7 @@ import org.exoplatform.ide.extension.cloudbees.shared.Credentials;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudBeesAutoBeanFactory.java Mar 15, 2012 10:38:48 AM azatsarynnyy $
- *
+ * 
  */
 public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
 {
@@ -46,4 +48,18 @@ public interface CloudBeesAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link Credentials}
     */
    AutoBean<Credentials> credentials();
+
+   /**
+    * A factory method for a CloudBees account bean.
+    * 
+    * @return an {@link AutoBean} of type {@link CloudBeesAccount}
+    */
+   AutoBean<CloudBeesAccount> account();
+
+   /**
+    * A factory method for a CloudBees user bean.
+    * 
+    * @return an {@link AutoBean} of type {@link CloudBeesUser}
+    */
+   AutoBean<CloudBeesUser> user();
 }

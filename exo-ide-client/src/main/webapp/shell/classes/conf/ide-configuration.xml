@@ -252,9 +252,9 @@
 
 <!-- Google Gadgets support-->   
 
-   <component>
+   <!--component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
-   </component>
+   </component-->
    
 <!-- End Google Gadgets support-->   
 
