@@ -42,12 +42,12 @@ public class WebSocketManager
     */
    public enum EventType {
       /**
-       * Maven build job status.
+       * Event type for message that contains maven build job status.
        */
       BUILD_STATUS("buildStatus"),
 
       /**
-       * Debugger events.
+       * Event type for message that contains debugger events.
        */
       DEBUGGER_EVENTS("debuggerEvents"),
 
@@ -59,7 +59,12 @@ public class WebSocketManager
       /**
        * Indicates that the git-repository has been cloned.
        */
-      GIT_REPO_CLONED("gitRepoCloned");
+      GIT_REPO_CLONED("gitRepoCloned"),
+
+      /**
+       * Event type for message with session identifier for client.
+       */
+      WELCOME("welcome");
 
       private final String eventTypeValue;
 

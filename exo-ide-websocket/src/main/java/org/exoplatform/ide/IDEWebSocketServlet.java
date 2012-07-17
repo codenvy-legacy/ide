@@ -89,7 +89,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
          webSocketManager.registerConnection(sessionId, this);
          try
          {
-            outbound.writeTextMessage(CharBuffer.wrap("{\"sessionId\":\"" + sessionId + "\"}"));
+            webSocketManager.send(sessionId, WebSocketManager.EventType.WELCOME, "\"" + sessionId + "\"", null);
          }
          catch (IOException e)
          {

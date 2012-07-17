@@ -225,7 +225,15 @@ public class GitService
                   doClone(request);
                   sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, null);
                }
-               catch (Exception e)
+               catch (GitException e)
+               {
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+               }
+               catch (VirtualFileSystemException e)
+               {
+                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+               }
+               catch (URISyntaxException e)
                {
                   sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
                }
