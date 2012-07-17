@@ -68,13 +68,16 @@ public class DebuggerClientService
       return instance;
    }
 
-   public void create(String host, int port, String sessionId, AsyncRequestCallback<DebuggerInfo> callback)
+   public void create(String host, int port, String webSocketSessionId, AsyncRequestCallback<DebuggerInfo> callback)
       throws RequestException
    {
-      AsyncRequest
-         .build(RequestBuilder.GET,
-            BASE_URL + "/connect?host=" + host + "&port=" + port + "&sessionid=" + (sessionId == null ? "" : sessionId))
-         .loader(new EmptyLoader()).send(callback);
+      String params = "host=" + host + "&port=" + port;
+      if (webSocketSessionId != null)
+      {
+         params += "&sessionid=" + webSocketSessionId;
+      }
+
+      AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?" + params).loader(new EmptyLoader()).send(callback);
    }
 
    public void disconnect(String id, AsyncRequestCallback<String> callback) throws RequestException

@@ -46,6 +46,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
@@ -201,11 +203,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       try
       {
          String sessionId = null;
-         final WebSocket ws = WebSocket.getInstance();
+         WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             sessionId = ws.getSessionId();
          }
+         final String webSocketSessionId = sessionId;
 
          BuilderClientService.getInstance().build(projectId, vfs.getId(), sessionId,
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
@@ -219,7 +222,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.startAnimation();
                   previousStatus = null;
 
-                  if (ws.getReadyState() != WebSocket.ReadyState.OPEN)
+                  if (webSocketSessionId == null)
                   {
                      refreshBuildStatusTimer.schedule(delay);
                   }
@@ -653,15 +656,35 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    public void onWebSocketMessage(WebSocketMessageEvent event)
    {
       String message = event.getMessage();
-      if (!message.contains("{\"event\":\"buildStatus"))
+
+      WebSocketMessage webSocketMessage =
+         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
+      if (!webSocketMessage.getEvent().equals("buildStatus"))
       {
          return;
       }
 
-      AutoBean<WebSocketEventBuildStatus> webSocketMessageBean =
-         AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, WebSocketEventBuildStatus.class, message);
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         AutoBean<BuildStatus> buildStatusBean =
+            AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class, webSocketMessage.getData());
+         afterBuildFinished(buildStatusBean.as());
+      }
 
-      afterBuildFinished(webSocketMessageBean.as().getData());
+      String exceptionMessage = null;
+      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      {
+         exceptionMessage = webSocketException.getMessage();
+      }
+
+      statusHandler.requestError(projectId, new Exception(exceptionMessage));
+      setBuildInProgress(false);
+      display.stopAnimation();
+      if (exceptionMessage != null)
+      {
+         IDE.fireEvent(new OutputEvent(exceptionMessage, Type.ERROR));
+      }
    }
 
    /**

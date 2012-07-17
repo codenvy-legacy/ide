@@ -54,6 +54,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
@@ -456,7 +458,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
          
-         if (ws != null && WebSocket.ReadyState.OPEN != ws.getReadyState())
+         if (ws == null || WebSocket.ReadyState.OPEN != ws.getReadyState())
          {
             checkDebugEventsTimer.scheduleRepeating(3000);
          }
@@ -976,25 +978,46 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onWebSocketMessage(WebSocketMessageEvent event)
    {
       String message = event.getMessage();
-      if (!message.contains("{\"event\":\"debuggerEvents"))
+
+      WebSocketMessage webSocketMessage =
+         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
+      if (!webSocketMessage.getEvent().equals("debuggerEvents"))
       {
          return;
       }
 
-      WebSocketEventDebuggerEventList wsDebuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(WebSocketEventDebuggerEventList.class).as();
-      DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
-      wsDebuggerEventList.setData(debuggerEventList);
-      parseDebuggerEvents(wsDebuggerEventList, message);
-      eventListReceived(wsDebuggerEventList.getData());
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
+         parseDebuggerEvents(debuggerEventList, webSocketMessage.getData().getPayload());
+         eventListReceived(debuggerEventList);
+      }
+
+      String exceptionMessage = null;
+      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      {
+         exceptionMessage = webSocketException.getMessage();
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+      if (runningApp != null)
+      {
+         if (exceptionMessage != null && exceptionMessage.contains("not found"))
+         {
+            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
+            IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+            return;
+         }
+      }
    }
 
    /**
-    * Parses data in JSON format to {@link WebSocketEventDebuggerEventList} object.
+    * Deserializes data in JSON format to {@link DebuggerEventList} object.
     * 
-    * @param wsDebuggerEventList
+    * @param debuggerEventList {@link DebuggerEventList} object
     * @param jsonData data in JSON format
     */
-   private void parseDebuggerEvents(WebSocketEventDebuggerEventList wsDebuggerEventList, String jsonData)
+   private void parseDebuggerEvents(DebuggerEventList debuggerEventList, String jsonData)
    {
       JSONObject jObj = JSONParser.parseStrict(jsonData).isObject();
       if (jObj == null)
@@ -1003,35 +1026,30 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
 
       List<DebuggerEvent> eventList = new ArrayList<DebuggerEvent>();
-      wsDebuggerEventList.getData().setEvents(eventList);
+      debuggerEventList.setEvents(eventList);
 
-      if (jObj.containsKey("data"))
+      if (jObj.containsKey("events"))
       {
-         JSONObject debuggerEventList = jObj.get("data").isObject();
-
-         if (debuggerEventList.containsKey("events"))
+         JSONArray jEvent = jObj.get("events").isArray();
+         for (int i = 0; i < jEvent.size(); i++)
          {
-            JSONArray jEvent = debuggerEventList.get("events").isArray();
-            for (int i = 0; i < jEvent.size(); i++)
+            JSONObject je = jEvent.get(i).isObject();
+            if (je.containsKey("type"))
             {
-               JSONObject je = jEvent.get(i).isObject();
-               if (je.containsKey("type"))
+               int type = (int)je.get("type").isNumber().doubleValue();
+               if (type == DebuggerEvent.BREAKPOINT)
                {
-                  int type = (int)je.get("type").isNumber().doubleValue();
-                  if (type == DebuggerEvent.BREAKPOINT)
-                  {
-                     AutoBean<BreakPointEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoinEvent();
-                     Splittable data = StringQuoter.split(je.toString());
-                     AutoBeanCodex.decodeInto(data, bean);
-                     eventList.add(bean.as());
-                  }
-                  else if (type == DebuggerEvent.STEP)
-                  {
-                     AutoBean<StepEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.stepEvent();
-                     Splittable data = StringQuoter.split(je.toString());
-                     AutoBeanCodex.decodeInto(data, bean);
-                     eventList.add(bean.as());
-                  }
+                  AutoBean<BreakPointEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoinEvent();
+                  Splittable data = StringQuoter.split(je.toString());
+                  AutoBeanCodex.decodeInto(data, bean);
+                  eventList.add(bean.as());
+               }
+               else if (type == DebuggerEvent.STEP)
+               {
+                  AutoBean<StepEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.stepEvent();
+                  Splittable data = StringQuoter.split(je.toString());
+                  AutoBeanCodex.decodeInto(data, bean);
+                  eventList.add(bean.as());
                }
             }
          }

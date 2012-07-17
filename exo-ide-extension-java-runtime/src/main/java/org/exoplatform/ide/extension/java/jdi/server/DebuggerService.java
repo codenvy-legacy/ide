@@ -29,9 +29,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.UpdateVariableRequest;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -50,12 +48,6 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/java/debug")
 public class DebuggerService
 {
-   /**
-    * Component for sending message to client via WebSocket connection.
-    */
-   @Inject
-   private IDEWebSocketDispatcher webSocketDispatcher;
-
    @GET
    @Path("connect")
    @Produces(MediaType.APPLICATION_JSON)
@@ -67,7 +59,7 @@ public class DebuggerService
       if (!webSocketSessionId.trim().isEmpty())
       {
          // start checking for debugger events asynchronously
-         d.startCheckingEvents(d.id, webSocketSessionId, webSocketDispatcher);
+         d.startCheckingEvents(d.id, webSocketSessionId);
       }
       return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
    }

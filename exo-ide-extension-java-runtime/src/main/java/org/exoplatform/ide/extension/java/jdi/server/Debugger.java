@@ -38,6 +38,7 @@ import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
@@ -55,7 +56,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
+import org.exoplatform.ide.websocket.WebSocketManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -85,6 +86,18 @@ public class Debugger implements EventsHandler
    private static final Log LOG = ExoLogger.getLogger(Debugger.class);
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
+
+   /**
+    * Component for sending messages to client over WebSocket connection.
+    */
+   private static final WebSocketManager webSocketManager = (WebSocketManager)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(WebSocketManager.class);
+
+   private static final int CHECKING_EVENTS_PERIOD = 1000;
+
+   /**
+    * Timer for check new debugger events and send it over WebSocket connection.
+    */
    private Timer checkEventsTimer = new Timer();
 
    public static Debugger newInstance(String host, int port) throws VMConnectException
@@ -92,47 +105,6 @@ public class Debugger implements EventsHandler
       Debugger d = new Debugger(host, port);
       instances.put(d.id, d);
       return d;
-   }
-
-   /**
-    * Periodically checks for the new debugger events and sends the events
-    * to the WebSocket connection when the events is appeared.
-    * 
-    * @param debuggerId
-    *    ID of debugger instance
-    * @param webSocketSessionId
-    *    identifier of WebSocket session which will be used for sending the debugger events
-    */
-   public void startCheckingEvents(final String debuggerId, final String webSocketSessionId,
-      final IDEWebSocketDispatcher wsDispatcher)
-   {
-      checkEventsTimer.schedule(new TimerTask()
-      {
-         @Override
-         public void run()
-         {
-            try
-            {
-               List<DebuggerEvent> eventsList = getInstance(debuggerId).getEvents();
-               if (!eventsList.isEmpty())
-               {
-                  DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
-                  wsDispatcher.sendEventMessage(webSocketSessionId, toJson(debuggerEvents),
-                     IDEWebSocketDispatcher.EventType.DEBUGGER_EVENTS);
-               }
-            }
-            catch (DebuggerException e)
-            {
-               LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
-            }
-            catch (IOException e)
-            {
-               LOG.error(
-                  "An error occurs writing data to the client (sessionId " + webSocketSessionId + ")."
-                     + e.getMessage(), e);
-            }
-         }
-      }, 0, 2000);
    }
 
    public static Debugger getInstance(String name)
@@ -871,6 +843,76 @@ public class Debugger implements EventsHandler
       catch (VMCannotBeModifiedException e)
       {
          throw new DebuggerException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Periodically checks for the new debugger events and sends the events
+    * to the WebSocket connection when the events is appeared.
+    * 
+    * @param debuggerId
+    *    ID of debugger instance
+    * @param webSocketSessionId
+    *    identifier of WebSocket session which will be used for sending the debugger events
+    * @param webSocketManager
+    *    {@link WebSocketManager} instance
+    */
+   public void startCheckingEvents(final String debuggerId, final String webSocketSessionId)
+   {
+      checkEventsTimer.schedule(new TimerTask()
+      {
+         @Override
+         public void run()
+         {
+            try
+            {
+               List<DebuggerEvent> eventsList = getInstance(debuggerId).getEvents();
+               if (!eventsList.isEmpty())
+               {
+                  DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
+                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS,
+                     toJson(debuggerEvents), null);
+               }
+            }
+            catch (DebuggerException e)
+            {
+               cancel();
+               LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS, null, e);
+            }
+            catch (IllegalArgumentException e)
+            {
+               // debugger not found
+               cancel();
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS, null,
+                  new DebuggerException(e.getMessage(), e));
+            }
+         }
+      }, 0, CHECKING_EVENTS_PERIOD);
+   }
+
+   /**
+    * Sends the message to the client over WebSocket connection.
+    * 
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session
+    * @param eventType
+    *    WebSocket event type
+    * @param data
+    *    the data to be sent to the client
+    * @param e
+    *    an exception to be sent to the client
+    */
+   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, String data, Exception e)
+   {
+      try
+      {
+         webSocketManager.send(webSocketSessionId, eventType, data, e);
+      }
+      catch (IOException ex)
+      {
+         LOG.error(
+            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
       }
    }
 }

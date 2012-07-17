@@ -79,6 +79,4 @@ public interface DebuggerAutoBeanFactory extends AutoBeanFactory
 
    AutoBean<UpdateVariableRequest> updateVariableRequest(UpdateVariableRequest request);
 
-   AutoBean<WebSocketEventDebuggerEventList> webSocketEventDebuggerEventList();
-
 }

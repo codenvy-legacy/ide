@@ -23,7 +23,7 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.IDEWebSocketDispatcher;
+import org.exoplatform.ide.websocket.WebSocketManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -50,18 +50,21 @@ public class BuilderClient
    private final String baseURL;
 
    /**
-    * Component for sending message to client via WebSocket connection.
+    * Component for sending message to client over WebSocket connection.
     */
-   private final IDEWebSocketDispatcher webSocketDispatcher;
+   private final WebSocketManager webSocketManager;
 
    /**
     * Exo logger.
     */
-   private static final Log LOG = ExoLogger.getLogger(IDEWebSocketDispatcher.class);
+   private static final Log LOG = ExoLogger.getLogger(WebSocketManager.class);
 
-   public BuilderClient(InitParams initParams, IDEWebSocketDispatcher wsDispatcher)
+   private static final int CHECKING_STATUS_PERIOD = 1000;
+
+   public BuilderClient(InitParams initParams, WebSocketManager webSocketManager)
    {
-      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)), wsDispatcher);
+      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
+         webSocketManager);
    }
 
    private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
@@ -77,14 +80,14 @@ public class BuilderClient
       return defaultValue;
    }
 
-   protected BuilderClient(String baseURL, IDEWebSocketDispatcher wsDispatcher)
+   protected BuilderClient(String baseURL, WebSocketManager webSocketManager)
    {
       if (baseURL == null || baseURL.isEmpty())
       {
          throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
       }
       this.baseURL = baseURL;
-      this.webSocketDispatcher = wsDispatcher;
+      this.webSocketManager = webSocketManager;
    }
 
    /**
@@ -275,49 +278,27 @@ public class BuilderClient
          @Override
          public void run()
          {
-            String status = null;
             try
             {
-               status = status(buildId);
+               String status = status(buildId);
+               if (!status.contains("\"status\":\"IN_PROGRESS\""))
+               {
+                  cancel();
+                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, status, null);
+               }
             }
             catch (IOException e)
             {
-               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
+               cancel();
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, null, e);
             }
             catch (BuilderException e)
             {
-               status = "{\"status\":\"FAILED\",\"error\":\"" + e.getMessage() + "\"}";
-            }
-
-            if (!status.contains("\"status\":\"IN_PROGRESS\""))
-            {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, status);
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, null, e);
             }
          }
-      }, 0, 2000);
-   }
-
-   /**
-    * Sends the message to the client via WebSocket connection.
-    * 
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session
-    * @param message
-    *    a text string to send to the client
-    */
-   private void sendWebSocketMessage(String webSocketSessionId, String message)
-   {
-      try
-      {
-         webSocketDispatcher.sendEventMessage(webSocketSessionId, message,
-            IDEWebSocketDispatcher.EventType.BUILD_STATUS);
-      }
-      catch (IOException e)
-      {
-         LOG.error(
-            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + e.getMessage(), e);
-      }
+      }, 0, CHECKING_STATUS_PERIOD);
    }
 
    /**
@@ -503,6 +484,31 @@ public class BuilderClient
          body = bout.toString();
       }
       return body;
+   }
+
+   /**
+    * Sends the message to the client over WebSocket connection.
+    * 
+    * @param webSocketSessionId
+    *    identifier of the WebSocket session
+    * @param eventType
+    *    WebSocket event type
+    * @param data
+    *    the data to be sent to the client
+    * @param e
+    *    an exception to be sent to the client
+    */
+   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, String data, Exception e)
+   {
+      try
+      {
+         webSocketManager.send(webSocketSessionId, eventType, data, e);
+      }
+      catch (IOException ex)
+      {
+         LOG.error(
+            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+      }
    }
 
    /** Stream that automatically close HTTP connection when all data ends. */

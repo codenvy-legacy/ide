@@ -394,8 +394,8 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
       <init-params>
          <object-param>
@@ -557,7 +557,7 @@
 -->
 
    <component>
-      <type>org.exoplatform.ide.websocket.IDEWebSocketDispatcher</type>
+      <type>org.exoplatform.ide.websocket.WebSocketManager</type>
    </component>
 
 </configuration>

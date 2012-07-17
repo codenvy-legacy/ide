@@ -85,7 +85,7 @@ public class BuilderService
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
       final String buildID = builder.build(vfs, projectId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
-      if (!webSocketSessionId.trim().isEmpty())
+      if (webSocketSessionId != null)
       {
          // start checking build status asynchronously
          builder.startCheckingBuildStatus(buildID, webSocketSessionId);
