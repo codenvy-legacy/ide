@@ -172,6 +172,10 @@
                <artifactId>gwt-user</artifactId>
                <groupId>com.google.gwt</groupId>
             </exclusion>
+            <exclusion>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
 
@@ -640,7 +644,8 @@
          <artifactId>exo.ws.rest.ext</artifactId>
       </dependency>
 
-      <dependency>
+
+      <!--dependency>
          <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-common</artifactId>
          <version>${shindig.version}</version>
@@ -670,7 +675,7 @@
          <artifactId>shindig-social-api</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
-      </dependency>
+      </dependency-->
       
       <dependency>
          <groupId>org.apache.shindig</groupId>
