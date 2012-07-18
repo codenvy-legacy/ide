@@ -22,7 +22,9 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.List;
@@ -54,7 +56,8 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server) throws RequestException;
+   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
+      throws RequestException;
 
    /**
     * Create application on CloudFoundry.
@@ -271,7 +274,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server
     */
    public abstract void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-   
+
    /**
     * Getting logs for CloudFoundry Application
     * 
@@ -280,6 +283,67 @@ public abstract class CloudFoundryClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
+   public abstract void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException;
 
+   /**
+    * Get the list of services available and provisioned.
+    * 
+    * @param server server's name (may be <code>null</code>)
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void services(String server, AsyncRequestCallback<CloudfoundryServices> callback)
+      throws RequestException;
+
+   /**
+    * Create new provisioned service.
+    * 
+    * @param server server's name
+    * @param type service's type
+    * @param name service's name
+    * @param application application's name
+    * @param vfsId virtual file system id
+    * @param projectId project's id
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void createService(String server, String type, String name, String application, String vfsId,
+      String projectId, CloudFoundryAsyncRequestCallback<ProvisionedService> callback) throws RequestException;
+
+   /**
+    * Delete provisioned service.
+    * 
+    * @param server server's name
+    * @param name service's name
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+   
+   /**
+    * Bind service to application.
+    * 
+    * @param server server's name
+    * @param name service's name
+    * @param application application's name
+    * @param vfsId virtual file system id
+    * @param projectId project's id
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void bindService(String server, String name, String application, String vfsId, String projetcId, CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
+
+   /**
+    * Unbind service from application.
+    * 
+    * @param server server's name
+    * @param name service's name
+    * @param application application's name
+    * @param vfsId virtual file system id
+    * @param projectId project's id
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void unbindService(String server, String name, String application, String vfsId, String projetcId, CloudFoundryAsyncRequestCallback<Object> callback) throws RequestException;
 }

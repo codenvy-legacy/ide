@@ -18,196 +18,193 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"%>
-<html>
+<%@page language="java" contentType="text/html; charset=UTF-8" %>
 
-<!-- %
-   if(!request.isSecure())
+<%@page import="org.exoplatform.ide.authentication.openid.OpenIDUser" %>
+<%@page import="java.net.URLEncoder" %>
+
+<%
+   OpenIDUser user = (OpenIDUser)request.getSession().getAttribute("openid.user");
+   if (user != null)
    {
-      String location = "https://" + request.getServerName() + ":8443" + "/IDE/Application.html";
-      response.sendRedirect(location);
+      request.getSession().removeAttribute("openid.user");
+      response.sendRedirect("j_security_check?j_username=" + URLEncoder.encode(user.getAttribute("email")) +
+                                            "&j_password=" + URLEncoder.encode(user.getIdentifier().getIdentifier()));
       return;
-   } 
-   
-% -->
+   }
+%>
+<html>
+   <head>
+      <title>eXo IDE Login Page</title>
+      <script type="text/javascript" src="popup.js"></script>
+      <script type="text/javascript">
+         var REST_SERVICE_CONTEXT = "/rest";
 
-<head>
-	<title>eXo IDE Login Page</title>
-	
-<script type="text/javascript">
-
-var REST_SERVICE_CONTEXT = "/rest";
-
-function getXmlHTTP() {
-    var xmlhttp = null;
-
-    if (window.XMLHttpRequest)
-    { 
-	xmlhttp = new XMLHttpRequest(); // Firefox, Safari
-    } 
-    else if (window.ActiveXObject) // Internet Explorer 
-    {
-	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }    
-
-    return xmlhttp; 
-}
-
-function showRegisterForm() {
-	document.getElementById("loginForm").style.display="none";
-	document.getElementById("registerForm").style.display="block";
-	document.getElementById("newUserID").value = "";
-	document.getElementById("newUserPassword").value = "";
-}
-
-function showLoginForm() {
-	document.getElementById("registerForm").style.display="none";
-	document.getElementById("loginForm").style.display="block";
-}
-
-function registerNewUser() {
-	var login = document.getElementById("newUserID").value;
-	var password = document.getElementById("newUserPassword").value;
-	
-    var body = "{";
-	    body += "\"id\":\"" + login + "\",";
-	    body += "\"password\":\"" + password + "\",";
-	    body += "\"firstName\":\"" + login + "\",";
-	    body += "\"lastName\":\"" + login + "\",";
-	    body += "\"email\":\"" + login + "@localhost.com\"";
-    body += "}";
-    
-    var url = REST_SERVICE_CONTEXT + "/users/person";
-    var xmlhttp = getXmlHTTP();    
-    xmlhttp.open('POST', url, true);
-    
-    /* The callback function */
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4) {
-            if (xmlhttp.status == 201) {
-                alert("User " + login + " created.");
-                document.getElementById("userId").value = login;
-            	document.getElementById("userPassword").value = password;
-                showLoginForm();
+         function getXmlHTTP()
+         {
+            var xmlHttp = null;
+            if (window.XMLHttpRequest)
+            {
+               xmlHttp = new XMLHttpRequest();
             }
-            else {
-            	alert("Can't register user.");
+            else if (window.ActiveXObject)
+            {
+               xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
             }
-        }
-    }
-    
-    /* Send the POST request */
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.send(body);
-}
-</script>
-	
-	
-</head>
+            return xmlHttp;
+         }
 
+         function showRegisterForm()
+         {
+            document.getElementById("loginForm").style.display="none";
+            document.getElementById("federatedLoginForm").style.display="none";
+            document.getElementById("registerForm").style.display="block";
+            document.getElementById("newUserID").value = "";
+            document.getElementById("newUserPassword").value = "";
+         }
 
-<body bgcolor="white">
-<table width="100%" height="100%">
-	<tr align="center" valign="bottom">
-		<td><img alt="ide" src="/IDE/eXo-IDE-Logo.png"></td>
-	</tr>
+         function showLoginForm()
+         {
+            document.getElementById("registerForm").style.display="none";
+            document.getElementById("loginForm").style.display="block";
+            document.getElementById("federatedLoginForm").style.display="block";
+         }
 
-	<tr align="center" valign="top">
-		<td>
+         function isEmail(login)
+         {
+            var pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return pattern.test(login);
+         }
 
-			<form id="loginFormId" method="POST" action='<%=response.encodeURL("j_security_check")%>'>
-				<table border="0" cellspacing="5">
+         function registerNewUser()
+         {
+            var login = document.getElementById("newUserID").value;
+            var password = document.getElementById("newUserPassword").value;
+            var email = login;
+            if (!isEmail(login))
+            {
+               email += "@localhost"
+            }
 
-			<tr>
-				<th align="right">User ID:</th>
-				<td align="left"><input type="text" id="userId" name="j_username" value="exo"></td>
-			</tr>
+            var body = "{";
+            body += "\"id\":\"" + login + "\",";
+            body += "\"password\":\"" + password + "\",";
+            body += "\"firstName\":\"" + login + "\",";
+            body += "\"lastName\":\"" + login + "\",";
+            body += "\"email\":\"" + email + "\"";
+            body += "}";
 
-			<tr>
-				<th align="right">Password:</th>
-				<td align="left"><input type="password" id="userPassword" name="j_password" value="exo"></td>
-			</tr>
-			
-			<tr>
-				<td colspan="2"><div style="width:1px; height:3px;"></div></td>
-			</tr>
+            var url = REST_SERVICE_CONTEXT + "/users/person";
+            var xmlHttp = getXmlHTTP();
+            xmlHttp.open('POST', url, true);
 
-			<tr>
-				<td align="right"><input type="submit" value="Log In" id="loginButton"/></td>
-				<td align="left"><input type="reset" value="Reset"></td>
-			</tr>
+            xmlHttp.onreadystatechange = function()
+            {
+                if (xmlHttp.readyState == 4)
+                {
+                    if (xmlHttp.status == 201)
+                    {
+                       alert("User " + login + " created.");
+                       document.getElementById("userId").value = login;
+                       document.getElementById("userPassword").value = password;
+                       showLoginForm();
+                    }
+                    else
+                    {
+                       alert("Can't register user.");
+                    }
+                }
+            }
 
-			<tr>
-				<td colspan="2"><div style="width:1px; height:5px;"></div></td>
-			</tr>
+            xmlHttp.setRequestHeader("Content-type", "application/json");
+            xmlHttp.send(body);
+         }
 
-			<tr>
-				<td colspan="2">
-					<table border="0">
-						<tr bgcolor="#DDDDDD">
-							<td style="padding: 2" align="center">User ID / Password</td>
-							<td style="padding: 2" align="center">User role</td>
-						</tr>
-	
-						<tr>
-							<td style="padding: 2" align="left">exo/exo</td>
-							<td style="padding: 2" align="left">administrators and developers</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			
-			<tr>
-				<td colspan="2"><hr></td>
-			</tr>
-			
-			<tr>
-				<td>&nbsp;</td>
-				<td>
-					<input type="button" value="New User" onclick="showRegisterForm();" />
-				</td>
-			</tr>
-			
-		</table>
-			</form>
-		
-		<div id="registerForm" style="display:none;">
-		
-			<table border="0" cellspacing="5">
-				<tr>
-					<th colspan="2">Register new user</th>
-				</tr>
-	
-				<tr>
-					<td colspan="2"><div style="width:1px; height:3px;"></div></td>
-				</tr>
-	
-				<tr>
-					<th align="right">User ID:</th>
-					<td align="left"><input id="newUserID" type="text" name="userid"></td>
-				</tr>
-	
-				<tr>
-					<th align="right">Password:</th>
-					<td align="left"><input id="newUserPassword" type="password" name="password"></td>
-				</tr>
-				
-				<tr>
-					<td colspan="2"><div style="width:1px; height:3px;"></div></td>
-				</tr>
-				
-				<tr>
-					<td align="right"><input type="button" value="Register" onclick="registerNewUser();"></td>
-					<td align="left"><input type="button" value="Cancel" onclick="showLoginForm();"></td>
-				</tr>
-			</table>
-		</div>
-	
-		</td>
-	</tr>
-</table>
-
-</body>
-
+         function open_popup(provider)
+         {
+            var popup = new Popup(
+                '<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=' + provider,
+                "/site/index.html",
+                450,
+                500);
+            popup.open_window();
+         }
+      </script>
+   </head>
+   <body bgcolor="white">
+      <table width="100%" height="100%">
+         <tr align="center" valign="bottom">
+            <td><img alt="ide" src="/IDE/eXo-IDE-Logo.png"></td>
+         </tr>
+         <tr align="center" valign="top">
+            <td>
+               <form id="loginForm" method="POST" action='<%= "j_security_check"%>'>
+                  <table border="0" cellspacing="5">
+                     <tr>
+                        <th align="right">User ID:</th>
+                        <td align="left"><input type="text" id="userId" name="j_username" value="exo"></td>
+                     </tr>
+                     <tr>
+                        <th align="right">Password:</th>
+                        <td align="left"><input type="password" id="userPassword" name="j_password" value="exo"></td>
+                     </tr>
+                     <tr>
+                        <td align="right"><input type="submit" value="Log In" id="loginButton"/></td>
+                        <td align="left"><input type="reset" value="Reset"></td>
+                     <tr>
+                        <td colspan="3">
+                           <table border="0">
+                              <tr bgcolor="#DDDDDD">
+                                 <td style="padding: 2" align="center">User ID / Password</td>
+                                 <td style="padding: 2" align="center">User role</td>
+                              </tr>
+                              <tr>
+                                 <td style="padding: 2" align="left">exo/exo</td>
+                                 <td style="padding: 2" align="left">administrators and developers</td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td colspan="3" align="center">
+                           <input type="button" value="New User" onclick="showRegisterForm();" />
+                        </td>
+                     </tr>
+                  </table>
+               </form>
+               <div id="federatedLoginForm">
+                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account</button>
+                  <button onclick="open_popup('google');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button>
+               </div>
+               <div id="registerForm" style="display:none;">
+                  <table border="0" cellspacing="5">
+                     <tr>
+                        <th colspan="2">Register new user</th>
+                     </tr>
+                     <tr>
+                        <td colspan="2"><div style="width:1px; height:3px;"></div></td>
+                     </tr>
+                     <tr>
+                        <th align="right">User ID:</th>
+                        <td align="left"><input id="newUserID" type="text" name="userid"></td>
+                     </tr>
+                     <tr>
+                        <th align="right">Password:</th>
+                        <td align="left"><input id="newUserPassword" type="password" name="password"></td>
+                     </tr>
+                     <tr>
+                        <td colspan="2"><div style="width:1px; height:3px;"></div></td>
+                     </tr>
+                     <tr>
+                        <td align="right"><input type="button" value="Register" onclick="registerNewUser();"></td>
+                        <td align="left"><input type="button" value="Cancel" onclick="showLoginForm();"></td>
+                     </tr>
+                  </table>
+               </div>
+            </td>
+         </tr>
+      </table>
+   </body>
 </html>
-
