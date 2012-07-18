@@ -97,6 +97,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    {
       projectTypes.add(ProjectResolver.SERVLET_JSP);
       projectTypes.add(ProjectResolver.SPRING);
+      projectTypes.add(ProjectResolver.APP_ENGINE_JAVA);
    }
 
    /**

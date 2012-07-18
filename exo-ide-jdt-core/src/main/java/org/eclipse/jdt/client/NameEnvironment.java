@@ -415,7 +415,16 @@ public class NameEnvironment implements INameEnvironment
       if (status == 200)
          return xmlhttp.getResponseText();
       else
-         throw new RuntimeException("Server return " + xmlhttp.getResponseText());
+      {
+          String message = null;
+          if(status == 204)
+          {
+             message = "no content";
+          }
+          else
+          message = xmlhttp.getResponseText();
+         throw new RuntimeException("Server return " + message);
+      }
    }
 
    private native XmlHttpWraper nativeRunSyncReques(String url)/*-{
