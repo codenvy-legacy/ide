@@ -131,7 +131,28 @@ public class OpenIDAuthenticator
          final Identifier identifier = result.getVerifiedId();
          if (identifier == null)
          {
-            LOG.error("Cannot get openID identifier, result {}. ", result.getAuthResponse().getParameterValue("openid.mode"));
+            final String mode = result.getAuthResponse().getParameterValue("openid.mode");
+            LOG.error("Cannot get openID identifier, result {}. ", mode);
+            if ((Boolean)session.getAttribute("openid.popup"))
+            {
+               final String logoLocation = uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
+
+               StringBuilder body = new StringBuilder();
+               body.append("<html>\n");
+               body.append("<head>\n");
+               body.append("<script type='text/javascript'>\n");
+               body.append("window.close();\n"); // close popup window
+               body.append("</script>\n");
+               body.append("</head>\n");
+               // If popup window not closed - display HTML body.
+               body.append("<body style='font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;'>\n");
+               body.append("<div align='center' style='margin: 100 auto; border: dashed 1px #CACACA; width: 450px;'>\n");
+               body.append("<p>Authentication failed. Result: ").append(mode).append(". Please, close this window.</p><img src='").append(logoLocation).append("'/>\n");
+               body.append("</div>\n");
+               body.append("</body>\n");
+               body.append("</html>");
+               return Response.ok(body.toString(), MediaType.TEXT_HTML).build();
+            }
             // Lets user enter user ID and password.
             return Response.temporaryRedirect(URI.create((String)session.getAttribute("openid.redirect_after_login"))).build();
          }
