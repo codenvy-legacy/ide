@@ -74,12 +74,16 @@ public class BasicAuthFilter implements Filter
 
       // cut 'basic '
       byte[] token = Base64.decodeBase64(auth.substring(6).getBytes());
-      String username = null;
+      String username;
       String password = null;
       int colon = -1;
       for (int i = 0; i < token.length; i++)
+      {
          if (token[i] == ':')
+         {
             colon = i;
+         }
+      }
       if (colon < 0)
       {
          username = new String(token);
@@ -95,14 +99,14 @@ public class BasicAuthFilter implements Filter
          container = ExoContainerContext.getTopContainer();
       }
 
-      Identity identity = null;
+      Identity identity;
       try
       {
          Authenticator authenticator = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
 
          if (authenticator == null)
          {
-            LOG.error("Authenticator not found");
+            throw new RuntimeException("Authenticator not found");
          }
 
          Credential[] credentials =
@@ -115,7 +119,7 @@ public class BasicAuthFilter implements Filter
          IdentityRegistry ir = (IdentityRegistry)container.getComponentInstanceOfType(IdentityRegistry.class);
          if (ir == null)
          {
-            LOG.error("Authenticator not found");
+            throw new RuntimeException("Authenticator not found");
          }
 
          ir.register(identity);
@@ -141,7 +145,7 @@ public class BasicAuthFilter implements Filter
 
    }
 
-   final class AuthServletRequest extends HttpServletRequestWrapper
+   private static class AuthServletRequest extends HttpServletRequestWrapper
    {
       private final Identity identity;
 
@@ -174,7 +178,7 @@ public class BasicAuthFilter implements Filter
    {
    }
 
-   private class MockPrincipal implements Principal
+   private static class MockPrincipal implements Principal
    {
       private String username;
 

@@ -43,11 +43,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("button.delete")
    String deleteButton();
-   
+
    @Key("button.logs")
-   @DefaultMessage("Logs")
    String logsButton();
 
+   @Key("button.services")
+   String servicesButton();
 
    @Key("button.close")
    String closeButton();
@@ -63,6 +64,15 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("button.update")
    String updateButton();
+
+   @Key("button.bind")
+   String bindButton();
+
+   @Key("button.unbind")
+   String unBindButton();
+
+   @Key("button.add")
+   String addButton();
 
    /*
     * Controls.
@@ -216,10 +226,10 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("login.field.target")
    String loginViewTargetField();
-   
+
    @Key("login.error.unknowTarget")
    String loginViewErrorUnknownTarget();
-   
+
    @Key("login.error.invalidUserOrPassword")
    String loginViewErrorInvalidUserOrPassword();
 
@@ -261,6 +271,12 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("createApp.field.server")
    String createAppServerField();
+
+   @Key("create.application.started")
+   String createApplicationStarted(String project);
+
+   @Key("create.application.finished")
+   String createApplicationFinished(String project);
 
    /*
     * CreateApplicationPresenter
@@ -339,7 +355,7 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("systemInfo.umarshaller.error")
    String systemInfoUnmarshallerError();
-   
+
    @Key("application.not.found")
    String applicationNotFound();
 
@@ -561,4 +577,56 @@ public interface CloudFoundryLocalizationConstant extends Messages
 
    @Key("manage.project.restart")
    String manageProjectRestart();
+
+   @Key("manage.project.services")
+   String manageProjectServices();
+
+   /* Services */
+   @Key("service.name")
+   String serviceName();
+
+   @Key("service.type")
+   String serviceType();
+
+   @Key("service.vendor")
+   String serviceVendor();
+
+   @Key("service.version")
+   String serviceVersion();
+
+   @Key("manage.services.view.title")
+   String bindServiceViewTitle();
+
+   @Key("delete.service.title")
+   String deleteServiceTitle();
+
+   @Key("delete.service.question")
+   String deleteServiceQuestion(String service);
+
+   @Key("bind.service.successfully")
+   String bindServiceSuccessfully(String service);
+
+   @Key("create.service.view.title")
+   String createServiceViewTitle();
+
+   @Key("create.service.type.field")
+   String createServiceTypeField();
+
+   @Key("create.service.name.field")
+   String createServiceNameField();
+
+   @Key("retrieve.services.failed")
+   String retrieveServicesFailed();
+
+   @Key("no.bounded.services")
+   String noBoundedServices();
+
+   @Key("bounded.services")
+   String boundedServices();
+
+   @Key("provisioned.services")
+   String provisionedServices();
+
+   @Key("optional")
+   String optional();
 }

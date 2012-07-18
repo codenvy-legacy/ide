@@ -12,7 +12,7 @@
    <name>eXo IDE :: Extension :: Gadget</name>
    <dependencies>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-common</artifactId>
          <version>${shindig.version}</version>
          <exclusions>
@@ -31,13 +31,13 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-features</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-gadgets</artifactId>
          <version>${shindig.version}</version>
          <exclusions>
@@ -48,7 +48,7 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.gatein.shindig</groupId>
+         <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-social-api</artifactId>
          <version>${shindig.version}</version>
          <scope>runtime</scope>

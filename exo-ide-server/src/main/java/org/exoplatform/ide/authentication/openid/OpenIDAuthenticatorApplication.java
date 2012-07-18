@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,31 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.gadget.server.shindig;
+package org.exoplatform.ide.authentication.openid;
 
-import org.apache.shindig.gadgets.http.BasicHttpFetcher;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import javax.ws.rs.core.Application;
 
 /**
- * The goal of Http Fetcher subclass is to overwrite the default timeout in BasicHttpFetcher which is quite short time to make a
- * conversion if the server is slow. Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Singleton
-public class ExoIdeHttpFetcher extends BasicHttpFetcher
+public class OpenIDAuthenticatorApplication extends Application
 {
+   private final Set<Class<?>> classes;
 
-   private static final int DEFAULT_CONNECT_TIMEOUT_MS = 15000;
-
-   private static final int DEFAULT_MAX_OBJECT_SIZE = 1024 * 1024;
-
-   @Inject
-   public ExoIdeHttpFetcher()
+   public OpenIDAuthenticatorApplication()
    {
-      super(DEFAULT_MAX_OBJECT_SIZE, DEFAULT_CONNECT_TIMEOUT_MS);
+      classes = new HashSet<Class<?>>(1);
+      classes.add(OpenIDAuthenticator.class);
+   }
+
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      return classes;
    }
 }

@@ -22,11 +22,14 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 
 /**
  * The interface for the AutoBean generator.
@@ -79,4 +82,25 @@ public interface CloudFoundryAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link CreateApplicationRequest}
     */
    AutoBean<CreateApplicationRequest> createApplicationRequest();
+
+   /**
+    * A factory method for CloudFoundry services bean.
+    * 
+    * @return an {@link AutoBean} of type {@link CloudfoundryServices}
+    */
+   AutoBean<CloudfoundryServices> services();
+   
+   /**
+    * A factory method for CloudFoundry system service bean.
+    * 
+    * @return an {@link AutoBean} of type {@link SystemService}
+    */
+   AutoBean<SystemService> systemService();
+
+   /**
+    * A factory method for CloudFoundry provisioned service bean.
+    * 
+    * @return an {@link AutoBean} of type {@link ProvisionedService}
+    */
+   AutoBean<ProvisionedService> provisionedService();
 }
