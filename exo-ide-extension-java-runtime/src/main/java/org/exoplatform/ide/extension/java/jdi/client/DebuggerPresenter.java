@@ -992,6 +992,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
          parseDebuggerEvents(debuggerEventList, webSocketMessage.getData().getPayload());
          eventListReceived(debuggerEventList);
+         return;
       }
 
       String exceptionMessage = null;
@@ -1006,7 +1007,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          {
             IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
             IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
-            return;
          }
       }
    }

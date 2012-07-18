@@ -670,6 +670,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          AutoBean<BuildStatus> buildStatusBean =
             AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class, webSocketMessage.getData());
          afterBuildFinished(buildStatusBean.as());
+         return;
       }
 
       String exceptionMessage = null;
