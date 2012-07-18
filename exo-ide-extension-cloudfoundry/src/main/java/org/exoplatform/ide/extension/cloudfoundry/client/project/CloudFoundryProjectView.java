@@ -37,12 +37,11 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientBundl
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 
 /**
- * View for managing project, deployed on CloudFoundry.
- * View must be pointed in <b>Views.gwt.xml</b>
+ * View for managing project, deployed on CloudFoundry. View must be pointed in <b>Views.gwt.xml</b>
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id:  Dec 7, 2011 3:10:55 PM anya $
- *
+ * @version $Id: Dec 7, 2011 3:10:55 PM anya $
+ * 
  */
 public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryProjectPresenter.Display
 {
@@ -55,8 +54,10 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    private static final String DELETE_BUTTON_ID = "ideCloudFoundryProjectViewDeleteButton";
 
    private static final String UPDATE_BUTTON_ID = "ideCloudFoundryProjectViewUpdateButton";
-   
+
    private static final String LOGS_BUTTON_ID = "ideCloudFoundryProjectViewLogsButton";
+
+   private static final String SERVICES_BUTTON_ID = "ideCloudFoundryProjectViewServicesButton";
 
    private static final String INFO_BUTTON_ID = "ideCloudFoundryProjectViewInfoButton";
 
@@ -99,9 +100,12 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
 
    @UiField
    Button updateButton;
-   
+
    @UiField
    Button logsButton;
+
+   @UiField
+   Button servicesButton;
 
    @UiField
    ImageButton infoButton;
@@ -157,6 +161,7 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
       deleteButton.getElement().setId(DELETE_BUTTON_ID);
       updateButton.getElement().setId(UPDATE_BUTTON_ID);
       logsButton.getElement().setId(LOGS_BUTTON_ID);
+      servicesButton.getElement().setId(SERVICES_BUTTON_ID);
       closeButton.setButtonId(CLOSE_BUTTON_ID);
       infoButton.setButtonId(INFO_BUTTON_ID);
 
@@ -194,7 +199,7 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    {
       return updateButton;
    }
-   
+
    @Override
    public HasClickHandlers getLogsButton()
    {
@@ -363,5 +368,14 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    public HasValue<String> getApplicationStatus()
    {
       return statusField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getServicesButton()
+    */
+   @Override
+   public HasClickHandlers getServicesButton()
+   {
+      return servicesButton;
    }
 }
