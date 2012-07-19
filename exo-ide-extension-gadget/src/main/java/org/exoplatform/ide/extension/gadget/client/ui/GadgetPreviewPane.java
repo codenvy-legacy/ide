@@ -18,20 +18,18 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.FlowPanel;
+
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
-
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -59,51 +57,20 @@ public class GadgetPreviewPane extends ViewImpl
    private IDEConfiguration configuration;
 
    private FlowPanel framePanel;
-   
-   private String href;
 
-   /**
-    * @param eventBus
-    * @param gadgetMetadata
-    */
-   public GadgetPreviewPane(String href)
+   private String gadgetUrl;
+
+   private String gadgetServer;
+
+   public GadgetPreviewPane(String href, String gadgetServer)
    {
-      
       super(ID, ViewType.OPERATION, TITLE);
-      this.href =  href;
+      this.gadgetUrl = href;
+      this.gadgetServer = gadgetServer;
       framePanel = new FlowPanel();
       framePanel.setSize("100%", "100%");
       add(framePanel);
-
    }
-
-   /**
-    * @param configuration the configuration to set
-    */
-   public void setConfiguration(IDEConfiguration configuration)
-   {
-      this.configuration = configuration;
-   }
-
-   /**
-    * @param metadata the metadata to set
-    */
-   public void setMetadata(GadgetMetadata metadata)
-   {
-      this.metadata = metadata;
-   }
-
-   private native String getST()/*-{
-                                return encodeURIComponent(gadgets.util.getUrlParameters().st);
-                                }-*/;
-
-   private native String getGadgetParent()/*-{
-                                          return encodeURIComponent(gadgets.util.getUrlParameters().parent);
-                                          }-*/;
-
-   private native boolean isGadget()/*-{
-                                    return (typeof (gadgets) !== "undefined" && typeof (gadgets) !== "null");
-                                    }-*/;
 
    /**
     * Create iframe. Gadget will be load here.
@@ -111,10 +78,8 @@ public class GadgetPreviewPane extends ViewImpl
     */
    public void showGadget()
    {
-      
-     
-      String url = configuration.getGadgetServer() // 
-                   + "samplecontainer/samplecontainer.html?url=" + href;
+      String url = gadgetServer // 
+         + "samplecontainer/samplecontainer.html?url=" + gadgetUrl;
       final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
