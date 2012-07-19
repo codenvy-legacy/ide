@@ -88,58 +88,64 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
    {
       String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
-      getGadgetMetadata(href);
+      gadgetPreviewPane = new GadgetPreviewPane(href);
+      gadgetPreviewPane.setConfiguration(applicationConfiguration);
+      gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+      IDE.getInstance().openView(gadgetPreviewPane);
+      gadgetPreviewPane.showGadget();
+      previewOpened = true;
+//      getGadgetMetadata(href);
    }
 
    
    private void getGadgetMetadata(String gadgetUrl)
    {
-      try
-      {
-         AutoBean<Gadget> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.gadget();
-         AutoBeanUnmarshaller<Gadget> unmarshaller = new AutoBeanUnmarshaller<Gadget>(autoBean);
-
-         GadgetService.getInstance().getGadgetMetadata(gadgetUrl, new AsyncRequestCallback<Gadget>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(Gadget result)
-            {
-               if (gadgetPreviewPane == null)
-               {
-                  gadgetPreviewPane = new GadgetPreviewPane();
-                  gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-                  IDE.getInstance().openView(gadgetPreviewPane);
-               }
-               else
-               {
-                  if (!gadgetPreviewPane.isViewVisible())
-                  {
-                     gadgetPreviewPane.setViewVisible();
-                  }
-               }
-
-               gadgetPreviewPane.setConfiguration(applicationConfiguration);
-
-               Iterator<GadgetMetadata> iterator = result.getGadgets().iterator();
-               if (iterator.hasNext())
-               {
-                  gadgetPreviewPane.setMetadata(iterator.next());
-                  gadgetPreviewPane.showGadget();
-                  previewOpened = true;
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+//      try
+//      {
+//         AutoBean<Gadget> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.gadget();
+//         AutoBeanUnmarshaller<Gadget> unmarshaller = new AutoBeanUnmarshaller<Gadget>(autoBean);
+//
+//         GadgetService.getInstance().getGadgetMetadata(gadgetUrl, new AsyncRequestCallback<Gadget>(unmarshaller)
+//         {
+//            @Override
+//            protected void onSuccess(Gadget result)
+//            {
+//               if (gadgetPreviewPane == null)
+//               {
+//                  gadgetPreviewPane = new GadgetPreviewPane();
+//                  gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+//                  IDE.getInstance().openView(gadgetPreviewPane);
+//               }
+//               else
+//               {
+//                  if (!gadgetPreviewPane.isViewVisible())
+//                  {
+//                     gadgetPreviewPane.setViewVisible();
+//                  }
+//               }
+//
+//               gadgetPreviewPane.setConfiguration(applicationConfiguration);
+//
+//               Iterator<GadgetMetadata> iterator = result.getGadgets().iterator();
+//               if (iterator.hasNext())
+//               {
+//                  gadgetPreviewPane.setMetadata(iterator.next());
+//                  gadgetPreviewPane.showGadget();
+//                  previewOpened = true;
+//               }
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               IDE.fireEvent(new ExceptionThrownEvent(exception));
+//            }
+//         });
+//      }
+//      catch (RequestException e)
+//      {
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
    }
 
 

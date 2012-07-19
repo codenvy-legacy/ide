@@ -48,6 +48,12 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-gadget-server</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-asm</artifactId>
          <version>${project.version}</version>
          <type>jar</type>
@@ -644,45 +650,12 @@
          <artifactId>exo.ws.rest.ext</artifactId>
       </dependency>
 
-
-      <!--dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-common</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>xstream</groupId>
-               <artifactId>xstream</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      
-      <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-features</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-gadgets</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-social-api</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-      </dependency-->
-      
-      <dependency>
+      <!-- dependency>
          <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-server</artifactId>
          <version>${shindig.version}</version>
          <type>war</type>
-      </dependency>
+      </dependency-->
 
       <dependency>
          <groupId>org.hsqldb</groupId>
@@ -860,7 +833,7 @@
                            overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/storage.war"
                            overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/shindig-server-${shindig.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shindig.war"
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war"
                            overwrite="true" />   
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">

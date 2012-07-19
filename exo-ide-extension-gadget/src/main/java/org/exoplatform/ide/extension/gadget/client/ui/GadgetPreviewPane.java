@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
-import com.google.gwt.user.client.Window;
-
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.FlowPanel;
-
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.ui.PreviewFrame;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.IFrameElement;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
  * Created by The eXo Platform SAS.
@@ -59,15 +59,18 @@ public class GadgetPreviewPane extends ViewImpl
    private IDEConfiguration configuration;
 
    private FlowPanel framePanel;
+   
+   private String href;
 
    /**
     * @param eventBus
     * @param gadgetMetadata
     */
-   public GadgetPreviewPane()
+   public GadgetPreviewPane(String href)
    {
+      
       super(ID, ViewType.OPERATION, TITLE);
-
+      this.href =  href;
       framePanel = new FlowPanel();
       framePanel.setSize("100%", "100%");
       add(framePanel);
@@ -108,16 +111,16 @@ public class GadgetPreviewPane extends ViewImpl
     */
    public void showGadget()
    {
-
-      String url = metadata.getIframeUrl();
-      url = url.replace("&view=%25view%25", "&view=canvas");
+      
+     
+      String url = configuration.getGadgetServer() // 
+                   + "samplecontainer/samplecontainer.html?url=" + href;
       final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
       frame.setHeight("100%");
       frame.setStyleName("");
-
       frame.addLoadHandler(new LoadHandler()
       {
 
