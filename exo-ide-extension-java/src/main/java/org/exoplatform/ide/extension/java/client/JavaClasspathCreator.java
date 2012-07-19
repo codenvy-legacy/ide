@@ -52,6 +52,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
    {
       projectTypes.add(ProjectResolver.SERVLET_JSP);
       projectTypes.add(ProjectResolver.SPRING);
+      projectTypes.add(ProjectResolver.APP_ENGINE_JAVA);
    }
 
    /**
