@@ -32,14 +32,12 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -247,7 +245,8 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
          @Override
          protected void onSuccess(FileModel result)
          {
-            openFileInEditor(result);
+            IDE.fireEvent(new EditorOpenFileEvent(result));
+            IDE.getInstance().closeView(display.asView().getId());
          }
 
          @Override
@@ -272,27 +271,6 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Opens file in editor.
-    * 
-    * @param file file to be opened in editor.
-    */
-   private void openFileInEditor(FileModel file)
-   {
-      try
-      {
-         Editor editor = IDE.getInstance().getEditors(file.getMimeType())[0];
-         //EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
-         IDE.fireEvent(new EditorOpenFileEvent(file, editor));
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getMimeType()));
       }
    }
 

@@ -194,7 +194,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       }
       else
       {
-         new RestoreOpenedFilesPhase(IDE.eventBus(), applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
+         new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
       }
    }
 

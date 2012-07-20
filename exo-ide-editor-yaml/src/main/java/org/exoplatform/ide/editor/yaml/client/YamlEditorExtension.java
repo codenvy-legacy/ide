@@ -23,10 +23,12 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 
 /**
  * Provides a text editing area.
@@ -57,9 +59,20 @@ public class YamlEditorExtension extends Extension implements InitializeServices
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml",
-         new CodeMirrorConfiguration()
-      ));
+      IDE.getInstance().getFileTypeRegistry().addFileType(
+         new FileType(MimeType.TEXT_YAML, "yml", Images.INSTANCE.yamlImage()),
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.TEXT_YAML);
+            }
+         });
+      
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml",
+//         new CodeMirrorConfiguration()
+//      ));
       
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml", Images.INSTANCE.yamlImage(), true,

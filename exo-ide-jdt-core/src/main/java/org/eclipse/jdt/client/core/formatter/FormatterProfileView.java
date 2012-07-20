@@ -18,14 +18,13 @@
  */
 package org.eclipse.jdt.client.core.formatter;
 
-import java.util.HashMap;
-
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
+import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -74,29 +73,17 @@ public class FormatterProfileView extends ViewImpl implements Display
    {
       super(ID, ViewType.MODAL, "Formatter", null, 600, 700, true);
       add(uiBinder.createAndBindUi(this));
+
       try
       {
-         final HashMap<String, Object> params = new HashMap<String, Object>();
-//         params.put(EditorParameters.IS_READ_ONLY, true);
-//         params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
-//         params.put(EditorParameters.IS_SHOW_OVERVIEW_PANEL, Boolean.FALSE);
-
-         Editor[] editors = IDE.getInstance().getEditors(MimeType.APPLICATION_JAVA);         
-         Editor editor = editors[0];
+         Editor editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_JAVA);
          editor.asWidget().setSize("100%", "100%");
          editorPanel.add(editor);
          editor.setText(JdtClientBundle.INSTANCE.formatterSample().getText());
-
-//         EditorProducer editorProducer = IDE.getInstance().getEditor(MimeType.APPLICATION_JAVA);         
-//         eventBus = new HandlerManager(null);
-//         editor = editorProducer.createEditor(JdtClientBundle.INSTANCE.formatterSample().getText(), eventBus, params);
-//         editor.setSize("100%", "100%");
-//         editorPanel.add(editor);
       }
       catch (EditorNotFoundException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
       }
    }
 

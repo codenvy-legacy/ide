@@ -32,12 +32,15 @@ import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
@@ -99,26 +102,46 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    public void onInitializeServices(InitializeServicesEvent event)
    {
       if (GroovyCodeAssistantService.get() == null)
+      {
          service = new GroovyCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
+      }
       else
+      {
          service = GroovyCodeAssistantService.get();
-      factory =
-         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/groovy/class-doc?fqn=");
-      groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
-
-      groovyCodeValidator = new GroovyCodeValidator();
+      }
       
-      IDE.getInstance().addEditor(new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "cmtc",
-         new CodeMirrorConfiguration()
-            .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
-            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-            .setParser(new GroovyParser())
-            .setCanBeOutlined(true)
-            .setAutocompleteHelper(new GroovyAutocompleteHelper())
-            .setCodeAssistant(groovyCodeAssistant)
-            .setCodeValidator(groovyCodeValidator)
-      ));
+      String context = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/groovy/class-doc?fqn=";
+      factory = new JavaTokenWidgetFactory(context);
+      groovyCodeAssistant = new GroovyCodeAssistant(service, factory, this);
+      groovyCodeValidator = new GroovyCodeValidator();
+            
+      IDE.getInstance().getFileTypeRegistry()
+         .addFileType(new FileType(MimeType.CHROMATTIC_DATA_OBJECT, "cmtc", IMAGES.chromattic()), new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, new CodeMirrorConfiguration()
+                  .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+                  .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+                  .setParser(new GroovyParser())
+                  .setCanBeOutlined(true)
+                  .setAutocompleteHelper(new GroovyAutocompleteHelper())
+                  .setCodeAssistant(groovyCodeAssistant)
+                  .setCodeValidator(groovyCodeValidator));
+            }
+         });
+      
+//    IDE.getInstance().addEditor(new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "cmtc",
+//    new CodeMirrorConfiguration()
+//       .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
+//       .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
+//       .setParser(new GroovyParser())
+//       .setCanBeOutlined(true)
+//       .setAutocompleteHelper(new GroovyAutocompleteHelper())
+//       .setCodeAssistant(groovyCodeAssistant)
+//       .setCodeValidator(groovyCodeValidator)
+// ));
       
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "cmtc", IMAGES

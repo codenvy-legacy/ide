@@ -19,13 +19,21 @@
 package org.exoplatform.ide.editor.gadget.client;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.control.GroupNames;
+import org.exoplatform.ide.client.framework.control.NewItemControl;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.ckeditor.CKEditor;
+import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.gadget.client.codemirror.GoogleGadgetParser;
 import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlAutocompleteHelper;
+import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -44,17 +52,42 @@ public class GadgetEditorExtension extends Extension
       //IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor OpenSocial Gadget editor", "gadget", Images.INSTANCE.gadgetImage(), false, new CKEditorConfiguration()));
       //IDE.getInstance().addEditor(new GadgetCodeMirrorEditor());
       
+      IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.GOOGLE_GADGET, "gadget", Images.INSTANCE.gadgetImage()),
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.GOOGLE_GADGET, new CodeMirrorConfiguration()
+                 .setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
+                 .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+                 .setParser(new GoogleGadgetParser())
+                 .setCanBeOutlined(true)
+                 .setAutocompleteHelper(new HtmlAutocompleteHelper())
+                 .setCodeAssistant(new HtmlCodeAssistant())
+                 .setCanHaveSeveralMimeTypes(true)
+               );
+            }
+         },
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CKEditor(MimeType.GOOGLE_GADGET, new CKEditorConfiguration());
+            }
+         });
       
-      IDE.getInstance().addEditor(new CodeMirror(MimeType.GOOGLE_GADGET, "CodeMirror OpenSocial Gadget editor", "gadget",
-         new CodeMirrorConfiguration()
-            .setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
-            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-            .setParser(new GoogleGadgetParser())
-            .setCanBeOutlined(true)
-            .setAutocompleteHelper(new HtmlAutocompleteHelper())
-            .setCodeAssistant(new HtmlCodeAssistant())
-            .setCanHaveSeveralMimeTypes(true)
-               ));
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.GOOGLE_GADGET, "CodeMirror OpenSocial Gadget editor", "gadget",
+//         new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+//            .setParser(new GoogleGadgetParser())
+//            .setCanBeOutlined(true)
+//            .setAutocompleteHelper(new HtmlAutocompleteHelper())
+//            .setCodeAssistant(new HtmlCodeAssistant())
+//            .setCanHaveSeveralMimeTypes(true)
+//               ));
 
 //      CodeMirrorProducer producer = new CodeMirrorProducer(
 //         MimeType.GOOGLE_GADGET,
@@ -74,10 +107,10 @@ public class GadgetEditorExtension extends Extension
 //      );      
 //      IDE.getInstance().addEditor(producer);
 
-//      IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
-//         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroupName(GroupNames.NEW_FILE));
-//      
-//      IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
+      IDE.getInstance().addControl(new NewItemControl("File/New/New OpenSocial Gadget", "OpenSocial Gadget",
+         "Create New OpenSocial Gadget", Images.GOOGLE_GADGET, MimeType.GOOGLE_GADGET).setGroupName(GroupNames.NEW_FILE));
+      
+      IDE.getInstance().addOutlineItemCreator(MimeType.GOOGLE_GADGET, new HtmlOutlineItemCreator());
    }
 
 }

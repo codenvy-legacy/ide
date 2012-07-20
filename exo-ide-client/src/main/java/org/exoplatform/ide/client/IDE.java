@@ -25,6 +25,7 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.EditControlsFormatter;
+import org.exoplatform.ide.client.application.IDEFileTypeRegistry;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
@@ -37,13 +38,12 @@ import org.exoplatform.ide.client.dialogs.IDEDialogs;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
-import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
@@ -68,7 +68,6 @@ import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
-import org.exoplatform.ide.editor.api.Editor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -127,6 +126,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
 
+   private FileTypeRegistry fileTypeRegistry = new IDEFileTypeRegistry();
+   
    public IDE()
    {
       // Remember browser's window.alert(...) function
@@ -315,19 +316,25 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
-    */
    @Override
-   public void addEditor(Editor editor)
+   public FileTypeRegistry getFileTypeRegistry()
    {
-      EditorFactory.addEditor(editor);
+      return fileTypeRegistry;
    }
 
-   @Override
-   public Editor[] getEditors(String mimeType) throws EditorNotFoundException
-   {
-      return EditorFactory.getEditors(mimeType);
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
+//    */
+//   @Override
+//   public void addEditor(Editor editor)
+//   {
+//      EditorFactory.addEditor(editor);
+//   }
+//
+//   @Override
+//   public Editor[] getEditors(String mimeType) throws EditorNotFoundException
+//   {
+//      return EditorFactory.getEditors(mimeType);
+//   }
 
 }

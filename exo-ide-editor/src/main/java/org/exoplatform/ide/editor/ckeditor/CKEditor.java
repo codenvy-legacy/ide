@@ -49,10 +49,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    
    private final String mimeType;
    
-   private final String editorDescription;
-   
-   private final String fileExtension;
-   
    private final CKEditorConfiguration configuration;
    
    protected final String id;
@@ -76,19 +72,15 @@ public class CKEditor extends AbsolutePanel implements Editor
 
    private String suffix = "";
 
+   public CKEditor(String mimeType)
+   {
+      this(mimeType, new CKEditorConfiguration());
+   }
    
-   public CKEditor(String mimeType, String editorDescription, String fileExtension, CKEditorConfiguration configuration)
+   public CKEditor(String mimeType, CKEditorConfiguration configuration)
    {
       this.mimeType = mimeType;
-      this.editorDescription = editorDescription;
-      this.fileExtension = fileExtension;
-
       id = "CKEditor - " + String.valueOf(this.hashCode());
-      if (configuration == null)
-      {
-         configuration = new CKEditorConfiguration();
-      }
-
       this.configuration = configuration;
       if (mimeType.equals(MimeType.TEXT_HTML))
       {
@@ -118,63 +110,63 @@ public class CKEditor extends AbsolutePanel implements Editor
 //      }
 //   }
    
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
-    */
-   @Override
-   public Editor newInstance()
-   {
-      return new CKEditor(mimeType, editorDescription, fileExtension, configuration);
-   }
-
-   @Override
-   protected void onLoad()
-   {
-      super.onLoad();
-   }
-   
-   @Override
-   protected void onUnload()
-   {
-      super.onUnload();
-   }
-   
 //   /**
-//    * @see com.google.gwt.user.client.ui.Widget#onLoad()
+//    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
 //    */
+//   @Override
+//   public Editor newInstance()
+//   {
+//      return new CKEditor(mimeType, editorDescription, fileExtension, configuration);
+//   }
+//
+//   @Override
 //   protected void onLoad()
 //   {
-//      label = new Label();
-//      DOM.setElementAttribute(label.getElement(), "id", id);
-//      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
-//      add(label);
-//
-//      try
-//      {
-//         super.onLoad();
-//         editorObject = initCKEditor(id,
-//               CKEditorConfiguration.BASE_PATH,
-//               CKEditorConfiguration.TOOLBAR.toString(), // aditional default configuration can be found in config.js
-//               CKEditorConfiguration.THEME.toString(), CKEditorConfiguration.SKIN.toString(),
-//               CKEditorConfiguration.LANGUAGE.toString(), CKEditorConfiguration.CONTINUOUS_SCANNING,
-//               CKEditorConfiguration.isFullPage());
-//      }
-//      catch (Exception e)
-//      {
-//         e.printStackTrace();
-//      }      
+//      super.onLoad();
 //   }
-//
-//   /*
-//    * remove listeners and restore functions
-//    */
+//   
+//   @Override
 //   protected void onUnload()
 //   {
-//      removeEditorListeners();
-//      removeOnContentChangeListener();
-//      removeOnEditorResizeListener();
-//      restoreNativeAlertAndConfirm();
+//      super.onUnload();
 //   }
+   
+   /**
+    * @see com.google.gwt.user.client.ui.Widget#onLoad()
+    */
+   protected void onLoad()
+   {
+      label = new Label();
+      DOM.setElementAttribute(label.getElement(), "id", id);
+      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+      add(label);
+
+      try
+      {
+         super.onLoad();
+         editorObject = initCKEditor(id,
+               CKEditorConfiguration.BASE_PATH,
+               CKEditorConfiguration.TOOLBAR.toString(), // aditional default configuration can be found in config.js
+               CKEditorConfiguration.THEME.toString(), CKEditorConfiguration.SKIN.toString(),
+               CKEditorConfiguration.LANGUAGE.toString(), CKEditorConfiguration.CONTINUOUS_SCANNING,
+               CKEditorConfiguration.isFullPage());
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }      
+   }
+
+   /*
+    * remove listeners and restore functions
+    */
+   protected void onUnload()
+   {
+      removeEditorListeners();
+      removeOnContentChangeListener();
+      removeOnEditorResizeListener();
+      restoreNativeAlertAndConfirm();
+   }
 
    private native JavaScriptObject initCKEditor(String id, String basePath, String toolbar, String theme, String skin,
       String language, int continuousScanning, boolean fullPage)
@@ -829,31 +821,10 @@ public class CKEditor extends AbsolutePanel implements Editor
       this.readOnly = readOnly;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getDescription()
-    */
    @Override
-   public String getDescription()
+   public String getName()
    {
-      return editorDescription;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getFileExtension()
-    */
-   @Override
-   public String getFileExtension()
-   {
-      return fileExtension;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getType()
-    */
-   @Override
-   public Type getType()
-   {
-      return Type.CODE;
+      return "Design";
    }
    
 }

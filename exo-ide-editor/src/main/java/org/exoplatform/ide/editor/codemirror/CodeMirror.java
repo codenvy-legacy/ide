@@ -64,7 +64,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -130,20 +129,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    protected final CodeMirrorConfiguration configuration;
    
    /**
-    * Some editor description.
-    */
-   private final String editorDescription;
-   
-   /**
-    * Default file extension.
-    */
-   private final String defaultFileExtension;
-   
-   
-   
-   
-   
-   /**
     * Visibility of line numbers column.
     */
    private boolean showLineNumbers = false;
@@ -152,12 +137,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     * Visibility of overview column.
     */
    protected boolean showOverview = false;
-   
-   
-   
-//   @Deprecated
-//   private HandlerManager eventBus;
-   
    
    
    protected TextArea textArea;
@@ -194,30 +173,26 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private String initialText;
    
    /**
-    * Create new instance of CodeMirror editor.
+    * Creates new CodeMirror instance.
+    * 
+    * @param mimeType
+    */
+   public CodeMirror(String mimeType)
+   {
+      this(mimeType, new CodeMirrorConfiguration());
+   }
+   
+   /**
+    * Creates new CodeMirror instance.
     * 
     * @param mimeType
     * @param configuration
-    * @param editorDescription
-    * @param defaultFileExtension
     */
-   public CodeMirror(String mimeType, String editorDescription,
-      String defaultFileExtension, CodeMirrorConfiguration configuration)
+   public CodeMirror(String mimeType, CodeMirrorConfiguration configuration)
    {
       id = "CodeMirror - " + String.valueOf(this.hashCode());
       this.mimeType = mimeType;
-      this.editorDescription = editorDescription;
-      this.defaultFileExtension = defaultFileExtension;
-      this.configuration = configuration != null ? configuration : new CodeMirrorConfiguration();
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
-    */
-   @Override
-   public Editor newInstance()
-   {
-      return new CodeMirror(mimeType, editorDescription, defaultFileExtension, configuration);
+      this.configuration = configuration;
    }
    
    /**
@@ -228,19 +203,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       return mimeType;
    }
-   
-   
-   @Override
-   public String getDescription()
-   {
-      return editorDescription;
-   }
-
-   @Override
-   public String getFileExtension()
-   {
-      return defaultFileExtension;
-   }   
 
    /**
     * @see com.google.gwt.user.client.ui.Panel#onLoad()
@@ -250,7 +212,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       super.onLoad();
       
-      System.out.println("CodeMirror.onLoad() Editor ID > " + id);
+//      System.out.println("CodeMirror.onLoad() Editor ID > " + id);
       
       DockLayoutPanel doc = new DockLayoutPanel(Unit.PX);
       doc.setSize("100%", "100%");
@@ -295,7 +257,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       super.onUnload();
       
-      System.out.println("CodeMirror.onUnload() Editor ID > " + id);
+//      System.out.println("CodeMirror.onUnload() Editor ID > " + id);
       
       codeValidateTimer.cancel();
       
@@ -2025,14 +1987,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       this.readOnly = readOnly;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getType()
-    */
    @Override
-   public Type getType()
+   public String getName()
    {
-      return null;
+      return "Source";
    }
-   
    
 }

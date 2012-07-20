@@ -24,10 +24,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
@@ -78,6 +81,20 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       if (JavaCodeAssistantService.get() == null)
          new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
 
+      IDE.getInstance().getFileTypeRegistry().addFileType(
+         new FileType(MimeType.APPLICATION_JAVA, "java", JavaClientBundle.INSTANCE.java()),
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.APPLICATION_JAVA, new CodeMirrorConfiguration()
+               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+               .setCanBeOutlined(true));
+            }
+         });
+      
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
 //            JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
