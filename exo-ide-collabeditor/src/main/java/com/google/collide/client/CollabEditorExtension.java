@@ -1,94 +1,73 @@
-// Copyright 2012 Google Inc. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 package com.google.collide.client;
 
-import com.google.collide.client.util.ClientImplementationsInjector;
-
-import com.google.collide.client.code.EditableContentArea.Resources;
-
-import com.google.collide.client.util.PathUtil;
-
-import com.google.collide.shared.document.Document;
-
-import com.google.collide.client.util.Elements;
-
-import com.google.gwt.user.client.ui.RootLayoutPanel;
-
-import com.google.collide.client.code.EditableContentArea.View;
-
-import com.google.collide.client.code.EditableContentArea;
-
-import com.google.collide.client.code.errorrenderer.EditorErrorListener;
-
-import com.google.collide.client.code.errorrenderer.ErrorReceiver;
-
-import com.google.collide.client.code.errorrenderer.ErrorRenderer;
-
-import com.google.collide.client.code.EditorBundle;
-
 import com.google.collide.client.document.DocumentManager;
-
+import com.google.collide.client.util.ClientImplementationsInjector;
+import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
-import com.google.collide.json.shared.JsonArray;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.user.client.Window;
+import org.exoplatform.ide.client.framework.module.Extension;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:  7/18/12 evgen $
  */
-public class Collide implements EntryPoint {
+public class CollabEditorExtension extends Extension
+{
 
-  /**
-   * This is the entry point method.
-   */
-  @Override
-  public void onModuleLoad() {
+   private static CollabEditorExtension instance;
+   private AppContext context = AppContext.create();
+   private DocumentManager documentManager;
 
-//    // If we do not have a valid Client ID we need to redirect back to the login page.
-//    if (BootstrapSession.getBootstrapSession().getActiveClientId() == null) {
-//      Window.Location.assign("/static/login.html");
-//      return;
-//    }
-//
-    ClientImplementationsInjector.inject();
+   public static CollabEditorExtension get()
+   {
+      return instance;
+   }
 
-    final AppContext appContext = AppContext.create();
-//
+   @Override
+   public void initialize()
+   {
+      instance = this;
+      ClientImplementationsInjector.inject();
+
+      //
 //    GWT.setUncaughtExceptionHandler(appContext.getUncaughtExceptionHandler());
 //    XhrWarden.watch();
 //
-      com.google.collide.client.Resources resources = appContext.getResources();
+      com.google.collide.client.Resources resources = context.getResources();
 //
 //    // TODO: Figure out why when we use the + operator to concat,
 //    // these Strings don't at compile time converge to a single String literal.
 //    // In theory they should. For now we use a StringBuilder.
 //
 //    // Make sure you call getText() on your CssResource!
-    StringBuilder styleBuilder = new StringBuilder();
-    styleBuilder.append(resources.appCss().getText());
-    styleBuilder.append(resources.baseCss().getText());
+      StringBuilder styleBuilder = new StringBuilder();
+      styleBuilder.append(resources.appCss().getText());
+      styleBuilder.append(resources.baseCss().getText());
 //    styleBuilder.append(resources.workspaceHeaderCss().getText());
 //    styleBuilder.append(resources.editorToolBarCss().getText());
 //    styleBuilder.append(resources.defaultSimpleListCss().getText());
 //    styleBuilder.append(resources.workspaceShellCss().getText());
-    styleBuilder.append(resources.workspaceEditorCss().getText());
-    styleBuilder.append(resources.workspaceEditorBufferCss().getText());
-    styleBuilder.append(resources.workspaceEditorCursorCss().getText());
+      styleBuilder.append(resources.workspaceEditorCss().getText());
+      styleBuilder.append(resources.workspaceEditorBufferCss().getText());
+      styleBuilder.append(resources.workspaceEditorCursorCss().getText());
 //    styleBuilder.append(resources.workspaceEditorConsoleViewCss().getText());
 //    styleBuilder.append(resources.workspaceEditorDebuggingModelCss().getText());
 //    styleBuilder.append(resources.workspaceEditorDebuggingSidebarCss().getText());
@@ -121,17 +100,17 @@ public class Collide implements EntryPoint {
 //    styleBuilder.append(resources.deltaInfoBarCss().getText());
 //    styleBuilder.append(resources.codePerspectiveCss().getText());
 //    styleBuilder.append(resources.unauthorizedUserCss().getText());
-    styleBuilder.append(resources.syntaxHighlighterRendererCss().getText());
-    styleBuilder.append(resources.lineNumberRendererCss().getText());
+      styleBuilder.append(resources.syntaxHighlighterRendererCss().getText());
+      styleBuilder.append(resources.lineNumberRendererCss().getText());
 //    styleBuilder.append(resources.uneditableDisplayCss().getText());
-    styleBuilder.append(resources.editorSelectionLineRendererCss().getText());
+      styleBuilder.append(resources.editorSelectionLineRendererCss().getText());
 //    styleBuilder.append(resources.fileHistoryCss().getText());
 //    styleBuilder.append(resources.timelineCss().getText());
 //    styleBuilder.append(resources.timelineNodeCss().getText());
 //    styleBuilder.append(resources.popupCss().getText());
 //    styleBuilder.append(resources.tooltipCss().getText());
 //    styleBuilder.append(resources.sliderCss().getText());
-    styleBuilder.append(resources.editableContentAreaCss().getText());
+      styleBuilder.append(resources.editableContentAreaCss().getText());
 //    styleBuilder.append(resources.workspaceLocationBreadcrumbsCss().getText());
 //    styleBuilder.append(resources.awesomeBoxCss().getText());
 //    styleBuilder.append(resources.awesomeBoxSectionCss().getText());
@@ -140,7 +119,7 @@ public class Collide implements EntryPoint {
 //    styleBuilder.append(resources.runButtonTargetPopupCss().getText());
 //    styleBuilder.append(resources.popupBlockedInstructionalPopupCss().getText());
 //    styleBuilder.append(resources.dropdownWidgetsCss().getText());
-    styleBuilder.append(resources.parenMatchHighlighterCss().getText());
+      styleBuilder.append(resources.parenMatchHighlighterCss().getText());
 //    styleBuilder.append(resources.awesomeBoxHostCss().getText());
 //    styleBuilder.append(resources.awesomeBoxComponentCss().getText());
 //    styleBuilder.append(resources.coachmarkCss().getText());
@@ -156,53 +135,17 @@ public class Collide implements EntryPoint {
 //
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
-//
-//    // Setup Places
-//    setUpPlaces(appContext);
-//
-//    // Status Presenter
-//    StatusPresenter statusPresenter = StatusPresenter.create(appContext.getResources());
-//    Elements.getBody().appendChild(statusPresenter.getView().getElement());
-//    appContext.getStatusManager().setHandler(statusPresenter);
-//
-//    // Replay History
-//    replayHistory(HistoryUtils.parseHistoryString());
-    DocumentManager manager = DocumentManager.create(appContext);
-    
-    
-    EditorBundle editorBundle = EditorBundle.create(appContext, manager, EditorErrorListener.NOOP_ERROR_RECEIVER);
-    //GWT.<Resources>create(Resources.class)
-    View v = new View(resources);
-    EditableContentArea contentArea = EditableContentArea.create(v, appContext, editorBundle);
-    contentArea.setContent(editorBundle);
-    
-    Elements.getBody().appendChild(v.getElement());
-    editorBundle.setDocument(Document.createFromString("package test;\n public class MMM extends Object implements Abb{\n private static final String ds;}"), new PathUtil("test.java"), "");
-    
-    
-    
-  }
+      documentManager = DocumentManager.create(context);
+   }
 
-//  @VisibleForTesting
-//  static void setUpPlaces(AppContext context) {
-//    RootPlace.PLACE.registerChildHandler(
-//        WorkspacePlace.PLACE, new WorkspacePlaceNavigationHandler(context), true);
-//
-//    // Back/forward buttons or manual manipulation of the hash.
-//    HistoryUtils.addValueChangeListener(new ValueChangeListener() {
-//      @Override
-//      public void onValueChanged(String historyString) {
-//        replayHistory(HistoryUtils.parseHistoryString(historyString));
-//      }
-//    });
-//  }
-//
-//  private static void replayHistory(JsonArray<NavigationToken> historyPieces) {
-//
-//    // We don't want to snapshot history as we fire the Place events in the
-//    // replay.
-//    RootPlace.PLACE.disableHistorySnapshotting();
-//    RootPlace.PLACE.dispatchHistory(historyPieces);
-//    RootPlace.PLACE.enableHistorySnapshotting();
-//  }
+   public AppContext getContext()
+   {
+      return context;
+   }
+
+   public DocumentManager getManager()
+   {
+      return documentManager;
+   }
+
 }

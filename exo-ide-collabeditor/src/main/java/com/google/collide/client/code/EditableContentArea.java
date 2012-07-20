@@ -90,7 +90,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
    * The View for the EditableContentArea.
    */
   public static class View extends CompositeView<Void> {
-    private DivElement header;
+//    private DivElement header;
     private DivElement content;
 //    private final WorkspaceLocationBreadcrumbs.View breadcrumbsView;
 //    private final EditorToolBar.View editorToolBarView;
@@ -111,9 +111,9 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
       return content;
     }
 
-    public Element getHeaderElement() {
-      return header;
-    }
+//    public Element getHeaderElement() {
+//      return header;
+//    }
 
 //    public EditorToolBar.View getEditorToolBarView() {
 //      return editorToolBarView;
@@ -129,10 +129,10 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
 
     private void createDom() {
       Element elem = getElement();
-      header = Elements.createDivElement(css.contentHeader());
+//      header = Elements.createDivElement(css.contentHeader());
       content = Elements.createDivElement(css.contentContainer());
 
-      elem.appendChild(header);
+//      elem.appendChild(header);
       elem.appendChild(content);
 //      header.appendChild(breadcrumbsView.getElement());
 //      header.appendChild(editorToolBarView.getElement());

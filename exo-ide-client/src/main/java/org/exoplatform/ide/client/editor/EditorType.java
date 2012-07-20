@@ -33,7 +33,7 @@ public enum EditorType {
       
    DESIGN(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabDesignView(), Images.Editor.DESIGN_BUTTON_ICON, 1),
    
-   DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 2);
+   DEFAULT(org.exoplatform.ide.client.IDE.EDITOR_CONSTANT.editorControllerFileTabSourceView(), Images.Editor.SOURCE_BUTTON_ICON, 0);
 
    private String label;
 

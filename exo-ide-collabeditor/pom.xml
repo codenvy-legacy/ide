@@ -14,9 +14,18 @@
    <dependencies>
 
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-editor-api</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+        <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
-         <version>2.5.0-rc1</version><!--$NO-MVN-MAN-VER$ -->
       </dependency>
 
       <dependency>

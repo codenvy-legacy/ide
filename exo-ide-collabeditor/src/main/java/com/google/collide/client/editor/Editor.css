@@ -1,8 +1,6 @@
 /* Annotated CSS for the Editor presenter. */
 
 .root {
-  -moz-user-select: none;
-  -webkit-user-select: none;
   background-color: white;
   bottom: 0;
   font-family: 'Inconsolata', monospace;

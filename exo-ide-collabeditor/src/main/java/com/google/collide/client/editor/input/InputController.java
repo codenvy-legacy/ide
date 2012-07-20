@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.input;
 
+import com.google.collide.client.editor.selection.SelectionModel.SelectionListener;
+
 import com.google.collide.client.document.linedimensions.LineDimensionsUtils;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.ViewportModel;
@@ -119,6 +121,24 @@ public class InputController {
     this.document = document;
     this.selection = selection;
     this.viewport = viewport;
+//    selection.getSelectionListenerRegistrar().add(new SelectionListener()
+//   {
+//      
+//      @Override
+//      public void onSelectionChange(Position[] oldSelectionRange, Position[] newSelectionRange)
+//      {
+//            if (newSelectionRange != null)
+//            {
+//               String selectionText =
+//                  LineUtils.getText(newSelectionRange[0].getLine(), newSelectionRange[0].getColumn(),
+//                     newSelectionRange[1].getLine(), newSelectionRange[1].getColumn());
+//               setInputText(selectionText);
+//               inputElement.select();
+//            }
+//            else
+//               setInputText("");
+//      }
+//   });
   }
 
   public void initializeFromEditor(Editor editor, DocumentMutator editorDocumentMutator) {
@@ -205,6 +225,8 @@ public class InputController {
      * the legacy wrap attribute.
      */
     inputElement.setAttribute("wrap", "off");
+    inputElement.setAttribute("autocorrect", "off");
+    inputElement.setAttribute("autocapitalize", "off");
 
     // Attach listeners
     /*
@@ -260,6 +282,15 @@ public class InputController {
       public void handleEvent(Event event) {
         SignalEvent signalEvent = SignalEventUtils.create(event);
         if (signalEvent != null) {
+           if(selection.hasSelection() && signalEvent.getCommandKey() &&
+                    (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120)){
+              Position[] selectionRange = selection.getSelectionRange(true);
+              String selectionText = LineUtils.getText(
+                  selectionRange[0].getLine(), selectionRange[0].getColumn(),
+                  selectionRange[1].getLine(), selectionRange[1].getColumn());
+              setInputText(selectionText);
+              inputElement.select();
+           }
           processSignalEvent(signalEvent);
         } else if ("keyup".equals(event.getType())) {
           boolean handled = dispatchKeyUp(event);
@@ -271,17 +302,20 @@ public class InputController {
         }
       }
     };
-
+    
     /*
      * Attach to all of key events, and the SignalEvent logic will filter
      * appropriately
      */
+    if (!BrowserUtils.isFirefox()){
+       inputElement.addEventListener(Event.COPY, signalEventListener, false);
+    }
+
+    inputElement.addEventListener(Event.CUT, signalEventListener, false);
     inputElement.addEventListener(Event.KEYDOWN, signalEventListener, false);
     inputElement.addEventListener(Event.KEYPRESS, signalEventListener, false);
     inputElement.addEventListener(Event.KEYUP, signalEventListener, false);
-    inputElement.addEventListener(Event.COPY, signalEventListener, false);
     inputElement.addEventListener(Event.PASTE, signalEventListener, false);
-    inputElement.addEventListener(Event.CUT, signalEventListener, false);
 
     return inputElement;
   }
@@ -318,6 +352,7 @@ public class InputController {
       setInputText("");
     }
   }
+
 
   public void prepareForCopy() {
     if (!selection.hasSelection()) {

@@ -36,6 +36,7 @@ import org.exoplatform.ide.editor.java.client.control.NewJavaClassControl;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
+import com.google.collide.client.CollabEditor;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -84,12 +85,13 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
 //            true));
       
-      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", 
-         new CodeMirrorConfiguration()
-            .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
-            .setCanBeOutlined(true)
-      ));
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
+//         new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+//            .setCanBeOutlined(true)
+//      ));
+      IDE.getInstance().addEditor(new CollabEditor(MimeType.APPLICATION_JAVA,"java"));
       
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
       new CreateJavaPresenter(IDE.eventBus(),VirtualFileSystem.getInstance(), IDE.getInstance());

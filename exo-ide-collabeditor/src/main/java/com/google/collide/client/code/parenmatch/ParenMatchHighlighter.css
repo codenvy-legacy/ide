@@ -1,7 +1,7 @@
 .match {
-  box-shadow: inset 0 0 -1px dividerColorDark;
-  -moz-box-shadow: inset 0 0 -1px dividerColorDark;
-  -webkit-box-shadow: inset 0 0 -1px dividerColorDark;
+  box-shadow:inset 0 0 1px 0 #222;
+  -moz-box-shadow: inset 0 0 -1px #222;
+  -webkit-box-shadow: inset 0 0 -1px #222;
 }
 
 .animationEnabled .match {

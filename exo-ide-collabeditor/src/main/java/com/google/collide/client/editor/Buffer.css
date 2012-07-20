@@ -5,6 +5,8 @@
 .root {
   height: 100%;
   position: relative;
+  -moz-user-select: none;
+  -webkit-user-select: none;
   
   /* TODO: clean up the invalid negative z-indexes and
      remove this */

@@ -14,6 +14,8 @@
 
 package com.google.collide.shared.util;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.collide.json.server.JsonIntegerMapAdapter;
 
 import com.google.collide.json.server.JsonStringSetAdapter;
@@ -28,7 +30,6 @@ import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.json.shared.JsonStringSet;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Objects;
-import com.google.gwt.core.shared.GWT;
 
 import java.util.ArrayList;
 import java.util.HashMap;
