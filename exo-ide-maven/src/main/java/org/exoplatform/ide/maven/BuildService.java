@@ -118,6 +118,9 @@ public class BuildService
    /** Maven build goals 'test package'. */
    private static final String[] BUILD_GOALS = new String[]{"test", "package"};
 
+   /** Maven compile goals 'compile'. */
+   private static final String[] COMPILE_GOALS = new String[]{"compile"};
+
    /** Maven list dependencies goals 'dependency:list'. */
    private static final String[] DEPENDENCIES_LIST_GOALS = new String[]{"dependency:list"};
 
@@ -244,6 +247,89 @@ public class BuildService
          Collections.<Runnable>emptyList(),
          Collections.<Runnable>emptyList(),
          WAR_FILE_GETTER);
+   }
+
+   /**
+    * Compile current project.
+    *
+    * @param data
+    *    zipped maven project for compile
+    * @param files
+    *    input list files for compile, may be null (if null, task will be pack all compiled class files, otherwise
+    *    given by this param)
+    * @return
+    * @throws IOException
+    *    if i/o error occur when try to unzip project
+    */
+   public MavenBuildTask compile(InputStream data, final String[] files) throws IOException
+   {
+      final FilenameFilter filter;
+
+      if (files != null)
+      {
+         final Pattern[] patterns = new Pattern[files.length];
+         for (int i = 0; i < files.length; i++)
+         {
+            String className = files[i];
+            className = className.substring(className.lastIndexOf('/') + 1, className.lastIndexOf('.'));
+            className += "(\\$.+)?\\.class";
+
+            patterns[i] = Pattern.compile(className);
+         }
+
+         filter = new FilenameFilter()
+         {
+            @Override
+            public boolean accept(File dir, String name)
+            {
+               File file = new File(dir, name);
+               if (file.isFile())
+               {
+                  for (Pattern currentPattern: patterns)
+                  {
+                     if (currentPattern.matcher(name).find())
+                     {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+               return true;
+            }
+         };
+
+      }
+      else
+      {
+         filter = new FilenameFilter()
+         {
+            @Override
+            public boolean accept(File dir, String name)
+            {
+               return new File(dir, name).isDirectory() || name.endsWith(".class");
+            }
+         };
+      }
+
+      return addTask(makeProject(data),
+         COMPILE_GOALS,
+         null,
+         Collections.<Runnable>emptyList(),
+         Collections.<Runnable>emptyList(),
+         new ResultGetter()
+         {
+            @Override
+            public Result getResult(File projectDirectory) throws IOException
+            {
+               File target = new File(projectDirectory, "target");
+               File classes = new File(target, "classes");
+               File zip = new File(target, "classes.zip");
+
+               zipDir(classes.getAbsolutePath(), classes, zip, filter);
+
+               return new Result(zip, "application/zip", zip.getName(), 0);
+            }
+         });
    }
 
    /**
