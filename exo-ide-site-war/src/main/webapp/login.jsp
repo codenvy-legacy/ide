@@ -24,10 +24,10 @@
 <%@page import="java.net.URLEncoder" %>
 
 <%
-   OpenIDUser user = (OpenIDUser)request.getSession().getAttribute("openid.user");
+   OpenIDUser user = (OpenIDUser)session.getAttribute("openid.user");
    if (user != null)
    {
-      request.getSession().removeAttribute("openid.user");
+      session.removeAttribute("openid.user");
       response.sendRedirect("j_security_check?j_username=" + URLEncoder.encode(user.getAttribute("email")) +
                                             "&j_password=" + URLEncoder.encode(user.getIdentifier().getIdentifier()));
       return;
@@ -123,7 +123,7 @@
          function open_popup(provider)
          {
             var popup = new Popup(
-                '<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=' + provider,
+                '<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/popup_login.jsp',
                 "/site/index.html",
                 450,
                 500);

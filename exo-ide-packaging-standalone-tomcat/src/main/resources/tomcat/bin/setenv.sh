@@ -21,7 +21,7 @@
 IDE_OPTS="-Dorg.exoplatform.logreader.logpath=${CATALINA_HOME}/logs/logreader"
 LOG_OPTS="-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog"
 SECURITY_OPTS="-Djava.security.auth.login.config=../conf/jaas.conf"
-EXO_CONFIG_OPTS="-Xshare:auto -Xms512m -Xmx1024m -XX:MaxPermSize=256M"
+EXO_CONFIG_OPTS="-Xshare:auto -Xms512m -Xmx1024m -XX:MaxPermSize=256m"
 JAVA_SRC="$JAVA_HOME/src.zip"
 EXO_OPTS="-Djavasrc=$JAVA_HOME/src.zip -Djre.lib=$JAVA_HOME/jre/lib -Dorg.exoplatform.mimetypes=conf/mimetypes.properties -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.ide.server.fs-root-path=${CATALINA_HOME}/bin/git"
 #REMOTE_DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"

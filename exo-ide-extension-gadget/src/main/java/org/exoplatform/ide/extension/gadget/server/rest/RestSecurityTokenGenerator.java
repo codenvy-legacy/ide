@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.gadget.server.rest;
 
+import org.apache.shindig.auth.BlobCrypterSecurityToken;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenRequest;
 import org.exoplatform.ide.extension.gadget.server.shindig.oauth.TokenResponse;
 
@@ -43,8 +44,17 @@ public class RestSecurityTokenGenerator
    @Consumes(MediaType.APPLICATION_JSON)
    public TokenResponse createToken(TokenRequest tokenRequest)
    {
-      
-      //TODO : need study more detail hoe to work with token in 2.5.x version
+
+//       BlobCrypter blobCrypter = getBlobCrypter();
+//       BlobCrypterSecurityToken t = new BlobCrypterSecurityToken(blobCrypter, container, null);
+//
+//       t.setAppUrl(gadgetURL);
+//       t.setModuleId(moduleId);
+//       t.setOwnerId(owner);
+//       t.setViewerId(viewer);
+//       t.setTrustedJson("trusted");
+
+       //TODO : need study more detail hoe to work with token in 2.5.x version
       // currently allow anonymous access (tokens don't check)
       TokenResponse response = new TokenResponse();
       response.setModuleId(tokenRequest.getModuleId());
