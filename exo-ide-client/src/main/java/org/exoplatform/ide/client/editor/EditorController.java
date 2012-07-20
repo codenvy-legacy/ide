@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFindTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
@@ -438,12 +439,15 @@ public class EditorController implements EditorContentChangedHandler,
          if (event.getCursorPosition() != null)
          {
             editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
-         }         
+         }
+         
+         IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
       } catch (EditorNotFoundException e) {
          e.printStackTrace();
          Dialogs.getInstance().showError("Editor for " + file.getMimeType() + " not found!");
       }            
 
+      
 //      List<Editor> supportedEditors = new ArrayList<Editor>();
 //      try 
 //      {
@@ -490,7 +494,6 @@ public class EditorController implements EditorContentChangedHandler,
 //         editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
 //      }
       
-      //IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
    }
    
    
@@ -811,8 +814,6 @@ public class EditorController implements EditorContentChangedHandler,
          
          final EditorView editorView = (EditorView)event.getView();
          activeFile = editorView.getFile();
-
-         System.out.println("EditorController.onViewVisibilityChanged(). file > " + activeFile.getPath());
 
          Timer timer = new Timer()
          {
