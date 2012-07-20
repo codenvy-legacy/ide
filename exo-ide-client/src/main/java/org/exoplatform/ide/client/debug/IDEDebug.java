@@ -36,7 +36,6 @@ public class IDEDebug
       }
 
       new ShowImagesPresenter();
-      new TraceAvailableEditorsPresenter();
    }
    
 }

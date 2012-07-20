@@ -223,10 +223,14 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     */
    public Editor createEditor(String content)
    {
-      Editor diffEditor =
-         new CodeMirror(MimeType.DIFF, "CodeMirror diff editor", "diff", new CodeMirrorConfiguration()
-            .setGenericParsers("['parsediff.js']").setGenericStyles(
-               "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
+      Editor diffEditor = new CodeMirror(MimeType.DIFF, 
+         new CodeMirrorConfiguration()
+            .setGenericParsers("['parsediff.js']")
+            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
+      
+//         new CodeMirror(MimeType.DIFF, "CodeMirror diff editor", "diff", new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsediff.js']").setGenericStyles(
+//               "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
 
       //      /**
       //       * Editor's producer.

@@ -22,8 +22,13 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.ckeditor.CKEditor;
+import org.exoplatform.ide.editor.ckeditor.CKEditorConfiguration;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
@@ -57,17 +62,45 @@ public class HtmlEditorExtension extends Extension
          new NewItemControl("File/New/New HTML", MESSAGES.controlNewHtmlTitle(), MESSAGES.controlNewHtmlPrompt(),
             Images.HTML, MimeType.TEXT_HTML).setGroupName(GroupNames.NEW_FILE));
 
-      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
-         new CodeMirrorConfiguration()
-            .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
-            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
-                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-            .setParser(new HtmlParser())
-            .setCanBeOutlined(true)
-            .setAutocompleteHelper(new HtmlAutocompleteHelper())
-            .setCodeAssistant(new HtmlCodeAssistant())
-            .setCanHaveSeveralMimeTypes(true)
-               ));
+      IDE.getInstance().getFileTypeRegistry().addFileType(
+         new FileType(MimeType.TEXT_HTML, "html", Images.INSTANCE.html()),
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.TEXT_HTML, new CodeMirrorConfiguration()
+               .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+               .setParser(new HtmlParser())
+               .setCanBeOutlined(true)
+               .setAutocompleteHelper(new HtmlAutocompleteHelper())
+               .setCodeAssistant(new HtmlCodeAssistant())
+               .setCanHaveSeveralMimeTypes(true)
+               );
+            }
+         },
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CKEditor(MimeType.TEXT_HTML, new CKEditorConfiguration());
+            }
+         });
+      
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_HTML, MESSAGES.codeMirrorHtmlEditor(), "html",
+//         new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/xmlcolors.css', '" + CodeMirrorConfiguration.PATH
+//                     + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+//            .setParser(new HtmlParser())
+//            .setCanBeOutlined(true)
+//            .setAutocompleteHelper(new HtmlAutocompleteHelper())
+//            .setCodeAssistant(new HtmlCodeAssistant())
+//            .setCanHaveSeveralMimeTypes(true)
+//               ));
 
 //      IDE.getInstance().addEditor(
 //         new CKEditorProducer(MimeType.TEXT_HTML, MESSAGES.ckEditorHtmlEditor(), "html", Images.INSTANCE.html(), false,

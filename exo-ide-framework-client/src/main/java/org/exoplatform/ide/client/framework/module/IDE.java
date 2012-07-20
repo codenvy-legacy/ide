@@ -24,11 +24,9 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.editor.api.Editor;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -170,22 +168,30 @@ public abstract class IDE
    
    
    
-   /**
-    * Add new editor.
-    * 
-    * @param editor
-    */
-   public abstract void addEditor(Editor editor);
+//   /**
+//    * Add new editor.
+//    * 
+//    * @param editor
+//    */
+//   public abstract void addEditor(Editor editor);
+//
+//   /**
+//    * Returns array of EditorBuilder for mimeType
+//    * 
+//    * @param mimeType of file
+//    * @return {@link EditorBuilder} for mimeType
+//    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+//    */
+//   public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
 
    /**
-    * Returns array of EditorBuilder for mimeType
+    * Returns FileTypeRegistry. 
     * 
-    * @param mimeType of file
-    * @return {@link EditorBuilder} for mimeType
-    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+    * @return
     */
-   public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
-
+   public abstract FileTypeRegistry getFileTypeRegistry();
+   
+   
    /**
     * Add new outline item creator extension
     * 

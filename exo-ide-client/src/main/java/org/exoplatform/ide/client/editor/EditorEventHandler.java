@@ -62,8 +62,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    {
       this.editor = editor;
       
-      System.out.println("registering handlers for editor > " + editor.getId());
-
       handlers.add(editor.asWidget().addHandler(this, EditorInitializedEvent.TYPE));
       handlers.add(editor.asWidget().addHandler(this, EditorLineNumberContextMenuEvent.TYPE));
       handlers.add(editor.asWidget().addHandler(this, EditorContentChangedEvent.TYPE));
@@ -97,7 +95,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorInitialized(EditorInitializedEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorInitialized()");
       IDE.fireEvent(event);
       
       enableHandling();
@@ -106,8 +103,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorLineNumberContextMenu(EditorLineNumberContextMenuEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorLineNumberContextMenu()");
-      
       if (!handleEvents)
       {
          return;
@@ -119,8 +114,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorContentChanged()");
-      
       if (!handleEvents)
       {
          return;
@@ -132,8 +125,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorCursorActivity()");
-      
       if (!handleEvents)
       {
          return;
@@ -145,8 +136,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorHotKeyPressed()");
-
       if (!handleEvents)
       {
          return;
@@ -158,8 +147,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorFocusReceived(EditorFocusReceivedEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorFocusReceived()");
-      
       if (!handleEvents)
       {
          return;
@@ -171,8 +158,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onEditorContextMenu(EditorContextMenuEvent event)
    {
-      System.out.println("EditorEventHandler.onEditorContextMenu()");
-      
       if (!handleEvents)
       {
          return;
@@ -184,8 +169,6 @@ public class EditorEventHandler implements EditorInitializedHandler, EditorLineN
    @Override
    public void onRunCodeAssistant(RunCodeAssistantEvent event)
    {
-      System.out.println("EditorEventHandler.onRunCodeAssistant()");
-      
       if (!handleEvents)
       {
          return;

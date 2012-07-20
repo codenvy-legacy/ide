@@ -218,6 +218,5 @@ public class ConfigurationServiceTest extends BaseTest
       Map<String, Object> userSettingsMap = (Map<String, Object>)entity.get("userSettings");
       Assert.assertNotNull(userSettingsMap.get("hotkeys"));
       Assert.assertNotNull(userSettingsMap.get("toolbar-items"));
-      Assert.assertNotNull(userSettingsMap.get("default-editors"));
    }
 }

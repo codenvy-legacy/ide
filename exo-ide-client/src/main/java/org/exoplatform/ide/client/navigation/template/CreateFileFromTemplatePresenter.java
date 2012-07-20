@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.navigation.template;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,8 +30,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -41,9 +38,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -60,7 +54,6 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
 import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
-import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -88,8 +81,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHandler, ViewClosedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler,
-   ApplicationSettingsReceivedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler
 {
 
    public interface Display extends IsView
@@ -203,8 +195,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private boolean isTemplatesMigrated = false;
 
-   private ApplicationSettings applicationSettings;
-
    private List<Item> selectedItems = new ArrayList<Item>();
 
    public CreateFileFromTemplatePresenter()
@@ -215,7 +205,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
 
    private void bindDisplay(String title, String submitButtonTitle)
@@ -233,7 +222,9 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             {
                FileTemplate fileTemplate =
                   new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
-               closeView();
+               
+               IDE.getInstance().closeView(display.asView().getId());
+               
                submitCallback.onSubmit(fileTemplate);
                submitCallback = null;
             }
@@ -256,7 +247,9 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
                FileTemplate fileTemplate =
                   new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
                      display.getSelectedTemplate().getMimeType());
-               closeView();
+               
+               IDE.getInstance().closeView(display.asView().getId());
+               
                submitCallback.onSubmit(fileTemplate);
                submitCallback = null;
             }
@@ -509,36 +502,12 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          }
       }
 
-      final FileModel newFile = new FileModel(fileName, contentType, selectedTemplate.getContent(), baseFolder);
+      FileModel newFile = new FileModel(fileName, contentType, selectedTemplate.getContent(), baseFolder);
       newFile.setContentChanged(true);
       newFile.setId(fileName);
       newFile.setProject(project);
+      IDE.fireEvent(new EditorOpenFileEvent(newFile));
 
-      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-      if (defaultEditors == null)
-      {
-         defaultEditors = new LinkedHashMap<String, String>();
-      }
-
-      try
-      {
-         String defaultEditorDescription = defaultEditors.get(contentType);
-         // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         //EditorProducer producer = EditorFactory.getEditorProducer(contentType, defaultEditorDescription);
-         Editor editor = EditorFactory.getEditor(contentType, defaultEditorDescription);
-         IDE.fireEvent(new EditorOpenFileEvent(newFile, editor));
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.createFileCantFindEditorForType(contentType));
-      }
-
-      closeView();
-   }
-
-   private void closeView()
-   {
       IDE.getInstance().closeView(display.asView().getId());
    }
 
@@ -819,15 +788,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    public void onTemplatesMigrated(TemplatesMigratedEvent event)
    {
       isTemplatesMigrated = true;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
    }
 
 }

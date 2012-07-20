@@ -38,52 +38,24 @@ import com.google.gwt.user.client.ui.IsWidget;
 public interface Editor extends IsWidget
 {
    
-   public enum Type
-   {
-      
-      CODE, DESIGN
-      
-   }
-
-   /**
-    * Creates new instance of Editor.
-    * 
-    * @return new instance of Editor
-    */
-   Editor newInstance();
-
    /**
     * Get mime type.
     * 
     * @return mime type associated with this editor
     */
    String getMimeType();
-   
+
    /**
-    * Get description of editor.
+    * Get name of editor.
     * 
-    * @return description of editor.
+    * @return
     */
-   String getDescription();
-   
-   /**
-    * Get file extension.
-    * 
-    * @return file extension(i.e. "java", "xml" etc.)
-    */
-   String getFileExtension();   
+   String getName();
 
    /**
     * @return unique identifier which can be used to found out editor instance in the DOM
     */
    String getId();
-   
-   /**
-    * Get type of editor.
-    * 
-    * @return type of editor
-    */
-   Type getType();
    
    /**
     * @return content of editor
