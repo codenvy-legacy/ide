@@ -160,18 +160,18 @@ public class ShellService
             String url =
                (resource.getPath().startsWith("/")) ? REST_CONTEXT + resource.getPath() : REST_CONTEXT + "/"
                   + resource.getPath();
-
             AsyncRequest asyncRequest = createAsyncRequest(resource.getMethod(), url, false);
             if (canParseOptions(resource, cmd, asyncRequest))
             {
                CommandLine commandLine = CLIResourceUtil.parseCommandLine(cmd, resource.getParams());
+               url = setPathParameters(url, resource, commandLine, cmd);
                String query = formQueryString(resource, commandLine, cmd);
                url = (query != null && !query.isEmpty()) ? url + "?" + query : url;
                boolean runAsync = commandLine.hasOption("&");
                // Recreate, because of the URL:
                asyncRequest = createAsyncRequest(resource.getMethod(), url, runAsync);
 
-               setHeaderParameters(asyncRequest, resource.getParams(), commandLine);
+               setHeaderParameters(asyncRequest, resource, commandLine, cmd);
                setBody(resource, commandLine, cmd, asyncRequest);
             }
             setAcceptTypes(resource, asyncRequest);
@@ -275,7 +275,7 @@ public class ShellService
     */
    protected void setContentType(CLIResource resource, AsyncRequest asyncRequest)
    {
-      if (resource.getConsumes() != null && resource.getConsumes().size() > 0)
+      if (resource.getConsumes() != null && !resource.getConsumes().isEmpty())
       {
          String value = "";
          for (String type : resource.getConsumes())
@@ -300,7 +300,14 @@ public class ShellService
    protected void setBody(CLIResource resource, CommandLine commandLine, String cmd, AsyncRequest asyncRequest)
       throws MandatoryParameterNotFoundException
    {
+      if (resource.getParams() == null || resource.getParams().isEmpty())
+      {
+         return;
+      }
+
       JSONObject jsonObject = new JSONObject();
+
+      boolean hasBodyParameter = false;
       for (CLIResourceParameter parameter : resource.getParams())
       {
          // Check type of the parameter is BODY:
@@ -309,6 +316,7 @@ public class ShellService
             continue;
          }
 
+         hasBodyParameter = true;
          // Process system property
          if (parameter.getName().startsWith("$"))
          {
@@ -357,10 +365,10 @@ public class ShellService
          }
       }
 
-      /*  TODO if (jsonObject.keySet().size() > 0)
-        {*/
-      asyncRequest.data(jsonObject.toString());
-      /*   }*/
+      if (hasBodyParameter)
+      {
+         asyncRequest.data(jsonObject.toString());
+      }
    }
 
    /**
@@ -398,9 +406,6 @@ public class ShellService
    protected String formQueryString(CLIResource resource, CommandLine commandLine, String cmd)
       throws MandatoryParameterNotFoundException
    {
-      if (resource.getParams() == null || resource.getParams().size() <= 0)
-         return null;
-
       String query = "";
       for (CLIResourceParameter param : resource.getParams())
       {
@@ -507,10 +512,10 @@ public class ShellService
     * @return {@link AsyncRequest} asynchronous request
     * @throws MandatoryParameterNotFoundException
     */
-   protected void setHeaderParameters(AsyncRequest asyncRequest, Set<CLIResourceParameter> params,
-      CommandLine commandLine) throws MandatoryParameterNotFoundException
+   protected void setHeaderParameters(AsyncRequest asyncRequest, CLIResource resource, CommandLine commandLine,
+      String cmd) throws MandatoryParameterNotFoundException
    {
-      for (CLIResourceParameter parameter : params)
+      for (CLIResourceParameter parameter : resource.getParams())
       {
          // Check type of the parameter:
          if (!Type.HEADER.equals(parameter.getType()))
@@ -534,6 +539,20 @@ public class ShellService
             boolean present = isOptionPresent(parameter.getOptions(), commandLine);
             asyncRequest.header(parameter.getName(), String.valueOf(present));
          }
+         // Process arguments without options:
+         else if (parameter.getOptions() == null || parameter.getOptions().size() == 0)
+         {
+            List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
+            if ((values == null || values.size() == 0) && parameter.isMandatory())
+            {
+               throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredArgumentNotFound(parameter
+                  .getName()));
+            }
+            else if (values != null && values.size() > 0 && values.get(0) != null)
+            {
+               asyncRequest.header(parameter.getName(), values.get(0));
+            }
+         }
          else
          {
             String value = getOptionValue(parameter.getOptions(), commandLine);
@@ -545,6 +564,61 @@ public class ShellService
             asyncRequest.header(parameter.getName(), value);
          }
       }
+   }
+
+   protected String setPathParameters(String url, CLIResource resource, CommandLine commandLine, String cmd)
+      throws MandatoryParameterNotFoundException
+   {
+      for (CLIResourceParameter param : resource.getParams())
+      {
+         if (!Type.PATH.equals(param.getType()))
+         {
+            continue;
+         }
+
+         // Process system property
+         if (param.getName().startsWith("$"))
+         {
+            String value = processSystemProperty(param);
+            if (value != null)
+            {
+               url = url.replace("{" + param.getName().substring(1) + "}", value);
+            }
+            continue;
+         }
+
+         // Parameter has no arguments, so get option is present or not.
+         if (!param.isHasArg())
+         {
+            boolean isOptionPresent = isOptionPresent(param.getOptions(), commandLine);
+            url = url.replace("{" + param.getName() + "}", String.valueOf(isOptionPresent));
+         }
+         // Process arguments without options:
+         else if (param.getOptions() == null || param.getOptions().size() == 0)
+         {
+            List<String> values = getArgumentsWithoutOptions(cmd, resource, commandLine);
+            if ((values == null || values.size() == 0) && param.isMandatory())
+            {
+               throw new MandatoryParameterNotFoundException(CloudShell.messages.requiredArgumentNotFound(param
+                  .getName()));
+            }
+            else if (values != null && values.size() > 0 && values.get(0) != null)
+            {
+               url = url.replace("{" + param.getName() + "}", values.get(0));
+            }
+         }
+         else
+         {
+            String value = getOptionValue(param.getOptions(), commandLine);
+            if (param.isMandatory() && value == null)
+            {
+               throw new MandatoryParameterNotFoundException(
+                  CloudShell.messages.requiredOptionNotFound(optionsToString(param.getOptions())));
+            }
+            url = url.replace("{" + param.getName() + "}", value);
+         }
+      }
+      return url;
    }
 
    /**
