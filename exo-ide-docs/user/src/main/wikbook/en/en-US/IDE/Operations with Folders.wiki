@@ -9,11 +9,11 @@ To refresh content of the selected folder, click the *Refresh Selected Folder* b
 
 h1. Go to Folder
 
-You can quickly find the opened file in the _Workspace Panel_ using the *Go to Folder* function as follows:
+You can quickly find the opened file in the _Project Explorer_ using the *Go to Folder* function as follows:
 * *Step 1:* Select the appropriate file tab in the _Editor Panel_.
 * *Step 2:* Go to *View > Go to Folder* on the top menu.
 
-Your selected file will be highlighted in the _Workspace Panel_. Similarly, you can localize the found file from the _Search Tab_.
+Your selected file will be highlighted in the _Project Explorer_. Similarly, you can localize the found file from the _Search Tab_.
 
 
 h1. Download Zipped Folder
@@ -21,9 +21,7 @@ h1. Download Zipped Folder
 If you want to download some folders from server _Workspace_, do as follows:
 
 * *Step 1:* Click the target folder in the _Workspace Panel_.
-* *Step 2:* Go to *File > Download Zipped Folder...* from the Menu Bar.
-
-Click *OK* to save the zip-archive with folder content.
+* *Step 2:* Go to *File > Download Zipped Folder...* from the Menu Bar to save the zip-archive with folder content.
 
 
 h1. Upload Zipped Folder
