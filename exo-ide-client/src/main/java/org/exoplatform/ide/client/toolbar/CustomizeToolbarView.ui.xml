@@ -19,35 +19,43 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-   xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:t="urn:import:org.exoplatform.ide.client.toolbar">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:t="urn:import:org.exoplatform.ide.client.toolbar">
 
    <ui:style>
       .panel {
       	float: left;
       }
       
-      .flpanel{
-	display: inline-block;
-
-	}
+      .flpanel {
+      	display: inline-block;
+      }
       
+      .center {
+      	margin-left: auto;
+      	margin-right: auto;
+      	display: block;
+      }
+      
+      .floatLeft {
+      	float: left;
+      }
    </ui:style>
 
    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
    <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="idepreferences"></ui:with>
 
-   <c:Border margin="5" borderColor="transparent">
-      <c:layer top="0" bottom="50px" left="0px" width="100%">
+   <c:Border margin="15" borderColor="transparent">
+      <c:layer top="0" bottom="35px" left="0px" width="100%">
 
-         <g:FlowPanel styleName="{style.flpanel}">
+         <g:FlowPanel styleName="{style.flpanel}" width="100%" height="100%">
 
-            <c:Border margin="0" styleName="{style.panel}" width="40%" height="100%">
+            <c:Border margin="0" styleName="{style.panel}" width="40%" height="99%">
                <c:layer>
                   <t:CommandsListGrid ui:field="availableCommandsListGrid" width="100%"></t:CommandsListGrid>
                </c:layer>
             </c:Border>
-    
+
             <g:HTMLPanel width="19%" styleName="{style.panel}" height="100%">
                <center>
                   <div style="height:5px; width:1px;"></div>
@@ -68,24 +76,21 @@
                </center>
             </g:HTMLPanel>
 
-            <c:Border margin="0" width="40%" height="100%">
+            <c:Border margin="0" width="40%" height="99%">
                <c:layer>
                   <t:ToolbarItemListGrid ui:field="toolbarItemsListGrid" width="100%"></t:ToolbarItemListGrid>
                </c:layer>
             </c:Border>
          </g:FlowPanel>
       </c:layer>
-      <c:layer bottom="0px" height="50px" width="100%">
-         <g:VerticalPanel horizontalAlignment="ALIGN_CENTER" width="100%">
-            <g:HorizontalPanel spacing="10" height="100%" verticalAlignment="ALIGN_MIDDLE">
-               <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton"
-                  buttonId="ide.core.customize-toolbar.ok-button" width="100px"></c:ImageButton>
-               <c:ImageButton text="{idelocal.cancelButton}" imageName="cancel" ui:field="cancelButton"
-                  buttonId="ide.core.customize-tolbar.cancel-button" width="100px"></c:ImageButton>
-               <c:ImageButton text="{idepreferences.customizeToolbarDefaultButton}" imageName="defaults" ui:field="defaultsButton"
-                  buttonId="ide.core.customize-toolbar.defaults-button" width="100px"></c:ImageButton>
-            </g:HorizontalPanel>
-         </g:VerticalPanel>
+      <c:layer height="22px" bottom="0">
+         <g:FlowPanel width="190px" styleName="{style.center}">
+            <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="ide.core.customize-toolbar.ok-button"
+               width="90px" addStyleNames="{style.floatLeft}"></c:ImageButton>
+            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <c:ImageButton text="{idepreferences.customizeToolbarDefaultButton}" imageName="defaults" ui:field="defaultsButton"
+               buttonId="ide.core.customize-toolbar.defaults-button" width="90px" addStyleNames="{style.floatLeft}"></c:ImageButton>
+         </g:FlowPanel>
       </c:layer>
    </c:Border>
 

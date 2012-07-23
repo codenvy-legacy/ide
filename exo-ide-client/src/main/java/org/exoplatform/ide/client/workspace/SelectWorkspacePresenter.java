@@ -35,11 +35,13 @@ import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
@@ -61,7 +63,7 @@ import java.util.List;
  * @version $Id: $
  */
 public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHandler, SelectWorkspaceHandler,
-   ViewClosedHandler, AllFilesClosedHandler
+   ViewClosedHandler, AllFilesClosedHandler, PreferencePerformer
 {
 
    public interface Display extends IsView
@@ -76,11 +78,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
        * Returns Ok button
        */
       HasClickHandlers getOkButton();
-
-      /*
-       * Returns Cancel button
-       */
-      HasClickHandlers getCancelButton();
 
       /**
        * Enables or disables Ok button.
@@ -178,6 +175,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
                   display = GWT.create(Display.class);
                   IDE.getInstance().openView(display.asView());
                   bindDisplay();
+                  updateVFSListGrid();
                }
 
                @Override
@@ -200,14 +198,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
     */
    public void bindDisplay()
    {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent arg0)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -233,7 +223,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
       });
 
       display.setOkButtonEnabled(false);
-      updateVFSListGrid();
    }
 
    /**
@@ -343,6 +332,47 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
+    */
+   @Override
+   public View getPreference()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+
+      try
+      {
+         VirtualFileSystemFactory.getInstance().getAvailableFileSystems(
+            new AsyncRequestCallback<List<VirtualFileSystemInfo>>(new VFSListUnmarshaller(
+               new ArrayList<VirtualFileSystemInfo>()))
+            {
+
+               @Override
+               protected void onSuccess(List<VirtualFileSystemInfo> result)
+               {
+                  workspaceList = result;
+                  updateVFSListGrid();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+
+      return display.asView();
    }
 
 }

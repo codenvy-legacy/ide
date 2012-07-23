@@ -54,12 +54,12 @@ public class CustomizeHotKeysView extends ViewImpl implements
    /**
     * Initial width of this view
     */
-   private static final int WIDTH = 700;
+   private static final int WIDTH = 725;
 
    /**
     * Initial height of this view
     */
-   private static final int HEIGHT = 300;
+   private static final int HEIGHT = 390;
 
    private static CustomizeHotKeysViewUiBinder uiBinder = GWT.create(CustomizeHotKeysViewUiBinder.class);
 
@@ -75,9 +75,6 @@ public class CustomizeHotKeysView extends ViewImpl implements
 
    @UiField
    ImageButton okButton;
-
-   @UiField
-   ImageButton cancelButton;
 
    @UiField
    ImageButton defaultsButton;
@@ -105,12 +102,6 @@ public class CustomizeHotKeysView extends ViewImpl implements
    public HasClickHandlers getOkButton()
    {
       return okButton;
-   }
-
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
    }
 
    @Override

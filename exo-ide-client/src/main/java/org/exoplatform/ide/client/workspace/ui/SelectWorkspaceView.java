@@ -51,12 +51,12 @@ public class SelectWorkspaceView extends ViewImpl implements
    /**
     * Initial width of this view.
     */
-   private static final int WIDTH = 370;
+   private static final int WIDTH = 450;
 
    /**
     * Initial height of this view.
     */
-   private static final int HEIGHT = 180;
+   private static final int HEIGHT = 320;
 
    private static final String TITLE = IDE.PREFERENCES_CONSTANT.workspaceTitle();
 
@@ -81,9 +81,6 @@ public class SelectWorkspaceView extends ViewImpl implements
    @UiField
    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
-
    public SelectWorkspaceView()
    {
       super(ID, "popup", TITLE, new Image(IDEImageBundle.INSTANCE.workspace()), WIDTH, HEIGHT);
@@ -101,12 +98,6 @@ public class SelectWorkspaceView extends ViewImpl implements
    public HasClickHandlers getOkButton()
    {
       return okButton;
-   }
-
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
    }
 
    @Override

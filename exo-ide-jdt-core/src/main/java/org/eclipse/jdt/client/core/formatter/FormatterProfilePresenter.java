@@ -40,6 +40,7 @@ import org.eclipse.jdt.client.event.ShowFormatterProfilesHandler;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -47,6 +48,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent;
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEvent.SaveType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
@@ -67,7 +69,7 @@ import java.util.Map;
  * 
  */
 public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, ViewClosedHandler,
-   ApplicationSettingsReceivedHandler
+   ApplicationSettingsReceivedHandler, PreferencePerformer
 {
    public final static String ECLIPSE_PROFILE = "org.eclipse.jdt.ui.default.eclipse_profile";
 
@@ -80,8 +82,6 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
       String ID = "eXoIdeJavaCodeFormatterProfileView";
 
       HasClickHandlers getOkButton();
-
-      HasClickHandlers getCancelButton();
 
       SelectItem getProfilesSelect();
 
@@ -114,16 +114,6 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
     */
    private void bind()
    {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(Display.ID);
-         }
-      });
-
       display.getOkButton().addClickHandler(new ClickHandler()
       {
 
@@ -297,5 +287,19 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       settings = event.getApplicationSettings();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
+    */
+   @Override
+   public View getPreference()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bind();
+      }
+      return display.asView();
    }
 }
