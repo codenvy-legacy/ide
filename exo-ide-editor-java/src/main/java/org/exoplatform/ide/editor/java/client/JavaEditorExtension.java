@@ -102,13 +102,12 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
 //            true));
       
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", 
 //         new CodeMirrorConfiguration()
 //            .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
 //            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
 //            .setCanBeOutlined(true)
 //      ));
-      IDE.getInstance().addEditor(new CollabEditor(MimeType.APPLICATION_JAVA,"java"));
       
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
       new CreateJavaPresenter(IDE.eventBus(),VirtualFileSystem.getInstance(), IDE.getInstance());

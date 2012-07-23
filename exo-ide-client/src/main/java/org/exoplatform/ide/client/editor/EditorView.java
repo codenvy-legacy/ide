@@ -19,14 +19,11 @@
 package org.exoplatform.ide.client.editor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
@@ -36,13 +33,9 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -107,8 +100,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       
-      System.out.println("aditors to open > " + editors.length);
-      
 //      if (editors.length == 1) {
          Editor editor = editors[0];
          editor.asWidget().setHeight("100%");
@@ -144,43 +135,6 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
       
       
 
-
-//      for (Editor editor : this.supportedEditors)
-//      {
-//         EditorType editorType = EditorType.getType(editor.getClass().getName());
-//         editors.put(editorType, editor);
-//         editor.asWidget().setHeight("100%");
-//
-//         editorSequence[editorType.getPosition()] = editorType;
-//
-//         ToggleButton button = createButton(editorType.getLabel(), editorType.getIcon(), editorType.getLabel() + "ButtonID");
-//         buttons.put(editorType, button);
-//         editor.asWidget().setHeight("100%");         
-//      }
-//
-//      // to respect of button sequence
-//      for (int i = 0; i < editorSequence.length; i++)
-//      {
-//         EditorType editorType = editorSequence[i];
-//         editorSwitcher.add(buttons.get(editorType));
-//         
-//         Editor editor = editors.get(editorType);
-//         editorEventHandlers.put(editor, new EditorEventHandler(editor));         
-//         editorArea.add(editor);
-//         editorArea.setWidgetTopBottom(editor, 0, Unit.PX, BUTTON_HEIGHT, Unit.PX);
-//         editor.asWidget().setHeight("100%");
-//         if (editors.get(editorType) == this.supportedEditors.get(currentEditorIndex))
-//         {
-//            currentEditorType = editorType;
-//            showEditor(editorType);
-//            downButton(buttons.get(editorType));
-//            editors.get(editorType).setText(file.getContent());
-//         }
-//         else
-//         {
-//            hideEditor(editorType);
-//         }
-//      }
 
       
       

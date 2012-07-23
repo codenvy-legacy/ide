@@ -359,8 +359,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     */
    private void onInitialized()
    {
-      System.out.println("CodeMirror.onInitialized()");
-      
       addHighlighterListeners();
       addKeyPressedListener();
       addFocusReceivedListeners();
