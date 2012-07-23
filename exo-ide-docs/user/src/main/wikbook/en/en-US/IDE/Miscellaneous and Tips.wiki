@@ -71,7 +71,6 @@ The following is the list of predefined hotkeys:
 * Non-changeable hotkeys within editors
 
 || Hotkeys || Functions ||
-| *Ctrl+Space* | Autocomplete |
 | *Ctrl+B* | Make text bold |
 | *Ctrl+I* | Make text italic |
 | *Ctrl+U* | Make text underlined |
@@ -88,7 +87,7 @@ h1. Available Dependencies
 
 This option allows you to view the list of JAR Libraries along with their attributes. These libraries are available on the server for your REST Service, Templates, POGO files, Data objects and Groovy projects.
 
-To view the list of libraries go to *Help > Available dependencies*, the following window will appear:
+To view the list of libraries go to *Help > Show Available dependencies...*, the following window will appear:
 
 
 !available dependences.png|border=0!

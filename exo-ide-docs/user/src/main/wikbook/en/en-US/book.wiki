@@ -4,7 +4,6 @@ h1. Introduction
 h1. Interface Overview
 {include:document="IDE/Interface Overview.wiki" /} 
 
-
 h1. Basic Operations with Files and Folders
 {include:document="IDE/Basic Operations with Files and Folders.wiki" /}
 
@@ -16,9 +15,6 @@ h1. Operations with Files
 
 h1. Use File Template
 {include:document="IDE/Use File Template.wiki" /}
-
-h1. Use Project Template
-{include:document="IDE/Use Project Template.wiki" /}
 
 h1. Edit Files in the Code Editor
 {include:document="IDE/Edit Files in the Code Editor.wiki" /}
@@ -41,17 +37,14 @@ h1. SSH Keys
 h1. Operations with POGO File
 {include:document="IDE/Operations with POGO File.wiki" /}
 
-h1. Operations with Google Gadget
-{include:document="IDE/Operations with Google Gadget.wiki" /}
+h1. Operations with OpenSocial Gadget
+{include:document="IDE/Operations with OpenSocial Gadget.wiki" /}
 
 h1. Operations with Templates
 {include:document="IDE/Operations with Templates.wiki" /}
 
 h1. Chromattic Data Object Usage
 {include:document="IDE/Chromattic Data Object Usage.wiki" /}
-
-h1. Versioning
-{include:document="IDE/Versioning.wiki" /}
 
 h1. PaaS Deployment
 {include:document="IDE/PaaS Deployment.wiki" /}
@@ -65,5 +58,4 @@ h1. Miscellaneous and Tips
 h1. Links
 * [Codemirror usage|http://codemirror.net]
 * [FCKeditor user guide|http://docs.cksource.com/FCKeditor_2.x/Users_Guide]
-* [What are gadgets powered by Google|http://www.google.com/webmasters/gadgets]
 * [RESTful Web Services|http://www.oracle.com/technetwork/articles/javase/index-137171.html]
