@@ -18,9 +18,15 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.editor.Editor.TextListener;
+import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
 
-import com.google.collide.shared.document.TextChange;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import com.google.gwt.core.client.Scheduler;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
+import com.google.collide.client.editor.Editor.TextListener;
 
 import com.google.collide.shared.document.TextChange;
 
@@ -37,6 +43,11 @@ import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.DocumentEvent;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IDocumentListener;
@@ -46,7 +57,7 @@ import org.exoplatform.ide.editor.text.IDocumentListener;
  * @version $Id:
  *
  */
-public class CollabEditor extends Widget implements Editor, IDocumentListener
+public class CollabEditor extends Widget implements Editor, IDocumentListener, Markable
 {
 
    /**
@@ -59,7 +70,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
       @Override
       public void onTextChange(TextChange textChange)
       {
-         fireEvent(new EditorContentChangedEvent(getId()));         
+         fireEvent(new EditorContentChangedEvent(getId()));
       }
    }
 
@@ -67,27 +78,30 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
 
    private String mimeType;
 
-   private String fileExtension;
-
    private String id;
-   
-   private IDocument document;
 
-   public CollabEditor(String mimeType, String fileExtension)
+   private IDocument document;
+   
+   private LeftGutterNotificationManager notificationManager;
+
+   public CollabEditor(String mimeType)
    {
       this.mimeType = mimeType;
-      this.fileExtension = fileExtension;
 
       id = "CollabEditor - " + hashCode();
-      editorBundle = EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
-         EditorErrorListener.NOOP_ERROR_RECEIVER);
+      editorBundle =
+         EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
+            EditorErrorListener.NOOP_ERROR_RECEIVER);
       editorBundle.getEditor().getTextListenerRegistrar().add(new TextListenerImpl());
-      EditableContentArea.View v = new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
-      EditableContentArea contentArea = EditableContentArea.create(v, CollabEditorExtension.get().getContext(), editorBundle);
+      EditableContentArea.View v =
+         new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
+      EditableContentArea contentArea =
+         EditableContentArea.create(v, CollabEditorExtension.get().getContext(), editorBundle);
       contentArea.setContent(editorBundle);
+      notificationManager = editorBundle.getEditor().getLeftGutterNotificationManager();
       setElement((Element)v.getElement());
    }
-   
+
    /**
     * @see com.google.gwt.user.client.ui.Widget#onLoad()
     */
@@ -96,15 +110,6 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    {
       fireEvent(new EditorInitializedEvent(id));
       super.onLoad();
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
-    */
-   @Override
-   public Editor newInstance()
-   {
-      return new CollabEditor(mimeType, fileExtension);
    }
 
    /**
@@ -117,39 +122,12 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getDescription()
-    */
-   @Override
-   public String getDescription()
-   {
-      return "new cool pure GWT editor";
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getFileExtension()
-    */
-   @Override
-   public String getFileExtension()
-   {
-      return fileExtension;
-   }
-
-   /**
     * @see org.exoplatform.ide.editor.api.Editor#getId()
     */
    @Override
    public String getId()
    {
       return id;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getType()
-    */
-   @Override
-   public Type getType()
-   {
-      return Type.CODE;
    }
 
    /**
@@ -165,11 +143,19 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
     * @see org.exoplatform.ide.editor.api.Editor#setText(java.lang.String)
     */
    @Override
-   public void setText(String text)
+   public void setText(final String text)
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
       document.addDocumentListener(this);
-      editorBundle.setDocument(Document.createFromString(text),new PathUtil("test.java"), "");
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         
+         @Override
+         public void execute()
+         {
+            editorBundle.setDocument(Document.createFromString(text), new PathUtil("test.java"), "");
+         }
+      });
    }
 
    /**
@@ -308,8 +294,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    @Override
    public boolean isReadOnly()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return editorBundle.isReadOnly();
    }
 
    /**
@@ -318,8 +303,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    @Override
    public void setReadOnly(boolean readOnly)
    {
-      // TODO Auto-generated method stub
-
+      editorBundle.getEditor().setReadOnly(readOnly);
    }
 
    /**
@@ -328,7 +312,6 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    @Override
    public int getCursorRow()
    {
-      // TODO Auto-generated method stub
       return 0;
    }
 
@@ -459,7 +442,73 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener
    public void documentChanged(DocumentEvent event)
    {
       // TODO Auto-generated method stub
-      
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    */
+   @Override
+   public String getName()
+   {
+      return "Source";
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#markProblem(org.exoplatform.ide.editor.marking.Marker)
+    */
+   @Override
+   public void markProblem(Marker problem)
+   {
+      notificationManager.addProblem(problem);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.marking.Marker)
+    */
+   @Override
+   public void unmarkProblem(Marker problem)
+   {
+      notificationManager.unmarkProblem(problem);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#unmarkAllProblems()
+    */
+   @Override
+   public void unmarkAllProblems()
+   {
+      notificationManager.clear();
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addProblemClickHandler(org.exoplatform.ide.editor.marking.ProblemClickHandler)
+    */
+   @Override
+   public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addLineNumberDoubleClickHandler(org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler)
+    */
+   @Override
+   public HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

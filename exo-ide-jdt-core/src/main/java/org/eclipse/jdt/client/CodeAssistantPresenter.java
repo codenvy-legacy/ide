@@ -53,11 +53,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -80,7 +80,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    private FileModel currentFile;
 
-   private CodeMirror currentEditor;
+   private Editor currentEditor;
 
    private int completionPosition;
 
@@ -112,7 +112,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
       if (!resolver.isProjectSupported(currentFile.getProject().getProjectType()))
          return;
-      
+
       IDE.fireEvent(new CancelParseEvent());
       GWT.runAsync(new RunAsyncCallback()
       {
@@ -148,8 +148,8 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       try
       {
          completionPosition =
-            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1) + currentEditor.getCursorColumn()
-               - 1;
+            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1)
+               + currentEditor.getCursorColumn() - 1;
       }
       catch (BadLocationException e1)
       {
@@ -302,11 +302,11 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
     */
    private void codecomplete()
    {
-
-      int posX = currentEditor.getCursorOffsetX() + 8;
-      int posY = currentEditor.getCursorOffsetY() + 22;
+      //TODO 
+      //      int posX = currentEditor.getCursorOffsetX() + 8;
+      //      int posY = currentEditor.getCursorOffsetY() + 22;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
-      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
+      display = new CodeAssitantForm(100, 100, createProposals(false), this);
 
    }
 
@@ -331,10 +331,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       currentFile = event.getFile();
-      if (event.getEditor() instanceof CodeMirror)
-         currentEditor = (CodeMirror)event.getEditor();
-      else
-         currentEditor = null;
+      currentEditor = event.getEditor();
    }
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */

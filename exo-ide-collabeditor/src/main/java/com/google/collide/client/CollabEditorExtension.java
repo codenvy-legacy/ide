@@ -133,6 +133,7 @@ public class CollabEditorExtension extends Extension
 //    styleBuilder.append(resources.workspaceNavigationSectionCss().getText());
 //    styleBuilder.append(resources.resizeControllerCss().getText());
 //
+      styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
       documentManager = DocumentManager.create(context);

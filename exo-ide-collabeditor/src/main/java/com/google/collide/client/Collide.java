@@ -14,6 +14,8 @@
 
 package com.google.collide.client;
 
+import org.exoplatform.ide.editor.marking.Marker;
+
 import com.google.collide.client.util.ClientImplementationsInjector;
 
 import com.google.collide.client.code.EditableContentArea.Resources;
@@ -154,6 +156,7 @@ public class Collide implements EntryPoint {
 //    styleBuilder.append(resources.workspaceNavigationSectionCss().getText());
 //    styleBuilder.append(resources.resizeControllerCss().getText());
 //
+    styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
 //
@@ -178,7 +181,7 @@ public class Collide implements EntryPoint {
     
     Elements.getBody().appendChild(v.getElement());
     editorBundle.setDocument(Document.createFromString("package test;\n public class MMM extends Object implements Abb{\n private static final String ds;}"), new PathUtil("test.java"), "");
-    
+
     
     
   }

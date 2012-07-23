@@ -42,7 +42,7 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
@@ -67,7 +67,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    ShowQuickFixHandler, UpdateOutlineHandler, ProposalSelectedHandler, EditorHotKeyPressedHandler, ProblemClickHandler
 {
 
-   private CodeMirror editor;
+   private Editor editor;
 
    private CompilationUnit compilationUnit;
 
@@ -120,10 +120,10 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
       if (event.getFile() == null)
          return;
 
-      if (event.getEditor() instanceof CodeMirror)
+      if (event.getEditor() instanceof Markable)
       {
-         editor = (CodeMirror)event.getEditor();
-         problemClickHandler = editor.addProblemClickHandler(this);
+         editor = event.getEditor();
+         problemClickHandler = ((Markable)editor).addProblemClickHandler(this);
          file = event.getFile();
       }
    }
@@ -244,10 +244,11 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
             ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
             if (display == null)
             {
-               int posX = editor.getCursorOffsetX() + 8;
-               int posY = editor.getCursorOffsetY() + 22;
+               //TODO
+//               int posX = editor.getCursorOffsetX() + 8;
+//               int posY = editor.getCursorOffsetY() + 22;
                keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, QuickFixPresenter.this);
-               display = new CodeAssitantForm(posX, posY, proposals, QuickFixPresenter.this);
+               display = new CodeAssitantForm(100, 100, proposals, QuickFixPresenter.this);
             }
             else
             {

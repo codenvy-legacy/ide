@@ -14,6 +14,8 @@
 
 package com.google.collide.client;
 
+import com.google.collide.client.editor.gutter.GutterNotificationResources;
+
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.renderer.LineNumberRenderer;
@@ -31,7 +33,8 @@ public interface Resources extends
     Editor.Resources,
     LineNumberRenderer.Resources,
     com.google.collide.client.code.EditableContentArea.Resources,
-    com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources
+    com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
+    GutterNotificationResources
     // TODO: Once we have actual consumers of the Tooltip class, we
     // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,

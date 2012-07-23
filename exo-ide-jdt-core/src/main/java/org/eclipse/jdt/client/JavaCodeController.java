@@ -55,7 +55,8 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -93,7 +94,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
    private Map<String, Timer> workingParsers = new HashMap<String, Timer>();
 
-   private Map<String, CodeMirror> editors = new HashMap<String, CodeMirror>();
+   private Map<String, Markable> editors = new HashMap<String, Markable>();
 
    public static INameEnvironment NAME_ENVIRONMENT;
 
@@ -126,7 +127,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       if (!editors.containsKey(file.getId()))
          return null;
       ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(editors.get(file.getId()).getText());
+      parser.setSource(((Editor)editors.get(file.getId())).getText());
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
       parser.setResolveBindings(true);
@@ -148,9 +149,9 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
          if (!resolver.isProjectSupported(activeFile.getProject().getProjectType()))
             return;
          NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
-         if (event.getEditor() instanceof CodeMirror)
+         if (event.getEditor() instanceof Markable)
          {
-            editors.put(activeFile.getId(), (CodeMirror)event.getEditor());
+            editors.put(activeFile.getId(), (Markable)event.getEditor());
             if (needReparse.contains(activeFile.getId()))
             {
                startParsing();
@@ -200,7 +201,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
 
             }
             finishJob(file);
-            CodeMirror editor = editors.get(file.getId());
+            Markable editor = editors.get(file.getId());
             editor.unmarkAllProblems();
             IDE.fireEvent(new UpdateOutlineEvent(unit, file));
             if (unit.getProblems().length == 0 || editor == null)
@@ -383,10 +384,11 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     */
    private void startParsing()
    {
+      int time = 2000;
       if (workingParsers.containsKey(activeFile.getId()))
       {
          workingParsers.get(activeFile.getId()).cancel();
-         workingParsers.get(activeFile.getId()).schedule(2000);
+         workingParsers.get(activeFile.getId()).schedule(time);
       }
       else
       {
@@ -407,7 +409,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             }
          };
          workingParsers.put(activeFile.getId(), t);
-         t.schedule(2000);
+         t.schedule(time);
       }
    }
 

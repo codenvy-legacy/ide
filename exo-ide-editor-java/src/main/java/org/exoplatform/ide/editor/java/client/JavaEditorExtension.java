@@ -88,10 +88,11 @@ public class JavaEditorExtension extends Extension implements InitializeServices
             @Override
             public Editor createEditor()
             {
-               return new CodeMirror(MimeType.APPLICATION_JAVA, new CodeMirrorConfiguration()
-               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
-               .setCanBeOutlined(true));
+//               return new CodeMirror(MimeType.APPLICATION_JAVA, new CodeMirrorConfiguration()
+//               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
+//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+//               .setCanBeOutlined(true));
+               return new CollabEditor(MimeType.APPLICATION_JAVA);
             }
          });
       

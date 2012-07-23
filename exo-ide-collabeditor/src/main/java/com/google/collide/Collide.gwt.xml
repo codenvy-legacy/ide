@@ -14,6 +14,7 @@
   <!-- <inherits name="com.google.gwt.dev.codeserver.hook" /> -->
 
   <inherits name="elemental.Elemental" />
+  <inherits name='org.exoplatform.ide.editor.API' />
 
   <inherits name="com.google.common.base.Base" />
   <inherits name="com.google.common.collect.Collect" />

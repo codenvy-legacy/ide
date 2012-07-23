@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
+
 import com.google.collide.client.editor.renderer.CurrentLineHighlighter;
 
 import com.google.collide.client.AppContext;
@@ -108,6 +110,8 @@ public class Editor extends UiComponent<Editor.View> {
    */
   public interface Css extends EditorSharedCss {
     String leftGutter();
+    
+    String leftGutterNotification();
 
     String editorFont();
 
@@ -315,6 +319,7 @@ public class Editor extends UiComponent<Editor.View> {
   private boolean isReadOnly;
   private final RenderTimeExecutor renderTimeExecutor;
   private CurrentLineHighlighter currentLineHighlighter;
+  private LeftGutterNotificationManager leftGutterNotificationManager;
 
   private Editor(AppContext appContext, View view, Buffer buffer, InputController input,
       FocusManager focusManager, FontDimensionsCalculator editorFontDimensionsCalculator,
@@ -326,7 +331,11 @@ public class Editor extends UiComponent<Editor.View> {
     this.focusManager = focusManager;
     this.editorFontDimensionsCalculator = editorFontDimensionsCalculator;
     this.renderTimeExecutor = renderTimeExecutor;
-
+    
+    //TODO (evgen) set left gutter notification configurable
+    Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutterNotification());
+    leftGutterNotificationManager = new LeftGutterNotificationManager(buffer, leftNotificationGutter, appContext.getResources());
+    
     Gutter leftGutter = createGutter(
         false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
     leftGutterManager = new LeftGutterManager(leftGutter, buffer);
@@ -484,6 +493,10 @@ public class Editor extends UiComponent<Editor.View> {
   public ListenerRegistrar<DocumentListener> getDocumentListenerRegistrar() {
     return documentListenerManager;
   }
+  
+  public LeftGutterNotificationManager getLeftGutterNotificationManager(){
+     return leftGutterNotificationManager;
+  }
 
   // TODO: need a public interface and impl
   public ViewportModel getViewport() {
@@ -522,6 +535,7 @@ public class Editor extends UiComponent<Editor.View> {
     // Core editor components
     buffer.handleDocumentChanged(document);
     leftGutterManager.handleDocumentChanged(document);
+    
     selectionManager =
         SelectionManager.create(document, buffer, focusManager, appContext.getResources());
 

@@ -130,13 +130,7 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
 //      for (Editor editor : editors) {
 //         editor.asWidget().setHeight("100%");
 //         
-//      }
-      
-      
-      
-
-
-      
+//      }   
       
       
    }

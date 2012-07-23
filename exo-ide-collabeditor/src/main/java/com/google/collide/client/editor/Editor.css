@@ -61,6 +61,21 @@
   /* Allow decorations with z-index:-1 such as breakpoints */
   z-index: 0;
 }
+.leftGutterNotification {
+  cursor: default;
+  font-size: 11px;
+  font-face: Verdana;
+  height: 100%;
+  line-height: editorLineHeight;
+  overflow: hidden;
+  width: 14px;
+  background-color: #eee;
+  /* Allow children to position absolutely against us */
+  position: relative;
+  text-align: right;
+  /* Allow decorations with z-index:-1 such as breakpoints */
+  z-index: 0;
+}
 
 /* Empty rule for enabling CSS3 animations for editor changes. */
 .animationEnabled {
