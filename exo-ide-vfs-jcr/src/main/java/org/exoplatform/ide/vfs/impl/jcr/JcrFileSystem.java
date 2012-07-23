@@ -373,6 +373,10 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData data = getItemData(session, id);
          String path = data.getPath();
          MediaType mediaType = data.getMediaType();
+         if (listeners != null && data.getType() == ItemType.PROJECT)
+         {
+            listeners.removeEventListener(ProjectUpdateEventFilter.newFilter((ProjectData)data), new ProjectUpdateListener(id));
+         }
          data.delete(lockToken);
          notifyListeners(new ChangeEvent(this, //
             id, //

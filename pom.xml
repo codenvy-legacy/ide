@@ -884,6 +884,7 @@
       <module>exo-ide-websocket</module>
 
       <module>exo-ide-git-server</module>
+      <module>exo-ide-gadget-server</module> 
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>

@@ -18,13 +18,8 @@
  */
 package org.exoplatform.ide.extension.gadget.client;
 
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -35,14 +30,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetEvent;
 import org.exoplatform.ide.extension.gadget.client.event.PreviewGadgetHandler;
-import org.exoplatform.ide.extension.gadget.client.service.GadgetService;
 import org.exoplatform.ide.extension.gadget.client.ui.GadgetPreviewPane;
-import org.exoplatform.ide.extension.gadget.shared.Gadget;
-import org.exoplatform.ide.extension.gadget.shared.GadgetMetadata;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Link;
-
-import java.util.Iterator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -88,60 +78,22 @@ public class GadgetPluginEventHandler implements EditorActiveFileChangedHandler,
    {
       String href = activeFile.getLinkByRelation(Link.REL_CONTENT_BY_PATH).getHref();
       href = href.replace(applicationConfiguration.getContext(), applicationConfiguration.getPublicContext());
-      getGadgetMetadata(href);
-   }
-
-   
-   private void getGadgetMetadata(String gadgetUrl)
-   {
-      try
+      if (gadgetPreviewPane == null)
       {
-         AutoBean<Gadget> autoBean = GadgetExtension.AUTO_BEAN_FACTORY.gadget();
-         AutoBeanUnmarshaller<Gadget> unmarshaller = new AutoBeanUnmarshaller<Gadget>(autoBean);
-
-         GadgetService.getInstance().getGadgetMetadata(gadgetUrl, new AsyncRequestCallback<Gadget>(unmarshaller)
+         gadgetPreviewPane = new GadgetPreviewPane(href, applicationConfiguration.getGadgetServer());
+         gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
+         IDE.getInstance().openView(gadgetPreviewPane);
+      }
+      else
+      {
+         if (!gadgetPreviewPane.isViewVisible())
          {
-            @Override
-            protected void onSuccess(Gadget result)
-            {
-               if (gadgetPreviewPane == null)
-               {
-                  gadgetPreviewPane = new GadgetPreviewPane();
-                  gadgetPreviewPane.setIcon(new Image(GadgetClientBundle.INSTANCE.preview()));
-                  IDE.getInstance().openView(gadgetPreviewPane);
-               }
-               else
-               {
-                  if (!gadgetPreviewPane.isViewVisible())
-                  {
-                     gadgetPreviewPane.setViewVisible();
-                  }
-               }
-
-               gadgetPreviewPane.setConfiguration(applicationConfiguration);
-
-               Iterator<GadgetMetadata> iterator = result.getGadgets().iterator();
-               if (iterator.hasNext())
-               {
-                  gadgetPreviewPane.setMetadata(iterator.next());
-                  gadgetPreviewPane.showGadget();
-                  previewOpened = true;
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+            gadgetPreviewPane.setViewVisible();
+         }
       }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+      gadgetPreviewPane.showGadget();
+      previewOpened = true;
    }
-
 
    /**
     * @see org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyHandler#onConfigurationReceivedSuccessfully(org.exoplatform.ide.client.framework.configuration.event.ConfigurationReceivedSuccessfullyEvent)

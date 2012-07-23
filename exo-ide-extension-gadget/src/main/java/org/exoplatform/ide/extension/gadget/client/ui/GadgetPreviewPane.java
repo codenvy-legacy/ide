@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.gadget.client.ui;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -60,47 +58,19 @@ public class GadgetPreviewPane extends ViewImpl
 
    private FlowPanel framePanel;
 
-   /**
-    * @param eventBus
-    * @param gadgetMetadata
-    */
-   public GadgetPreviewPane()
+   private String gadgetUrl;
+
+   private String gadgetServer;
+
+   public GadgetPreviewPane(String href, String gadgetServer)
    {
       super(ID, ViewType.OPERATION, TITLE);
-
+      this.gadgetUrl = href;
+      this.gadgetServer = gadgetServer;
       framePanel = new FlowPanel();
       framePanel.setSize("100%", "100%");
       add(framePanel);
-
    }
-
-   /**
-    * @param configuration the configuration to set
-    */
-   public void setConfiguration(IDEConfiguration configuration)
-   {
-      this.configuration = configuration;
-   }
-
-   /**
-    * @param metadata the metadata to set
-    */
-   public void setMetadata(GadgetMetadata metadata)
-   {
-      this.metadata = metadata;
-   }
-
-   private native String getST()/*-{
-                                return encodeURIComponent(gadgets.util.getUrlParameters().st);
-                                }-*/;
-
-   private native String getGadgetParent()/*-{
-                                          return encodeURIComponent(gadgets.util.getUrlParameters().parent);
-                                          }-*/;
-
-   private native boolean isGadget()/*-{
-                                    return (typeof (gadgets) !== "undefined" && typeof (gadgets) !== "null");
-                                    }-*/;
 
    /**
     * Create iframe. Gadget will be load here.
@@ -108,16 +78,14 @@ public class GadgetPreviewPane extends ViewImpl
     */
    public void showGadget()
    {
-
-      String url = metadata.getIframeUrl();
-      url = url.replace("&view=%25view%25", "&view=canvas");
+      String url = gadgetServer // 
+         + "samplecontainer/samplecontainer.html?url=" + gadgetUrl;
       final PreviewFrame frame = new PreviewFrame(url);
       DOM.setElementAttribute(frame.getElement(), "scrolling", "no");
       DOM.setElementAttribute(frame.getElement(), "frameborder", "0");
       frame.setWidth("100%");
       frame.setHeight("100%");
       frame.setStyleName("");
-
       frame.addLoadHandler(new LoadHandler()
       {
 

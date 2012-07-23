@@ -170,9 +170,16 @@
                <artifactId>exo-ide-jdt-core</artifactId>
             </dependency>
 
-            <!--dependency>
+            <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-gadget</artifactId>
+               <exclusions>
+                 <exclusion>
+                    <groupId>com.google.inject</groupId>                                                                                                                                                            
+                   <artifactId>guice</artifactId>
+                  </exclusion>
+                 
+                  </exclusions>
             </dependency>
 
             <dependency>
@@ -184,7 +191,7 @@
                      <artifactId>xstream</artifactId>
                   </exclusion>
                </exclusions>
-            </dependency-->
+            </dependency>
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -254,6 +261,12 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-groovy</artifactId>
+               <exclusions>
+                   <exclusion>
+                    <groupId>org.exoplatform.ide</groupId>                                                                                                                                                            
+                   <artifactId>exo-ide-server</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
 
             <dependency>
@@ -457,6 +470,7 @@
                   </exclusion>
                </exclusions>
             </dependency>
+           
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
@@ -465,6 +479,10 @@
                   <exclusion>
                      <groupId>xstream</groupId>
                      <artifactId>xstream</artifactId>
+                  </exclusion>
+                   <exclusion>
+                    <groupId>com.google.code.guice</groupId>                                                                                                                                                            
+                   <artifactId>guice</artifactId>
                   </exclusion>
                </exclusions>
             </dependency>
@@ -481,7 +499,7 @@
             </dependency>
             <!-- 
             <dependency>
-               <groupId>org.gatein.shindig</groupId>
+               <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-common</artifactId>
                <version>${shindig.version}</version>
                <scope>runtime</scope>
@@ -493,19 +511,19 @@
                </exclusions>
             </dependency>
             <dependency>
-               <groupId>org.gatein.shindig</groupId>
+               <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-features</artifactId>
                <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
-               <groupId>org.gatein.shindig</groupId>
+               <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-gadgets</artifactId>
                <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
             <dependency>
-               <groupId>org.gatein.shindig</groupId>
+               <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-social-api</artifactId>
                <version>${shindig.version}</version>
                <scope>runtime</scope>

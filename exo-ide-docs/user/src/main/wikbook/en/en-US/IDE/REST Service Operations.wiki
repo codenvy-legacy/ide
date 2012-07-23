@@ -7,7 +7,6 @@ The eXo IDE application provides the original approach to operate with _REST Ser
 | *Undeploy* | Disabled | Enabled |
 | *Deploy in Sandbox* | Enabled | Enabled |
 | *Undeploy from Sandbox* | Enabled | Enabled |
-| *Set/Unset Autoload* | Disabled | Enabled |
 | *Run in Sandbox* | Enabled | Enabled |
 | *Launch REST Service* | Disabled | Enabled |
 
@@ -105,19 +104,6 @@ Deleting the service will not make it undeploy. Please undeploy the service befo
 {warning}
 
 
-
-h1. Use Autoload Property
-
-This function is for users with the _administrators_ role only.
-
-REST Service is deployed automatically on the server after being saved, if the *Autoload* property is set to _True_. You can view this property in the _Property Tab_ by clicking the *Show Properties* button. To manage the *Autoload* property use *Set/Unset Autoload* commands respectively. These commands are displayed to the current status of the *Autoload* property, so you can invert this property. The default value of the *Autoload* property is set to _False_. For more details, see the illustration below:
-
-
-!change_autoload_property.png|border=0!
-
-*Illustration. Change Autoload service property*
-
-
 h1. Launch REST Service with set parameters and Preview Server Console Messages in the _Output Tab_
 
 With eXo IDE, you can not only write and deploy services, but launch these services and view service response in the _Output Tab_. You can view _WADL-description_ of methods, make requests with your own _header_, _query_, _path parameters_ and _body content_ using one of the _supported methods_.  To do that, simply call the *Launch REST Service...* button on the toolbar, or select *Run > Launch REST Service...* on the top menu as follows:
@@ -209,7 +195,7 @@ h1. Configure Classpath
 
 The  class path configuration means the setting of paths to the  source files or folders. This class path will be used for project sources compilation. Classpath file is located in the root of the project's directory, but it's not visible in browser tree, because can not be directly edited by user. So, to view the sources paths of the project, do as follows:
 * *Step 1.* Select the created project item in _Workspace Panel_.
-* *Step 2.* Go to *File > Configure Classpath...* on the top menu to open the *Configure Classpath* window as below:
+* *Step 2.* Go to *Project > Configure Classpath...* on the top menu to open the *Configure Classpath* window as below:
 
 
 !configure_classpath.png|border=0!
@@ -236,11 +222,6 @@ To add source to classpath, do as follows:
 !add-source.png|border=0!
 
 *Illustration. Add source to classpath*
-
-{tip}
-Use "CTRL" key to select more than one item in the tree.
-{tip}
-
 
 {info}
 The "Ok" button is disabled if workspace root folder is selected in the "Choose source path" dialog.
