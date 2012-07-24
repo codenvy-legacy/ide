@@ -61,9 +61,6 @@ public class FormatterProfileView extends ViewImpl implements Display
    @UiField
    ImageButton okButton;
 
-   @UiField
-   ImageButton cancelButton;
-
    private Editor editor;
 
    private HandlerManager eventBus;
@@ -74,7 +71,7 @@ public class FormatterProfileView extends ViewImpl implements Display
 
    public FormatterProfileView()
    {
-      super(ID, ViewType.MODAL, "Formatter", null, 600, 700, true);
+      super(ID, ViewType.MODAL, "Formatter", null, 725, 390, true);
       add(uiBinder.createAndBindUi(this));
       try
       {
@@ -102,15 +99,6 @@ public class FormatterProfileView extends ViewImpl implements Display
    public HasClickHandlers getOkButton()
    {
       return okButton;
-   }
-
-   /**
-    * @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
    }
 
    /**
