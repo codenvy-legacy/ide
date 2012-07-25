@@ -27,3 +27,8 @@ To view the absolute URL of a file/folder and copy it to the clipboard, do as fo
 * *Step 1:* Select the appropriate item in the _Project Explorer_.
 * *Step 2:* Go to *View > Get URL...* from the top menu to open the *Item URL* window.
 * *Step 3:* Copy the target URL to the clipboard and click *OK* to close the window.
+
+
+h1. Show/Hide Hidden Files
+
+You can view hidden files in the _Project Explorer_ or in the _Workspace Navigator_. Go to *View > Show Hidden Files* to show hidden items. The *Show Hidden Files* menu command is turned into the *Hide Hidden Files* menu command. Select *Hide Hidden Files* to hide hidden items. The last selected settings are saved in the browser cookies for the next sessions.

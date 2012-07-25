@@ -1,5 +1,66 @@
-eXo IDE allows not only to create PHP, Java, Ruby and Ruby on Rails projects, but also provides all necessary tools for their easy deployment on Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees PaaS.
-Git is among the tools provided by the IDE, required for the successful deployment. Go to Git Version Control System and SSH keys chapters of the eXo IDE User Manual to learn more about Git usage.
+eXo IDE provides all necessary tools for easy deployment your projects on Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees PaaS.
+
+h1. Google App Engine
+
+Google App Engine is a PaaS cloud computing platform for developing and hosting web applications written in Java, Python and Go (experimental support) languages. To deploy application on Google App Engine, do as follows:
+
+* *Step 1:* Make sure that you have Google Account at [https://accounts.google.com|https://accounts.google.com] with connected Google App Engine service.
+
+* *Step 2:* Open the project you want to deploy to Google App Engine.
+
+* *Step 3:* In the *PaaS > Google App Engine* menu, choose *Login*.
+
+!GAE_menu.png|border=0!
+
+*Illustration. Google App Engine menu*
+
+In the appeared *Not Authorized* window click the *Authenticate* button.
+
+!GAE_not_authorized.png|border=0!
+
+*Illustration. Not Authorized window*
+
+* *Step 4:* If you are not logged in to Google Account, new tab with login page will be opened in your browser. Otherwise, if you are logged in to your Google Account, you will be redirected to the Google App Engine authorization page.
+
+!GAE_authorization_page.png|border=0!
+
+*Illustration. Google App Engine authorization page*
+
+In this page you will be asked to allow the access for eXo IDE to manage your applications. Press *Allow access* button, wait for *Authentication successful* message and switch to eXo IDE tab.
+
+!GAE_authentication_successful_page.png|border=0!
+
+*Illustration. Authentication Successful page*
+
+* *Step 5:* Go to *PaaS > Google App Engine > Create Application...*. In the appeared *Create Application on Google App Engine* window click the *Create* button.
+
+* *Step 6:* You will be redirected to the Google App Engine page to create a new application.
+
+* *Step 7:* Type application identifier and application title in the appropriate text fields. Specify what type of users can sign in to your application and click *Create Application* button.
+
+!GAE_create_app_page.png|border=0!
+
+*Illustration. Google App Engine page*
+
+Wait for *Application created* message and switch to eXo IDE tab.
+
+!GAE_app_created_message.png|border=0!
+
+*Illustration. Application created page*
+
+* *Step 8:* Click *Deploy* button in the *Create Application on Google App Engine* window. Your application will be builded and deployed to Google App Engine. The build and deploy status displays in the *Output* window. If it is successful, you will receive a message with your application URL.
+
+!GAE_output_window.png|border=0!
+
+*Illustration. Output message about build and deploy of the application to Google App Engine*
+
+* *Step 9:* Now, having your application deployed, you can manage it by using *Project > PaaS > Google App Engine* menu command. You can see the resource limits for your application, state of the Cron jobs and available backends. Also you can update your App Engine services such as Indexes, PageSpeed, Queues, DoS.
+
+!GAE_application_window.png|border=0!
+
+*Illustration. Google App Engine Application window for manage an application*
+
+You can modify your application and update it on the Google App Engine, simply click *Update Application* menu command in *PaaS > Google App Engine* menu.
 
 
 h1. Heroku

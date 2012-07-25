@@ -13,6 +13,9 @@ h1. Operations with Folders
 h1. Operations with Files
 {include:document="IDE/Operations with Files.wiki" /}
 
+h1. Operations with Projects
+{include:document="IDE/Operations with Projects.wiki" /}
+
 h1. Use File Template
 {include:document="IDE/Use File Template.wiki" /}
 
@@ -45,6 +48,9 @@ h1. Operations with Templates
 
 h1. Chromattic Data Object Usage
 {include:document="IDE/Chromattic Data Object Usage.wiki" /}
+
+h1. Operations with Java Projects
+{include:document="IDE/Operations with Java Projects.wiki" /}
 
 h1. PaaS Deployment
 {include:document="IDE/PaaS Deployment.wiki" /}
