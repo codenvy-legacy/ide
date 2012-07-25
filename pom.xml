@@ -831,8 +831,8 @@
       <!--
       <module>exo-ide-editor-ckeditor</module>
       <module>exo-ide-editor-codemirror</module>
-      <module>exo-ide-editor-codemirror2</module>
       -->
+      <module>exo-ide-editor-codemirror2</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>
@@ -850,6 +850,7 @@
       <module>exo-ide-editor-xml</module>
       <module>exo-ide-editor-python</module>
       <module>exo-ide-editor-yaml</module>
+      
 
       <module>exo-ide-jdt-core</module>
 
@@ -872,10 +873,13 @@
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
-
+<!--
       <module>exo-ide-docs</module>
-
+-->
+      <module>exo-ide-extension-maven</module>
       <module>exo-ide-client</module>
+      <!--module>exo-ide-packaging-gadget-war</module -->
+<!--      
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>
@@ -884,13 +888,12 @@
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
 
-      <!--module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
 
       <module>exo-ide-maven</module>
-      <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
+      -->
    </modules>
 </project>

@@ -18,8 +18,16 @@
  */
 package org.exoplatform.ide.editor.api;
 
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.text.IDocument;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
@@ -158,7 +166,7 @@ public interface Editor extends IsWidget
     * @return <b>true</b> if content is read-only
     */
    boolean isReadOnly();
-   
+
    /**
     * Switches editor to read-only mode.
     * 
@@ -253,6 +261,54 @@ public interface Editor extends IsWidget
     * Delete selected text in editor.
     */
    void delete();
+   
+   /**
+    * Get absolute position of 
+    * 
+    * @return
+    */
+   int getCursorOffsetLeft();
+   
+   /**
+    * @return
+    */
+   int getCursorOffsetTop();
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addInitializedHandler(EditorInitializedHandler handler);
 
 // ??????????????????????????
 //   listen MouseMoveEvent

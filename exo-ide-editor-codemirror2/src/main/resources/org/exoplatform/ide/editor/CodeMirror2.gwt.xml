@@ -36,16 +36,19 @@
         -->
        
       <!-- Load CodeMirror files. -->
-      <!-- 
-      <stylesheet src='codemirror/css/editor.css' />
-      <script src='codemirror/js/codemirror.js' />       
-       -->
-       
-       <stylesheet src='codemirror2/lib/codemirror.css' />
-       <script src='codemirror2/lib/codemirror.js' />
-       <stylesheet src='codemirror2/style.css' />
-       <script src="codemirror2/mode/xml/xml.js"></script>
+      <stylesheet src='codemirror2/lib/codemirror.css' />
+      <stylesheet src='codemirror2/codemirror-styles.css' />
+      <script src='codemirror2/lib/codemirror.js' />
+      <script src="codemirror2/mode/xml/xml.js"></script>
        
       <source path="codemirror2" />
+      <source path="client" />
+      
+      <inherits name='org.exoplatform.ide.editor.Editor' /> 
+      
+      <!-- 
+      <entry-point class="org.exoplatform.ide.editor.codemirror2.CodeMirror2EditorExtension" />
+       -->
+      <entry-point class="org.exoplatform.ide.editor.client.TestCodeMirror2" />
 
 </module>

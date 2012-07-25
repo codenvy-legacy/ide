@@ -37,6 +37,8 @@
    <inherits name="org.exoplatform.ide.editor.css.CssEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.python.PythonEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.yaml.YamlEditorExtension" />
+   
+   <inherits name="org.exoplatform.ide.editor.CodeMirror2" />
 
    <!-- EXTENSIONS -->
    <inherits name='org.exoplatform.ide.extension.groovy.GroovyExtension' />
