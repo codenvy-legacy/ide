@@ -18,8 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
@@ -52,11 +55,8 @@ import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.editor.text.Position;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -244,11 +244,10 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
             ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
             if (display == null)
             {
-               //TODO
-//               int posX = editor.getCursorOffsetX() + 8;
-//               int posY = editor.getCursorOffsetY() + 22;
+               int posX = editor.getCursorOffsetLeft() + 2;
+               int posY = editor.getCursorOffsetTop() + 15;
                keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, QuickFixPresenter.this);
-               display = new CodeAssitantForm(100, 100, proposals, QuickFixPresenter.this);
+               display = new CodeAssitantForm(posX, posY, proposals, QuickFixPresenter.this);
             }
             else
             {

@@ -56,5 +56,10 @@ This can be used to make labels for "native" accelerators, etc. -->
       <when-type-is class="com.google.collide.client.ClientOs" />
       <when-property-is name="webide.clientOs" value="macintosh" />
    </replace-with>
+     <replace-with
+     class="com.google.collide.client.util.logging.LogConfig.Enabled">
+    <when-type-is
+       class="com.google.collide.client.util.logging.LogConfig"/>
+  </replace-with>
    
 </module>

@@ -18,8 +18,13 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.LineInfo;
 
+import com.google.collide.client.editor.EditorDocumentMutator;
+import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.DocumentMutator;
+
+import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.DocumentEvent;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IDocumentListener;
@@ -30,10 +35,10 @@ import org.exoplatform.ide.editor.text.IDocumentListener;
  *
  */
 public class DocumentAdaptor implements IDocumentListener
-
 {
 
-   private IDocument document;
+   private DocumentMutator mutator;
+
    private Document editorDocument;
 
    /**
@@ -42,23 +47,47 @@ public class DocumentAdaptor implements IDocumentListener
    @Override
    public void documentChanged(DocumentEvent event)
    {
-//      editorDocument.
-   }
-
-   /**
-    * @param document
-    */
-   public void setDocument(IDocument document)
-   {
-      this.document = document;
+//      mutator.insertText(editorDocument.getFirstLine(), 0, 0, "it's alive");
+      try
+      {
+         IDocument document = event.getDocument();
+         int lineNumber = document.getLineOfOffset(event.getOffset());
+         int col = event.getOffset() - document.getLineOffset(lineNumber);
+         
+         LineInfo lineInfo = editorDocument.getLineFinder().findLine(lineNumber);
+         StringBuilder b = new StringBuilder(lineInfo.line().getText());
+         int length = col + event.getLength();
+         int nextLine = lineNumber + 1;
+         while (length > b.length())
+         {
+            lineInfo.moveToNext();
+            b.append(lineInfo.line().getText());
+            mutator.deleteText(lineInfo.line(), nextLine, 0, lineInfo.line().length());
+//            deleteLine(editorObject, nextLine);
+            // symbol '\n' not present in line content
+            length--;
+         }
+         b.replace(col, length, event.getText());
+         
+         LineInfo line = editorDocument.getLineFinder().findLine(lineNumber);
+         mutator.deleteText(line.line(), 0, line.line().length());
+         mutator.insertText(line.line(), 0, b.toString());
+//         setLineText(lineNumber, b.toString());
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
     * @param editorDocument
+    * @param editorDocumentMutator
     */
-   public void setEditorDocument(Document editorDocument)
+   public void setDocument(Document editorDocument, EditorDocumentMutator editorDocumentMutator)
    {
       this.editorDocument = editorDocument;
+      mutator = editorDocumentMutator;
    }
 
 }

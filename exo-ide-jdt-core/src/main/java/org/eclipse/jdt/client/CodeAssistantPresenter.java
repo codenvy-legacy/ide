@@ -302,11 +302,10 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
     */
    private void codecomplete()
    {
-      //TODO 
-      //      int posX = currentEditor.getCursorOffsetX() + 8;
-      //      int posY = currentEditor.getCursorOffsetY() + 22;
+      int posX = currentEditor.getCursorOffsetLeft() + 2;
+      int posY = currentEditor.getCursorOffsetTop() + 15;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
-      display = new CodeAssitantForm(100, 100, createProposals(false), this);
+      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
 
    }
 

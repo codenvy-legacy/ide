@@ -18,10 +18,17 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.json.shared.JsonArray;
+
+import com.google.collide.shared.document.Document.TextListener;
+
+import com.google.collide.client.editor.selection.SelectionModel;
+
+import com.google.collide.shared.document.Position;
+
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
-import com.google.collide.client.editor.Editor.TextListener;
 import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.shared.document.Document;
@@ -37,7 +44,13 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.marking.Markable;
@@ -64,17 +77,24 @@ public class CollabEditor extends Widget implements Editor, Markable
    private IDocument document;
 
    private LeftGutterNotificationManager notificationManager;
-   
+
    private DocumentAdaptor documentAdaptor;
-   
-   private final class TextListenerImpl implements TextListener
+
+   private boolean initialized;
+
+   private final class TextListenerImpl implements TextListener 
    {
+
+      /**
+       * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
+       */
       @Override
-      public void onTextChange(TextChange textChange)
+      public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
          fireEvent(new EditorContentChangedEvent(getId()));
-         //TODO update document
+         udateDocument();
       }
+      
    }
 
    public CollabEditor(String mimeType)
@@ -86,7 +106,7 @@ public class CollabEditor extends Widget implements Editor, Markable
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
             EditorErrorListener.NOOP_ERROR_RECEIVER);
       editor = editorBundle.getEditor();
-      editor.getTextListenerRegistrar().add(new TextListenerImpl());
+      //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
          new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
       EditableContentArea contentArea =
@@ -95,6 +115,17 @@ public class CollabEditor extends Widget implements Editor, Markable
       notificationManager = editor.getLeftGutterNotificationManager();
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
+   }
+
+   /**
+    * 
+    */
+   private void udateDocument()
+   {
+      //TODO change document not all content
+      document.removeDocumentListener(documentAdaptor);
+      document.set(getText());
+      document.addDocumentListener(documentAdaptor);
    }
 
    /**
@@ -142,16 +173,17 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
       document.addDocumentListener(documentAdaptor);
-      documentAdaptor.setDocument(document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
          @Override
          public void execute()
          {
+            initialized = true;
             Document editorDocument = Document.createFromString(text);
-            documentAdaptor.setEditorDocument(editorDocument);
+            editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
          }
       });
    }
@@ -212,16 +244,21 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void setCursorPosition(final int row, final int column)
    {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      if (initialized)
       {
-
-         @Override
-         public void execute()
+         LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(row - 1);
+         editor.getSelection().setCursorPosition(lineInfo, column - 1);
+      }
+      else
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
-            LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(row - 1);
-            editor.getSelection().setCursorPosition(lineInfo, column - 1);
-         }
-      });
+
+            @Override
+            public void execute()
+            {
+               setCursorPosition(row, column);
+            }
+         });
    }
 
    /**
@@ -371,8 +408,9 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public SelectionRange getSelectionRange()
    {
-      // TODO Auto-generated method stub
-      return null;
+      SelectionModel selection = editor.getSelection();
+      return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn() + 1,
+         selection.getCursorLineNumber() + 1, selection.getCursorColumn() + 1);
    }
 
    /**
@@ -477,8 +515,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return editor.getLeftGutterNotificationManager().addProblemClickHandler(handler);
    }
 
    /**
@@ -496,6 +533,88 @@ public class CollabEditor extends Widget implements Editor, Markable
     */
    @Override
    public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      Position position = editor.getSelection().getCursorPosition();
+      return getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
+         + editor.getLeftGutterNotificationManager().getGutter().getWidth()
+         + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    */
+   @Override
+   public int getCursorOffsetTop()
+   {
+      Position position = editor.getSelection().getCursorPosition();
+      return getElement().getAbsoluteTop() + editor.getBuffer().convertLineNumberToY(position.getLineNumber());
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    */
+   @Override
+   public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    */
+   @Override
+   public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    */
+   @Override
+   public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    */
+   @Override
+   public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    */
+   @Override
+   public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
    {
       // TODO Auto-generated method stub
       return null;

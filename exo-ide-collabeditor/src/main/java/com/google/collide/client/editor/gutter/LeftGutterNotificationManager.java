@@ -18,7 +18,13 @@
  */
 package com.google.collide.client.editor.gutter;
 
+import com.google.collide.client.editor.gutter.Gutter.ClickListener;
+
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
@@ -40,11 +46,43 @@ import java.util.List;
  */
 public class LeftGutterNotificationManager
 {
+   /**
+    * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+    * @version $Id:
+    *
+    */
+   private final class ClickListenerImpl implements ClickListener
+   {
+      private final ProblemClickHandler handler;
+
+      /**
+       * @param handler
+       */
+      public ClickListenerImpl(ProblemClickHandler handler)
+      {
+         this.handler = handler;
+      }
+
+      @Override
+      public void onClick(int y)
+      {
+         int lineNumber = buffer.convertYToLineNumber(y, true);
+         JsoArray<Marker> jsoArray = markers.get(lineNumber);
+         Marker[] arr = new Marker[jsoArray.size()];
+         for (int i = 0; i < jsoArray.size(); i++)
+         {
+            arr[i] = jsoArray.get(i);
+         }
+         handler.onProblemClick(new ProblemClickEvent(arr));
+      }
+   }
+
    private Buffer buffer;
 
    private Gutter gutter;
-   
-   private JsIntegerMap<JsoArray<Marker>> markers;
+
+   private JsIntegerMap<JsoArray<Marker>> markers = JsIntegerMap.<JsoArray<Marker>>create();
+
    private final JsonArray<Element> elements = JsonCollections.createArray();
 
    private final GutterNotificationResources res;
@@ -66,19 +104,20 @@ public class LeftGutterNotificationManager
     */
    public void addProblem(Marker problem)
    {
-      if (!markers.hasKey(problem.getLineNumber()))
-         markers.put(problem.getLineNumber(), JsoArray.<Marker>create());
-      markers.get(problem.getLineNumber()).add(problem);
+      int lineNumber = problem.getLineNumber() - 1;
+      if (!markers.hasKey(lineNumber))
+         markers.put(lineNumber, JsoArray.<Marker> create());
+      markers.get(lineNumber).add(problem);
       StringBuilder message = new StringBuilder();
-      JsoArray<Marker> problemList = markers.get(problem.getLineNumber());
+      JsoArray<Marker> problemList = markers.get(lineNumber);
       boolean hasError = fillMessages(problemList, message);
-      Element element = createElement(problem.getLineNumber());
+      Element element = createElement(lineNumber);
       element.setAttribute("title", message.toString());
       element.addClassName(getStyleForLine(problemList, hasError));
       elements.add(element);
       gutter.addUnmanagedElement(element);
    }
-   
+
    /**
     * @param markerList
     * @param hasError
@@ -111,13 +150,14 @@ public class LeftGutterNotificationManager
       return markStyle;
    }
 
-   private Element createElement(int lineNumber) {
+   private Element createElement(int lineNumber)
+   {
       Element element = Elements.createDivElement();
       // Line 0 will be rendered as Line 1
-      element.getStyle().setTop(buffer.calculateLineTop(lineNumber -1), CSSStyleDeclaration.Unit.PX);
+      element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
       return element;
-    }
-   
+   }
+
    private boolean fillMessages(JsoArray<Marker> markers, StringBuilder message)
    {
       boolean hasError = false;
@@ -154,7 +194,7 @@ public class LeftGutterNotificationManager
    public void unmarkProblem(Marker problem)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -162,9 +202,40 @@ public class LeftGutterNotificationManager
     */
    public void clear()
    {
-      for (int i = 0, n = elements.size(); i < n; i++) {
-         gutter.removeUnmanagedElement(elements.get(i));         
+      for (int i = 0, n = elements.size(); i < n; i++)
+      {
+         gutter.removeUnmanagedElement(elements.get(i));
       }
+      markers = JsIntegerMap.<JsoArray<Marker>>create();
+      elements.clear();
+   }
+
+   /**
+    * @return the gutter
+    */
+   public Gutter getGutter()
+   {
+      return gutter;
+   }
+
+   /**
+    * @param handler
+    * @return
+    */
+   public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler)
+   {
+      final ClickListenerImpl listener = new ClickListenerImpl(handler);
+      gutter.getClickListenerRegistrar().add(listener);
+      return new HandlerRegistration()
+      {
+
+         @Override
+         public void removeHandler()
+         {
+            gutter.getClickListenerRegistrar().remove(listener);
+         }
+      };
+
    }
 
 }
