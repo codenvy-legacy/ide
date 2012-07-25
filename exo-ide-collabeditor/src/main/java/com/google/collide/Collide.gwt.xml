@@ -135,7 +135,6 @@
      class="com.google.collide.client.util.logging.LogConfig.Enabled">
     <when-type-is
        class="com.google.collide.client.util.logging.LogConfig"/>
-    <when-property-is name="webide.release_mode" value="debug"/>
   </replace-with>
 
   <replace-with
@@ -144,12 +143,13 @@
        class="com.google.collide.client.ClientConfig.DebugOrReleaseMode"/>
     <when-property-is name="webide.release_mode" value="release"/>
   </replace-with>
-  <replace-with
+  <!-- <replace-with
+    <when-property-is name="webide.release_mode" value="debug"/>
      class="com.google.collide.client.util.logging.LogConfig.Disabled">
     <when-type-is
        class="com.google.collide.client.util.logging.LogConfig"/>
     <when-property-is name="webide.release_mode" value="release"/>
-  </replace-with>
+  </replace-with>  -->
 
   <!-- Single permutation settings for development.
   <set-property name="webide.debuggingApi" value="chrome"/>

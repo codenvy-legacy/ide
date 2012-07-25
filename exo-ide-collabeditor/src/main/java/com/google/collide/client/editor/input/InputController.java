@@ -121,24 +121,6 @@ public class InputController {
     this.document = document;
     this.selection = selection;
     this.viewport = viewport;
-//    selection.getSelectionListenerRegistrar().add(new SelectionListener()
-//   {
-//      
-//      @Override
-//      public void onSelectionChange(Position[] oldSelectionRange, Position[] newSelectionRange)
-//      {
-//            if (newSelectionRange != null)
-//            {
-//               String selectionText =
-//                  LineUtils.getText(newSelectionRange[0].getLine(), newSelectionRange[0].getColumn(),
-//                     newSelectionRange[1].getLine(), newSelectionRange[1].getColumn());
-//               setInputText(selectionText);
-//               inputElement.select();
-//            }
-//            else
-//               setInputText("");
-//      }
-//   });
   }
 
   public void initializeFromEditor(Editor editor, DocumentMutator editorDocumentMutator) {

@@ -505,6 +505,7 @@ public class LineDimensionsCalculator {
 
     if (result != null) {
       double x = 0;
+      int index = 0;
       do {
         // Calculate any x offset up to this point in the line
         ColumnOffset offset = cache.getLastColumnOffsetInCache();
@@ -523,11 +524,12 @@ public class LineDimensionsCalculator {
         }
         result = regexp.exec(line.getText());
         // we have to ensure we measure through the last zero-width character.
+        index = result == null ? 0 : result.getIndex();
       } while (result != null && result.getIndex() < endColumn && x < endX);
     }
 
+    cache.measuredOffset = ColumnOffsetCache.FULLY_MEASURED;
     if (result == null) {
-      cache.measuredOffset = ColumnOffsetCache.FULLY_MEASURED;
       return;
     }
 

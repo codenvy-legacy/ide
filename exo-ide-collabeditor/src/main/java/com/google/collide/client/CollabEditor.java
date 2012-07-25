@@ -18,24 +18,19 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
-
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
-import com.google.gwt.core.client.Scheduler;
-
-import com.google.gwt.event.shared.HandlerRegistration;
-
-import com.google.collide.client.editor.Editor.TextListener;
-
-import com.google.collide.shared.document.TextChange;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.editor.Editor.TextListener;
+import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.LineInfo;
+import com.google.collide.shared.document.TextChange;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.api.Editor;
@@ -48,41 +43,39 @@ import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.DocumentEvent;
 import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IDocumentListener;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class CollabEditor extends Widget implements Editor, IDocumentListener, Markable
+public class CollabEditor extends Widget implements Editor, Markable
 {
 
-   /**
-    * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
-    * @version $Id:
-    *
-    */
-   private final class TextListenerImpl implements TextListener
-   {
-      @Override
-      public void onTextChange(TextChange textChange)
-      {
-         fireEvent(new EditorContentChangedEvent(getId()));
-      }
-   }
-
    private final EditorBundle editorBundle;
+
+   private final com.google.collide.client.editor.Editor editor;
 
    private String mimeType;
 
    private String id;
 
    private IDocument document;
-   
+
    private LeftGutterNotificationManager notificationManager;
+   
+   private DocumentAdaptor documentAdaptor;
+   
+   private final class TextListenerImpl implements TextListener
+   {
+      @Override
+      public void onTextChange(TextChange textChange)
+      {
+         fireEvent(new EditorContentChangedEvent(getId()));
+         //TODO update document
+      }
+   }
 
    public CollabEditor(String mimeType)
    {
@@ -92,14 +85,16 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
             EditorErrorListener.NOOP_ERROR_RECEIVER);
-      editorBundle.getEditor().getTextListenerRegistrar().add(new TextListenerImpl());
+      editor = editorBundle.getEditor();
+      editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
          new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
       EditableContentArea contentArea =
          EditableContentArea.create(v, CollabEditorExtension.get().getContext(), editorBundle);
       contentArea.setContent(editorBundle);
-      notificationManager = editorBundle.getEditor().getLeftGutterNotificationManager();
+      notificationManager = editor.getLeftGutterNotificationManager();
       setElement((Element)v.getElement());
+      documentAdaptor = new DocumentAdaptor();
    }
 
    /**
@@ -136,7 +131,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public String getText()
    {
-      return editorBundle.getEditor().getDocument().asText();
+      return editor.getDocument().asText();
    }
 
    /**
@@ -146,14 +141,17 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    public void setText(final String text)
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
-      document.addDocumentListener(this);
+      document.addDocumentListener(documentAdaptor);
+      documentAdaptor.setDocument(document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         
+
          @Override
          public void execute()
          {
-            editorBundle.setDocument(Document.createFromString(text), new PathUtil("test.java"), "");
+            Document editorDocument = Document.createFromString(text);
+            documentAdaptor.setEditorDocument(editorDocument);
+            editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
          }
       });
    }
@@ -164,8 +162,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public IDocument getDocument()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return document;
    }
 
    /**
@@ -204,7 +201,8 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public void setFocus()
    {
-      // TODO Auto-generated method stub
+
+      editor.getFocusManager().focus();
 
    }
 
@@ -212,10 +210,18 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
     * @see org.exoplatform.ide.editor.api.Editor#setCursorPosition(int, int)
     */
    @Override
-   public void setCursorPosition(int row, int column)
+   public void setCursorPosition(final int row, final int column)
    {
-      // TODO Auto-generated method stub
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
 
+         @Override
+         public void execute()
+         {
+            LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(row - 1);
+            editor.getSelection().setCursorPosition(lineInfo, column - 1);
+         }
+      });
    }
 
    /**
@@ -254,8 +260,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public boolean hasUndoChanges()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return editor.isMutatingDocumentFromUndoOrRedo();
    }
 
    /**
@@ -264,8 +269,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public void undo()
    {
-      // TODO Auto-generated method stub
-
+      editor.undo();
    }
 
    /**
@@ -274,8 +278,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public boolean hasRedoChanges()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return editor.isMutatingDocumentFromUndoOrRedo();
    }
 
    /**
@@ -284,8 +287,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public void redo()
    {
-      // TODO Auto-generated method stub
-
+      editor.redo();
    }
 
    /**
@@ -303,7 +305,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public void setReadOnly(boolean readOnly)
    {
-      editorBundle.getEditor().setReadOnly(readOnly);
+      editor.setReadOnly(readOnly);
    }
 
    /**
@@ -312,7 +314,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public int getCursorRow()
    {
-      return 0;
+      return editor.getSelection().getCursorLineNumber() + 1;
    }
 
    /**
@@ -321,8 +323,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public int getCursorColumn()
    {
-      // TODO Auto-generated method stub
-      return 0;
+      return editor.getSelection().getCursorColumn() + 1;
    }
 
    /**
@@ -361,8 +362,7 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
    @Override
    public int getNumberOfLines()
    {
-      // TODO Auto-generated method stub
-      return 0;
+      return editor.getDocument().getLastLineNumber();
    }
 
    /**
@@ -430,16 +430,6 @@ public class CollabEditor extends Widget implements Editor, IDocumentListener, M
     */
    @Override
    public void delete()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.text.DocumentEvent)
-    */
-   @Override
-   public void documentChanged(DocumentEvent event)
    {
       // TODO Auto-generated method stub
 

@@ -182,15 +182,26 @@ public class DefaultScheme extends InputScheme {
       }
     };
 
+//    /*
+//     * ACTION+S - prevent the default browser behavior because the document is
+//     * saved automatically.
+//     */
+//    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 's') {
+//      @Override
+//      public boolean event(InputScheme scheme, SignalEvent event) {
+//        // prevent ACTION+S
+//        return true;
+//      }
+//    });
     /*
-     * ACTION+S - prevent the default browser behavior because the document is
+     * ACTION+SPACE - prevent the default browser behavior because the document is
      * saved automatically.
      */
-    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 's') {
+    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, ' ') {
       @Override
       public boolean event(InputScheme scheme, SignalEvent event) {
-        // prevent ACTION+S
-        return true;
+        // not prevent ACTION+SPACE
+        return false;
       }
     });
 

@@ -3,7 +3,7 @@
 .root {
   background-color: white;
   bottom: 0;
-  font-family: 'Inconsolata', monospace;
+  font-family: monospace;
   font-size: 13px;
   left: 0;
   line-height: editorLineHeight;
@@ -16,7 +16,7 @@
 }
 
 .editorFont, .root {
-  font-family: 'Inconsolata', monospace;
+  font-family: monospace;
   font-size: 13px;
 }
 
@@ -60,6 +60,7 @@
   text-align: right;
   /* Allow decorations with z-index:-1 such as breakpoints */
   z-index: 0;
+  border-right: 1px solid;
 }
 .leftGutterNotification {
   cursor: default;

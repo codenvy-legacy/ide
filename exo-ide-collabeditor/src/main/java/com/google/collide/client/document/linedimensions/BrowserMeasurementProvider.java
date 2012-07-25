@@ -65,8 +65,11 @@ class BrowserMeasurementProvider implements MeasurementProvider {
      * from screwing with our measurement (these spaces must be removed from our
      * result at the end).
      */
-    element.setTextContent(StringUtils.repeatString(text + "\u00A0", instances));
-    double width = (element.getBoundingClientRect().getWidth() - (getCharacterWidth() * instances))
+    String repeatString = StringUtils.repeatString(text + "\u00A0", instances);
+    String content = repeatString.replaceAll(" ", "\u00A0");
+   element.setTextContent(content);
+    double elementWidht = element.getBoundingClientRect().getWidth();
+   double width = (elementWidht - (getCharacterWidth() * instances))
         / instances;
     LineDimensionsUtils.markTimeline(getClass(), "End measurement of text");
     return width;
