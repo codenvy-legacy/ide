@@ -47,8 +47,8 @@
       <inherits name='org.exoplatform.ide.editor.Editor' /> 
       
       <!-- 
+      <entry-point class="org.exoplatform.ide.editor.client.TestCodeMirror2" />
       <entry-point class="org.exoplatform.ide.editor.codemirror2.CodeMirror2EditorExtension" />
        -->
-      <entry-point class="org.exoplatform.ide.editor.client.TestCodeMirror2" />
 
 </module>
