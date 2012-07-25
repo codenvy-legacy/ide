@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
+import com.google.gwt.user.client.Event.NativePreviewHandler;
+
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,13 +70,13 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       return instance;
    }
 
-   private static final class WindowCloseHandlerImpl implements ClosingHandler
-   {
-      public native void onWindowClosing(ClosingEvent event)
-      /*-{
-         $doc.onkeydown = null; 
-      }-*/;
-   }
+//   private static final class WindowCloseHandlerImpl implements ClosingHandler
+//   {
+//      public native void onWindowClosing(ClosingEvent event)
+//      /*-{
+//         $doc.onkeydown = null; 
+//      }-*/;
+//   }
    
    private native void setKeyDownHandler()
    /*-{
@@ -102,10 +108,22 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
       IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
 
-      final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
-      Window.addWindowClosingHandler(closeListener);
-      setKeyDownHandler();
-
+//      final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
+//      Window.addWindowClosingHandler(closeListener);
+//      setKeyDownHandler();
+      Event.addNativePreviewHandler(new NativePreviewHandler()
+      {
+         
+         @Override
+         public void onPreviewNativeEvent(NativePreviewEvent event)
+         {
+            if(event.getTypeInt() != Event.ONKEYDOWN)
+               return;
+            System.out.println(event.getNativeEvent().getCharCode());
+            System.out.println(event.getNativeEvent().getKeyCode());
+            onKeyDown(Event.as(event.getNativeEvent()));
+         }
+      });
       hotKeyMap = applicationSettings.getValueAsMap("hotkeys");
       if (hotKeyMap == null)
       {
