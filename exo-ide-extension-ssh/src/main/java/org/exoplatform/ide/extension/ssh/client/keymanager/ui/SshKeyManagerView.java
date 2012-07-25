@@ -43,9 +43,6 @@ public class SshKeyManagerView extends ViewImpl implements Display
    SshKeysGrid keysGrid;
 
    @UiField
-   ImageButton closeButton;
-
-   @UiField
    ImageButton generateButton;
 
    @UiField
@@ -53,7 +50,7 @@ public class SshKeyManagerView extends ViewImpl implements Display
 
    public SshKeyManagerView()
    {
-      super(ID, ViewType.MODAL, "Ssh Keys", null, 400, 400, false);
+      super(ID, ViewType.MODAL, "Ssh Keys", null, 725, 390, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
    }
@@ -65,15 +62,6 @@ public class SshKeyManagerView extends ViewImpl implements Display
    public HasSshGrid<KeyItem> getKeyItemGrid()
    {
       return keysGrid;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.ssh.client.keymanager.SshKeyManagerPresenter.Display#getCloseButton()
-    */
-   @Override
-   public HasClickHandlers getCloseButton()
-   {
-      return closeButton;
    }
 
    /**

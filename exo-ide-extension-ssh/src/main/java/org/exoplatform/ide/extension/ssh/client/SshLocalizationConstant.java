@@ -63,4 +63,8 @@ public interface SshLocalizationConstant extends Constants
    @DefaultStringValue("Generate")
    @Key("key.manager.generateButton")
    String managerGenerateButton();
+   
+   
+   @Key("key.manager.title")
+   String sshManagerTitle();
 }

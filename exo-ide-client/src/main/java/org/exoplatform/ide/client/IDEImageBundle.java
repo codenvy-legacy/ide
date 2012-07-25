@@ -568,6 +568,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/window/workspace_Disabled.png")
    ImageResource workspaceDisabled();
 
+   @Source("../public/images/bundled/window/preferences.png")
+   ImageResource preferences();
+
+   @Source("../public/images/bundled/window/preferences_Disabled.png")
+   ImageResource preferencesDisabled();
+
    /*
     * AUTO COMPLETE
     */

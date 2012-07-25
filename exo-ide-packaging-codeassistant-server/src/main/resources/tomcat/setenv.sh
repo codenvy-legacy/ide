@@ -17,25 +17,9 @@
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 #
 
-cancelButton=Cancel
 
-closeButton=Close
-
-############Upload Private SSH Key#################
-uploadButton=Upload
-
-browseButton=Browse...
-
-hostFieldTitle=Host
-
-fileNameFieldTitle=File name
-
-host.validation.error=Host field cannot be empty
-
-#############SSH Key Manager Form#################
-key.manager.uploadButton=Upload Key
-
-key.manager.generateButton=Generate Key
-
-key.manager.title=Ssh Keys
+EXO_CONFIG_OPTS="-Xshare:auto -Xms256m -Xmx1024m"
+#REMOTE_DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
+JAVA_OPTS="$JAVA_OPTS $LOG_OPTS $SECURITY_OPTS $EXO_CONFIG_OPTS $EXO_OPTS $REMOTE_DEBUG $IDE_OPTS"
+export JAVA_OPTS
 

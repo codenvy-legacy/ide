@@ -55,12 +55,12 @@ public class CustomizeToolbarView extends ViewImpl implements
    /**
     * 
     */
-   private static final int WIDTH = 700;
+   private static final int WIDTH = 725;
 
    /**
     * 
     */
-   private static final int HEIGHT = 360;
+   private static final int HEIGHT = 390;
 
    /**
     * 
@@ -88,7 +88,7 @@ public class CustomizeToolbarView extends ViewImpl implements
     */
    @UiField
    ImageButton addCommandButton, addDelimiterButton, deleteButton, moveUpButton, moveDownButton, okButton,
-            cancelButton, defaultsButton;
+            defaultsButton;
 
    /**
     * 
@@ -176,15 +176,6 @@ public class CustomizeToolbarView extends ViewImpl implements
    public HasClickHandlers getOkButton()
    {
       return okButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display#getCancelButton()
-    */
-   @Override
-   public HasClickHandlers getCancelButton()
-   {
-      return cancelButton;
    }
 
    /**

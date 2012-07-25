@@ -27,16 +27,20 @@ import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
+import org.exoplatform.ide.client.hotkeys.HotKeysPreferenceItem;
 import org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter;
 import org.exoplatform.ide.client.operation.autocompletion.AutocompletionHandler;
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
+import org.exoplatform.ide.client.toolbar.ToolbarPreferenceItem;
 import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
+import org.exoplatform.ide.client.workspace.WorkspacePreferenceItem;
 import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
 
 import java.util.List;
@@ -64,37 +68,15 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       IDE.addHandler(ControlsUpdatedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
+      Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
+      Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
+      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
+
       new AutocompletionHandler();
-      
-      /*
-       * Select Workspace ability.
-       */
-      new SelectWorkspacePresenter();
-
-      /*
-       * Customizing of Toollbars.
-       */
-      new CustomizeToolbarPresenter();
-
-      /*
-       * About IDE.
-       */
       new AboutIDEPresenter();
-
-      /*
-       * Rest Services Discovery.
-       */
       new RestServicesDiscoveryPresenter();
-
-      /*
-       * Hot Keys customizing.
-       */
-      new CustomizeHotKeysPresenter();
-
-      /*
-       * Show keyboard shortcuts.
-       */
       new ShowHotKeysPresenter();
+      new PreferencesPresenter();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
