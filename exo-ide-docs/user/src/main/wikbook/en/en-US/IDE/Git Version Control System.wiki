@@ -177,3 +177,14 @@ To perform pull or fetch operation, go to *Git > Remote > Pull/Fetch...* In the 
 !Pull.png|border=0!
 
 *Illustration. "Pull from remote repository" dialog window*
+
+
+h1. View Git URL
+
+You can view the URL of your project's Git repository by clicking *Git > Git URL (Read-Only)...* menu command.
+
+!view_git_url.png|border=0!
+
+*Illustration. Project Git URL window*
+
+This URL can be used for access to your Git repository with read-only permissions.
