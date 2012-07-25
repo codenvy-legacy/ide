@@ -85,12 +85,13 @@ public class IDEFileTypeRegistry implements FileTypeRegistry
    @Override
    public Editor[] getEditors(String mimeType) throws EditorNotFoundException
    {
-      if (!editors.containsKey(mimeType))
-      {
-         throw new EditorNotFoundException("Editor for " + mimeType + " not found");
-      }
       
-      EditorCreator[] creatorList = editors.get(mimeType);
+//      if (!editors.containsKey(mimeType))
+//      {
+//         throw new EditorNotFoundException("Editor for " + mimeType + " not found");
+//      }
+//      
+      EditorCreator[] creatorList = editors.get(MimeType.APPLICATION_JAVA);
       Editor[] editors = new Editor[creatorList.length];
       
       for (int i = 0; i < creatorList.length; i++)
