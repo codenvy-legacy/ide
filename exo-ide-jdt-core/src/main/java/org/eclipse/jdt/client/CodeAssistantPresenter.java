@@ -48,6 +48,7 @@ import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo.AssertionFailedException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateProposal;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -329,8 +330,18 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      currentFile = event.getFile();
-      currentEditor = event.getEditor();
+      if (event.getFile() == null)
+         return;
+      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      {
+         currentFile = event.getFile();
+         currentEditor = event.getEditor();
+      }
+      else
+      {
+         currentFile = null;
+         currentEditor = null;
+      }
    }
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */

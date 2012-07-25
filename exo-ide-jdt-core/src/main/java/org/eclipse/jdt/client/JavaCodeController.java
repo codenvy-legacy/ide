@@ -346,6 +346,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onCancelParse(CancelParseEvent event)
    {
+      if(activeFile == null)
+         return;
       if (workingParsers.containsKey(activeFile.getId()))
       {
          workingParsers.get(activeFile.getId()).cancel();
