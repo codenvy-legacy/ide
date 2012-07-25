@@ -24,15 +24,23 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Label;
@@ -821,10 +829,85 @@ public class CKEditor extends AbsolutePanel implements Editor
       this.readOnly = readOnly;
    }
 
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    */
    @Override
    public String getName()
    {
       return "Design";
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    */
+   @Override
+   public int getCursorOffsetTop()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    */
+   @Override
+   public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
+   {
+      return addHandler(handler, EditorContentChangedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
+   {
+      return addHandler(handler, EditorContextMenuEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    */
+   @Override
+   public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
+   {
+      return addHandler(handler, EditorCursorActivityEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    */
+   @Override
+   public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
+   {
+      return addHandler(handler, EditorFocusReceivedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    */
+   @Override
+   public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
+   {
+      return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    */
+   @Override
+   public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
+   {
+      return addHandler(handler, EditorInitializedEvent.TYPE);
    }
    
 }

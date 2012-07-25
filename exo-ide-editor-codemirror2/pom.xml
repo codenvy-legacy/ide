@@ -38,6 +38,11 @@
       </dependency>      
       
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
+      </dependency>      
+
+      <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
@@ -46,13 +51,7 @@
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
       </dependency>
-      
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <scope>test</scope>
-      </dependency>
-      
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
@@ -95,6 +94,71 @@
       </plugins>
    </build>
 
-   <profiles>
-   </profiles>
+	<profiles>
+	
+      <profile>
+         <id>test</id>
+         <activation>
+            <activeByDefault>false</activeByDefault>
+         </activation>
+         
+         <dependencies>
+         </dependencies>
+         
+         <build>
+            <resources>
+               <resource>
+                  <directory>src/main/java</directory>
+               </resource>
+               <resource>
+                  <directory>src/main/resources</directory>
+               </resource>
+            </resources>
+            
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <version>2.3</version>
+                  <executions>
+                     <execution>
+                        <id>copy-prod-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                           <outputDirectory>target/war/WEB-INF/</outputDirectory>
+                           <resources>
+                              <resource>
+                                 <directory>src/main/webapp</directory>
+                                 <filtering>true</filtering>
+                              </resource>
+                           </resources>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+
+               <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>gwt-maven-plugin</artifactId>
+                  <version>${gwt.maven.plugin.version}</version>
+                  <configuration>
+                     <runTarget>org.exoplatform.ide.editor.CodeMirror2/CodeMirror2.html</runTarget>
+                     <logLevel>INFO</logLevel>
+                     <hostedWebapp>${basedir}/target/war</hostedWebapp>
+                     <skipTests>${gwt.test.skip}</skipTests>
+                     <!-- <port>${gwt.port}</port> -->
+                     <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
+                  </configuration>
+               </plugin>
+
+            </plugins>
+         </build>
+      </profile>	
+	
+	
+	</profiles>
+
 </project>
