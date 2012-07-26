@@ -883,8 +883,7 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-      <!--module>exo-ide-packaging-gadget-war</module -->
-<!--      
+      <!--module>exo-ide-packaging-gadget-war</module --> 
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>

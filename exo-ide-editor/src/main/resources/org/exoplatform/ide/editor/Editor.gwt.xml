@@ -40,15 +40,16 @@
       
       <!-- Load CodeMirror files. -->
       <stylesheet src='testeditor.css' />
-      
+      <!-- 
       <stylesheet src='codemirror/css/editor.css' />      
       <stylesheet src='editor-notifications.css' />
       <script src='codemirror/js/codemirror.js' />
-      
+      -->
       <!-- Load FCKEditor files. -->
+      <!--
       <script src="ckeditor/ckeditor.js" />
       <script src="ckeditor/config.js" />
-
+      -->
 	<!-- Specify the app entry point class. -->
 	<entry-point class='org.exoplatform.ide.editor.client.TestEditor' />
          
