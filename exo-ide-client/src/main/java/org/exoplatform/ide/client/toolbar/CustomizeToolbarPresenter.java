@@ -37,11 +37,13 @@ import org.exoplatform.gwtframework.ui.client.command.ui.SetToolbarItemsEvent;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
+import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
@@ -61,7 +63,7 @@ import java.util.Set;
  */
 
 public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, ApplicationSettingsReceivedHandler,
-   CustomizeToolbarHandler, ViewClosedHandler
+   CustomizeToolbarHandler, ViewClosedHandler, PreferencePerformer
 {
 
    /**
@@ -87,8 +89,6 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       HasClickHandlers getMoveDownButton();
 
       HasClickHandlers getOkButton();
-
-      HasClickHandlers getCancelButton();
 
       HasClickHandlers getDefaultsButton();
 
@@ -181,14 +181,6 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
 
    public void bindDisplay()
    {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
       display.getAddCommandButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -291,7 +283,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
          {
             continue;
          }
-         
+
          if (command instanceof SimpleControl)
          {
             if (((SimpleControl)command).getEvent() != null)
@@ -628,6 +620,20 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       {
          display = null;
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
+    */
+   @Override
+   public View getPreference()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      return display.asView();
    }
 
 }

@@ -879,10 +879,9 @@
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
-<!--
+
       <module>exo-ide-docs</module>
--->
-      <module>exo-ide-extension-maven</module>
+
       <module>exo-ide-client</module>
       <!--module>exo-ide-packaging-gadget-war</module -->
 <!--      
@@ -895,12 +894,14 @@
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
 
+      <!--module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>
 
       <module>exo-ide-maven</module>
+      <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
-      -->
+      <module>exo-ide-packaging-codeassistant-server</module>
    </modules>
 </project>

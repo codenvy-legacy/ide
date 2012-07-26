@@ -26,7 +26,7 @@ h1. Preview Template
 To preview the ECM template, do as follows:
 
 * *Step 1:* Open Groovy template in the _Content Panel_.
-* *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Preview* on the top menu.
+* *Step 2:* Click the *Show Preview* button on the toolbar; or go to *Run > Show Template Preview* on the top menu.
 The selected template is opened in the _Gadget Container_ of the _Preview Tab_ as below:
 
 

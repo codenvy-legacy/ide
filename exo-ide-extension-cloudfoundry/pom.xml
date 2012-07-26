@@ -50,6 +50,8 @@
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
       </dependency>
+      
+      
 
        <dependency>
          <groupId>org.json</groupId>
@@ -72,6 +74,12 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      
+       <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-dev</artifactId>
          <scope>provided</scope>
       </dependency>
 

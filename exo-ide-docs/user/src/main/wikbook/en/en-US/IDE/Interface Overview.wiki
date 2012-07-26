@@ -12,14 +12,12 @@ IDE uses notion of _Virtual File System_ which wraps the physical location you a
 The _Content Panel_ consists of two horizontal panels:
 
 * The _Editor Panel_ shows files in several file tabs with their content.
-* The _Operation Panel_ may contain several tabs with the list of file properties, REST Service, Google Gadget output messages, HTML, Google Gadget, ECM Template files preview. To view these tabs, just use special buttons at the right part of the toolbar, or select *View* or *Run* from the top menu.
+* The _Operation Panel_ may contain several tabs with the list of file properties, REST Service, OpenSocial Gadget output messages, HTML, OpenSocial Gadget, ECM Template files preview. To view these tabs, just use special buttons at the right part of the toolbar, or select *View* or *Run* from the top menu.
 
 The panels are divided by Resize Bars, so all panels are resizable.
 
-You can do some basic actions, such as browsing, creating, editing, copying, renaming, uploading, downloading, moving, deleting files and folders. At the right column are shown the _Outline Panel_ and _Version Panel_:
+You can do some basic actions, such as browsing, creating, editing, copying, renaming, uploading, downloading, moving, deleting files and folders. At the right column is shown the _Outline Panel_:
 
 * The _Outline Panel_ enables you to access tags, variables, functions and other file elements quickly.
-
-* The _Version Panel_ is to navigate to the file versions.
 
 * The active panel is highlighted with one special thick border around the panel window.

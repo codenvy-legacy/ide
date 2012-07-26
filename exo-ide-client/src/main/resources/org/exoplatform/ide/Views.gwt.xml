@@ -44,7 +44,7 @@
    <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
       <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.progress.SingleJobView">
       <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay" />
    </replace-with>
@@ -108,11 +108,11 @@
    <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectView">
       <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
       <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display" />
    </replace-with>
-   
+
    <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
       <when-type-is class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display" />
    </replace-with>
@@ -123,7 +123,7 @@
 
    <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
       <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
-   </replace-with>   
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
       <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
@@ -250,6 +250,10 @@
    </replace-with>
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
       <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.preferences.PreferencesView">
+      <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display" />
    </replace-with>
 
 </module>

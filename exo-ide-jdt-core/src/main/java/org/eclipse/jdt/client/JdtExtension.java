@@ -23,6 +23,7 @@ import com.google.gwt.core.client.GWT;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
+import org.eclipse.jdt.client.core.formatter.FormatterPreferenceItem;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
@@ -172,6 +173,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
+      org.exoplatform.ide.client.framework.preference.Preferences.get().addPreferenceItem(new FormatterPreferenceItem(formatterProfileManager));
       new QuickFixPresenter(IDE.eventBus(), this);
       new QuickOutlinePresenter(IDE.eventBus());
       injector = GWT.create(JdtGinjector.class);

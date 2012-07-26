@@ -37,7 +37,9 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
@@ -56,15 +58,13 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
  * 
  */
 public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
-   ConfigurationReceivedSuccessfullyHandler
+   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer
 {
    public interface Display extends IsView
    {
       String ID = "ideSshKeyManagerView";
 
       HasSshGrid<KeyItem> getKeyItemGrid();
-
-      HasClickHandlers getCloseButton();
 
       HasClickHandlers getGenerateButton();
 
@@ -139,17 +139,6 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
     */
    private void bindDisplay()
    {
-      display.getCloseButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-            display = null;
-         }
-      });
-
       display.getKeyItemGrid().addViewButtonSelectionHandler(new SelectionHandler<KeyItem>()
       {
 
@@ -294,6 +283,20 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    public void onConfigurationReceivedSuccessfully(ConfigurationReceivedSuccessfullyEvent event)
    {
       configuration = event.getConfiguration();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
+    */
+   @Override
+   public View getPreference()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      return display.asView();
    }
 
 }
