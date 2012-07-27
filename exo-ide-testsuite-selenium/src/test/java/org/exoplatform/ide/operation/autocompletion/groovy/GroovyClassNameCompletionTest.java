@@ -38,7 +38,7 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
    @Before
    public void createProject() throws Exception
    {
-      createProject(GroovyClassNameCompletionTest.class.getSimpleName());
+      createExoPrj(GroovyClassNameCompletionTest.class.getSimpleName());
       openProject();
    }
 

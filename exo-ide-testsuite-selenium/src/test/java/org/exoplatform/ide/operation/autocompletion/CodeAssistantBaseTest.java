@@ -55,11 +55,44 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       }
 
    }
+   
+   
+   /**
+    * create empty exo-project in IDE
+    * @param name
+    * @param zipPath
+    */
+   public static void createExoProject(String name, String zipPath)
+   {
+      projectName = name;
+      try
+      {
+         if (zipPath == null)
+            project = VirtualFileSystemUtils.createExoProject(name);
+         else
+            project = VirtualFileSystemUtils.importZipProject(name, zipPath);
+      }
+      catch (IOException e)
+      {
+         Assert.fail(e.getMessage());
+      }
 
+   }
+   
    public static void createProject(String name)
    {
       createProject(name, null);
    }
+   
+   /**
+    * create empty eXo project
+    * @param name
+    */
+   public static void createExoPrj(String name)
+   {
+      createExoProject(name, null);
+   }
+   
 
    @After
    public void deleteProject() throws IOException
