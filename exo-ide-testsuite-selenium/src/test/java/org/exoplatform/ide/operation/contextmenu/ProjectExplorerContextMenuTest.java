@@ -109,7 +109,14 @@ public class ProjectExplorerContextMenuTest extends BaseTest
       assertEquals(" " + PROJECT, IDE.STATUSBAR.getNavigationStatus());
 
       IDE.CONTEXT_MENU.waitOpened();
-      assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.File.DELETE));
+      
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.File.DELETE));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Rename..."));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Open..."));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Close"));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Properties..."));
+      
+      assertFalse(IDE.CONTEXT_MENU.isCommandEnabled("Paste Item(s)"));  
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.CUT_MENU));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.COPY_MENU));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.PASTE_MENU));
