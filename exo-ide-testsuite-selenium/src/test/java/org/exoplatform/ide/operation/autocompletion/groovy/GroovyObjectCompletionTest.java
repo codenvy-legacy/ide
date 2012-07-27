@@ -46,7 +46,7 @@ public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
    {
       try
       {
-         createProject(GroovyObjectCompletionTest.class.getSimpleName());
+         createExoPrj(GroovyObjectCompletionTest.class.getSimpleName());
          VirtualFileSystemUtils
             .createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME, MimeType.GROOVY_SERVICE,
                "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/groovy/groovyObjectCompetitionTest.grs");

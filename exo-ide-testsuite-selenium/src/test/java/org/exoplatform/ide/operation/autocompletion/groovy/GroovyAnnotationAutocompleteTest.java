@@ -37,7 +37,7 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
    @Before
    public void createProject() throws Exception
    {
-      createProject(GroovyAnnotationAutocompleteTest.class.getSimpleName());
+      createExoPrj(GroovyAnnotationAutocompleteTest.class.getSimpleName());
       openProject();
    }
 
@@ -47,21 +47,45 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
       IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
       IDE.EDITOR.moveCursorDown(0, 8);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n@");
 
+      //check Deprecated annotation
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n@Depr");
       IDE.CODEASSISTANT.openForm();
-      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello(String):String"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Deprecated"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Documented"));
+      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello(String):String"));
+      closeFormAndDeleteAnotatationString();
+
+      //check Inherited annotation
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Inh");
+      IDE.CODEASSISTANT.openForm();
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Inherited"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Override"));
+      closeFormAndDeleteAnotatationString();
+
+      //check Retention annotation
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Rete");
+      IDE.CODEASSISTANT.openForm();
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Retention"));
+      closeFormAndDeleteAnotatationString();
+
+      //check SuppressWarnings annotation
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Suppress");
+      IDE.CODEASSISTANT.openForm();
       assertTrue(IDE.CODEASSISTANT.isElementPresent("SuppressWarnings"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Target"));
-      
-      IDE.CODEASSISTANT.typeToInput("Over");
-      IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Override"));
+      closeFormAndDeleteAnotatationString();
+
+      //check Override annotation
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Ove");
+      IDE.CODEASSISTANT.openForm();
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("Override"));
+      closeFormAndDeleteAnotatationString();
+     
+   }
+
+   private void closeFormAndDeleteAnotatationString() throws Exception
+   {
+      IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.HOME.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.DELETE.toString());
    }
 
 }
