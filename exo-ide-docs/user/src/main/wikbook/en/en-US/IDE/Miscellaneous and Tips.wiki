@@ -71,7 +71,6 @@ The following is the list of predefined hotkeys:
 * Non-changeable hotkeys within editors
 
 || Hotkeys || Functions ||
-| *Ctrl+Space* | Autocomplete |
 | *Ctrl+B* | Make text bold |
 | *Ctrl+I* | Make text italic |
 | *Ctrl+U* | Make text underlined |
@@ -84,13 +83,39 @@ The following is the list of predefined hotkeys:
 | *Ctrl+Home* | Go to the start of document |
 | *Ctrl+End* | Go to the end of document |
 
+
+h1. Show Keyboard Shortcuts
+
+You can view the list of available shortcuts using the *Help > Show Keyboard Shortcuts...* menu command.
+
+!keyboard_shortcuts_window.png|border=0!
+
+*Illustration. Keyboard Shortcuts window*
+
+
 h1. Available Dependencies
 
 This option allows you to view the list of JAR Libraries along with their attributes. These libraries are available on the server for your REST Service, Templates, POGO files, Data objects and Groovy projects.
 
-To view the list of libraries go to *Help > Available dependencies*, the following window will appear:
+To view the list of libraries go to *Help > Show Available dependencies...*, the following window will appear:
 
 
 !available dependences.png|border=0!
 
 *Illustration. Available JAR Packages with attributes*
+
+
+h1. Open Resource
+
+You can quick find and open any file in your project, go to *Project > Open Resource*.
+
+!open_resource.png|border=0!
+
+*Illustration. Open Resource window.
+
+In the *Select an item to open* field, type the first few characters of the name of the file you want to open. Select an item in the *Matching items* list. The *Open* button opens the file with the default editor for the selected file.
+
+
+h1. Switching between editors
+
+To switch between editor's tabs, use the *Window > Navigation > Next Editor* and *Window > Navigation > Previous Editor* menu commands. Also you can use the default shortcuts *Ctrl+Shift+PageDown* and *Ctrl+Shift+PageUp* respectively.

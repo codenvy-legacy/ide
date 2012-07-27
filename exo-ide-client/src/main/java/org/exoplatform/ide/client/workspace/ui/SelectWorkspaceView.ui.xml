@@ -19,13 +19,11 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder
-	xmlns:ui="urn:ui:com.google.gwt.uibinder"
-	xmlns:g="urn:import:com.google.gwt.user.client.ui"
-	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
-	xmlns:w="urn:import:org.exoplatform.ide.client.workspace.ui">
-   
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
+   xmlns:w="urn:import:org.exoplatform.ide.client.workspace.ui">
+
    <ui:with type="org.exoplatform.ide.client.IdeLocalizationConstant" field="idelocal"></ui:with>
+   <ui:with type="org.exoplatform.ide.client.messages.IdePreferencesLocalizationConstant" field="preferlocal"></ui:with>
 
    <ui:style>
       .center {
@@ -37,10 +35,19 @@
       .floatLeft {
       	float: left;
       }
+      
+      .label {
+      	font-size: 11px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-weight: bold;
+      }
    </ui:style>
 
    <c:Border margin="10" borderColor="transparent">
-      <c:layer top="0px" bottom="40px">
+      <c:layer height="20px" top="0">
+         <c:Label value="{preferlocal.selectWorkspace}" addStyleNames="{style.label}"></c:Label>
+      </c:layer>
+      <c:layer top="25" bottom="40">
          <c:Border>
             <c:layer>
                <w:VFSListGrid ui:field="entryPointListGrid" width="100%"></w:VFSListGrid>
@@ -48,12 +55,7 @@
          </c:Border>
       </c:layer>
       <c:layer height="22px" bottom="0px">
-         <g:FlowPanel width="190px" styleName="{style.center}">
-            <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="ideEntryPointOkButton" addStyleNames="{style.floatLeft}"></c:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
-            <c:ImageButton text="{idelocal.cancelButton}" imageName="cancel" ui:field="cancelButton" buttonId="ideEntryPointCancelButton"
-               addStyleNames="{style.floatLeft}"></c:ImageButton>
-         </g:FlowPanel>
+         <c:ImageButton text="{idelocal.okButton}" imageName="ok" ui:field="okButton" buttonId="ideEntryPointOkButton" addStyleNames="{style.center}"></c:ImageButton>
       </c:layer>
    </c:Border>
 

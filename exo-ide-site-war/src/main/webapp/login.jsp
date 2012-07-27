@@ -56,18 +56,18 @@
 
          function showRegisterForm()
          {
-            document.getElementById("loginForm").style.display="none";
-            document.getElementById("federatedLoginForm").style.display="none";
+            document.getElementById("loginFormId").style.display="none";
+            document.getElementById("federatedloginFormId").style.display="none";
             document.getElementById("registerForm").style.display="block";
             document.getElementById("newUserID").value = "";
             document.getElementById("newUserPassword").value = "";
          }
 
-         function showLoginForm()
+         function showloginFormId()
          {
             document.getElementById("registerForm").style.display="none";
-            document.getElementById("loginForm").style.display="block";
-            document.getElementById("federatedLoginForm").style.display="block";
+            document.getElementById("loginFormId").style.display="block";
+            document.getElementById("federatedloginFormId").style.display="block";
          }
 
          function isEmail(login)
@@ -107,7 +107,7 @@
                        alert("User " + login + " created.");
                        document.getElementById("userId").value = login;
                        document.getElementById("userPassword").value = password;
-                       showLoginForm();
+                       showloginFormId();
                     }
                     else
                     {
@@ -138,7 +138,7 @@
          </tr>
          <tr align="center" valign="top">
             <td>
-               <form id="loginForm" method="POST" action='<%= "j_security_check"%>'>
+               <form id="loginFormId" method="POST" action='<%= "j_security_check"%>'>
                   <table border="0" cellspacing="5">
                      <tr>
                         <th align="right">User ID:</th>
@@ -172,11 +172,11 @@
                      </tr>
                   </table>
                </form>
-               <div id="federatedLoginForm">
+               <div id="federatedloginFormId">
                   <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account</button>
-                  <button onclick="open_popup('google');">
-                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button>
+                  <!--button onclick="open_popup('google');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button-->
                </div>
                <div id="registerForm" style="display:none;">
                   <table border="0" cellspacing="5">
@@ -199,7 +199,7 @@
                      </tr>
                      <tr>
                         <td align="right"><input type="button" value="Register" onclick="registerNewUser();"></td>
-                        <td align="left"><input type="button" value="Cancel" onclick="showLoginForm();"></td>
+                        <td align="left"><input type="button" value="Cancel" onclick="showloginFormId();"></td>
                      </tr>
                   </table>
                </div>

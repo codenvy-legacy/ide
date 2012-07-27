@@ -877,6 +877,7 @@
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>
+      <module>exo-ide-gadget-server</module> 
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
@@ -890,5 +891,6 @@
       <module>exo-ide-maven</module>
       <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
+      <module>exo-ide-packaging-codeassistant-server</module>
    </modules>
 </project>

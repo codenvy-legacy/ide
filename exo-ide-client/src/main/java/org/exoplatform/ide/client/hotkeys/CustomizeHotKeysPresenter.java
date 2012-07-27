@@ -35,10 +35,12 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.preference.PreferencePerformer;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -60,15 +62,13 @@ import java.util.Map;
  * 
  */
 public class CustomizeHotKeysPresenter implements HotKeyPressedListener, CustomizeHotKeysHandler, ViewOpenedHandler,
-   ViewClosedHandler, ApplicationSettingsReceivedHandler, ControlsUpdatedHandler
+   ViewClosedHandler, ApplicationSettingsReceivedHandler, ControlsUpdatedHandler, PreferencePerformer
 {
 
    public interface Display extends IsView
    {
 
       HasClickHandlers getOkButton();
-
-      HasClickHandlers getCancelButton();
 
       HasClickHandlers getDefaultsButton();
 
@@ -185,14 +185,6 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
    public void bindDisplay()
    {
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
       display.getOkButton().addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
@@ -224,7 +216,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                display.getHotKeyField().setValue("");
                return;
             }
-            
+
             hotKeySelected(selectedItem);
             display.showError(null);
          }
@@ -261,8 +253,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
     * 
     * Update value of hotkey list grid.
     * 
-    * @param filledWithDefaultValues - if <code>true</code> - hotkey list will be filled with default values,
-    *                                  if <code>false</code> - hotkey list will be filled with current values
+    * @param filledWithDefaultValues - if <code>true</code> - hotkey list will be filled with default values, if
+    *           <code>false</code> - hotkey list will be filled with current values
     */
    private void fillHotkeyListGrid(boolean filledWithDefaultValues)
    {
@@ -278,12 +270,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          }
       }
 
-//      if (hotKeys == null)
-//      {
-//         hotKeys = applicationSettings.getValueAsMap("hotkeys");
-//         hotKeys keys.clear();
-//      }
-      
+      // if (hotKeys == null)
+      // {
+      // hotKeys = applicationSettings.getValueAsMap("hotkeys");
+      // hotKeys keys.clear();
+      // }
+
       hotKeys = new ArrayList<HotKeyItem>();
       for (String groupName : groups.keySet())
       {
@@ -291,24 +283,23 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
          List<SimpleControl> commands = groups.get(groupName);
          for (SimpleControl command : commands)
          {
-            hotKeys.add(new HotKeyItem(command,
-                                       filledWithDefaultValues ? defaultHotkeys.get(command) : command.getHotKey(),
-                                       groupName));
+            hotKeys.add(new HotKeyItem(command, filledWithDefaultValues ? defaultHotkeys.get(command) : command
+               .getHotKey(), groupName));
          }
       }
 
-//      /*
-//       * fill default hotkeys
-//       */
-//      hotKeys.add(new HotKeyItem(EDITOR_GROUP, null, true, EDITOR_GROUP));
-//      Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
-//      while (it.hasNext())
-//      {
-//         Entry<String, String> entry = it.next();
-//         String id = entry.getValue();
-//         String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
-//         hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
-//      }
+      // /*
+      // * fill default hotkeys
+      // */
+      // hotKeys.add(new HotKeyItem(EDITOR_GROUP, null, true, EDITOR_GROUP));
+      // Iterator<Entry<String, String>> it = ReservedHotKeys.getHotkeys().entrySet().iterator();
+      // while (it.hasNext())
+      // {
+      // Entry<String, String> entry = it.next();
+      // String id = entry.getValue();
+      // String hotkey = HotKeyHelper.convertToStringCombination(entry.getKey());
+      // hotKeys.add(new HotKeyItem(id, hotkey, false, EDITOR_GROUP));
+      // }
 
       display.getHotKeyItemListGrid().setValue(hotKeys);
    }
@@ -352,7 +343,8 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
    private void bindHotKey()
    {
       String newHotKey = display.getHotKeyField().getValue();
-      String selectedCommandId = selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
+      String selectedCommandId =
+         selectedItem.getCommand() == null ? selectedItem.getTitle() : selectedItem.getCommand().getId();
       for (HotKeyItem hotKey : hotKeys)
       {
          String commandId = hotKey.getCommand() == null ? hotKey.getTitle() : hotKey.getCommand().getId();
@@ -361,7 +353,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
             hotKey.setHotKey(newHotKey);
          }
       }
-      
+
       updateState();
    }
 
@@ -557,7 +549,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
                protected void onSuccess(ApplicationSettings result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  HotKeyManager.getInstance().setHotKeys(keys);                     
+                  HotKeyManager.getInstance().setHotKeys(keys);
                }
 
                @Override
@@ -588,12 +580,12 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       else
       {
          display.setUnbindButtonEnabled(false);
-//         display.getHotKeyField().setValue("", true);
-//         display.setHotKeyFieldEnabled(false);
-//         display.getHotKeyItemListGrid().setValue(hotKeys);
+         // display.getHotKeyField().setValue("", true);
+         // display.setHotKeyFieldEnabled(false);
+         // display.getHotKeyItemListGrid().setValue(hotKeys);
       }
-      
-      display.getHotKeyItemListGrid().setValue(hotKeys);      
+
+      display.getHotKeyItemListGrid().setValue(hotKeys);
       display.setOkButtonEnabled(true);
    }
 
@@ -650,4 +642,18 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
       return defaultHotKeysMap;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.preference.PreferencePerformer#getPreference()
+    */
+   @Override
+   public View getPreference()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      HotKeyManager.getInstance().setHotKeyPressedListener(this);
+      return display.asView();
+   }
 }

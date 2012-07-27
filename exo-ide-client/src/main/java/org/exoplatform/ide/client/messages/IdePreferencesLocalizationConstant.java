@@ -43,6 +43,9 @@ public interface IdePreferencesLocalizationConstant extends Constants
    @Key("workspace.title")
    String workspaceTitle();
 
+   @Key("select.workspace")
+   String selectWorkspace();
+
    /*
     * SelectWorkspacePresenter
     */
@@ -282,4 +285,16 @@ public interface IdePreferencesLocalizationConstant extends Constants
     */
    @Key("closeAllFiles.unsavedFilesMayBeLost")
    String unsavedFilesMayBeLost();
+
+   @Key("show.preferences.control.id")
+   String showPreferencesControlId();
+
+   @Key("show.preferences.control.title")
+   String showPreferencesControlTitle();
+
+   @Key("show.preferences.control.prompt")
+   String showPreferencesControlPrompt();
+
+   @Key("show.preferences.view.title")
+   String showPreferencesViewTitle();
 }

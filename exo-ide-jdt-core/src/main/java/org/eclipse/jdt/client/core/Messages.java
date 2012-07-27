@@ -23,7 +23,7 @@ import com.google.gwt.core.client.GWT;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
+ * 
  */
 public interface Messages extends com.google.gwt.i18n.client.Messages
 {
@@ -56,7 +56,7 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
    String convention_package_consecutiveDotsName();
 
    /**
-    * @param typeName 
+    * @param typeName
     * @return
     */
    String convention_illegalIdentifier(String typeName);
@@ -74,4 +74,6 @@ public interface Messages extends com.google.gwt.i18n.client.Messages
 
    String MethodCompletionProposal_method_label();
 
+   @Key("formatter.title")
+   String formatterTitle();
 }

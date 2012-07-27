@@ -99,15 +99,6 @@
                   </td>
 
                   <td>
-                     <c:ImageButton text="{idelocal.cancelButton}" imageName="cancel" ui:field="cancelButton"
-                        buttonId="ideCustomizeHotKeysViewCancelButton"></c:ImageButton>
-                  </td>
-
-                  <td style="width:3px;">
-                     <div style="width:3px; height:1px;"></div>
-                  </td>
-
-                  <td>
                      <c:ImageButton text="{idePrefs.customizeHotkeysDefaultsButton}" imageName="defaults" ui:field="defaultsButton"
                         buttonId="ideCustomizeHotKeysViewDefaultsButton"></c:ImageButton>
                   </td>

@@ -4,7 +4,7 @@ h1. Initializing local repository
 
 Start using Git by initializing a Git repository as follows:
 
-1. Create or specify the folder to initialize as Git repository.
+1. Create the project to initialize as Git repository.
 
 2. Go to *Git > Initialize Repository*.
 
@@ -17,10 +17,6 @@ Start using Git by initializing a Git repository as follows:
 The following message will appear in the _Output Tab_
 
 \[INFO\] Repository was successfully initialized.
-
-{info}
-You can initialise any directory except the root folder.
-{info}
 
 To delete a repository, go to *Git > Delete Repository*. A message confirming the deletion will be displayed.
 
@@ -55,7 +51,7 @@ To remove files from index and repository directory at once, go to *Git > Remove
 
 h1. Commit Files
 
-To commit files, go to *Git > Commit*. The committed files are marked as follows: !Commited files.png|border=0!
+To commit files, go to *Git > Commit...*. The committed files are marked as follows: !Commited files.png|border=0!
 
 When committed files are changed but new changes are not committed, these files are marked with asterisk: !Commited but changed.png|border=0!
 
@@ -119,10 +115,6 @@ To view history of commits and changes, select the repository and go to *Git > S
 *Illustration. History Panel*
 
 
-{info}
-If the repository is not selected, the following error message will appear in the pop up window: Not a Git repository (or any of the parent directories).
-{info}
-
 Use different options of comparison and view the following differences:
 
 * Differences with previous version.
@@ -185,3 +177,14 @@ To perform pull or fetch operation, go to *Git > Remote > Pull/Fetch...* In the 
 !Pull.png|border=0!
 
 *Illustration. "Pull from remote repository" dialog window*
+
+
+h1. View Git URL
+
+You can view the URL of your project's Git repository by clicking *Git > Git URL (Read-Only)...* menu command.
+
+!view_git_url.png|border=0!
+
+*Illustration. Project Git URL window*
+
+This URL can be used for access to your Git repository with read-only permissions.

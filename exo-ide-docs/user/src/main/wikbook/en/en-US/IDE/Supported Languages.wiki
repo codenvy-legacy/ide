@@ -1,4 +1,4 @@
-eXo IDE supports the following programming and scripting languages: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Ruby and JSP. Editing files in the IDE you have such editing functions as Syntax Highlighting, Code formatting, Code Autocompletion, Error Marking and Outliner. There are also preview mode for HTML, Javascript and Google gadget files. Finally IDE makes online development simple, providing deployment of your Java, PHP and Ruby applications to such cloud platforms (PaaS)as Heroku, Openshift and CloudBees out of the box.
+eXo IDE supports the following programming and scripting languages: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Python, Ruby and JSP. Editing files in the IDE you have such editing functions as Syntax Highlighting, Code formatting, Code Autocompletion, Error Marking and Outliner. There are also preview mode for HTML, Javascript and OpenSocial gadget files. Finally IDE makes online development simple, providing deployment of your Java, PHP and Ruby applications to such cloud platforms (PaaS) as Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees out of the box.
 
 h1. Java
 
@@ -186,6 +186,11 @@ To preview the HTML file simply click the *Show Preview* button on the right par
 * Unsaved changes are not displayed when you edit the HTML file.
 {note}
 
+h1. Python
+
+Syntax Highlighting of Python files is supported, but no Outlining, Code Formatting and Code Autocompletion support has been provided yet.
+
+To create a new Python file go to *File > New > Python File* to create new Python file.
 
 h1. PHP
 
@@ -195,7 +200,7 @@ To create a new PHP file, go to *File > New > PHP File*
 
 h2. PHP Specific Autocomplete List
 
-The autocomplete in PHP files is supported for code written between "<?php…?>" or "<?…?>"  tags as shown below:
+The autocomplete in PHP files is supported for code written between "<?php\85?>" or "<?\85?>"  tags as shown below:
 
 !php_autocomplete.png|border=0!
 

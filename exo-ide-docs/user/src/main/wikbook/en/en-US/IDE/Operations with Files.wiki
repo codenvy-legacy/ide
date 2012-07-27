@@ -5,7 +5,12 @@ To create a new file go to *File > New* and select the required file type. A new
 
 h1. Open File
 
-To open a file in the _Content Panel_, double-click the file item in the _Workspace Panel_.
+To open a file in the _Content Panel_, double-click the file item in the _Project Explorer_.
+
+
+h1. Close File
+
+To close a file which is currently opened and a such file tab is active in the _Content Panel_ go to *File > Close* or use *Ctrl+W* shortcut.
 
 
 h1. Save/Save all/Save As... File
@@ -36,29 +41,25 @@ You can also use the tab browsing buttons *<*, *>* at the top right corner of th
 
 *Illustration. File tab browsing buttons.*
 
-{tip}
-You can view the full path to the opened file in the tip of the tab title.
-{tip}
 
-
-You can see some useful commands represented with special buttons on the toolbar and in the *Edit* on the top menu: *Undo/Redo Typing*, *Format*, *Show/Hide Line Numbers*:
+You can see some useful commands represented with special buttons on the toolbar and in the *Edit* on the top menu: *Undo/Redo Typing*, *Format*, *Show/Hide Line Numbers* and more:
 
 
 !edit.png|border=0!
 
-*Illustration. Undo/Redo, Format and Show/Hide Line Numbers on the toolbar and on the top menu*.
+*Illustration. Undo/Redo Typing, Format and Show/Hide Line Numbers on the toolbar and on the top menu*.
 
 
 h1. Change MIME Type of File
 
 You can change the MIME type of the closed file as follows:
-* *Step 1:* Click the target file in the _Workspace Panel_.
+* *Step 1:* Click the target file in the _Project Explorer_ or in the _Workspace Panel_.
 * *Step 2:* Go to *File > Rename...* from the top menu.
 * *Step 3:* Select the new MIME type from *Select mime-type* combo-box, or type another non-registered MIME type in this field.
 * *Step 4:* Click *Rename* to change the MIME type.
 
 {note}
-You cannot open the file with the non-registered MIME type in eXo IDE.
+The file with the non-registered MIME type in eXo IDE will be opened as plain text file.
 {note}
 
 h1. Preview File Properties
@@ -82,12 +83,12 @@ h1. Lock File
 
 This feature is used to protect your files from being changed or removed by another users. Lock or unlock a file by clicking the *Lock* or *Unlock* icon on the toolbar, or go to *Edit > Lock/Unlock File* on the top menu.
 
-The "Lock" icon is located next to the title of the locked file in the _Workspace Panel_ and at the title of a such file tab in the _Content Panel_:
+The "Lock" icon is located next to the title of the locked file in the _Project Explorer_ and at the title of a such file tab in the _Content Panel_:
 
 
 !locked_file.png|border=0!
 
-*Illustration. Locked file in Workspace Panel*
+*Illustration. Locked file in Project Explorer*
 
 
 !locked_read_only_mode.png|border=0!
@@ -127,25 +128,36 @@ The following table is the list of MIME types registered in the eXo IDE.
 | *POGO* | application/x-groovy | .groovy | Code Editor |
 | *Template* | application/x-groovy+html | .gtmpl | Code Editor |
 | *HTML* | text/html | .html | Code Editor |
-| *Google Gadget* | application/x-google-gadget | .xml | Code Editor |
+| *OpenSocial Gadget* | application/x-google-gadget | .xml | Code Editor |
 | *JavaScript* | text/javascript; application/javascript; application/x-javascript | .js | Code Editor |
 | *CSS* | text/css | .css | Code Editor |
 | *Data Object* | application/x-chromattic+groovy | .groovy | Code Editor |
+| *Java* | application/java | .java | Code Editor |
+| *JSP* | application/jsp | .java | Code Editor |
+| *PHP* | application/php; application/x-php | .php | Code Editor |
+| *Python* | text/x-python | .py | Code Editor |
+| *YAML* | text/yaml | .yml | Code Editor |
+| *Ruby* | application/x-ruby | .rb | Code Editor |
 | *<unrecognized>* | binary/octet-stream | | |
 
 {info}
-To load the Google Gadget file, you should set the MIME Type as "application/x-google-gadget" in the "Open file" dialog as figured out in the below illustration:
+To load the OpenSocial Gadget file, you should set the MIME Type as "application/x-google-gadget" in the "Open file" dialog as figured out in the below illustration:
 {info}
 
 !mimetypes.png!
 
-*Illustration. Open the Google Gadget file*
+*Illustration. Open the OpenSocial Gadget file*
 
+h1. Download File
+
+If you want to download some file from server Workspace, do as follows:
+* *Step 1:* Click the target file in the _Project Explorer_ or in the _Workspace Panel_.
+* *Step 2:* Go to *File > Download...* on the top menu.
 
 h1. Upload File
 
-To upload a loclal file directly to the _IDE Workspace_, go to *File > Upload File...*. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
-* *Step 1:* Select the *Gadget* folder in the _Workspace Panel._
+To upload a local file directly to the _IDE Workspace_, go to *File > Upload File...*. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
+* *Step 1:* Select the *Gadget* folder in the _Project Explorer_ or in the _Workspace Panel_.
 * *Step 2:* Go to *File > Upload File...* on the top menu.
 * *Step 3:* Click the *Browse...* button to select the *gadget.xml* file from the local device in the *File upload* dialog.
 * *Step 4:* Select the appropriate MIME type as _application/x-google-gadget_.

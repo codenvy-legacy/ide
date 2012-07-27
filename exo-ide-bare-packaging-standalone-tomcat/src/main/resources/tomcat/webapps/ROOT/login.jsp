@@ -54,15 +54,15 @@ function getXmlHTTP() {
 }
 
 function showRegisterForm() {
-	document.getElementById("loginForm").style.display="none";
+	document.getElementById("loginFormId").style.display="none";
 	document.getElementById("registerForm").style.display="block";
 	document.getElementById("newUserID").value = "";
 	document.getElementById("newUserPassword").value = "";
 }
 
-function showLoginForm() {
+function showloginFormId() {
 	document.getElementById("registerForm").style.display="none";
-	document.getElementById("loginForm").style.display="block";
+	document.getElementById("loginFormId").style.display="block";
 }
 
 function registerNewUser() {
@@ -88,7 +88,7 @@ function registerNewUser() {
                 alert("User " + login + " created.");
                 document.getElementById("userId").value = login;
             	document.getElementById("userPassword").value = password;
-                showLoginForm();
+                showloginFormId();
             }
             else {
             	alert("Can't register user.");
@@ -115,7 +115,7 @@ function registerNewUser() {
 	<tr align="center" valign="top">
 		<td>
 
-			<form id="loginForm" method="POST" action='<%=response.encodeURL("j_security_check")%>'>
+			<form id="loginFormId" method="POST" action='<%=response.encodeURL("j_security_check")%>'>
 				<table border="0" cellspacing="5">
 
 			<tr>
@@ -198,7 +198,7 @@ function registerNewUser() {
 				
 				<tr>
 					<td align="right"><input type="button" value="Register" onclick="registerNewUser();"></td>
-					<td align="left"><input type="button" value="Cancel" onclick="showLoginForm();"></td>
+					<td align="left"><input type="button" value="Cancel" onclick="showloginFormId();"></td>
 				</tr>
 			</table>
 		</div>
