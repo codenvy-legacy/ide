@@ -42,9 +42,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class OrganizeImportsTest extends CodeAssistantBaseTest
 {
    private static final String FILE_NAME = "GreetingController.java";
-   
-   private static final String VIEW_LOCATOR = "div#ideOrganizeImportsView-window.gwt-DialogBox";
-
    @Before
    public void beforeTest() throws Exception
    {
@@ -75,52 +72,38 @@ public class OrganizeImportsTest extends CodeAssistantBaseTest
    @Test
    public void organizeImportTest() throws Exception
    {
+      //step 1 check organize import
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
-
       assertThat(IDE.EDITOR.getTextFromCodeEditor(0)).doesNotContain("import java.util.HashMap;").doesNotContain(
          "import java.util.Map;");
-      
+
+      //step 3 add two new objects
       IDE.GOTOLINE.goToLine(21);
-      
       IDE.EDITOR.typeTextIntoEditor(0, "List a;\n Label b;");
       //To editor parse text 
       Thread.sleep(TestConstants.SLEEP);
-      
+
+      //step 3 organize import for new objects
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
-      waitForWindowOpened();
-      String ss = driver.findElement(By.cssSelector("div#ideOrganizeImportsView-window.gwt-DialogBox div table tbody tr.dialogMiddle td.dialogMiddleCenter div.dialogMiddleCenterInner div div div div div div div div div div div")).getText();
-      assertThat(ss).contains("com.sun.xml.internal.bind.v2.schemagen.xmlschema.List").contains("java.util.List").contains("java.awt.List");
-      driver.findElement(By.id("ideOrganizeImportNext")).click();
-      driver.findElement(By.id("ideOrganizeImportFinish")).click();
-
-    //To editor parse text 
+      IDE.ORGINIZEIMPORT.waitForWindowOpened();
+      String ss = IDE.ORGINIZEIMPORT.getTextFromImportList();
+      assertThat(ss).contains("com.sun.xml.internal.bind.v2.schemagen.xmlschema.List").contains("java.util.List")
+         .contains("java.awt.List");
+      
+      //driver.findElement(By.id("ideOrganizeImportNext")).click();
+      IDE.ORGINIZEIMPORT.nextBtnclick();
+      IDE.ORGINIZEIMPORT.waitForValueInImportList("com.sun.xml.internal.ws.org.objectweb.asm.Label");
+      IDE.ORGINIZEIMPORT.selectValueInImportList("com.sun.xml.internal.ws.org.objectweb.asm.Label");
+      IDE.ORGINIZEIMPORT.finishBtnclick();
+      //driver.findElement(By.id("ideOrganizeImportFinish")).click();
+      IDE.ORGINIZEIMPORT.waitForWindowClosed();
+      //To editor parse text 
       Thread.sleep(TestConstants.SLEEP);
-      assertThat(IDE.EDITOR.getTextFromCodeEditor(0)).contains("import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;").contains(
-               "import com.sun.xml.internal.ws.org.objectweb.asm.Label;");
+      
+      //step 4 check complete of the organize import
+      assertThat(IDE.EDITOR.getTextFromCodeEditor(0)).contains(
+         "import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;").contains(
+         "import com.sun.xml.internal.ws.org.objectweb.asm.Label;");
    }
 
-   /**
-    * 
-    */
-   private void waitForWindowOpened()
-   {
-      new WebDriverWait(driver,10).until(new ExpectedCondition<Boolean>(){
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement view = input.findElement(By.cssSelector(VIEW_LOCATOR));
-               return (view != null && view.isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
-   
-
-   }
 }
