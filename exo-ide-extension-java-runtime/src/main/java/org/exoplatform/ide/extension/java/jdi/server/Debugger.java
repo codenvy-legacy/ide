@@ -96,7 +96,7 @@ public class Debugger implements EventsHandler
    private static final int CHECKING_EVENTS_PERIOD = 1000;
 
    /**
-    * Timer for check new debugger events and send it over WebSocket connection.
+    * Timer for checking new debugger events and send it over WebSocket connection.
     */
    private Timer checkEventsTimer = new Timer();
 

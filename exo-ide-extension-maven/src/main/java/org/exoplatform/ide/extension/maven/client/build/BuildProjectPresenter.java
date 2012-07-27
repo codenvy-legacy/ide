@@ -659,7 +659,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       WebSocketMessage webSocketMessage =
          AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("buildStatus"))
+      if (!webSocketMessage.getEvent().equals("mavenBuildStatus"))
       {
          return;
       }

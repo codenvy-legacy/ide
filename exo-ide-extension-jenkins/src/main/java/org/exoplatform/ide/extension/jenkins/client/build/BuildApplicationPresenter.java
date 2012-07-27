@@ -267,28 +267,41 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         JenkinsService.get().buildJob(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<Object>()
+         String sessionId = null;
+         WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            @Override
-            protected void onSuccess(Object result)
+            sessionId = ws.getSessionId();
+         }
+         final String webSocketSessionId = sessionId;
+
+         JenkinsService.get().buildJob(vfs.getId(), project.getId(), jobName, sessionId,
+            new AsyncRequestCallback<Object>()
             {
-               buildInProgress = true;
+               @Override
+               protected void onSuccess(Object result)
+               {
+                  buildInProgress = true;
 
-               showBuildMessage("Building project <b>" + project.getPath() + "</b>");
+                  showBuildMessage("Building project <b>" + project.getPath() + "</b>");
 
-               display.startAnimation();
-               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
+                  display.startAnimation();
+                  display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
 
-               prevStatus = null;
-               refreshJobStatusTimer.schedule(delay);
-            }
+                  prevStatus = null;
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+                  if (webSocketSessionId == null)
+                  {
+                     refreshJobStatusTimer.schedule(delay);
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -418,34 +431,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
                      if (status.getStatus() == Status.END)
                      {
-                        IDE.fireEvent(new ApplicationBuiltEvent(status));
-
-                        try
-                        {
-                           JenkinsService.get().getJenkinsOutput(
-                              vfs.getId(),
-                              project.getId(),
-                              jobName,
-                              new AsyncRequestCallback<StringBuilder>(
-                                 new StringContentUnmarshaller(new StringBuilder()))
-                              {
-                                 @Override
-                                 protected void onSuccess(StringBuilder result)
-                                 {
-                                    showBuildMessage(result.toString());
-                                 }
-
-                                 @Override
-                                 protected void onFailure(Throwable exception)
-                                 {
-                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                 }
-                              });
-                        }
-                        catch (RequestException e)
-                        {
-                           IDE.fireEvent(new ExceptionThrownEvent(e));
-                        }
+                        onJobFinished(status);
                      }
                      else
                      {
@@ -467,6 +453,39 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          }
       }
    };
+
+   /**
+    * Performs actions when job status received.
+    * 
+    * @param status build job status
+    */
+   private void onJobFinished(JobStatus status)
+   {
+      IDE.fireEvent(new ApplicationBuiltEvent(status));
+
+      try
+      {
+         JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
+            new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  showBuildMessage(result.toString());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
 
    /**
     * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
@@ -496,8 +515,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          }
          final String webSocketSessionId = sessionId;
 
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false, webSocketSessionId,
-            new AsyncRequestCallback<String>()
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
+            webSocketSessionId, new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
@@ -568,11 +587,59 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
       WebSocketMessage webSocketMessage =
          AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("gitRepoInitialized"))
+      if (webSocketMessage.getEvent().equals("jenkinsBuildStatus"))
       {
+         onWebSocketMessageJenkinsBuildStatus(webSocketMessage);
+      }
+      else if (webSocketMessage.getEvent().equals("gitRepoInitialized"))
+      {
+         onWebSocketMessageGitRepoInitialized(webSocketMessage);
+      }
+   }
+
+   /**
+    * Performs actions when Jenkins job status received.
+    * 
+    * @param webSocketMessage WebSocket message
+    */
+   private void onWebSocketMessageJenkinsBuildStatus(WebSocketMessage webSocketMessage)
+   {
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         JobStatus buildStatus =
+            AutoBeanCodex.decode(JenkinsExtension.AUTO_BEAN_FACTORY, JobStatus.class, webSocketMessage.getData()).as();
+
+         updateJobStatus(buildStatus);
+         if (buildStatus.getStatus() == Status.END)
+         {
+            onJobFinished(buildStatus);
+         }
          return;
       }
 
+      String exceptionMessage = null;
+      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      {
+         exceptionMessage = webSocketException.getMessage();
+      }
+
+      buildInProgress = false;
+      display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+
+      if (exceptionMessage != null)
+      {
+         IDE.fireEvent(new OutputEvent(exceptionMessage, Type.ERROR));
+      }
+   }
+
+   /**
+    * Performs actions when Git-repository initialized.
+    * 
+    * @param webSocketMessage WebSocket message
+    */
+   private void onWebSocketMessageGitRepoInitialized(WebSocketMessage webSocketMessage)
+   {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       if (!project.getId().equals(webSocketMessage.getData().asString()))
       {
@@ -599,4 +666,5 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       String errorMessage = (exceptionMessage != null) ? exceptionMessage : GitExtension.MESSAGES.initFailed();
       IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
+
 }

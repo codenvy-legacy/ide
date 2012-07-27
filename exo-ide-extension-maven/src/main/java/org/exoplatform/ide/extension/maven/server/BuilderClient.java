@@ -59,7 +59,7 @@ public class BuilderClient
     */
    private static final Log LOG = ExoLogger.getLogger(WebSocketManager.class);
 
-   private static final int CHECKING_STATUS_PERIOD = 1000;
+   private static final int CHECKING_STATUS_PERIOD = 2000;
 
    public BuilderClient(InitParams initParams, WebSocketManager webSocketManager)
    {
@@ -284,18 +284,18 @@ public class BuilderClient
                if (!status.contains("\"status\":\"IN_PROGRESS\""))
                {
                   cancel();
-                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, status, null);
+                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, status, null);
                }
             }
             catch (IOException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, null, e);
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
             }
             catch (BuilderException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.BUILD_STATUS, null, e);
+               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
             }
          }
       }, 0, CHECKING_STATUS_PERIOD);

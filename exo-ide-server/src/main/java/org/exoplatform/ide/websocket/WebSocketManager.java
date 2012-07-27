@@ -42,9 +42,19 @@ public class WebSocketManager
     */
    public enum EventType {
       /**
-       * Event type for message that contains maven build job status.
+       * Event type for message with session identifier for client.
        */
-      BUILD_STATUS("buildStatus"),
+      WELCOME("welcome"),
+
+      /**
+       * Event type for message that contains status of the Maven build job.
+       */
+      MAVEN_BUILD_STATUS("mavenBuildStatus"),
+
+      /**
+       * Event type for message that contains status of the Jenkins build job.
+       */
+      JENKINS_BUILD_STATUS("jenkinsBuildStatus"),
 
       /**
        * Event type for message that contains debugger events.
@@ -59,12 +69,7 @@ public class WebSocketManager
       /**
        * Indicates that the git-repository has been cloned.
        */
-      GIT_REPO_CLONED("gitRepoCloned"),
-
-      /**
-       * Event type for message with session identifier for client.
-       */
-      WELCOME("welcome");
+      GIT_REPO_CLONED("gitRepoCloned");
 
       private final String eventTypeValue;
 
@@ -112,7 +117,7 @@ public class WebSocketManager
     * @param sessionId identifier of the WebSocket session
     * @param inbound inbound connection
     */
-   public void unregisterConnection(String sessionId, MessageInbound inbound)
+   public void deregisterConnection(String sessionId, MessageInbound inbound)
    {
       List<MessageInbound> userConnectionsList = connections.get(sessionId);
       if (userConnectionsList == null)

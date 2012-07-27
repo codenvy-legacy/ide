@@ -46,20 +46,50 @@ public interface BuildStatus
       }
    }
 
+   /**
+    * Returns the current build job status.
+    * 
+    * @return current build job status
+    */
    Status getStatus();
 
    int getExitCode();
 
+   /**
+    * Returns the specific details about the error.
+    * 
+    * @return an error message
+    */
    String getError();
 
+   /**
+    * Returns the URL to download artifact.
+    * 
+    * @return URL to download artifact
+    */
    String getDownloadUrl();
 
+   /**
+    * Sets the current build job status.
+    * 
+    * @param status current build job status
+    */
    void setStatus(Status status);
 
    void setExitCode(int exitCode);
 
+   /**
+    * Sets the message that describes the specific details about the error.
+    * 
+    * @param error an error message
+    */
    void setError(String error);
 
+   /**
+    * Changes the URL to download artifact
+    * 
+    * @param downloadUrl URL to download artifact
+    */
    void setDownloadUrl(String downloadUrl);
 
    String getTime();

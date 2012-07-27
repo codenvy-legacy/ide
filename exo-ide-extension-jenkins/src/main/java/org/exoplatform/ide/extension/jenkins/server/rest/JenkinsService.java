@@ -92,9 +92,21 @@ public class JenkinsService
    public void build( //
       @QueryParam("name") String jobName, //
       @QueryParam("projectid") String projectId, //
-      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("vfsid") String vfsId, //
+      @QueryParam("sessionid") String webSocketSessionId) throws IOException, JenkinsException, VirtualFileSystemException
    {
-      jenkins.build(jobName, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId);
+      VirtualFileSystem vfs = null;
+      if (vfsId != null)
+      {
+         vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      }
+
+      jenkins.build(jobName, vfs, projectId);
+      if (webSocketSessionId != null)
+      {
+         // start checking job status asynchronously
+         jenkins.startCheckingJobStatus(jobName, vfs, projectId, webSocketSessionId);
+      }
    }
 
    @Path("job/status")

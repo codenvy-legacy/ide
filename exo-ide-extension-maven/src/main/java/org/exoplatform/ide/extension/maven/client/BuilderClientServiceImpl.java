@@ -90,8 +90,8 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void build(String projectId, String vfsId, String webSocketSessionId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
+   public void build(String projectId, String vfsId, String webSocketSessionId,
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
 
