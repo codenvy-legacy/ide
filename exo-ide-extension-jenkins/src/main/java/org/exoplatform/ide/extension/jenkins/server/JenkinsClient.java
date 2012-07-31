@@ -779,11 +779,8 @@ public abstract class JenkinsClient
     *    virtual file system
     * @param projectId
     *    identifier of the project need to check
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session which will be used for sending the status of build job
     */
-   public void startCheckingJobStatus(final String jobName, final VirtualFileSystem vfs, final String projectId,
-      final String webSocketSessionId)
+   public void startCheckingJobStatus(final String jobName, final VirtualFileSystem vfs, final String projectId)
    {
       TimerTask task = new TimerTask()
       {
@@ -801,7 +798,7 @@ public abstract class JenkinsClient
                jobStatus = jobStatus(jobName, vfs, projectId);
                if (jobStatus.getStatus() != previousStatus)
                {
-                  sendWebSocketMessage(webSocketSessionId, toJson(jobStatus), null);
+                  publishWebSocketMessage(toJson(jobStatus), null);
                   previousStatus = jobStatus.getStatus();
                }
 
@@ -813,17 +810,17 @@ public abstract class JenkinsClient
             catch (IOException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, null, e);
+               publishWebSocketMessage(null, e);
             }
             catch (JenkinsException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, null, e);
+               publishWebSocketMessage(null, e);
             }
             catch (VirtualFileSystemException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, null, e);
+               publishWebSocketMessage(null, e);
             }
          }
       };
@@ -833,25 +830,23 @@ public abstract class JenkinsClient
    }
 
    /**
-    * Sends the message to the client over WebSocket connection.
+    * Publishes the message over WebSocket connection.
     * 
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session
     * @param data
     *    the data to be sent to the client
     * @param e
     *    an exception to be sent to the client
     */
-   private void sendWebSocketMessage(String webSocketSessionId, String data, Exception e)
+   private void publishWebSocketMessage(String data, Exception e)
    {
       try
       {
-         webSocketManager.send(webSocketSessionId, WebSocketManager.EventType.JENKINS_BUILD_STATUS, data, e);
+         webSocketManager.publish(WebSocketManager.EventType.JENKINS_BUILD_STATUS.toString(), data, e);
       }
       catch (IOException ex)
       {
          LOG.error(
-            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+            "An error occurs writing data to the client over WebSocket connection. " + ex.getMessage(), ex);
       }
    }
 }

@@ -25,6 +25,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.event.EventBus;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorEvent;
@@ -83,8 +85,6 @@ public class WebSocket
       }
    }
 
-   public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
-
    /**
     * The native WebSocket object.
     */
@@ -106,6 +106,13 @@ public class WebSocket
    private String sessionId;
 
    /**
+    * Event subscriber for this WebSocket instance.
+    */
+   private EventBus eventBus = new EventBus();
+
+   public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
+
+   /**
     * Counter of connection attempts.
     */
    private static int counterConnectionAttempts;
@@ -113,11 +120,20 @@ public class WebSocket
    /**
     * Creates a new WebSocket instance and connects to the remote socket location.
     */
-   private WebSocket()
+   protected WebSocket()
    {
       instance = this;
       url = "ws://" + Window.Location.getHost() + "/websocket";
       socket = WebSocketImpl.create(url);
+      init();
+   }
+
+   /**
+    * Initialize WebSocket instance.
+    */
+   private void init()
+   {
+      IDE.addHandler(WebSocketMessageEvent.TYPE, eventBus);
 
       socket.setOnOpenHandler(new WebSocketOpenedHandler()
       {
@@ -141,7 +157,7 @@ public class WebSocket
 
             if (!event.wasClean() && counterConnectionAttempts < 5)
             {
-               reconnectWebSocketTimer.schedule(10000);
+               reconnectWebSocketTimer.schedule(5000);
             }
          }
       });
@@ -170,7 +186,7 @@ public class WebSocket
     * Returns the instance of the {@link WebSocket} or <code>null</code>
     * if WebSocket not supported in the current web-browser.
     * 
-    * @return instance of {@link WebSocket}
+    * @return instance of {@link WebSocket} or <code>null</code> if WebSocket not supported
     */
    public static WebSocket getInstance()
    {
@@ -265,11 +281,10 @@ public class WebSocket
     */
    public void close()
    {
-      if (getReadyState() != ReadyState.OPEN)
+      if (getReadyState() == ReadyState.OPEN)
       {
-         return;
+         socket.close();
       }
-      socket.close();
    }
 
    /**
@@ -300,6 +315,28 @@ public class WebSocket
    public String getSessionId()
    {
       return sessionId;
+   }
+
+   /**
+    * Registers a new subscriber which will receive messages with a particular event type.
+    * 
+    * @param topicId topic identifier
+    * @param subscriber {@link Subscriber}
+    */
+   public void subscribe(String topicId, Subscriber subscriber)
+   {
+      eventBus.subscribe(topicId, subscriber);
+   }
+
+   /**
+    * Unregisters existing subscriber to receive messages with a particular event type.
+    * 
+    * @param topicId topic identifier
+    * @param subscriber {@link Subscriber}
+    */
+   public void unsubscribe(String topicId, Subscriber subscriber)
+   {
+      eventBus.unsubscribe(topicId, subscriber);
    }
 
    /**

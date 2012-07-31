@@ -206,10 +206,11 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+   public void clone(@QueryParam("usewebsocket") boolean useWebSocket,
+                     final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
-      if (request.getSessionId() == null)
+      if (!useWebSocket)
       {
          doClone(request);
       }
@@ -223,19 +224,19 @@ public class GitService
                try
                {
                   doClone(request);
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, null);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, null);
                }
                catch (GitException e)
                {
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
                }
                catch (URISyntaxException e)
                {
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
                }
             }
          }.run();
@@ -297,9 +298,10 @@ public class GitService
    @Path("init")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void init(final InitRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
+   public void init(@QueryParam("usewebsocket") boolean useWebSocket,
+                     final InitRequest request) throws GitException, LocalPathResolveException, VirtualFileSystemException
    {
-      if (request.getSessionId() == null)
+      if (!useWebSocket)
       {
          doInit(request);
       }
@@ -313,15 +315,15 @@ public class GitService
                try
                {
                   doInit(request);
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, null);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, null);
                }
                catch (GitException e)
                {
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  sendWebSocketMessage(request.getSessionId(), WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
                }
             }
          }.run();
@@ -641,25 +643,23 @@ public class GitService
    }
 
    /**
-    * Sends the message to the client over WebSocket connection.
+    * Publishes message over WebSocket connection.
     * 
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session
     * @param eventType
     *    WebSocket event type
     * @param e
     *    an exception to be sent to the client
     */
-   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, Exception e)
+   private void publishWebSocketMessage(WebSocketManager.EventType eventType, Exception e)
    {
       try
       {
-         webSocketManager.send(webSocketSessionId, eventType, "\"" + projectId + "\"", e);
+         webSocketManager.publish(eventType.toString(), "\"" + projectId + "\"", e);
       }
       catch (IOException ex)
       {
          LOG.error(
-            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 }

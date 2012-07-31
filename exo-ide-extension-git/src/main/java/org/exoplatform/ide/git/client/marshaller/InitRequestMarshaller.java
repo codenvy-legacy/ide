@@ -56,10 +56,6 @@ public class InitRequestMarshaller implements Marshallable, Constants
       JSONObject jsonObject = new JSONObject();
       jsonObject.put(WORKNG_DIR, new JSONString(initRequest.getWorkingDir()));
       jsonObject.put(BARE, JSONBoolean.getInstance(initRequest.isBare()));
-      if (initRequest.getSessionId() != null)
-      {
-         jsonObject.put(SESSION_ID, new JSONString(initRequest.getSessionId()));
-      }
       return jsonObject.toString();
    }
 

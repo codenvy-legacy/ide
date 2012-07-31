@@ -53,13 +53,13 @@ public class DebuggerService
    @Produces(MediaType.APPLICATION_JSON)
    public DebuggerInfo create(@QueryParam("host") String host,
                               @QueryParam("port") int port,
-                              @QueryParam("sessionid") String webSocketSessionId) throws DebuggerException
+                              @QueryParam("usewebsocket") boolean useWebSocket) throws DebuggerException
    {
       Debugger d = Debugger.newInstance(host, port);
-      if (!webSocketSessionId.trim().isEmpty())
+      if (useWebSocket)
       {
          // start checking for debugger events asynchronously
-         d.startCheckingEvents(d.id, webSocketSessionId);
+         d.startCheckingEvents(d.id);
       }
       return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
    }

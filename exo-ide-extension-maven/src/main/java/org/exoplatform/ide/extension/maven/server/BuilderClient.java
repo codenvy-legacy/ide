@@ -263,15 +263,13 @@ public class BuilderClient
    }
 
    /**
-    * Periodically checks the status of previously launched job and sends
-    * the status to WebSocket connection when build job will be finished.
+    * Periodically checks the status of previously launched job and publishes
+    * the status over the WebSocket connection when build job will be finished.
     * 
     * @param buildId
     *    identifier of the build job need to check
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session which will be used for sending the status of build job
     */
-   public void startCheckingBuildStatus(final String buildId, final String webSocketSessionId)
+   public void startCheckingBuildStatus(final String buildId)
    {
       new Timer().schedule(new TimerTask()
       {
@@ -284,18 +282,18 @@ public class BuilderClient
                if (!status.contains("\"status\":\"IN_PROGRESS\""))
                {
                   cancel();
-                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, status, null);
+                  publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, status, null);
                }
             }
             catch (IOException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
+               publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
             }
             catch (BuilderException e)
             {
                cancel();
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
+               publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
             }
          }
       }, 0, CHECKING_STATUS_PERIOD);
@@ -487,10 +485,8 @@ public class BuilderClient
    }
 
    /**
-    * Sends the message to the client over WebSocket connection.
+    * Publishes the message over WebSocket connection.
     * 
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session
     * @param eventType
     *    WebSocket event type
     * @param data
@@ -498,16 +494,16 @@ public class BuilderClient
     * @param e
     *    an exception to be sent to the client
     */
-   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, String data, Exception e)
+   private void publishWebSocketMessage(WebSocketManager.EventType eventType, String data, Exception e)
    {
       try
       {
-         webSocketManager.send(webSocketSessionId, eventType, data, e);
+         webSocketManager.publish(eventType.toString(), data, e);
       }
       catch (IOException ex)
       {
          LOG.error(
-            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 

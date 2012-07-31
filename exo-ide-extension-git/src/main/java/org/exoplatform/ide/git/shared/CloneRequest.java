@@ -57,11 +57,6 @@ public class CloneRequest extends GitRequest
    private int timeout;
 
    /**
-    * WebSocket session identifier.
-    */
-   private String sessionId;
-
-   /**
     * @param remoteUri URI of repository to be cloned
     * @param branchesToFetch list of remote branches to fetch in cloned
     *           repository
@@ -87,18 +82,6 @@ public class CloneRequest extends GitRequest
    {
       this.remoteUri = remoteUri;
       this.workingDir = workingDir;
-   }
-
-   /**
-    * @param remoteUri URI of repository to be cloned
-    * @param workingDir work directory for cloning
-    * @param sessionId WebSocket session identifier
-    */
-   public CloneRequest(String remoteUri, String workingDir, String sessionId)
-   {
-      this.remoteUri = remoteUri;
-      this.workingDir = workingDir;
-      this.sessionId = sessionId;
    }
 
    /**
@@ -193,21 +176,5 @@ public class CloneRequest extends GitRequest
    public void setTimeout(int timeout)
    {
       this.timeout = timeout;
-   }
-
-   /**
-    * @return WebSocket session identifier
-    */
-   public String getSessionId()
-   {
-      return sessionId;
-   }
-
-   /**
-    * @param sessionId WebSocket session identifier to set
-    */
-   public void setSessionId(String sessionId)
-   {
-      this.sessionId = sessionId;
    }
 }

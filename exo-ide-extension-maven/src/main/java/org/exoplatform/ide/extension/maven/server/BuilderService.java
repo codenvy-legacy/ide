@@ -79,16 +79,16 @@ public class BuilderService
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
-                         @QueryParam("sessionid") String webSocketSessionId, //
+                         @QueryParam("usewebsocket") boolean useWebSocket, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
       final String buildID = builder.build(vfs, projectId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
-      if (webSocketSessionId != null)
+      if (useWebSocket)
       {
          // start checking build status asynchronously
-         builder.startCheckingBuildStatus(buildID, webSocketSessionId);
+         builder.startCheckingBuildStatus(buildID);
       }
       return Response.status(202).location(location).entity(location.toString()).build();
    }

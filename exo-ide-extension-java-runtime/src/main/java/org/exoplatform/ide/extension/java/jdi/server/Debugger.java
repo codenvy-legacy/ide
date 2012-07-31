@@ -847,17 +847,13 @@ public class Debugger implements EventsHandler
    }
 
    /**
-    * Periodically checks for the new debugger events and sends the events
-    * to the WebSocket connection when the events is appeared.
+    * Periodically checks for the new debugger events and publishes it
+    * over the WebSocket connection.
     * 
     * @param debuggerId
     *    ID of debugger instance
-    * @param webSocketSessionId
-    *    identifier of WebSocket session which will be used for sending the debugger events
-    * @param webSocketManager
-    *    {@link WebSocketManager} instance
     */
-   public void startCheckingEvents(final String debuggerId, final String webSocketSessionId)
+   public void startCheckingEvents(final String debuggerId)
    {
       checkEventsTimer.schedule(new TimerTask()
       {
@@ -870,7 +866,7 @@ public class Debugger implements EventsHandler
                if (!eventsList.isEmpty())
                {
                   DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
-                  sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS,
+                  publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS,
                      toJson(debuggerEvents), null);
                }
             }
@@ -878,13 +874,13 @@ public class Debugger implements EventsHandler
             {
                cancel();
                LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS, null, e);
+               publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS, null, e);
             }
             catch (IllegalArgumentException e)
             {
                // debugger not found
                cancel();
-               sendWebSocketMessage(webSocketSessionId, WebSocketManager.EventType.DEBUGGER_EVENTS, null,
+               publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS, null,
                   new DebuggerException(e.getMessage(), e));
             }
          }
@@ -892,10 +888,8 @@ public class Debugger implements EventsHandler
    }
 
    /**
-    * Sends the message to the client over WebSocket connection.
+    * Publishes the message over WebSocket connection.
     * 
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session
     * @param eventType
     *    WebSocket event type
     * @param data
@@ -903,16 +897,16 @@ public class Debugger implements EventsHandler
     * @param e
     *    an exception to be sent to the client
     */
-   private void sendWebSocketMessage(String webSocketSessionId, WebSocketManager.EventType eventType, String data, Exception e)
+   private void publishWebSocketMessage(WebSocketManager.EventType eventType, String data, Exception e)
    {
       try
       {
-         webSocketManager.send(webSocketSessionId, eventType, data, e);
+         webSocketManager.publish(eventType.toString(), data, e);
       }
       catch (IOException ex)
       {
          LOG.error(
-            "An error occurs writing data to the client (session ID: " + webSocketSessionId + "). " + ex.getMessage(), ex);
+            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 }

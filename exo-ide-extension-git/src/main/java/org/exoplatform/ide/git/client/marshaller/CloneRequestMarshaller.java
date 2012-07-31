@@ -59,10 +59,6 @@ public class CloneRequestMarshaller implements Marshallable, Constants
       {
          jsonObject.put(REMOTE_NAME, new JSONString(cloneRequest.getRemoteName()));
       }
-      if (cloneRequest.getSessionId() != null)
-      {
-         jsonObject.put(SESSION_ID, new JSONString(cloneRequest.getSessionId()));
-      }
       return jsonObject.toString();
    }
 

@@ -23,10 +23,10 @@ import org.apache.catalina.websocket.WsOutbound;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Class used for managing WebSocket connections and sending messages to clients.
@@ -45,6 +45,21 @@ public class WebSocketManager
        * Event type for message with session identifier for client.
        */
       WELCOME("welcome"),
+
+      /**
+       * Event type for subscribing to receive messages on a particular message topic.
+       */
+      SUBSCRIBE("subscribe"),
+
+      /**
+       * Event type for unsubscribing to receive messages on a particular message topic.
+       */
+      UNSUBSCRIBE("unsubscribe"),
+
+      /**
+       * Event type for publishing message with a particular message topic.
+       */
+      PUBLISH("publish"),
 
       /**
        * Event type for message that contains status of the Maven build job.
@@ -69,7 +84,12 @@ public class WebSocketManager
       /**
        * Indicates that the git-repository has been cloned.
        */
-      GIT_REPO_CLONED("gitRepoCloned");
+      GIT_REPO_CLONED("gitRepoCloned"),
+
+      /**
+       * Indicates that Heroku application has been created.
+       */
+      HEROKU_APP_CREATED("herokuAppCreated");
 
       private final String eventTypeValue;
 
@@ -86,9 +106,19 @@ public class WebSocketManager
    }
 
    /**
-    * Stores user connections.
+    * Stores connection identifiers mapped to the connections themselves.
+    * Used for sending message to the client by identifier.
     */
-   private ConcurrentMap<String, List<MessageInbound>> connections = new ConcurrentHashMap<String, List<MessageInbound>>();
+   private ConcurrentMap<String, CopyOnWriteArraySet<MessageInbound>> connections =
+      new ConcurrentHashMap<String, CopyOnWriteArraySet<MessageInbound>>();
+
+   /**
+    * Stores event types mapped to the subscribers.
+    * Used for publish messages to the clients which subscribed
+    * to receive messages on a particular message topic.
+    */
+   private ConcurrentMap<String, CopyOnWriteArraySet<String>> events =
+      new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>();
 
    /**
     * Register user connection in active connection list.
@@ -98,16 +128,25 @@ public class WebSocketManager
     */
    public void registerConnection(String sessionId, MessageInbound inbound)
    {
-      List<MessageInbound> userConnectionsList = connections.get(sessionId);
-      if (userConnectionsList != null)
+      if (sessionId == null)
       {
-         userConnectionsList.add(inbound);
+         throw new NullPointerException("Session identifier must not be null");
+      }
+      if (inbound == null)
+      {
+         throw new NullPointerException("Inbound must not be null");
+      }
+
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      if (connectionsSet != null)
+      {
+         connectionsSet.add(inbound);
       }
       else
       {
-         userConnectionsList = new ArrayList<MessageInbound>();
-         userConnectionsList.add(inbound);
-         connections.put(sessionId, userConnectionsList);
+         connectionsSet = new CopyOnWriteArraySet<MessageInbound>();
+         connectionsSet.add(inbound);
+         connections.put(sessionId, connectionsSet);
       }
    }
 
@@ -117,18 +156,102 @@ public class WebSocketManager
     * @param sessionId identifier of the WebSocket session
     * @param inbound inbound connection
     */
-   public void deregisterConnection(String sessionId, MessageInbound inbound)
+   public void unregisterConnection(String sessionId, MessageInbound inbound)
    {
-      List<MessageInbound> userConnectionsList = connections.get(sessionId);
-      if (userConnectionsList == null)
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      if (connectionsSet != null)
       {
+         connectionsSet.remove(inbound);
+         if (connectionsSet.isEmpty())
+         {
+            connections.remove(sessionId);
+         }
+      }
+   }
+
+   /**
+    * Subscribes client to receive messages on a particular message topic.
+    * 
+    * @param sessionId client's session identifier
+    * @param topicId topic identifier
+    */
+   public void subscribe(String sessionId, String topicId)
+   {
+      if (sessionId == null)
+      {
+         throw new NullPointerException("Session identifier must not be null");
+      }
+      if (topicId == null)
+      {
+         throw new NullPointerException("Topic identifier must not be null");
+      }
+
+      CopyOnWriteArraySet<String> subscribersSet = events.get(sessionId);
+      if (subscribersSet != null)
+      {
+         subscribersSet.add(sessionId);
+      }
+      else
+      {
+         subscribersSet = new CopyOnWriteArraySet<String>();
+         subscribersSet.add(sessionId);
+         events.put(topicId, subscribersSet);
+      }
+   }
+
+   /**
+    * Unsubscribes client to receive messages on a particular message topic.
+    * 
+    * @param sessionId client's session identifier
+    * @param topicId topic identifier. If <code>null</code> - client will be unsubscribed to all subscriptions.
+    */
+   public void unsubscribe(String sessionId, String topicId)
+   {
+      if (topicId == null)
+      {
+         // unsubscribe client to all subscriptions
+         ConcurrentHashMap<String, CopyOnWriteArraySet<String>> eventsCopy =
+            new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>(events);
+         for (Entry<String, CopyOnWriteArraySet<String>> entry : eventsCopy.entrySet())
+         {
+            CopyOnWriteArraySet<String> connectionsSet = entry.getValue();
+            connectionsSet.remove(sessionId);
+            if (connectionsSet.isEmpty())
+            {
+               events.remove(entry.getKey());
+            }
+         }
          return;
       }
 
-      userConnectionsList.remove(inbound);
-      if (userConnectionsList.isEmpty())
+      CopyOnWriteArraySet<String> subscribersSet = events.get(topicId);
+      if (subscribersSet != null)
       {
-         connections.remove(sessionId);
+         subscribersSet.remove(sessionId);
+         if (subscribersSet.isEmpty())
+         {
+            events.remove(topicId);
+         }
+      }
+   }
+
+   /**
+    * Publishes message with a particular topic.
+    * 
+    * @param topicId topic identifier
+    * @param message the message
+    * @param e an exception
+    * @throws IOException
+    */
+   public void publish(String topicId, String message, Exception e) throws IOException
+   {
+      if (events.containsKey(topicId))
+      {
+         CopyOnWriteArraySet<String> subscribersSet = events.get(topicId);
+         for (String subscriber : subscribersSet)
+         {
+            send(subscriber, topicId, message, e);
+         }
       }
    }
 
@@ -139,17 +262,35 @@ public class WebSocketManager
     * will be sent to all connections.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param eventType {@link EventType}
+    * @param eventType event type
     * @param data the data to be sent to the client
     * @param e an exception to be sent to the client
     * @throws IOException if an error occurs writing to the client
     */
    public void send(String sessionId, EventType eventType, String data, Exception e) throws IOException
    {
+      send(sessionId, eventType.toString(), data, e);
+   }
+
+   /**
+    * Sends the message to client.
+    * <p><strong>Note:</strong> if user has more than one active
+    * connections with the same session identifier then message
+    * will be sent to all connections.
+    * 
+    * @param sessionId identifier of the WebSocket session
+    * @param eventType event type
+    * @param data the data to be sent to the client
+    * @param e an exception to be sent to the client
+    * @throws IOException if an error occurs writing to the client
+    */
+   public void send(String sessionId, String eventType, String data, Exception e) throws IOException
+   {
       String exception = null;
       if (e != null)
       {
-         exception = "{\"type\":\"" + e.getClass().getSimpleName() + "\",\"message\":\"" + e.getMessage() + "\"}";
+         String errorMessage = e.getMessage().replaceAll("\n", " ");
+         exception = "{\"type\":\"" + e.getClass().getSimpleName() + "\",\"message\":\"" + errorMessage + "\"}";
       }
 
       if (data == null || data.trim().isEmpty())
@@ -160,13 +301,13 @@ public class WebSocketManager
       String wsMessage =
          "{\"event\":\"" + eventType + "\", \"data\":" + data + ", " + "\"exception\":" + exception + "}";
 
-      List<MessageInbound> userConnectionsList = connections.get(sessionId);
-      if (userConnectionsList == null)
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      if (connectionsSet == null)
       {
-         throw new IllegalArgumentException("WebSocket session with ID: " + sessionId + " not found.");
+         throw new IllegalArgumentException("Client's session with ID " + sessionId + " not found.");
       }
 
-      for (MessageInbound messageInbound : userConnectionsList)
+      for (MessageInbound messageInbound : connectionsSet)
       {
          WsOutbound wsOut = messageInbound.getWsOutbound();
          wsOut.writeTextMessage(CharBuffer.wrap(wsMessage));

@@ -161,24 +161,24 @@ public class GitClientServiceImpl extends GitClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, java.lang.String, java.lang.String, boolean, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, java.lang.String, java.lang.String, boolean, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void init(String vfsId, String projectid, String projectName, boolean bare, String webSocketSessionId,
+   public void init(String vfsId, String projectid, String projectName, boolean bare, boolean useWebSocket,
       AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + INIT;
 
       boolean async = false;
       RequestStatusHandler statusHandler = null;
-      if (webSocketSessionId == null)
+      if (!useWebSocket)
       {
          async = true;
          statusHandler = new InitRequestStatusHandler(projectName);
       }
 
-      InitRequest initRequest = new InitRequest(projectid, bare, webSocketSessionId);
+      InitRequest initRequest = new InitRequest(projectid, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&usewebsocket=" + useWebSocket;
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, async).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000).requestStatusHandler(statusHandler)
          .send(callback);
@@ -186,27 +186,27 @@ public class GitClientServiceImpl extends GitClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, org.exoplatform.ide.vfs.client.model.ProjectModel, java.lang.String, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      String webSocketSessionId, AsyncRequestCallback<String> callback) throws RequestException
+      boolean useWebSocket, AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
 
       boolean async = false;
       RequestStatusHandler statusHandler = null;
-      if (webSocketSessionId == null)
+      if (!useWebSocket)
       {
          async = true;
          statusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
       }
 
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId(), webSocketSessionId);
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
+      String params = "vfsid=" + vfsId + "&projectid=" + project.getId() + "&usewebsocket=" + useWebSocket;
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, async)
          .requestStatusHandler(statusHandler).data(marshaller.marshal())

@@ -56,8 +56,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
 import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -115,7 +114,7 @@ import java.util.Set;
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
    ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler,
-   WebSocketMessageHandler
+   Subscriber
 {
 
    private Display display;
@@ -133,8 +132,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private FileModel activeFile;
 
    private ProjectModel project;
-
-   private WebSocket ws = WebSocket.getInstance();
 
    public interface Display extends IsView
    {
@@ -457,7 +454,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          display = new DebuggerView(debuggerInfo);
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
-         
+
+         WebSocket ws = WebSocket.getInstance();
          if (ws == null || WebSocket.ReadyState.OPEN != ws.getReadyState())
          {
             checkDebugEventsTimer.scheduleRepeating(3000);
@@ -626,7 +624,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    public void reLaunchDebugger(DebugApplicationInstance debugApplicationInstance)
    {
-      ReLaunchDebuggerPresenter runDebuggerPresenter = new ReLaunchDebuggerPresenter(debugApplicationInstance);
+      ReLaunchDebuggerPresenter runDebuggerPresenter = new ReLaunchDebuggerPresenter(debugApplicationInstance, this);
       RunDebuggerView view = new RunDebuggerView();
       runDebuggerPresenter.bindDisplay(view);
       IDE.getInstance().openView(view.asView());
@@ -744,14 +742,17 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-         String sessionId = null;
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = ws.getSessionId();
+            useWebSocketForCallback = true;
+            ws.subscribe("debuggerEvents", this);
          }
+         final boolean useWebSocket = useWebSocketForCallback;
 
          DebuggerClientService.getInstance().create(debugApplicationInstance.getDebugHost(),
-            debugApplicationInstance.getDebugPort(), sessionId, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
+            debugApplicationInstance.getDebugPort(), useWebSocket, new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
                @Override
                public void onSuccess(DebuggerInfo result)
@@ -763,6 +764,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                protected void onFailure(Throwable exception)
                {
                   reLaunchDebugger(debugApplicationInstance);
+                  if (useWebSocket)
+                  {
+                     ws.unsubscribe("debuggerEvents", DebuggerPresenter.this);
+                  }
                }
             });
       }
@@ -972,19 +977,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
     */
    @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
+   public void onMessage(WebSocketMessage webSocketMessage)
    {
-      String message = event.getMessage();
-
-      WebSocketMessage webSocketMessage =
-         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("debuggerEvents"))
-      {
-         return;
-      }
+      WebSocket.getInstance().unsubscribe("debuggerEvents", this);
 
       WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
       if (webSocketException == null)

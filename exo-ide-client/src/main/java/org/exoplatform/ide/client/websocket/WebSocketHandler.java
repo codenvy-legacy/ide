@@ -18,34 +18,27 @@
  */
 package org.exoplatform.ide.client.websocket;
 
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
 
 /**
- * Handler for WebSocket connection.
+ * Handler that opens WebSocket connection on start IDE and close WebSocket on close IDE.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $
  *
  */
-public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler,
-   WebSocketMessageHandler
+public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler
 {
 
    public WebSocketHandler()
    {
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ApplicationClosedEvent.TYPE, this);
-      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -54,7 +47,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      // prepare WebSocket connection on start IDE
+      // invoke WebSocket.getInstance() to prepare WebSocket connection on start IDE
       WebSocket.getInstance();
    }
 
@@ -70,25 +63,4 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          ws.close();
       }
    }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
-    */
-   @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
-   {
-      String message = event.getMessage();
-
-      WebSocketMessage webSocketMessage =
-         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (webSocketMessage.getEvent().equals("welcome"))
-      {
-         WebSocket ws = WebSocket.getInstance();
-         if (ws != null)
-         {
-            ws.setSessionId(webSocketMessage.getData().asString());
-         }
-      }
-   }
-
 }

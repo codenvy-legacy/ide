@@ -23,7 +23,10 @@ import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound;
+import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ide.helper.JsonHelper;
+import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.websocket.WebSocketManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -109,6 +112,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
                + sessionId + ").");
          }
          webSocketManager.unregisterConnection(sessionId, this);
+         webSocketManager.unsubscribe(sessionId, null);
       }
 
       /**
@@ -117,7 +121,39 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onTextMessage(CharBuffer message) throws IOException
       {
-         throw new UnsupportedOperationException("Receiving messages is not supported.");
+         // TODO hide parsing into WebSocketMessage object
+         String topicId = null;
+         String eventId = null;
+         try
+         {
+            JsonValue jsonMessage = JsonHelper.parseJson(message.toString());
+            if (jsonMessage == null || !jsonMessage.isObject())
+            {
+               return;
+            }
+            eventId = jsonMessage.getElement("eventId").getStringValue();
+            topicId = jsonMessage.getElement("topicId").getStringValue();
+         }
+         catch (ParsingResponseException e)
+         {
+            e.printStackTrace();
+         }
+
+         if (WebSocketManager.EventType.SUBSCRIBE.toString().equals(eventId))
+         {
+            webSocketManager.subscribe(sessionId, topicId);
+            return;
+         }
+         else if (WebSocketManager.EventType.UNSUBSCRIBE.toString().equals(eventId))
+         {
+            webSocketManager.unsubscribe(sessionId, topicId);
+            return;
+         }
+         else if (WebSocketManager.EventType.PUBLISH.toString().equals(eventId))
+         {
+            //WebSocketManager.onPublish(sessionId, new WampPublishMessage(parser));
+            return;
+         }
       }
 
       /**
@@ -126,7 +162,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onBinaryMessage(ByteBuffer message) throws IOException
       {
-         throw new UnsupportedOperationException("Receiving messages is not supported.");
+         throw new UnsupportedOperationException("Receiving binary messages is not supported.");
       }
    }
 

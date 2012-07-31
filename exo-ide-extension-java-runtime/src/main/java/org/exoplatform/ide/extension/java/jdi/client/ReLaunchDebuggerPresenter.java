@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
@@ -55,9 +56,15 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
 
    private final DebugApplicationInstance instance;
 
-   public ReLaunchDebuggerPresenter(DebugApplicationInstance instance)
+   /**
+    * Used for subscribe/unsubscribe on receive WebSocket messages.
+    */
+   private final Subscriber webSocketSubscriber; 
+
+   public ReLaunchDebuggerPresenter(DebugApplicationInstance instance, Subscriber webSocketSubscriber)
    {
       this.instance = instance;
+      this.webSocketSubscriber = webSocketSubscriber;
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -101,14 +108,16 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-         String sessionId = null;
-         WebSocket ws = WebSocket.getInstance();
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = ws.getSessionId();
+            useWebSocketForCallback = true;
+            ws.subscribe("debuggerEvents", webSocketSubscriber);
          }
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(), sessionId,
+         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(), useWebSocket,
             new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
                @Override
@@ -123,6 +132,10 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
                protected void onFailure(Throwable exception)
                {
 //                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+                  if (useWebSocket)
+                  {
+                     ws.unsubscribe("debuggerEvents", webSocketSubscriber);
+                  }
                }
             });
       }

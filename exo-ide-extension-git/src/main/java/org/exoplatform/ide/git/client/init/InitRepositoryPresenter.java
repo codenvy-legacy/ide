@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.client.init;
 
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -38,8 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
 import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -53,7 +50,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: Mar 24, 2011 9:07:58 AM anya $
  * 
  */
-public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler, WebSocketMessageHandler
+public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler, Subscriber
 {
    public interface Display extends IsView
    {
@@ -96,7 +93,6 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    public InitRepositoryPresenter()
    {
       IDE.addHandler(InitRepositoryEvent.TYPE, this);
-      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -149,24 +145,25 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       boolean bare = display.getBareValue().getValue();
       try
       {
-         String sessionId = null;
-         WebSocket ws = WebSocket.getInstance();
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = ws.getSessionId();
+            useWebSocketForCallback = true;
             statusHandler = new InitRequestStatusHandler(projectName);
             statusHandler.requestInProgress(projectId);
+            ws.subscribe("gitRepoInitialized", this);
          }
-         final String webSocketSessionId = sessionId;
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare, webSocketSessionId,
+         GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare, useWebSocket,
             new AsyncRequestCallback<String>()
             {
 
                @Override
                protected void onSuccess(String result)
                {
-                  if (webSocketSessionId == null)
+                  if (!useWebSocket)
                   {
                      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
                      IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
@@ -180,6 +177,10 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.initFailed();
                   IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  if (useWebSocket)
+                  {
+                     ws.unsubscribe("gitRepoInitialized", InitRepositoryPresenter.this);
+                  }
                }
             });
       }
@@ -194,19 +195,12 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
     */
    @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
+   public void onMessage(WebSocketMessage webSocketMessage)
    {
-      String message = event.getMessage();
-
-      WebSocketMessage webSocketMessage =
-         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("gitRepoInitialized"))
-      {
-         return;
-      }
+      WebSocket.getInstance().unsubscribe("gitRepoInitialized", this);
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       if (!project.getId().equals(webSocketMessage.getData().asString()))

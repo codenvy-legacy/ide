@@ -48,8 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
 import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
@@ -77,7 +76,7 @@ import java.util.List;
  * 
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
-   VfsChangedHandler, WebSocketMessageHandler
+   VfsChangedHandler, Subscriber
 {
    public interface Display extends IsView
    {
@@ -159,7 +158,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -202,15 +200,16 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       try
       {
-         String sessionId = null;
-         WebSocket ws = WebSocket.getInstance();
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = ws.getSessionId();
+            useWebSocketForCallback = true;
+            ws.subscribe("mavenBuildStatus", this);
          }
-         final String webSocketSessionId = sessionId;
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         BuilderClientService.getInstance().build(projectId, vfs.getId(), sessionId,
+         BuilderClientService.getInstance().build(projectId, vfs.getId(), useWebSocket,
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -222,7 +221,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   display.startAnimation();
                   previousStatus = null;
 
-                  if (webSocketSessionId == null)
+                  if (!useWebSocket)
                   {
                      refreshBuildStatusTimer.schedule(delay);
                   }
@@ -241,6 +240,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   else
                   {
                      IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+                  if (useWebSocket)
+                  {
+                     ws.unsubscribe("mavenBuildStatus", BuildProjectPresenter.this);
                   }
                }
             });
@@ -650,19 +653,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
     */
    @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
+   public void onMessage(WebSocketMessage webSocketMessage)
    {
-      String message = event.getMessage();
-
-      WebSocketMessage webSocketMessage =
-         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("mavenBuildStatus"))
-      {
-         return;
-      }
+      WebSocket.getInstance().unsubscribe("mavenBuildStatus", this);
 
       WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
       if (webSocketException == null)
@@ -674,7 +670,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
 
       String exceptionMessage = null;
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      if (webSocketException.getMessage() != null && !webSocketException.getMessage().isEmpty())
       {
          exceptionMessage = webSocketException.getMessage();
       }
