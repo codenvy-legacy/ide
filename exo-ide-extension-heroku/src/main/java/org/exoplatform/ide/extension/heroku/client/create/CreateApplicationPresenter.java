@@ -23,6 +23,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,16 +36,22 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
+import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +62,7 @@ import java.util.List;
  * 
  */
 public class CreateApplicationPresenter extends GitPresenter implements ViewClosedHandler, CreateApplicationHandler,
-   LoggedInHandler
+   LoggedInHandler, Subscriber
 {
    interface Display extends IsView
    {
@@ -191,15 +200,40 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       try
       {
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            ws.subscribe("herokuAppCreated", this);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
+
          HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
-            new HerokuAsyncRequestCallback(this)
+            useWebSocket, new HerokuAsyncRequestCallback(this)
             {
 
                @Override
                protected void onSuccess(List<Property> properties)
                {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
+                  if (!useWebSocket)
+                  {
+                     IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+                     IDE.fireEvent(new RefreshBrowserEvent(project));
+                  }
+               }
+
+               /**
+                * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onFailure(java.lang.Throwable)
+                */
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+                  if (useWebSocket)
+                  {
+                     ws.unsubscribe("herokuAppCreated", CreateApplicationPresenter.this);
+                  }
                }
             });
       }
@@ -251,5 +285,73 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
       {
          doCreateApplication();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    */
+   @Override
+   public void onMessage(WebSocketMessage webSocketMessage)
+   {
+      WebSocket.getInstance().unsubscribe("herokuAppCreated", this);
+
+      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      if (webSocketException == null)
+      {
+         List<Property> properties = parseApplicationProperties(webSocketMessage.getData().getPayload());
+         if (properties != null)
+         {
+            IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+            IDE.fireEvent(new RefreshBrowserEvent(project));
+         }
+         return;
+      }
+
+      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      {
+         if (webSocketException.getMessage().contains("Authentication required"))
+         {
+            IDE.addHandler(LoggedInEvent.TYPE, this);
+            IDE.fireEvent(new LoginEvent());
+            return;
+         }
+
+         IDE.fireEvent(new OutputEvent(webSocketException.getMessage(), Type.ERROR));
+      }
+   }
+
+   /**
+    * Deserializes data in JSON format to List that contain application properties.
+    * 
+    * @param jsonData data in JSON format
+    */
+   private List<Property> parseApplicationProperties(String jsonData)
+   {
+      if (jsonData == null || jsonData.isEmpty())
+      {
+         return null;
+      }
+
+      JSONValue json = JSONParser.parseStrict(jsonData);
+      if (json == null)
+      {
+         return null;
+      }
+      JSONObject jsonObject = json.isObject();
+      if (jsonObject == null)
+      {
+         return null;
+      }
+
+      List<Property> properties = new ArrayList<Property>();
+      for (String key : jsonObject.keySet())
+      {
+         if (jsonObject.get(key).isString() != null)
+         {
+            String value = jsonObject.get(key).isString().stringValue();
+            properties.add(new Property(key, value));
+         }
+      }
+      return properties;
    }
 }

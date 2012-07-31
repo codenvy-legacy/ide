@@ -289,23 +289,23 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    {
       try
       {
-         String sessionId = null;
+         boolean useWebSocketForCallback = false;
          WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            sessionId = ws.getSessionId();
+            useWebSocketForCallback = true;
             gitCloneStatusHandler = new CloneRequestStatusHandler(project.getName(), gitLocation);
             gitCloneStatusHandler.requestInProgress(project.getId());
          }
-         final String webSocketSessionId = sessionId;
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null, webSocketSessionId,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null, useWebSocket,
             new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  if (webSocketSessionId == null)
+                  if (!useWebSocket)
                   {
                      updateProperties();
                   }
