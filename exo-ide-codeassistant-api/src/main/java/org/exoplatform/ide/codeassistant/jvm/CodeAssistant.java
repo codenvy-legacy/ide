@@ -37,6 +37,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -398,9 +399,16 @@ public abstract class CodeAssistant
       List<TypeInfo> searchResult =
          storage.getTypesInfoByNamePrefix(namePrefix, getProjectDependencys(projectId, vfsId));
       List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
+      List<TypeInfo> result = new ArrayList<TypeInfo>();
       if (list != null)
-         searchResult.addAll(list);
-      return searchResult;
+      {
+         result.addAll(list);
+      }
+         if(searchResult != null)
+      {
+         result.addAll(searchResult);
+      }
+      return result;
    }
 
    /**
@@ -417,11 +425,18 @@ public abstract class CodeAssistant
    {
       List<String> packages = storage.getPackages(prefix, getProjectDependencys(projectId, vfsId));
       List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
+      List<String> result = new ArrayList<String>();
       if (packagesFromProject != null)
       {
-         packages.addAll(packagesFromProject);
+         result.addAll(packagesFromProject);
       }
-      return packages;
+
+      if (packages != null)
+      {
+         result.addAll(packages);
+
+      }
+      return result;
    }
 
    /**
