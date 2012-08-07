@@ -9,7 +9,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M9-SNAPSHOT</version>
+      <version>1.2.0-M9</version>
    </parent>
 
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -819,22 +819,14 @@
                         <move file="${project.build.directory}/tomcat-ide/lib/logback-classic-${ch.qos.logback.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar" />
                         <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
                         <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war"
-                           overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war"
-                           overwrite="true" />   
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />   
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                            <patternset>
@@ -938,12 +930,9 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war"
-                                 dest="${project.build.directory}/packager-conf/unwar" />
-                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
-                                 overwrite="true" />
-                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
-                                 overwrite="true" />
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml" overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>

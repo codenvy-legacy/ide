@@ -4,7 +4,7 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M9-SNAPSHOT</version>
+      <version>1.2.0-M9</version>
    </parent>
    <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
    <packaging>jar</packaging>
@@ -733,7 +733,7 @@
                            <groupId>com.google.gwt</groupId>
                            <artifactId>gwt-user</artifactId>
                            <version>2.4.0</version>
-                           version>
+                           version&gt;
                         </artifactItem>
                      </artifactItems>
                   </configuration>

@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M9-SNAPSHOT</version>
+      <version>1.2.0-M9</version>
    </parent>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
@@ -703,40 +703,40 @@
                            <tasks>
                               <mkdir dir="target/git/repository/dev-monit" />
                               <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
-                                  overwrite="true" />
+                                  overwrite="true" /&gt;
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}">
                            <patternset>
-                              <exclude name="**/bin/**"/>
-                              <exclude name="**/demos/**"/>
-                              <exclude name="**/src/**"/>
-                              <exclude name="**/docs/javadoc/**"/>
-                              <exclude name="**/docs/remoteapi/**"/>
-                              <exclude name="**/docs/testing/**"/>
-                              <exclude name="**/docs/tools/**"/>
-                              <exclude name="**/docs/javadoc/**"/>
-                              <exclude name="**/ABOUT"/>
-                              <exclude name="**/COPYING"/>
-                              <exclude name="**/README"/>
-                              <exclude name="**/README.ORM"/>
-                              <exclude name="**/RELEASE_NOTES"/>
-                              <exclude name="**/RELEASE_NOTES.ORM"/>
+                              <exclude name="**/bin/**" />
+                              <exclude name="**/demos/**" />
+                              <exclude name="**/src/**" />
+                              <exclude name="**/docs/javadoc/**" />
+                              <exclude name="**/docs/remoteapi/**" />
+                              <exclude name="**/docs/testing/**" />
+                              <exclude name="**/docs/tools/**" />
+                              <exclude name="**/docs/javadoc/**" />
+                              <exclude name="**/ABOUT" />
+                              <exclude name="**/COPYING" />
+                              <exclude name="**/README" />
+                              <exclude name="**/README.ORM" />
+                              <exclude name="**/RELEASE_NOTES" />
+                              <exclude name="**/RELEASE_NOTES.ORM" />
                            </patternset>
                         </unzip>
-                        <move  file="${project.build.directory}/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/appengine-java-sdk"/>
+                        <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/appengine-java-sdk" />
                         
                               
                                <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}">
                            <patternset>
-                              <exclude name="**/demos/**"/>
-                              <exclude name="**/new_project_template/**"/>
-                              <exclude name="**/BUGS"/>
-                              <exclude name="**/LICENSE"/>
-                              <exclude name="**/README"/>
-                              <exclude name="**/RELEASE_NOTES"/>
-                              <exclude name="**/VERSION"/>
+                              <exclude name="**/demos/**" />
+                              <exclude name="**/new_project_template/**" />
+                              <exclude name="**/BUGS" />
+                              <exclude name="**/LICENSE" />
+                              <exclude name="**/README" />
+                              <exclude name="**/RELEASE_NOTES" />
+                              <exclude name="**/VERSION" />
                            </patternset>
                         </unzip>
-                        <move  file="${project.build.directory}/google_appengine" tofile="${project.build.directory}/appengine-python-sdk"/>
+                        <move file="${project.build.directory}/google_appengine" tofile="${project.build.directory}/appengine-python-sdk" />
                         
                            </tasks>
                         </configuration>
