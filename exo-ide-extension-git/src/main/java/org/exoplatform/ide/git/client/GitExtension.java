@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
+import org.exoplatform.ide.git.client.clone.GetCommitersHandler;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddFilesControl;
 import org.exoplatform.ide.git.client.control.BranchesControl;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.git.client.control.CloneRepositoryControl;
 import org.exoplatform.ide.git.client.control.CommitControl;
 import org.exoplatform.ide.git.client.control.DeleteRepositoryControl;
 import org.exoplatform.ide.git.client.control.FetchControl;
+import org.exoplatform.ide.git.client.control.GetCommitersControl;
 import org.exoplatform.ide.git.client.control.InitRepositoryControl;
 import org.exoplatform.ide.git.client.control.MergeControl;
 import org.exoplatform.ide.git.client.control.PullControl;
@@ -71,6 +73,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
+   
+   public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -100,6 +104,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowHistoryControl());
       IDE.getInstance().addControl(new ShowStatusControl());
       IDE.getInstance().addControl(new ShowProjectGitReadOnlyUrl());
+      IDE.getInstance().addControl(new GetCommitersControl());
       IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
       // Create presenters:
@@ -122,6 +127,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new MergePresenter();
 
       new ShowProjectGitReadOnlyUrlPresenter();
+      
+      new GetCommitersHandler();
    }
 
    /**

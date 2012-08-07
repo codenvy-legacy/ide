@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.samples.server.rest;
 
 import org.exoplatform.ide.extension.samples.server.Github;
 import org.exoplatform.ide.extension.samples.server.GithubException;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.helper.ParsingResponseException;
@@ -34,6 +35,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -84,5 +86,15 @@ public class GithubService
       VirtualFileSystemException
    {
       return github.listRepositories();
+   }
+   
+   
+   @GET
+   @Path("collaborators/{user}/{repository}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository) throws IOException, GithubException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      return github.getCollaborators(user, repository);
    }
 }

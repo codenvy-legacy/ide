@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.ide.git.server.CommitersBean;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitUser;
@@ -538,6 +540,21 @@ public class GitService
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return gitUrlResolver.resolve(uriInfo, vfs, projectId);
+   }
+   
+   @GET
+   @Path("commiters")
+   public Commiters getCommiters(@Context UriInfo uriInfo) throws VirtualFileSystemException, GitException
+   {
+      GitConnection gitConnection = getGitConnection();
+      try
+      {
+         return new CommitersBean(gitConnection.getCommiters());
+      }
+      finally
+      {
+         gitConnection.close();
+      }
    }
 
    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,

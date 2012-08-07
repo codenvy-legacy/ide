@@ -18,29 +18,35 @@
  */
 package org.exoplatform.ide.git.server.jgit;
 
-import org.eclipse.jgit.api.Git;
-import org.exoplatform.ide.git.shared.LogRequest;
+import junit.framework.Assert;
 
-import java.io.ByteArrayOutputStream;
+import org.eclipse.jgit.api.Git;
+import org.exoplatform.ide.git.shared.GitUser;
+
 import java.io.File;
+import java.util.List;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: LogTest.java 22811 2011-03-22 07:28:35Z andrew00x $
+ * Created by The eXo Platform SAS.
+ * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: Aug 3, 2012
  */
-public class LogTest extends BaseTest
+public class GetCommitersTest extends BaseTest
 {
-   public void testLog() throws Exception
+   public void testGetCommiters() throws Exception
    {
       Git git = new Git(getDefaultRepository());
       File workDir = git.getRepository().getWorkTree();
       addFile(workDir, "t-log1", "AAA\n");
       git.add().addFilepattern(".").call();
-      git.commit().setMessage("log\ntest").setCommitter("andrey", "andrey@mail.com").call();
+      git.commit().setMessage("log\ntest").setCommitter("Chuck Norris", "gmail@chucknorris.com").call();
       
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      getDefaultConnection().log(new LogRequest()).writeTo(out);
-      // TODO test output.
-      System.out.println(new String(out.toByteArray()));
+      List<GitUser> commiters = getDefaultConnection().getCommiters();
+      Assert.assertNotNull("No commiters", commiters);
+      Assert.assertEquals("Must be to comitters one of them owner of repository, other commiter from test", 2, commiters.size());
+      Assert.assertEquals("gmail@chucknorris.com", commiters.get(0).getEmail());
+      Assert.assertEquals("Chuck Norris", commiters.get(0).getName());
    }
+   
 }

@@ -18,13 +18,22 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.git.client.clone.GetCommitersEvent;
+import org.exoplatform.ide.git.client.clone.GetCommitersHandler;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -102,4 +111,6 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
    {
       this.vfs = event.getVfsInfo();
    }
+   
+  
 }

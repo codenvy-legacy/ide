@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,6 +30,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -36,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -170,7 +174,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void cloneRepository()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
 
@@ -185,6 +189,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  
 
                }
 

@@ -65,6 +65,7 @@ import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -134,6 +135,8 @@ public class GitClientServiceImpl extends GitClientService
    public static final String REMOVE = "/ide/git/rm";
 
    public static final String RESET = "/ide/git/reset";
+   
+   public static final String COMMITERS = "/ide/git/commiters";
 
    /**
     * REST service context.
@@ -633,6 +636,16 @@ public class GitClientServiceImpl extends GitClientService
       String url = restServiceContext + RO_URL;
       url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+   }
+   
+   @Override
+   public void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + COMMITERS;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params)
+      .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
 }

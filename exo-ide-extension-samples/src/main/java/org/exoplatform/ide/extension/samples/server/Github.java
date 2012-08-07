@@ -29,6 +29,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
@@ -40,7 +41,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -95,7 +99,7 @@ public class Github
       {
          throw new InvalidArgumentException("'User's name must not be null.");
       }
-      
+
       String url = "https://api.github.com/users/" + user + "/repos";
       String method = "GET";
       String response = doJsonRequest(url, method, null, 200);
@@ -108,6 +112,38 @@ public class Github
       {
          Repository[] repos = (Repository[])ObjectBuilder.createArray(Repository[].class, reposArray);
          return repos;
+      }
+      catch (JsonException jsone)
+      {
+         throw new ParsingResponseException(jsone.getMessage(), jsone);
+      }
+   }
+
+   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GithubException
+   {
+      String url = "https://api.github.com/repos/" + user + "/" + repository + "/collaborators";
+      String method = "GET";
+      String response = doJsonRequest(url, method, null, 200);
+      JsonValue jsonArray = JsonHelper.parseJson(response);
+      jsonArray = formatJsonArray(jsonArray);
+      try
+      {
+         Iterator<JsonValue> iterator = jsonArray.getElements();
+         Collaborators collaborators = new CollaboratorsImpl();
+         while (iterator.hasNext())
+         {
+            JsonValue obj = iterator.next();
+            if (obj.isObject())
+            {
+               url = obj.getElement("url").getStringValue();
+               response = doJsonRequest(url, method, null, 200);
+               JsonValue jsonUser = JsonHelper.parseJson(response);
+               jsonUser = formatObject(jsonUser);
+               GitHubUserImpl userImpl = ObjectBuilder.createObject(GitHubUserImpl.class, jsonUser);
+               collaborators.getCollaborators().add(userImpl);
+            }
+         }
+         return collaborators;
       }
       catch (JsonException jsone)
       {
@@ -214,17 +250,23 @@ public class Github
          JsonValue obj = objIterator.next();
          if (obj.isObject())
          {
-            Iterator<String> keysIterator = obj.getKeys();
-            ObjectValue objectValue = new ObjectValue();
-            while (keysIterator.hasNext())
-            {
-               String key = keysIterator.next();
-               objectValue.addElement(formatKey(key), obj.getElement(key));
-            }
+            ObjectValue objectValue = formatObject(obj);
             array.addElement(objectValue);
          }
       }
       return array;
+   }
+
+   private ObjectValue formatObject(JsonValue obj)
+   {
+      Iterator<String> keysIterator = obj.getKeys();
+      ObjectValue objectValue = new ObjectValue();
+      while (keysIterator.hasNext())
+      {
+         String key = keysIterator.next();
+         objectValue.addElement(formatKey(key), obj.getElement(key));
+      }
+      return objectValue;
    }
 
    /**
