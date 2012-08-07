@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.authentication;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -74,6 +76,8 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       HasClickHandlers getLoginButton();
 
+      HasClickHandlers getLoginGoogleButton();
+
       HasClickHandlers getCancelButton();
 
       void setLoginButtonEnabled(boolean enabled);
@@ -123,7 +127,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      // Nothing todo
+     //nothing to do
    }
 
    /**
@@ -151,6 +155,23 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       }
 
       display = GWT.create(Display.class);
+
+      display.getLoginGoogleButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+
+            int clientHeight = Window.getClientHeight();
+            int clientWidth = Window.getClientWidth();
+            loginWithGoogleAccount(getAuthorizationContext()
+                  + "/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=google&redirect_after_login=/IDE/popup_login.jsp",//
+               getAuthorizationPageURL(), 450, 500, clientWidth, clientHeight);
+            IDE.getInstance().closeView(display.asView().getId());
+
+         }
+      });
 
       display.getLoginButton().addClickHandler(new ClickHandler()
       {
@@ -357,11 +378,52 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    }
 
    private native String getAuthorizationPageURL() /*-{
-                                                   return $wnd.authorizationPageURL;
-                                                   }-*/;
+		return $wnd.authorizationPageURL;
+   }-*/;
 
    private native String getSecurityCheckURL() /*-{
-                                               return $wnd.securityCheckURL;
-                                               }-*/;
+		return $wnd.securityCheckURL;
+   }-*/;
+
+   private native String getAuthorizationContext() /*-{
+		return $wnd.authorizationContext;
+   }-*/;
+
+   public static native void loginWithGoogleAccount(String authUrl, String redirectAfterLogin, int popupWindowWidth,
+      int popupWindowHeight, int clientWidth, int clientHeight) /*-{
+		function Popup(authUrl, redirectAfterLogin, popupWindowWidth,
+				popupWindowHeight) {
+			this.authUrl = authUrl;
+			this.redirectAfterLogin = redirectAfterLogin;
+			this.popupWindowWidth = popupWindowWidth;
+			this.popupWindowHeight = popupWindowHeight;
+
+			var popup_close_handler = function() {
+				if (!popupWindow || popupWindow.closed) {
+					popupWindow = null;
+					if (popupCloseHandlerIntervalId) {
+						window.clearInterval(popupCloseHandlerIntervalId);
+					}
+					window.location.replace(redirectAfterLogin);
+				}
+			}
+
+			this.open_window = function() {
+				var x = Math.max(0, Math.round(clientWidth / 2)
+						- Math.round(this.popupWindowWidth / 2));
+				var y = Math.max(0, Math.round(clientHeight / 2)
+						- Math.round(this.popupWindowHeight / 2));
+				popupWindow = window.open(this.authUrl, 'popup', 'width='
+						+ this.popupWindowWidth + ',height='
+						+ this.popupWindowHeight + ',left=' + x + ',top=' + y);
+				popupCloseHandlerIntervalId = window.setInterval(
+						popup_close_handler, 100);
+			}
+		}
+
+		var popup = new Popup(authUrl, redirectAfterLogin, popupWindowWidth,
+				popupWindowHeight);
+		popup.open_window();
+   }-*/;
 
 }

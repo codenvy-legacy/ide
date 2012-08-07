@@ -38,6 +38,36 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+       <dependency>
+           <groupId>org.crsh</groupId>
+           <artifactId>crsh.shell.core</artifactId>
+           <version>${crash.version}</version>
+           <scope>provided</scope>
+       </dependency>
+       <dependency>
+           <groupId>org.crsh</groupId>
+           <artifactId>crsh.jcr</artifactId>
+           <version>${crash.version}</version>
+           <scope>provided</scope>
+           <exclusions>
+               <exclusion>
+                   <artifactId>slf4j-api</artifactId>
+                   <groupId>org.slf4j</groupId>
+               </exclusion>
+               <exclusion>
+                   <artifactId>crsh.shell.packaging</artifactId>
+                   <groupId>org.crsh</groupId>
+               </exclusion>
+               <exclusion>
+                   <artifactId>sshd-core</artifactId>
+                   <groupId>org.apache.sshd</groupId>
+               </exclusion>
+               <exclusion>
+                   <artifactId>sshd-pam</artifactId>
+                   <groupId>org.apache.sshd</groupId>
+               </exclusion>
+           </exclusions>
+       </dependency>
    </dependencies>
    <build>
       <resources>

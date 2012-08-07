@@ -175,8 +175,8 @@
                <div id="federatedloginFormId">
                   <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account</button>
-                  <button onclick="open_popup('google');">
-                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button>
+                  <!--button onclick="open_popup('google');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button-->
                </div>
                <div id="registerForm" style="display:none;">
                   <table border="0" cellspacing="5">

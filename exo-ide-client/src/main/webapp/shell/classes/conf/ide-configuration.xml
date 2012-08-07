@@ -471,4 +471,18 @@
       <type>org.exoplatform.ide.websocket.WebSocketManager</type>
    </component>
 
+<!--
+   ***************************************************************************************
+   ********************************** OpenID Support *************************************
+   ***************************************************************************************
+-->
+
+   <component>
+      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
+   </component>
+
 </configuration>

@@ -443,6 +443,12 @@
                   </exclusion>
                </exclusions>
             </dependency>
+            
+           <dependency>
+             <groupId>com.google.gwt</groupId>
+             <artifactId>gwt-user</artifactId>
+           </dependency>
+         
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
@@ -602,12 +608,12 @@
                <systemPath>${java.home}/../lib/tools.jar</systemPath>
             </dependency-->
 
-            <dependency>
+            <!--dependency>
                <groupId>com.google.appengine</groupId>
                <artifactId>appengine-tools-sdk</artifactId>
                <version>1.6.5</version>
                <scope>provided</scope>
-            </dependency>
+            </dependency-->
          </dependencies>
          <build>
             <plugins>

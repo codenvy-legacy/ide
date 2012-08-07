@@ -372,7 +372,6 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
             <configuration>
-               <warSourceExcludes>.gwt-tmp/**,**/gadget/**,**/shell/**,**/application/**</warSourceExcludes>
                <packagingExcludes>**/classes/org/**,**/classes/gadget/**,**/lib/**,
                   **/classes/default/**,**/classes/ide/**,
                   **/Commons.css,
