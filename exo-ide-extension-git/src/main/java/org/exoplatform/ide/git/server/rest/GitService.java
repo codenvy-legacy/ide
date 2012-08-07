@@ -224,19 +224,19 @@ public class GitService
                try
                {
                   doClone(request);
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, null);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, null);
                }
                catch (GitException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
                }
                catch (URISyntaxException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
                }
             }
          }.run();
@@ -315,15 +315,15 @@ public class GitService
                try
                {
                   doInit(request);
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, null);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, null);
                }
                catch (GitException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, e);
                }
             }
          }.run();
@@ -645,21 +645,20 @@ public class GitService
    /**
     * Publishes message over WebSocket connection.
     * 
-    * @param eventType
+    * @param channels
     *    WebSocket event type
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(WebSocketManager.EventType eventType, Exception e)
+   private void publishWebSocketMessage(WebSocketManager.Channels channels, Exception e)
    {
       try
       {
-         webSocketManager.publish(eventType.toString(), "\"" + projectId + "\"", e);
+         webSocketManager.publish(channels.toString(), "\"" + projectId + "\"", e, null);
       }
       catch (IOException ex)
       {
-         LOG.error(
-            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
+         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 }

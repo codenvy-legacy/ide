@@ -282,18 +282,18 @@ public class BuilderClient
                if (!status.contains("\"status\":\"IN_PROGRESS\""))
                {
                   cancel();
-                  publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, status, null);
+                  publishWebSocketMessage(status, null);
                }
             }
             catch (IOException e)
             {
                cancel();
-               publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
+               publishWebSocketMessage(null, e);
             }
             catch (BuilderException e)
             {
                cancel();
-               publishWebSocketMessage(WebSocketManager.EventType.MAVEN_BUILD_STATUS, null, e);
+               publishWebSocketMessage(null, e);
             }
          }
       }, 0, CHECKING_STATUS_PERIOD);
@@ -487,23 +487,20 @@ public class BuilderClient
    /**
     * Publishes the message over WebSocket connection.
     * 
-    * @param eventType
-    *    WebSocket event type
     * @param data
     *    the data to be sent to the client
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(WebSocketManager.EventType eventType, String data, Exception e)
+   private void publishWebSocketMessage(String data, Exception e)
    {
       try
       {
-         webSocketManager.publish(eventType.toString(), data, e);
+         webSocketManager.publish(WebSocketManager.Channels.MAVEN_BUILD_STATUS.toString(), data, e, null);
       }
       catch (IOException ex)
       {
-         LOG.error(
-            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
+         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 

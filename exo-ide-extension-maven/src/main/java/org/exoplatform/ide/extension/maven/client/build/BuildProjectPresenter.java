@@ -46,9 +46,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
@@ -76,7 +77,7 @@ import java.util.List;
  * 
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
-   VfsChangedHandler, Subscriber
+   VfsChangedHandler, WebSocketEventHandler
 {
    public interface Display extends IsView
    {
@@ -205,7 +206,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.subscribe("mavenBuildStatus", this);
+            ws.eventBus().subscribe("mavenBuildStatus", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -243,7 +244,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   }
                   if (useWebSocket)
                   {
-                     ws.unsubscribe("mavenBuildStatus", BuildProjectPresenter.this);
+                     ws.eventBus().unsubscribe("mavenBuildStatus", BuildProjectPresenter.this);
                   }
                }
             });
@@ -253,6 +254,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          setBuildInProgress(false);
          display.stopAnimation();
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+      }
+      catch (WebSocketException e)
+      {
       }
    }
 
@@ -653,18 +657,19 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onMessage(WebSocketMessage webSocketMessage)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("mavenBuildStatus", this);
+      WebSocket.getInstance().eventBus().unsubscribe("mavenBuildStatus", this);
 
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          AutoBean<BuildStatus> buildStatusBean =
-            AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class, webSocketMessage.getData());
+            AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class,
+               webSocketEventMessage.getPayload());
          afterBuildFinished(buildStatusBean.as());
          return;
       }

@@ -16,34 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
- * Thrown when there was a problem with WebSocket connection.
+ * The WELCOME message is send from the server to a client,
+ * when the connection has successfully been established.
+ * The WELCOME message is the only message that contains
+ * the session identifier for the client.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
+ * @version $Id: WebSocketWelcomeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-public class WebSocketException extends Exception
+public interface WebSocketWelcomeMessage extends WebSocketMessage
 {
+   String getSessionId();
 
-   public WebSocketException()
-   {
-      super();
-   }
-
-   public WebSocketException(String message)
-   {
-      super(message);
-   }
-
-   public WebSocketException(Throwable cause)
-   {
-      super(cause);
-   }
-
-   public WebSocketException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
+   void setSessionId(String sessionId);
 }

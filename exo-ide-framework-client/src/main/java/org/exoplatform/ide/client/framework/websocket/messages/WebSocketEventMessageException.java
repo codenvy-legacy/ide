@@ -16,20 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
-
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
- * Class that implements this interface will receive all
- * messages published to the topics to which this class subscribe,
- * and all subscribers to a topic will receive the same messages.
+ * Interface represents the WebSocket message that contains description of the exception.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: Subscriber.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
+ * @version $Id: WebSocketExceptionMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface Subscriber
+public interface WebSocketEventMessageException extends WebSocketMessage
 {
-   public void onMessage(WebSocketMessage webSocketMessage);
+   String getName();
+
+   void setName(String name);
+
+   String getMessage();
+
+   void setMessage(String message);
 }

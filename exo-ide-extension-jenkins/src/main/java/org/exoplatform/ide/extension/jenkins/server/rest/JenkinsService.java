@@ -93,7 +93,7 @@ public class JenkinsService
       @QueryParam("name") String jobName, //
       @QueryParam("projectid") String projectId, //
       @QueryParam("vfsid") String vfsId, //
-      @QueryParam("useWebSocket") boolean useWebSocket) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("usewebsocket") boolean useWebSocket) throws IOException, JenkinsException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = null;
       if (vfsId != null)

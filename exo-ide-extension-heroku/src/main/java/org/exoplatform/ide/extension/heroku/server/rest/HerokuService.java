@@ -144,28 +144,23 @@ public class HerokuService
                {
                   application = doAppsCreate(remote);
 
-                  publishWebSocketMessage(WebSocketManager.EventType.HEROKU_APP_CREATED.toString(),
-                     toJson(application), null);
+                  publishWebSocketMessage(toJson(application), null);
                }
                catch (VirtualFileSystemException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.HEROKU_APP_CREATED.toString(),
-                     null, e);
+                  publishWebSocketMessage(null, e);
                }
                catch (HerokuException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.HEROKU_APP_CREATED.toString(),
-                     null, e);
+                  publishWebSocketMessage(null, e);
                }
                catch (ParsingResponseException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.HEROKU_APP_CREATED.toString(),
-                     null, e);
+                  publishWebSocketMessage(null, e);
                }
                catch (IOException e)
                {
-                  publishWebSocketMessage(WebSocketManager.EventType.HEROKU_APP_CREATED.toString(),
-                     null, e);
+                  publishWebSocketMessage(null, e);
                }
             }
          }.run();
@@ -308,23 +303,20 @@ public class HerokuService
    /**
     * Publishes message over WebSocket connection.
     * 
-    * @param eventType
-    *    event type
     * @param data
     *    the data to be sent to the client
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(String eventType, String data, Exception e)
+   private void publishWebSocketMessage(String data, Exception e)
    {
       try
       {
-         webSocketManager.publish(eventType.toString(), data, e);
+         webSocketManager.publish(WebSocketManager.Channels.HEROKU_APP_CREATED.toString(), data, e, null);
       }
       catch (IOException ex)
       {
-         LOG.error(
-            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
+         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 }

@@ -16,18 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide;
+package org.exoplatform.ide.websocket;
 
 import org.apache.catalina.websocket.Constants;
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.StreamInbound;
 import org.apache.catalina.websocket.WebSocketServlet;
 import org.apache.catalina.websocket.WsOutbound;
-import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
-import org.exoplatform.ide.websocket.WebSocketManager;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -66,6 +62,11 @@ public class IDEWebSocketServlet extends WebSocketServlet
    protected StreamInbound createWebSocketInbound(String subProtocol, HttpServletRequest request)
    {
       return new WSMessageInbound(request.getSession().getId());
+
+      // TODO
+      // Generate new unique session identifier for every new connection as follow:
+      // return new WSMessageInbound(UUID.randomUUID().toString());
+      // After client reconnecting to the server, client send session id to server
    }
 
    /**
@@ -74,7 +75,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private final class WSMessageInbound extends MessageInbound
    {
       /**
-       * Session identifier of a connected user.
+       * Session identifier of a WebSocket connection.
        */
       private String sessionId;
 
@@ -90,14 +91,6 @@ public class IDEWebSocketServlet extends WebSocketServlet
       protected void onOpen(WsOutbound outbound)
       {
          webSocketManager.registerConnection(sessionId, this);
-         try
-         {
-            webSocketManager.send(sessionId, WebSocketManager.EventType.WELCOME, "\"" + sessionId + "\"", null);
-         }
-         catch (IOException e)
-         {
-            LOG.error("An error occurs writing data to the client (sessionId " + sessionId + ")." + e.getMessage(), e);
-         }
       }
 
       /**
@@ -112,7 +105,6 @@ public class IDEWebSocketServlet extends WebSocketServlet
                + sessionId + ").");
          }
          webSocketManager.unregisterConnection(sessionId, this);
-         webSocketManager.unsubscribe(sessionId, null);
       }
 
       /**
@@ -121,39 +113,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onTextMessage(CharBuffer message) throws IOException
       {
-         // TODO hide parsing into WebSocketMessage object
-         String topicId = null;
-         String eventId = null;
-         try
-         {
-            JsonValue jsonMessage = JsonHelper.parseJson(message.toString());
-            if (jsonMessage == null || !jsonMessage.isObject())
-            {
-               return;
-            }
-            eventId = jsonMessage.getElement("eventId").getStringValue();
-            topicId = jsonMessage.getElement("topicId").getStringValue();
-         }
-         catch (ParsingResponseException e)
-         {
-            e.printStackTrace();
-         }
-
-         if (WebSocketManager.EventType.SUBSCRIBE.toString().equals(eventId))
-         {
-            webSocketManager.subscribe(sessionId, topicId);
-            return;
-         }
-         else if (WebSocketManager.EventType.UNSUBSCRIBE.toString().equals(eventId))
-         {
-            webSocketManager.unsubscribe(sessionId, topicId);
-            return;
-         }
-         else if (WebSocketManager.EventType.PUBLISH.toString().equals(eventId))
-         {
-            //WebSocketManager.onPublish(sessionId, new WampPublishMessage(parser));
-            return;
-         }
+         webSocketManager.onMessage(sessionId, message.toString());
       }
 
       /**

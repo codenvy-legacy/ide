@@ -16,39 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
+package org.exoplatform.ide.client.framework.websocket.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when WebSocket message was received.
+ * Event is fired, when error has occurred during websocket connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
  * 
  */
-public class WebSocketMessageEvent extends GwtEvent<WebSocketMessageHandler>
+public class WebSocketErrorEvent extends GwtEvent<WebSocketErrorHandler>
 {
-   /**
-    * Received message.
-    */
-   private String message;
-
-   public WebSocketMessageEvent(String message)
-   {
-      this.message = message;
-   }
-
    /**
     * Type, used to register event.
     */
-   public static final GwtEvent.Type<WebSocketMessageHandler> TYPE = new GwtEvent.Type<WebSocketMessageHandler>();
+   public static final GwtEvent.Type<WebSocketErrorHandler> TYPE = new GwtEvent.Type<WebSocketErrorHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketMessageHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketErrorHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -57,19 +47,8 @@ public class WebSocketMessageEvent extends GwtEvent<WebSocketMessageHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(WebSocketMessageHandler handler)
+   protected void dispatch(WebSocketErrorHandler handler)
    {
-      handler.onWebSocketMessage(this);
+      handler.onWebSocketError(this);
    }
-
-   /**
-    * Returns message.
-    * 
-    * @return message
-    */
-   public String getMessage()
-   {
-      return message;
-   }
-
 }

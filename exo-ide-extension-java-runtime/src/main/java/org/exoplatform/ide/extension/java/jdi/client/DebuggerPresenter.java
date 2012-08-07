@@ -54,9 +54,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -114,7 +115,7 @@ import java.util.Set;
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
    ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler,
-   Subscriber
+   WebSocketEventHandler
 {
 
    private Display display;
@@ -643,7 +644,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       IDE.getInstance().closeView(display.asView().getId());
-
+      WebSocket.getInstance().eventBus().unsubscribe("debuggerEvents", this);
    }
 
    @Override
@@ -747,7 +748,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.subscribe("debuggerEvents", this);
+            ws.eventBus().subscribe("debuggerEvents", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -766,7 +767,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   reLaunchDebugger(debugApplicationInstance);
                   if (useWebSocket)
                   {
-                     ws.unsubscribe("debuggerEvents", DebuggerPresenter.this);
+                     ws.eventBus().unsubscribe("debuggerEvents", DebuggerPresenter.this);
                   }
                }
             });
@@ -775,7 +776,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
-
+      catch (WebSocketException e)
+      {
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    private void runApplication(String warUrl)
@@ -977,18 +981,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onMessage(WebSocketMessage webSocketMessage)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("debuggerEvents", this);
-
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
-         parseDebuggerEvents(debuggerEventList, webSocketMessage.getData().getPayload());
+         parseDebuggerEvents(debuggerEventList, webSocketEventMessage.getPayload().getPayload());
          eventListReceived(debuggerEventList);
          return;
       }

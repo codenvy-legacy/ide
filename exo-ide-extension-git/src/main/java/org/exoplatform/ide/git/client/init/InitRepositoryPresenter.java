@@ -33,10 +33,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -50,7 +51,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: Mar 24, 2011 9:07:58 AM anya $
  * 
  */
-public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler, Subscriber
+public class InitRepositoryPresenter extends GitPresenter implements InitRepositoryHandler, WebSocketEventHandler
 {
    public interface Display extends IsView
    {
@@ -152,7 +153,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             useWebSocketForCallback = true;
             statusHandler = new InitRequestStatusHandler(projectName);
             statusHandler.requestInProgress(projectId);
-            ws.subscribe("gitRepoInitialized", this);
+            ws.eventBus().subscribe("gitRepoInitialized", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -173,42 +174,47 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.unsubscribe("gitRepoInitialized", InitRepositoryPresenter.this);
+                     ws.eventBus().unsubscribe("gitRepoInitialized", InitRepositoryPresenter.this);
                   }
                }
             });
       }
       catch (RequestException e)
       {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         handleError(e);
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
       }
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   private void handleError(Throwable e)
+   {
+      String errorMessage =
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+   }
+
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onMessage(WebSocketMessage webSocketMessage)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("gitRepoInitialized", this);
+      WebSocket.getInstance().eventBus().unsubscribe("gitRepoInitialized", this);
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      if (!project.getId().equals(webSocketMessage.getData().asString()))
+      if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {
          return;
       }
 
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          statusHandler.requestFinished(project.getId());
@@ -217,15 +223,9 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
          return;
       }
 
-      String exceptionMessage = null;
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
-      {
-         exceptionMessage = webSocketException.getMessage();
-      }
-
-      statusHandler.requestError(project.getId(), new Exception(exceptionMessage));
-      String errorMessage = (exceptionMessage != null) ? exceptionMessage : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      Exception e = new Exception(webSocketException.getMessage());
+      statusHandler.requestError(project.getId(), e);
+      handleError(e);
    }
 
 }

@@ -25,19 +25,18 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.event.EventBus;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorHandler;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketOpenedEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
 
 /**
  * Class represents a WebSocket connection.
+ * Each connection is identified by it's session identifier.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
@@ -101,7 +100,7 @@ public class WebSocket
    private String url;
 
    /**
-    * Session identifier of the current WebSocket connection.
+    * The session identifier of this WebSocket connection.
     */
    private String sessionId;
 
@@ -204,6 +203,16 @@ public class WebSocket
    }
 
    /**
+    * Returns an {@link EventBus}.
+    * 
+    * @return an {@link EventBus}
+    */
+   public EventBus eventBus()
+   {
+      return eventBus;
+   }
+
+   /**
     * Timer for reconnecting WebSocket.
     */
    private Timer reconnectWebSocketTimer = new Timer()
@@ -217,10 +226,10 @@ public class WebSocket
    };
 
    /**
-    * Checks whether WebSocket are supported in the current web-browser.
+    * Checks if the browser has support for native WebSockets.
     * 
-    * @return <code>true</code> if WebSockets are supported;
-    *         <code>false</code> if they are not
+    * @return <code>true</code> if WebSocket is supported;
+    *         <code>false</code> if it's not
     */
    public static boolean isSupported()
    {
@@ -251,28 +260,6 @@ public class WebSocket
             return ReadyState.CLOSED;
          default :
             return ReadyState.CLOSED;
-      }
-   }
-
-   /**
-    * Transmits data to the server over the WebSocket connection.
-    * 
-    * @param data the data to be sent to the server
-    */
-   public void send(String data) throws WebSocketException
-   {
-      if (getReadyState() != ReadyState.OPEN)
-      {
-         throw new IllegalStateException("Failed to send data. WebSocket connection not opened");
-      }
-
-      try
-      {
-         socket.send(data);
-      }
-      catch (JavaScriptException e)
-      {
-         throw new WebSocketException(e.getMessage());
       }
    }
 
@@ -308,9 +295,9 @@ public class WebSocket
    }
 
    /**
-    * Returns the session identifier.
     * 
-    * @return session identifier
+    * 
+    * @return the session identifier of this WebSocket connection
     */
    public String getSessionId()
    {
@@ -318,25 +305,26 @@ public class WebSocket
    }
 
    /**
-    * Registers a new subscriber which will receive messages with a particular event type.
+    * Transmits data to the server over the WebSocket connection.
     * 
-    * @param topicId topic identifier
-    * @param subscriber {@link Subscriber}
+    * @param data the data to be sent to the server
+    * @throws WebSocketException if error has occurred while sending data
     */
-   public void subscribe(String topicId, Subscriber subscriber)
+   public void send(String data) throws WebSocketException
    {
-      eventBus.subscribe(topicId, subscriber);
-   }
+      if (getReadyState() != ReadyState.OPEN)
+      {
+         throw new WebSocketException("Failed to send data. WebSocket connection not opened");
+      }
 
-   /**
-    * Unregisters existing subscriber to receive messages with a particular event type.
-    * 
-    * @param topicId topic identifier
-    * @param subscriber {@link Subscriber}
-    */
-   public void unsubscribe(String topicId, Subscriber subscriber)
-   {
-      eventBus.unsubscribe(topicId, subscriber);
+      try
+      {
+         socket.send(data);
+      }
+      catch (JavaScriptException e)
+      {
+         throw new WebSocketException(e.getMessage());
+      }
    }
 
    /**
@@ -433,8 +421,8 @@ public class WebSocket
       public final native void setOnOpenHandler(WebSocketOpenedHandler handler)
       /*-{
          this.onopen = $entry(function() {
-            var webSocketOpenedEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketOpenedEvent::new()();
-            handler.@org.exoplatform.ide.client.framework.websocket.event.WebSocketOpenedHandler::onWebSocketOpened(Lorg/exoplatform/ide/client/framework/websocket/event/WebSocketOpenedEvent;)(webSocketOpenedEventInstance);
+            var webSocketOpenedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent::new()();
+            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler::onWebSocketOpened(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketOpenedEvent;)(webSocketOpenedEventInstance);
          });
       }-*/;
 
@@ -446,8 +434,8 @@ public class WebSocket
       public final native void setOnCloseHandler(WebSocketClosedHandler handler)
       /*-{
          this.onclose = $entry(function() {
-            var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
-            handler.@org.exoplatform.ide.client.framework.websocket.event.WebSocketClosedHandler::onWebSocketClosed(Lorg/exoplatform/ide/client/framework/websocket/event/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+            var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
+            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler::onWebSocketClosed(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
          });
       }-*/;
 
@@ -460,8 +448,8 @@ public class WebSocket
       public final native void setOnErrorHandler(WebSocketErrorHandler handler)
       /*-{
          this.onerror = $entry(function() {
-            var webSocketErrorEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorEvent::new()();
-            handler.@org.exoplatform.ide.client.framework.websocket.event.WebSocketErrorHandler::onWebSocketError(Lorg/exoplatform/ide/client/framework/websocket/event/WebSocketErrorEvent;)(webSocketErrorEventInstance);
+            var webSocketErrorEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorEvent::new()();
+            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandler::onWebSocketError(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketErrorEvent;)(webSocketErrorEventInstance);
          });
       }-*/;
 
@@ -474,8 +462,8 @@ public class WebSocket
       public final native void setOnMessageHandler(WebSocketMessageHandler handler)
       /*-{
          this.onmessage = $entry(function(event) {
-            var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent::new(Ljava/lang/String;)(event.data);
-            handler.@org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler::onWebSocketMessage(Lorg/exoplatform/ide/client/framework/websocket/event/WebSocketMessageEvent;)(webSocketMessageEventInstance);
+            var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent::new(Ljava/lang/String;)(event.data);
+            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler::onWebSocketMessage(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketMessageEvent;)(webSocketMessageEventInstance);
          });
       }-*/;
    }

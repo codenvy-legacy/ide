@@ -16,34 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.websocket;
 
 /**
- * Thrown when there was a problem with WebSocket connection.
+ * Class represents the WebSocket message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
+ * @version $Id: WebSocketCallMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-public class WebSocketException extends Exception
+public class WebSocketMessage
 {
-
-   public WebSocketException()
-   {
-      super();
+   /**
+    * Enum defines the standard WebSocket message types for interaction between client and server.
+    */
+   public enum Type {
+      WELCOME, //
+      PUBLISH, //
+      EVENT, //
+      CALL, //
+      CALL_RESULT, //
+      SUBSCRIBE, //
+      UNSUBSCRIBE;
    }
 
-   public WebSocketException(String message)
+   protected String type;
+
+   public String getType()
    {
-      super(message);
+      return type;
    }
 
-   public WebSocketException(Throwable cause)
+   public void setType(String type)
    {
-      super(cause);
-   }
-
-   public WebSocketException(String message, Throwable cause)
-   {
-      super(message, cause);
+      this.type = type;
    }
 }

@@ -16,23 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.websocket;
 
 /**
- * Handler for {@link WebSocketMessageEvent} event.
+ * The WELCOME message is send from the server to a client,
+ * when the connection has successfully been established.
+ * The WELCOME message is the only message that contains
+ * the session identifier for the client.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketErrorHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: WebSocketCallMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-public interface WebSocketMessageHandler extends EventHandler
+public class WebSocketWelcomeMessage extends WebSocketMessage
 {
-   /**
-    * Perform actions, when message has received.
-    * 
-    * @param event
-    */
-   void onWebSocketMessage(WebSocketMessageEvent event);
+   private String sessionId;
+
+   public WebSocketWelcomeMessage(String sessionId)
+   {
+      this.type = Type.WELCOME.toString();
+      this.sessionId = sessionId;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "{\"type\":\"" + type + "\", " + "\"sessionId\":\"" + sessionId + "\"}";
+   }
+
+   public void setSessionId(String sessionId)
+   {
+      this.sessionId = sessionId;
+   }
+
+   public String getSessionId()
+   {
+      return sessionId;
+   }
 }

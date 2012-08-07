@@ -20,12 +20,19 @@ package org.exoplatform.ide.websocket;
 
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.WsOutbound;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.exoplatform.ide.helper.JsonHelper;
+import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.websocket.WebSocketMessage.Type;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -40,27 +47,7 @@ public class WebSocketManager
    /**
     * Enumeration describing the WebSocket message event types.
     */
-   public enum EventType {
-      /**
-       * Event type for message with session identifier for client.
-       */
-      WELCOME("welcome"),
-
-      /**
-       * Event type for subscribing to receive messages on a particular message topic.
-       */
-      SUBSCRIBE("subscribe"),
-
-      /**
-       * Event type for unsubscribing to receive messages on a particular message topic.
-       */
-      UNSUBSCRIBE("unsubscribe"),
-
-      /**
-       * Event type for publishing message with a particular message topic.
-       */
-      PUBLISH("publish"),
-
+   public enum Channels {
       /**
        * Event type for message that contains status of the Maven build job.
        */
@@ -93,7 +80,7 @@ public class WebSocketManager
 
       private final String eventTypeValue;
 
-      private EventType(String value)
+      private Channels(String value)
       {
          this.eventTypeValue = value;
       }
@@ -106,87 +93,151 @@ public class WebSocketManager
    }
 
    /**
-    * Stores connection identifiers mapped to the connections themselves.
-    * Used for sending message to the client by identifier.
+    * Exo logger.
     */
-   private ConcurrentMap<String, CopyOnWriteArraySet<MessageInbound>> connections =
+   private static final Log LOG = ExoLogger.getLogger(WebSocketManager.class);
+
+   /**
+    * Map of the session identifier to the connection.
+    */
+   // TODO
+   // If new session id will be generated for every new connection then
+   // use  Map<String, MessageInbound> instead of Map<String, CopyOnWriteArraySet<MessageInbound>>
+   private Map<String, CopyOnWriteArraySet<MessageInbound>> sessionToConnection =
       new ConcurrentHashMap<String, CopyOnWriteArraySet<MessageInbound>>();
 
    /**
-    * Stores event types mapped to the subscribers.
-    * Used for publish messages to the clients which subscribed
-    * to receive messages on a particular message topic.
+    * Map of the channel to the subscribers.
+    * Used for publish messages to clients which subscribed
+    * to receive messages on a particular channel.
     */
-   private ConcurrentMap<String, CopyOnWriteArraySet<String>> events =
+   private Map<String, CopyOnWriteArraySet<String>> channelToSubscribers =
       new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>();
 
    /**
     * Register user connection in active connection list.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param inbound inbound connection
+    * @param connection WebSocket connection
     */
-   public void registerConnection(String sessionId, MessageInbound inbound)
+   public void registerConnection(String sessionId, MessageInbound connection)
    {
       if (sessionId == null)
       {
          throw new NullPointerException("Session identifier must not be null");
       }
-      if (inbound == null)
+      if (connection == null)
       {
-         throw new NullPointerException("Inbound must not be null");
+         throw new NullPointerException("Connection must not be null");
       }
 
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
       if (connectionsSet != null)
       {
-         connectionsSet.add(inbound);
+         connectionsSet.add(connection);
       }
       else
       {
          connectionsSet = new CopyOnWriteArraySet<MessageInbound>();
-         connectionsSet.add(inbound);
-         connections.put(sessionId, connectionsSet);
+         connectionsSet.add(connection);
+         sessionToConnection.put(sessionId, connectionsSet);
+      }
+
+      try
+      {
+         send(sessionId, new WebSocketWelcomeMessage(sessionId));
+      }
+      catch (IOException e)
+      {
+         LOG.warn("An error occurs sending data to client over WebSocket", e);
       }
    }
 
    /**
-    * Remove user connection from registered connection list.
+    * Remove WebSocket connection from connections registry and unsubscribe
+    * the client with the given session identifier from the all channels.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param inbound inbound connection
+    * @param inbound WebSocket connection
     */
    public void unregisterConnection(String sessionId, MessageInbound inbound)
    {
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      unsubscribe(sessionId, null);
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
       if (connectionsSet != null)
       {
-         connectionsSet.remove(inbound);
-         if (connectionsSet.isEmpty())
+         if (connectionsSet.remove(inbound) && connectionsSet.isEmpty())
          {
-            connections.remove(sessionId);
+            sessionToConnection.remove(sessionId);
          }
       }
    }
 
    /**
-    * Subscribes client to receive messages on a particular message topic.
+    * Parse and process incoming message.
+    * 
+    * @param message incoming message
+    */
+   public void onMessage(String sessionId, String message)
+   {
+      String type = null;
+      try
+      {
+         JsonValue jsonValue = JsonHelper.parseJson(message.toString());
+         if (jsonValue != null && jsonValue.isObject())
+         {
+            type = jsonValue.getElement("type").getStringValue();
+         }
+
+         if (Type.SUBSCRIBE.name().equals(type))
+         {
+            WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
+            subscribe(sessionId, webSocketMessage.getChannel());
+         }
+         else if (Type.UNSUBSCRIBE.name().equals(type))
+         {
+            WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
+            unsubscribe(sessionId, webSocketMessage.getChannel());
+         }
+         else if (Type.PUBLISH.name().equals(type))
+         {
+            WebSocketPublishMessage webSocketMessage = new WebSocketPublishMessage(message);
+            publish(webSocketMessage.getChannel(), webSocketMessage.getPayload(), null, sessionId);
+         }
+         else if (Type.CALL.name().equals(type))
+         {
+            WebSocketCallMessage webSocketMessage = new WebSocketCallMessage(message);
+            call(sessionId, webSocketMessage.getCallId(), webSocketMessage.getPayload());
+         }
+      }
+      catch (ParsingResponseException e)
+      {
+         LOG.warn("An error occurs parsing the WebSocket message", e);
+      }
+      catch (IOException e)
+      {
+         LOG.warn("An error occurs sending data to client over WebSocket", e);
+      }
+   }
+
+   /**
+    * Subscribes client to receive messages on a particular channel.
     * 
     * @param sessionId client's session identifier
-    * @param topicId topic identifier
+    * @param channel channel name
     */
-   public void subscribe(String sessionId, String topicId)
+   private void subscribe(String sessionId, String channel)
    {
       if (sessionId == null)
       {
          throw new NullPointerException("Session identifier must not be null");
       }
-      if (topicId == null)
+      if (channel == null)
       {
-         throw new NullPointerException("Topic identifier must not be null");
+         throw new NullPointerException("Channel name must not be null");
       }
 
-      CopyOnWriteArraySet<String> subscribersSet = events.get(sessionId);
+      CopyOnWriteArraySet<String> subscribersSet = channelToSubscribers.get(sessionId);
       if (subscribersSet != null)
       {
          subscribersSet.add(sessionId);
@@ -195,81 +246,102 @@ public class WebSocketManager
       {
          subscribersSet = new CopyOnWriteArraySet<String>();
          subscribersSet.add(sessionId);
-         events.put(topicId, subscribersSet);
+         channelToSubscribers.put(channel, subscribersSet);
       }
    }
 
    /**
-    * Unsubscribes client to receive messages on a particular message topic.
+    * Unsubscribes the client to receive messages on a particular channel or the all channels.
     * 
     * @param sessionId client's session identifier
-    * @param topicId topic identifier. If <code>null</code> - client will be unsubscribed to all subscriptions.
+    * @param channel channel name. If <code>null</code> - client will be unsubscribed to all subscriptions.
     */
-   public void unsubscribe(String sessionId, String topicId)
+   public void unsubscribe(String sessionId, String channel)
    {
-      if (topicId == null)
+      if (sessionId == null)
       {
-         // unsubscribe client to all subscriptions
-         ConcurrentHashMap<String, CopyOnWriteArraySet<String>> eventsCopy =
-            new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>(events);
-         for (Entry<String, CopyOnWriteArraySet<String>> entry : eventsCopy.entrySet())
+         throw new NullPointerException("Session identifier must not be null");
+      }
+
+      if (channel != null)
+      {
+         doUnsubscribe(sessionId, channel, channelToSubscribers.get(channel));
+      }
+      else
+      {
+         for (Entry<String, CopyOnWriteArraySet<String>> entry : channelToSubscribers.entrySet())
          {
-            CopyOnWriteArraySet<String> connectionsSet = entry.getValue();
-            connectionsSet.remove(sessionId);
-            if (connectionsSet.isEmpty())
-            {
-               events.remove(entry.getKey());
-            }
+            doUnsubscribe(sessionId, entry.getKey(), entry.getValue());
          }
+      }
+   }
+
+   private void doUnsubscribe(String sessionId, String channel, Set<String> subscribersSet)
+   {
+      if (channel == null || subscribersSet == null)
+      {
          return;
       }
 
-      CopyOnWriteArraySet<String> subscribersSet = events.get(topicId);
-      if (subscribersSet != null)
+      if (subscribersSet.remove(sessionId) && subscribersSet.isEmpty())
       {
-         subscribersSet.remove(sessionId);
-         if (subscribersSet.isEmpty())
-         {
-            events.remove(topicId);
-         }
+         channelToSubscribers.remove(channel);
       }
    }
 
    /**
-    * Publishes message with a particular topic.
+    * Publishes message in a particular channel.
     * 
-    * @param topicId topic identifier
+    * @param channel channel name
     * @param message the message
-    * @param e an exception
-    * @throws IOException
+    * @param an exception to be sent to the client. May be </code>null<code>
+    * @param excludeSessionId
+    * @throws IOException 
     */
-   public void publish(String topicId, String message, Exception e) throws IOException
+   public void publish(String channel, String message, Exception e, String excludeSessionId) throws IOException
    {
-      if (events.containsKey(topicId))
+      if (channelToSubscribers.containsKey(channel))
       {
-         CopyOnWriteArraySet<String> subscribersSet = events.get(topicId);
+         CopyOnWriteArraySet<String> subscribersSet = channelToSubscribers.get(channel);
          for (String subscriber : subscribersSet)
          {
-            send(subscriber, topicId, message, e);
+            if (excludeSessionId != null && excludeSessionId.equals(subscriber))
+            {
+               return;
+            }
+
+            String exception = null;
+            if (e != null)
+            {
+               String errorMessage = e.getMessage().replaceAll("\n", " ");
+               exception = "{\"name\":\"" + e.getClass().getSimpleName() + "\",\"message\":\"" + errorMessage + "\"}";
+            }
+            send(subscriber, new WebSocketEventMessage(channel, message, exception));
          }
       }
    }
 
+   private void call(String sessionId, String callId, String data) throws IOException
+   {
+      // TODO
+      // processCall
+      // send result to caller callback
+      //send(sessionId, new WebSocketCallResultMessage(callId, "\"" + result + "\""));
+   }
+
    /**
     * Sends the message to client.
     * <p><strong>Note:</strong> if user has more than one active
     * connections with the same session identifier then message
     * will be sent to all connections.
     * 
-    * @param sessionId identifier of the WebSocket session
-    * @param eventType event type
-    * @param data the data to be sent to the client
-    * @param e an exception to be sent to the client
+    * @param sessionId identifier of the WebSocket connection
+    * @param message the {@link WebSocketMessage} to be sent to the client
     * @throws IOException if an error occurs writing to the client
     */
-   public void send(String sessionId, EventType eventType, String data, Exception e) throws IOException
+   private void send(String sessionId, WebSocketMessage message) throws IOException
    {
-      send(sessionId, eventType.toString(), data, e);
+      send(sessionId, message.toString());
    }
 
    /**
@@ -279,38 +351,21 @@ public class WebSocketManager
     * will be sent to all connections.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param eventType event type
-    * @param data the data to be sent to the client
-    * @param e an exception to be sent to the client
+    * @param message the message to be sent to the client
     * @throws IOException if an error occurs writing to the client
     */
-   public void send(String sessionId, String eventType, String data, Exception e) throws IOException
+   private void send(String sessionId, String message) throws IOException
    {
-      String exception = null;
-      if (e != null)
-      {
-         String errorMessage = e.getMessage().replaceAll("\n", " ");
-         exception = "{\"type\":\"" + e.getClass().getSimpleName() + "\",\"message\":\"" + errorMessage + "\"}";
-      }
-
-      if (data == null || data.trim().isEmpty())
-      {
-         data = "{}";
-      }
-
-      String wsMessage =
-         "{\"event\":\"" + eventType + "\", \"data\":" + data + ", " + "\"exception\":" + exception + "}";
-
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = connections.get(sessionId);
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
       if (connectionsSet == null)
       {
-         throw new IllegalArgumentException("Client's session with ID " + sessionId + " not found.");
+         throw new IllegalArgumentException("Unable to find connection with session ID " + sessionId + ".");
       }
 
       for (MessageInbound messageInbound : connectionsSet)
       {
          WsOutbound wsOut = messageInbound.getWsOutbound();
-         wsOut.writeTextMessage(CharBuffer.wrap(wsMessage));
+         wsOut.writeTextMessage(CharBuffer.wrap(message));
          wsOut.flush();
       }
    }

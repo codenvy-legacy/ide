@@ -866,22 +866,20 @@ public class Debugger implements EventsHandler
                if (!eventsList.isEmpty())
                {
                   DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
-                  publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS,
-                     toJson(debuggerEvents), null);
+                  publishWebSocketMessage(toJson(debuggerEvents), null);
                }
             }
             catch (DebuggerException e)
             {
                cancel();
                LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
-               publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS, null, e);
+               publishWebSocketMessage(null, e);
             }
             catch (IllegalArgumentException e)
             {
                // debugger not found
                cancel();
-               publishWebSocketMessage(WebSocketManager.EventType.DEBUGGER_EVENTS, null,
-                  new DebuggerException(e.getMessage(), e));
+               publishWebSocketMessage(null, new DebuggerException(e.getMessage(), e));
             }
          }
       }, 0, CHECKING_EVENTS_PERIOD);
@@ -890,23 +888,20 @@ public class Debugger implements EventsHandler
    /**
     * Publishes the message over WebSocket connection.
     * 
-    * @param eventType
-    *    WebSocket event type
     * @param data
     *    the data to be sent to the client
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(WebSocketManager.EventType eventType, String data, Exception e)
+   private void publishWebSocketMessage(String data, Exception e)
    {
       try
       {
-         webSocketManager.publish(eventType.toString(), data, e);
+         webSocketManager.publish(WebSocketManager.Channels.DEBUGGER_EVENTS.toString(), data, e, null);
       }
       catch (IOException ex)
       {
-         LOG.error(
-            "An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
+         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
       }
    }
 }

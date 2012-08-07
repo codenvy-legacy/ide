@@ -36,10 +36,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -62,7 +63,7 @@ import java.util.List;
  * 
  */
 public class CreateApplicationPresenter extends GitPresenter implements ViewClosedHandler, CreateApplicationHandler,
-   LoggedInHandler, Subscriber
+   LoggedInHandler, WebSocketEventHandler
 {
    interface Display extends IsView
    {
@@ -205,7 +206,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.subscribe("herokuAppCreated", this);
+            ws.eventBus().subscribe("herokuAppCreated", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -232,12 +233,16 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
                   super.onFailure(exception);
                   if (useWebSocket)
                   {
-                     ws.unsubscribe("herokuAppCreated", CreateApplicationPresenter.this);
+                     ws.eventBus().unsubscribe("herokuAppCreated", CreateApplicationPresenter.this);
                   }
                }
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -288,17 +293,17 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onMessage(WebSocketMessage webSocketMessage)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("herokuAppCreated", this);
+      WebSocket.getInstance().eventBus().unsubscribe("herokuAppCreated", this);
 
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
-         List<Property> properties = parseApplicationProperties(webSocketMessage.getData().getPayload());
+         List<Property> properties = parseApplicationProperties(webSocketEventMessage.getPayload().getPayload());
          if (properties != null)
          {
             IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));

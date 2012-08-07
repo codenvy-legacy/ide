@@ -16,28 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.events;
 
-import com.google.web.bindery.autobean.shared.Splittable;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Interface represents the WebSocket message.
+ * Handler for {@link WebSocketErrorEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
- *
+ * @version $Id: WebSocketErrorHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
+ * 
  */
-public interface WebSocketMessage
+public interface WebSocketErrorHandler extends EventHandler
 {
-   String getEvent();
-
-   void setEvent(String event);
-
-   Splittable getData();
-
-   void setData(Splittable data);
-
-   WebSocketExceptionMessage getException();
-
-   void setException(WebSocketExceptionMessage exception);
+   /**
+    * Perform actions, when error has occurred during websocket connection.
+    * 
+    * @param event
+    */
+   void onWebSocketError(WebSocketErrorEvent event);
 }

@@ -16,23 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
 /**
- * Handler for {@link WebSocketErrorEvent} event.
+ * Interface represents the WebSocket message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketErrorHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: WebSocketMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-public interface WebSocketErrorHandler extends EventHandler
+public interface WebSocketMessage
 {
    /**
-    * Perform actions, when error has occurred during websocket connection.
-    * 
-    * @param event
+    * Enum for the WebSocket message types.
     */
-   void onWebSocketError(WebSocketErrorEvent event);
+   public enum Type {
+      WELCOME, //
+      PUBLISH, //
+      EVENT, //
+      CALL, //
+      CALL_RESULT, //
+      SUBSCRIBE, //
+      UNSUBSCRIBE;
+   }
+
+   @PropertyName("type")
+   Type getType();
+
+   void setType(Type type);
 }

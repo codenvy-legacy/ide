@@ -16,22 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
- * Interface represents the WebSocket message that contains description of the exception.
+ * Interface represents the WebSocket message for RPC.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketExceptionMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WebSocketPublishMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketExceptionMessage
+public interface WebSocketPublishMessage extends WebSocketMessage
 {
-   String getType();
+   String getChannel();
 
-   void setType(String type);
+   void setChannel(String channel);
 
-   String getMessage();
+   String getPayload();
 
-   void setMessage(String message);
+   void setPayload(String payload);
 }

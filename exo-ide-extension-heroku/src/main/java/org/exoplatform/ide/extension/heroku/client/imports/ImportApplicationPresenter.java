@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -41,11 +40,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -79,7 +78,7 @@ import java.util.List;
  * 
  */
 public class ImportApplicationPresenter implements ImportApplicationHandler, ViewClosedHandler, VfsChangedHandler,
-   LoggedInHandler, WebSocketMessageHandler
+   LoggedInHandler, WebSocketEventHandler
 {
 
    interface Display extends IsView
@@ -128,7 +127,6 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       IDE.addHandler(ImportApplicationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(WebSocketMessageEvent.TYPE, this);
    }
 
    /**
@@ -290,12 +288,13 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       try
       {
          boolean useWebSocketForCallback = false;
-         WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = WebSocket.getInstance();
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
             gitCloneStatusHandler = new CloneRequestStatusHandler(project.getName(), gitLocation);
             gitCloneStatusHandler.requestInProgress(project.getId());
+            ws.eventBus().subscribe("gitRepoCloned", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -315,10 +314,18 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
                protected void onFailure(Throwable exception)
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  if (useWebSocket)
+                  {
+                     ws.eventBus().unsubscribe("gitRepoCloned", ImportApplicationPresenter.this);
+                  }
                }
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -403,26 +410,19 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageHandler#onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.event.WebSocketMessageEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      String message = event.getMessage();
+      WebSocket.getInstance().eventBus().unsubscribe("gitRepoCloned", this);
 
-      WebSocketMessage webSocketMessage =
-         AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketMessage.class, message).as();
-      if (!webSocketMessage.getEvent().equals("gitRepoCloned"))
+      if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {
          return;
       }
 
-      if (!project.getId().equals(webSocketMessage.getData().asString()))
-      {
-         return;
-      }
-
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          gitCloneStatusHandler.requestFinished(project.getId());

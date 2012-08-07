@@ -16,39 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
+package org.exoplatform.ide.client.framework.websocket.events;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Event is fired, when websocket connection is opened.
+ * Handler for {@link WebSocketClosedEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
+ * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
  * 
  */
-public class WebSocketOpenedEvent extends GwtEvent<WebSocketOpenedHandler>
+public interface WebSocketClosedHandler extends EventHandler
 {
    /**
-    * Type, used to register event.
+    * Perform actions, when websocket connection is closed.
+    * 
+    * @param event
     */
-   public static final GwtEvent.Type<WebSocketOpenedHandler> TYPE = new GwtEvent.Type<WebSocketOpenedHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketOpenedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(WebSocketOpenedHandler handler)
-   {
-      handler.onWebSocketOpened(this);
-   }
+   void onWebSocketClosed(WebSocketClosedEvent event);
 }

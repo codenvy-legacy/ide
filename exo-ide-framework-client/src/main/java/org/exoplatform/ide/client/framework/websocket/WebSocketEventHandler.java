@@ -16,23 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
+package org.exoplatform.ide.client.framework.websocket;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+
 
 /**
- * Handler for {@link WebSocketOpenedEvent} event.
+ * Class that implements this interface will receive all
+ * messages published to the topics to which this class subscribe,
+ * and all subscribers to a topic will receive the same messages.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: WebSocketEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
+ *
  */
-public interface WebSocketOpenedHandler extends EventHandler
+public interface WebSocketEventHandler
 {
-   /**
-    * Perform actions, when websocket connection is opened.
-    * 
-    * @param event
-    */
-   void onWebSocketOpened(WebSocketOpenedEvent event);
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage);
 }

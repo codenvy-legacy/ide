@@ -841,7 +841,7 @@ public abstract class JenkinsClient
    {
       try
       {
-         webSocketManager.publish(WebSocketManager.EventType.JENKINS_BUILD_STATUS.toString(), data, e);
+         webSocketManager.publish(WebSocketManager.Channels.JENKINS_BUILD_STATUS.toString(), data, e, null);
       }
       catch (IOException ex)
       {

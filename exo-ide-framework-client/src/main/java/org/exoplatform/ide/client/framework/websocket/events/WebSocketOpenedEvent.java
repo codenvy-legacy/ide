@@ -16,34 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.events;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Thrown when there was a problem with WebSocket connection.
+ * Event is fired, when websocket connection is opened.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
+ * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
+ * 
  */
-public class WebSocketException extends Exception
+public class WebSocketOpenedEvent extends GwtEvent<WebSocketOpenedHandler>
 {
+   /**
+    * Type, used to register event.
+    */
+   public static final GwtEvent.Type<WebSocketOpenedHandler> TYPE = new GwtEvent.Type<WebSocketOpenedHandler>();
 
-   public WebSocketException()
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketOpenedHandler> getAssociatedType()
    {
-      super();
+      return TYPE;
    }
 
-   public WebSocketException(String message)
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(WebSocketOpenedHandler handler)
    {
-      super(message);
-   }
-
-   public WebSocketException(Throwable cause)
-   {
-      super(cause);
-   }
-
-   public WebSocketException(String message, Throwable cause)
-   {
-      super(message, cause);
+      handler.onWebSocketOpened(this);
    }
 }

@@ -42,9 +42,10 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketExceptionMessage;
-import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.event.Subscriber;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -75,7 +76,7 @@ import java.util.List;
  * 
  */
 public class BuildApplicationPresenter extends GitPresenter implements BuildApplicationHandler,
-   UserInfoReceivedHandler, ViewClosedHandler, Subscriber
+   UserInfoReceivedHandler, ViewClosedHandler, WebSocketEventHandler
 {
 
    public interface Display extends IsView
@@ -270,7 +271,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.subscribe("jenkinsBuildStatus", BuildApplicationPresenter.this);
+            ws.eventBus().subscribe("jenkinsBuildStatus", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -301,12 +302,16 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                   if (useWebSocket)
                   {
-                     ws.unsubscribe("jenkinsBuildStatus", BuildApplicationPresenter.this);
+                     ws.eventBus().unsubscribe("jenkinsBuildStatus", BuildApplicationPresenter.this);
                   }
                }
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -515,11 +520,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             useWebSocketForCallback = true;
             gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
             gitInitStatusHandler.requestInProgress(project.getId());
+            ws.eventBus().subscribe("gitRepoInitialized", this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
-            useWebSocket, new AsyncRequestCallback<String>()
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false, useWebSocket,
+            new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
@@ -530,29 +536,34 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                      IDE.fireEvent(new RefreshBrowserEvent());
                      createJob();
                   }
-                  else
-                  {
-                     ws.subscribe("gitRepoInitialized", BuildApplicationPresenter.this);
-                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  handleError(exception);
+                  if (useWebSocket)
+                  {
+                     ws.eventBus().unsubscribe("gitRepoInitialized", BuildApplicationPresenter.this);
+                  }
                }
             });
       }
       catch (RequestException e)
       {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         handleError(e);
       }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+   }
+
+   private void handleError(Throwable e)
+   {
+      String errorMessage =
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    private void showBuildMessage(String message)
@@ -585,43 +596,45 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.event.Subscriber#onMessage(org.exoplatform.ide.client.framework.websocket.WebSocketMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
     */
    @Override
-   public void onMessage(WebSocketMessage webSocketMessage)
+   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      if (webSocketMessage.getEvent().equals("jenkinsBuildStatus"))
+      if (webSocketEventMessage.getChannel().equals("jenkinsBuildStatus"))
       {
-         onWebSocketMessageJenkinsBuildStatus(webSocketMessage);
+         onWebSocketMessageJenkinsBuildStatus(webSocketEventMessage);
       }
-      else if (webSocketMessage.getEvent().equals("gitRepoInitialized"))
+      else if (webSocketEventMessage.getChannel().equals("gitRepoInitialized"))
       {
-         onWebSocketMessageGitRepoInitialized(webSocketMessage);
+         onWebSocketMessageGitRepoInitialized(webSocketEventMessage);
       }
    }
 
    /**
     * Performs actions when Jenkins job status received.
     * 
-    * @param webSocketMessage WebSocket message
+    * @param webSocketEventMessage WebSocket message
     */
-   private void onWebSocketMessageJenkinsBuildStatus(WebSocketMessage webSocketMessage)
+   private void onWebSocketMessageJenkinsBuildStatus(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("jenkinsBuildStatus", this);
-
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          JobStatus buildStatus =
-            AutoBeanCodex.decode(JenkinsExtension.AUTO_BEAN_FACTORY, JobStatus.class, webSocketMessage.getData()).as();
+            AutoBeanCodex.decode(JenkinsExtension.AUTO_BEAN_FACTORY, JobStatus.class,
+               webSocketEventMessage.getPayload()).as();
 
          updateJobStatus(buildStatus);
          if (buildStatus.getStatus() == Status.END)
          {
+            WebSocket.getInstance().eventBus().unsubscribe("jenkinsBuildStatus", this);
             onJobFinished(buildStatus);
          }
          return;
       }
+
+      WebSocket.getInstance().eventBus().unsubscribe("jenkinsBuildStatus", this);
 
       String exceptionMessage = null;
       if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
@@ -641,19 +654,19 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    /**
     * Performs actions when Git-repository initialized.
     * 
-    * @param webSocketMessage WebSocket message
+    * @param webSocketEventMessage WebSocket message
     */
-   private void onWebSocketMessageGitRepoInitialized(WebSocketMessage webSocketMessage)
+   private void onWebSocketMessageGitRepoInitialized(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().unsubscribe("gitRepoInitialized", this);
+      WebSocket.getInstance().eventBus().unsubscribe("gitRepoInitialized", this);
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      if (!project.getId().equals(webSocketMessage.getData().asString()))
+      if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {
          return;
       }
 
-      WebSocketExceptionMessage webSocketException = webSocketMessage.getException();
+      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)
       {
          gitInitStatusHandler.requestFinished(project.getId());
@@ -663,15 +676,9 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          return;
       }
 
-      String exceptionMessage = null;
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
-      {
-         exceptionMessage = webSocketException.getMessage();
-      }
-
-      gitInitStatusHandler.requestError(project.getId(), new Exception(exceptionMessage));
-      String errorMessage = (exceptionMessage != null) ? exceptionMessage : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      Exception e = new Exception(webSocketException.getMessage());
+      gitInitStatusHandler.requestError(project.getId(), e);
+      handleError(e);
    }
 
 }

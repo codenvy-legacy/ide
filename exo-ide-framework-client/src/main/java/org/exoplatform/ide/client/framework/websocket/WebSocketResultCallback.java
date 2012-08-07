@@ -16,23 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.event;
+package org.exoplatform.ide.client.framework.websocket;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallResultMessage;
 
 /**
- * Handler for {@link WebSocketClosedEvent} event.
+ * Class must implement this interface to receive a result message to a RPC.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: ResultCallback.java Jul 31, 2012 3:40:39 PM azatsarynnyy $
  */
-public interface WebSocketClosedHandler extends EventHandler
+public interface WebSocketResultCallback
 {
    /**
-    * Perform actions, when websocket connection is closed.
+    * Called when the sended call completes normally.
     * 
-    * @param event
+    * @param webSocketEventMessage {@link WebSocketCallResultMessage} 
     */
-   void onWebSocketClosed(WebSocketClosedEvent event);
+   void onResult(WebSocketCallResultMessage webSocketCallResultMessage);
 }
