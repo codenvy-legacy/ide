@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
@@ -49,6 +50,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String LOGIN = BASE_URL + "/login";
 
    private static final String LIST_USER = BASE_URL + "/list/user";
+   
+   private static final String COLLABORATORS = BASE_URL + "/collaborators";
 
    /**
     * REST service context.
@@ -111,5 +114,15 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+   
+   
+   @Override
+   public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      
    }
 }

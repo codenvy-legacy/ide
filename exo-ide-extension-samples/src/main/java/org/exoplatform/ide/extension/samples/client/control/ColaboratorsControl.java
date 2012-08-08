@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.GetCollboratorsEvent;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
@@ -70,7 +71,7 @@ ProjectOpenedHandler, ProjectClosedHandler
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
-      setEvent(new OpenStartPageEvent());
+      setEvent(new GetCollboratorsEvent());
    }
 
    /**

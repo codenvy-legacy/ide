@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.extension.samples.client;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.core.client.GWT;
 
+import com.google.gwt.http.client.RequestException;
+
+import com.google.web.bindery.autobean.shared.AutoBean;
+
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,7 +37,58 @@ import com.google.gwt.event.shared.EventHandler;
  * @version $Id: GetCollaboratorsHandler.java Aug 6, 2012
  * 
  */
-public interface GetCollaboratorsHandler extends EventHandler
+public class GetCollaboratorsHandler implements EventHandler
 {
-   void onGetCollaborators(GetCollboratorsEvent event);
+
+   public interface Display
+   {
+      void showCollaborators(Collaborators collaborators);
+   }
+   
+   private Display display;
+
+   void onGetCollaborators(GetCollboratorsEvent event)
+   {
+      AutoBean<Collaborators> autoBean = SamplesExtension.AUTO_BEAN_FACTORY.collaborators();
+      AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
+      try
+      {
+         SamplesClientService.getInstance().getCollaborators("eXoIDE", "rails-demo",
+            new AsyncRequestCallback<Collaborators>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(Collaborators result)
+               {
+                  showColloborators(result);
+
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  // TODO Auto-generated method stub
+
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+   }
+
+   protected void showColloborators(Collaborators result)
+   {
+      display = GWT.create(Display.class);
+      bindDisplay();
+      display.showCollaborators(result);
+   }
+
+   private void bindDisplay()
+   {
+      // TODO Auto-generated method stub
+      
+   }
 }

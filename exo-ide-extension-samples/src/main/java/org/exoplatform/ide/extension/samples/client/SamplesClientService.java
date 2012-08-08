@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.samples.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
 import java.util.List;
@@ -74,4 +75,7 @@ public abstract class SamplesClientService
     * @param callback callback the client has to implement
     */
    public abstract void loginGitHub(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
+   
+   
+   public abstract void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback) throws RequestException;
 }

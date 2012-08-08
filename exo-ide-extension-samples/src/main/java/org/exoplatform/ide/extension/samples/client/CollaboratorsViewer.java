@@ -19,17 +19,18 @@
 package org.exoplatform.ide.extension.samples.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.cellview.client.CellTable;
+import org.exoplatform.ide.extension.samples.client.GetCollaboratorsHandler.Display;
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 
 /**
  * Created by The eXo Platform SAS.
@@ -37,7 +38,7 @@ import com.google.gwt.user.cellview.client.CellTable;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CollaboratorsViewer.java Aug 6, 2012
  */
-public class CollaboratorsViewer extends Composite implements HasText
+public class CollaboratorsViewer extends Composite implements HasText, Display
 {
 
    private static CollaboratorsViewerUiBinder uiBinder = GWT.create(CollaboratorsViewerUiBinder.class);
@@ -62,13 +63,37 @@ public class CollaboratorsViewer extends Composite implements HasText
       initWidget(uiBinder.createAndBindUi(this));
    }
 
-   @UiField(provided=true) CellTable<Object> cellTable = new CellTable<Object>();
+   @UiField Grid grid;
    @UiField Button closeButton;
    @UiField Button inviteButton;
 
    public CollaboratorsViewer(String firstName)
    {
       initWidget(uiBinder.createAndBindUi(this));
+   }
+
+   @Override
+   public String getText()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public void setText(String text)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void showCollaborators(Collaborators collaborators)
+   {
+      DockPanel panel = new DockPanel();
+      panel.add(new Image(collaborators.getCollaborators().get(0).getAvatarUrl()), DockPanel.WEST);
+      panel.add(new Image(collaborators.getCollaborators().get(0).getLogin()), DockPanel.EAST);
+      grid.add(panel);
+      
    }
 
  

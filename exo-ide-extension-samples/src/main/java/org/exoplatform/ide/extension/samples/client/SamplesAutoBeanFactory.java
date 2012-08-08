@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.samples.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import org.exoplatform.ide.extension.samples.shared.Collaborators;
 import org.exoplatform.ide.extension.samples.shared.Credentials;
 import org.exoplatform.ide.extension.samples.shared.Repository;
 
@@ -46,4 +47,6 @@ public interface SamplesAutoBeanFactory extends AutoBeanFactory
     * @return {@link AutoBean} of type {@link Credentials}
     */
    AutoBean<Credentials> githubCredentials();
+   
+   AutoBean<Collaborators> collaborators();
 }
