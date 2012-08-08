@@ -64,6 +64,12 @@
       <version>1.9.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.googlecode.gwt-test-utils</groupId>
+      <artifactId>gwt-test-utils</artifactId>
+      <version>0.39</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -90,9 +96,9 @@
         <!-- Plugin configuration. There are many available options, see 
           gwt-maven-plugin documentation at codehaus.org -->
         <configuration>
-          <runTarget>IDEClient.html</runTarget>
+          <runTarget>IDE.html</runTarget>
           <hostedWebapp>${webappDirectory}</hostedWebapp>
-          <i18nMessagesBundle>org.exoplatform.ide.client.client.Messages</i18nMessagesBundle>
+          <i18nMessagesBundle>org.exoplatform.ide.client.Messages</i18nMessagesBundle>
         </configuration>
       </plugin>
 

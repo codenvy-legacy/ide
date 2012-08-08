@@ -5,20 +5,30 @@
 
 <web-app>
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>org.exoplatform.ide.client.server.GreetingServiceImpl</servlet-class>
-  </servlet>
+   <!-- Servlets -->
+   <servlet>
+      <servlet-name>greetServlet</servlet-name>
+      <servlet-class>org.exoplatform.ide.server.GreetingServiceImpl</servlet-class>
+   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/IDEClient/greet</url-pattern>
-  </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>greetServlet</servlet-name>
+      <url-pattern>/IDE/greet</url-pattern>
+   </servlet-mapping>
 
-  <!-- Default page to serve -->
-  <welcome-file-list>
-    <welcome-file>IDEClient.html</welcome-file>
-  </welcome-file-list>
+   <servlet>
+      <servlet-name>fileServlet</servlet-name>
+      <servlet-class>org.exoplatform.ide.server.services.FileSystemSeriveImpl</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>fileServlet</servlet-name>
+      <url-pattern>/IDE/files</url-pattern>
+   </servlet-mapping>
+
+   <!-- Default page to serve -->
+   <welcome-file-list>
+      <welcome-file>IDE.html</welcome-file>
+   </welcome-file-list>
 
 </web-app>

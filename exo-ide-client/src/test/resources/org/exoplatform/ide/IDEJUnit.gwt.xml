@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='org.exoplatform.ide.IDE' />
+  <inherits name="com.google.gwt.inject.Inject"/>
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/IDE/greet" class="org.exoplatform.ide.server.GreetingServiceImpl" />
+
+</module>

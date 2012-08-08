@@ -1,0 +1,2 @@
+serviceClass: org.exoplatform.ide.client.GreetingService
+path: DBD5CA3E4093A05455D4B55B8CA1FA76.gwt.rpc
