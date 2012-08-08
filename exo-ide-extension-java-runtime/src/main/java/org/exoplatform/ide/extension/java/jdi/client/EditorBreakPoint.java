@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.java.client.Breakpoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 /**
@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
  * 
  */
-public class EditorBreakPoint implements Marker
+public class EditorBreakPoint extends Breakpoint
 {
 
    private String message;
@@ -37,29 +37,12 @@ public class EditorBreakPoint implements Marker
     * @param lineNumber
     * @param message
     */
-   
+
    public EditorBreakPoint(BreakPoint breakPoint, String message)
    {
+      super(Type.BREAKPOINT, breakPoint.getLocation().getLineNumber(), message);
       this.breakPoint = breakPoint;
-      this.message = message;
-   }
 
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getID()
-    */
-   @Override
-   public int getID()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getMessage()
-    */
-   @Override
-   public String getMessage()
-   {
-      return message;
    }
 
    /**
@@ -72,62 +55,11 @@ public class EditorBreakPoint implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getEnd()
-    */
-   @Override
-   public int getEnd()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getStart()
-    */
-   @Override
-   public int getStart()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isError()
-    */
-   @Override
-   public boolean isError()
-   {
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isWarning()
-    */
-   @Override
-   public boolean isWarning()
-   {
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isBreakpoint()
-    */
-   @Override
-   public boolean isBreakpoint()
-   {
-      return true;
-   }
-
-   /**
     * @return the breakPoint
     */
    public BreakPoint getBreakPoint()
    {
       return breakPoint;
-   }
-
-   @Override
-   public boolean isCurrentBreakPoint()
-   {
-      return false;
    }
 
 }

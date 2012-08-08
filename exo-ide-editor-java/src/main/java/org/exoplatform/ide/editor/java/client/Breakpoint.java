@@ -16,58 +16,69 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
-
-import org.exoplatform.ide.editor.java.client.Breakpoint;
+package org.exoplatform.ide.editor.java.client;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class CurrentEditorBreakPoint extends Breakpoint
+public class Breakpoint
 {
+   public enum Type {
+      BREAKPOINT, DISABLED, CONDITIONAL, CURRENT
+   }
 
-   private String filePath;
+   protected int lineNumber;
 
-  
+   private Type type;
+
+   private String message;
+
    /**
+    * @param type
+    * @param lineNumber
+    */
+   public Breakpoint(Type type, int lineNumber)
+   {
+      this(type, lineNumber, null);
+   }
+
+   /**
+    * @param type
     * @param lineNumber
     * @param message
     */
-   public CurrentEditorBreakPoint(int line, String message, String filePath)
+   public Breakpoint(Type type, int lineNumber, String message)
    {
-      super(Type.CURRENT, line, message);
-      this.filePath = filePath;
+      super();
+      this.type = type;
+      this.lineNumber = lineNumber;
+      this.message = message;
    }
-
-   
-   public String getFilePath()
-   {
-      return filePath;
-   }
-   
-   public void setFilePath(String filePath)
-   {
-      this.filePath = filePath;
-   }
-   
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj instanceof CurrentEditorBreakPoint)
-         return getLineNumber() == ((CurrentEditorBreakPoint)obj).getLineNumber();
-      return false;
-   }
-
 
    /**
-    * @param lineNumber
+    * @return the type
     */
-   public void setLineNumber(int lineNumber)
+   public Type getType()
    {
-      this.lineNumber = lineNumber;
+      return type;
+   }
+
+   /**
+    * @return the lineNumber
+    */
+   public int getLineNumber()
+   {
+      return lineNumber;
+   }
+
+   /**
+    * @return the message
+    */
+   public String getMessage()
+   {
+      return message;
    }
 
 }

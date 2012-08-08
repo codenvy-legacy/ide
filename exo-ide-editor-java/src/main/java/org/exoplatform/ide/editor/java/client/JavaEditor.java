@@ -16,58 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.editor.java.client;
 
-import org.exoplatform.ide.editor.java.client.Breakpoint;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.editor.gutter.Gutter;
+import com.google.collide.client.editor.gutter.Gutter.Position;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class CurrentEditorBreakPoint extends Breakpoint
+public class JavaEditor extends CollabEditor
 {
 
-   private String filePath;
-
-  
-   /**
-    * @param lineNumber
-    * @param message
-    */
-   public CurrentEditorBreakPoint(int line, String message, String filePath)
-   {
-      super(Type.CURRENT, line, message);
-      this.filePath = filePath;
-   }
-
-   
-   public String getFilePath()
-   {
-      return filePath;
-   }
-   
-   public void setFilePath(String filePath)
-   {
-      this.filePath = filePath;
-   }
-   
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (obj instanceof CurrentEditorBreakPoint)
-         return getLineNumber() == ((CurrentEditorBreakPoint)obj).getLineNumber();
-      return false;
-   }
-
+   private BreakpointGutterManager breakPointManager;
 
    /**
-    * @param lineNumber
+    * @param mimeType
     */
-   public void setLineNumber(int lineNumber)
+   public JavaEditor(String mimeType)
    {
-      this.lineNumber = lineNumber;
+      super(mimeType);
+      Gutter gutter =
+         editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
+            .workspaceEditorCss().leftGutterBase());
+      breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(), JavaClientBundle.INSTANCE);
+   }
+
+   /**
+    * @return the breakPointManager
+    */
+   public BreakpointGutterManager getBreakPointManager()
+   {
+      return breakPointManager;
    }
 
 }

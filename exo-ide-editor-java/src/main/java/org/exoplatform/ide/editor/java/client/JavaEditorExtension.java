@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -31,16 +33,11 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.java.client.control.NewJavaClassControl;
 import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-
-import com.google.collide.client.CollabEditor;
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -92,7 +89,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
 //               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
 //               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
 //               .setCanBeOutlined(true));
-               return new CollabEditor(MimeType.APPLICATION_JAVA);
+               return new JavaEditor(MimeType.APPLICATION_JAVA);
             }
          });
       

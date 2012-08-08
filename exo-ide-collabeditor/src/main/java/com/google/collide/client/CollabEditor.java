@@ -66,19 +66,19 @@ import org.exoplatform.ide.editor.text.IDocument;
 public class CollabEditor extends Widget implements Editor, Markable
 {
 
-   private final EditorBundle editorBundle;
+   protected final EditorBundle editorBundle;
 
-   private final com.google.collide.client.editor.Editor editor;
+   protected final com.google.collide.client.editor.Editor editor;
 
    private String mimeType;
 
    private String id;
 
-   private IDocument document;
+   protected IDocument document;
 
-   private LeftGutterNotificationManager notificationManager;
+   protected LeftGutterNotificationManager notificationManager;
 
-   private DocumentAdaptor documentAdaptor;
+   protected DocumentAdaptor documentAdaptor;
 
    private boolean initialized;
 

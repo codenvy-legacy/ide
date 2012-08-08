@@ -44,38 +44,37 @@
   box-shadow: inset 0px 4px 2px -2px #DDD;
 }
 
+.leftGutterBase, .leftGutter, .leftGutterNotification {
+  cursor: default;
+  font-size: 11px;
+  font-face: Verdana;
+  height: 100%;	
+  line-height: editorLineHeight;
+  overflow: hidden;
+  /* Allow children to position absolutely against us */
+  position: relative;
+  
+  /* Allow decorations with z-index:-1 such as breakpoints */
+  z-index: 0;
+}
+
+.leftGutterBase{
+	border-right: 1px dotted;
+	color: #bbbbbb;
+}
+
 .leftGutter {
   color: #bbbbbb;
-  cursor: default;
-  font-size: 11px;
-  font-face: Verdana;
-  height: 100%;
-  line-height: editorLineHeight;
   min-width: 2em;
-  overflow: hidden;
   padding-left: 5px;
   padding-right: 6px;
-  /* Allow children to position absolutely against us */
-  position: relative;
+  border-right: 1px dotted;
   text-align: right;
-  /* Allow decorations with z-index:-1 such as breakpoints */
-  z-index: 0;
-  border-right: 1px solid;
 }
 .leftGutterNotification {
-  cursor: default;
-  font-size: 11px;
-  font-face: Verdana;
-  height: 100%;
-  line-height: editorLineHeight;
-  overflow: hidden;
   width: 14px;
   background-color: #eee;
-  /* Allow children to position absolutely against us */
-  position: relative;
   text-align: right;
-  /* Allow decorations with z-index:-1 such as breakpoints */
-  z-index: 0;
 }
 
 /* Empty rule for enabling CSS3 animations for editor changes. */

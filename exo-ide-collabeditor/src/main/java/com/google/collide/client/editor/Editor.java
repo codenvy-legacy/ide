@@ -122,6 +122,8 @@ public class Editor extends UiComponent<Editor.View> {
     String gutter();
     
     String lineRendererError();
+    
+    String leftGutterBase();
   }
 
   /**
