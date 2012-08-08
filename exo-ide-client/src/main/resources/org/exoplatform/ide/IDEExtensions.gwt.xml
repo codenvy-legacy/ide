@@ -20,7 +20,7 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-
+   <inherits name='com.google.collide.CollabEditor'/>
    <inherits name="org.eclipse.jdt.IdeJdt" />
    <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
    <inherits name="org.exoplatform.gwtframework.ui.UITextEditor" />

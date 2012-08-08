@@ -89,7 +89,7 @@
 }
 
 .currentLine{
-	background: #E8F2FF !important;
+	background-color: #E8F2FF;
 	position: absolute;
 	z-index: -1;
 }

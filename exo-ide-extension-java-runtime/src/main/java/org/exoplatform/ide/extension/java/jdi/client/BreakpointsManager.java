@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.google.collide.client.editor.gutter.Gutter.ClickListener;
+import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,12 +35,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.editor.java.client.Breakpoint;
+import org.exoplatform.ide.editor.java.client.BreakpointGutterManager;
+import org.exoplatform.ide.editor.java.client.JavaEditor;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -51,24 +52,22 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 import org.exoplatform.ide.extension.java.jdi.shared.Location;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:36:51 PM Mar 26, 2012 evgen $
  * 
  */
-public class BreakpointsManager implements EditorActiveFileChangedHandler, EditorLineNumberDoubleClickHandler,
-   DebuggerConnectedHandler, DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler,
-   EditorLineNumberContextMenuHandler
+public class BreakpointsManager implements EditorActiveFileChangedHandler, DebuggerConnectedHandler,
+   DebuggerDisconnectedHandler, EditorFileOpenedHandler, BreakPointsUpdatedHandler, EditorLineNumberContextMenuHandler,
+   ClickListener
 {
 
    private HandlerManager eventBus;
-
-   private Markable markable;
 
    private DebuggerClientService service;
 
@@ -84,7 +83,9 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
 
    private final FqnResolverFactory resolverFactory;
 
-   private HandlerRegistration lineNumberDobleClickHandler;
+   private Remover breakpointClickRemover;
+
+   private BreakpointGutterManager gutterManager;
 
    private HandlerRegistration lineNumberContextMenuHandler;
 
@@ -119,12 +120,13 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
 
       if (resolverFactory.isResolverExist(event.getFile().getMimeType()))
       {
-         if (event.getEditor() instanceof Markable)
+         if (event.getEditor() instanceof JavaEditor)
          {
-            if (lineNumberDobleClickHandler != null)
-               lineNumberDobleClickHandler.removeHandler();
-            markable = (Markable)event.getEditor();
-            lineNumberDobleClickHandler = markable.addLineNumberDoubleClickHandler(this);
+            if (breakpointClickRemover != null)
+               breakpointClickRemover.remove();
+            JavaEditor editor = (JavaEditor)event.getEditor();
+            gutterManager = editor.getBreakPointManager();
+            breakpointClickRemover = gutterManager.addLineClickListener(this);
             file = event.getFile();
             if (debuggerInfo == null)
             {
@@ -132,7 +134,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
                {
                   for (EditorBreakPoint b : breakPoints.get(event.getFile().getId()))
                   {
-                     markable.unmarkProblem(b);
+                     gutterManager.removeBreakpoint(b.getLineNumber());
                   }
                   breakPoints.get(event.getFile().getId()).clear();
                }
@@ -144,7 +146,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
    private void addProblem(BreakPoint breakPoint)
    {
       EditorBreakPoint problem = new EditorBreakPoint(breakPoint, "Breakpoint");
-      markable.markProblem(problem);
+      gutterManager.setBreakpoint(problem);
       if (!breakPoints.containsKey(file.getId()))
          breakPoints.put(file.getId(), new HashSet<EditorBreakPoint>());
       breakPoints.get(file.getId()).add(problem);
@@ -154,32 +156,16 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
       eventBus.fireEvent(new BreakPointsUpdatedEvent(breakPoints));
    }
 
-   public void markCurrentBreakPoint(Marker problem)
+   public void markCurrentBreakPoint(Breakpoint bp)
    {
-      if (problem != null)
-         markable.markProblem(problem);
+      if (bp != null)
+         gutterManager.setCurrentDebugLine(bp);
    }
 
-   public void unmarkCurrentBreakPoint(Marker problem)
+   public void unmarkCurrentBreakPoint(Breakpoint bp)
    {
-      if (problem != null)
-         markable.unmarkProblem(problem);
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler#onLineNumberDoubleClick(org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent)
-    */
-   @Override
-   public void onEditorLineNumberDoubleClick(final EditorLineNumberDoubleClickEvent event)
-   {
-      if (debuggerInfo == null)
-         return;
-
-      EditorBreakPoint breakPoint = isBreakpointExist(event.getLineNumber());
-      if (breakPoint != null)
-         removeBreakpoint(breakPoint);
-      else
-         addBreakpoint(event.getLineNumber());
+      if (bp != null)
+         gutterManager.removeCurrentDebugLine(bp);
    }
 
    /**
@@ -203,7 +189,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
    {
       try
       {
-         markable.unmarkProblem(breakPoint);
+         gutterManager.removeBreakpoint(breakPoint.getLineNumber());
          service.deleteBreakPoint(debuggerInfo.getId(), breakPoint.getBreakPoint(),
             new AsyncRequestCallback<BreakPoint>()
             {
@@ -307,7 +293,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
       {
          for (EditorBreakPoint p : breakPoints.get(file.getId()))
          {
-            markable.unmarkProblem(p);
+            gutterManager.removeBreakpoint(p.getLineNumber());
          }
          breakPoints.get(file.getId()).clear();
       }
@@ -326,12 +312,12 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
             breakPoints.get(event.getFile().getId()).clear();
             return;
          }
-         if (event.getEditor() instanceof Markable)
+         if (event.getEditor() instanceof JavaEditor)
          {
-            Markable m = (Markable)event.getEditor();
+            JavaEditor m = (JavaEditor)event.getEditor();
             for (EditorBreakPoint p : breakPoints.get(event.getFile().getId()))
             {
-               m.markProblem(p);
+               m.getBreakPointManager().setBreakpoint(p);
             }
          }
       }
@@ -354,7 +340,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
          {
             for (EditorBreakPoint p : breakPoints.get(file.getId()))
             {
-               markable.unmarkProblem(p);
+               gutterManager.removeBreakpoint(p.getLineNumber());
             }
             breakPoints.get(file.getId()).clear();
          }
@@ -375,6 +361,23 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Edito
       {
          IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), breakPoint));
       }
+   }
+
+   /**
+    * @see com.google.collide.client.editor.gutter.Gutter.ClickListener#onClick(int)
+    */
+   @Override
+   public void onClick(int y)
+   {
+      if (debuggerInfo == null)
+         return;
+
+      EditorBreakPoint breakPoint = isBreakpointExist(y);
+      if (breakPoint != null)
+         removeBreakpoint(breakPoint);
+      else
+         addBreakpoint(y);
+
    }
 
 }
