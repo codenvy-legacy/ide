@@ -127,7 +127,7 @@ class CoordinateMap implements Document.LineListener {
 
     int lineHeight = documentSizeProvider.getEditorLineHeight();
     if (!requiresMapping) {
-      return y / lineHeight;
+      return (y - 5) / lineHeight;
     }
 
     OffsetCache precedingOffsetCache = getPrecedingOffsetCache(y, IGNORE);
