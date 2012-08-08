@@ -148,8 +148,6 @@ public abstract class IDE
     * @return
     */
    public abstract List<Control> getControls();
-
-   
    
    /**
     * Open {@link View}

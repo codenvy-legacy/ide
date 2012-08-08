@@ -18,28 +18,6 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.json.shared.JsonArray;
-
-import com.google.collide.shared.document.Document.TextListener;
-
-import com.google.collide.client.editor.selection.SelectionModel;
-
-import com.google.collide.shared.document.Position;
-
-import com.google.collide.client.code.EditableContentArea;
-import com.google.collide.client.code.EditorBundle;
-import com.google.collide.client.code.errorrenderer.EditorErrorListener;
-import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
-import com.google.collide.client.util.PathUtil;
-import com.google.collide.shared.document.Document;
-import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.document.TextChange;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
@@ -57,6 +35,24 @@ import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.IDocument;
+
+import com.google.collide.client.code.EditableContentArea;
+import com.google.collide.client.code.EditorBundle;
+import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
+import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.util.PathUtil;
+import com.google.collide.json.shared.JsonArray;
+import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.LineInfo;
+import com.google.collide.shared.document.Position;
+import com.google.collide.shared.document.TextChange;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -544,10 +540,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public int getCursorOffsetLeft()
    {
+      int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
-      return getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
+      int offsetLeft = getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
          + editor.getLeftGutterNotificationManager().getGutter().getWidth()
          + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
+      
+      return offsetLeft - scrollLeft + 2;
    }
 
    /**
@@ -556,8 +555,11 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public int getCursorOffsetTop()
    {
+      int scrollTop = editor.getBuffer().getScrollTop();
       Position position = editor.getSelection().getCursorPosition();
-      return getElement().getAbsoluteTop() + editor.getBuffer().convertLineNumberToY(position.getLineNumber());
+      int offsetTop = getElement().getAbsoluteTop()
+               + editor.getBuffer().convertLineNumberToY(position.getLineNumber());
+      return offsetTop - scrollTop + 1;
    }
 
    /**

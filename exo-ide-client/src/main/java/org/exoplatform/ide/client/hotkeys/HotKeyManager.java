@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.client.hotkeys;
 
-import com.google.gwt.user.client.Event.NativePreviewHandler;
-
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +30,10 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 
 /**
  * Created by The eXo Platform SAS.
@@ -113,17 +103,15 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 //      setKeyDownHandler();
       Event.addNativePreviewHandler(new NativePreviewHandler()
       {
-         
          @Override
          public void onPreviewNativeEvent(NativePreviewEvent event)
          {
             if(event.getTypeInt() != Event.ONKEYDOWN)
                return;
-            System.out.println(event.getNativeEvent().getCharCode());
-            System.out.println(event.getNativeEvent().getKeyCode());
             onKeyDown(Event.as(event.getNativeEvent()));
          }
       });
+      
       hotKeyMap = applicationSettings.getValueAsMap("hotkeys");
       if (hotKeyMap == null)
       {
