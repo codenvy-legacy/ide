@@ -53,6 +53,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
@@ -644,7 +645,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       IDE.getInstance().closeView(display.asView().getId());
-      WebSocket.getInstance().eventBus().unsubscribe("debuggerEvents", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), this);
    }
 
    @Override
@@ -748,7 +749,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.eventBus().subscribe("debuggerEvents", this);
+            ws.eventBus().subscribe(Channels.DEBUGGER_EVENT.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -767,7 +768,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   reLaunchDebugger(debugApplicationInstance);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("debuggerEvents", DebuggerPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), DebuggerPresenter.this);
                   }
                }
             });

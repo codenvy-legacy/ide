@@ -23,7 +23,7 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -52,19 +52,14 @@ public class BuilderClient
    /**
     * Component for sending message to client over WebSocket connection.
     */
-   private final WebSocketManager webSocketManager;
+   private final MessageBroker messageBroker;
 
-   /**
-    * Exo logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(WebSocketManager.class);
+   private static final int CHECKING_STATUS_PERIOD = 1000;
 
-   private static final int CHECKING_STATUS_PERIOD = 2000;
-
-   public BuilderClient(InitParams initParams, WebSocketManager webSocketManager)
+   public BuilderClient(InitParams initParams, MessageBroker messageBroker)
    {
       this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
-         webSocketManager);
+         messageBroker);
    }
 
    private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
@@ -80,14 +75,14 @@ public class BuilderClient
       return defaultValue;
    }
 
-   protected BuilderClient(String baseURL, WebSocketManager webSocketManager)
+   protected BuilderClient(String baseURL, MessageBroker messageBroker)
    {
       if (baseURL == null || baseURL.isEmpty())
       {
          throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
       }
       this.baseURL = baseURL;
-      this.webSocketManager = webSocketManager;
+      this.messageBroker = messageBroker;
    }
 
    /**
@@ -494,14 +489,7 @@ public class BuilderClient
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      try
-      {
-         webSocketManager.publish(WebSocketManager.Channels.MAVEN_BUILD_STATUS.toString(), data, e, null);
-      }
-      catch (IOException ex)
-      {
-         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
-      }
+      messageBroker.publish(MessageBroker.Channels.MAVEN_BUILD_STATUS.toString(), data, e, null);
    }
 
    /** Stream that automatically close HTTP connection when all data ends. */

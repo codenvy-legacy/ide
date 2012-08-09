@@ -32,6 +32,9 @@ public class WebSocketEventMessage extends WebSocketMessage
 
    private String payload;
 
+   /**
+    * An exception describing failure. This will be <code>null</code> if the operation succeeded.
+    */
    private String exception;
 
    public WebSocketEventMessage(String channel, String payload, String exception)
@@ -73,7 +76,9 @@ public class WebSocketEventMessage extends WebSocketMessage
    }
 
    /**
-    * @return an exception
+    * Returns an exception describing failure.
+    * 
+    * @return an exception describing failure. This will be <code>null</code> if the operation succeeded.
     */
    public String getException()
    {
@@ -81,6 +86,8 @@ public class WebSocketEventMessage extends WebSocketMessage
    }
 
    /**
+    * Sets an exception describing failure.
+    * 
     * @param exception an exception
     */
    public void setException(String exception)

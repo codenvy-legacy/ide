@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -189,7 +190,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             appCreateRequestHandler = new CreateRequestHandler();
             appCreateRequestHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe("herokuAppCreated", this);
+            ws.eventBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -215,7 +216,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   paasCallback.onDeploy(false);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("herokuAppCreated", DeployApplicationPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), DeployApplicationPresenter.this);
                   }
                }
             });
@@ -341,7 +342,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
             gitInitStatusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe("gitRepoInitialized", DeployApplicationPresenter.this);
+            ws.eventBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), DeployApplicationPresenter.this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -366,7 +367,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("gitRepoInitialized", DeployApplicationPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), DeployApplicationPresenter.this);
                   }
                }
             });
@@ -399,11 +400,11 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    @Override
    public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      if (webSocketEventMessage.getChannel().equals("gitRepoInitialized"))
+      if (webSocketEventMessage.getChannel().equals(Channels.GIT_REPO_INITIALIZED.toString()))
       {
          onGitRepoInitialized(webSocketEventMessage);
       }
-      else if (webSocketEventMessage.getChannel().equals("herokuAppCreated"))
+      else if (webSocketEventMessage.getChannel().equals(Channels.HEROKU_APP_CREATED.toString()))
       {
          onHerokuAppCreated(webSocketEventMessage);
       }
@@ -416,7 +417,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
     */
    private void onGitRepoInitialized(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("gitRepoInitialized", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
 
       if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {
@@ -449,7 +450,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
     */
    private void onHerokuAppCreated(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("herokuAppCreated", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
 
       WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
       if (webSocketException == null)

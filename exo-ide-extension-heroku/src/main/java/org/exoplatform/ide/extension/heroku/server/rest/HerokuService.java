@@ -31,7 +31,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -72,7 +72,7 @@ public class HerokuService
    private VirtualFileSystemRegistry vfsRegistry;
 
    @Inject
-   private WebSocketManager webSocketManager;
+   private MessageBroker messageBroker;
 
    /**
     * Exo logger.
@@ -310,13 +310,6 @@ public class HerokuService
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      try
-      {
-         webSocketManager.publish(WebSocketManager.Channels.HEROKU_APP_CREATED.toString(), data, e, null);
-      }
-      catch (IOException ex)
-      {
-         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
-      }
+      messageBroker.publish(MessageBroker.Channels.HEROKU_APP_CREATED.toString(), data, e, null);
    }
 }

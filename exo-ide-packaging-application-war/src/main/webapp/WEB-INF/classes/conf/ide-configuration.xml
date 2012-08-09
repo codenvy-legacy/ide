@@ -552,12 +552,22 @@
 
 <!-- 
 ***************************************************************************************
-**************************** WebSocket Supporting *************************************
+******************************* WebSocket Support *************************************
 ***************************************************************************************
 -->
 
    <component>
-      <type>org.exoplatform.ide.websocket.WebSocketManager</type>
+      <type>org.exoplatform.ide.websocket.MessageBroker</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.websocket.SessionManager</type>
+      <init-params>
+         <value-param>
+            <name>disconnected-session-timeout</name>
+            <value>30</value>
+         </value-param>
+      </init-params>
    </component>
 
 <!--

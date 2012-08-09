@@ -19,7 +19,7 @@
 package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
- * Interface represents the WebSocket message that contains description of the exception.
+ * Interface represents an exception describing failure.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketExceptionMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $

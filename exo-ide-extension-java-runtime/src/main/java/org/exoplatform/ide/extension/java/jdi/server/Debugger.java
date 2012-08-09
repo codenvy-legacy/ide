@@ -56,7 +56,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -90,8 +90,8 @@ public class Debugger implements EventsHandler
    /**
     * Component for sending messages to client over WebSocket connection.
     */
-   private static final WebSocketManager webSocketManager = (WebSocketManager)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(WebSocketManager.class);
+   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(MessageBroker.class);
 
    private static final int CHECKING_EVENTS_PERIOD = 1000;
 
@@ -895,13 +895,6 @@ public class Debugger implements EventsHandler
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      try
-      {
-         webSocketManager.publish(WebSocketManager.Channels.DEBUGGER_EVENTS.toString(), data, e, null);
-      }
-      catch (IOException ex)
-      {
-         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
-      }
+      messageBroker.publish(MessageBroker.Channels.DEBUGGER_EVENT.toString(), data, e, null);
    }
 }

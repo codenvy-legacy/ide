@@ -50,10 +50,16 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private static final Log LOG = ExoLogger.getLogger(IDEWebSocketServlet.class);
 
    /**
-    * WebSocket manager that used for managing client connections.
+    * WebSocket session manager that used for managing of the client's sessions.
     */
-   private static WebSocketManager webSocketManager = (WebSocketManager)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(WebSocketManager.class);
+   private static SessionManager sessionManager = (SessionManager)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(SessionManager.class);
+
+   /**
+    * WebSocket message broker that used for managing of the messages.
+    */
+   private static MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(MessageBroker.class);
 
    /**
     * @see org.apache.catalina.websocket.WebSocketServlet#createWebSocketInbound(java.lang.String)
@@ -61,12 +67,12 @@ public class IDEWebSocketServlet extends WebSocketServlet
    @Override
    protected StreamInbound createWebSocketInbound(String subProtocol, HttpServletRequest request)
    {
-      return new WSMessageInbound(request.getSession().getId());
-
-      // TODO
-      // Generate new unique session identifier for every new connection as follow:
-      // return new WSMessageInbound(UUID.randomUUID().toString());
-      // After client reconnecting to the server, client send session id to server
+      String sessionId = request.getParameter("sessionId");
+      if (sessionId.isEmpty())
+      {
+         sessionId = request.getSession().getId();
+      }
+      return new WSMessageInbound(sessionId);
    }
 
    /**
@@ -90,7 +96,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onOpen(WsOutbound outbound)
       {
-         webSocketManager.registerConnection(sessionId, this);
+         sessionManager.registerConnection(sessionId, this);
       }
 
       /**
@@ -104,7 +110,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
             LOG.info("WebSocket connection was closed abnormally with status code " + status + " (session ID: "
                + sessionId + ").");
          }
-         webSocketManager.unregisterConnection(sessionId, this);
+         sessionManager.unregisterConnection(sessionId, this);
       }
 
       /**
@@ -113,7 +119,7 @@ public class IDEWebSocketServlet extends WebSocketServlet
       @Override
       protected void onTextMessage(CharBuffer message) throws IOException
       {
-         webSocketManager.onMessage(sessionId, message.toString());
+         messageBroker.handleMessage(sessionId, message.toString());
       }
 
       /**

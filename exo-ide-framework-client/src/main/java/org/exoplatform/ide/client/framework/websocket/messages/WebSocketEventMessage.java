@@ -38,7 +38,17 @@ public interface WebSocketEventMessage extends WebSocketMessage
 
    void setPayload(Splittable payload);
 
+   /**
+    * Returns an exception describing failure.
+    * 
+    * @return an exception describing failure. This will be <code>null</code> if the operation succeeded.
+    */
    WebSocketEventMessageException getException();
 
+   /**
+    * Sets an exception describing failure.
+    * 
+    * @param exception an exception
+    */
    void setException(WebSocketEventMessageException exception);
 }

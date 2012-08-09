@@ -29,7 +29,7 @@ import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -144,15 +144,10 @@ public abstract class JenkinsClient
    private Templates transfomRules;
 
    /**
-    * Exo logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(JenkinsClient.class);
-
-   /**
     * Component for sending messages to client over WebSocket connection.
     */
-   private static final WebSocketManager webSocketManager = (WebSocketManager)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(WebSocketManager.class);
+   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(MessageBroker.class);
 
    private Timer checkEventsTimer = new Timer();
 
@@ -839,14 +834,6 @@ public abstract class JenkinsClient
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      try
-      {
-         webSocketManager.publish(WebSocketManager.Channels.JENKINS_BUILD_STATUS.toString(), data, e, null);
-      }
-      catch (IOException ex)
-      {
-         LOG.error(
-            "An error occurs writing data to the client over WebSocket connection. " + ex.getMessage(), ex);
-      }
+      messageBroker.publish(MessageBroker.Channels.JENKINS_BUILD_STATUS.toString(), data, e, null);
    }
 }

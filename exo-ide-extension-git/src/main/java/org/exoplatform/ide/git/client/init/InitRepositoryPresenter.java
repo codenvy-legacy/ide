@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
@@ -153,7 +154,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             useWebSocketForCallback = true;
             statusHandler = new InitRequestStatusHandler(projectName);
             statusHandler.requestInProgress(projectId);
-            ws.eventBus().subscribe("gitRepoInitialized", this);
+            ws.eventBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -177,7 +178,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("gitRepoInitialized", InitRepositoryPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), InitRepositoryPresenter.this);
                   }
                }
             });
@@ -206,7 +207,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    @Override
    public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("gitRepoInitialized", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))

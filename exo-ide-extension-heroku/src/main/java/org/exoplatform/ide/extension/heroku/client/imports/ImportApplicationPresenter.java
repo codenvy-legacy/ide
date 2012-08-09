@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
@@ -294,7 +295,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
             useWebSocketForCallback = true;
             gitCloneStatusHandler = new CloneRequestStatusHandler(project.getName(), gitLocation);
             gitCloneStatusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe("gitRepoCloned", this);
+            ws.eventBus().subscribe(Channels.GIT_REPO_CLONED.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -316,7 +317,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("gitRepoCloned", ImportApplicationPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), ImportApplicationPresenter.this);
                   }
                }
             });
@@ -415,7 +416,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    @Override
    public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("gitRepoCloned", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
 
       if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {

@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -191,7 +192,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             useWebSocketForCallback = true;
             statusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
             statusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe("gitRepoCloned", this);
+            ws.eventBus().subscribe(Channels.GIT_REPO_CLONED.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -215,7 +216,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("gitRepoCloned", CloneRepositoryPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), CloneRepositoryPresenter.this);
                   }
                }
             });
@@ -244,7 +245,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    @Override
    public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("gitRepoCloned", this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
 
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))

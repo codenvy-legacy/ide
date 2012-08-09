@@ -52,6 +52,54 @@ import java.util.Set;
 public class EventBus implements WebSocketMessageHandler
 {
    /**
+    * Enumeration describing the WebSocket message event types.
+    */
+   public enum Channels {
+      /**
+       * Event type for message that contains status of the Maven build job.
+       */
+      MAVEN_BUILD_STATUS("maven:buildStatus"),
+
+      /**
+       * Event type for message that contains status of the Jenkins build job.
+       */
+      JENKINS_BUILD_STATUS("jenkins:buildStatus"),
+
+      /**
+       * Event type for message that contains debugger events.
+       */
+      DEBUGGER_EVENT("debugger:event"),
+
+      /**
+       * Indicates that the Git repository has been initialized.
+       */
+      GIT_REPO_INITIALIZED("git:repoInitialized"),
+
+      /**
+       * Indicates that the Git repository has been cloned.
+       */
+      GIT_REPO_CLONED("git:repoCloned"),
+
+      /**
+       * Indicates that Heroku application has been created.
+       */
+      HEROKU_APP_CREATED("heroku:appCreated");
+
+      private final String eventTypeValue;
+
+      private Channels(String value)
+      {
+         this.eventTypeValue = value;
+      }
+
+      @Override
+      public String toString()
+      {
+         return eventTypeValue;
+      }
+   }
+
+   /**
     * Map of the channel to the subscribers.
     */
    private Map<String, Set<WebSocketEventHandler>> channelToSubscribersMap =
@@ -93,7 +141,7 @@ public class EventBus implements WebSocketMessageHandler
       {
          WebSocketWelcomeMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketWelcomeMessage.class, eventMessage).as();
-         WebSocket.getInstance().setSessionId(message.getSessionId());
+         WebSocket.getInstance().getSession().setId(message.getSessionId());
       }
       else if (Type.EVENT.name().equals(eventType))
       {
@@ -114,10 +162,10 @@ public class EventBus implements WebSocketMessageHandler
       {
          WebSocketCallResultMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketCallResultMessage.class, eventMessage).as();
-         WebSocketResultCallback remove = callbackMap.remove(message.getCallId());
-         if (remove != null)
+         WebSocketResultCallback callbcak = callbackMap.remove(message.getCallId());
+         if (callbcak != null)
          {
-            remove.onResult(message);
+            callbcak.onResult(message);
          }
       }
    }

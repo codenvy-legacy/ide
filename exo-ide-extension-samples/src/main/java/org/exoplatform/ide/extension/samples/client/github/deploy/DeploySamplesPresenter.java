@@ -48,6 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -383,7 +384,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             useWebSocketForCallback = true;
             cloneStatusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
             cloneStatusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe("gitRepoCloned", this);
+            ws.eventBus().subscribe(Channels.GIT_REPO_CLONED.toString(), this);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -405,7 +406,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("gitRepoCloned", DeploySamplesPresenter.this);
+                     ws.eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), DeploySamplesPresenter.this);
                   }
                }
             });
@@ -467,7 +468,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    @Override
    public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
    {
-      WebSocket.getInstance().eventBus().unsubscribe("gitRepoCloned", DeploySamplesPresenter.this);
+      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), DeploySamplesPresenter.this);
 
       if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
       {

@@ -60,7 +60,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.WebSocketManager;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -102,18 +102,13 @@ public class GitService
     * Component for sending message to client over WebSocket connection.
     */
    @Inject
-   private WebSocketManager webSocketManager;
+   private MessageBroker messageBroker;
 
    @QueryParam("vfsid")
    private String vfsId;
 
    @QueryParam("projectid")
    private String projectId;
-
-   /**
-    * Exo logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(GitService.class);
 
    @Path("add")
    @POST
@@ -224,19 +219,19 @@ public class GitService
                try
                {
                   doClone(request);
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, null);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_CLONED, null);
                }
                catch (GitException e)
                {
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_CLONED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_CLONED, e);
                }
                catch (URISyntaxException e)
                {
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_CLONED, e);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_CLONED, e);
                }
             }
          }.run();
@@ -315,15 +310,15 @@ public class GitService
                try
                {
                   doInit(request);
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, null);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_INITIALIZED, null);
                }
                catch (GitException e)
                {
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_INITIALIZED, e);
                }
                catch (VirtualFileSystemException e)
                {
-                  publishWebSocketMessage(WebSocketManager.Channels.GIT_REPO_INITIALIZED, e);
+                  publishWebSocketMessage(MessageBroker.Channels.GIT_REPO_INITIALIZED, e);
                }
             }
          }.run();
@@ -650,15 +645,8 @@ public class GitService
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(WebSocketManager.Channels channels, Exception e)
+   private void publishWebSocketMessage(MessageBroker.Channels channels, Exception e)
    {
-      try
-      {
-         webSocketManager.publish(channels.toString(), "\"" + projectId + "\"", e, null);
-      }
-      catch (IOException ex)
-      {
-         LOG.error("An error occurs writing data to the client over WebSocket. " + ex.getMessage(), ex);
-      }
+      messageBroker.publish(channels.toString(), "\"" + projectId + "\"", e, null);
    }
 }

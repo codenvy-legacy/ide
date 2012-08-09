@@ -21,6 +21,7 @@ package org.exoplatform.ide.websocket;
 import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.WsOutbound;
 import org.everrest.core.impl.provider.json.JsonValue;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.websocket.WebSocketMessage.Type;
@@ -29,20 +30,22 @@ import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Class used for managing WebSocket connections and sending messages to clients.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketManager.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
+ * @version $Id: MessageBroker.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
  *
  */
-public class WebSocketManager
+public class MessageBroker
 {
    /**
     * Enumeration describing the WebSocket message event types.
@@ -51,32 +54,32 @@ public class WebSocketManager
       /**
        * Event type for message that contains status of the Maven build job.
        */
-      MAVEN_BUILD_STATUS("mavenBuildStatus"),
+      MAVEN_BUILD_STATUS("maven:buildStatus"),
 
       /**
        * Event type for message that contains status of the Jenkins build job.
        */
-      JENKINS_BUILD_STATUS("jenkinsBuildStatus"),
+      JENKINS_BUILD_STATUS("jenkins:buildStatus"),
 
       /**
        * Event type for message that contains debugger events.
        */
-      DEBUGGER_EVENTS("debuggerEvents"),
+      DEBUGGER_EVENT("debugger:event"),
 
       /**
-       * Indicates that the git-repository has been initialized.
+       * Indicates that the Git repository has been initialized.
        */
-      GIT_REPO_INITIALIZED("gitRepoInitialized"),
+      GIT_REPO_INITIALIZED("git:repoInitialized"),
 
       /**
-       * Indicates that the git-repository has been cloned.
+       * Indicates that the Git repository has been cloned.
        */
-      GIT_REPO_CLONED("gitRepoCloned"),
+      GIT_REPO_CLONED("git:repoCloned"),
 
       /**
        * Indicates that Heroku application has been created.
        */
-      HEROKU_APP_CREATED("herokuAppCreated");
+      HEROKU_APP_CREATED("heroku:appCreated");
 
       private final String eventTypeValue;
 
@@ -93,18 +96,15 @@ public class WebSocketManager
    }
 
    /**
-    * Exo logger.
+    * WebSocket session manager that used for managing of the client's sessions.
     */
-   private static final Log LOG = ExoLogger.getLogger(WebSocketManager.class);
+   private static SessionManager sessionManager = (SessionManager)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(SessionManager.class);
 
    /**
-    * Map of the session identifier to the connection.
+    * Exo logger.
     */
-   // TODO
-   // If new session id will be generated for every new connection then
-   // use  Map<String, MessageInbound> instead of Map<String, CopyOnWriteArraySet<MessageInbound>>
-   private Map<String, CopyOnWriteArraySet<MessageInbound>> sessionToConnection =
-      new ConcurrentHashMap<String, CopyOnWriteArraySet<MessageInbound>>();
+   private static final Log LOG = ExoLogger.getLogger(MessageBroker.class);
 
    /**
     * Map of the channel to the subscribers.
@@ -115,71 +115,22 @@ public class WebSocketManager
       new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>();
 
    /**
-    * Register user connection in active connection list.
-    * 
-    * @param sessionId identifier of the WebSocket session
-    * @param connection WebSocket connection
+    * Map of the disconnected sessions to the queued messages that were sent with errors.
     */
-   public void registerConnection(String sessionId, MessageInbound connection)
-   {
-      if (sessionId == null)
-      {
-         throw new NullPointerException("Session identifier must not be null");
-      }
-      if (connection == null)
-      {
-         throw new NullPointerException("Connection must not be null");
-      }
-
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
-      if (connectionsSet != null)
-      {
-         connectionsSet.add(connection);
-      }
-      else
-      {
-         connectionsSet = new CopyOnWriteArraySet<MessageInbound>();
-         connectionsSet.add(connection);
-         sessionToConnection.put(sessionId, connectionsSet);
-      }
-
-      try
-      {
-         send(sessionId, new WebSocketWelcomeMessage(sessionId));
-      }
-      catch (IOException e)
-      {
-         LOG.warn("An error occurs sending data to client over WebSocket", e);
-      }
-   }
-
-   /**
-    * Remove WebSocket connection from connections registry and unsubscribe
-    * the client with the given session identifier from the all channels.
-    * 
-    * @param sessionId identifier of the WebSocket session
-    * @param inbound WebSocket connection
-    */
-   public void unregisterConnection(String sessionId, MessageInbound inbound)
-   {
-      unsubscribe(sessionId, null);
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
-      if (connectionsSet != null)
-      {
-         if (connectionsSet.remove(inbound) && connectionsSet.isEmpty())
-         {
-            sessionToConnection.remove(sessionId);
-         }
-      }
-   }
+   private Map<String, CopyOnWriteArrayList<WebSocketMessage>> notSendedMessageQueue =
+      new ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketMessage>>();
 
    /**
     * Parse and process incoming message.
     * 
     * @param message incoming message
     */
-   public void onMessage(String sessionId, String message)
+   public void handleMessage(String sessionId, String message)
    {
+      if (message.equals("PING"))
+      {
+         return;
+      }
       String type = null;
       try
       {
@@ -214,9 +165,28 @@ public class WebSocketManager
       {
          LOG.warn("An error occurs parsing the WebSocket message", e);
       }
-      catch (IOException e)
+   }
+
+   /**
+    * Re-sends all messages that were sent with any errors.
+    * 
+    * @param sessionId WebSocket session identifier
+    */
+   public void checkNotSendedMessages(String sessionId)
+   {
+      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+      if (messageList != null)
       {
-         LOG.warn("An error occurs sending data to client over WebSocket", e);
+         for (WebSocketMessage message : messageList)
+         {
+            messageList.remove(message);
+            if (messageList.isEmpty())
+            {
+               notSendedMessageQueue.remove(messageList);
+            }
+
+            send(sessionId, message);
+         }
       }
    }
 
@@ -254,7 +224,7 @@ public class WebSocketManager
     * Unsubscribes the client to receive messages on a particular channel or the all channels.
     * 
     * @param sessionId client's session identifier
-    * @param channel channel name. If <code>null</code> - client will be unsubscribed to all subscriptions.
+    * @param channel channel name. If <code>null</code> then client will be unsubscribed to all subscriptions.
     */
    public void unsubscribe(String sessionId, String channel)
    {
@@ -296,9 +266,8 @@ public class WebSocketManager
     * @param message the message
     * @param an exception to be sent to the client. May be </code>null<code>
     * @param excludeSessionId
-    * @throws IOException 
     */
-   public void publish(String channel, String message, Exception e, String excludeSessionId) throws IOException
+   public void publish(String channel, String message, Exception e, String excludeSessionId)
    {
       if (channelToSubscribers.containsKey(channel))
       {
@@ -321,7 +290,7 @@ public class WebSocketManager
       }
    }
 
-   private void call(String sessionId, String callId, String data) throws IOException
+   private void call(String sessionId, String callId, String data)
    {
       // TODO
       // processCall
@@ -337,11 +306,27 @@ public class WebSocketManager
     * 
     * @param sessionId identifier of the WebSocket connection
     * @param message the {@link WebSocketMessage} to be sent to the client
-    * @throws IOException if an error occurs writing to the client
     */
-   private void send(String sessionId, WebSocketMessage message) throws IOException
+   void send(String sessionId, WebSocketMessage message)
    {
-      send(sessionId, message.toString());
+      try
+      {
+         send(sessionId, message.toString());
+      }
+      catch (Exception e)
+      {
+         CopyOnWriteArrayList<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+         if (messageList != null)
+         {
+            messageList.add(message);
+         }
+         else
+         {
+            messageList = new CopyOnWriteArrayList<WebSocketMessage>();
+            messageList.add(message);
+            notSendedMessageQueue.put(sessionId, messageList);
+         }
+      }
    }
 
    /**
@@ -356,8 +341,13 @@ public class WebSocketManager
     */
    private void send(String sessionId, String message) throws IOException
    {
-      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionToConnection.get(sessionId);
+      CopyOnWriteArraySet<MessageInbound> connectionsSet = sessionManager.getConnectionsOfSession(sessionId);
       if (connectionsSet == null)
+      {
+         throw new IllegalArgumentException("Unable to find session with ID " + sessionId + ".");
+      }
+
+      if (connectionsSet.isEmpty())
       {
          throw new IllegalArgumentException("Unable to find connection with session ID " + sessionId + ".");
       }
@@ -367,6 +357,20 @@ public class WebSocketManager
          WsOutbound wsOut = messageInbound.getWsOutbound();
          wsOut.writeTextMessage(CharBuffer.wrap(message));
          wsOut.flush();
+      }
+   }
+
+   /**
+    * Removes all queued messages that were sent with errors.
+    * 
+    * @param sessionId WebSocket session identifier
+    */
+   void clearNotSendedMessageQueue(String sessionId)
+   {
+      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+      if (messageList != null)
+      {
+         notSendedMessageQueue.remove(sessionId);
       }
    }
 }
