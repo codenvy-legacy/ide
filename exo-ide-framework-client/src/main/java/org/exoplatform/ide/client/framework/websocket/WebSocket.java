@@ -24,6 +24,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler;
@@ -35,8 +36,10 @@ import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEven
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
 
 /**
- * Class represents a WebSocket connection.
- * Each connection is identified by it's session identifier.
+ * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
+ * If connection was closed unexpectedly, makes 5 attempts to reconnect connection for every 5 sec.
+ * You should normally only use a single instance of this class. You can create an instance using
+ * the static {@code getInstance} method.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
@@ -55,8 +58,8 @@ public class WebSocket
       CONNECTING(0),
 
       /**
-       * Connection is established and communication is possible.
-       * A WebSocket must be in the open state in order to send and receive data over the network.
+       * Connection is established and communication is possible. A WebSocket must
+       * be in the open state in order to send and receive data over the network.
        */
       OPEN(1),
 
@@ -100,9 +103,9 @@ public class WebSocket
    private String url;
 
    /**
-    * The session identifier of this WebSocket connection.
+    * The WebSocket session.
     */
-   private String sessionId;
+   private WebSocketSession session;
 
    /**
     * Event subscriber for this WebSocket instance.
@@ -114,7 +117,7 @@ public class WebSocket
    /**
     * Counter of connection attempts.
     */
-   private static int counterConnectionAttempts;
+   private static int connectionAttemptsCounter;
 
    /**
     * Creates a new WebSocket instance and connects to the remote socket location.
@@ -122,7 +125,9 @@ public class WebSocket
    protected WebSocket()
    {
       instance = this;
-      url = "ws://" + Window.Location.getHost() + "/websocket";
+      session = new WebSocketSession();
+      String sessionId = session.getId();
+      url = "ws://" + Window.Location.getHost() + "/websocket/?sessionId=" + (sessionId==null ? "" : sessionId);
       socket = WebSocketImpl.create(url);
       init();
    }
@@ -139,8 +144,9 @@ public class WebSocket
          @Override
          public void onWebSocketOpened(WebSocketOpenedEvent event)
          {
-            counterConnectionAttempts = 0;
+            connectionAttemptsCounter = 0;
             IDE.fireEvent(event);
+            heartbeatPingTimer.scheduleRepeating(30*1000);
          }
       });
 
@@ -154,7 +160,7 @@ public class WebSocket
 
             IDE.fireEvent(event);
 
-            if (!event.wasClean() && counterConnectionAttempts < 5)
+            if (!event.wasClean() && connectionAttemptsCounter < 5)
             {
                reconnectWebSocketTimer.schedule(5000);
             }
@@ -220,8 +226,27 @@ public class WebSocket
       @Override
       public void run()
       {
-         counterConnectionAttempts++;
+         connectionAttemptsCounter++;
          getInstance();
+      }
+   };
+
+   /**
+    * Timer for sending automatic heartbeat pings to prevent closing idle WebSocket connection.
+    */
+   private Timer heartbeatPingTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         try
+         {
+            send("PING");
+         }
+         catch (WebSocketException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
       }
    };
 
@@ -285,23 +310,23 @@ public class WebSocket
    }
 
    /**
-    * Set the session identifier.
+    * Sets the session.
     * 
-    * @param newSessionId new session identifier
+    * @param session new session
     */
-   public void setSessionId(String sessionId)
+   public void setSession(WebSocketSession session)
    {
-      this.sessionId = sessionId;
+      this.session = session;
    }
 
    /**
-    * 
+    * Returns the WebSocket session.
     * 
     * @return the session identifier of this WebSocket connection
     */
-   public String getSessionId()
+   public WebSocketSession getSession()
    {
-      return sessionId;
+      return session;
    }
 
    /**
