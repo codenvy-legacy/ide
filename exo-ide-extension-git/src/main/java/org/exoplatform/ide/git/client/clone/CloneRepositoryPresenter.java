@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
 import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -175,7 +176,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    private void cloneRepository()
    {
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      String remoteUri = display.getRemoteUriValue().getValue();
+      final String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
 
       try
@@ -189,7 +190,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-                  
+                  String[] userRepo = parseGitUrl(remoteUri);
+                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0],userRepo[1]));
 
                }
 
@@ -211,5 +213,22 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
       IDE.getInstance().closeView(display.asView().getId());
+   }
+   
+   private String[] parseGitUrl(String gitUrl)
+   {
+      String[] userRepo = new String[2];
+      if (gitUrl.startsWith("git@github.com"))
+      {
+         gitUrl = gitUrl.split("git@github.com")[1];
+         userRepo = gitUrl.split("/");
+      }
+      else
+      {
+         gitUrl = gitUrl.split("https://github.com")[1];
+         userRepo = gitUrl.split("/");
+      }
+      return userRepo;
+
    }
 }

@@ -358,7 +358,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          remoteUri += ".git";
       }
-      final String gitUrl = remoteUri;
       try
       {
          JobManager.get().showJobSeparated();
@@ -372,8 +371,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new ProjectCreatedEvent(project));
                   IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-                  String[] userRepo = parseGitUrl(gitUrl);
-                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0],userRepo[1]));
                   if (paas != null)
                   {
                      // FIXME
@@ -420,21 +417,5 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       this.vfs = event.getVfsInfo();
    }
 
-   private String[] parseGitUrl(String gitUrl)
-   {
-      String[] userRepo = new String[2];
-      if (gitUrl.startsWith("git@github.com"))
-      {
-         gitUrl = gitUrl.split("git@github.com")[1];
-         userRepo = gitUrl.split("/");
-      }
-      else
-      {
-         gitUrl = gitUrl.split("https://github.com")[1];
-         userRepo = gitUrl.split("/");
-      }
-      return userRepo;
-
-   }
 
 }
