@@ -22,10 +22,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+
+import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -41,6 +45,24 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
       openProject();
    }
 
+
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + GroovyAnnotationAutocompleteTest.class.getSimpleName());
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+   }
+   
+   
+   
    @Test
    public void testGroovyAnnotation() throws Exception
    {

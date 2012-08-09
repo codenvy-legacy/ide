@@ -93,7 +93,7 @@ public abstract class JcrFileSystemTest extends TestCase
       RepositoryService repositoryService =
          (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
       ManageableRepository repository = repositoryService.getRepository(REPOSITORY_NAME);
-      session = (Session)repository.login(new CredentialsImpl("root", "exo".toCharArray()), WORKSPACE_NAME);
+      session = repository.login(new CredentialsImpl("root", "exo".toCharArray()), WORKSPACE_NAME);
       testRoot = session.getRootNode().addNode(TEST_ROOT_NAME, "nt:unstructured");
       session.save();
       repositoryService.setCurrentRepositoryName(REPOSITORY_NAME);
@@ -136,7 +136,7 @@ public abstract class JcrFileSystemTest extends TestCase
 
    protected Item getItem(String id) throws Exception
    {
-      String path = new StringBuilder().append(SERVICE_URI).append("item/").append(id).toString();
+      String path = SERVICE_URI + "item/" + id;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, null, null);
       if (response.getStatus() == 200)
          return (Item)response.getEntity();
