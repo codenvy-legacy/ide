@@ -30,7 +30,7 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-final class ProjectUpdateListener implements EventListener
+class ProjectUpdateListener implements EventListener
 {
    private String projectId;
 
@@ -48,7 +48,7 @@ final class ProjectUpdateListener implements EventListener
    }
 
    @Override
-   public boolean equals(Object o)
+   public final boolean equals(Object o)
    {
       if (this == o)
       {
@@ -63,7 +63,7 @@ final class ProjectUpdateListener implements EventListener
    }
 
    @Override
-   public int hashCode()
+   public final int hashCode()
    {
       int hash = 7;
       hash = 31 * hash + projectId.hashCode();

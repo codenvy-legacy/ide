@@ -375,7 +375,7 @@ public class JcrFileSystem implements VirtualFileSystem
          MediaType mediaType = data.getMediaType();
          if (listeners != null && data.getType() == ItemType.PROJECT)
          {
-            listeners.removeEventListener(ProjectUpdateEventFilter.newFilter((ProjectData)data), new ProjectUpdateListener(id));
+            listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
          }
          data.delete(lockToken);
          notifyListeners(new ChangeEvent(this, //
@@ -1938,7 +1938,7 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Item is not a project. ");
          }
          if (!listeners.addEventListener(
-            ProjectUpdateEventFilter.newFilter((ProjectData)projectData), new ProjectUpdateListener(projectId)))
+            ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData), new ProjectUpdateListener(projectId)))
          {
             throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
          }
@@ -1963,7 +1963,7 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             ItemData projectData = getItemData(session, projectId);
             if (ItemType.PROJECT != projectData.getType() // Do not check listeners if not a project.
-               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter((ProjectData)projectData), new ProjectUpdateListener(projectId)))
+               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData), new ProjectUpdateListener(projectId)))
             {
                throw new InvalidArgumentException("'" + projectData.getName() + "' is not under watching. ");
             }
