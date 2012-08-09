@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplates;
@@ -76,7 +77,13 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
-      String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
+      FileType fileType = IDE.getInstance().getFileTypeRegistry().getFileType(event.getMimeType());
+      if (fileType == null)
+      {
+         return;
+      }
+      
+      String extension = fileType.getExtension();
 
       String content = FileTemplates.getTemplateFor(event.getMimeType());
 
