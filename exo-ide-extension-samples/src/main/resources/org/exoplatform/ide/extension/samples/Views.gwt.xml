@@ -62,5 +62,9 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display" />
    </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.extension.samples.client.CollaboratorsViewer">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.GetCollaboratorsHandler.Display" />
+   </replace-with>
 
 </module>

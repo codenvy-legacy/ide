@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.git.client;
 
+import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Commiters;
+import org.exoplatform.ide.git.shared.Credentials;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -34,4 +37,20 @@ public interface GitAutoBeanFactory extends AutoBeanFactory
 {
    AutoBean<Commiters> commiters();
 
+   
+   /**
+    * A factory method for a log entry bean.
+    * 
+    * @return an {@link AutoBean} of type {@link GitHubRepository}
+    */
+   AutoBean<GitHubRepository> repositoryExt();
+
+   /**
+    * Factory method for GitHub credentials bean.
+    * 
+    * @return {@link AutoBean} of type {@link Credentials}
+    */
+   AutoBean<Credentials> githubCredentials();
+   
+   AutoBean<Collaborators> collaborators();
 }

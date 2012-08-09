@@ -30,13 +30,13 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.GetCollboratorsEvent;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.WelcomePageOpenedHandler;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display;
+import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**

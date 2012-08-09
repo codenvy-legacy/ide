@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -106,11 +107,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    //-----new----------------
    private Paas paas;
-   
+
    private List<String> paases;
 
    private List<Paas> paasList;
-   
+
    private PaasCallback paasCallback = new PaasCallback()
    {
       @Override
@@ -204,7 +205,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            
+
             String value = event.getValue();
             if ("None".equals(value))
             {
@@ -222,7 +223,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   }
                }
             }
-            
+
          }
       });
 
@@ -265,7 +266,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
    }
-   
+
    private List<String> getPaasValues()
    {
       List<String> paases = new ArrayList<String>();
@@ -327,10 +328,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       model.setParent(parent);
       try
       {
-         VirtualFileSystem.getInstance().createProject(
-            parent,
-            new AsyncRequestCallback<ProjectModel>(
-               new ProjectUnmarshaller(model))
+         VirtualFileSystem.getInstance().createProject(parent,
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(model))
             {
                @Override
                protected void onSuccess(ProjectModel result)
@@ -359,11 +358,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          remoteUri += ".git";
       }
-
+      final String gitUrl = remoteUri;
       try
       {
          JobManager.get().showJobSeparated();
-         
+
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
             new AsyncRequestCallback<String>()
             {
@@ -373,7 +372,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new ProjectCreatedEvent(project));
                   IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-
+                  String[] userRepo = parseGitUrl(gitUrl);
+                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0],userRepo[1]));
                   if (paas != null)
                   {
                      // FIXME
@@ -388,7 +388,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                         }
                      }.schedule(2000);
                   }
-                  
+
                }
 
                @Override
@@ -418,6 +418,23 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    public void onVfsChanged(VfsChangedEvent event)
    {
       this.vfs = event.getVfsInfo();
+   }
+
+   private String[] parseGitUrl(String gitUrl)
+   {
+      String[] userRepo = new String[2];
+      if (gitUrl.startsWith("git@github.com"))
+      {
+         gitUrl = gitUrl.split("git@github.com")[1];
+         userRepo = gitUrl.split("/");
+      }
+      else
+      {
+         gitUrl = gitUrl.split("https://github.com")[1];
+         userRepo = gitUrl.split("/");
+      }
+      return userRepo;
+
    }
 
 }

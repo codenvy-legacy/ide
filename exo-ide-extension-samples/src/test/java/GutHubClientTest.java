@@ -1,8 +1,8 @@
 import junit.framework.Assert;
 
-import org.exoplatform.ide.extension.samples.server.Github;
-import org.exoplatform.ide.extension.samples.shared.Collaborators;
-import org.exoplatform.ide.extension.samples.shared.GitHubUser;
+import org.exoplatform.ide.git.server.github.Github;
+import org.exoplatform.ide.git.shared.Collaborators;
+import org.exoplatform.ide.git.shared.GitHubUser;
 import org.junit.Test;
 
 

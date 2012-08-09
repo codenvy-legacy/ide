@@ -37,6 +37,9 @@ import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithu
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
+import org.exoplatform.ide.git.client.github.GetCollaboratorsHandler;
+import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
+import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
@@ -62,7 +65,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new SamplesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new GitHubClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());
    }
 

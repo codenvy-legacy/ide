@@ -44,12 +44,12 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.samples.client.SamplesClientService;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -308,16 +308,16 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    {
       try
       {
-         SamplesClientService.getInstance().getRepositoriesList(
-            new AsyncRequestCallback<List<Repository>>(new RepositoriesUnmarshaller(
-               new ArrayList<Repository>()))
+         GitHubClientService.getInstance().getRepositoriesList(
+            new AsyncRequestCallback<List<GitHubRepository>>(new RepositoriesUnmarshaller(
+               new ArrayList<GitHubRepository>()))
             {
                @Override
-               protected void onSuccess(List<Repository> result)
+               protected void onSuccess(List<GitHubRepository> result)
                {
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   readonlyUrls.clear();
-                  for (Repository repo : result)
+                  for (GitHubRepository repo : result)
                   {
                      projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getSshUrl()));
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
@@ -486,7 +486,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
 
       try
       {
-         SamplesClientService.getInstance().loginGitHub(login, password, new AsyncRequestCallback<String>()
+         GitHubClientService.getInstance().loginGitHub(login, password, new AsyncRequestCallback<String>()
          {
 
             @Override
