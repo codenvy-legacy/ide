@@ -24,28 +24,3 @@
   height: editorLineHeight;
   position: absolute;
 }
-
-@sprite .mark-breakpoint
-{
-  gwt-image: "breakpoint";
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: 14px;
-  height: editorLineHeight;
-  position: absolute;
-}
-
-@sprite .mark-breakpoint-current
-{
-  gwt-image: "breakpointCurrent";
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: scroll;
-  cursor: pointer;
-  width: 14px;
-  height:editorLineHeight;
-  position: absolute;
-}
-

@@ -18,23 +18,31 @@
  */
 package com.google.collide.client.editor.gutter;
 
+import com.google.collide.client.MarkLineRenderer;
+import com.google.collide.client.Resources;
+import com.google.collide.client.editor.Buffer;
+import com.google.collide.client.editor.Editor;
+import com.google.collide.client.editor.Editor.DocumentListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
-
+import com.google.collide.client.util.Elements;
+import com.google.collide.client.util.JsIntegerMap;
+import com.google.collide.json.client.JsoArray;
+import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineFinder;
+import com.google.collide.shared.document.LineInfo;
+import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.shared.HandlerRegistration;
+import elemental.css.CSSStyleDeclaration;
+import elemental.html.Element;
 
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.JsonCollections;
-
-import com.google.collide.client.editor.Buffer;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
-import com.google.collide.json.client.JsoArray;
-import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.DocumentEvent;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IDocumentListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +52,7 @@ import java.util.List;
  * @version $Id:
  *
  */
-public class LeftGutterNotificationManager
+public class LeftGutterNotificationManager implements DocumentListener
 {
    /**
     * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -81,20 +89,29 @@ public class LeftGutterNotificationManager
 
    private Gutter gutter;
 
-   private JsIntegerMap<JsoArray<Marker>> markers = JsIntegerMap.<JsoArray<Marker>>create();
+   private JsIntegerMap<JsoArray<Marker>> markers = JsIntegerMap.<JsoArray<Marker>> create();
 
-   private final JsonArray<Element> elements = JsonCollections.createArray();
+   private final JsoArray<Element> elements = JsoArray.create();
 
-   private final GutterNotificationResources res;
+   private JsoArray<Integer> highligetLines = JsoArray.create();
+
+   private final Resources res;
+
+   private final Editor editor;
+
+   private MarkLineRenderer markLineRenderer;
+
+   private IDocument document;
 
    /**
     * @param buffer
     * @param gutter
     */
-   public LeftGutterNotificationManager(Buffer buffer, Gutter gutter, GutterNotificationResources res)
+   public LeftGutterNotificationManager(Editor editor, Gutter gutter, Resources res)
    {
       super();
-      this.buffer = buffer;
+      this.editor = editor;
+      this.buffer = editor.getBuffer();
       this.gutter = gutter;
       this.res = res;
    }
@@ -116,6 +133,26 @@ public class LeftGutterNotificationManager
       element.addClassName(getStyleForLine(problemList, hasError));
       elements.add(element);
       gutter.addUnmanagedElement(element);
+      LineInfo line = editor.getDocument().getLineFinder().findLine(lineNumber);
+      int length = problem.getEnd() - problem.getStart();
+      try
+      {
+         int lines = document.getNumberOfLines(problem.getStart(), length);
+         editor.getRenderer().requestRenderLine(line.line());
+         highligetLines.add(line.number());
+         Line nextLine = line.line();
+         for (int i = 1; i < lines; i++)
+         {
+            line.moveToNext();
+            nextLine = line.line();
+            highligetLines.add(line.number());
+            editor.getRenderer().requestRenderLine(nextLine);
+         }
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -132,18 +169,13 @@ public class LeftGutterNotificationManager
       }
       else
       {
-         markStyle = res.notificationCss().markBreakpoint();
+         markStyle = "";
          for (Marker p : markerList.asIterable())
          {
             if (p.isWarning())
             {
                markStyle = res.notificationCss().markWarning();
 
-            }
-            if (p.isCurrentBreakPoint())
-            {
-               markStyle = res.notificationCss().markBreakpointCurrent();
-               break;
             }
          }
       }
@@ -206,8 +238,31 @@ public class LeftGutterNotificationManager
       {
          gutter.removeUnmanagedElement(elements.get(i));
       }
-      markers = JsIntegerMap.<JsoArray<Marker>>create();
+
+      JsArrayNumber keys = markers.getKeys();
+      LineFinder lineFinder = editor.getDocument().getLineFinder();
+      for (int i = 0; i < keys.length(); i++)
+      {
+         double line = keys.get(i);
+         markers.erase((int)line);
+      }
+
+      markers = JsIntegerMap.<JsoArray<Marker>> create();
       elements.clear();
+      markLineRenderer.clear();
+      for (Integer i : highligetLines.asIterable())
+      {
+         try
+         {
+            editor.getRenderer().requestRenderLine(lineFinder.findLine(i).line());
+         }
+         catch (IndexOutOfBoundsException e)
+         {
+
+         }
+      }
+      highligetLines = JsoArray.create();
+               
    }
 
    /**
@@ -236,6 +291,25 @@ public class LeftGutterNotificationManager
          }
       };
 
+   }
+
+   /**
+    * @return the markers
+    */
+   public JsIntegerMap<JsoArray<Marker>> getMarkers()
+   {
+      return markers;
+   }
+
+   /**
+    * @see com.google.collide.client.editor.Editor.DocumentListener#onDocumentChanged(com.google.collide.shared.document.Document, com.google.collide.shared.document.Document)
+    */
+   @Override
+   public void onDocumentChanged(Document oldDocument, Document newDocument)
+   {
+      document = newDocument.<IDocument> getTag("IDocument");
+      markLineRenderer = new MarkLineRenderer(res.workspaceEditorCss(), this, document);
+      editor.addLineRenderer(markLineRenderer);
    }
 
 }

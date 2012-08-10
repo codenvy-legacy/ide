@@ -27,17 +27,9 @@ import com.google.gwt.resources.client.CssResource;
  */
 public interface NotificationCss extends CssResource
 {
-
-   @ClassName("mark-breakpoint")
-   String markBreakpoint();
-
    @ClassName("warning-mark")
    String markWarning();
 
    @ClassName("mark-error")
    String markError();
-
-   @ClassName("mark-breakpoint-current")
-   String markBreakpointCurrent();
-
 }
