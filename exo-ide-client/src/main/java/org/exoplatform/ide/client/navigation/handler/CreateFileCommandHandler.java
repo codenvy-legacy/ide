@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.model.template.FileTemplates;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;

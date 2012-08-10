@@ -31,6 +31,8 @@ public interface FileTypeRegistry
    void addFileType(FileType fileType, EditorCreator... editors);
 
    FileType getFileType(String mimeType);
+
+   FileType[] getSupportedFileTypes();
    
    Editor[] getEditors(String mimeType) throws EditorNotFoundException;
    

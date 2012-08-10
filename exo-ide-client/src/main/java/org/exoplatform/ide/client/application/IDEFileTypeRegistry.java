@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
@@ -68,6 +69,8 @@ public class IDEFileTypeRegistry implements FileTypeRegistry
    {
       fileTypes.put(fileType.getMimeType(), fileType);
       this.editors.put(fileType.getMimeType(), editors);
+      
+      ImageUtil.putIcon(fileType.getMimeType(), fileType.getIcon());
    }
 
    /**
@@ -116,6 +119,12 @@ public class IDEFileTypeRegistry implements FileTypeRegistry
       }
       
       return creatorList[0].createEditor();
+   }
+
+   @Override
+   public FileType[] getSupportedFileTypes()
+   {
+      return fileTypes.values().toArray(new FileType[fileTypes.size()]);
    }
 
 }

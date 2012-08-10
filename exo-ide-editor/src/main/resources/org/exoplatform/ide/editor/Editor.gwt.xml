@@ -20,37 +20,26 @@
 -->
 
 <module>
-      <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE' />
 
-      <!-- Inherit the core Web Toolkit stuff.                        -->
-      <inherits name='com.google.gwt.user.User'/>  
-      <inherits name="com.google.gwt.http.HTTP" />
-      <inherits name='com.google.gwt.user.Debug' />
-      <inherits name='com.google.gwt.json.JSON' />
-   
-      <inherits name='org.exoplatform.gwtframework.commons.Commons' />       
-      <inherits name='org.exoplatform.ide.editor.API' />
-       
-      <source path="api" />
-      <source path="ckeditor" />      
-      <source path="client" />
-      <source path="codeassistant" />
-      <source path="codemirror" />
-      <source path="notification" />      
-      
-      <!-- Load CodeMirror files. -->
-      <stylesheet src='testeditor.css' />
-      <!-- 
-      <stylesheet src='codemirror/css/editor.css' />      
-      <stylesheet src='editor-notifications.css' />
-      <script src='codemirror/js/codemirror.js' />
-      -->
-      <!-- Load FCKEditor files. -->
-      <!--
-      <script src="ckeditor/ckeditor.js" />
-      <script src="ckeditor/config.js" />
-      -->
-	<!-- Specify the app entry point class. -->
-	<entry-point class='org.exoplatform.ide.editor.client.TestEditor' />
-         
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.user.Debug' />
+	<inherits name='com.google.gwt.xml.XML' />
+	<inherits name='com.google.gwt.json.JSON' />
+	<inherits name="com.google.gwt.resources.Resources" />
+
+	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
+	<inherits name='org.exoplatform.gwtframework.ui.UI' />
+	<inherits name='org.exoplatform.ide.editor.API' />
+
+	<source path="api" />
+	<source path="ckeditor" />
+	<source path="codeassistant" />
+	<source path="codemirror" />
+
+	<!-- Load FCKEditor files. -->
+	<script src="ckeditor/ckeditor.js" />
+	<script src="ckeditor/config.js" />
+
 </module>

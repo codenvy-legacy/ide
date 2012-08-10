@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
@@ -47,7 +48,6 @@ import org.exoplatform.ide.client.model.template.ProjectTemplate;
 import org.exoplatform.ide.client.model.template.Template;
 import org.exoplatform.ide.client.model.template.TemplateService;
 import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
@@ -445,7 +445,14 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    protected void updateFileNameExtension()
    {
-      String extension = IDEMimeTypes.getExtensionsMap().get(selectedTemplate.getMimeType());
+      String templateMimeType = selectedTemplate.getMimeType();
+      FileType fileType = IDE.getInstance().getFileTypeRegistry().getFileType(templateMimeType);
+      if (fileType == null)
+      {
+         return;
+      }
+      
+      String extension = fileType.getExtension();
 
       if (previousExtension != null)
       {

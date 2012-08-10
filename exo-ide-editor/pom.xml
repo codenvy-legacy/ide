@@ -22,10 +22,17 @@
    <name>eXo IDE :: Editor</name>
 
    <dependencies>
+
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+      </dependency>
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
+
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
@@ -36,14 +43,12 @@
       	<artifactId>exo-ide-editor-api</artifactId>
       </dependency>
       
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-      </dependency>
+      <!-- 
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-servlet</artifactId>
       </dependency>
+
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-dev</artifactId>
@@ -54,6 +59,7 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
+       -->
 
    </dependencies>
    <build>
@@ -65,14 +71,6 @@
             <directory>src/main/resources</directory>
          </resource>
       </resources>
-      <testResources>
-         <testResource>
-            <directory>src/test/java</directory>
-         </testResource>
-         <testResource>
-            <directory>src/test/resources</directory>
-         </testResource>
-      </testResources>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -80,18 +78,16 @@
             <version>2.3.1</version>
             <configuration>
                <excludes>
-                  <exclude>**/example*</exclude>
                   <exclude>**/Editor.html</exclude>
-                  <exclude>**/EditorTest.gwt.xml</exclude>
-                  <exclude>**/EditorTest*</exclude>
-                  <exclude>**/ExamplesBuandle*</exclude>
+                  <exclude>**/TestCodeMirror.java</exclude>
                </excludes>
             </configuration>
          </plugin>
       </plugins>
    </build>
    
-   <profiles>
+   <!-- 
+	<profiles>
       <profile>
          <id>test</id>
          <activation>
@@ -145,14 +141,14 @@
                      <logLevel>INFO</logLevel>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
-                     <!-- <port>${gwt.port}</port> -->
                      <extraJvmArgs>-Xmx2048m -XX:MaxPermSize=256m -Dorg.exoplatform.ide.server.fs-root-path=target/git -Dorg.exoplatform.ide.git.server=git -Dorg.exoplatform.mimetypes=conf/mimetypes.properties</extraJvmArgs>
                   </configuration>
                </plugin>
 
             </plugins>
          </build>
-      </profile>
-      
-   </profiles>
+      </profile>	
+	</profiles>      
+    -->
+   
 </project>

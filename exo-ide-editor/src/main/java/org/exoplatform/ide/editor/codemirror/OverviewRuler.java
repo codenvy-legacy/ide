@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.notification;
+package org.exoplatform.ide.editor.codemirror;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,6 @@ public class OverviewRuler extends Composite implements MouseDownHandler
 
    private LayoutPanel ruler;
 
-   //private CodeMirror codeMirror;
-   
    private Editor editor;
 
    private Mark bottomMark;
@@ -62,7 +60,6 @@ public class OverviewRuler extends Composite implements MouseDownHandler
     */
    public OverviewRuler(Editor editor)
    {
-      //this.codeMirror = codeMirror;
       this.editor = editor;
       
       panel = new LayoutPanel();

@@ -57,8 +57,6 @@ import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickEvent;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.notification.NotificationWidget;
-import org.exoplatform.ide.editor.notification.OverviewRuler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.DocumentEvent;
@@ -68,15 +66,23 @@ import org.exoplatform.ide.editor.text.IDocumentListener;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.rebind.rpc.ProblemReport.Problem;
 
@@ -87,7 +93,7 @@ import com.google.gwt.user.rebind.rpc.ProblemReport.Problem;
  * 
  */
 public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocumentListener, CanInsertImportStatement
-{
+{   
   
    /**
     * Height of line in the CodeMirror in pixels.
@@ -137,7 +143,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    /**
     * Visibility of line numbers column.
     */
-   private boolean showLineNumbers = false;
+   private boolean showLineNumbers = true;
 
    /**
     * Visibility of overview column.
@@ -145,7 +151,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    protected boolean showOverview = false;
    
    
-   protected TextArea textArea;
+   
 
    protected JavaScriptObject editorObject;
 
@@ -158,11 +164,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private boolean needValidateCode = false;
 
 
-   
    private List<TokenBeenImpl> tokenList;
-
-   
-
 
    private int cursorPositionCol = 1;
 
@@ -177,6 +179,10 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private boolean readOnly = false;  
 
    private String initialText;
+   
+   
+   private FrameElement frameElement;
+   
    
    /**
     * Creates new CodeMirror instance.
@@ -196,11 +202,111 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
     */
    public CodeMirror(String mimeType, CodeMirrorConfiguration configuration)
    {
+      this(mimeType, configuration, false);
+   }
+
+   /**
+    * Creates new CodeMirror instance.
+    * 
+    * @param mimeType
+    * @param configuration
+    */
+   public CodeMirror(String mimeType, CodeMirrorConfiguration configuration, boolean showOverview)
+   {
       id = "CodeMirror - " + String.valueOf(this.hashCode());
       this.mimeType = mimeType;
+      if (configuration == null)
+      {
+         configuration = new CodeMirrorConfiguration();
+      }
+      
       this.configuration = configuration;
+      this.showOverview = showOverview;
+      
+      document = new Document("");
+      document.addDocumentListener(this);
+      
+      createFrame();
+   }
+
+   private void createFrame()
+   {
+      final Frame frame = new Frame(CodeMirrorConfiguration.CODEMIRROR_START_PAGE);
+      add(frame);
+      frame.getElement().getStyle().setPosition(Position.ABSOLUTE);
+      frame.setSize("100%", "100%");
+      frame.getElement().setAttribute("frameborder", "0");
+      frame.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+      
+      frame.addLoadHandler(new LoadHandler()
+      {
+         @Override
+         public void onLoad(LoadEvent event)
+         {
+            frameElement = frame.getElement().cast();
+            
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  buildEditor();
+               }
+            });
+         }
+      });
    }
    
+   private class FrameBodyWidget extends AbsolutePanel
+   {
+      public FrameBodyWidget(BodyElement body)
+      {
+         super(body.<com.google.gwt.user.client.Element> cast());
+         onAttach();
+      }
+   }   
+
+   private void buildEditor()
+   {
+      com.google.gwt.dom.client.Document frameDocument = frameElement.getContentDocument();
+      final BodyElement bodyElement = frameDocument.getBody();
+      FrameBodyWidget body = new FrameBodyWidget(bodyElement);
+
+      DockLayoutPanel doc = new DockLayoutPanel(Unit.PX);
+      doc.setSize("100%", "100%");
+      body.add(doc, 0, 0);
+
+      if (showOverview)
+      {
+         overviewRuler = new OverviewRuler(this);
+         doc.addEast(overviewRuler, 13);
+      }
+
+      absPanel = new AbsolutePanel();
+      doc.add(absPanel);
+
+      TextArea textArea = new TextArea();
+      DOM.setElementAttribute(textArea.getElement(), "id", getId());
+      textArea.setVisible(false);
+      absPanel.add(textArea);
+
+      lineHighlighter = getLineHighlighter();
+      absPanel.add(lineHighlighter);
+      absPanel.setWidgetPosition(lineHighlighter, 0, 5);
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            editorObject =
+               initCodeMirror(id, "", "100%", readOnly, configuration.getContinuousScanning(),
+                  configuration.isTextWrapping(), showLineNumbers, configuration.getCodeStyles(),
+                  configuration.getCodeParsers(), configuration.getJsDirectory(), configuration.getTabMode().toString());
+         }
+      });
+   }
+
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
     */
@@ -210,80 +316,30 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       return mimeType;
    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.Panel#onLoad()
-    */
-   @Override
-   protected void onLoad()
-   {
-      super.onLoad();
-      
-//      System.out.println("CodeMirror.onLoad() Editor ID > " + id);
-      
-      DockLayoutPanel doc = new DockLayoutPanel(Unit.PX);
-      doc.setSize("100%", "100%");
-      add(doc);
-
-      if (showOverview)
-      {
-         overviewRuler = new OverviewRuler(this);
-         doc.addEast(overviewRuler, 13);         
-      }
-      
-      absPanel = new AbsolutePanel();
-      doc.add(absPanel);
-      textArea = new TextArea();
-      DOM.setElementAttribute(textArea.getElement(), "id", getId());
-      textArea.setVisible(false);
-      absPanel.add(textArea);
-
-      lineHighlighter = getLineHighlighter();
-      absPanel.add(lineHighlighter);
-      absPanel.setWidgetPosition(lineHighlighter, 0, 5);
-
-      //eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
-      
-      document = new Document("");
-      document.addDocumentListener(this);
-      
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            editorObject =
-               initCodeMirror(id, "", "100%", readOnly, configuration.getContinuousScanning(), configuration.isTextWrapping(), showLineNumbers,
-                  configuration.getCodeStyles(), configuration.getCodeParsers(), configuration.getJsDirectory(), configuration.getTabMode().toString());
-         }
-      });
-   }
-
    @Override
    protected void onUnload()
    {
-      super.onUnload();
-      
-//      System.out.println("CodeMirror.onUnload() Editor ID > " + id);
-      
-      codeValidateTimer.cancel();
-      
-       if (configuration.getParser() != null)
-       {
-          configuration.getParser().stopParsing();
-       }
-      
-      
-      
-//
-//      eventBus.removeHandler(EditorTokenListPreparedEvent.TYPE, this);
-//
+      try
+      {
+         codeValidateTimer.cancel();
+
+         if (configuration.getParser() != null)
+         {
+            configuration.getParser().stopParsing();
+         }         
+      } catch (Exception e) {
+         Window.alert("Exception > " + e.getMessage());
+         System.out.println("error >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+         e.printStackTrace();
+      }      
    }
    
-
    private native JavaScriptObject initCodeMirror(String id, String width, String height, boolean readOnly, int cs, boolean tr,
       boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory, String modeTab)
    /*-{
 		var instance = this;
+		var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
+		
 		var changeFunction = function()
 		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContentChanged()();
@@ -318,43 +374,43 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::needUpdateTokenList = true;
 		};
-
-		var editor = $wnd.CodeMirror.fromTextArea(id, {
-			width : width,
-			height : height,
-			parserfile : eval(parserNames),
-			stylesheet : eval(styleURLs),
-			path : jsDirectory,
-			continuousScanning : cs || false,
-			undoDelay : 50, // decrease delay before calling 'onChange' callback
-			lineNumbers : lineNumbers,
-			readOnly : readOnly,
-			textWrapping : tr,
-			tabMode : modeTab,
-			content : "", // to fix bug with blocked deleting function of CodeMirror just after opening file [WBT-223]
-			onChange : changeFunction,
-			reindentOnLoad : false, // to fix problem with getting token list after the loading content
-			onCursorActivity : cursorActivity,
-			onLineNumberClick : onLineNumberClick,
-			onLineNumberDoubleClick : onLineNumberDoubleClick,
-			onLineNumberContextMenu : onLineNumberContextMenu,
-			onLoad : initCallback,
-			autoMatchParens : true,
+		
+		var editor = frame.contentWindow.CodeMirror.fromTextArea(id, {
+			'width' : width,
+			'height' : height,
+			'parserfile' : eval(parserNames),
+			'stylesheet' : eval(styleURLs),
+			'path' : jsDirectory,
+			'continuousScanning' : cs || false,
+			'undoDelay' : 50, // decrease delay before calling 'onChange' callback
+			'lineNumbers' : lineNumbers,
+			'readOnly' : readOnly,
+			'textWrapping' : tr,
+			'tabMode' : modeTab,
+			'content' : "", // to fix bug with blocked deleting function of CodeMirror just after opening file [WBT-223]
+			'onChange' : changeFunction,
+			'reindentOnLoad' : false, // to fix problem with getting token list after the loading content
+			'onCursorActivity' : cursorActivity,
+			'onLineNumberClick' : onLineNumberClick,
+			'onLineNumberDoubleClick' : onLineNumberDoubleClick,
+			'onLineNumberContextMenu' : onLineNumberContextMenu,
+			'onLoad' : initCallback,
+			'autoMatchParens' : true,
 
 			// Take the token before the cursor. If it contains a character in '()[]{}', search for the matching paren/brace/bracket, and
 			// highlight them in green for a moment, or red if no proper match was found.
-			markParen : function(node, ok)
+			'markParen' : function(node, ok)
 			{
 				node.id = ok ? "parenCorrect" : "parenIncorrect";
 			},
 			
-			unmarkParen : function(node)
+			'unmarkParen' : function(node)
 			{
 				node.id = null;
 			},
 
 			// to update outline panel after the new line has being highlighted
-			activeTokens : activeTokensFunction
+			'activeTokens' : activeTokensFunction
 		});
 
 		return editor;
@@ -370,8 +426,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       addFocusReceivedListeners();
       addContextMenuListener();
       
-      //setText(initialContent);
-
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
       // turn on code validation time
       if (configuration.canBeValidated())
@@ -380,8 +434,9 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          codeValidateTimer.scheduleRepeating(2000);
       }
 
-      //eventBus.fireEvent(new EditorInitializedEvent(id));
-      fireEvent(new EditorInitializedEvent(id));
+//      showLineNumbers(showLineNumbers);
+
+      fireEvent(new EditorInitializedEvent(id));      
       
       if (initialText != null)
       {
@@ -416,7 +471,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       event.stopPropagation();
       event.preventDefault();
       fireEvent(new EditorLineNumberContextMenuEvent(lineNumber, event.getClientX(), event.getClientY()));
-      //eventBus.fireEvent(new EditorLineNumberContextMenuEvent(lineNumber, event.getClientX(), event.getClientY()));
    }
 
    private void onContentChanged()
@@ -424,7 +478,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       needUpdateTokenList = true;
       needUpdateDocument = true;
       fireEvent(new EditorContentChangedEvent(getId()));
-      //eventBus.fireEvent(new EditorContentChangedEvent(getId()));
    }
 
    private void onCursorActivity(JavaScriptObject cursor)
@@ -451,7 +504,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       highlightLine(cursorPositionRow);
 
       fireEvent(new EditorCursorActivityEvent(id, cursorPositionRow, cursorPositionCol));
-      //eventBus.fireEvent(new EditorCursorActivityEvent(id, cursorPositionRow, cursorPositionCol));
    }
 
    private void highlightLine(int lineNumber)
@@ -518,7 +570,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       EditorHotKeyPressedEvent event = new EditorHotKeyPressedEvent(isCtrl, isAlt, isShift, keyCode);
       fireEvent(event);
-      //eventBus.fireEvent(event);
       return event.isHotKeyHandled();
    }
 
@@ -580,7 +631,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       if (mimeType.equals(MimeType.APPLICATION_JAVA))
       {
          fireEvent(new RunCodeAssistantEvent());
-         //eventBus.fireEvent(new RunCodeAssistantEvent());
          return;
       }
 
@@ -632,7 +682,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    public int getCursorOffsetX()
    {
       int cursorOffsetX = (cursorPositionCol - 2) * CHARACTER_WIDTH + getAbsoluteLeft() + LINE_OFFSET_LEFT; // 8px per symbol
-      if (this.showLineNumbers)
+      if (showLineNumbers)
       {
          cursorOffsetX += LINE_NUMBERS_COLUMN_WIDTH;
       }
@@ -738,7 +788,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private native void addFocusReceivedListeners()
    /*-{
 		var instance = this;
-        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
 		var focusReceivedListener = function()
 		{
@@ -1012,7 +1062,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    public void setFocus()
    {
       setCursorPosition(cursorPositionRow, cursorPositionCol);
-
       setFocus(editorObject);
    }
 
@@ -1347,7 +1396,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       else
       {
          tokenListReceivedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(id, this.tokenList));
-         //eventBus.fireEvent(new EditorTokenListPreparedEvent(id, this.tokenList));
       }
    }
 
@@ -1855,9 +1903,12 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private native void addContextMenuListener()
    /*-{
 		var instance = this;
+      var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
+		
 		var contextMenuListener = function(e) {
 			if (!e)
 				var e = $wnd.event;
+				//var e = frame.contentWindow.event; //TODO
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContextMenu(Lcom/google/gwt/dom/client/NativeEvent;)(e);
 		};
 
@@ -1969,9 +2020,14 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       }
       catch (e)
       {
-        alert('error > ' + e.message);
+         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
       }
    }-*/;
+   
+   private void trace(String message)
+   {
+      System.out.println("CodeMirror: " + message);
+   }
    
    /**
     * @see org.exoplatform.ide.editor.problem.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler)
