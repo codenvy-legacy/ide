@@ -124,6 +124,8 @@ public class Editor extends UiComponent<Editor.View> {
     String lineRendererError();
     
     String leftGutterBase();
+    
+    String lineWarning();
   }
 
   /**
@@ -178,6 +180,9 @@ public class Editor extends UiComponent<Editor.View> {
     
     @Source("squiggle.gif")
     ImageResource squiggle();
+    
+    @Source("squiggle-warning.png")
+    ImageResource squiggleWarning();
   }
 
   /**
@@ -336,8 +341,8 @@ public class Editor extends UiComponent<Editor.View> {
     
     //TODO (evgen) set left gutter notification configurable
     Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutterNotification());
-    leftGutterNotificationManager = new LeftGutterNotificationManager(buffer, leftNotificationGutter, appContext.getResources());
-    
+    leftGutterNotificationManager = new LeftGutterNotificationManager(this, leftNotificationGutter, appContext.getResources());
+    getDocumentListenerRegistrar().add(leftGutterNotificationManager);
     Gutter leftGutter = createGutter(
         false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
     leftGutterManager = new LeftGutterManager(leftGutter, buffer);

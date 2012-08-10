@@ -118,7 +118,7 @@ public class CollabEditor extends Widget implements Editor, Markable
     */
    private void udateDocument()
    {
-      //TODO change document not all content
+      //TODO change document, not all content
       document.removeDocumentListener(documentAdaptor);
       document.set(getText());
       document.addDocumentListener(documentAdaptor);
@@ -177,6 +177,7 @@ public class CollabEditor extends Widget implements Editor, Markable
          {
             initialized = true;
             Document editorDocument = Document.createFromString(text);
+            editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());

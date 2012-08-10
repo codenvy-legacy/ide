@@ -30,11 +30,6 @@ import com.google.gwt.resources.client.ClientBundle;
 public interface GutterNotificationResources extends ClientBundle
 {
 
-   @Source("braekpoint-current.gif")
-   ImageResource breakpointCurrent();
-
-   ImageResource breakpoint();
-
    @Source({"GutterNotification.css", "com/google/collide/client/editor/constants.css"})
    NotificationCss notificationCss();
 
