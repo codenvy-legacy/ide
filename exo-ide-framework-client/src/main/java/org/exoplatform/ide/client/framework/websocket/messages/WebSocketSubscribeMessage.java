@@ -27,7 +27,17 @@ package org.exoplatform.ide.client.framework.websocket.messages;
  */
 public interface WebSocketSubscribeMessage extends WebSocketMessage
 {
+   /**
+    * Returns a channel for publishing message.
+    * 
+    * @return channel identifier
+    */
    String getChannel();
 
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel identifier
+    */
    void setChannel(String channel);
 }

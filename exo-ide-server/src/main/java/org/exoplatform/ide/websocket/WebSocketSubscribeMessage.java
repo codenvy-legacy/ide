@@ -31,6 +31,9 @@ import org.exoplatform.ide.helper.ParsingResponseException;
  */
 public class WebSocketSubscribeMessage
 {
+   /**
+    * A channel for subscribing.
+    */
    private String channel;
 
    /**
@@ -55,11 +58,21 @@ public class WebSocketSubscribeMessage
       }
    }
 
+   /**
+    * Returns a channel for subscribing.
+    * 
+    * @return channel identifier
+    */
    public String getChannel()
    {
       return channel;
    }
 
+   /**
+    * Sets a channel for subscribing.
+    * 
+    * @param channel channel identifier
+    */
    public void setChannel(String channel)
    {
       this.channel = channel;

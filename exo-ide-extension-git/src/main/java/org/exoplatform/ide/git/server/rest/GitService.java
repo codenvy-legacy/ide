@@ -61,11 +61,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.websocket.MessageBroker;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -647,6 +644,6 @@ public class GitService
     */
    private void publishWebSocketMessage(MessageBroker.Channels channels, Exception e)
    {
-      messageBroker.publish(channels.toString(), "\"" + projectId + "\"", e, null);
+      messageBroker.publish(channels.toString(), null, e, null);
    }
 }

@@ -30,7 +30,17 @@ package org.exoplatform.ide.client.framework.websocket.messages;
  */
 public interface WebSocketWelcomeMessage extends WebSocketMessage
 {
+   /**
+    * REturns a WebSocket session identifier.
+    * 
+    * @return WebSocket session identifier
+    */
    String getSessionId();
 
+   /**
+    * Sets a WebSocket session identifier.
+    * 
+    * @param sessionId WebSocket session identifier
+    */
    void setSessionId(String sessionId);
 }

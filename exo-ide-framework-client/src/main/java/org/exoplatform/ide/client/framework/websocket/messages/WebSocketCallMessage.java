@@ -43,11 +43,31 @@ public interface WebSocketCallMessage extends WebSocketMessage
     */
    void setCallId(String callId);
 
+   /**
+    * Returns a remote procedure identifier.
+    * 
+    * @return remote procedure identifier
+    */
    String getProcId();
 
+   /**
+    * Sets a remote procedure identifier.
+    * 
+    * @param procId remote procedure identifier
+    */
    void setProcId(String procId);
 
+   /**
+    * Returns a payload.
+    * 
+    * @return payload
+    */
    String getPayload();
 
+   /**
+    * Sets a payload.
+    * 
+    * @param payload payload
+    */
    void setPayload(String payload);
 }

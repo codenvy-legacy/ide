@@ -41,48 +41,43 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Class stores list of subscribers (classes) and used for publish messages.
- * The {@link EventBus} will route a sent message to all subscribers which are subscribed.
- * Also class used for usedsubscribe/unsubscribe subscribers to receive messages on a particular channel.
+ * {@link MessageBus} provides two asynchronous messaging patterns: RPC and
+ * list-based PubSub. Class maintains lists of channels and subscribers and
+ * notifying each one individually a message received. Also used to publishing
+ * messages to channel and to calling remote methods.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: EventSubscriber.java Jul 30, 2012 9:24:42 AM azatsarynnyy $
  *
  */
-public class EventBus implements WebSocketMessageHandler
+public class MessageBus implements WebSocketMessageHandler
 {
    /**
     * Enumeration describing the WebSocket message event types.
     */
    public enum Channels {
-      /**
-       * Event type for message that contains status of the Maven build job.
-       */
+      /** Channel for message that contains status of the Maven build job. */
       MAVEN_BUILD_STATUS("maven:buildStatus"),
 
-      /**
-       * Event type for message that contains status of the Jenkins build job.
-       */
+      /** Channel for message that contains status of the Jenkins build job. */
       JENKINS_BUILD_STATUS("jenkins:buildStatus"),
 
-      /**
-       * Event type for message that contains debugger events.
-       */
+      /** Channel for message that contains debugger event. */
       DEBUGGER_EVENT("debugger:event"),
 
-      /**
-       * Indicates that the Git repository has been initialized.
-       */
+      /** Channel for message that contains started application instance for debugging. */
+      DEBUG_STARTED("debugger:debugAppStarted"),
+
+      /** Channel for message that contains started application instance. */
+      APP_STARTED("debugger:appStarted"),
+
+      /** Channel for message that indicates the Git repository has been initialized. */
       GIT_REPO_INITIALIZED("git:repoInitialized"),
 
-      /**
-       * Indicates that the Git repository has been cloned.
-       */
+      /** Channel for message that indicates the Git repository has been cloned. */
       GIT_REPO_CLONED("git:repoCloned"),
 
-      /**
-       * Indicates that Heroku application has been created.
-       */
+      /** Channel for message that indicates Heroku application has been created. */
       HEROKU_APP_CREATED("heroku:appCreated");
 
       private final String eventTypeValue;
@@ -106,12 +101,12 @@ public class EventBus implements WebSocketMessageHandler
       new HashMap<String, Set<WebSocketEventHandler>>();
 
    /**
-    * Map of the call identifier to the {@link WebSocketResultCallback}.
+    * Map of the call identifier to the {@link WebSocketRPCResultCallback}.
     */
-   private Map<String, WebSocketResultCallback> callbackMap = new HashMap<String, WebSocketResultCallback>();
+   private Map<String, WebSocketRPCResultCallback> callbackMap = new HashMap<String, WebSocketRPCResultCallback>();
 
    /**
-    * Receives WebSocket messages and performs topic-based filtering.
+    * Receive and process WebSocket messages.
     * 
     * @see org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler
     *       #onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent)
@@ -149,7 +144,7 @@ public class EventBus implements WebSocketMessageHandler
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketEventMessage.class, eventMessage).as();
          if (channelToSubscribersMap.containsKey(message.getChannel()))
          {
-            // copy the list to avoid 'CuncurrentModificationException' when 'unsubscribe()' method invoked
+            // copy the Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will be invoke
             Set<WebSocketEventHandler> subscribersSet =
                new HashSet<WebSocketEventHandler>(channelToSubscribersMap.get(message.getChannel()));
             for (WebSocketEventHandler webSocketEventHandler : subscribersSet)
@@ -162,10 +157,10 @@ public class EventBus implements WebSocketMessageHandler
       {
          WebSocketCallResultMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketCallResultMessage.class, eventMessage).as();
-         WebSocketResultCallback callbcak = callbackMap.remove(message.getCallId());
-         if (callbcak != null)
+         WebSocketRPCResultCallback callback = callbackMap.remove(message.getCallId());
+         if (callback != null)
          {
-            callbcak.onResult(message);
+            callback.onResult(message);
          }
       }
    }
@@ -182,8 +177,9 @@ public class EventBus implements WebSocketMessageHandler
     * feedback whether a subscription was successful or not.
     * 
     * @param channel channel name
-    * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire when receiving an event on the subscribed channel
-    * @throws WebSocketException if error has occurred while sending data
+    * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire
+    *                   when receiving an event on the subscribed channel
+    * @throws WebSocketException if an error has occurred while sending data
     */
    public void subscribe(String channel, WebSocketEventHandler webSocketEventHandler) throws WebSocketException
    {
@@ -252,14 +248,14 @@ public class EventBus implements WebSocketMessageHandler
    }
 
    /**
+    * Calls remote procedure.
     * 
-    * 
-    * @param event an event
+    * @param procId remote procedure identifier
     * @param data data which will be sent
     * @param callback handler which will be called when a reply from the server is received
-    * @throws WebSocketException if error has occurred while sending data
+    * @throws WebSocketException throws if an error has occurred while sending data
     */
-   public void call(String procId, String data, WebSocketResultCallback callback) throws WebSocketException
+   public void call(String procId, String data, WebSocketRPCResultCallback callback) throws WebSocketException
    {
       WebSocketCallMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketCallMessage().as();
       message.setType(WebSocketMessage.Type.CALL);
@@ -275,11 +271,11 @@ public class EventBus implements WebSocketMessageHandler
    }
 
    /**
+    * Publishes a message in a particular channel.
     * 
-    * 
-    * @param channelId
-    * @param data
-    * @throws WebSocketException
+    * @param channelId channel identifier
+    * @param data the text data to be published to the channel
+    * @throws WebSocketException throws if an error has occurred while publishing data
     */
    public void publish(String channelId, String data) throws WebSocketException
    {

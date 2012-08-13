@@ -53,12 +53,11 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -115,8 +114,7 @@ import java.util.Set;
  */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, AppStopedHandler,
-   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler,
-   WebSocketEventHandler
+   ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, UpdateVariableValueInTreeHandler
 {
 
    private Display display;
@@ -134,6 +132,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private FileModel activeFile;
 
    private ProjectModel project;
+
+   private RunningAppStatusHandler runStatusHandler;
 
    public interface Display extends IsView
    {
@@ -626,7 +626,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    public void reLaunchDebugger(DebugApplicationInstance debugApplicationInstance)
    {
-      ReLaunchDebuggerPresenter runDebuggerPresenter = new ReLaunchDebuggerPresenter(debugApplicationInstance, this);
+      ReLaunchDebuggerPresenter runDebuggerPresenter =
+         new ReLaunchDebuggerPresenter(debugApplicationInstance, debuggerEventHandler);
       RunDebuggerView view = new RunDebuggerView();
       runDebuggerPresenter.bindDisplay(view);
       IDE.getInstance().openView(view.asView());
@@ -645,7 +646,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       IDE.getInstance().closeView(display.asView().getId());
-      WebSocket.getInstance().eventBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), this);
+      WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
    }
 
    @Override
@@ -698,28 +699,34 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void debugApplication(String warUrl)
    {
+      AutoBean<DebugApplicationInstance> debugApplicationInstance =
+         DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+
+      AutoBeanUnmarshaller<DebugApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshaller<DebugApplicationInstance>(debugApplicationInstance);
       try
       {
-         AutoBean<DebugApplicationInstance> debugApplicationInstance =
-            DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            runStatusHandler = new RunningAppStatusHandler(project.getName());
+            runStatusHandler.requestInProgress(project.getId());
+            ws.messageBus().subscribe(Channels.DEBUG_STARTED.toString(), debugStartedHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         AutoBeanUnmarshaller<DebugApplicationInstance> unmarshaller =
-            new AutoBeanUnmarshaller<DebugApplicationInstance>(debugApplicationInstance);
-         ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl,
+         ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl, useWebSocket,
             new AsyncRequestCallback<DebugApplicationInstance>(unmarshaller)
             {
                @Override
                protected void onSuccess(DebugApplicationInstance result)
                {
-                  String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
-                  msg +=
-                     "<br>"
-                        + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
-                           getAppUrlsAsString(result));
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  doRunDebugger(result);
-                  IDE.fireEvent(new AppStartedEvent(result));
-                  runningApp = result;
+                  if (!useWebSocket)
+                  {
+                     onDebugStarted(result);
+                  }
                }
 
                @Override
@@ -728,10 +735,20 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   exception.printStackTrace();
                   IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
                      + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), debugStartedHandler);
+                     runStatusHandler.requestError(project.getId(), exception);
+                  }
                }
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
+            OutputMessage.Type.INFO));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
             OutputMessage.Type.INFO));
@@ -749,7 +766,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.eventBus().subscribe(Channels.DEBUGGER_EVENT.toString(), this);
+            ws.messageBus().subscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -768,7 +785,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   reLaunchDebugger(debugApplicationInstance);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), DebuggerPresenter.this);
+                     ws.messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
                   }
                }
             });
@@ -785,34 +802,43 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void runApplication(String warUrl)
    {
+      AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
       try
       {
-         AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            runStatusHandler = new RunningAppStatusHandler(project.getName());
+            runStatusHandler.requestInProgress(project.getId());
+            ws.messageBus().subscribe(Channels.APP_STARTED.toString(), appStartedHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
 
-         AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
-            new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
-         ApplicationRunnerClientService.getInstance().runApplication(project.getName(), warUrl,
+         ApplicationRunnerClientService.getInstance().runApplication(project.getName(), warUrl, useWebSocket,
             new AsyncRequestCallback<ApplicationInstance>(unmarshaller)
             {
                @Override
                protected void onSuccess(ApplicationInstance result)
                {
-                  String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
-                  msg +=
-                     "<br>"
-                        + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
-                           getAppUrlsAsString(result));
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  IDE.fireEvent(new AppStartedEvent(result));
-                  runningApp = result;
+                  if (!useWebSocket)
+                  {
+                     onApplicationStarted(result);
+                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  exception.printStackTrace();
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
-                     + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
+                  handleError(exception);
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.APP_STARTED.toString(), appStartedHandler);
+                     runStatusHandler.requestError(project.getId(), exception);
+                  }
                }
             });
       }
@@ -821,6 +847,42 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
             OutputMessage.Type.INFO));
       }
+      catch (WebSocketException e)
+      {
+         IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed(),
+            OutputMessage.Type.INFO));
+      }
+   }
+
+   private void onApplicationStarted(ApplicationInstance app)
+   {
+      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(app.getName());
+      msg +=
+         "<br>"
+            + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      IDE.fireEvent(new AppStartedEvent(app));
+      runningApp = app;
+   }
+
+   private void onDebugStarted(DebugApplicationInstance result)
+   {
+      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
+      msg +=
+         "<br>"
+            + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
+               getAppUrlsAsString(result));
+      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      doRunDebugger(result);
+      IDE.fireEvent(new AppStartedEvent(result));
+      runningApp = result;
+   }
+
+   private void handleError(Throwable exception)
+   {
+      exception.printStackTrace();
+      IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : "
+         + exception.getMessage(), OutputMessage.Type.ERROR));
    }
 
    private String getAppUrlsAsString(ApplicationInstance application)
@@ -982,35 +1044,88 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
+    * Performs actions after the debugger was started.
     */
-   @Override
-   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
+   private WebSocketEventHandler debugStartedHandler = new WebSocketEventHandler()
    {
-      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
-      if (webSocketException == null)
+      @Override
+      public void onMessage(WebSocketEventMessage message)
       {
-         DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
-         parseDebuggerEvents(debuggerEventList, webSocketEventMessage.getPayload().getPayload());
-         eventListReceived(debuggerEventList);
-         return;
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), this);
+
+         AutoBean<DebugApplicationInstance> debugApp =
+            AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, DebugApplicationInstance.class,
+               message.getPayload());
+         onDebugStarted(debugApp.as());
+         runStatusHandler.requestFinished(project.getId());
       }
 
-      String exceptionMessage = null;
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      @Override
+      public void onError(Exception exception)
       {
-         exceptionMessage = webSocketException.getMessage();
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), this);
+
+         exception.printStackTrace();
+         IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
+            + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
+         runStatusHandler.requestError(project.getId(), exception);
       }
-      IDE.getInstance().closeView(display.asView().getId());
-      if (runningApp != null)
+   };
+
+   /**
+    * Performs actions after the debugger event was received.
+    */
+   private WebSocketEventHandler debuggerEventHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage event)
       {
-         if (exceptionMessage != null && exceptionMessage.contains("not found"))
+         DebuggerEventList debuggerEventList = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerEventList.class).as();
+         parseDebuggerEvents(debuggerEventList, event.getPayload().getPayload());
+         eventListReceived(debuggerEventList);
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+         if (runningApp != null)
          {
-            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
-            IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+            if (exception.getMessage() != null && exception.getMessage().contains("not found"))
+            {
+               IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(),
+                  Type.WARNING));
+               IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+            }
          }
       }
-   }
+   };
+
+   /**
+    * Performs actions after the application was started.
+    */
+   private WebSocketEventHandler appStartedHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage message)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED.toString(), this);
+
+         AutoBean<ApplicationInstance> app =
+            AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, ApplicationInstance.class, message.getPayload());
+         onApplicationStarted(app.as());
+         runStatusHandler.requestFinished(project.getId());
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED.toString(), this);
+
+         handleError(exception);
+         runStatusHandler.requestError(project.getId(), exception);
+      }
+   };
 
    /**
     * Deserializes data in JSON format to {@link DebuggerEventList} object.
@@ -1056,5 +1171,4 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       }
    }
-
 }

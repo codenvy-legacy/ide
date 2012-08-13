@@ -40,12 +40,11 @@ import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.PaasCallback;
 import org.exoplatform.ide.client.framework.paas.PaasComponent;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -72,7 +71,7 @@ import java.util.List;
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
  * 
  */
-public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler, LoggedInHandler, WebSocketEventHandler
+public class DeployApplicationPresenter implements PaasComponent, VfsChangedHandler, LoggedInHandler
 {
    interface Display
    {
@@ -190,7 +189,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             appCreateRequestHandler = new CreateRequestHandler();
             appCreateRequestHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -216,7 +215,8 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   paasCallback.onDeploy(false);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), DeployApplicationPresenter.this);
+                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
+                     appCreateRequestHandler.requestError(project.getId(), exception);
                   }
                }
             });
@@ -342,7 +342,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
             gitInitStatusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), DeployApplicationPresenter.this);
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -356,25 +356,23 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   {
                      createApplication();
                   }
-                  // showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  // IDE.fireEvent(new RefreshBrowserEvent());
-                  // createJob();
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleGitError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), DeployApplicationPresenter.this);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+                     gitInitStatusHandler.requestError(project.getId(), exception);
                   }
                }
             });
       }
       catch (RequestException e)
       {
-         handleError(e);
+         handleGitError(e);
       }
       catch (WebSocketException e)
       {
@@ -382,7 +380,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       }
    }
 
-   private void handleError(Throwable e)
+   private void handleGitError(Throwable e)
    {
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
@@ -395,88 +393,66 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
+    * Performs actions after the Git-repository was initialized.
     */
-   @Override
-   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
+   private WebSocketEventHandler repoInitializedHandler = new WebSocketEventHandler()
    {
-      if (webSocketEventMessage.getChannel().equals(Channels.GIT_REPO_INITIALIZED.toString()))
+      @Override
+      public void onMessage(WebSocketEventMessage event)
       {
-         onGitRepoInitialized(webSocketEventMessage);
-      }
-      else if (webSocketEventMessage.getChannel().equals(Channels.HEROKU_APP_CREATED.toString()))
-      {
-         onHerokuAppCreated(webSocketEventMessage);
-      }
-   }
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
 
-   /**
-    * Performs actions when Git-repository initialized.
-    * 
-    * @param webSocketEventMessage WebSocket message
-    */
-   private void onGitRepoInitialized(WebSocketEventMessage webSocketEventMessage)
-   {
-      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
-
-      if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
-      {
-         return;
-      }
-
-      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
-      if (webSocketException == null)
-      {
          gitInitStatusHandler.requestFinished(project.getId());
          createApplication();
-         return;
       }
 
-      String exceptionMessage = null;
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      @Override
+      public void onError(Exception exception)
       {
-         exceptionMessage = webSocketException.getMessage();
-      }
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
 
-      gitInitStatusHandler.requestError(project.getId(), new Exception(exceptionMessage));
-      String errorMessage = (exceptionMessage != null) ? exceptionMessage : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-   }
+         gitInitStatusHandler.requestError(project.getId(), exception);
+         handleGitError(exception);
+      }
+   };
 
    /**
-    * Performs actions when application created.
-    * 
-    * @param webSocketEventMessage WebSocket message
+    * Performs actions after the application was created.
     */
-   private void onHerokuAppCreated(WebSocketEventMessage webSocketEventMessage)
+   private WebSocketEventHandler appCreatedHandler = new WebSocketEventHandler()
    {
-      WebSocket.getInstance().eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
-
-      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
-      if (webSocketException == null)
+      @Override
+      public void onMessage(WebSocketEventMessage event)
       {
-         List<Property> properties = parseApplicationProperties(webSocketEventMessage.getPayload().getPayload());
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+
+         List<Property> properties = parseApplicationProperties(event.getPayload().getPayload());
          if (properties != null)
          {
             IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
             IDE.fireEvent(new RefreshBrowserEvent(project));
             paasCallback.onDeploy(true);
          }
-         return;
       }
 
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      @Override
+      public void onError(Exception exception)
       {
-         if (webSocketException.getMessage().contains("Authentication required"))
-         {
-            IDE.addHandler(LoggedInEvent.TYPE, this);
-            IDE.fireEvent(new LoginEvent());
-            return;
-         }
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
 
-         IDE.fireEvent(new OutputEvent(webSocketException.getMessage(), Type.ERROR));
+         if (exception.getMessage() != null && !exception.getMessage().isEmpty())
+         {
+            if (exception.getMessage().contains("Authentication required"))
+            {
+               IDE.addHandler(LoggedInEvent.TYPE, DeployApplicationPresenter.this);
+               IDE.fireEvent(new LoginEvent());
+               return;
+            }
+
+            IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+         }
       }
-   }
+   };
 
    /**
     * Deserializes data in JSON format to List that contain application properties.

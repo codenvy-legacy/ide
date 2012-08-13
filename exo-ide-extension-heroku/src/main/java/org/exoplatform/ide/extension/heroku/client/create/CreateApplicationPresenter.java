@@ -36,12 +36,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -64,7 +63,7 @@ import java.util.List;
  * 
  */
 public class CreateApplicationPresenter extends GitPresenter implements ViewClosedHandler, CreateApplicationHandler,
-   LoggedInHandler, WebSocketEventHandler
+   LoggedInHandler
 {
    interface Display extends IsView
    {
@@ -207,7 +206,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.eventBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -234,7 +233,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
                   super.onFailure(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), CreateApplicationPresenter.this);
+                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
                   }
                }
             });
@@ -294,37 +293,41 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
+    * Performs actions after the application was created.
     */
-   @Override
-   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
+   private WebSocketEventHandler appCreatedHandler = new WebSocketEventHandler()
    {
-      WebSocket.getInstance().eventBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
-
-      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
-      if (webSocketException == null)
+      @Override
+      public void onMessage(WebSocketEventMessage event)
       {
-         List<Property> properties = parseApplicationProperties(webSocketEventMessage.getPayload().getPayload());
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+
+         List<Property> properties = parseApplicationProperties(event.getPayload().getPayload());
          if (properties != null)
          {
             IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
             IDE.fireEvent(new RefreshBrowserEvent(project));
          }
-         return;
       }
 
-      if (webSocketException.getMessage() != null && webSocketException.getMessage().length() > 0)
+      @Override
+      public void onError(Exception exception)
       {
-         if (webSocketException.getMessage().contains("Authentication required"))
-         {
-            IDE.addHandler(LoggedInEvent.TYPE, this);
-            IDE.fireEvent(new LoginEvent());
-            return;
-         }
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
 
-         IDE.fireEvent(new OutputEvent(webSocketException.getMessage(), Type.ERROR));
+         if (exception.getMessage() != null && !exception.getMessage().isEmpty())
+         {
+            if (exception.getMessage().contains("Authentication required"))
+            {
+               IDE.addHandler(LoggedInEvent.TYPE, CreateApplicationPresenter.this);
+               IDE.fireEvent(new LoginEvent());
+               return;
+            }
+
+            IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+         }
       }
-   }
+   };
 
    /**
     * Deserializes data in JSON format to List that contain application properties.

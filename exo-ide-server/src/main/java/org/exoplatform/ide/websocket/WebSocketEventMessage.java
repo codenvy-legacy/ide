@@ -28,8 +28,14 @@ package org.exoplatform.ide.websocket;
  */
 public class WebSocketEventMessage extends WebSocketMessage
 {
+   /**
+    * A channel for publishing message.
+    */
    private String channel;
 
+   /**
+    * Payload.
+    */
    private String payload;
 
    /**
@@ -45,31 +51,41 @@ public class WebSocketEventMessage extends WebSocketMessage
       this.exception = exception;
    }
 
-   @Override
-   public String toString()
-   {
-      return "{\"type\":\"" + type + "\", " +
-               "\"channel\":\"" + channel + "\", " +
-               "\"payload\":" + payload  + ", " +
-               "\"exception\":" + exception +
-               "}";
-   }
-
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel
+    */
    public void setChannel(String channel)
    {
       this.channel = channel;
    }
 
+   /**
+    * Returns a channel for publishing message
+    * 
+    * @return channel
+    */
    public String getChannel()
    {
       return channel;
    }
 
+   /**
+    * Sets the payload.
+    * 
+    * @param payload text data
+    */
    public void setPayload(String payload)
    {
       this.payload = payload;
    }
 
+   /**
+    * Returns the payload.
+    * 
+    * @return payload.
+    */
    public String getPayload()
    {
       return payload;
@@ -93,5 +109,18 @@ public class WebSocketEventMessage extends WebSocketMessage
    public void setException(String exception)
    {
       this.exception = exception;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "{\"type\":\"" + type + "\", " +
+               "\"channel\":\"" + channel + "\", " +
+               "\"payload\":" + payload  + ", " +
+               "\"exception\":" + exception +
+               "}";
    }
 }

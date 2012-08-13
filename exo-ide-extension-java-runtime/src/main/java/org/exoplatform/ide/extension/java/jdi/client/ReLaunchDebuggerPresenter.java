@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
@@ -60,12 +61,12 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
    /**
     * Used for subscribe/unsubscribe on receive WebSocket messages.
     */
-   private final WebSocketEventHandler webSocketSubscriber; 
+   private final WebSocketEventHandler debuggerEventHandler; 
 
    public ReLaunchDebuggerPresenter(DebugApplicationInstance instance, WebSocketEventHandler webSocketSubscriber)
    {
       this.instance = instance;
-      this.webSocketSubscriber = webSocketSubscriber;
+      this.debuggerEventHandler = webSocketSubscriber;
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
@@ -84,6 +85,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
          {
             IDE.fireEvent(new StopAppEvent());
             tryConnectDebuger.cancel();
+            WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
@@ -114,7 +116,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.eventBus().subscribe("debuggerEvents", webSocketSubscriber);
+            ws.messageBus().subscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -135,7 +137,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
 //                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe("debuggerEvents", webSocketSubscriber);
+                     ws.messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
                   }
                }
             });

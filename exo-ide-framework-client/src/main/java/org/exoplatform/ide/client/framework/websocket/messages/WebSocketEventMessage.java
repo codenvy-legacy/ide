@@ -30,12 +30,32 @@ import com.google.web.bindery.autobean.shared.Splittable;
  */
 public interface WebSocketEventMessage extends WebSocketMessage
 {
+   /**
+    * Returns a channel for publishing message.
+    * 
+    * @return channel identifier
+    */
    String getChannel();
 
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel identifier
+    */
    void setChannel(String channel);
 
+   /**
+    * Returns a payload.
+    * 
+    * @return payload
+    */
    Splittable getPayload();
 
+   /**
+    * Sets a payload.
+    * 
+    * @param payload payload
+    */
    void setPayload(Splittable payload);
 
    /**

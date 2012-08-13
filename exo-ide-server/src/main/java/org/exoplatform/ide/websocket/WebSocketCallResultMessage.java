@@ -48,15 +48,6 @@ public class WebSocketCallResultMessage extends WebSocketMessage
       this.payload = payload;
    }
 
-   @Override
-   public String toString()
-   {
-      return "{\"type\":\"" + type + "\", " +
-               "\"callId\":\"" + callId + "\", " +
-               "\"payload\":" + payload +
-               "}";
-   }
-
    /**
     * Sets the call identifier which allow the client to assign
     * a certain result to a corresponding previous request.
@@ -97,5 +88,17 @@ public class WebSocketCallResultMessage extends WebSocketMessage
    public String getPayload()
    {
       return payload;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "{\"type\":\"" + type + "\", " +
+               "\"callId\":\"" + callId + "\", " +
+               "\"payload\":" + payload +
+               "}";
    }
 }

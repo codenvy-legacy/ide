@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.framework.websocket.events;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event is fired, when websocket connection is closed.
+ * Event is fired, when WebSocket connection is closed.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $

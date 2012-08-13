@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 public interface WebSocketErrorHandler extends EventHandler
 {
    /**
-    * Perform actions, when error has occurred during websocket connection.
+    * Perform actions, when error has occurred during WebSocket connection.
     * 
     * @param event
     */

@@ -27,11 +27,31 @@ package org.exoplatform.ide.client.framework.websocket.messages;
  */
 public interface WebSocketEventMessageException extends WebSocketMessage
 {
+   /**
+    * Returns an exception name.
+    * 
+    * @return name of the exception
+    */
    String getName();
 
+   /**
+    * Sets an exception name.
+    * 
+    * @param name name of the exception
+    */
    void setName(String name);
 
+   /**
+    * Returns a detail message that represents an exception.
+    * 
+    * @return error message
+    */
    String getMessage();
 
+   /**
+    * Sets a detail message that represents an exception.
+    * 
+    * @param message error message
+    */
    void setMessage(String message);
 }

@@ -30,7 +30,7 @@ import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 public interface WebSocketMessage
 {
    /**
-    * Enum for the WebSocket message types.
+    * Enum of the WebSocket message types.
     */
    public enum Type {
       WELCOME, //
@@ -42,8 +42,18 @@ public interface WebSocketMessage
       UNSUBSCRIBE;
    }
 
+   /**
+    * Returns a message type.
+    * 
+    * @return message type
+    */
    @PropertyName("type")
    Type getType();
 
+   /**
+    * Sets the message type.
+    * 
+    * @param type message type
+    */
    void setType(Type type);
 }

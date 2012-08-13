@@ -30,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
+ * Class used to manage (register/unregister) the WebSocket sessions
+ * and implements the session invalidation mechanism that based on the timeout.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: SessionManager.java Aug 8, 2012 3:02:22 PM azatsarynnyy $
  *

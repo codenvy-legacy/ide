@@ -45,12 +45,11 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.EventBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -71,8 +70,7 @@ import java.util.List;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler,
-   WebSocketEventHandler
+public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -384,7 +382,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             useWebSocketForCallback = true;
             cloneStatusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
             cloneStatusHandler.requestInProgress(project.getId());
-            ws.eventBus().subscribe(Channels.GIT_REPO_CLONED.toString(), this);
+            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -406,7 +404,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), DeploySamplesPresenter.this);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+                     cloneStatusHandler.requestError(project.getId(), exception);
                   }
                }
             });
@@ -463,26 +462,26 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler#onWebSocketEvent(org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage)
+    * Performs actions after the Git-repository was cloned.
     */
-   @Override
-   public void onWebSocketEvent(WebSocketEventMessage webSocketEventMessage)
+   private WebSocketEventHandler repoClonedHandler = new WebSocketEventHandler()
    {
-      WebSocket.getInstance().eventBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), DeploySamplesPresenter.this);
-
-      if (!project.getId().equals(webSocketEventMessage.getPayload().asString()))
+      @Override
+      public void onMessage(WebSocketEventMessage event)
       {
-         return;
-      }
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
 
-      WebSocketEventMessageException webSocketException = webSocketEventMessage.getException();
-      if (webSocketException == null)
-      {
          cloneStatusHandler.requestFinished(project.getId());
          onRepositoryCloned();
-         return;
       }
-      handleError(new Exception(webSocketException.getMessage()));
-      cloneStatusHandler.requestError(project.getId(), new Exception(webSocketException.getMessage()));
-   }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+
+         cloneStatusHandler.requestError(project.getId(), exception);
+         handleError(exception);
+      }
+   };
 }

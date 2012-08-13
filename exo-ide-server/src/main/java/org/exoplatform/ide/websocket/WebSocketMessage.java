@@ -40,13 +40,26 @@ public class WebSocketMessage
       UNSUBSCRIBE;
    }
 
+   /**
+    * TYpe of the WebSocket message.
+    */
    protected String type;
 
+   /**
+    * Returns a type of the WebScoket message.
+    * 
+    * @return message type
+    */
    public String getType()
    {
       return type;
    }
 
+   /**
+    * Sets a type of the WebScoket message.
+    * 
+    * @param type message type
+    */
    public void setType(String type)
    {
       this.type = type;

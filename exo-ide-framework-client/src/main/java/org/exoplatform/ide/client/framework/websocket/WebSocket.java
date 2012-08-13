@@ -24,7 +24,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler;
@@ -43,7 +42,6 @@ import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHand
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
- *
  */
 public class WebSocket
 {
@@ -52,25 +50,17 @@ public class WebSocket
     */
    public enum ReadyState {
 
-      /**
-       * The WebSocket object is created but connection has not yet been established.
-       */
+      /** The WebSocket object is created but connection has not yet been established. */
       CONNECTING(0),
 
-      /**
-       * Connection is established and communication is possible. A WebSocket must
-       * be in the open state in order to send and receive data over the network.
-       */
+      /** Connection is established and communication is possible. A WebSocket must
+       * be in the open state in order to send and receive data over the network. */
       OPEN(1),
 
-      /**
-       * Connection is going through the closing handshake.
-       */
+      /** Connection is going through the closing handshake. */
       CLOSING(2),
 
-      /**
-       * The connection has been closed or could not be opened.
-       */
+      /** The connection has been closed or could not be opened. */
       CLOSED(3);
 
       private final int value;
@@ -108,9 +98,9 @@ public class WebSocket
    private WebSocketSession session;
 
    /**
-    * Event subscriber for this WebSocket instance.
+    * {@link MessageBus} for this {@link WebSocket} instance.
     */
-   private EventBus eventBus = new EventBus();
+   private MessageBus messageBus = new MessageBus();
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
@@ -127,7 +117,7 @@ public class WebSocket
       instance = this;
       session = new WebSocketSession();
       String sessionId = session.getId();
-      url = "ws://" + Window.Location.getHost() + "/websocket/?sessionId=" + (sessionId==null ? "" : sessionId);
+      url = "ws://" + Window.Location.getHost() + "/websocket/?sessionId=" + (sessionId == null ? "" : sessionId);
       socket = WebSocketImpl.create(url);
       init();
    }
@@ -137,7 +127,7 @@ public class WebSocket
     */
    private void init()
    {
-      IDE.addHandler(WebSocketMessageEvent.TYPE, eventBus);
+      IDE.addHandler(WebSocketMessageEvent.TYPE, messageBus);
 
       socket.setOnOpenHandler(new WebSocketOpenedHandler()
       {
@@ -146,7 +136,7 @@ public class WebSocket
          {
             connectionAttemptsCounter = 0;
             IDE.fireEvent(event);
-            heartbeatPingTimer.scheduleRepeating(30*1000);
+            heartbeatTimer.scheduleRepeating(30 * 1000);
          }
       });
 
@@ -209,13 +199,13 @@ public class WebSocket
    }
 
    /**
-    * Returns an {@link EventBus}.
+    * Returns a {@link MessageBus}.
     * 
-    * @return an {@link EventBus}
+    * @return a {@link MessageBus}
     */
-   public EventBus eventBus()
+   public MessageBus messageBus()
    {
-      return eventBus;
+      return messageBus;
    }
 
    /**
@@ -232,9 +222,9 @@ public class WebSocket
    };
 
    /**
-    * Timer for sending automatic heartbeat pings to prevent closing idle WebSocket connection.
+    * Timer for sending heartbeat pings to prevent closing an idle WebSocket connection.
     */
-   private Timer heartbeatPingTimer = new Timer()
+   private Timer heartbeatTimer = new Timer()
    {
       @Override
       public void run()
@@ -245,7 +235,8 @@ public class WebSocket
          }
          catch (WebSocketException e)
          {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
+            // nothing to do
+            //IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    };
@@ -333,7 +324,7 @@ public class WebSocket
     * Transmits data to the server over the WebSocket connection.
     * 
     * @param data the data to be sent to the server
-    * @throws WebSocketException if error has occurred while sending data
+    * @throws WebSocketException throws if an error has occurred while sending data
     */
    public void send(String data) throws WebSocketException
    {

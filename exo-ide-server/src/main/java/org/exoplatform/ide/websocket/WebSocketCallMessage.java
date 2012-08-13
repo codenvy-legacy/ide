@@ -37,8 +37,14 @@ public class WebSocketCallMessage
     */
    private String callId;
 
+   /**
+    * Remote procedure identifier.
+    */
    private String procId;
 
+   /**
+    * Payload.
+    */
    private String payload;
 
    /**
@@ -87,21 +93,41 @@ public class WebSocketCallMessage
       this.callId = callId;
    }
 
+   /**
+    * Returns the remote procedure identifier.
+    * 
+    * @return remote procedure identifier
+    */
    public String getProcId()
    {
       return procId;
    }
 
+   /**
+    * Sets the remote procedure identifier
+    * 
+    * @param procId remote procedure identifier
+    */
    public void setProcId(String procId)
    {
       this.procId = procId;
    }
 
+   /**
+    * Returns payload.
+    * 
+    * @return payload
+    */
    public String getPayload()
    {
       return payload;
    }
 
+   /**
+    * Sets payload.
+    * 
+    * @param payload payload
+    */
    public void setPayload(String payload)
    {
       this.payload = payload;

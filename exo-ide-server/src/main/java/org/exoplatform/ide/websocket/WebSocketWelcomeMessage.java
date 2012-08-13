@@ -30,27 +30,48 @@ package org.exoplatform.ide.websocket;
  */
 public class WebSocketWelcomeMessage extends WebSocketMessage
 {
+   /**
+    * WebSocket session identifier.
+    */
    private String sessionId;
 
+   /**
+    * Constructs a new message with a given session identifier.
+    * 
+    * @param sessionId
+    */
    public WebSocketWelcomeMessage(String sessionId)
    {
       this.type = Type.WELCOME.toString();
       this.sessionId = sessionId;
    }
 
-   @Override
-   public String toString()
-   {
-      return "{\"type\":\"" + type + "\", " + "\"sessionId\":\"" + sessionId + "\"}";
-   }
-
+   /**
+    * Sets a WebSocket session identifier.
+    * 
+    * @param sessionId WebSocket session identifier
+    */
    public void setSessionId(String sessionId)
    {
       this.sessionId = sessionId;
    }
 
+   /**
+    * Returns WebSocket session identifier.
+    * 
+    * @return WebSocket session identifier
+    */
    public String getSessionId()
    {
       return sessionId;
+   }
+
+   /**
+    * @see java.lang.Object#toString()
+    */
+   @Override
+   public String toString()
+   {
+      return "{\"type\":\"" + type + "\", " + "\"sessionId\":\"" + sessionId + "\"}";
    }
 }

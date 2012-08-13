@@ -50,13 +50,13 @@ public class IDEWebSocketServlet extends WebSocketServlet
    private static final Log LOG = ExoLogger.getLogger(IDEWebSocketServlet.class);
 
    /**
-    * WebSocket session manager that used for managing of the client's sessions.
+    * WebSocket session manager that used to managing the client's sessions.
     */
    private static SessionManager sessionManager = (SessionManager)ExoContainerContext.getCurrentContainer()
       .getComponentInstanceOfType(SessionManager.class);
 
    /**
-    * WebSocket message broker that used for managing of the messages.
+    * WebSocket message broker that used to managing the messages.
     */
    private static MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
       .getComponentInstanceOfType(MessageBroker.class);
@@ -76,15 +76,20 @@ public class IDEWebSocketServlet extends WebSocketServlet
    }
 
    /**
-    * Class used to process WebSocket connections.
+    * Class used to process WebSocket connections based on messages.
     */
    private final class WSMessageInbound extends MessageInbound
    {
       /**
-       * Session identifier of a WebSocket connection.
+       * Identifier of the WebSocket session.
        */
       private String sessionId;
 
+      /**
+       * Constructs the {@link WSMessageInbound} instance with a given session identifier.
+       * 
+       * @param sessionId WebSocket session identifier
+       */
       public WSMessageInbound(String sessionId)
       {
          this.sessionId = sessionId;
@@ -131,5 +136,4 @@ public class IDEWebSocketServlet extends WebSocketServlet
          throw new UnsupportedOperationException("Receiving binary messages is not supported.");
       }
    }
-
 }

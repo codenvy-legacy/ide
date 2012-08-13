@@ -39,7 +39,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * Class used for managing WebSocket connections and sending messages to clients.
+ * {@link MessageBroker} provides two asynchronous messaging patterns: RPC and
+ * list-based PubSub. For the PubSub model, the {@link MessageBroker} looks
+ * up clients registered under the session identifier and then passes the message
+ * to them. For the RPC mechanism, client calls the remote method and
+ * {@link MessageBroker} sends the result of call to the client after executing
+ * of the called method.
+ * Also {@link MessageBroker} implements a queue of messages that were sent with errors.
+ * This messages must be resent on the next client conect.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MessageBroker.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
@@ -51,34 +58,28 @@ public class MessageBroker
     * Enumeration describing the WebSocket message event types.
     */
    public enum Channels {
-      /**
-       * Event type for message that contains status of the Maven build job.
-       */
+      /** Channel for message that contains status of the Maven build job. */
       MAVEN_BUILD_STATUS("maven:buildStatus"),
 
-      /**
-       * Event type for message that contains status of the Jenkins build job.
-       */
+      /** Channel for message that contains status of the Jenkins build job. */
       JENKINS_BUILD_STATUS("jenkins:buildStatus"),
 
-      /**
-       * Event type for message that contains debugger events.
-       */
+      /** Channel for message that contains debugger event. */
       DEBUGGER_EVENT("debugger:event"),
 
-      /**
-       * Indicates that the Git repository has been initialized.
-       */
+      /** Channel for message that contains started application instance for debugging. */
+      DEBUG_STARTED("debugger:debugAppStarted"),
+
+      /** Channel for message that contains started application instance. */
+      APP_STARTED("debugger:appStarted"),
+
+      /** Channel for message that indicates the Git repository has been initialized. */
       GIT_REPO_INITIALIZED("git:repoInitialized"),
 
-      /**
-       * Indicates that the Git repository has been cloned.
-       */
+      /** Channel for message that indicates the Git repository has been cloned. */
       GIT_REPO_CLONED("git:repoCloned"),
 
-      /**
-       * Indicates that Heroku application has been created.
-       */
+      /** Channel for message that indicates Heroku application has been created. */
       HEROKU_APP_CREATED("heroku:appCreated");
 
       private final String eventTypeValue;
@@ -115,15 +116,16 @@ public class MessageBroker
       new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>();
 
    /**
-    * Map of the disconnected sessions to the queued messages that were sent with errors.
+    * Map of the session identifier to the queued messages that were sent with errors.
     */
    private Map<String, CopyOnWriteArrayList<WebSocketMessage>> notSendedMessageQueue =
       new ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketMessage>>();
 
    /**
-    * Parse and process incoming message.
+    * Process incoming message.
     * 
     * @param message incoming message
+    * @param sessionId WebSocket session identifier
     */
    public void handleMessage(String sessionId, String message)
    {
@@ -131,44 +133,51 @@ public class MessageBroker
       {
          return;
       }
+
       String type = null;
+      JsonValue jsonValue = null;
       try
       {
-         JsonValue jsonValue = JsonHelper.parseJson(message.toString());
-         if (jsonValue != null && jsonValue.isObject())
-         {
-            type = jsonValue.getElement("type").getStringValue();
-         }
-
-         if (Type.SUBSCRIBE.name().equals(type))
-         {
-            WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
-            subscribe(sessionId, webSocketMessage.getChannel());
-         }
-         else if (Type.UNSUBSCRIBE.name().equals(type))
-         {
-            WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
-            unsubscribe(sessionId, webSocketMessage.getChannel());
-         }
-         else if (Type.PUBLISH.name().equals(type))
-         {
-            WebSocketPublishMessage webSocketMessage = new WebSocketPublishMessage(message);
-            publish(webSocketMessage.getChannel(), webSocketMessage.getPayload(), null, sessionId);
-         }
-         else if (Type.CALL.name().equals(type))
-         {
-            WebSocketCallMessage webSocketMessage = new WebSocketCallMessage(message);
-            call(sessionId, webSocketMessage.getCallId(), webSocketMessage.getPayload());
-         }
+         jsonValue = JsonHelper.parseJson(message.toString());
       }
       catch (ParsingResponseException e)
       {
          LOG.warn("An error occurs parsing the WebSocket message", e);
       }
+
+      if (jsonValue != null && jsonValue.isObject())
+      {
+         type = jsonValue.getElement("type").getStringValue();
+      }
+      else
+      {
+         return;
+      }
+
+      if (Type.SUBSCRIBE.name().equals(type))
+      {
+         WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
+         subscribe(sessionId, webSocketMessage.getChannel());
+      }
+      else if (Type.UNSUBSCRIBE.name().equals(type))
+      {
+         WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
+         unsubscribe(sessionId, webSocketMessage.getChannel());
+      }
+      else if (Type.PUBLISH.name().equals(type))
+      {
+         WebSocketPublishMessage webSocketMessage = new WebSocketPublishMessage(message);
+         publish(webSocketMessage.getChannel(), webSocketMessage.getPayload(), null, sessionId);
+      }
+      else if (Type.CALL.name().equals(type))
+      {
+         WebSocketCallMessage webSocketMessage = new WebSocketCallMessage(message);
+         call(sessionId, webSocketMessage.getCallId(), webSocketMessage.getPayload());
+      }
    }
 
    /**
-    * Re-sends all messages that were sent with any errors.
+    * Resends all messages that were sent with any errors.
     * 
     * @param sessionId WebSocket session identifier
     */
@@ -184,9 +193,22 @@ public class MessageBroker
             {
                notSendedMessageQueue.remove(messageList);
             }
-
             send(sessionId, message);
          }
+      }
+   }
+
+   /**
+    * Removes all queued messages that were sent with errors.
+    * 
+    * @param sessionId WebSocket session identifier
+    */
+   void clearNotSendedMessageQueue(String sessionId)
+   {
+      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+      if (messageList != null)
+      {
+         notSendedMessageQueue.remove(sessionId);
       }
    }
 
@@ -221,7 +243,7 @@ public class MessageBroker
    }
 
    /**
-    * Unsubscribes the client to receive messages on a particular channel or the all channels.
+    * Unsubscribes the client to receive the messages on a particular channel or on the all channels.
     * 
     * @param sessionId client's session identifier
     * @param channel channel name. If <code>null</code> then client will be unsubscribed to all subscriptions.
@@ -260,12 +282,13 @@ public class MessageBroker
    }
 
    /**
-    * Publishes message in a particular channel.
+    * Publishes a message in a particular channel.
     * 
     * @param channel channel name
-    * @param message the message
-    * @param an exception to be sent to the client. May be </code>null<code>
-    * @param excludeSessionId
+    * @param message the text message to be published to the channel
+    * @param an exception to be sent to the client. May be <code>null</code>.
+    * @param excludeSessionId identifier of the WebSocket session,
+    *          who does not will be sent a message
     */
    public void publish(String channel, String message, Exception e, String excludeSessionId)
    {
@@ -290,21 +313,28 @@ public class MessageBroker
       }
    }
 
+   /**
+    * Process the remote procedure call and send result to the caller.
+    * 
+    * @param sessionId WebSocket session identifier
+    * @param callId unique identifier of this call
+    * @param data text data which received with RPC
+    */
    private void call(String sessionId, String callId, String data)
    {
       // TODO
-      // processCall
-      // send result to caller callback
+      // process call of remote method
+      // send result of call to the client
       //send(sessionId, new WebSocketCallResultMessage(callId, "\"" + result + "\""));
    }
 
    /**
-    * Sends the message to client.
+    * Sends the message to the client.
     * <p><strong>Note:</strong> if user has more than one active
     * connections with the same session identifier then message
     * will be sent to all connections.
     * 
-    * @param sessionId identifier of the WebSocket connection
+    * @param sessionId WebSocket session identifier
     * @param message the {@link WebSocketMessage} to be sent to the client
     */
    void send(String sessionId, WebSocketMessage message)
@@ -330,13 +360,13 @@ public class MessageBroker
    }
 
    /**
-    * Sends the message to client.
+    * Sends the message to the client.
     * <p><strong>Note:</strong> if user has more than one active
     * connections with the same session identifier then message
     * will be sent to all connections.
     * 
-    * @param sessionId identifier of the WebSocket session
-    * @param message the message to be sent to the client
+    * @param sessionId WebSocket session identifier
+    * @param message the text message to be sent to the client
     * @throws IOException if an error occurs writing to the client
     */
    private void send(String sessionId, String message) throws IOException
@@ -357,20 +387,6 @@ public class MessageBroker
          WsOutbound wsOut = messageInbound.getWsOutbound();
          wsOut.writeTextMessage(CharBuffer.wrap(message));
          wsOut.flush();
-      }
-   }
-
-   /**
-    * Removes all queued messages that were sent with errors.
-    * 
-    * @param sessionId WebSocket session identifier
-    */
-   void clearNotSendedMessageQueue(String sessionId)
-   {
-      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
-      if (messageList != null)
-      {
-         notSendedMessageQueue.remove(sessionId);
       }
    }
 }

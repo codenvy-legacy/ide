@@ -31,10 +31,19 @@ import org.exoplatform.ide.helper.ParsingResponseException;
  */
 public class WebSocketPublishMessage
 {
+   /**
+    * A channel for publishing message.
+    */
    private String channel;
 
+   /**
+    * Payload.
+    */
    private String payload;
 
+   /**
+    * A text represents an error.
+    */
    private String error;
 
    /**
@@ -60,31 +69,61 @@ public class WebSocketPublishMessage
       }
    }
 
+   /**
+    * Returns a channel for publishing message.
+    * 
+    * @return channel identifier
+    */
    public String getChannel()
    {
       return channel;
    }
 
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel identifier
+    */
    public void setChannel(String channel)
    {
       this.channel = channel;
    }
 
+   /**
+    * Returns a data which will be sent in a message.
+    * 
+    * @return payload
+    */
    public String getPayload()
    {
       return payload;
    }
 
+   /**
+    * Sets a data which will be sent in a message.
+    * 
+    * @param payload payload
+    */
    public void setPayload(String payload)
    {
       this.payload = payload;
    }
 
+   /**
+    * Returns an error.
+    * 
+    * @return an error
+    */
    public String getError()
    {
       return error;
    }
 
+   /**
+    * Sets an text represent error.
+    * 
+    * @param error an error
+    */
    public void setError(String error)
    {
       this.error = error;

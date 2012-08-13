@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 public interface WebSocketOpenedHandler extends EventHandler
 {
    /**
-    * Perform actions, when websocket connection is opened.
+    * Perform actions, when WebSocket connection is opened.
     * 
     * @param event
     */

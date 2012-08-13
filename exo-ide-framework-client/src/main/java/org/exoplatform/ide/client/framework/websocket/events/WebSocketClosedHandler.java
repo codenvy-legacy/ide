@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.EventHandler;
 public interface WebSocketClosedHandler extends EventHandler
 {
    /**
-    * Perform actions, when websocket connection is closed.
+    * Perform actions, when WebSocket connection is closed.
     * 
     * @param event
     */
