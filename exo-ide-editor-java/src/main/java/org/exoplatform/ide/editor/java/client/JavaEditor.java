@@ -52,5 +52,14 @@ public class JavaEditor extends CollabEditor
    {
       return breakPointManager;
    }
+   
+   /**
+    * @see com.google.collide.client.CollabEditor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return super.getCursorOffsetLeft() + breakPointManager.getGutter().getWidth();
+   }
 
 }

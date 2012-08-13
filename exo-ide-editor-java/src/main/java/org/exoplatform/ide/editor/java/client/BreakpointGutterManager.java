@@ -169,5 +169,13 @@ public class BreakpointGutterManager
       currentDebugLine = null;
       buffer.removeUnmanagedElement(currentDebugHighlighter);
    }
+   
+   /**
+    * @return the gutter
+    */
+   public Gutter getGutter()
+   {
+      return gutter;
+   }
 
 }
