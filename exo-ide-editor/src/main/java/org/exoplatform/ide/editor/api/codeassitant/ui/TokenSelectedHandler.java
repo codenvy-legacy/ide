@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.api.codeassitant.ui;
 
+import com.google.gwt.event.shared.EventHandler;
+
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -25,13 +27,13 @@ package org.exoplatform.ide.editor.api.codeassitant.ui;
  * @version $Id: Nov 25, 2010 5:01:51 PM evgen $
  * 
  */
-public interface TokenSelectedHandler
+public interface TokenSelectedHandler extends EventHandler
 {
 
-   void onStringSelected(String value);
+   void onStringValueEntered(String value);
 
    void onTokenSelected(TokenWidget value);
 
-   void onCancelAutoComplete();
-
+   void onAutoCompleteCanceled();
+   
 }

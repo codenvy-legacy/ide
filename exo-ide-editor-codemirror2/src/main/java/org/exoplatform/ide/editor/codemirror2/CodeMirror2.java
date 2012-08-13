@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,123 +16,205 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.editor.codemirror2;
+
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.LinkElement;
+import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.TextArea;
 
-import org.exoplatform.ide.editor.api.Capability;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.EditorParameters;
-
-import java.util.HashMap;
-
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
  */
-
 public class CodeMirror2 extends AbsolutePanel implements Editor
 {
    
-   private String content;
+   private final String id;
    
-   private HashMap<String, Object> params;
+   private final String mimeType;
    
-   private String id;
+//   private Document iFrameDocument;
+//   
+//   private Element headElement;
+//   
+//   private Element bodyElement;
    
    private JavaScriptObject editor;
    
-   private int cursorRow;
-   
-   private int cursorColumn;
-   
-   public CodeMirror2(String content, HashMap<String, Object> params) {
-      this.content = content;
-      this.params = params;
+   public CodeMirror2(String mimeType)
+   {
+      id = "CodeMirror2-" + hashCode();
+      this.mimeType = mimeType;
       
-      id = "CodeMirror2-" + String.valueOf(this.hashCode());
-      setStyleName("Codemirror2Panel");      
+      System.out.println("generated id > " + id);
       
-      TextArea textArea = new TextArea();
-      textArea.getElement().getStyle().setPosition(Position.ABSOLUTE);
-      textArea.getElement().getStyle().setLeft(0, Unit.PX);
-      textArea.getElement().getStyle().setTop(0, Unit.PX);
-      textArea.getElement().getStyle().setRight(0, Unit.PX);
-      textArea.getElement().getStyle().setBottom(0, Unit.PX);
-      add(textArea);
+      getElement().getStyle().setBackgroundColor("grey");
       
-      boolean showLineNumbers = params.get(EditorParameters.SHOW_LINE_NUMERS) != null ? 
-         (Boolean)params.get(EditorParameters.SHOW_LINE_NUMERS) :
-            false;
-      boolean readOnly = params.get(EditorParameters.IS_READ_ONLY) != null ?
-         (Boolean)params.get(EditorParameters.IS_READ_ONLY) :
-            false;
+//      final Frame iFrame = new Frame("_codemirror2.html");
+//      add(iFrame);
+//      iFrame.setSize("100%", "100%");
+//      iFrame.getElement().setAttribute("frameborder", "0");
+//      iFrame.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+//      
+//      iFrame.addLoadHandler(new LoadHandler()
+//      {
+//         @Override
+//         public void onLoad(LoadEvent event)
+//         {
+////            FrameElement frameElement = iFrame.getElement().cast();
+////            iFrameDocument = frameElement.getContentDocument();
+////            headElement = iFrameDocument.getElementsByTagName("head").getItem(0);
+////            bodyElement = iFrameDocument.getElementsByTagName("body").getItem(0);
+////            
+////            System.out.println("body element > " + bodyElement);
+//
+////            injectStyleElement("codemirror2/lib/codemirror.css");
+////            injectJSElement("codemirror2/lib/codemirror.js");
+////            injectJSElement("codemirror2/mode/xml/xml.js");
+////            injectStyleElement("codemirror2/codemirror-styles.css");
+//            
+//            //initCodeMirror();
+//         }
+//      });
       
-      editor = init(textArea.getElement(), showLineNumbers, readOnly);
+      initCodeMirror();
       
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            refreshEditor(editor);
-         }
-      });
    }
    
-   private native JavaScriptObject init(JavaScriptObject textArea, boolean showLineNumbers, boolean isReadOnly) /*-{
-      var instance = this;
+//   private void injectJSElement(String src)
+//   {
+//      ScriptElement sce = iFrameDocument.createScriptElement();
+//      sce.setType("text/javascript");
+//      sce.setSrc(src);
+//      headElement.appendChild(sce);
+//   }
+//   
+//   private void injectStyleElement(String href)
+//   {
+//      LinkElement le = iFrameDocument.createLinkElement();
+//      le.setRel("stylesheet");
+//      le.setHref(href);
+//      headElement.appendChild(le);      
+//   }
+//   
    
+   private void initCodeMirror()
+   {
+      //BodyPanel bodyPanel = new BodyPanel();
+      //bodyElement.appendChild(bodyPanel.getElement());
+      
+//      bodyPanel.getElement().getStyle().setPosition(Position.ABSOLUTE);
+//      bodyPanel.getElement().getStyle().setLeft(0, Unit.PX);
+//      bodyPanel.getElement().getStyle().setTop(0, Unit.PX);
+//      bodyPanel.getElement().getStyle().setRight(0, Unit.PX);
+//      bodyPanel.getElement().getStyle().setBottom(0, Unit.PX);
+//      bodyPanel.getElement().getStyle().setBackgroundColor("green");
+      
+       TextArea textArea = new TextArea();
+       textArea.getElement().getStyle().setPosition(Position.ABSOLUTE);
+       textArea.getElement().getStyle().setLeft(0, Unit.PX);
+       textArea.getElement().getStyle().setTop(0, Unit.PX);
+       textArea.getElement().getStyle().setRight(0, Unit.PX);
+       textArea.getElement().getStyle().setBottom(0, Unit.PX);
+       add(textArea);
+       
+       editor = init(textArea.getElement(), true, false);
+//       
+//        Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//        {
+//           @Override
+//           public void execute()
+//           {
+//              refreshEditor(editor);
+//           }
+//        });       
+   }
+   
+   private native JavaScriptObject init(JavaScriptObject textArea, boolean showLineNumbers, boolean isReadOnly)
+   /*-{
+      var instance = this;
+      
+      alert('> ' + $wnd);
+      alert('> ' + $doc);
+      alert('codemirror > ' + $wnd.CodeMirror);
+      
       var editor = $wnd.CodeMirror.fromTextArea(textArea, {
          mode: {
             name: "xml",
             alignCDATA: true
-            },
+         },
+   
          lineNumbers: showLineNumbers,
          readOnly: isReadOnly,
+   
          //fixedGutter: true,
          onCursorActivity: function() {
-            editor.setLineClass(hlLine, null);
-            hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
-            
-            var cursor = editor.getCursor();            
-            instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::cursorRow = cursor.line;
-            instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::cursorColumn = cursor.ch;
-            instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::onCursorActivity()();
+            //editor.setLineClass(hlLine, null);
+            //hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+            //var cursor = editor.getCursor();            
+            //instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::cursorRow = cursor.line;
+            //instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::cursorColumn = cursor.ch;
+            //instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::onCursorActivity()();
          },
+   
          onChange: function() {
-            instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::onContentChanged()();
+            //instance.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::onContentChanged()();
          }
       });
-      
-      var hlLine = editor.setLineClass(0, "activeline");
+ 
+      //var hlLine = editor.setLineClass(0, "activeline");
       return editor;
    }-*/;
+
+   private native void refreshEditor(JavaScriptObject editor)
+   /*-{
+      //editor.refresh();
+   }-*/;   
    
-   private native void refreshEditor(JavaScriptObject editor) /*-{
-      editor.refresh();
-   }-*/;
-   
-   private void onCursorActivity() {
-      fireEvent(new EditorCursorActivityEvent(id, cursorRow, cursorColumn));
+   @Override
+   public String getMimeType()
+   {
+      return mimeType;
    }
-   
-   private void onContentChanged() {
-      fireEvent(new EditorContentChangedEvent(id));
+
+   @Override
+   public String getName()
+   {
+      return "CodeMirror 2";
    }
-   
+
    @Override
    public String getId()
    {
@@ -148,139 +230,275 @@ public class CodeMirror2 extends AbsolutePanel implements Editor
    @Override
    public void setText(String text)
    {
+      
    }
 
    @Override
-   public native void focus() /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      editor.focus();
-   }-*/;
-
-   @Override
-   public void undo()
+   public IDocument getDocument()
    {
+      return null;
    }
 
    @Override
-   public void redo()
+   public boolean isCapable(EditorCapability capability)
    {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public void formatSource()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void showLineNumbers(boolean showLineNumbers)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void setFocus()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void setCursorPosition(int row, int column)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void deleteCurrentLine()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public boolean findAndSelect(String find, boolean caseSensitive)
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
    @Override
    public boolean hasUndoChanges()
    {
-//      undo()
-//      Undo one edit (if any undo events are stored).
-//      redo()
-//      Redo one undone edit.
-//      historySize() → object
-//      Returns an object with {undo, redo} properties, both of which hold integers, indicating the amount of stored undo and redo operations.      
-      
+      // TODO Auto-generated method stub
       return false;
+   }
+
+   @Override
+   public void undo()
+   {
+      // TODO Auto-generated method stub
+      
    }
 
    @Override
    public boolean hasRedoChanges()
    {
+      // TODO Auto-generated method stub
       return false;
+   }
+
+   @Override
+   public void redo()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public boolean isReadOnly()
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public void setReadOnly(boolean readOnly)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
    @Override
    public int getCursorRow()
    {
-      return cursorRow;
+      // TODO Auto-generated method stub
+      return 0;
    }
 
    @Override
    public int getCursorColumn()
    {
-      return cursorColumn;
+      // TODO Auto-generated method stub
+      return 0;
    }
 
    @Override
-   public native boolean isReadOnly() /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      
-      var isReadOnly = editor.getOption("readOnly");
-      return isReadOnly;
-
-//      alert("Is Read Only > " + isReadOnly);
-//      getOption(option) → value
-//      readOnly (boolean)
-      
-   }-*/;
-
-   @Override
-   public boolean isCapable(Capability capability)
+   public void replaceTextAtCurrentLine(String line, int cursorPosition)
    {
-      switch (capability)
-      {
-         case SHOW_LINE_NUMBERS : return true;
-         case SET_CURSOR_POSITION: return true;
-         case DELETE_LINE: return true;
-         case INSERT_LINE: return true;
-      }
+      // TODO Auto-generated method stub
       
-      return false;
    }
 
    @Override
-   public native void setCursorPosition(int row, int column) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      var cursor = {
-        line: row,
-        ch: column
-      };
-      editor.setCursor(cursor);
-   }-*/;
+   public String getLineText(int line)
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 
    @Override
-   public native void deleteLine(int lineNumber) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      editor.removeLine(lineNumber);
-   }-*/;
-
-   @Override
-   public native void insetLine(int lineNumber, String text) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
+   public void setLineText(int line, String text)
+   {
+      // TODO Auto-generated method stub
       
-      var curLineText = editor.getLine(lineNumber);
-      curLineText += "\r\n" + text; 
-      editor.setLine(lineNumber, curLineText);
-   }-*/;
-
-   @Override
-   public native void showLineNumbers(boolean lineNumbers) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      editor.setOption("lineNumbers", lineNumbers);
-   }-*/;
-
-   @Override
-   public void format()
-   {
    }
 
    @Override
-   public boolean findText(String text, boolean caseSensitive)
+   public int getNumberOfLines()
    {
-      return false;
+      // TODO Auto-generated method stub
+      return 0;
    }
 
    @Override
-   public void replaceSelection(String text)
+   public SelectionRange getSelectionRange()
    {
+      // TODO Auto-generated method stub
+      return null;
    }
 
    @Override
-   public native String getLineText(int lineNumber) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      return editor.getLine(line);
-   }-*/;
+   public void selectRange(int startLine, int startChar, int endLine, int endChar)
+   {
+      // TODO Auto-generated method stub
+      
+   }
 
    @Override
-   public native void setLineText(int lineNumber, String text) /*-{
-      var editor = this.@org.exoplatform.ide.editor.codemirror2.CodeMirror2::editor;
-      editor.setLine(lineNumber, text);
-   }-*/;
+   public void selectAll()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void cut()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void copy()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void paste()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    */
+   @Override
+   public void delete()
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    */
+   @Override
+   public int getCursorOffsetTop()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    */
+   @Override
+   public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
+   {
+      return addHandler(handler, EditorContentChangedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
+   {
+      return addHandler(handler, EditorContextMenuEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    */
+   @Override
+   public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
+   {
+      return addHandler(handler, EditorCursorActivityEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    */
+   @Override
+   public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
+   {
+      return addHandler(handler, EditorFocusReceivedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    */
+   @Override
+   public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
+   {
+      return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    */
+   @Override
+   public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
+   {
+      return addHandler(handler, EditorInitializedEvent.TYPE);
+   }
 
 }

@@ -27,19 +27,19 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class ShowImagesEvent extends GwtEvent<ShowImagesHandler>
+public class ShowImagesEvent extends GwtEvent<ShowImagesgHandler>
 {
 
-   public static final GwtEvent.Type<ShowImagesHandler> TYPE = new GwtEvent.Type<ShowImagesHandler>();
+   public static final GwtEvent.Type<ShowImagesgHandler> TYPE = new GwtEvent.Type<ShowImagesgHandler>();
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowImagesHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowImagesgHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(ShowImagesHandler handler)
+   protected void dispatch(ShowImagesgHandler handler)
    {
       handler.onShowImages(this);
    }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.css.client.outline;
 
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.css.client.CssEditorExtension;
 

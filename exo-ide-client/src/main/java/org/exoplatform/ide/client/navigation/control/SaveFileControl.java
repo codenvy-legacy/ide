@@ -194,6 +194,12 @@ public class SaveFileControl extends SimpleControl implements IDEControl, Editor
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
+      if (activeFile == null || event.getFile() == null)
+      {
+         setEnabled(false);
+         return;
+      }
+      
       if (event.getFile().getId().equals(activeFile.getId()))
       {
          setEnabled(false);

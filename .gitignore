@@ -40,6 +40,11 @@
 /exo-ide-client/git
 /exo-ide-client/tomcat
 
+# /exo-ide-collabeditor
+/exo-ide-collabeditor/war
+/exo-ide-collabeditor/tomcat
+/exo-ide-collabeditor/gwt-unitCache
+/exo-ide-collabeditor/.gwt-tmp
 
 /**/.gwt
 

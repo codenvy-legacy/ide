@@ -18,18 +18,16 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
@@ -42,7 +40,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.settings.Settings;
-import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
@@ -51,11 +48,10 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 
 /**
  * 
@@ -73,8 +69,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    private RestoreOpenedFilesPhase instance;
 
-   private HandlerManager eventBus;
-
    private ApplicationSettings applicationSettings;
 
    private List<String> filesToLoad;
@@ -82,8 +76,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
    private FileModel fileToLoad;
-
-   private Map<String, String> defaultEditors;
 
    private List<String> filesToOpen;
 
@@ -103,9 +95,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    private String initialActiveFile;
    
 
-   public RestoreOpenedFilesPhase(HandlerManager eventBus, ApplicationSettings applicationSettings, String initialOpenedProject, List<String> initialOpenedFiles, String initialActiveFile)
+   public RestoreOpenedFilesPhase(ApplicationSettings applicationSettings, String initialOpenedProject, List<String> initialOpenedFiles, String initialActiveFile)
    {
-      this.eventBus = eventBus;
       this.applicationSettings = applicationSettings;
       
       this.initialOpenedProject = initialOpenedProject;
@@ -116,8 +107,8 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       // TODO eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
-      eventBus.addHandler(ExceptionThrownEvent.TYPE, this);
-      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ExceptionThrownEvent.TYPE, this);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
 
       rememberFilesToBeRestored();
       isLoadingOpenedFiles = false;
@@ -211,15 +202,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       
       activeFileURL = applicationSettings.getValueAsString(Settings.ACTIVE_FILE);
       activeFileURL = initialActiveFile;
-
-      if (!applicationSettings.containsKey(Settings.DEFAULT_EDITORS))
-      {
-         applicationSettings.setValue(Settings.DEFAULT_EDITORS, new LinkedHashMap<String, String>(), Store.SERVER);
-      }
-
-      defaultEditors = new LinkedHashMap<String, String>();
-      defaultEditors.putAll(applicationSettings.getValueAsMap(Settings.DEFAULT_EDITORS));
-
    }
 
    protected void lazyRestoreOpenedFiles()
@@ -274,14 +256,14 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
                            @Override
                            protected void onFailure(Throwable exception)
                            {
-                              eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                              IDE.fireEvent(new ExceptionThrownEvent(exception));
                               preloadNextFile();
                            }
                         });
                   }
                   catch (RequestException e)
                   {
-                     eventBus.fireEvent(new ExceptionThrownEvent(e));
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
                   }
                }
 
@@ -289,19 +271,19 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
    private void openFilesInEditor()
    {
-      eventBus.fireEvent(new EnableStandartErrorsHandlingEvent());
+      IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
 
       isRestoringOpenedFiles = true;
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
       openNextFileInEditor();
    }
-
+   
    private void openNextFileInEditor()
    {
       if (filesToOpen.size() == 0)
@@ -325,16 +307,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
       FileModel file = openedFiles.get(fileURL);
       file.setProject(restoredProject);
-      try
-      {
-         String editorDescription = defaultEditors.get(file.getMimeType());
-         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), editorDescription);
-         eventBus.fireEvent(new EditorOpenFileEvent(file, producer));
-      }
-      catch (EditorNotFoundException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+      IDE.fireEvent(new EditorOpenFileEvent(file));
    }
 
    private FileModel getFileByPath(String path) {
@@ -382,7 +355,7 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       {
          FileModel file = getFileByPath(initialActiveFile);
          if (file != null) {
-            eventBus.fireEvent(new EditorChangeActiveFileEvent(file));
+            IDE.fireEvent(new EditorChangeActiveFileEvent(file));
          }         
       }
       

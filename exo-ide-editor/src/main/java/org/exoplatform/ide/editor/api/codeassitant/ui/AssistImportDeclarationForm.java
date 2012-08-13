@@ -58,7 +58,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
  * @version $Id: Nov 19, 2010 4:12:46 PM evgen $
  * 
  */
-public class AssistImportDeclarationForm extends Composite implements ResizeHandler
+public class AssistImportDeclarationForm extends Composite implements ResizeHandler, Event.NativePreviewHandler
 {
 
    private static final String ID = "ideAssistImportDeclarationForm";
@@ -75,11 +75,9 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
    private MousHandler mousHandler;
 
-   private AssistImportDeclarationHandler handler;
+   private ImportDeclarationSelectedHandler handler;
 
    private TokenWidget selectedWidget;
-
-   private CodeAssistantFormKeyboardManager keyboardManager;
 
    private HandlerRegistration keyboardManagerRegistration;
 
@@ -88,7 +86,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
    private HandlerRegistration resizeHandler;
 
    public AssistImportDeclarationForm(int left, int top, List<Token> items, TokenWidgetFactory factory,
-      AssistImportDeclarationHandler handler)
+      ImportDeclarationSelectedHandler handler)
    {
       absolutePanel = new AbsolutePanel();
 
@@ -115,8 +113,7 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
       scrollPanel = new CodeAssitantScrollPanel();
 
-      keyboardManager = new CodeAssistantFormKeyboardManager();
-      keyboardManagerRegistration = Event.addNativePreviewHandler(keyboardManager);
+      keyboardManagerRegistration = Event.addNativePreviewHandler(this);
 
       resizeHandler = Window.addResizeHandler(this);
 
@@ -183,20 +180,21 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
    private void cancelAssistant()
    {
-      removeHandlers();
-      handler.onImportCancel();
       lockLayer.removeFromParent();
+      handler.onImportCanceled();
    }
 
    private void tokenSelected()
    {
-      removeHandlers();
-      handler.onImportTokenSelected(selectedWidget.getToken());
       lockLayer.removeFromParent();
+      handler.onImportDeclarationSelected(selectedWidget.getToken());
    }
-
-   private void removeHandlers()
+   
+   @Override
+   protected void onDetach()
    {
+      super.onDetach();
+
       if (keyboardManagerRegistration != null)
       {
          keyboardManagerRegistration.removeHandler();
@@ -314,47 +312,43 @@ public class AssistImportDeclarationForm extends Composite implements ResizeHand
 
    }
 
-   protected class CodeAssistantFormKeyboardManager implements Event.NativePreviewHandler
+   /**
+    * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
+    */
+   public void onPreviewNativeEvent(NativePreviewEvent event)
    {
+      NativeEvent nativeEvent = event.getNativeEvent();
 
-      /**
-       * @see com.google.gwt.user.client.Event.NativePreviewHandler#onPreviewNativeEvent(com.google.gwt.user.client.Event.NativePreviewEvent)
-       */
-      public void onPreviewNativeEvent(NativePreviewEvent event)
+      int type = event.getTypeInt();
+      int typeEvent = Event.ONKEYDOWN;
+      if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX))
       {
-         NativeEvent nativeEvent = event.getNativeEvent();
+         typeEvent = Event.ONKEYPRESS;
+      }
 
-         int type = event.getTypeInt();
-         int typeEvent = Event.ONKEYDOWN;
-         if (BrowserResolver.CURRENT_BROWSER.equals(Browser.FIREFOX))
+      if (type == typeEvent)
+      {
+         switch (nativeEvent.getKeyCode())
          {
-            typeEvent = Event.ONKEYPRESS;
-         }
+            case KeyCodes.KEY_DOWN :
+               keyPressDown();
+               break;
 
-         if (type == typeEvent)
-         {
-            switch (nativeEvent.getKeyCode())
-            {
-               case KeyCodes.KEY_DOWN :
-                  keyPressDown();
-                  break;
+            case KeyCodes.KEY_UP :
+               keyPressUP();
+               break;
 
-               case KeyCodes.KEY_UP :
-                  keyPressUP();
-                  break;
+            case KeyCodes.KEY_ENTER :
+               tokenSelected();
+               break;
 
-               case KeyCodes.KEY_ENTER :
-                  tokenSelected();
-                  break;
+            case KeyCodes.KEY_ESCAPE :
+               cancelAssistant();
+               break;
 
-               case KeyCodes.KEY_ESCAPE :
-                  cancelAssistant();
-                  break;
-
-            }
          }
       }
-   }
+   }   
 
    /**
     * @see com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google.gwt.event.logical.shared.ResizeEvent)

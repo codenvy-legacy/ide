@@ -18,10 +18,8 @@
  */
 package org.eclipse.jdt.client.outline;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
@@ -39,9 +37,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
-import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
-import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineHandler;
+import org.exoplatform.ide.client.framework.outline.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ShowOutlineEvent;
+import org.exoplatform.ide.client.framework.outline.ShowOutlineHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
@@ -52,8 +50,10 @@ import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Presenter for Java Outline View.

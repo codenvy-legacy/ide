@@ -19,6 +19,28 @@
 
 package org.exoplatform.ide.client.operation.openbyurl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,30 +53,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Presenter for opening file by URL.
@@ -247,7 +245,8 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
          @Override
          protected void onSuccess(FileModel result)
          {
-            openFileInEditor(result);
+            IDE.fireEvent(new EditorOpenFileEvent(result));
+            IDE.getInstance().closeView(display.asView().getId());
          }
 
          @Override
@@ -272,26 +271,6 @@ public class OpenFileByURLPresenter implements OpenFileByURLHandler, ViewClosedH
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Opens file in editor.
-    * 
-    * @param file file to be opened in editor.
-    */
-   private void openFileInEditor(FileModel file)
-   {
-      try
-      {
-         EditorProducer editorProducer = IDE.getInstance().getEditor(file.getMimeType());
-         IDE.fireEvent(new EditorOpenFileEvent(file, editorProducer));
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getMimeType()));
       }
    }
 

@@ -18,15 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import com.google.gwt.core.client.Scheduler;
-
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.KeyCodes;
-
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
@@ -49,10 +45,10 @@ import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.problem.Problem;
-import org.exoplatform.ide.editor.problem.ProblemClickEvent;
-import org.exoplatform.ide.editor.problem.ProblemClickHandler;
+import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
@@ -71,7 +67,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    ShowQuickFixHandler, UpdateOutlineHandler, ProposalSelectedHandler, EditorHotKeyPressedHandler, ProblemClickHandler
 {
 
-   private CodeMirror editor;
+   private Editor editor;
 
    private CompilationUnit compilationUnit;
 
@@ -124,10 +120,10 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
       if (event.getFile() == null)
          return;
 
-      if (event.getEditor() instanceof CodeMirror)
+      if (event.getEditor() instanceof Markable)
       {
-         editor = (CodeMirror)event.getEditor();
-         problemClickHandler = editor.addProblemClickHandler(this);
+         editor = event.getEditor();
+         problemClickHandler = ((Markable)editor).addProblemClickHandler(this);
          file = event.getFile();
       }
    }
@@ -230,7 +226,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
       if (newOffset != currOffset)
       {
          int row = document.getLineOfOffset(newOffset) + 1;
-         editor.goToPosition(row, newOffset - document.getLineOffset(row - 1) + 1);
+         editor.setCursorPosition(row, newOffset - document.getLineOffset(row - 1) + 1);
          currOffset = newOffset;
 
       }
@@ -248,8 +244,8 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
             ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
             if (display == null)
             {
-               int posX = editor.getCursorOffsetX() + 8;
-               int posY = editor.getCursorOffsetY() + 22;
+               int posX = editor.getCursorOffsetLeft() + 2;
+               int posY = editor.getCursorOffsetTop() + 15;
                keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, QuickFixPresenter.this);
                display = new CodeAssitantForm(posX, posY, proposals, QuickFixPresenter.this);
             }
@@ -475,14 +471,14 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
             break;
 
          case KeyCodes.KEY_RIGHT :
-            if (editor.getCursorCol() + 1 > editor.getLineText(editor.getCursorRow()).length())
+            if (editor.getCursorColumn() + 1 > editor.getLineText(editor.getCursorRow()).length())
                display.cancelCodeAssistant();
             else
                generateNewProposals();
             break;
 
          case KeyCodes.KEY_LEFT :
-            if (editor.getCursorCol() - 1 <= 0)
+            if (editor.getCursorColumn() - 1 <= 0)
                display.cancelCodeAssistant();
             else
                generateNewProposals();
@@ -509,7 +505,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    public void onProblemClick(ProblemClickEvent event)
    {
       List<IProblem> problems = new ArrayList<IProblem>();
-      for (Problem p : event.getProblems())
+      for (Marker p : event.getProblems())
       {
          if (p instanceof ProblemImpl)
          {

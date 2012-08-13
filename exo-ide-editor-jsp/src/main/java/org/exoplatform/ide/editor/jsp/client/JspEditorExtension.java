@@ -27,7 +27,9 @@ import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -35,8 +37,9 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaTokenWidgetFactory;
@@ -93,29 +96,59 @@ public class JspEditorExtension extends Extension implements InitializeServicesH
       else
          service = JavaCodeAssistantService.get();
 
-      factory =
-         new JavaTokenWidgetFactory(event.getApplicationConfiguration().getContext()
-            + "/ide/code-assistant/java/class-doc?fqn=");
+      String context = event.getApplicationConfiguration().getContext() + "/ide/code-assistant/java/class-doc?fqn=";
+      factory = new JavaTokenWidgetFactory(context);
       jspCodeAssistant = new JspCodeAssistant(service, factory, this);
 
-      IDE.getInstance()
-         .addEditor(
-            new CodeMirrorProducer(
-               MimeType.APPLICATION_JSP,
-               "CodeMirror JSP file editor",
-               "jsp",
-               Images.INSTANCE.jsp(),
-               true,
-               new CodeMirrorConfiguration()
-                  .setGenericParsers(
-                     "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']")
-                  .setGenericStyles(
-                     "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
-                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
-                        + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setParser(new JspParser())
-                  .setCanBeOutlined(true).setAutocompleteHelper(new JspAutocompleteHelper())
-                  .setCodeAssistant(jspCodeAssistant).setCodeValidator(new JspCodeValidator())
-                  .setCanHaveSeveralMimeTypes(true)));
+      IDE.getInstance().getFileTypeRegistry().addFileType(
+         new FileType(MimeType.APPLICATION_JSP, "jsp", Images.INSTANCE.jsp()),
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.APPLICATION_JSP, new CodeMirrorConfiguration()
+               .setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']")
+               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH+ "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"+ CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+               .setParser(new JspParser())
+               .setCanBeOutlined(true)
+               .setAutocompleteHelper(new JspAutocompleteHelper())
+               .setCodeAssistant(jspCodeAssistant)
+               .setCodeValidator(new JspCodeValidator())
+               .setCanHaveSeveralMimeTypes(true));
+            }
+         });
+      
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JSP, "CodeMirror JSP file editor", "jsp",
+//         new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH+ "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"+ CodeMirrorConfiguration.PATH + "css/javacolors.css']")
+//            .setParser(new JspParser())
+//            .setCanBeOutlined(true)
+//            .setAutocompleteHelper(new JspAutocompleteHelper())
+//            .setCodeAssistant(jspCodeAssistant)
+//            .setCodeValidator(new JspCodeValidator())
+//            .setCanHaveSeveralMimeTypes(true)
+//      ));
+      
+//      IDE.getInstance()
+//         .addEditor(
+//            new CodeMirrorProducer(
+//               MimeType.APPLICATION_JSP,
+//               "CodeMirror JSP file editor",
+//               "jsp",
+//               Images.INSTANCE.jsp(),
+//               true,
+//               new CodeMirrorConfiguration()
+//                  .setGenericParsers(
+//                     "['parsejsp.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'tokenizejava.js', 'parsejava.js', 'parsejspmixed.js']")
+//                  .setGenericStyles(
+//                     "['" + CodeMirrorConfiguration.PATH + "css/jspcolors.css', '" + CodeMirrorConfiguration.PATH
+//                        + "css/jscolors.css', '" + CodeMirrorConfiguration.PATH + "css/csscolors.css', '"
+//                        + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setParser(new JspParser())
+//                  .setCanBeOutlined(true).setAutocompleteHelper(new JspAutocompleteHelper())
+//                  .setCodeAssistant(jspCodeAssistant).setCodeValidator(new JspCodeValidator())
+//                  .setCanHaveSeveralMimeTypes(true)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.APPLICATION_JSP, new HtmlOutlineItemCreator());
    }

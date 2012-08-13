@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+
+@sprite .warning-mark
+{
+  gwt-image: "markWarning";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: scroll;
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  cursor: pointer;
+  width: 14px;
+  height: editorLineHeight;
+  position: absolute;
+}
+
+@sprite .mark-error
+{
+  gwt-image: "markError";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: scroll;
+  cursor: pointer;
+  width: 14px;
+  height: editorLineHeight;
+  position: absolute;
+}

@@ -48,16 +48,17 @@ import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.compiler.flow.UnconditionalFlowInfo.AssertionFailedException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateProposal;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -80,7 +81,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    private FileModel currentFile;
 
-   private CodeMirror currentEditor;
+   private Editor currentEditor;
 
    private int completionPosition;
 
@@ -112,7 +113,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
       if (!resolver.isProjectSupported(currentFile.getProject().getProjectType()))
          return;
-      
+
       IDE.fireEvent(new CancelParseEvent());
       GWT.runAsync(new RunAsyncCallback()
       {
@@ -148,8 +149,8 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       try
       {
          completionPosition =
-            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1) + currentEditor.getCursorCol()
-               - 1;
+            currentEditor.getDocument().getLineOffset(currentEditor.getCursorRow() - 1)
+               + currentEditor.getCursorColumn() - 1;
       }
       catch (BadLocationException e1)
       {
@@ -302,9 +303,8 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
     */
    private void codecomplete()
    {
-
-      int posX = currentEditor.getCursorOffsetX() + 8;
-      int posY = currentEditor.getCursorOffsetY() + 22;
+      int posX = currentEditor.getCursorOffsetLeft() + 2;
+      int posY = currentEditor.getCursorOffsetTop() + 15;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
       display = new CodeAssitantForm(posX, posY, createProposals(false), this);
 
@@ -330,11 +330,18 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      currentFile = event.getFile();
-      if (event.getEditor() instanceof CodeMirror)
-         currentEditor = (CodeMirror)event.getEditor();
+      if (event.getFile() == null)
+         return;
+      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
+      {
+         currentFile = event.getFile();
+         currentEditor = event.getEditor();
+      }
       else
+      {
+         currentFile = null;
          currentEditor = null;
+      }
    }
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
@@ -360,7 +367,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
          }
          String string = document.get(0, replacementOffset + cursorPosition);
          String[] split = string.split("\n");
-         currentEditor.goToPosition(split.length, split[split.length - 1].length() + 1);
+         currentEditor.setCursorPosition(split.length, split[split.length - 1].length() + 1);
       }
       catch (Exception e)
       {
@@ -438,14 +445,14 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
             break;
 
          case KeyCodes.KEY_RIGHT :
-            if (currentEditor.getCursorCol() + 1 > currentEditor.getLineText(currentEditor.getCursorRow()).length())
+            if (currentEditor.getCursorColumn() + 1 > currentEditor.getLineText(currentEditor.getCursorRow()).length())
                display.cancelCodeAssistant();
             else
                generateNewProposals();
             break;
 
          case KeyCodes.KEY_LEFT :
-            if (currentEditor.getCursorCol() - 1 <= 0)
+            if (currentEditor.getCursorColumn() - 1 <= 0)
                display.cancelCodeAssistant();
             else
                generateNewProposals();

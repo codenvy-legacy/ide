@@ -18,23 +18,8 @@
  */
 package org.eclipse.jdt.client.outline;
 
-import com.google.gwt.user.client.Timer;
-
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.HasCloseHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
@@ -50,8 +35,22 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.text.BadLocationException;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -138,7 +137,7 @@ public class QuickOutlinePresenter implements ShowQuickOutlineHandler, UpdateOut
       if (!asts.containsKey(activeFileId))
          throw new UnsupportedOperationException("Can't find Compilationt unit");
       CompilationUnit unit = asts.get(activeFileId);
-      display = new QuickOutlineView(editor, unit);
+      display = new QuickOutlineView(editor.asWidget(), unit);
       bind();
       try
       {
@@ -258,7 +257,7 @@ public class QuickOutlinePresenter implements ShowQuickOutlineHandler, UpdateOut
       ASTNode node = display.getSingleSelectionModel().getSelectedObject();
       try
       {
-         editor.goToPosition(editor.getDocument().getLineOfOffset(node.getStartPosition()) + 1, 1);
+         editor.setCursorPosition(editor.getDocument().getLineOfOffset(node.getStartPosition()) + 1, 1);
       }
       catch (BadLocationException e)
       {

@@ -19,14 +19,14 @@
 package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
-import org.exoplatform.ide.editor.problem.Problem;
+import org.exoplatform.ide.editor.marking.Marker;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:04:46 AM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
-public class ProblemImpl implements Problem
+public class ProblemImpl implements Marker
 {
 
    private IProblem problem;

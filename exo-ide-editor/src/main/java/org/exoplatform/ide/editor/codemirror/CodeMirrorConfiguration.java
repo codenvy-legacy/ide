@@ -30,16 +30,21 @@ import com.google.gwt.core.client.GWT;
  */
 public class CodeMirrorConfiguration
 {
+   
+   public static final String CODEMIRROR_DIRECTORY = "codemirror-0.94";
+
+   public static final String CODEMIRROR_START_PAGE = CODEMIRROR_DIRECTORY + "/codemirror.html";
+
+   public final static String PATH = GWT.getModuleBaseURL() + CODEMIRROR_DIRECTORY + "/";
+
+   private String jsDirectory = PATH + "js/";   
+
    private boolean isTextWrapping = false;
 
    /**
     * 0 to turn off continuous scanning, or value like 100 in millisec as scanning period
     */
    private int continuousScanning = 0;
-
-   public final static String PATH = GWT.getModuleBaseURL() + "codemirror/";
-
-   private String jsDirectory = CodeMirrorConfiguration.PATH + "js/";
 
    private String codeParsers;
 
@@ -69,7 +74,7 @@ public class CodeMirrorConfiguration
       this.codeParsers = "['parsexml.js']";
       this.codeStyles = "['" + PATH + "css/xmlcolors.css']";
    }
-
+   
    public String getCodeParsers()
    {
       return codeParsers;

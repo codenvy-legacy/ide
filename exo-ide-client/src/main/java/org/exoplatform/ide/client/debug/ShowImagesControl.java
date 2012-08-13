@@ -27,8 +27,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
-import com.google.gwt.event.shared.HandlerManager;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -41,19 +39,16 @@ public class ShowImagesControl extends SimpleControl implements IDEControl, View
 
    public static final String ID = "Help/Debug/Show Images";
 
-   public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.showImagesControl();
-
-   public static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.showImagesControl();
-
    public ShowImagesControl()
    {
       super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
+      setTitle("Show Images");
+      setPrompt("Show Images");
       // setImages(IDEImageBundle.INSTANCE., IDEImageBundle.INSTANCE.propertiesDisabled());
       setEvent(new ShowImagesEvent());
       setVisible(true);
       setEnabled(true);
+      setGroupName("Debug");
    }
 
    public void initialize()

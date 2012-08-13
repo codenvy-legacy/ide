@@ -24,11 +24,9 @@ import java.util.List;
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.editor.api.EditorProducer;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -42,38 +40,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public abstract class IDE
 {
-   // public static final HandlerManager EVENT_BUS = new HandlerManager(null);
-   private static HandlerManager eventBus = new SafeHandlerManager();
-
-   private static List<Extension> extensions = new ArrayList<Extension>();
 
    private static IDE instance;
-
-   public static <H extends EventHandler> HandlerRegistration addHandler(GwtEvent.Type<H> type, final H handler)
-   {
-      return eventBus.addHandler(type, handler);
-   }
-
-   public static <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type, final H handler)
-   {
-      eventBus.removeHandler(type, handler);
-   }
-
-   public static void fireEvent(GwtEvent<?> event)
-   {
-      eventBus.fireEvent(event);
-   }
-
-   public static HandlerManager eventBus()
-   {
-      return eventBus;
-   }
-
-   protected IDE()
-   {
-      instance = this;
-   }
-
+   
+   private static List<Extension> extensions = new ArrayList<Extension>();
+   
+   private static HandlerManager eventBus = new SafeHandlerManager();
+   
    /**
     * @return the instance
     */
@@ -81,17 +54,72 @@ public abstract class IDE
    {
       return instance;
    }
+   
+   /**
+    * Get list of registered extensions.
+    * 
+    * @return list of registered extensions
+    */
+   public static List<Extension> getExtensions()
+   {
+      return extensions;
+   }
 
    public static void registerExtension(Extension extension)
    {
       extensions.add(extension);
    }
 
-   public static List<Extension> extensions()
+   protected IDE()
    {
-      return extensions;
+      instance = this;
+   }
+   
+   /**
+    * Returns EventBus.
+    * 
+    * @return EventBus.
+    */
+   public static HandlerManager eventBus()
+   {
+      return eventBus;
+   }
+   
+   /**
+    * Add handler to EventBus.
+    * 
+    * @param type
+    * @param handler
+    * @return
+    */
+   public static <H extends EventHandler> HandlerRegistration addHandler(GwtEvent.Type<H> type, final H handler)
+   {
+      return eventBus.addHandler(type, handler);
    }
 
+   /**
+    * Remove handler from EventBus.
+    * 
+    * @param type
+    * @param handler
+    */
+   public static <H extends EventHandler> void removeHandler(GwtEvent.Type<H> type, final H handler)
+   {
+      eventBus.removeHandler(type, handler);
+   }
+
+   /**
+    * Fire event to EventBus.
+    * 
+    * @param event
+    */
+   public static void fireEvent(GwtEvent<?> event)
+   {
+      eventBus.fireEvent(event);
+   }
+   
+   
+   
    /**
     * Add control to main menu/tool bar or status bar
     * 
@@ -120,7 +148,7 @@ public abstract class IDE
     * @return
     */
    public abstract List<Control> getControls();
-
+   
    /**
     * Open {@link View}
     * 
@@ -129,28 +157,39 @@ public abstract class IDE
    public abstract void openView(View view);
 
    /**
-    * Close view
+    * Close {@link View}
     * 
     * @param viewId ID of view
     */
    public abstract void closeView(String viewId);
 
-   /**
-    * Add new editor extension
-    * 
-    * @param editorProducer
-    */
-   public abstract void addEditor(EditorProducer editorProducer);
+   
+   
+   
+//   /**
+//    * Add new editor.
+//    * 
+//    * @param editor
+//    */
+//   public abstract void addEditor(Editor editor);
+//
+//   /**
+//    * Returns array of EditorBuilder for mimeType
+//    * 
+//    * @param mimeType of file
+//    * @return {@link EditorBuilder} for mimeType
+//    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+//    */
+//   public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
 
    /**
-    * Get EditorProducer for mimeType
+    * Returns FileTypeRegistry. 
     * 
-    * @param mimeType of file
-    * @return {@link EditorProducer} for mimeType
-    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+    * @return
     */
-   public abstract EditorProducer getEditor(String mimeType) throws EditorNotFoundException;
-
+   public abstract FileTypeRegistry getFileTypeRegistry();
+   
+   
    /**
     * Add new outline item creator extension
     * 
@@ -165,7 +204,7 @@ public abstract class IDE
     * @return {@link OutlineItemCreator} for mimeType
     */
    public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
-
+   
    /**
     * Get the list of registered paases.
     * 

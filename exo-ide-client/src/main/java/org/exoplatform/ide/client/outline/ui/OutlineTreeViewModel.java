@@ -18,29 +18,23 @@
  */
 package org.exoplatform.ide.client.outline.ui;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
+import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.TreeViewModel;
-
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
-import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>

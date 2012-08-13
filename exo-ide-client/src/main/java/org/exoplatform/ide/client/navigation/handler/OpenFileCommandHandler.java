@@ -35,16 +35,12 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.http.client.RequestException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
@@ -54,18 +50,15 @@ import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.FileOpenedEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.OpenFileHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Handlers events for opening files.
@@ -73,13 +66,8 @@ import java.util.Map;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler
+public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpenedHandler, EditorFileClosedHandler
 {
-
-   private String selectedEditor;
-
-   private ApplicationSettings applicationSettings;
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
@@ -87,7 +75,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
 
    public OpenFileCommandHandler()
    {
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(OpenFileEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
@@ -98,8 +85,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
     */
    public void onOpenFile(OpenFileEvent event)
    {
-      selectedEditor = event.getEditor();
-
       cursorPosition = event.getCursorPosition();
 
       FileModel file = event.getFile();
@@ -186,33 +171,7 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    private void openFile(FileModel file)
    {
       fileToOpen = file;
-      
-      try
-      {
-         if (selectedEditor == null)
-         {
-            Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-            if (defaultEditors != null)
-            {
-               selectedEditor = defaultEditors.get(file.getMimeType());
-            }
-         }
-
-         EditorProducer producer = EditorFactory.getEditorProducer(file.getMimeType(), selectedEditor);
-         if (cursorPosition != null)
-         {
-            IDE.fireEvent(new EditorOpenFileEvent(file, producer, cursorPosition));
-         }
-         else
-         {
-            IDE.fireEvent(new EditorOpenFileEvent(file, producer));
-         }
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            IDE.IDE_LOCALIZATION_MESSAGES.openFileCantFindEditorForType(file.getMimeType()));
-      }
+      IDE.fireEvent(new EditorOpenFileEvent(file, cursorPosition));
    }
 
    /**
@@ -242,14 +201,6 @@ public class OpenFileCommandHandler implements OpenFileHandler, EditorFileOpened
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
    }
 
 }
