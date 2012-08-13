@@ -46,7 +46,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * {@link MessageBroker} sends the result of call to the client after executing
  * of the called method.
  * Also {@link MessageBroker} implements a queue of messages that were sent with errors.
- * This messages must be resent on the next client conect.
+ * This messages must be resent on the next client connect.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MessageBroker.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
