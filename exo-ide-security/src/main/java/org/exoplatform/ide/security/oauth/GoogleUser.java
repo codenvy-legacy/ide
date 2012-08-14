@@ -34,7 +34,7 @@ public class GoogleUser extends User
 
    public void setEmail(String email)
    {
-      setUsername(email);
+      setUserId(email);
       this.email = email;
    }
 

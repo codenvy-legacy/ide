@@ -27,8 +27,6 @@
          <groupId>com.google.api-client</groupId>
          <artifactId>google-api-client</artifactId>
          <version>1.9.0-beta</version>
-         <!-- Set as provided. Use jarajr plugin because conflict guava. -->
-         <!--<scope>provided</scope>-->
       </dependency>
 
       <dependency>
