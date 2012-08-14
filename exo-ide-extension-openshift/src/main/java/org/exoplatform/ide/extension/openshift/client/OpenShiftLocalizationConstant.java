@@ -275,12 +275,21 @@ public interface OpenShiftLocalizationConstant extends Messages
    @Key("deleteApplicationSuccess")
    String deleteApplicationSuccess(String applicationName);
 
+   @Key("creatingApplication")
+   String creatingApplication();
+
+   @Key("creatingProject")
+   String creatingProject();
+
+   @Key("deployToOpenShift")
+   String deployToOpenShift();
+
    @Key("updatePublicKeySuccess")
    String updatePublicKeySuccess();
 
    @Key("updatePublicKeyFailed")
    String updatePublicKeyFailed();
-   
+
    @Key("pullSourceFailed")
    String pullSourceFailed();
 

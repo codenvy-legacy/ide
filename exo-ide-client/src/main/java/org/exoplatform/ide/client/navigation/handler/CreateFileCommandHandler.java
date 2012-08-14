@@ -18,13 +18,6 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
@@ -34,7 +27,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.model.template.FileTemplates;
+import org.exoplatform.ide.client.framework.template.FileTemplates;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -43,6 +36,13 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -98,7 +98,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          fileName = UNTITLED_FILE_NAME + " " + index + "." + extension;
          index++;
       }
-      
+
       FolderModel parent = new FolderModel();
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)

@@ -32,7 +32,10 @@ import com.google.gwt.resources.client.ImageResource;
 public interface HerokuClientBundle extends ClientBundle
 {
    HerokuClientBundle INSTANCE = GWT.<HerokuClientBundle> create(HerokuClientBundle.class);
-
+   
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_32.png")
+   ImageResource herokuLogo();
+   
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/ok.png")
    ImageResource okButton();
 

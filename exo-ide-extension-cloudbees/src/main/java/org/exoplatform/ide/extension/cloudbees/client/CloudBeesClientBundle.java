@@ -36,6 +36,9 @@ public interface CloudBeesClientBundle extends ClientBundle
    /*
     * Buttons
     */
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_36.png")
+   ImageResource cloudBeesLogo();
+   
    @Source("org/exoplatform/ide/extension/cloudbees/images/ok.png")
    ImageResource okButton();
 

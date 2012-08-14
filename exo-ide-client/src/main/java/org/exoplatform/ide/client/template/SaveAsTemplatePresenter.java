@@ -33,12 +33,12 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.template.FileTemplate;
+import org.exoplatform.ide.client.framework.template.TemplateAutoBeanFactory;
+import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.navigation.control.SaveFileAsTemplateControl;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.SaveFileAsTemplateHandler;
@@ -53,7 +53,7 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
  * @version $Id: $
  * 
  */
-public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler, TemplatesMigratedHandler,
+public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewClosedHandler,
    EditorActiveFileChangedHandler
 {
 
@@ -86,14 +86,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
 
    private Display display;
 
-   private Template templateToCreate;
-
    private FileModel activeFile;
-
-   /**
-    * Flag, to indicate, were templates moved from registry to plain text file on server.
-    */
-   private boolean isTemplatesMigrated = false;
 
    public SaveAsTemplatePresenter()
    {
@@ -102,7 +95,6 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       IDE.addHandler(SaveFileAsTemplateEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    public void bindDisplay(Display d)
@@ -163,26 +155,29 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
          description = display.getDescriptionField().getValue();
       }
 
-      templateToCreate = new FileTemplate(activeFile.getMimeType(), name, description, activeFile.getContent(), null);
-
+      FileTemplate fileTemplate = TemplateAutoBeanFactory.AUTO_BEAN_FACTORY.fileTemplate().as();
+      fileTemplate.setMimeType(activeFile.getMimeType());
+      fileTemplate.setName(name);
+      fileTemplate.setDescription(description);
+      fileTemplate.setContent(activeFile.getContent());
+      fileTemplate.setDefault(false);
       try
       {
-         TemplateServiceImpl.getInstance().addFileTemplate((FileTemplate)templateToCreate,
-            new AsyncRequestCallback<FileTemplate>()
+         TemplateServiceImpl.getInstance().addFileTemplate(fileTemplate, new AsyncRequestCallback<FileTemplate>()
+         {
+            @Override
+            protected void onSuccess(FileTemplate result)
             {
-               @Override
-               protected void onSuccess(FileTemplate result)
-               {
-                  closeView();
-                  Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
-               }
+               closeView();
+               Dialogs.getInstance().showInfo(TEMPLATE_CREATED);
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -201,21 +196,7 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
    @Override
    public void onSaveFileAsTemplate(SaveFileAsTemplateEvent event)
    {
-      if (isTemplatesMigrated)
-      {
-         openView();
-      }
-      else
-      {
-         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-         {
-            @Override
-            public void onTemplatesMigrated()
-            {
-               openView();
-            }
-         }));
-      }
+      openView();
    }
 
    private void openView()
@@ -248,15 +229,6 @@ public class SaveAsTemplatePresenter implements SaveFileAsTemplateHandler, ViewC
       {
          display = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
-    */
-   @Override
-   public void onTemplatesMigrated(TemplatesMigratedEvent event)
-   {
-      isTemplatesMigrated = true;
    }
 
    /**

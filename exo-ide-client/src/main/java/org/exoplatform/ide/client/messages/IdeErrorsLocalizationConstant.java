@@ -240,5 +240,8 @@ public interface IdeErrorsLocalizationConstant extends Constants
 
    @Key("configuration.receivedJsonValueNotAnObject")
    String configurationReceivedJsonValueNotAnObject();
-
+   
+   @Key("create.project.error.vfs.info.not.set")
+   String createProjectErrorVFSInfoNotSets();
+   
 }

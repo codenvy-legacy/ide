@@ -19,12 +19,15 @@
 package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.CloudFoundryControlGroup;
@@ -42,6 +45,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationP
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
+
+import java.util.Arrays;
 
 /**
  * CloudFoundry extention for IDE.
@@ -81,6 +86,11 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void initialize()
    {
+      IDE.getInstance().registerPaaS(
+         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry()), Arrays
+            .asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING),
+            new org.exoplatform.ide.extension.cloudfoundry.client.deploy.recent.DeployApplicationPresenter()));
+
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new CloudFoundryControlGroup());

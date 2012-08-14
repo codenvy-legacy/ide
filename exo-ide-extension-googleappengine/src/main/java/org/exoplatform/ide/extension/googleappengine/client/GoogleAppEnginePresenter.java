@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -87,7 +87,7 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
     */
    protected boolean isAppEngineProject()
    {
-      return (currentProject != null && (ProjectResolver.APP_ENGINE_JAVA.equals(currentProject.getProjectType()) || ProjectResolver.APP_ENGINE_PYTHON
-         .equals(currentProject.getProjectType())));
+      return (currentProject != null && (ProjectType.GAE_JAVA.value().equals(currentProject.getProjectType()) || ProjectType.GAE_PYTHON
+         .value().equals(currentProject.getProjectType())));
    }
 }

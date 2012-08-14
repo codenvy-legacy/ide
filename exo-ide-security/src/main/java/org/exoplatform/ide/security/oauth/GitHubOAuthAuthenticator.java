@@ -35,8 +35,10 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Collections;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -48,10 +50,7 @@ import java.util.List;
  */
 public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   private static final List<String> SCOPE = Collections.singletonList("user,repo,delete_repo");
-
-//   private final String GITHUB_ACCESS_TOKEN_URI = "https://github.com/login/oauth/access_token";
-//   private final String GITHUB_AUTHORIZE_SERVICE = "https://github.com/login/oauth/authorize";
+   private static final List<String> SCOPE = Arrays.asList("user", "repo");
 
    public GitHubOAuthAuthenticator() throws IOException
    {
@@ -89,17 +88,46 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
    @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
+      HttpURLConnection urlConnection = null;
+      InputStream urlInputStream = null;
+
       try
       {
+         URL url = new URL("https://api.github.com/user?access_token=" + accessToken);
+         urlConnection = (HttpURLConnection)url.openConnection();
+         urlInputStream = urlConnection.getInputStream();
+
          JsonParser parser = new JsonParser();
-         String body = null;
-         parser.parse(new StringReader(body));
+         parser.parse(urlInputStream);
          JsonValue jsonValue = parser.getJsonObject();
+
          return ObjectBuilder.createObject(GitHubUser.class, jsonValue);
       }
       catch (JsonException e)
       {
          throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      finally
+      {
+         if (urlInputStream != null)
+         {
+            try
+            {
+               urlInputStream.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+
+         if (urlConnection != null)
+         {
+            urlConnection.disconnect();
+         }
       }
    }
 
