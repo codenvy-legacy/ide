@@ -30,7 +30,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: IDEAutoBeanFactory.java Mar 27, 2012 9:57:25 AM azatsarynnyy $
- *
+ * 
  */
 public interface IDEAutoBeanFactory extends AutoBeanFactory
 {

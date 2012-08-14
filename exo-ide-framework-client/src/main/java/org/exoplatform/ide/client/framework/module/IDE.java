@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
 import org.exoplatform.ide.client.framework.ui.api.View;
 
 import com.google.gwt.event.shared.EventHandler;
@@ -42,11 +43,11 @@ public abstract class IDE
 {
 
    private static IDE instance;
-   
+
    private static List<Extension> extensions = new ArrayList<Extension>();
-   
+
    private static HandlerManager eventBus = new SafeHandlerManager();
-   
+
    /**
     * @return the instance
     */
@@ -54,7 +55,7 @@ public abstract class IDE
    {
       return instance;
    }
-   
+
    /**
     * Get list of registered extensions.
     * 
@@ -74,7 +75,7 @@ public abstract class IDE
    {
       instance = this;
    }
-   
+
    /**
     * Returns EventBus.
     * 
@@ -84,7 +85,7 @@ public abstract class IDE
    {
       return eventBus;
    }
-   
+
    /**
     * Add handler to EventBus.
     * 
@@ -117,9 +118,7 @@ public abstract class IDE
    {
       eventBus.fireEvent(event);
    }
-   
-   
-   
+
    /**
     * Add control to main menu/tool bar or status bar
     * 
@@ -148,7 +147,7 @@ public abstract class IDE
     * @return
     */
    public abstract List<Control> getControls();
-   
+
    /**
     * Open {@link View}
     * 
@@ -163,33 +162,29 @@ public abstract class IDE
     */
    public abstract void closeView(String viewId);
 
-   
-   
-   
-//   /**
-//    * Add new editor.
-//    * 
-//    * @param editor
-//    */
-//   public abstract void addEditor(Editor editor);
-//
-//   /**
-//    * Returns array of EditorBuilder for mimeType
-//    * 
-//    * @param mimeType of file
-//    * @return {@link EditorBuilder} for mimeType
-//    * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
-//    */
-//   public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
+   // /**
+   // * Add new editor.
+   // *
+   // * @param editor
+   // */
+   // public abstract void addEditor(Editor editor);
+   //
+   // /**
+   // * Returns array of EditorBuilder for mimeType
+   // *
+   // * @param mimeType of file
+   // * @return {@link EditorBuilder} for mimeType
+   // * @throws EditorNotFoundException if {@link EditorProducer} not found for mimeType
+   // */
+   // public abstract Editor[] getEditors(String mimeType) throws EditorNotFoundException;
 
    /**
-    * Returns FileTypeRegistry. 
+    * Returns FileTypeRegistry.
     * 
     * @return
     */
    public abstract FileTypeRegistry getFileTypeRegistry();
-   
-   
+
    /**
     * Add new outline item creator extension
     * 
@@ -204,12 +199,13 @@ public abstract class IDE
     * @return {@link OutlineItemCreator} for mimeType
     */
    public abstract OutlineItemCreator getOutlineItemCreator(String mimeType);
-   
+
    /**
     * Get the list of registered paases.
     * 
     * @return
     */
+   @Deprecated
    public abstract List<Paas> getPaases();
 
    /**
@@ -217,6 +213,10 @@ public abstract class IDE
     * 
     * @param paas
     */
+   @Deprecated
    public abstract void addPaas(Paas paas);
 
+   public abstract List<PaaS> getPaaSes();
+
+   public abstract void registerPaaS(PaaS paas);
 }

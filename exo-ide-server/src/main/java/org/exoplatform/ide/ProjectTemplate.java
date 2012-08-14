@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide;
 
+import java.util.List;
+
 /**
  * Project template.
  * 
@@ -27,8 +29,9 @@ package org.exoplatform.ide;
  */
 public class ProjectTemplate extends FolderTemplate
 {
-
    private String type;
+
+   private List<String> targets;
 
    /**
     * @param type the type to set
@@ -46,4 +49,19 @@ public class ProjectTemplate extends FolderTemplate
       return type;
    }
 
+   /**
+    * @return the destination
+    */
+   public List<String> getTargets()
+   {
+      return targets;
+   }
+
+   /**
+    * @param destination the destination to set
+    */
+   public void setDestination(List<String> targets)
+   {
+      this.targets = targets;
+   }
 }

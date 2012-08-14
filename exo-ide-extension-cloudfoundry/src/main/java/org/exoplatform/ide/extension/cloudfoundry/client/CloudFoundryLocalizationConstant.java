@@ -359,6 +359,9 @@ public interface CloudFoundryLocalizationConstant extends Messages
    @Key("application.not.found")
    String applicationNotFound();
 
+   @Key("creatingProject")
+   String creatingProject();
+
    /*
     * DeployApplicationPresenter
     */

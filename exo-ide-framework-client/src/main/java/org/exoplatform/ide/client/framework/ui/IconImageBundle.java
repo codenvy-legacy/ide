@@ -42,6 +42,12 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/java-project.png")
    ImageResource javaProject();
 
+   @Source("org/exoplatform/ide/client/bundled-images/projects/template_36.png")
+   ImageResource template();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/jsp.png")
+   ImageResource jspProject();
+
    @Source("org/exoplatform/ide/client/bundled-images/projects/gae_java.png")
    ImageResource gaeJavaProject();
 
@@ -68,4 +74,17 @@ public interface IconImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
+
+   /* Languages */
+   @Source("org/exoplatform/ide/client/bundled-images/projects/java_type.png")
+   ImageResource javaType();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/python_type.png")
+   ImageResource pythonType();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/ruby_type.png")
+   ImageResource rubyType();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/php_type.png")
+   ImageResource phpType();
 }

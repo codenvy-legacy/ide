@@ -23,6 +23,10 @@
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.recent.DeployApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.recent.DeployApplicationPresenter.Display" />
+   </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView">
       <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display" />

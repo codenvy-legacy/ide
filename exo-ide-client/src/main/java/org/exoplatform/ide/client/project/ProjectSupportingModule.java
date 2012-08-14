@@ -18,20 +18,17 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
+import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.template.marshal.TemplateListUnmarshaller;
-import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
@@ -44,11 +41,6 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -67,24 +59,25 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       IDE.getInstance().addControl(new NewProjectMenuGroup());
       IDE.getInstance().addControl(new ProjectPaaSControl());
 
-      new CreateProjectPresenter();
+   //   new CreateProjectPresenter();
+      new org.exoplatform.ide.client.project.create.recent.CreateProjectPresenter();
 
       new DeployProjectToPaasPresenter();
 
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
-//      new ProjectExplorerPresenter();
-      
+      // new ProjectExplorerPresenter();
+
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
-      IDE.getInstance().addControl(new CloseProjectControl());      
+      IDE.getInstance().addControl(new CloseProjectControl());
 
       new CreateEmptyProjectPresenter();
 
       new ProjectPropertiesPresenter();
 
       new ProjectCreatedEventHandler();
-      
+
       new OpenResourcePresenter();
 
       IDE.getInstance().addControlsFormatter(new ProjectMenuItemFormatter());
@@ -105,103 +98,9 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       }
    }
 
-   private void moveTemplatesFromRegistryToPlainText()
-   {
-      try
-      {
-         TemplateService.getInstance().getTemplates(
-            new AsyncRequestCallback<List<Template>>(new TemplateListUnmarshaller(new ArrayList<Template>()))
-            {
-               @Override
-               protected void onSuccess(List<Template> result)
-               {
-                  if (result.size() == 0)
-                  {
-                     IDE.fireEvent(new TemplatesMigratedEvent());
-                     callback.onTemplatesMigrated();
-                  }
-                  else
-                  {
-                     saveTemplatesOnServer(result);
-                  }
-               }
+  
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void saveTemplatesOnServer(List<Template> templates)
-   {
-      if (templates.isEmpty())
-         return;
-
-      List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
-      final List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
-      for (Template template : templates)
-      {
-         template.setDefault(false);
-         if (template instanceof FileTemplate)
-         {
-            fileTemplates.add((FileTemplate)template);
-         }
-         else if (template instanceof ProjectTemplate)
-         {
-            projectTemplates.add((ProjectTemplate)template);
-         }
-      }
-
-      try
-      {
-         TemplateService.getInstance().addFileTemplateList(fileTemplates, new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               try
-               {
-                  TemplateService.getInstance().addProjectTemplateList(projectTemplates,
-                     new AsyncRequestCallback<String>()
-                     {
-                        @Override
-                        protected void onSuccess(String result)
-                        {
-                           deleteTemplatesFromRegistry();
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception)
-                        {
-                           IDE.fireEvent(new ExceptionThrownEvent(exception));
-                        }
-                     });
-               }
-               catch (RequestException e)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(e));
-               }
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+  
 
    protected void deleteTemplatesFromRegistry()
    {
@@ -239,6 +138,5 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    public void onMigrateTemplates(MigrateTemplatesEvent event)
    {
       this.callback = event.getTemplatesMigratedCallback();
-      moveTemplatesFromRegistryToPlainText();
    }
 }

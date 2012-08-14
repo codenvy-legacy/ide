@@ -40,11 +40,11 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   public static final String ID = "Project/New/Create Project...";
+   public static final String ID = "Project/New/Create Project(OLD)...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl() + "(OLD)";
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl();
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl() + "(OLD)";
 
    private VirtualFileSystemInfo vfsInfo;
 

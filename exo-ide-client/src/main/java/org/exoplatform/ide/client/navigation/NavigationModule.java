@@ -78,7 +78,6 @@ public class NavigationModule implements InitializeServicesHandler
       IDE.getInstance().addControl(new NewItemMenuGroup());
 
       IDE.getInstance().addControl(new CreateFileFromTemplateControl());
-      IDE.getInstance().addControl(new CreateProjectControl());
 
       new CreateFolderPresenter();
 

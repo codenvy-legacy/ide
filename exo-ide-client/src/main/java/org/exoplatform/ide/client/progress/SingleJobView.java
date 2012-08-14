@@ -44,13 +44,14 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
  * @version $
  */
 
-public class SingleJobView extends ViewImpl implements org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay
+public class SingleJobView extends ViewImpl implements
+   org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay
 {
-   
+
    public static final int DEFAULT_WIDTH = 500;
-   
+
    public static final int DEFAULT_HEIGHT = 120;
-   
+
    public static final String ID = "ide.modalJob.view";
 
    private static ModalJobViewUiBinder uiBinder = GWT.create(ModalJobViewUiBinder.class);
@@ -58,16 +59,16 @@ public class SingleJobView extends ViewImpl implements org.exoplatform.ide.clien
    interface ModalJobViewUiBinder extends UiBinder<Widget, SingleJobView>
    {
    }
-   
+
    @UiField
    FlowPanel jobPanel;
-   
+
    @UiField
    HTML jobInfo;
-   
+
    @UiField
    ImageButton hideButton;
-   
+
    private Job currentJob;
 
    public SingleJobView()
@@ -81,14 +82,16 @@ public class SingleJobView extends ViewImpl implements org.exoplatform.ide.clien
    public void setCurrentJob(Job job)
    {
       currentJob = job;
-      
-      if (job == null) {
+
+      if (job == null)
+      {
          return;
       }
-      
-      if (job.getStatus() == JobStatus.STARTED) {
-         String status =  job.getStartMessage();
-         status = status.substring(status.indexOf(": ") + 2);
+
+      if (job.getStatus() == JobStatus.STARTED)
+      {
+         String status = job.getStartMessage();
+         status = (status.indexOf(": ") != -1) ? status.substring(status.indexOf(": ") + 2) : status;
          status = ImageHelper.getImageHTML(IDEImageBundle.INSTANCE.asyncRequest()) + "&nbsp;&nbsp;&nbsp;" + status;
          jobInfo.setHTML(status);
       }

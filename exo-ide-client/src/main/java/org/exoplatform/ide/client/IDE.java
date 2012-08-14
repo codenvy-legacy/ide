@@ -49,6 +49,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
@@ -88,6 +89,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private ControlsRegistration controlsRegistration;
 
    private List<Paas> paasRegistration;
+
+   private List<PaaS> registeredPaaS;
 
    private IDEPresenter presenter;
 
@@ -318,25 +321,31 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       });
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getPaaSes()
+    */
+   @Override
+   public List<PaaS> getPaaSes()
+   {
+      if (registeredPaaS == null)
+      {
+         registeredPaaS = new ArrayList<PaaS>();
+      }
+      return registeredPaaS;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#registerPaaS(org.exoplatform.ide.client.framework.paas.recent.PaaS)
+    */
+   @Override
+   public void registerPaaS(PaaS paas)
+   {
+      getPaaSes().add(paas);
+   }
+
    @Override
    public FileTypeRegistry getFileTypeRegistry()
    {
       return fileTypeRegistry;
    }
-
-//   /**
-//    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
-//    */
-//   @Override
-//   public void addEditor(Editor editor)
-//   {
-//      EditorFactory.addEditor(editor);
-//   }
-//
-//   @Override
-//   public Editor[] getEditors(String mimeType) throws EditorNotFoundException
-//   {
-//      return EditorFactory.getEditors(mimeType);
-//   }
-
 }

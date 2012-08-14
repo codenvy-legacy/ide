@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.openshift.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.Credentials;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
@@ -100,7 +101,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#login(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -119,7 +120,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createDomain(java.lang.String, boolean,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -132,7 +133,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplication(java.lang.String,
     *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -143,11 +144,12 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       String url = restServiceContext + CREATE_APPLICATION;
 
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url + params, true).requestStatusHandler(new CreateRequestHandler(name))
+         .send(callback);
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#destroyApplication(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -162,7 +164,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getUserInfo(boolean,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -176,7 +178,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationInfo(java.lang.String,
     *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -193,7 +195,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    }
 
    /**
-    * @throws RequestException 
+    * @throws RequestException
     * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#getApplicationTypes(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override

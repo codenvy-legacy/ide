@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -39,39 +46,32 @@ import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.template.AbstractTemplate;
+import org.exoplatform.ide.client.framework.template.FileTemplate;
+import org.exoplatform.ide.client.framework.template.FileTemplateImpl;
+import org.exoplatform.ide.client.framework.template.FolderTemplate;
+import org.exoplatform.ide.client.framework.template.FolderTemplateImpl;
+import org.exoplatform.ide.client.framework.template.ProjectTemplateImpl;
+import org.exoplatform.ide.client.framework.template.Template;
+import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.template.marshal.FileTemplateListUnmarshaller;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.Template;
-import org.exoplatform.ide.client.model.template.TemplateService;
-import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
-import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
-import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Presenter for form "Create file from template"
@@ -81,7 +81,7 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHandler, ViewClosedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler
 {
 
    public interface Display extends IsView
@@ -184,7 +184,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
    private FolderModel baseFolder;
 
-   private List<ProjectTemplate> projectTemplates = new ArrayList<ProjectTemplate>();
+   private List<ProjectTemplateImpl> projectTemplates = new ArrayList<ProjectTemplateImpl>();
 
    protected List<FileTemplate> fileTemplates = new ArrayList<FileTemplate>();
 
@@ -192,8 +192,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     * The list of templates, that selected.
     */
    protected FileTemplate selectedTemplate;
-
-   private boolean isTemplatesMigrated = false;
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -204,7 +202,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
    }
 
    private void bindDisplay(String title, String submitButtonTitle)
@@ -221,7 +218,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             if (submitCallback != null)
             {
                FileTemplate fileTemplate =
-                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
+                  new FileTemplateImpl(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
                
                IDE.getInstance().closeView(display.asView().getId());
                
@@ -245,7 +242,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             if (submitCallback != null)
             {
                FileTemplate fileTemplate =
-                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
+                  new FileTemplateImpl(display.getSelectedTemplate().getName(), display.getFileNameField().getValue(),
                      display.getSelectedTemplate().getMimeType());
                
                IDE.getInstance().closeView(display.asView().getId());
@@ -358,22 +355,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    public void onCreateFileFromTemplate(final CreateFileFromTemplateEvent event)
    {
       submitCallback = event.getCallback();
-
-      if (isTemplatesMigrated)
-      {
-         createFileFromTemplate(event.getFormTitle(), event.getSubmitButtonTitle());
-      }
-      else
-      {
-         IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-         {
-            @Override
-            public void onTemplatesMigrated()
-            {
-               createFileFromTemplate(event.getFormTitle(), event.getSubmitButtonTitle());
-            }
-         }));
-      }
+      createFileFromTemplate(event.getFormTitle(), event.getSubmitButtonTitle());
    }
 
    /**
@@ -425,7 +407,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       }
    }
 
-   protected void prepareTemplateLists(List<Template> templates)
+   protected void prepareTemplateLists(List<AbstractTemplate> templates)
    {
       fileTemplates.clear();
       projectTemplates.clear();
@@ -436,9 +418,9 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          {
             fileTemplates.add((FileTemplate)template);
          }
-         else if (template instanceof ProjectTemplate)
+         else if (template instanceof ProjectTemplateImpl)
          {
-            projectTemplates.add((ProjectTemplate)template);
+            projectTemplates.add((ProjectTemplateImpl)template);
          }
       }
    }
@@ -552,7 +534,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          name = nameWithoutExt + " " + index + "." + extension;
          index++;
       }
-      
+
       return name;
    }
 
@@ -568,7 +550,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
          {
             return true;
          }
-         else if (template instanceof FolderTemplate)
+         else if (template instanceof FolderTemplateImpl)
          {
             return isPresentInProjectTemplate((FolderTemplate)template, fileTemplate);
          }
@@ -669,8 +651,8 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    private void doDeleteTemplate()
    {
-      List<ProjectTemplate> usedProjectTemplates = new ArrayList<ProjectTemplate>();
-      for (ProjectTemplate projectTemplate : projectTemplates)
+      List<ProjectTemplateImpl> usedProjectTemplates = new ArrayList<ProjectTemplateImpl>();
+      for (ProjectTemplateImpl projectTemplate : projectTemplates)
       {
          if (isPresentInProjectTemplate(projectTemplate, selectedTemplate))
          {
@@ -708,7 +690,7 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       }
 
       StringBuffer projectsNames = new StringBuffer();
-      for (ProjectTemplate template : usedProjectTemplates)
+      for (ProjectTemplateImpl template : usedProjectTemplates)
       {
          projectsNames.append(template.getName()).append(", ");
       }
@@ -755,7 +737,6 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
                }
             }
          });
-
    }
 
    /**
@@ -787,14 +768,5 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
 
       updateFileNameExtension();
    }
-
-   /**
-    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
-    */
-   @Override
-   public void onTemplatesMigrated(TemplatesMigratedEvent event)
-   {
-      isTemplatesMigrated = true;
-   }
-
+   
 }

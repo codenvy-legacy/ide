@@ -39,7 +39,7 @@ import org.exoplatform.ide.editor.text.IDocument;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
-import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
+import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
@@ -72,7 +72,7 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    protected IDocument document;
 
-   protected LeftGutterNotificationManager notificationManager;
+   protected NotificationManager notificationManager;
 
    protected DocumentAdaptor documentAdaptor;
 
@@ -544,7 +544,7 @@ public class CollabEditor extends Widget implements Editor, Markable
       int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
       int offsetLeft = getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
-         + editor.getLeftGutterNotificationManager().getGutter().getWidth()
+         + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
          + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
       
       return offsetLeft - scrollLeft + 2;

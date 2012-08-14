@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
 
 import java.util.Comparator;
 

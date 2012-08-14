@@ -109,6 +109,12 @@ public interface HerokuLocalizationConstant extends Messages
    @Key("control.addKey.prompt")
    String addKeyControlPrompt();
 
+   @Key("creatingProject")
+   String creatingProject();
+
+   @Key("deployToHeroku")
+   String deployToHeroku();
+
    @Key("control.listApp.id")
    String listApplicationsControlId();
 
