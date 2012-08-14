@@ -65,7 +65,7 @@ public final class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
    }
 
    @Override
-   public User getUser(String accessToken) throws OAuthAuthenticationException, IOException
+   public User getUser(String accessToken) throws OAuthAuthenticationException
    {
       return new User(null);
    }

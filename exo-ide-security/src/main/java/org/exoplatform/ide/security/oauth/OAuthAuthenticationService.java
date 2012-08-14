@@ -38,7 +38,7 @@ import javax.ws.rs.core.UriInfo;
  * @version $Id: $
  */
 @Path("ide/appengine/oauth")
-public class OAuthAuthenticatorService
+public class OAuthAuthenticationService
 {
    @Inject
    private OAuthAuthenticatorProvider provider;
@@ -104,16 +104,16 @@ public class OAuthAuthenticatorService
 //      }
 //      try
 //      {
-//         if (oauth.getToken(principal.getName()) != null)
+//         if (oauth.getToken(principal.getUsername()) != null)
 //         {
-//            return new UserImpl(principal.getName(), true, "oauth2");
+//            return new UserImpl(principal.getUsername(), true, "oauth2");
 //         }
 //      }
 //      catch (IOException ignored)
 //      {
 //         // Failed to update an expired token - user is not authenticated.
 //      }
-//      return new UserImpl(principal.getName(), false, "oauth2");
+//      return new UserImpl(principal.getUsername(), false, "oauth2");
       return null; // TODO
    }
 }

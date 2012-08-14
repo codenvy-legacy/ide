@@ -29,8 +29,13 @@ import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.UrlEncodedParser;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.List;
 
@@ -152,9 +157,20 @@ public final class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
    }
 
    @Override
-   public User getUser(String accessToken) throws OAuthAuthenticationException, IOException
+   public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      return new User(null); // TODO
+      try
+      {
+         JsonParser parser = new JsonParser();
+         String body = null;
+         parser.parse(new StringReader(body));
+         JsonValue jsonValue = parser.getJsonObject();
+         return ObjectBuilder.createObject(GitHubUser.class, jsonValue);
+      }
+      catch (JsonException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
    }
 
    @Override

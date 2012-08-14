@@ -78,10 +78,8 @@ public interface OAuthAuthenticator
     * @return user info
     * @throws OAuthAuthenticationException
     *    if fail to get user info
-    * @throws IOException
-    *    if any i/o error occurs
     */
-   User getUser(String accessToken) throws OAuthAuthenticationException, IOException;
+   User getUser(String accessToken) throws OAuthAuthenticationException;
 
    /**
     * Get the name of OAuth provider supported by current implementation.
