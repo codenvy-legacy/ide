@@ -241,6 +241,11 @@
             <artifactId>exo-ide-editor-codemirror2</artifactId>
             <version>${project.version}</version>
          </dependency>
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-collabeditor</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -828,8 +833,11 @@
       <module>exo-ide-codeassistant-storage</module>
 
       <module>exo-ide-editor-api</module>
+      <module>exo-ide-collabeditor</module>
+      <!--
       <module>exo-ide-editor-ckeditor</module>
       <module>exo-ide-editor-codemirror</module>
+      -->
       <module>exo-ide-editor-codemirror2</module>
 
       <module>exo-ide-editor</module>
@@ -848,6 +856,7 @@
       <module>exo-ide-editor-xml</module>
       <module>exo-ide-editor-python</module>
       <module>exo-ide-editor-yaml</module>
+      
 
       <module>exo-ide-jdt-core</module>
 
@@ -874,6 +883,7 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
+      <!--module>exo-ide-packaging-gadget-war</module --> 
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>

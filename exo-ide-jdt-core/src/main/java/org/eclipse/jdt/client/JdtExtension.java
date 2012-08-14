@@ -68,6 +68,7 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashMap;
@@ -149,6 +150,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    @Override
    public void initialize()
    {
+      CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);

@@ -37,8 +37,6 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
 
    private String fileId;
 
-   private String editor;
-   
    private CursorPosition cursorPosition;
 
    private int ignoreErrorsCount = 0;
@@ -78,27 +76,9 @@ public class OpenFileEvent extends GwtEvent<OpenFileHandler>
       this.fileId = fileId;
    }
 
-   public OpenFileEvent(FileModel file, String editor)
-   {
-      this(file);
-      this.editor = editor;
-   }
-
-   public OpenFileEvent(FileModel file, String editor, boolean lockFile)
-   {
-      this(file);
-      this.editor = editor;
-      this.lockFile = lockFile;
-   }
-
    public FileModel getFile()
    {
       return file;
-   }
-
-   public String getEditor()
-   {
-      return editor;
    }
 
    public String getFileId()

@@ -104,7 +104,7 @@ public class ContextMenu implements ItemSelectedHandler, CloseMenuHandler
                contextMenuItems.add(new PopupMenuItem(null));
             }
             contextMenuItems.add(popupMenuItem);
-            new MenuItemControl(IDE.eventBus(), popupMenuItem, (SimpleControl)control);
+            new MenuItemControl(IDE.getInstance().eventBus(), popupMenuItem, (SimpleControl)control);
          }
       }
 

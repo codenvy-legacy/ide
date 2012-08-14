@@ -73,7 +73,7 @@ public class DeleteCurrentLineControl extends SimpleControl implements IDEContro
          return;
       }
 
-      if (event.getEditor().isCapable(EditorCapability.DELETE_CURRENT_LINE))
+      if (event.getEditor().isCapable(EditorCapability.DELETE_LINES))
       {
          setVisible(true);
          setEnabled(true);

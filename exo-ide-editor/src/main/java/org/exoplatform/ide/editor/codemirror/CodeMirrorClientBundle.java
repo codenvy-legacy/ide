@@ -31,21 +31,21 @@ public interface CodeMirrorClientBundle extends ClientBundle
 {
    CodeMirrorClientBundle INSTANCE = GWT.create(CodeMirrorClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/public/bundle/codemirror.css")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/codemirror.css")
    CodeMirrorCss css();
 
-   @Source("org/exoplatform/ide/editor/public/bundle/images/code-error-mark.png")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/images/code-error-mark.png")
    ImageResource codeErrorMark();
    
-   @Source("org/exoplatform/ide/editor/public/bundle/images/mark-warning.png")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/images/mark-warning.png")
    ImageResource markWarning();
    
-   @Source("org/exoplatform/ide/editor/public/bundle/images/mark-error.png")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/images/mark-error.png")
    ImageResource markError();
    
-   @Source("org/exoplatform/ide/editor/public/bundle/images/breakpoint.gif")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/images/breakpoint.gif")
    ImageResource breakpoint();
    
-   @Source("org/exoplatform/ide/editor/public/bundle/images/braekpoint-current.gif")
+   @Source("org/exoplatform/ide/editor/public/codemirror-0.94/bundle/images/braekpoint-current.gif")
    ImageResource breakpointCurrent();
 }

@@ -35,7 +35,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
  * @version $
  */
 
-public class ShowImagesPresenter implements ShowImagesHandler, ViewClosedHandler
+public class ShowImagesPresenter implements ShowImagesgHandler, ViewClosedHandler
 {
 
    public interface Display extends IsView

@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 /**
@@ -59,6 +60,10 @@ public class AutocompletionHandler implements AutocompleteCalledHandler, EditorA
       {
          CodeMirror codemirror = (CodeMirror)activeEditor;
          codemirror.onAutocomplete();
+      }
+      else
+      {
+         IDE.fireEvent(new RunCodeAssistantEvent());
       }
    }
 

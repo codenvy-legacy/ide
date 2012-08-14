@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.xml.client.XmlEditor;
+import org.exoplatform.ide.editor.xml.client.XmlEditorExtension;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -47,7 +47,7 @@ public class XmlTokenWidget extends TokenWidget
    {
       super(token);
       grid = new Grid(1, 3);
-      grid.setStyleName(XmlEditor.RESOURCES.css().item());
+      grid.setStyleName(XmlEditorExtension.RESOURCES.css().item());
       grid.setWidth("100%");
 
       Image i = getImage();
@@ -84,11 +84,11 @@ public class XmlTokenWidget extends TokenWidget
       switch (token.getType())
       {
          case ATTRIBUTE :
-            return new Image(XmlEditor.RESOURCES.attribute());
+            return new Image(XmlEditorExtension.RESOURCES.attribute());
 
          case TAG :
          default :
-            return new Image(XmlEditor.RESOURCES.tag());
+            return new Image(XmlEditorExtension.RESOURCES.tag());
       }
 
    }
@@ -135,7 +135,7 @@ public class XmlTokenWidget extends TokenWidget
    @Override
    public void setSelectedStyle()
    {
-      setStyleName(XmlEditor.RESOURCES.css().selectedItem());
+      setStyleName(XmlEditorExtension.RESOURCES.css().selectedItem());
    }
 
    /**
@@ -144,7 +144,7 @@ public class XmlTokenWidget extends TokenWidget
    @Override
    public void setDefaultStyle()
    {
-      setStyleName(XmlEditor.RESOURCES.css().item());
+      setStyleName(XmlEditorExtension.RESOURCES.css().item());
    }
 
 }

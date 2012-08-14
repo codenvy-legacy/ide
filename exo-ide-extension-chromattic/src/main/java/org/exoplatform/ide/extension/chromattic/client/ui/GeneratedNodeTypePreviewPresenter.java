@@ -121,11 +121,10 @@ public class GeneratedNodeTypePreviewPresenter implements EditorInitializedHandl
    @Override
    public void onEditorInitialized(EditorInitializedEvent event)
    {
-      if (display.getEditor().getEditorId().equals(event.getEditorId()))
+      if (display.getEditor().getId().equals(event.getEditorId()))
       {
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
-
             @Override
             public void execute()
             {

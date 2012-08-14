@@ -27,6 +27,8 @@
    site: http://www.fsf.org. -->
 <module>
    <inherits name='com.google.gwt.user.User' />
+   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
+   <inherits name="org.exoplatform.gwtframework.ui.UITextEditor" />
 
    <!-- replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
       <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />

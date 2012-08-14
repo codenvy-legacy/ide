@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.editor.xml.client.codemirror;
 
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.xml.client.XmlEditor;
+import org.exoplatform.ide.editor.xml.client.XmlEditorExtension;
 
 import com.google.gwt.resources.client.ImageResource;
 
@@ -38,10 +38,10 @@ public class XmlOutlineItemCreator extends OutlineItemCreatorImpl
       switch (token.getType())
       {
          case TAG :
-            return XmlEditor.RESOURCES.tag();
+            return XmlEditorExtension.RESOURCES.tag();
 
          case CDATA :
-            return XmlEditor.RESOURCES.cdata();
+            return XmlEditorExtension.RESOURCES.cdata();
 
          default :
             return null;

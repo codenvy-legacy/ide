@@ -23,10 +23,13 @@ import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.framework.editor.AddCommentsModifierEvent;
+import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorProducer;
 import org.exoplatform.ide.editor.css.client.codeassistant.CssCodeAssistant;
 import org.exoplatform.ide.editor.css.client.codemirror.CssParser;
 import org.exoplatform.ide.editor.css.client.outline.CssOutlineItemCreator;
@@ -59,12 +62,27 @@ public class CssEditorExtension extends Extension
          new NewItemControl("File/New/New CSS", MESSAGES.controlNewCssTitle(), MESSAGES.controlNewCssPrompt(),
             CSS_ICON, MimeType.TEXT_CSS).setGroupName(GroupNames.NEW_FILE));
 
-      IDE.getInstance().addEditor(
-         new CodeMirrorProducer(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css", RESOURCES.cssImage(), true,
-            new CodeMirrorConfiguration().setGenericParsers("['parsecss.js']")
+//      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_CSS, MESSAGES.cssEditor(), "css", 
+//         new CodeMirrorConfiguration()
+//            .setGenericParsers("['parsecss.js']")
+//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
+//            .setParser(new CssParser())
+//            .setCodeAssistant(new CssCodeAssistant())));
+//      
+      IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.TEXT_CSS, "css", RESOURCES.cssImage()), 
+         new EditorCreator()
+         {
+            @Override
+            public Editor createEditor()
+            {
+               return new CodeMirror(MimeType.TEXT_CSS, new CodeMirrorConfiguration()
+               .setGenericParsers("['parsecss.js']")
                .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/csscolors.css']")
-               .setParser(new CssParser()).setCodeAssistant(new CssCodeAssistant())));
-
+               .setParser(new CssParser())
+               .setCodeAssistant(new CssCodeAssistant()));
+            }
+         });
+      
       IDE.getInstance().addOutlineItemCreator(MimeType.TEXT_CSS, new CssOutlineItemCreator());
 
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_CSS, new CssCommentsModifier()));

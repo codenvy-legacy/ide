@@ -1,0 +1,91 @@
+@CHARSET "UTF-8";
+
+@sprite .warning-mark
+{
+  gwt-image: "markWarning";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: scroll;
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  cursor: pointer;
+  width: 14px;
+  height: editorLineHeight;
+  position: absolute;
+}
+
+@sprite .mark-error
+{
+  gwt-image: "markError";
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: scroll;
+  cursor: pointer;
+  width: 14px;
+  height: editorLineHeight;
+  position: absolute;
+}
+.overview-mark-error, .overview-bottom-mark-error, 
+.overview-mark-warning, .overview-bottom-mark-warning
+{
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;    
+  	left: 2px;
+  	right: 2px;
+  	height: 3px;
+  	position: absolute;
+}  
+
+.overview-mark-error
+{
+    background-color: #e4a5c5;
+    border-color: #f82c92;
+}
+
+.overview-bottom-mark-warning , .overview-bottom-mark-error
+{
+	height: 8px;
+}
+
+.overview-bottom-mark-error
+{
+    background-color: #e4a5c5;
+    border-color: #f82c92;
+}
+
+.overview-mark-warning
+{
+    background-color: #fcf1ca;
+    border-color: #f6d357;
+    
+}
+
+.overview-bottom-mark-warning
+{
+    background-color: #fcf1ca;
+    border-color: #f6d357;
+}
+
+.popup-notification
+{
+    position: absolute;
+    color: #222222;
+    background: #FFFFE1;
+    border: #999999 1px solid;
+    z-index:65000;
+    min-width:100px;
+    min-height:20px;
+    padding:5px;
+    overflow:visible;
+    line-height:16px;
+    
+    font-family: Verdana, Bitstream Vera Sans, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    cursor: default;
+    
+    -moz-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+    -webkit-box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+    box-shadow: 5px 5px 5px 0 #C8C8C8 !important;
+}

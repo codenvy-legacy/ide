@@ -19,6 +19,7 @@
 
 package org.exoplatform.ide.client.operation.openlocalfile;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -38,7 +40,6 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -184,6 +185,40 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    }
 
+   private List<String> getSupportedMimeTypes()
+   {
+      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
+      List<String> mimeTypeList = new ArrayList<String>();
+      for (FileType fileType : fileTypes)
+      {
+         mimeTypeList.add(fileType.getMimeType());
+      }
+
+      return mimeTypeList;
+   }
+
+   private List<String> getMimeTypesByFileName(String fileName)
+   {
+      if (fileName.indexOf(".") < 0)
+      {
+         return getSupportedMimeTypes();
+      }
+
+      String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
+      List<String> mimeTypeList = new ArrayList<String>();
+
+      for (FileType fileType : fileTypes)
+      {
+         if (fileType.getExtension().equalsIgnoreCase(fileExtension))
+         {
+            mimeTypeList.add(fileType.getMimeType());
+         }
+      }
+
+      return mimeTypeList;
+   }
+
    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
    {
       @Override
@@ -201,10 +236,10 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
          fileName = file;
          display.setMimeTypeFieldEnabled(true);
 
-         List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
+         List<String> mimeTypes = getSupportedMimeTypes();
          Collections.sort(mimeTypes);
 
-         List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(event.getFileName());
+         List<String> proposalMimeTypes = getMimeTypesByFileName(event.getFileName());
 
          String[] valueMap = mimeTypes.toArray(new String[0]);
 

@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.api.codeassitant;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationForm;
-import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler;
+import org.exoplatform.ide.editor.api.codeassitant.ui.ImportDeclarationSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
@@ -38,7 +38,7 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id: CodeAssistant Feb 22, 2011 12:43:13 PM evgen $
  * 
  */
-public abstract class CodeAssistant implements TokenSelectedHandler, AssistImportDeclarationHandler
+public abstract class CodeAssistant implements TokenSelectedHandler, ImportDeclarationSelectedHandler
 {
 
    protected String beforeToken;
@@ -101,10 +101,10 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onStringSelected(java.lang.String)
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onStringValueEntered(java.lang.String)
     */
    @Override
-   public void onStringSelected(String value)
+   public void onStringValueEntered(String value)
    {
       editor.replaceTextAtCurrentLine(beforeToken + value + afterToken, beforeToken.length() + value.length());
    }
@@ -155,16 +155,19 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
       editor.replaceTextAtCurrentLine(tokenToPaste, newCursorPos);
       if (value.getToken().hasProperty(TokenProperties.FQN))
       {
-         editor.insertImportStatement(value.getToken().getProperty(TokenProperties.FQN).isStringProperty()
-            .stringValue());
+         if (editor instanceof CanInsertImportStatement)
+         {
+            String statement = value.getToken().getProperty(TokenProperties.FQN).isStringProperty().stringValue();
+            ((CanInsertImportStatement)editor).insertImportStatement(statement);
+         }
       }
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onCancelAutoComplete()
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.TokenSelectedHandler#onAutoCompleteCanceled()
     */
    @Override
-   public void onCancelAutoComplete()
+   public void onAutoCompleteCanceled()
    {
       editor.setFocus();
    }
@@ -179,25 +182,29 @@ public abstract class CodeAssistant implements TokenSelectedHandler, AssistImpor
     * @param handler callback for {@link AssistImportDeclarationForm}
     */
    protected void openImportForm(int left, int top, List<Token> tokens, TokenWidgetFactory factory,
-      AssistImportDeclarationHandler handler)
+      ImportDeclarationSelectedHandler handler)
    {
       new AssistImportDeclarationForm(left, top, tokens, factory, handler);
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportTokenSelected(org.exoplatform.ide.editor.api.codeassitant.Token)
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.ImportDeclarationSelectedHandler#onImportDeclarationSelected(org.exoplatform.ide.editor.api.codeassitant.Token)
     */
    @Override
-   public void onImportTokenSelected(Token token)
+   public void onImportDeclarationSelected(Token token)
    {
-      editor.insertImportStatement(token.getProperty(TokenProperties.FQN).isStringProperty().stringValue());
+      if (editor instanceof CanInsertImportStatement)
+      {
+         String statement = token.getProperty(TokenProperties.FQN).isStringProperty().stringValue();
+         ((CanInsertImportStatement)editor).insertImportStatement(statement);
+      }
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationHandler#onImportCancel()
+    * @see org.exoplatform.ide.editor.api.codeassitant.ui.ImportDeclarationSelectedHandler#onImportCanceled()
     */
    @Override
-   public void onImportCancel()
+   public void onImportCanceled()
    {
       editor.setFocus();
    }

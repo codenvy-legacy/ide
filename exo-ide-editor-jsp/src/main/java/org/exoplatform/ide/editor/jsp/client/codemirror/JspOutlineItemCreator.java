@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.editor.jsp.client.codemirror;
 
-import com.google.gwt.resources.client.ImageResource;
-
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreatorImpl;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreatorImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
