@@ -53,9 +53,6 @@ public final class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
 {
    private static final List<String> SCOPE = Collections.singletonList("user,repo,delete_repo");
 
-//   private final String GITHUB_ACCESS_TOKEN_URI = "https://github.com/login/oauth/access_token";
-//   private final String GITHUB_AUTHORIZE_SERVICE = "https://github.com/login/oauth/authorize";
-
    public GitHubOAuthAuthenticator() throws IOException
    {
       this(new MemoryCredentialStore(), loadClientSecrets("client_github_secrets.json"));
@@ -120,9 +117,8 @@ public final class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
             {
                urlInputStream.close();
             }
-            catch (IOException e)
+            catch (IOException ignored)
             {
-               throw new OAuthAuthenticationException(e.getMessage(), e);
             }
          }
 
