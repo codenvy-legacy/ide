@@ -8,7 +8,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M9-SNAPSHOT</version>
+   <version>1.2.0-M10-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
@@ -21,11 +21,11 @@
       <exo.snapshots.repo.url>dav:http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
       <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
-      <org.exoplatform.jcr.version>1.14.7-GA</org.exoplatform.jcr.version>
-      <org.exoplatform.kernel.version>2.3.7-GA</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.4.7-GA</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.2.7-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M9-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.jcr.version>1.14.8-CR01</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.4.8-CR01</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.2.8-CR01</org.exoplatform.ws.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M9</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -49,7 +49,7 @@
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <everrest.version>1.0.5-SNAPSHOT</everrest.version>
+      <everrest.version>1.0.5</everrest.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
@@ -239,6 +239,11 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor-codemirror2</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+          <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-collabeditor</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -828,8 +833,11 @@
       <module>exo-ide-codeassistant-storage</module>
 
       <module>exo-ide-editor-api</module>
+      <module>exo-ide-collabeditor</module>
+      <!--
       <module>exo-ide-editor-ckeditor</module>
       <module>exo-ide-editor-codemirror</module>
+      -->
       <module>exo-ide-editor-codemirror2</module>
 
       <module>exo-ide-editor</module>
@@ -848,6 +856,7 @@
       <module>exo-ide-editor-xml</module>
       <module>exo-ide-editor-python</module>
       <module>exo-ide-editor-yaml</module>
+      
 
       <module>exo-ide-jdt-core</module>
 
@@ -874,6 +883,7 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
+      <!--module>exo-ide-packaging-gadget-war</module --> 
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>

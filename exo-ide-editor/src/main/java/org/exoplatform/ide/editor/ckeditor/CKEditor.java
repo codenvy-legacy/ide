@@ -18,28 +18,31 @@
  */
 package org.exoplatform.ide.editor.ckeditor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -49,9 +52,21 @@ import com.google.gwt.user.client.ui.Label;
  * @version $
  */
 
-public class CKEditor extends Editor
+public class CKEditor extends AbsolutePanel implements Editor
 {
-   protected String editorId;
+   
+   private final String mimeType;
+   
+   private final CKEditorConfiguration configuration;
+   
+   protected final String id;
+
+   
+   private String initialContent;
+   
+   private HandlerManager eventBus;
+   
+   private boolean readOnly;
 
    private Label label;
 
@@ -65,43 +80,79 @@ public class CKEditor extends Editor
 
    private String suffix = "";
 
-   private CKEditorConfiguration configuration;
-
-   public CKEditor(String content, Map<String, Object> params, HandlerManager eventBus)
+   public CKEditor(String mimeType)
    {
-      super(content, params, eventBus);
-      this.editorId = "CKEditor - " + String.valueOf(this.hashCode());
-
-      if (params == null)
-      {
-         params = new HashMap<String, Object>();
-      }
-
-      label = new Label();
-      DOM.setElementAttribute(label.getElement(), "id", getEditorId());
-      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
-                                                                                                          // and to display on the
-                                                                                                          // full tab
-      add(label);
-
-      if (params.get(EditorParameters.CONFIGURATION) != null)
-         configuration = (CKEditorConfiguration)params.get(EditorParameters.CONFIGURATION);
-      else
-         configuration = new CKEditorConfiguration();
-
-      // switch on CKEditor fullPage mode only for html-files
-      if (getMimeType().equals(MimeType.TEXT_HTML))
+      this(mimeType, new CKEditorConfiguration());
+   }
+   
+   public CKEditor(String mimeType, CKEditorConfiguration configuration)
+   {
+      this.mimeType = mimeType;
+      id = "CKEditor - " + String.valueOf(this.hashCode());
+      this.configuration = configuration;
+      if (mimeType.equals(MimeType.TEXT_HTML))
       {
          CKEditorConfiguration.setFullPage(true);
       }
    }
 
+//   public CKEditor(String initialContent, String mimeType, CKEditorConfiguration configuration, HandlerManager eventBus, boolean readOnly)
+//   {
+//
+//      label = new Label();
+//      DOM.setElementAttribute(label.getElement(), "id", id);
+//      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+//      add(label);
+//
+//      if (configuration == null)
+//      {
+//         configuration = new CKEditorConfiguration();
+//      }
+//      
+//      this.configuration = configuration;   
+//
+//      // switch on CKEditor fullPage mode only for html-files
+//      if (mimeType.equals(MimeType.TEXT_HTML))
+//      {
+//         CKEditorConfiguration.setFullPage(true);
+//      }
+//   }
+   
+//   /**
+//    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
+//    */
+//   @Override
+//   public Editor newInstance()
+//   {
+//      return new CKEditor(mimeType, editorDescription, fileExtension, configuration);
+//   }
+//
+//   @Override
+//   protected void onLoad()
+//   {
+//      super.onLoad();
+//   }
+//   
+//   @Override
+//   protected void onUnload()
+//   {
+//      super.onUnload();
+//   }
+   
+   /**
+    * @see com.google.gwt.user.client.ui.Widget#onLoad()
+    */
    protected void onLoad()
    {
+      label = new Label();
+      DOM.setElementAttribute(label.getElement(), "id", id);
+      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+      add(label);
+
       try
       {
          super.onLoad();
-         editorObject = initCKEditor(getEditorId(),
+         editorObject = initCKEditor(id,
                CKEditorConfiguration.BASE_PATH,
                CKEditorConfiguration.TOOLBAR.toString(), // aditional default configuration can be found in config.js
                CKEditorConfiguration.THEME.toString(), CKEditorConfiguration.SKIN.toString(),
@@ -112,6 +163,17 @@ public class CKEditor extends Editor
       {
          e.printStackTrace();
       }      
+   }
+
+   /*
+    * remove listeners and restore functions
+    */
+   protected void onUnload()
+   {
+      removeEditorListeners();
+      removeOnContentChangeListener();
+      removeOnEditorResizeListener();
+      restoreNativeAlertAndConfirm();
    }
 
    private native JavaScriptObject initCKEditor(String id, String basePath, String toolbar, String theme, String skin,
@@ -206,23 +268,23 @@ public class CKEditor extends Editor
 
    private void onContentChanged()
    {
-      eventBus.fireEvent(new EditorContentChangedEvent(getEditorId()));
+      eventBus.fireEvent(new EditorContentChangedEvent(id));
    }
 
    private void onCursorActivity()
    {
-      eventBus.fireEvent(new EditorCursorActivityEvent(getEditorId()));
+      eventBus.fireEvent(new EditorCursorActivityEvent(id, 0, 0));
    }
 
    private void onFocusReceived()
    {
-      eventBus.fireEvent(new EditorFocusReceivedEvent(getEditorId()));
+      eventBus.fireEvent(new EditorFocusReceivedEvent(id));
    }
 
    private void onInitialized()
    {
-      setText(content);
-      eventBus.fireEvent(new EditorInitializedEvent(getEditorId()));
+      setText(initialContent);
+      eventBus.fireEvent(new EditorInitializedEvent(id));
    }
 
    public String getText()
@@ -367,16 +429,6 @@ public class CKEditor extends Editor
       return false;
    }
 
-   /*
-    * remove listeners and restore functions
-    */
-   protected void onUnload()
-   {
-      removeEditorListeners();
-      removeOnContentChangeListener();
-      removeOnEditorResizeListener();
-      restoreNativeAlertAndConfirm();
-   }
 
    private native void restoreNativeAlertAndConfirm()
    /*-{
@@ -445,7 +497,7 @@ public class CKEditor extends Editor
 
    public boolean isReadOnly()
    {
-      return (Boolean)params.get(EditorParameters.IS_READ_ONLY);
+      return readOnly;
    }
 
    public int getLabelOffsetHeight()
@@ -528,11 +580,11 @@ public class CKEditor extends Editor
    {
    }
 
-   public void goToPosition(int row, int column)
+   public void setCursorPosition(int row, int column)
    {
    }
 
-   public int getCursorCol()
+   public int getCursorColumn()
    {
       return 0;
    }
@@ -625,26 +677,10 @@ public class CKEditor extends Editor
       }
    }-*/;
    
-   
-   public boolean canCreateTokenList()
-   {
-      return false;
-   }
-
-   public List<Token> getTokenList()
-   {
-      return null;
-   }
-
    @Override
-   public String getEditorId()
+   public String getId()
    {
-      return editorId;
-   }
-
-   @Override
-   public void insertImportStatement(String fqn)
-   {
+      return id;
    }
 
    @Override
@@ -667,9 +703,13 @@ public class CKEditor extends Editor
    {
    }
 
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
+    */
+   @Override
    public String getMimeType()
    {
-      return (String)params.get(EditorParameters.MIME_TYPE);
+      return mimeType;
    }
 
    /**
@@ -679,11 +719,6 @@ public class CKEditor extends Editor
    public String getLineText(int line)
    {
       return null;
-   }
-
-   @Override
-   public void getTokenListInBackground()
-   {
    }
 
    /**
@@ -783,6 +818,96 @@ public class CKEditor extends Editor
    @Override
    public void selectRange(int startLine, int startChar, int endLine, int endChar)
    {
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
+    */
+   @Override
+   public void setReadOnly(boolean readOnly)
+   {
+      this.readOnly = readOnly;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    */
+   @Override
+   public String getName()
+   {
+      return "Design";
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    */
+   @Override
+   public int getCursorOffsetTop()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    */
+   @Override
+   public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
+   {
+      return addHandler(handler, EditorContentChangedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
+   {
+      return addHandler(handler, EditorContextMenuEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    */
+   @Override
+   public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
+   {
+      return addHandler(handler, EditorCursorActivityEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    */
+   @Override
+   public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
+   {
+      return addHandler(handler, EditorFocusReceivedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    */
+   @Override
+   public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
+   {
+      return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    */
+   @Override
+   public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
+   {
+      return addHandler(handler, EditorInitializedEvent.TYPE);
    }
    
 }

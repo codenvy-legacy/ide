@@ -41,7 +41,6 @@ public class ChangeEvent
 
       private ChangeType(String value)
       {
-
          this.value = value;
       }
 

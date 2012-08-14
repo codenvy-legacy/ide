@@ -25,8 +25,8 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineDisplay;
-import org.exoplatform.ide.client.framework.outline.ui.ShowOutlineEvent;
+import org.exoplatform.ide.client.framework.outline.OutlineDisplay;
+import org.exoplatform.ide.client.framework.outline.ShowOutlineEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
@@ -90,7 +90,7 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
          return;
       }
 
-      boolean visible = event.getEditor().isCapable(EditorCapability.CAN_BE_OUTLINED);
+      boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
       setVisible(visible);
       if (visible)
       {

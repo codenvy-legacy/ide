@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+<<<<<<< HEAD
 import org.exoplatform.ide.client.framework.template.AbstractTemplate;
 import org.exoplatform.ide.client.framework.template.FileTemplate;
 import org.exoplatform.ide.client.framework.template.FileTemplateImpl;
@@ -53,6 +54,23 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
+=======
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.model.template.FolderTemplate;
+import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.model.template.TemplateService;
+import org.exoplatform.ide.client.model.template.marshal.FileTemplateListUnmarshaller;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
+import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateHandler;
+import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
+import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -80,7 +98,11 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 
 public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHandler, ViewClosedHandler,
+<<<<<<< HEAD
    EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, ApplicationSettingsReceivedHandler
+=======
+   EditorFileOpenedHandler, EditorFileClosedHandler, ItemsSelectedHandler, TemplatesMigratedHandler
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
 {
 
    public interface Display extends IsView
@@ -192,6 +214,11 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
     */
    protected FileTemplate selectedTemplate;
 
+<<<<<<< HEAD
+=======
+   private boolean isTemplatesMigrated = false;
+
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
    private List<Item> selectedItems = new ArrayList<Item>();
 
    public CreateFileFromTemplatePresenter()
@@ -201,6 +228,10 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+<<<<<<< HEAD
+=======
+      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
    }
 
    private void bindDisplay(String title, String submitButtonTitle)
@@ -217,7 +248,11 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
             if (submitCallback != null)
             {
                FileTemplate fileTemplate =
+<<<<<<< HEAD
                   new FileTemplateImpl(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
+=======
+                  new FileTemplate(display.getSelectedTemplate().getName(), display.getFileNameField().getValue());
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
                
                IDE.getInstance().closeView(display.asView().getId());
                
@@ -770,12 +805,21 @@ public class CreateFileFromTemplatePresenter implements CreateFileFromTemplateHa
    }
 
    /**
+<<<<<<< HEAD
     * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
+=======
+    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    */
+   @Override
+   public void onTemplatesMigrated(TemplatesMigratedEvent event)
+   {
+      isTemplatesMigrated = true;
+>>>>>>> f4e9fd8cf7d136696e77c2a997bfc41598c66fda
    }
 
 }

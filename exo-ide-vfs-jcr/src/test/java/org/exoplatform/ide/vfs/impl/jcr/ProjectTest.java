@@ -20,11 +20,18 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
+import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
+import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.Session;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -44,9 +52,7 @@ public class ProjectTest extends JcrFileSystemTest
    private String createTestID;
    private Node createTestNode;
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
-    */
+   /** @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp() */
    @Override
    public void setUp() throws Exception
    {
@@ -336,5 +342,90 @@ public class ProjectTest extends JcrFileSystemTest
       Folder folder = (Folder)response.getEntity();
       assertEquals("text/directory", folder.getMimeType());
       assertFalse("Project must be converted to Folder. ", folder instanceof Project);
+   }
+
+   public void testProjectUpdateEventsRepositoryIsolation() throws Exception
+   {
+      /* IDE-1768 */
+
+      String name = "testProjectUpdateEvents";
+      // JCR backend repository: db1, workspace: ws
+      Node projectNode = testRoot.addNode(name, "nt:folder");
+      projectNode.addMixin("vfs:project");
+      Node projectCfgNode = projectNode.getNode(".project");
+      projectCfgNode.setProperty("vfs:projectType", "java");
+      projectCfgNode.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
+      session.save();
+
+      // JCR backend repository: db2, workspace: ws
+      RepositoryService repositoryService =
+         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      ManageableRepository repository1 = repositoryService.getRepository("db2");
+      Session session1 = repository1.login(new CredentialsImpl("root", "exo".toCharArray()), "ws");
+      // create the same structure.
+      Node testRoot1 = session1.getRootNode().addNode(TEST_ROOT_NAME, "nt:unstructured");
+      Node projectNode1 = testRoot1.addNode(name, "nt:folder");
+      projectNode1.addMixin("vfs:project");
+      Node projectCfgNode1 = projectNode1.getNode(".project");
+      projectCfgNode1.setProperty("vfs:projectType", "java");
+      projectCfgNode1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
+      session1.save();
+
+      // Now have the same structure in two different repositories.
+      // This is the same what we have in exo-cloud.
+
+      EventListenerList listeners = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
+
+      ProjectData project = (ProjectData)ItemData.fromNode(projectNode, "/");
+      ProjectData project1 = (ProjectData)ItemData.fromNode(projectNode1, "/");
+      final boolean[] notified = {false};
+      final boolean[] notified1 = {false};
+
+      ChangeEventFilter filter = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
+         session.getRepository(), "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
+      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
+         repository1, "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
+
+      ProjectUpdateListener listener = new ProjectUpdateListener(project.getId())
+      {
+         @Override
+         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+         {
+            notified[0] = true;
+            super.handleEvent(event);
+         }
+      };
+
+      ProjectUpdateListener listener1 = new ProjectUpdateListener(project1.getId())
+      {
+         @Override
+         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+         {
+            notified1[0] = true;
+            super.handleEvent(event);
+         }
+      };
+
+      // Register listeners for both projects.
+      assertTrue(listeners.addEventListener(filter, listener));
+      // This one must not be notified.
+      assertTrue(listeners.addEventListener(filter1, listener1));
+
+      String path = SERVICE_URI + "file/" + project.getId() + "?" + "name=file";
+      Map<String, List<String>> headers = new HashMap<String, List<String>>();
+      List<String> contentType = new ArrayList<String>();
+      contentType.add("text/plain;charset=utf8");
+      headers.put("Content-Type", contentType);
+
+      // Create file. As result only repository 'db1' get notification.
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, new byte[0], null);
+      assertEquals(200, response.getStatus());
+
+      assertTrue("Listener must be notified. ", notified[0]);
+      assertFalse("Listener must not be notified. ", notified1[0]);
+
+      // test removing
+      assertTrue(listeners.removeEventListener(filter, listener));
+      assertTrue(listeners.removeEventListener(filter1, listener1));
    }
 }

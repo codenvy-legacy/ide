@@ -130,4 +130,10 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/java/client/images/package_Disabled.png")
    ImageResource packageDisabled();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/breakpoint-current.gif")
+   ImageResource breakpointCurrent();
+
+   @Source("org/exoplatform/ide/editor/java/client/images/breakpoint.gif")
+   ImageResource breakpoint();
 }

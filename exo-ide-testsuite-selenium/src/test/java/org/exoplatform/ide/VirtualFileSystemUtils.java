@@ -306,6 +306,20 @@ public class VirtualFileSystemUtils
       return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/default-selenium-test.zip");
    }
 
+   
+   /**
+    * create empty exo-project in IDE
+    * @param name
+    * @return
+    * @throws IOException
+    */
+   public static Map<String, Link> createExoProject(String name) throws IOException
+   {
+      return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/exo-project.zip");
+   }
+   
+   
+   
    public static int createFile(Link link, String name, String mimeType, String content) throws IOException
    {
       if (link == null)

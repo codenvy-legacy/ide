@@ -79,6 +79,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.exoplatform.ide.debug.DebugChangeVariable;
 import org.exoplatform.ide.core.Debuger;
+import org.exoplatform.ide.core.OrginizeImport;
+import org.exoplatform.ide.core.ProjectsMenu;
+import org.exoplatform.ide.core.DeployForm;
+import org.exoplatform.ide.core.PaasAuthorization;
 
 
 /**
@@ -173,6 +177,8 @@ public class IDE
    public Rename RENAME;
 
    public org.exoplatform.ide.git.core.GIT GIT;
+   
+   public org.exoplatform.paas.core.Paas PAAS;
 
    public Project PROJECT;
 
@@ -217,6 +223,14 @@ public class IDE
    public ContextMenu CONTEXT_MENU;
   
    public Debuger DEBUGER;
+   
+   public OrginizeImport ORGINIZEIMPORT;
+   
+   public ProjectsMenu PROJECTMENU;
+   
+   public DeployForm DEPLOY;
+   
+   public PaasAuthorization PAASAUTORIZATION;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -225,6 +239,7 @@ public class IDE
       this.driver = driver;
       instance = this;
       GIT = new org.exoplatform.ide.git.core.GIT(selenium, driver);
+      PAAS = new org.exoplatform.paas.core.Paas(selenium, driver);
       ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
@@ -279,6 +294,10 @@ public class IDE
       CODE_ASSISTANT_JAVA = PageFactory.initElements(driver, CodeAssistantJava.class);
       POPUP = PageFactory.initElements(driver, PopupDialogsBrowser.class);
       DEBUGER = PageFactory.initElements(driver, Debuger.class);
+      ORGINIZEIMPORT = PageFactory.initElements(driver, OrginizeImport.class);
+      PROJECTMENU = PageFactory.initElements(driver, ProjectsMenu.class);
+      DEPLOY = PageFactory.initElements(driver, DeployForm.class);
+      PAASAUTORIZATION = PageFactory.initElements(driver, PaasAuthorization.class);
    }
 
    public Selenium getSelenium()

@@ -5,11 +5,11 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M9-SNAPSHOT</version>
+      <version>1.2.0-M10-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-php</artifactId>
-   <version>1.2.0-M9-SNAPSHOT</version>
+   <version>1.2.0-M10-SNAPSHOT</version>
    <name>eXo IDE :: Editor :: PHP</name>
 
    <properties>
@@ -26,6 +26,10 @@
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
          <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-api</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

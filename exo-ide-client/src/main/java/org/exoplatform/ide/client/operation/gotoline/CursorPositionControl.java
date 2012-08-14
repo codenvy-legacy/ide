@@ -97,7 +97,7 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
    @Override
    public void onEditorCursorActivity(EditorCursorActivityEvent event)
    {
-      if (editor == null || !editor.getEditorId().equals(event.getEditorId()))
+      if (editor == null || !editor.getId().equals(event.getEditorId()))
       {
          return;
       }
@@ -131,7 +131,7 @@ public class CursorPositionControl extends StatusTextControl implements IDEContr
             }
 
             setVisible(true);
-            setCursorPosition(editor.getCursorRow(), editor.getCursorCol());
+            setCursorPosition(editor.getCursorRow(), editor.getCursorColumn());
          }
          catch (Throwable e)
          {

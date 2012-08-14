@@ -64,7 +64,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
    @Override
    public void onEditorMoveLineDown(EditorMoveLineDownEvent event)
    {
-      if (editor == null || !editor.isCapable(EditorCapability.GO_TO_POSITION))
+      if (editor == null || !editor.isCapable(EditorCapability.SET_CURSOR_POSITION))
       {
          return;
       }
@@ -98,7 +98,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
 
       editor.setLineText(start, nextLineText);
       editor.selectRange(start + 1, 0, end + 2, 0);
-      editor.goToPosition(row + 1, 0);
+      editor.setCursorPosition(row + 1, 0);
    }
 
    /**
@@ -109,7 +109,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
    @Override
    public void onEditorMoveLineUp(EditorMoveLineUpEvent event)
    {
-      if (editor == null || !editor.isCapable(EditorCapability.GO_TO_POSITION))
+      if (editor == null || !editor.isCapable(EditorCapability.SET_CURSOR_POSITION))
       {
          return;
       }
@@ -138,7 +138,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
 
       editor.setLineText(end, prevLineText);
       editor.selectRange(start - 1, 0, end, 0);
-      editor.goToPosition(row - 1, 0);
+      editor.setCursorPosition(row - 1, 0);
    }
 
    /**

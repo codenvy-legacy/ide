@@ -30,7 +30,7 @@ public interface CodeAssistantClientBundle extends ClientBundle
 {
    CodeAssistantClientBundle INSTANCE = GWT.create(CodeAssistantClientBundle.class);
 
-   @Source("org/exoplatform/ide/editor/public/bundle/codeassistant.css")
+   @Source("org/exoplatform/ide/editor/client/bundle/codeassistant.css")
    CodeAssistantCss css();
 
 }

@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M9-SNAPSHOT</version>
+      <version>1.2.0-M10-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-editor-java</artifactId>
    <packaging>jar</packaging>
@@ -23,6 +23,15 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-editor-api</artifactId>
+		</dependency>
+      <dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-collabeditor</artifactId>
 		</dependency>
 
 		<dependency>

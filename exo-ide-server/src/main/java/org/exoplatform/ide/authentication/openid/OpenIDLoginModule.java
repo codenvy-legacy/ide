@@ -84,6 +84,16 @@ public class OpenIDLoginModule extends AbstractLoginModule
             if (new String(password).equals(user.getIdentifier().getIdentifier()))
             {
                Identity identity = authenticator.createIdentity(userId);
+               // NOTE : Since OrganizationAuthenticatorImpl authenticator do not check is user exists in user database
+               // and in other hand we do not have user password we cannot trust user without roles.
+               // Check user roles here and if user's roles is empty do not trust such user.
+               // Any way if we create identity for the user it may not login without roles.
+               if (identity.getRoles().isEmpty())
+               {
+                  return false;
+               }
+
+               // Otherwise save Identity in shared state. Next LoginModule will use it.
                sharedState.put("javax.security.auth.login.name", userId);
                sharedState.put("exo.security.identity", identity);
                subject.getPublicCredentials().add(new UsernameCredential(userId));

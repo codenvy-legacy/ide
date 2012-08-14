@@ -174,9 +174,6 @@ public interface IdeLocalizationConstant extends Constants
    /*
     * Controls
     */
-   @Key("control.showImages")
-   String showImagesControl();
-
    @Key("control.about")
    String aboutControl();
 

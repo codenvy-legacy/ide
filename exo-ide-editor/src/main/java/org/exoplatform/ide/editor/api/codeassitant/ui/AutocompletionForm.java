@@ -118,7 +118,6 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       resizeHandler = Window.addResizeHandler(this);
 
       absolutePanel = new AbsolutePanel();
-
       initWidget(absolutePanel);
 
       lockLayer = new AbsolutePanel();
@@ -404,7 +403,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
    {
       timer.cancel();
       removeHandlers();
-      handler.onCancelAutoComplete();
+      handler.onAutoCompleteCanceled();
       lockLayer.removeFromParent();
    }
 
@@ -417,7 +416,7 @@ public class AutocompletionForm extends Composite implements ChangeHandler, Resi
       removeHandlers();
       if (selectedWidget == null)
       {
-         handler.onStringSelected(textBox.getText());
+         handler.onStringValueEntered(textBox.getText());
       }
       else
       {

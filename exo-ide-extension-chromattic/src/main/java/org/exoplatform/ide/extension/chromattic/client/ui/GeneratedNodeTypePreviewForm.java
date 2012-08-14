@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.extension.chromattic.client.ui;
 
-import java.util.HashMap;
-
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorParameters;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
@@ -58,24 +57,26 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
    {
       super(ID, "operation", ChromatticExtension.LOCALIZATION_CONSTANT.generateNodeTypePreviewFormTitle(), new Image(
          ChromatticClientBundle.INSTANCE.previewNodeTypeControl()));
-      createEditor();
+
+      try
+      {
+         createEditor();
+      }
+      catch (EditorNotFoundException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+      }
    }
 
    /**
     * Create editor to display the content of node type definition.
+    * @throws EditorNotFoundException 
     */
-   private void createEditor()
+   private void createEditor() throws EditorNotFoundException
    {
-      final HashMap<String, Object> params = new HashMap<String, Object>();
-      params.put(EditorParameters.IS_READ_ONLY, true);
-      params.put(EditorParameters.IS_SHOW_LINE_NUMER, true);
-      try
-      {
-         editor = IDE.getInstance().getEditor(MimeType.APPLICATION_XML).createEditor("", IDE.eventBus(), params);
-      }
-      catch (Exception e)
-      {
-      }
+      final Editor editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_XML);
+      editor.setReadOnly(true);
+      editor.showLineNumbers(true);
       add(editor);
 
       new Timer()
@@ -84,7 +85,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
          @Override
          public void run()
          {
-            Element editorWraper = Document.get().getElementById(editor.getEditorId());
+            Element editorWraper = Document.get().getElementById(editor.getId());
 
             NodeList<Element> iframes = editorWraper.getElementsByTagName("iframe");
             if (iframes != null && iframes.getLength() > 0)
@@ -116,18 +117,30 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
       return editor;
    }
 
-   private native void setHandler(Element e)/*-{
-                                            var type = "mousedown";
-                                            var instance = this;     
+   private native void setHandler(Element e)
+   /*-{
+      var type = "mousedown";
+      var instance = this;     
 
-                                            if(typeof e.contentDocument != "undefined")
-                                            {
-                                            e.contentDocument.addEventListener(type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();},false);
-                                            }
-                                            else
-                                            {
-                                            e.contentWindow.document.attachEvent("on" + type,function(){instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();});
-                                            }
-                                            }-*/;
+      if(typeof e.contentDocument != "undefined")
+      {
+         e.contentDocument.addEventListener(
+            type,
+            function()
+            {
+               instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();
+            },
+            false);
+      }
+      else
+      {
+         e.contentWindow.document.attachEvent(
+            "on" + type,
+            function()
+            {
+               instance.@org.exoplatform.ide.extension.chromattic.client.ui.GeneratedNodeTypePreviewForm::activate()();
+            });
+      }
+   }-*/;
 
 }

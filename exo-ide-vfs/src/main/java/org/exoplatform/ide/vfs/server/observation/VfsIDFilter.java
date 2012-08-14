@@ -39,6 +39,7 @@ public final class VfsIDFilter extends ChangeEventFilter
    @Override
    public boolean matched(ChangeEvent event) throws VirtualFileSystemException
    {
-      return vfsId.equals(event.getVirtualFileSystem().getInfo().getId());
+      final String theVfsId = event.getVirtualFileSystem().getInfo().getId();
+      return vfsId == null ? theVfsId == null : vfsId.equals(theVfsId);
    }
 }

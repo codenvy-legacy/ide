@@ -71,7 +71,7 @@ public class GoToLineControl extends SimpleControl implements IDEControl, Editor
          return;
       }
 
-      if (event.getEditor().isCapable(EditorCapability.GO_TO_POSITION))
+      if (event.getEditor().isCapable(EditorCapability.SET_CURSOR_POSITION))
       {
          setVisible(true);
          setEnabled(true);

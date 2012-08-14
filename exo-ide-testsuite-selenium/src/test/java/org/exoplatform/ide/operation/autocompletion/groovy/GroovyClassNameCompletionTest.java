@@ -21,10 +21,14 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
+import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+
+import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -38,10 +42,26 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
    @Before
    public void createProject() throws Exception
    {
-      createProject(GroovyClassNameCompletionTest.class.getSimpleName());
+      createExoPrj(GroovyClassNameCompletionTest.class.getSimpleName());
       openProject();
    }
 
+   @AfterClass
+   public static void tearDown() throws Exception
+   {
+
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + GroovyClassNameCompletionTest.class.getSimpleName());
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+
+   }
+   
+   
    @Test
    public void testGroovyClassNameCompletion() throws Exception
    {

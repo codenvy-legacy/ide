@@ -32,7 +32,8 @@
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.gwtframework.ui.UI' />
    <inherits name='org.exoplatform.ide.editor.Editor' />
-   <inherits name='org.exoplatform.ide.vfs.VFS' />
+   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
+   <inherits name="org.exoplatform.gwtframework.ui.UITextEditor" />
 
    <generate-with class="org.exoplatform.ide.generator.ControlAnnotationMapGenerator">
       <when-type-assignable class="org.exoplatform.ide.client.framework.annotation.ClassAnnotationMap" />

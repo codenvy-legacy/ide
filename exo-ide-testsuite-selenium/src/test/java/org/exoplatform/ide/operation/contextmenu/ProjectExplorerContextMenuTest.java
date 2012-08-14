@@ -29,6 +29,10 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By.ByXPath;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.Map;
 
@@ -44,6 +48,9 @@ public class ProjectExplorerContextMenuTest extends BaseTest
    private static final String FOLDER1 = "folder1";
 
    private static final String FOLDER2 = "folder2";
+
+   private static final String GOGLE_CHROME_LOCATOR =
+      "//div[@id='ideProjectExplorerItemTreeGrid']//div[@class='ide-Tree-label' and text()='" + PROJECT + "'" + "]";
 
    @BeforeClass
    public static void setUp()
@@ -104,12 +111,29 @@ public class ProjectExplorerContextMenuTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER2);
+      //need for Google Chrome browser. Because if we use IDE.PROJECT.EXPLORER.selectItemByRightClick(PROJECT) method
+      //in Chrome browser is select FOLDER1 
+      if (BROWSER_COMMAND.toString().equals("*googlechrome"))
+      {
 
-      IDE.PROJECT.EXPLORER.selectItemByRightClick(PROJECT);
+         WebElement elem = driver.findElement(By.xpath(GOGLE_CHROME_LOCATOR));
+         new Actions(driver).contextClick(elem).build().perform();
+      }
+      else
+      {
+         IDE.PROJECT.EXPLORER.selectItemByRightClick(PROJECT);
+      }
       assertEquals(" " + PROJECT, IDE.STATUSBAR.getNavigationStatus());
 
       IDE.CONTEXT_MENU.waitOpened();
-      assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.File.DELETE));
+
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.File.DELETE));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Rename..."));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Open..."));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Close"));
+      assertTrue(IDE.CONTEXT_MENU.isCommandEnabled("Properties..."));
+
+      assertFalse(IDE.CONTEXT_MENU.isCommandEnabled("Paste Item(s)"));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.CUT_MENU));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.COPY_MENU));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.PASTE_MENU));
