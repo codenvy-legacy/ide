@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
@@ -76,12 +77,14 @@ import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -183,19 +186,20 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException
+   public void cloneRepository(String vfsId, String workDir, String remoteUri, String remoteName, String projectType,
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir);
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
-
+      String params = "vfsid=" + vfsId + "&projectType=" + projectType;
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-         .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri)).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+         .requestStatusHandler(new CloneRequestStatusHandler(workDir, remoteUri)).data(marshaller.marshal())
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**

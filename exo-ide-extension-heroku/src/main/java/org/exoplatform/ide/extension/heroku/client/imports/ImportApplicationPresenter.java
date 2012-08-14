@@ -46,6 +46,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -278,10 +279,10 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null,
-            new AsyncRequestCallback<String>()
+            new AsyncRequestCallback<RepoInfo>()
             {
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(RepoInfo result)
                {
                   updateProperties();
                }

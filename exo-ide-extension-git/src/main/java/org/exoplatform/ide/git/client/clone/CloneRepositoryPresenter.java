@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.client.clone;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -30,18 +28,20 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
-import org.exoplatform.ide.git.shared.Commiters;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
+import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -76,6 +76,14 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
        */
       HasValue<String> getRemoteNameValue();
 
+      HasValue<String> getProjectType();
+
+      /**
+       * @param projectTypes available type of project
+       * @param def selected type by default
+       */
+      void setProjectType(String[] projectTypes, String def);
+
       /**
        * Returns clone repository button.
        * 
@@ -98,6 +106,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       void enableCloneButton(boolean enable);
 
       void focusInRemoteUrlField();
+
    }
 
    /**
@@ -146,10 +155,25 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            boolean enable = (event.getValue() != null && event.getValue().length() > 0);
+            String remoteUrl = event.getValue();
+            boolean enable = (remoteUrl != null && remoteUrl.length() > 0);
+            if (remoteUrl.endsWith("/"))
+            {
+               remoteUrl = remoteUrl.substring(0, remoteUrl.length() - 1);
+            }
+            if (remoteUrl.endsWith(".git"))
+            {
+               remoteUrl = remoteUrl.substring(0, remoteUrl.length() - 4);
+               String[] split = remoteUrl.split("/");
+               display.getWorkDirValue().setValue(split[split.length - 1]);
+            }
             display.enableCloneButton(enable);
          }
       });
+
+      display.setProjectType(ProjectResolver.getProjectsTypes().toArray(
+         new String[ProjectResolver.getProjectsTypes().size()]), ProjectResolver.UNDEFINED);
+
    }
 
    /**
@@ -164,7 +188,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
          display.focusInRemoteUrlField();
-         display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
          display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
          display.enableCloneButton(false);
       }
@@ -175,24 +198,27 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void cloneRepository()
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       final String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
-
+      String workDir = display.getWorkDirValue().getValue();
+      String projectType = display.getProjectType().getValue();
+      RepoInfo repoInfo = new RepoInfo();
+      RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
       try
       {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, remoteName,
-            new AsyncRequestCallback<String>()
+         GitClientService.getInstance().cloneRepository(vfs.getId(), workDir, remoteUri, remoteName, projectType,
+            new AsyncRequestCallback<RepoInfo>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-                  String[] userRepo = parseGitUrl(remoteUri);
-                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0],userRepo[1]));
-
+                  IDE.fireEvent(new RefreshBrowserEvent());
+                  ProjectModel projectModel = new ProjectModel(result.getProject());
+                  IDE.fireEvent(new OpenProjectEvent(projectModel));
+                  String[] userRepo = parseGitUrl(result.getRemoteUri());
+                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1].split(".git")[0]));
                }
 
                @Override
@@ -207,6 +233,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       }
       catch (RequestException e)
       {
+         e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
                .cloneFailed();
@@ -214,7 +241,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       }
       IDE.getInstance().closeView(display.asView().getId());
    }
-   
+
    private String[] parseGitUrl(String gitUrl)
    {
       String[] userRepo = new String[2];
@@ -223,12 +250,20 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          gitUrl = gitUrl.split("git@github.com")[1];
          userRepo = gitUrl.split("/");
       }
-      else
+      else if (gitUrl.startsWith("git://github.com/"))
       {
-         gitUrl = gitUrl.split("https://github.com")[1];
+         gitUrl = gitUrl.split("git://github.com/")[1];
          userRepo = gitUrl.split("/");
       }
+      //      else {
+      //         git://github.com/eXoIDE/java-web-project.git
+      //      }
       return userRepo;
+   }
 
+   @Override
+   protected boolean makeSelectionCheck()
+   {
+      return true;
    }
 }

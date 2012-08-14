@@ -48,6 +48,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
@@ -62,6 +63,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;
@@ -69,6 +71,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -193,13 +196,27 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+   @Produces(MediaType.APPLICATION_JSON)
+   public RepoInfo clone(@QueryParam("projectType") @DefaultValue("Undefined") String projectType,//
+                         CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      if (vfs == null)
+      {
+         throw new VirtualFileSystemException(
+            "Can't resolve path on the Local File System : Virtual file system not initialized");
+      }
+      vfs.getInfo().getRoot().getId();
+      Project project = vfs.createProject(vfs.getInfo().getRoot().getId(), 
+                                          request.getWorkingDir(),
+                                          projectType, null);
+      projectId = project.getId();
       GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.clone(request);
+         return new RepoInfo(request.getRemoteUri(),project);
       }
       finally
       {

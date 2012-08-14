@@ -40,6 +40,7 @@ import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -363,10 +364,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          JobManager.get().showJobSeparated();
 
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
-            new AsyncRequestCallback<String>()
+            new AsyncRequestCallback<RepoInfo>()
             {
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new ProjectCreatedEvent(project));

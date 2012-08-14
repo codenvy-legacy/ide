@@ -28,9 +28,11 @@ import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -263,14 +265,14 @@ public abstract class GitClientService
     * Clones one remote repository to local one.
     * 
     * @param vfsId virtual file system id
-    * @param project project (root of GIT repository)
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
+    * @param projectType 
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void cloneRepository(String vfsId, String workDir, String remoteUri, String remoteName,
+      String projectType, AsyncRequestCallback<RepoInfo> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
