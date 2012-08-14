@@ -48,7 +48,7 @@ import java.util.List;
 public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
    private static final List<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/appengine.admin",
-      "https://www.googleapis.com/auth/userinfo.profile");
+      "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email");
 
    public GoogleOAuthAuthenticator() throws IOException
    {
