@@ -45,6 +45,12 @@ class GutterView extends CompositeView<ViewDelegate> {
 
   private void createDom(Position position, String cssClassName) {
     contentElement = Elements.createDivElement();
+    if(overviewMode)
+    {
+       contentElement.getStyle().setWidth("100%");
+       contentElement.getStyle().setHeight("100%");
+    }
+    else
     contentElement.getStyle().setPosition(CSSStyleDeclaration.Position.RELATIVE);
 
     scrollableElement = Elements.createDivElement(cssClassName);

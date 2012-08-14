@@ -32,4 +32,19 @@ public interface NotificationCss extends CssResource
 
    @ClassName("mark-error")
    String markError();
+   
+   @ClassName("overview-mark-error")
+   String overviewMarkError();
+   
+   @ClassName("overview-bottom-mark-error")
+   String overviewBottomMarkError();
+   
+   @ClassName("overview-mark-warning")
+   String overviewMarkWarning();
+   
+   @ClassName("overview-bottom-mark-warning")
+   String overviewBottomMarkWarning();
+   
+   @ClassName("popup-notification")
+   String popupNotification();
 }

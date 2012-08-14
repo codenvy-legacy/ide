@@ -47,10 +47,10 @@ public class Gutter extends UiComponent<GutterView> {
   public static Gutter create(boolean overviewMode, Position position, String cssClassName,
       Buffer buffer) {
 
-    // TODO: remove when implemented
-    if (overviewMode) {
-      throw new IllegalArgumentException("Overview mode is not implemented yet");
-    }
+//    // TODO: remove when implemented
+//    if (overviewMode) {
+//      throw new IllegalArgumentException("Overview mode is not implemented yet");
+//    }
 
     GutterView view = new GutterView(overviewMode, position, cssClassName, buffer);
     return new Gutter(overviewMode, view, buffer);

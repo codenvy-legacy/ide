@@ -14,7 +14,9 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
+import com.google.collide.client.editor.gutter.Gutter.Position;
+
+import com.google.collide.client.editor.gutter.NotificationManager;
 
 import com.google.collide.client.editor.renderer.CurrentLineHighlighter;
 
@@ -54,6 +56,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
+import org.apache.bcel.generic.LUSHR;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 import elemental.events.Event;
@@ -326,7 +329,7 @@ public class Editor extends UiComponent<Editor.View> {
   private boolean isReadOnly;
   private final RenderTimeExecutor renderTimeExecutor;
   private CurrentLineHighlighter currentLineHighlighter;
-  private LeftGutterNotificationManager leftGutterNotificationManager;
+  private NotificationManager leftGutterNotificationManager;
 
   private Editor(AppContext appContext, View view, Buffer buffer, InputController input,
       FocusManager focusManager, FontDimensionsCalculator editorFontDimensionsCalculator,
@@ -341,7 +344,8 @@ public class Editor extends UiComponent<Editor.View> {
     
     //TODO (evgen) set left gutter notification configurable
     Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutterNotification());
-    leftGutterNotificationManager = new LeftGutterNotificationManager(this, leftNotificationGutter, appContext.getResources());
+    Gutter overviewGutter = createGutter(true, Position.RIGHT, appContext.getResources().workspaceEditorCss().leftGutterNotification());
+    leftGutterNotificationManager = new NotificationManager(this, leftNotificationGutter, overviewGutter,appContext.getResources());
     getDocumentListenerRegistrar().add(leftGutterNotificationManager);
     Gutter leftGutter = createGutter(
         false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
@@ -501,7 +505,7 @@ public class Editor extends UiComponent<Editor.View> {
     return documentListenerManager;
   }
   
-  public LeftGutterNotificationManager getLeftGutterNotificationManager(){
+  public NotificationManager getLeftGutterNotificationManager(){
      return leftGutterNotificationManager;
   }
 

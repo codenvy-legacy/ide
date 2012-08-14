@@ -20,7 +20,7 @@ package com.google.collide.client;
 
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.Css;
-import com.google.collide.client.editor.gutter.LeftGutterNotificationManager;
+import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.client.util.JsIntegerMap;
 import com.google.collide.json.client.JsoArray;
@@ -41,7 +41,7 @@ public class MarkLineRenderer implements LineRenderer
 
    private final Css editorCss;
 
-   private final LeftGutterNotificationManager notificationManager;
+   private final NotificationManager notificationManager;
 
    private final IDocument document;
 
@@ -61,7 +61,7 @@ public class MarkLineRenderer implements LineRenderer
     * @param iDocument 
     * 
     */
-   public MarkLineRenderer(Editor.Css editorCss, LeftGutterNotificationManager leftGutterNotificationManager,
+   public MarkLineRenderer(Editor.Css editorCss, NotificationManager leftGutterNotificationManager,
       IDocument document)
    {
       this.editorCss = editorCss;
