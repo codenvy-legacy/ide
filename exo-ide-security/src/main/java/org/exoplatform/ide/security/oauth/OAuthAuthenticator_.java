@@ -21,13 +21,12 @@ package org.exoplatform.ide.security.oauth;
 import java.io.IOException;
 
 /**
- * Authentication service which allow to get oauth token from most popular sites. Implemented for use oauth
- * authentication on github, google. In future plans, to add facebook authentication.
+ * Authentication service which allow get access token from OAuth provider site.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public interface OAuthService
+public interface OAuthAuthenticator_
 {
    /**
     * Get oauth token.
@@ -38,7 +37,7 @@ public interface OAuthService
     * @throws java.io.IOException
     *    if i/o error occurs when try to refresh expired oauth token
     */
-   public String getToken(String userId) throws IOException;
+   String getToken(String userId) throws IOException;
 
    /**
     * Process callback request.
@@ -48,14 +47,18 @@ public interface OAuthService
     * @throws OAuthAuthenticationException
     *    if authentication failed or <code>requestUri</code> does not contain required parameters, e.g. 'code'
     */
-   public void callback(String requestUri) throws OAuthAuthenticationException;
+   void callback(String requestUri) throws OAuthAuthenticationException;
 
    /**
     * Create authentication URL.
     *
+    * @param userId
+    *    user identifier. This parameter should be not <code>null</code> if user already authenticated in eXo IDE site
+    *    but need to get OAuth access token to be able use some third party services. This parameter always
+    *    <code>null</code> if third party OAuth provider used for authenticate user in eXo IDE.
     * @return URL for authentication
     */
-   public String getAuthenticateUri(String userId);
+   String getAuthenticateUri(String userId);
 
    /**
     * Invalidate OAuth token for specified user.
@@ -65,5 +68,25 @@ public interface OAuthService
     * @return <code>true</code> if OAuth token invalidated and <code>false</code> otherwise, e.g. if user does not have
     *         token yet
     */
-   public boolean invalidateToken(String userId);
+   boolean invalidateToken(String userId);
+
+   /**
+    * Get user info.
+    *
+    * @param accessToken
+    *    oauth access token
+    * @return user info
+    * @throws OAuthAuthenticationException
+    *    if fail to get user info
+    * @throws IOException
+    *    if any i/o error occurs
+    */
+   User getUser(String accessToken) throws OAuthAuthenticationException, IOException;
+
+   /**
+    * Get the name of OAuth provider supported by current implementation.
+    *
+    * @return oauth provider name
+    */
+   String getOAuthProvider();
 }

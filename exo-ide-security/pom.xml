@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
@@ -12,12 +13,22 @@
 
    <dependencies>
 
-       <dependency>
+      <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>exo.kernel.commons</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.security.core</artifactId>
+      </dependency>
+
+      <dependency>
          <groupId>com.google.api-client</groupId>
          <artifactId>google-api-client</artifactId>
          <version>1.9.0-beta</version>
-          <!-- Set as provided. Use jarajr plugin because conflict guava. -->
-          <scope>provided</scope>
+         <!-- Set as provided. Use jarajr plugin because conflict guava. -->
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -31,17 +42,52 @@
       </dependency>
 
       <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
 
       <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-log4j12</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
          <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-         <version>1.0.4</version>
-         <scope>provided</scope>
-      </dependency><dependency><groupId>org.exoplatform.ide</groupId><artifactId>exo-ide-extension-googleappengine</artifactId><version>1.2.0-M9-SNAPSHOT</version></dependency>
+         <artifactId>everrest-core</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.openid4java</groupId>
+         <artifactId>openid4java-consumer</artifactId>
+         <type>pom</type>
+         <version>0.9.6</version>
+         <exclusions>
+            <exclusion>
+               <groupId>xerces</groupId>
+               <artifactId>xercesImpl</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>net.sourceforge.nekohtml</groupId>
+               <artifactId>nekohtml</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <!--
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-googleappengine</artifactId>
+               <version>1.2.0-M9-SNAPSHOT</version>
+            </dependency>
+      -->
 
    </dependencies>
 

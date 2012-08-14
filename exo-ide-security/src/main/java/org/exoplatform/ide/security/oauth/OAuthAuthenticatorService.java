@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-import org.exoplatform.ide.extension.googleappengine.server.UserImpl;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
-
-import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 
@@ -36,7 +32,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * RESTful wrapper for OAuthAuthenticator.
+ * RESTful wrapper for BaseOAuthAuthenticator.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -44,7 +40,8 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/appengine/oauth")
 public class OAuthAuthenticatorService
 {
-   private OAuthService oauth = OAuthServiceProvider.getAuthService("google");
+   @Inject
+   private OAuthAuthenticatorProvider provider;
 
    @GET
    @Path("auth")
@@ -55,6 +52,7 @@ public class OAuthAuthenticatorService
       {
          throw new OAuthAuthenticationException("User is not logged in. ");
       }
+      OAuthAuthenticator oauth = provider.getAuthenticator("google"); // TODO
       if (oauth == null)
       {
          throw new OAuthAuthenticationException("oauth null");
@@ -66,6 +64,7 @@ public class OAuthAuthenticatorService
    @Path("callback")
    public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException
    {
+      OAuthAuthenticator oauth = provider.getAuthenticator("google"); // TODO
       oauth.callback(uriInfo.getRequestUri().toString());
 
       String logoLocation = uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();
@@ -83,6 +82,7 @@ public class OAuthAuthenticatorService
    public Response invalidate(@Context SecurityContext security)
    {
       final Principal principal = security.getUserPrincipal();
+      OAuthAuthenticator oauth = provider.getAuthenticator("google"); // TODO
       if (principal != null && oauth.invalidateToken(principal.getName()))
       {
          return Response.ok().build();
@@ -97,22 +97,23 @@ public class OAuthAuthenticatorService
    @Produces(MediaType.APPLICATION_JSON)
    public User getUser(@Context SecurityContext security) throws OAuthAuthenticationException
    {
-      final Principal principal = security.getUserPrincipal();
-      if (principal == null)
-      {
-         throw new OAuthAuthenticationException("User is not logged in. ");
-      }
-      try
-      {
-         if (oauth.getToken(principal.getName()) != null)
-         {
-            return new UserImpl(principal.getName(), true, "oauth2");
-         }
-      }
-      catch (IOException ignored)
-      {
-         // Failed to update an expired token - user is not authenticated.
-      }
-      return new UserImpl(principal.getName(), false, "oauth2");
+//      final Principal principal = security.getUserPrincipal();
+//      if (principal == null)
+//      {
+//         throw new OAuthAuthenticationException("User is not logged in. ");
+//      }
+//      try
+//      {
+//         if (oauth.getToken(principal.getName()) != null)
+//         {
+//            return new UserImpl(principal.getName(), true, "oauth2");
+//         }
+//      }
+//      catch (IOException ignored)
+//      {
+//         // Failed to update an expired token - user is not authenticated.
+//      }
+//      return new UserImpl(principal.getName(), false, "oauth2");
+      return null; // TODO
    }
 }
