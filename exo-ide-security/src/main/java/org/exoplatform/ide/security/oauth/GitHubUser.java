@@ -36,7 +36,7 @@ public class GitHubUser extends User
 
    public void setLogin(String login)
    {
-      setUsername(login);
+      setUserId(login);
       this.login = login;
    }
 

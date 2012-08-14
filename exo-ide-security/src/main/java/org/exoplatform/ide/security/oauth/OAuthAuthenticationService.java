@@ -57,7 +57,7 @@ public class OAuthAuthenticationService
       {
          throw new OAuthAuthenticationException("oauth null");
       }
-      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUri(principal.getName()))).build();
+      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUrl("", principal.getName()))).build();
    }
 
    @GET

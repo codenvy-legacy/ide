@@ -24,32 +24,32 @@ package org.exoplatform.ide.security.oauth;
  */
 public class User
 {
-   private String username;
+   private String userId;
 
-   public User(String username)
+   public User(String userId)
    {
-      this.username = username;
+      this.userId = userId;
    }
 
    public User()
    {
    }
 
-   public String getUsername()
+   public String getUserId()
    {
-      return username;
+      return userId;
    }
 
-   public void setUsername(String username)
+   public void setUserId(String userId)
    {
-      this.username = username;
+      this.userId = userId;
    }
 
    @Override
    public String toString()
    {
       return "User{" +
-         "username='" + username + '\'' +
+         "userId='" + userId + '\'' +
          '}';
    }
 }

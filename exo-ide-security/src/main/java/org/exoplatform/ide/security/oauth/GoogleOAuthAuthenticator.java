@@ -26,8 +26,10 @@ import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.jackson.JacksonFactory;
+
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -36,26 +38,29 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public final class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
+public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-
    private static final List<String> SCOPE = Collections.singletonList("https://www.googleapis.com/auth/appengine.admin");
 
    public GoogleOAuthAuthenticator() throws IOException
    {
-      this(new MemoryCredentialStore(), loadClientSecrets("client_secrets.json"));
+      this(new MemoryCredentialStore(), loadClientSecrets("google_client_secrets.json"));
+   }
+
+   public GoogleOAuthAuthenticator(CredentialStore credentialStore) throws IOException
+   {
+      this(credentialStore, loadClientSecrets("google_client_secrets.json"));
    }
 
    protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
-      this.flow = new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
-         SCOPE).setCredentialStore(credentialStore).build();
-      List<String> redirectUris = clientSecrets.getDetails().getRedirectUris();
-      if (redirectUris == null || redirectUris.isEmpty())
-      {
-         throw new RuntimeException("Redirect URI not found. ");
-      }
-      this.redirectUri = redirectUris.get(0);
+      super(
+         new GoogleAuthorizationCodeFlow.Builder(
+            new NetHttpTransport(),
+            new JacksonFactory(),
+            clientSecrets, SCOPE)
+            .setCredentialStore(credentialStore).build(),
+         new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
 
    @Override
