@@ -293,7 +293,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
             useWebSocketForCallback = true;
             gitCloneStatusHandler = new CloneRequestStatusHandler(project.getName(), gitLocation);
             gitCloneStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -315,7 +315,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
                      gitCloneStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -417,7 +417,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          gitCloneStatusHandler.requestFinished(project.getId());
          updateProperties();
@@ -426,7 +426,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          gitCloneStatusHandler.requestError(project.getId(), exception);
          IDE.fireEvent(new ExceptionThrownEvent(exception));

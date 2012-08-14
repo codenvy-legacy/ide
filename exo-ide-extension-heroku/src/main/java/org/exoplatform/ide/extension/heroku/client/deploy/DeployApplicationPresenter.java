@@ -189,7 +189,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             appCreateRequestHandler = new CreateRequestHandler();
             appCreateRequestHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
+            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED, appCreatedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -215,7 +215,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   paasCallback.onDeploy(false);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
+                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, appCreatedHandler);
                      appCreateRequestHandler.requestError(project.getId(), exception);
                   }
                }
@@ -342,7 +342,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
             useWebSocketForCallback = true;
             gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
             gitInitStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -364,7 +364,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
                   handleGitError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
                      gitInitStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -400,7 +400,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          gitInitStatusHandler.requestFinished(project.getId());
          createApplication();
@@ -409,7 +409,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          gitInitStatusHandler.requestError(project.getId(), exception);
          handleGitError(exception);
@@ -424,7 +424,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
 
          List<Property> properties = parseApplicationProperties(event.getPayload().getPayload());
          if (properties != null)
@@ -438,7 +438,7 @@ public class DeployApplicationPresenter implements PaasComponent, VfsChangedHand
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
 
          if (exception.getMessage() != null && !exception.getMessage().isEmpty())
          {

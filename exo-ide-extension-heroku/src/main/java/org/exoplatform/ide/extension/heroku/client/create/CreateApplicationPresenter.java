@@ -206,7 +206,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
+            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED, appCreatedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -233,7 +233,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
                   super.onFailure(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), appCreatedHandler);
+                     ws.messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, appCreatedHandler);
                   }
                }
             });
@@ -300,7 +300,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
 
          List<Property> properties = parseApplicationProperties(event.getPayload().getPayload());
          if (properties != null)
@@ -313,7 +313,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
 
          if (exception.getMessage() != null && !exception.getMessage().isEmpty())
          {

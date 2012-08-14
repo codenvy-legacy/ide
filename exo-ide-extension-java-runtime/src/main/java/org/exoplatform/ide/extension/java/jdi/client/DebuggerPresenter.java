@@ -712,7 +712,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             useWebSocketForCallback = true;
             runStatusHandler = new RunningAppStatusHandler(project.getName());
             runStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.DEBUG_STARTED.toString(), debugStartedHandler);
+            ws.messageBus().subscribe(Channels.DEBUG_STARTED, debugStartedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -736,7 +736,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                      + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), debugStartedHandler);
+                     ws.messageBus().unsubscribe(Channels.DEBUG_STARTED, debugStartedHandler);
                      runStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -765,7 +765,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.messageBus().subscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
+            ws.messageBus().subscribe(Channels.DEBUGGER_EVENT, debuggerEventHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -784,7 +784,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   reLaunchDebugger(debugApplicationInstance);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
+                     ws.messageBus().unsubscribe(Channels.DEBUGGER_EVENT, debuggerEventHandler);
                   }
                }
             });
@@ -813,7 +813,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             useWebSocketForCallback = true;
             runStatusHandler = new RunningAppStatusHandler(project.getName());
             runStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.APP_STARTED.toString(), appStartedHandler);
+            ws.messageBus().subscribe(Channels.APP_STARTED, appStartedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -835,7 +835,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.APP_STARTED.toString(), appStartedHandler);
+                     ws.messageBus().unsubscribe(Channels.APP_STARTED, appStartedHandler);
                      runStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -1108,7 +1108,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onMessage(WebSocketEventMessage message)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED, this);
 
          AutoBean<ApplicationInstance> app =
             AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, ApplicationInstance.class, message.getPayload());
@@ -1119,7 +1119,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.APP_STARTED, this);
 
          handleError(exception);
          runStatusHandler.requestError(project.getId(), exception);

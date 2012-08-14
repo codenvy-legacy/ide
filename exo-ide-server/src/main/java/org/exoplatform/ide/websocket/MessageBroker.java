@@ -284,7 +284,21 @@ public class MessageBroker
    /**
     * Publishes a message in a particular channel.
     * 
-    * @param channel channel name
+    * @param channel channel identifier
+    * @param message the text message to be published to the channel
+    * @param an exception to be sent to the client. May be <code>null</code>.
+    * @param excludeSessionId identifier of the WebSocket session,
+    *          who does not will be sent a message
+    */
+   public void publish(Channels channel, String message, Exception e, String excludeSessionId)
+   {
+      publish(channel.toString(), message, e, excludeSessionId);
+   }
+
+   /**
+    * Publishes a message in a particular channel.
+    * 
+    * @param channel channel identifier
     * @param message the text message to be published to the channel
     * @param an exception to be sent to the client. May be <code>null</code>.
     * @param excludeSessionId identifier of the WebSocket session,

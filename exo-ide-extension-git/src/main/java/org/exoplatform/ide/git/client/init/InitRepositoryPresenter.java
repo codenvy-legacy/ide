@@ -153,7 +153,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             useWebSocketForCallback = true;
             statusHandler = new InitRequestStatusHandler(projectName);
             statusHandler.requestInProgress(projectId);
-            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -177,7 +177,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
                      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
                      statusHandler.requestError(project.getId(), exception);
                   }
@@ -210,7 +210,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
          statusHandler.requestFinished(project.getId());
@@ -221,7 +221,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
          statusHandler.requestError(project.getId(), exception);

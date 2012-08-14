@@ -642,8 +642,8 @@ public class GitService
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(MessageBroker.Channels channels, Exception e)
+   private void publishWebSocketMessage(MessageBroker.Channels channel, Exception e)
    {
-      messageBroker.publish(channels.toString(), null, e, null);
+      messageBroker.publish(channel.toString(), null, e, null);
    }
 }

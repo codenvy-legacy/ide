@@ -32,8 +32,7 @@ import org.exoplatform.ide.helper.ParsingResponseException;
 public class WebSocketCallMessage
 {
    /**
-    * To allow the client to assign a certain result to a previous
-    * request the client assigns a call identifier to each request.
+    * To allow the client to assign a certain result to a previous request.
     */
    private String callId;
 

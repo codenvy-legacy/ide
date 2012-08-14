@@ -382,7 +382,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             useWebSocketForCallback = true;
             cloneStatusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
             cloneStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -404,7 +404,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
                      cloneStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -469,7 +469,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          cloneStatusHandler.requestFinished(project.getId());
          onRepositoryCloned();
@@ -478,7 +478,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          cloneStatusHandler.requestError(project.getId(), exception);
          handleError(exception);

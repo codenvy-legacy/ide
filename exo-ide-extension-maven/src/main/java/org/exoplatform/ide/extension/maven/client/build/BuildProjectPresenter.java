@@ -206,7 +206,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.messageBus().subscribe(Channels.MAVEN_BUILD_STATUS.toString(), projectBuiltHandler);
+            ws.messageBus().subscribe(Channels.MAVEN_BUILD_STATUS, projectBuiltHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -244,7 +244,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   }
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS.toString(), projectBuiltHandler);
+                     ws.messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, projectBuiltHandler);
                   }
                }
             });
@@ -664,7 +664,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, this);
 
          AutoBean<BuildStatus> buildStatusBean =
             AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class, event.getPayload());
@@ -674,7 +674,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, this);
 
          statusHandler.requestError(projectId, exception);
          setBuildInProgress(false);

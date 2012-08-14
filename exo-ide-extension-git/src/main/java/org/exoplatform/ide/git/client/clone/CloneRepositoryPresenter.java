@@ -191,7 +191,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             useWebSocketForCallback = true;
             statusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
             statusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -215,7 +215,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), repoClonedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
                      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
                      statusHandler.requestError(project.getId(), exception);
                   }
@@ -248,7 +248,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
          statusHandler.requestFinished(project.getId());
@@ -259,7 +259,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
          ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
          statusHandler.requestError(project.getId(), exception);

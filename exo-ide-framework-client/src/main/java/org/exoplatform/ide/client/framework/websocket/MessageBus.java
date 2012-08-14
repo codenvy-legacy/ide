@@ -29,8 +29,8 @@ import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallMess
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallResultMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketPublishMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketMessage.Type;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketPublishMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketSubscribeMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketWelcomeMessage;
 
@@ -176,7 +176,28 @@ public class MessageBus implements WebSocketMessageHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a subscription was successful or not.
     * 
-    * @param channel channel name
+    * @param channel channel identifier
+    * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire
+    *                   when receiving an event on the subscribed channel
+    * @throws WebSocketException if an error has occurred while sending data
+    */
+   public void subscribe(Channels channel, WebSocketEventHandler webSocketEventHandler) throws WebSocketException
+   {
+      subscribe(channel.toString(), webSocketEventHandler);
+   }
+
+   /**
+    * Registers a new subscriber which will receive messages on a particular channel.
+    * Upon the first subscribe to a channel, a message is sent to the server to
+    * subscribe the client for that channel. Subsequent subscribes for a channel
+    * already previously subscribed to do not trigger a send of another message
+    * to the server because the client has already a subscription, and merely registers
+    * (client side) the additional handler to be fired for events received on the respective channel.
+    * 
+    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
+    * feedback whether a subscription was successful or not.
+    * 
+    * @param channel channel identifier
     * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire
     *                   when receiving an event on the subscribed channel
     * @throws WebSocketException if an error has occurred while sending data
@@ -216,7 +237,23 @@ public class MessageBus implements WebSocketMessageHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a unsubscription was successful or not.
     * 
-    * @param channel channel name
+    * @param channel channel identifier
+    * @param webSocketEventHandler the {@link WebSocketEventHandler} for which to remove the subscription
+    */
+   public void unsubscribe(Channels channel, WebSocketEventHandler webSocketEventHandler)
+   {
+      unsubscribe(channel.toString(), webSocketEventHandler);
+   }
+
+   /**
+    * Unregisters existing subscriber to receive messages on a particular channel.
+    * If it's the last unsubscribe to a channel, a message is sent to the server to
+    * unsubscribe the client for that channel.
+    * 
+    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
+    * feedback whether a unsubscription was successful or not.
+    * 
+    * @param channel channel identifier
     * @param webSocketEventHandler the {@link WebSocketEventHandler} for which to remove the subscription
     */
    public void unsubscribe(String channel, WebSocketEventHandler webSocketEventHandler)
@@ -273,15 +310,27 @@ public class MessageBus implements WebSocketMessageHandler
    /**
     * Publishes a message in a particular channel.
     * 
-    * @param channelId channel identifier
+    * @param channel channel identifier
     * @param data the text data to be published to the channel
     * @throws WebSocketException throws if an error has occurred while publishing data
     */
-   public void publish(String channelId, String data) throws WebSocketException
+   public void publish(Channels channel, String data) throws WebSocketException
+   {
+      publish(channel.toString(), data);
+   }
+
+   /**
+    * Publishes a message in a particular channel.
+    * 
+    * @param channel channel identifier
+    * @param data the text data to be published to the channel
+    * @throws WebSocketException throws if an error has occurred while publishing data
+    */
+   public void publish(String channel, String data) throws WebSocketException
    {
       WebSocketPublishMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketPublishMessage().as();
       message.setType(WebSocketMessage.Type.PUBLISH);
-      message.setChannel(channelId);
+      message.setChannel(channel);
       message.setPayload(data);
 
       AutoBean<WebSocketPublishMessage> webSocketPublishMessageBean =

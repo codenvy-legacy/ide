@@ -271,7 +271,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            ws.messageBus().subscribe(Channels.JENKINS_BUILD_STATUS.toString(), jenkinsBuildStatusHandler);
+            ws.messageBus().subscribe(Channels.JENKINS_BUILD_STATUS, jenkinsBuildStatusHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -302,7 +302,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS.toString(), jenkinsBuildStatusHandler);
+                     ws.messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, jenkinsBuildStatusHandler);
                   }
                }
             });
@@ -520,7 +520,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             useWebSocketForCallback = true;
             gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
             gitInitStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -544,7 +544,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                   handleError(exception);
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), repoInitializedHandler);
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
                   }
                }
             });
@@ -609,7 +609,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          updateJobStatus(buildStatus);
          if (buildStatus.getStatus() == Status.END)
          {
-            WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS.toString(), this);
+            WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, this);
             onJobFinished(buildStatus);
          }
       }
@@ -617,7 +617,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, this);
 
          String exceptionMessage = null;
          if (exception.getMessage() != null && exception.getMessage().length() > 0)
@@ -643,7 +643,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       public void onMessage(WebSocketEventMessage event)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          gitInitStatusHandler.requestFinished(project.getId());
          showBuildMessage(GitExtension.MESSAGES.initSuccess());
@@ -654,7 +654,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
 
          gitInitStatusHandler.requestError(project.getId(), exception);
          handleError(exception);
