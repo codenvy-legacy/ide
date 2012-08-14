@@ -26,7 +26,14 @@ import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.jackson.JacksonFactory;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +46,7 @@ import java.util.List;
 public final class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
 
-   private static final List<String> SCOPE = Collections.singletonList("https://www.googleapis.com/auth/appengine.admin");
+   private static final List<String> SCOPE = Collections.singletonList("https://www.googleapis.com/auth/userinfo.profile");
 
    public GoogleOAuthAuthenticator() throws IOException
    {
@@ -67,7 +74,48 @@ public final class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
    @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      return new User(null);
+      HttpURLConnection urlConnection= null;
+      InputStream urlInputStream = null;
+
+      try
+      {
+         URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken);
+         urlConnection = (HttpURLConnection)url.openConnection();
+         urlInputStream = urlConnection.getInputStream();
+
+         JsonParser parser = new JsonParser();
+         parser.parse(urlInputStream);
+         JsonValue jsonValue = parser.getJsonObject();
+
+         return ObjectBuilder.createObject(GoogleUser.class, jsonValue);
+      }
+      catch (JsonException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      finally
+      {
+         if (urlInputStream != null)
+         {
+            try
+            {
+               urlInputStream.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+
+         if (urlConnection != null)
+         {
+            urlConnection.disconnect();
+         }
+      }
+
    }
 
    @Override
