@@ -35,6 +35,7 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -89,21 +90,21 @@ public final class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
       HttpURLConnection urlConnection= null;
+      InputStream urlInputStream = null;
 
       try
       {
          URL url = new URL("https://api.github.com/user?access_token=" + accessToken);
          urlConnection = (HttpURLConnection)url.openConnection();
+         urlInputStream = urlConnection.getInputStream();
+
          JsonParser parser = new JsonParser();
-         parser.parse(urlConnection.getInputStream());
+         parser.parse(urlInputStream);
          JsonValue jsonValue = parser.getJsonObject();
+
          return ObjectBuilder.createObject(GitHubUser.class, jsonValue);
       }
       catch (JsonException e)
-      {
-         throw new OAuthAuthenticationException(e.getMessage(), e);
-      }
-      catch (MalformedURLException e)
       {
          throw new OAuthAuthenticationException(e.getMessage(), e);
       }
@@ -113,6 +114,18 @@ public final class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
       }
       finally
       {
+         if (urlInputStream != null)
+         {
+            try
+            {
+               urlInputStream.close();
+            }
+            catch (IOException e)
+            {
+               throw new OAuthAuthenticationException(e.getMessage(), e);
+            }
+         }
+
          if (urlConnection != null)
          {
             urlConnection.disconnect();
