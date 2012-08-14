@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.messages;
 
-import com.google.gwt.i18n.client.Constants;
+import com.google.gwt.i18n.client.Messages;
 
 /**
  * Interface to represent the constants for template and project forms contained in resource bundle:
@@ -28,7 +28,7 @@ import com.google.gwt.i18n.client.Constants;
  * @version $Id: TemplateConstant.java Jun 2, 2011 2:59:52 PM vereshchaka $
  * 
  */
-public interface IdeTemplateLocalizationConstant extends Constants
+public interface IdeTemplateLocalizationConstant extends Messages
 {
 
    /*
@@ -84,6 +84,33 @@ public interface IdeTemplateLocalizationConstant extends Constants
 
    @Key("createProjectFromTemplate.nameField")
    String createProjectFromTemplateName();
+
+   @Key("createProjectFromTemplate.selectProject")
+   String createProjectFromTemplateSelectProject();
+
+   @Key("createProjectFromTemplate.deployField")
+   String createProjectFromTemplateDeployField();
+
+   @Key("createProjectFromTemplate.descriptionField")
+   String createProjectFromTemplateDescriptionField();
+
+   @Key("createProjectFromTemplate.selectTemplate")
+   String createProjectFromTemplateSelectTemplate();
+
+   @Key("createProjectFromTemplate.project.exists")
+   String createProjectFromTemplateProjectExists(String projectName);
+
+   @Key("creatingProject")
+   String creatingProject();
+
+   @Key("noRegistedDeployAction")
+   String noRegistedDeployAction(String target);
+
+   @Key("noProjectTempate")
+   String noProjectTempate();
+
+   @Key("noProjectTemplateForTarget")
+   String noProjectTemplateForTarget(String target);
 
    /*
     * CreateProjectTemplateForm

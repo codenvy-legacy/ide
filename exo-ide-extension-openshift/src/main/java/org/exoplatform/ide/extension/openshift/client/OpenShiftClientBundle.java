@@ -32,7 +32,10 @@ import com.google.gwt.resources.client.ImageResource;
 public interface OpenShiftClientBundle extends ClientBundle
 {
    OpenShiftClientBundle INSTANCE = GWT.<OpenShiftClientBundle> create(OpenShiftClientBundle.class);
-
+   
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_32.png")
+   ImageResource openShiftLogo();
+   
    @Source("org/exoplatform/ide/extension/openshift/images/buttons/ok.png")
    ImageResource okButton();
 

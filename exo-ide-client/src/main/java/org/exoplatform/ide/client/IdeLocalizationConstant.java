@@ -84,6 +84,10 @@ public interface IdeLocalizationConstant extends Constants
    @Key("backButton")
    String backButton();
 
+   @DefaultStringValue("Next")
+   @Key("nextButton")
+   String nextButton();
+
    @DefaultStringValue("Finish")
    @Key("finishButton")
    String finishButton();
@@ -235,10 +239,10 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("control.deleteText")
    String deleteTextControl();
-   
+
    @Key("control.moveLineUp")
    String moveLineUpControl();
-   
+
    @Key("control.moveLineDown")
    String moveLineDownControl();
 
@@ -401,13 +405,12 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.htmlPreview")
    String htmlPreview();
 
-
    @Key("control.closeEditor.title")
    String closeEditorControlTitle();
-   
+
    @Key("control.closeEditor.prompt")
    String closeEditorControlPrompt();
-   
+
    /*
     * 
     */

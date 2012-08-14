@@ -18,39 +18,31 @@
  */
 package org.exoplatform.ide.client.navigation.handler;
 
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.editor.EditorFactory;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.model.template.FileTemplates;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
+import org.exoplatform.ide.client.framework.template.FileTemplates;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
 import org.exoplatform.ide.client.navigation.event.CreateNewFileHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -59,14 +51,12 @@ import java.util.Set;
  * @version $Id: $
  */
 public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSelectedHandler, EditorFileOpenedHandler,
-   EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   EditorFileClosedHandler
 {
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-
-   private ApplicationSettings applicationSettings;
 
    private static final String UNTITLED_FILE_NAME = IDE.NAVIGATION_CONSTANT.createFileUntitledFileName();
 
@@ -74,7 +64,6 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
    {
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
 
       IDE.addHandler(CreateNewFileEvent.TYPE, this);
@@ -87,7 +76,13 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
 
    public void onCreateNewFile(CreateNewFileEvent event)
    {
-      String extension = IDEMimeTypes.getExtensionsMap().get(event.getMimeType());
+      FileType fileType = IDE.getInstance().getFileTypeRegistry().getFileType(event.getMimeType());
+      if (fileType == null)
+      {
+         return;
+      }
+      
+      String extension = fileType.getExtension();
 
       String content = FileTemplates.getTemplateFor(event.getMimeType());
 
@@ -103,7 +98,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
          fileName = UNTITLED_FILE_NAME + " " + index + "." + extension;
          index++;
       }
-      
+
       FolderModel parent = new FolderModel();
       ProjectModel project = null;
       if (selectedItems != null && selectedItems.size() != 0)
@@ -134,24 +129,7 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
       newFile.setId(fileName);
       newFile.setProject(project);
 
-      Map<String, String> defaultEditors = applicationSettings.getValueAsMap("default-editors");
-      if (defaultEditors == null)
-      {
-         defaultEditors = new LinkedHashMap<String, String>();
-      }
-
-      try
-      {
-         String defaultEditorDescription = defaultEditors.get(event.getMimeType());
-         // Editor editor = EditorUtil.getEditor(event.getMimeType(), defaultEditorDescription);
-         EditorProducer producer = EditorFactory.getEditorProducer(event.getMimeType(), defaultEditorDescription);
-         IDE.fireEvent(new EditorOpenFileEvent(newFile, producer));
-      }
-      catch (EditorNotFoundException e)
-      {
-         Dialogs.getInstance().showError(
-            IDE.IDE_LOCALIZATION_MESSAGES.createFileCantFindEditorForType(event.getMimeType()));
-      }
+      IDE.fireEvent(new EditorOpenFileEvent(newFile));
    }
 
    public void onEditorFileOpened(EditorFileOpenedEvent event)
@@ -162,11 +140,6 @@ public class CreateFileCommandHandler implements CreateNewFileHandler, ItemsSele
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      applicationSettings = event.getApplicationSettings();
    }
 
 }

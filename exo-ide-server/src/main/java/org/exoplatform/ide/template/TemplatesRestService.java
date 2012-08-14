@@ -349,7 +349,7 @@ public class TemplatesRestService
       try
       {
          templateStream =
-                  Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
+            Thread.currentThread().getContextClassLoader().getResourceAsStream("projects/" + templateName + ".zip");
          if (templateStream == null)
             throw new InvalidArgumentException("Can't find " + templateName + ".zip");
          vfs.importZip(projectFolder.getId(), templateStream, true);
@@ -517,6 +517,10 @@ public class TemplatesRestService
          {
             template.setDescription(prop.getValue().get(0));
          }
+         else if ("exoide:target".equals(name))
+         {
+            template.setDestination(prop.getValue());
+         }
       }
       return template;
    }
@@ -541,27 +545,6 @@ public class TemplatesRestService
 
       return fileTemplateList;
    }
-
-   // private ProjectTemplate parseProjectTemplateObject(ObjectValue obj)
-   // {
-   // ProjectTemplate projectTemplate = new ProjectTemplate();
-   // projectTemplate.setName(obj.getElement("name").getStringValue());
-   // projectTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
-   // if (obj.getElement("description") != null)
-   // {
-   // projectTemplate.setDescription(obj.getElement("description").getStringValue());
-   // }
-   // if (obj.getElement("type") != null)
-   // {
-   // projectTemplate.setType(obj.getElement("type").getStringValue());
-   // }
-   // if (obj.getElement("children") != null)
-   // {
-   // ArrayValue childrenArray = (ArrayValue)obj.getElement("children");
-   // projectTemplate.getChildren().addAll(parseChildrenArrayJsonObject(childrenArray));
-   // }
-   // return projectTemplate;
-   // }
 
    private List<Template> parseChildrenArrayJsonObject(ArrayValue childrenArray)
    {
@@ -617,7 +600,8 @@ public class TemplatesRestService
       fileTemplate.setDescription(obj.getElement("description").getStringValue());
       fileTemplate.setMimeType(obj.getElement("mimeType").getStringValue());
       fileTemplate.setContent(obj.getElement("content").getStringValue());
-      fileTemplate.setDefault(obj.getElement("isDefault").getBooleanValue());
+      fileTemplate.setDefault((obj.getElement("default") != null) ? obj.getElement("default").getBooleanValue() : obj
+         .getElement("isDefault").getBooleanValue());
       return fileTemplate;
    }
 

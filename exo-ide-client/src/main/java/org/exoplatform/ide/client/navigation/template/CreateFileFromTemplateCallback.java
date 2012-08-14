@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.navigation.template;
 
-import org.exoplatform.ide.client.model.template.FileTemplate;
+import org.exoplatform.ide.client.framework.template.FileTemplate;
 
 /**
  * 

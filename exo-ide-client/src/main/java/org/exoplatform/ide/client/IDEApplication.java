@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.client;
 
-import org.exoplatform.gwtframework.commons.util.Log;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+
+import org.exoplatform.gwtframework.commons.util.Log;
 
 /**
  * Created by The eXo Platform SAS.

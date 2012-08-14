@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.cloudbees.client.initialize.CreateApplicationRequestHandler;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
@@ -226,7 +227,8 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       if (message != null && !message.isEmpty())
          params += "&message=" + message;
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
+         .requestStatusHandler(new CreateApplicationRequestHandler(appId))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 

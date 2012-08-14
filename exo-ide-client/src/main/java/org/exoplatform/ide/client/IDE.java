@@ -21,7 +21,6 @@ package org.exoplatform.ide.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -49,6 +48,7 @@ import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
@@ -74,9 +74,8 @@ import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.editor.api.EditorProducer;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 /**
  * Created by The eXo Platform SAS .
@@ -90,6 +89,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    private ControlsRegistration controlsRegistration;
 
    private List<Paas> paasRegistration;
+
+   private List<PaaS> registeredPaaS;
 
    private IDEPresenter presenter;
 
@@ -330,6 +331,28 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
             fireEvent(new ApplicationClosingEvent(event));
          }
       });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#getPaaSes()
+    */
+   @Override
+   public List<PaaS> getPaaSes()
+   {
+      if (registeredPaaS == null)
+      {
+         registeredPaaS = new ArrayList<PaaS>();
+      }
+      return registeredPaaS;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.module.IDE#registerPaaS(org.exoplatform.ide.client.framework.paas.recent.PaaS)
+    */
+   @Override
+   public void registerPaaS(PaaS paas)
+   {
+      getPaaSes().add(paas);
    }
 
 }

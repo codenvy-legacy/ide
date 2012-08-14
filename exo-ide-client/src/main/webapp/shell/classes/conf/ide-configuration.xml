@@ -88,7 +88,7 @@
    
 <!-- End VirtualFileSystem -->  
 
-<!-- LogReader -->   
+<!-- LogReader -->
    <component>
       <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
@@ -157,8 +157,8 @@
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.IDEGroovyClassLoaderProvider</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
    </component>
    
@@ -186,7 +186,7 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
@@ -194,10 +194,10 @@
 <!-- End Chromattic Support -->
 
 <!--  Java  Support-->
-    <component>
+   <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.java.server.JavaCodeAssistant</type>
    </component>
@@ -206,12 +206,12 @@
       <type>org.exoplatform.ide.extension.java.jdi.server.DebuggerApplication</type>
    </component>
 
-  <component>
+   <component>
       <type>org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient</type>
       <init-params>
          <value-param>
             <name>codeassistant-storage-base-url</name>
-            <value>http://localhost:8080/storage</value>
+            <value>http://localhost:8080/codeassistant-storage </value>
          </value-param>
       </init-params>
    </component>
@@ -229,7 +229,7 @@
          </value-param>
       </init-params>
    </component>
-   
+
    <component>
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
       <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
@@ -237,7 +237,7 @@
    
 <!-- End Java Support -->
 
-<!-- Python Support -->   
+<!-- Python Support -->
 
    <component>
       <key>org.exoplatform.ide.extension.python.server.ApplicationRunner</key>
@@ -250,7 +250,7 @@
 
 <!-- End Python Support -->   
 
-<!-- Google Gadgets support-->   
+<!-- Google Gadgets support-->
 
    <!--component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
@@ -305,8 +305,8 @@
    <component>
       <type>org.exoplatform.ide.extension.maven.server.BuilderApplication</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.extension.maven.server.BuilderClient</type>
       <init-params>
          <value-param>
@@ -326,7 +326,7 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
-   
+
    <component>
       <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
       <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
@@ -347,9 +347,24 @@
             <name>jenkins-password</name>
             <value>9zpkuZ3X</value>
          </value-param>
+         <value-param>
+            <name>api-url</name>
+            <value>http://api.beescloud.com/v2</value>
+         </value-param>
+         <value-param>
+            <name>api-user</name>
+            <value>39106544CD54219FC4D018A43437B530D837E00F</value>
+         </value-param>
+         <value-param>
+            <name>api-key</name>
+            <value>11F3A32EA378329190365A9D964A86BE617D9F70</value>
+         </value-param>
+         <value-param>
+            <name>api-secret</name>
+            <value>NOSWJ6GQKAWPG6IET9S3WAH+1X7AR/XXO2YB9QHDMHQ=</value>
+         </value-param>
       </init-params>
    </component>
-   
 <!-- End Cloudbees -->   
 
 <!-- CloudFoundry -->
@@ -365,11 +380,11 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
-   
-    <component>
+
+   <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
       <init-params>
-            <object-param>
+         <object-param>
             <name>CF1</name>
             <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
                <field name="target">
@@ -383,8 +398,8 @@
                </field>
             </object>
          </object-param>
-   </init-params>
-  </component>
+      </init-params>
+   </component>
 
 <!-- End CloudFoundry -->
 
@@ -454,11 +469,26 @@
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
    </component>
 
 <!-- End Google AppEngine  -->     
+
+<!--
+   ***************************************************************************************
+   ********************************** OpenID Support *************************************
+   ***************************************************************************************
+-->
+
+   <component>
+      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
+   </component>
+
   
 </configuration>
