@@ -93,7 +93,6 @@ public class CreateEmptyProjectPresenter implements CreateEmptyProjectHandler, V
    public CreateEmptyProjectPresenter()
    {
       // IDE.getInstance().addControl(new NewProjectMenuGroup());
-      // IDE.getInstance().addControl(new CreateProjectControl());
 
       IDE.addHandler(CreateEmptyProjectEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);

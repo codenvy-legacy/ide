@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
+import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
@@ -59,8 +60,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       IDE.getInstance().addControl(new NewProjectMenuGroup());
       IDE.getInstance().addControl(new ProjectPaaSControl());
 
-   //   new CreateProjectPresenter();
-      new org.exoplatform.ide.client.project.create.recent.CreateProjectPresenter();
+      new CreateProjectPresenter();
 
       new DeployProjectToPaasPresenter();
 

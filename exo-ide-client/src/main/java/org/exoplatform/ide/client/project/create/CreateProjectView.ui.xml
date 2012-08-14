@@ -1,131 +1,131 @@
-<!--
-
-    Copyright (C) 2012 eXo Platform SAS.
-
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-
--->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
    xmlns:e="urn:import:org.exoplatform.ide.client.project.create">
-
    <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
+   <ui:with field='templateResource' type='org.exoplatform.ide.client.framework.ui.IconImageBundle' />
    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="templateLocale" type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant"></ui:with>
-
    <ui:style>
-      .buttonsBox {
-      display: block;
-      margin: 0 8px;
+      .label {
+      	font-size: 12px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       }
-
-      .left-float {
-      float: left;
+      
+      .error {
+      	font-size: 11px;
+      	color: #D21A1A;
       }
-
-      .rightButton {
-      position: absolute;
-      right: 0;
+      
+      .labelAlign {
+      	margin-top: 10px;
       }
-
-      .formLine {
-      margin-top:
-      8px;
+      
+      .floatRight {
+      	float: right;
+      	margin-left: 5px;
       }
-
-
-      .topBox {
-      background-color: #eef6ff;
-      vertical-align: middle;
-      border-bottom: 1px solid #A6ABAF;
-      width: 100%;
-      height: 60px;
+      
+      .rightAlign {
+      	margin-left: auto;
       }
-
-      .labelValue {
-      font-weight: bold;
+      
+      .title {
+      	height: 45px;
+      	display: block;
+      	width: 100%;
+      	border-bottom: 1px solid #ACACAC;
+      	margin-bottom: 30px;
+      	font-size: 14;
+      	font-weight: bold;
       }
-
-      .labelSubtitle {
-      font-weight: bold;
-      font-align: center;
+      
+      .image {
+      	float: left;
+      	width: 36px;
+      	height: 36px;
+      	margin-right: 10px;
       }
-
-      .middle {
-      position: absolute;
-      right: 100px;
-      }
-
-      .labelTitle {
-      font-size: medium;
-      font-weight: bold;
-      vertical-align: middle;
-      padding-left: 10px;
-      padding-top: 10px;
-      }
-
-      .labelDescription {
-      font-style: italic;
-      vertical-align: middle;
-      padding-left: 10px;
-      padding-top: 5px;
+      
+      .margin {
+      	margin-top: 10px;
+      	margin-left: 15px;
+      	margin-right: 15px;
       }
    </ui:style>
-
-   <g:LayoutPanel>
-      <g:layer>
-         <g:FlowPanel stylePrimaryName="{style.topBox}">
-            <g:Label text="New Project" styleName="{style.labelTitle}"></g:Label>
-            <g:Label text="new project" styleName="{style.labelDescription}"></g:Label>
-         </g:FlowPanel>
-      </g:layer>
-
-      <g:layer top="60px" bottom="33px">
-         <f:Border margin="8">
-            <f:layer>
-               <g:ScrollPanel>
-                  <e:ProjectTemplateListGrid width="100%" ui:field="templateListGrid"></e:ProjectTemplateListGrid>
-               </g:ScrollPanel>
-            </f:layer>
-         </f:Border>
-      </g:layer>
-
-      <g:layer height="33px" bottom="0">
-         <g:FlowPanel width="auto" styleName="{style.buttonsBox}">
-            <g:DockLayoutPanel width="260px" unit="PX" height="22px" stylePrimaryName="{style.left-float}">
-               <g:west size="60">
-                  <g:Label text="Name" height="18px"></g:Label>
+   <f:Border borderColor="transparent" margin="15">
+      <f:layer top="0" bottom="35">
+         <g:FlowPanel>
+            <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
+            </g:FlowPanel>
+            <g:DockLayoutPanel unit="PX" ui:field="createProjectStep" width="100%" height="100%">
+               <g:north size="20">
+                  <f:Label value="{templateLocale.createProjectFromTemplateSelectProject}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
+               </g:north>
+               <g:west size="270">
+                  <f:Border>
+                     <f:layer>
+                        <g:ScrollPanel ui:field="treePanel">
+                        </g:ScrollPanel>
+                     </f:layer>
+                  </f:Border>
+               </g:west>
+               <g:west size="20">
+                  <g:FlowPanel></g:FlowPanel>
                </g:west>
                <g:center>
-                  <f:TextInput ui:field="projectNameField" width="160px" height="22px"></f:TextInput>
+                  <g:DockLayoutPanel unit="PX">
+                     <g:north size="20">
+                        <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
+                     </g:north>
+                     <g:north size="25">
+                        <f:TextInput ui:field="projectNameField" width="100%" height="22px"></f:TextInput>
+                     </g:north>
+                     <g:north size="20">
+                        <f:Label ui:field="errorLabel" isHTML="true" addStyleNames="{style.label} {style.error}" width="100%"></f:Label>
+                     </g:north>
+                     <g:north size="10">
+                        <g:FlowPanel></g:FlowPanel>
+                     </g:north>
+                     <g:north size="20">
+                        <f:Label value="{templateLocale.createProjectFromTemplateDeployField}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
+                     </g:north>
+                     <g:center>
+                        <f:Border>
+                           <f:layer>
+                              <e:TargetGrid width="100%" height="100%" ui:field="targetGrid"></e:TargetGrid>
+                           </f:layer>
+                        </f:Border>
+                     </g:center>
+                  </g:DockLayoutPanel>
                </g:center>
             </g:DockLayoutPanel>
-            <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
-
-            <f:ImageButton ui:field="cancelButton" styleName="{style.middle}" width="90px" text="{locale.cancelButton}" imageName="cancel"
-               buttonId="ideCreateNewProjectCancelButton"></f:ImageButton>
-
-            <f:ImageButton ui:field="nextButton" text="Next" width="90px" styleName="{style.rightButton}" imageResource="{resource.next}"
-               disabledImageResource="{resource.nextDisabled}" buttonId="ideCreateNewProjectNextButton"></f:ImageButton>
-
-            <f:ImageButton ui:field="finishButton" text="Finish" width="90px" styleName="{style.rightButton}" imageResource="{resource.ok}"
-               disabledImageResource="{resource.okDisabled}" buttonId="ideCreateNewProjectNextButton" visible="false"></f:ImageButton>
-
+            <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="90%" styleName="{style.margin}">
+               <g:north size="70">
+                  <g:FlowPanel styleName="{style.title}">
+                     <g:Image resource="{templateResource.template}" styleName="{style.image}"></g:Image>
+                     <g:Label text="{templateLocale.createProjectFromTemplateSelectTemplate}" addStyleNames="{style.label} {style.labelAlign}"></g:Label>
+                  </g:FlowPanel>
+               </g:north>
+               <g:center>
+                  <f:Border>
+                     <f:layer>
+                        <e:ProjectTemplateGrid width="100%" height="100%" ui:field="templatesGrid"></e:ProjectTemplateGrid>
+                     </f:layer>
+                  </f:Border>
+               </g:center>
+            </g:DockLayoutPanel>
          </g:FlowPanel>
-      </g:layer>
-
-   </g:LayoutPanel>
+      </f:layer>
+      <f:layer height="22px" bottom="0">
+         <g:FlowPanel styleName="{style.rightAlign}">
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="finishButton" enabled="false" width="90" height="22" text="{locale.finishButton}" imageName="ok"
+               addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" enabled="false" width="90" height="22" text="{locale.nextButton}" imageName="next"
+               addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="backButton" enabled="true" width="90" height="22" text="{locale.backButton}" imageName="back"
+               addStyleNames="{style.floatRight}"></f:ImageButton>
+         </g:FlowPanel>
+      </f:layer>
+   </f:Border>
 </ui:UiBinder> 
