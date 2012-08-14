@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.problem.Problem;
-import org.exoplatform.ide.extension.java.jdi.shared.Location;
+import org.exoplatform.ide.editor.java.client.Breakpoint;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
  * 
  */
-public class CurrentEditorBreakPoint implements Problem
+public class CurrentEditorBreakPoint extends Breakpoint
 {
 
-   private String message;
-   private int line;
    private String filePath;
 
   
@@ -40,102 +37,10 @@ public class CurrentEditorBreakPoint implements Problem
     */
    public CurrentEditorBreakPoint(int line, String message, String filePath)
    {
-      this.line = line;
-      this.message = message;
+      super(Type.CURRENT, line, message);
       this.filePath = filePath;
    }
 
-   public CurrentEditorBreakPoint()
-   {
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getID()
-    */
-   @Override
-   public int getID()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getMessage()
-    */
-   @Override
-   public String getMessage()
-   {
-      return message;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getLineNumber()
-    */
-   @Override
-   public int getLineNumber()
-   {
-      return line;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getEnd()
-    */
-   @Override
-   public int getEnd()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getStart()
-    */
-   @Override
-   public int getStart()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isError()
-    */
-   @Override
-   public boolean isError()
-   {
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isWarning()
-    */
-   @Override
-   public boolean isWarning()
-   {
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#isBreakpoint()
-    */
-   @Override
-   public boolean isBreakpoint()
-   {
-      return false;
-   }
-
-   @Override
-   public boolean isCurrentBreakPoint()
-   {
-      return true;
-   }
-
-   public void setLine(int line)
-   {
-      this.line = line;
-   }
-
-   public void setMessage(String message)
-   {
-      this.message = message;
-   }
    
    public String getFilePath()
    {
@@ -147,17 +52,22 @@ public class CurrentEditorBreakPoint implements Problem
       this.filePath = filePath;
    }
    
-   public int getLine()
-   {
-      return line;
-   }
 
    @Override
    public boolean equals(Object obj)
    {
       if (obj instanceof CurrentEditorBreakPoint)
-         return line == ((CurrentEditorBreakPoint)obj).getLineNumber();
+         return getLineNumber() == ((CurrentEditorBreakPoint)obj).getLineNumber();
       return false;
+   }
+
+
+   /**
+    * @param lineNumber
+    */
+   public void setLineNumber(int lineNumber)
+   {
+      this.lineNumber = lineNumber;
    }
 
 }

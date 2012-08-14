@@ -42,7 +42,9 @@ public class ImageUtil
 
    static
    {
+      // TODO
       images.put(null, IconImageBundle.INSTANCE.defaultFile());
+      
       images.put(Folder.FOLDER_MIME_TYPE, IconImageBundle.INSTANCE.folder());
       images.put(Project.PROJECT_MIME_TYPE, IconImageBundle.INSTANCE.defaultProject());
    }

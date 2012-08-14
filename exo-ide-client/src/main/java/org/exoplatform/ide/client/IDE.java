@@ -28,25 +28,26 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
 import org.exoplatform.ide.client.application.EditControlsFormatter;
+import org.exoplatform.ide.client.application.IDEFileTypeRegistry;
 import org.exoplatform.ide.client.application.IDEForm;
 import org.exoplatform.ide.client.application.IDEPresenter;
 import org.exoplatform.ide.client.application.MainMenuControlsFormatter;
 import org.exoplatform.ide.client.application.NewItemControlsFormatter;
 import org.exoplatform.ide.client.application.ViewControlsFormatter;
 import org.exoplatform.ide.client.authentication.LoginPresenter;
+import org.exoplatform.ide.client.debug.IDEDebug;
 import org.exoplatform.ide.client.dialogs.AskForValueDialog;
 import org.exoplatform.ide.client.dialogs.IDEDialogs;
 import org.exoplatform.ide.client.documentation.DocumentationPresenter;
 import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
-import org.exoplatform.ide.client.editor.EditorFactory;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
@@ -71,7 +72,6 @@ import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
-import org.exoplatform.ide.editor.api.EditorProducer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +127,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
    public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
 
+   private FileTypeRegistry fileTypeRegistry = new IDEFileTypeRegistry();
+   
    public IDE()
    {
       // Remember browser's window.alert(...) function
@@ -184,8 +186,10 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 
       new WebSocketHandler();
 
+      new IDEDebug();
+
       // initialize extensions
-      for (Extension ext : extensions())
+      for (Extension ext : getExtensions())
       {
          ext.initialize();
       }
@@ -226,29 +230,11 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       presenter.closeView(viewId);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
-    */
-   @Override
-   public void addEditor(EditorProducer editorProducer)
-   {
-      EditorFactory.addEditor(editorProducer);
-   }
-
    @Override
    public void openView(View view)
    {
       ClearFocusForm.getInstance().clearFocus();
       presenter.openView(view);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#getEditor(java.lang.String)
-    */
-   @Override
-   public EditorProducer getEditor(String mimeType) throws EditorNotFoundException
-   {
-      return EditorFactory.getDefaultEditor(mimeType);
    }
 
    /**
@@ -260,7 +246,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       OutlineItemCreatorFactory.addOutlineItemCreator(mimeType, outlineItemCreator);
    }
-
+ 
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#getOutlineItemCreator(java.lang.String)
     */
@@ -331,5 +317,26 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
          }
       });
    }
+
+   @Override
+   public FileTypeRegistry getFileTypeRegistry()
+   {
+      return fileTypeRegistry;
+   }
+
+//   /**
+//    * @see org.exoplatform.ide.client.framework.module.IDE#addEditor(org.exoplatform.ide.editor.api.EditorProducer)
+//    */
+//   @Override
+//   public void addEditor(Editor editor)
+//   {
+//      EditorFactory.addEditor(editor);
+//   }
+//
+//   @Override
+//   public Editor[] getEditors(String mimeType) throws EditorNotFoundException
+//   {
+//      return EditorFactory.getEditors(mimeType);
+//   }
 
 }

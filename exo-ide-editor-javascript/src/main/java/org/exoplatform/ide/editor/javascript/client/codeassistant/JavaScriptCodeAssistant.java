@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.editor.javascript.client.codeassistant;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.Log;
@@ -36,14 +35,15 @@ import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.codeassistant.util.JSONTokenParser;
+import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -87,7 +87,7 @@ public class JavaScriptCodeAssistant extends CodeAssistant implements Comparator
       this.posY = cursorOffsetY;
       try
       {
-         parseTokenLine(editor.getLineText(editor.getCursorRow()), editor.getCursorCol());
+         parseTokenLine(editor.getLineText(editor.getCursorRow()), editor.getCursorColumn());
 
          if (defaultTokens == null)
          {

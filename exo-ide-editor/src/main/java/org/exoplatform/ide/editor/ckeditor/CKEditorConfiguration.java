@@ -26,7 +26,6 @@ import com.google.gwt.core.client.GWT;
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $
  */
-
 public class CKEditorConfiguration
 {
 

@@ -567,7 +567,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
                   openFile(location);
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
-               currentBreakPoint.setLine(location.getLineNumber());
             }
             doGetDump();
             enabelButtons();

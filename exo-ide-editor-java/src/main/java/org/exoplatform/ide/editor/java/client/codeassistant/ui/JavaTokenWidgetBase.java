@@ -18,20 +18,20 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant.ui;
 
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
 
 import org.exoplatform.ide.editor.api.codeassitant.Modifier;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperties;
 import org.exoplatform.ide.editor.api.codeassitant.TokenProperty;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidget;
-import org.exoplatform.ide.editor.codeassistant.util.ModifierHelper;
+import org.exoplatform.ide.editor.codeassistant.ModifierHelper;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.List;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS.

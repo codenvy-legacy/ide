@@ -30,32 +30,33 @@ import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.EditorParameters;
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
+import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
+import org.exoplatform.ide.editor.api.codeassitant.CanInsertImportStatement;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedEvent;
-import org.exoplatform.ide.editor.api.event.EditorTokenListPreparedHandler;
-import org.exoplatform.ide.editor.keys.KeyHandler;
-import org.exoplatform.ide.editor.keys.KeyManager;
-import org.exoplatform.ide.editor.notification.Notification;
-import org.exoplatform.ide.editor.notification.OverviewRuler;
-import org.exoplatform.ide.editor.problem.LineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.problem.LineNumberDoubleClickEvent;
-import org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.problem.Markable;
-import org.exoplatform.ide.editor.problem.Problem;
-import org.exoplatform.ide.editor.problem.ProblemClickEvent;
-import org.exoplatform.ide.editor.problem.ProblemClickHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.DocumentEvent;
@@ -63,17 +64,27 @@ import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IDocumentListener;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.rebind.rpc.ProblemReport.Problem;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -81,45 +92,79 @@ import com.google.gwt.user.client.ui.TextArea;
  * @version $Id: CodeMirror Feb 9, 2011 4:58:14 PM $
  * 
  */
-public class CodeMirror extends Editor implements EditorTokenListPreparedHandler, Markable, IDocumentListener,
-   KeyManager
-{
+public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocumentListener, CanInsertImportStatement
+{   
+  
+   /**
+    * Height of line in the CodeMirror in pixels.
+    */
+   public static final int LINE_HEIGHT = 16;
+   
+   /**
+    * Width of column with line numbers in pixels.
+    */
+   public static final int LINE_NUMBERS_COLUMN_WIDTH = 48;
+   
+   /**
+    * Width of character in the CodeMirror in pixels.
+    */
+   public static final int CHARACTER_WIDTH = 8;
 
-   protected String editorId;
+   /**
+    * Offset of the lines from left in pixels.
+    */
+   public static final int LINE_OFFSET_LEFT = 11;
 
-   protected TextArea textArea;
+   
+   public static final int codeErrorCorrectionPopupOffsetLeft = 6; // top offset of character of the line in px
+
+   private static int codeErrorCorrectionPopupOffsetTop = 22; // top offset of character of the line in px
+   
+   
+   private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;   
+   
+   
+   
+   /**
+    * Editor's ID.
+    */
+   private final String id;
+   
+   /**
+    * Media type of document.
+    */
+   private final String mimeType;
+   
+   /**
+    * Configuration of CodeMirror.
+    */
+   protected final CodeMirrorConfiguration configuration;
+   
+   /**
+    * Visibility of line numbers column.
+    */
+   private boolean showLineNumbers = true;
+
+   /**
+    * Visibility of overview column.
+    */
+   protected boolean showOverview = false;
+   
+   
+   
 
    protected JavaScriptObject editorObject;
 
    private FlowPanel lineHighlighter;
 
-   private final Browser currentBrowser = BrowserResolver.CURRENT_BROWSER;
+   
 
    private boolean needUpdateTokenList = true; // update token list only after the "initCallback" handler has been called
 
    private boolean needValidateCode = false;
 
-   private boolean showLineNumbers = true;
 
    private List<TokenBeenImpl> tokenList;
-
-   private int lineHeight = 16; // size of line in the CodeMirror in px
-
-   private CodeMirrorConfiguration configuration;
-
-   private int lineNumberFieldWidth = 48; // width of left field with line numbers
-
-   private static int characterWidth = 8; // width of character in the CodeMirror in px
-
-   private static int firstCharacterOffsetLeft = 11; // left offset of character of the line in px
-
-   private static int codeErrorCorrectionPopupOffsetLeft = 6; // top offset of character of the line in px
-
-   private static int codeErrorCorrectionPopupOffsetTop = 22; // top offset of character of the line in px
-
-   private CodeAssistant codeAssistant;
-
-   private String genericMimeType; // type of document itself
 
    private int cursorPositionCol = 1;
 
@@ -130,94 +175,171 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private IDocument document;
 
    private boolean needUpdateDocument = false;
+      
+   private boolean readOnly = false;  
+
+   private String initialText;
+   
+   
+   private FrameElement frameElement;
+   
+   
+   /**
+    * Creates new CodeMirror instance.
+    * 
+    * @param mimeType
+    */
+   public CodeMirror(String mimeType)
+   {
+      this(mimeType, new CodeMirrorConfiguration());
+   }
+   
+   /**
+    * Creates new CodeMirror instance.
+    * 
+    * @param mimeType
+    * @param configuration
+    */
+   public CodeMirror(String mimeType, CodeMirrorConfiguration configuration)
+   {
+      this(mimeType, configuration, false);
+   }
 
    /**
-    * @param file
-    * @param params
-    * @param eventBus
+    * Creates new CodeMirror instance.
+    * 
+    * @param mimeType
+    * @param configuration
     */
-   public CodeMirror(String content, HashMap<String, Object> params, HandlerManager eventBus)
+   public CodeMirror(String mimeType, CodeMirrorConfiguration configuration, boolean showOverview)
    {
-      super(content, params, eventBus);
-      this.editorId = "CodeMirror - " + String.valueOf(this.hashCode());
-
-      if (params == null)
+      id = "CodeMirror - " + String.valueOf(this.hashCode());
+      this.mimeType = mimeType;
+      if (configuration == null)
       {
-         params = new HashMap<String, Object>();
+         configuration = new CodeMirrorConfiguration();
       }
+      
+      this.configuration = configuration;
+      this.showOverview = showOverview;
+      
+      document = new Document("");
+      document.addDocumentListener(this);
+      
+      createFrame();
+   }
+
+   private void createFrame()
+   {
+      final Frame frame = new Frame(CodeMirrorConfiguration.CODEMIRROR_START_PAGE);
+      add(frame);
+      frame.getElement().getStyle().setPosition(Position.ABSOLUTE);
+      frame.setSize("100%", "100%");
+      frame.getElement().setAttribute("frameborder", "0");
+      frame.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+      
+      frame.addLoadHandler(new LoadHandler()
+      {
+         @Override
+         public void onLoad(LoadEvent event)
+         {
+            frameElement = frame.getElement().cast();
+            
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  buildEditor();
+               }
+            });
+         }
+      });
+   }
+   
+   private class FrameBodyWidget extends AbsolutePanel
+   {
+      public FrameBodyWidget(BodyElement body)
+      {
+         super(body.<com.google.gwt.user.client.Element> cast());
+         onAttach();
+      }
+   }   
+
+   private void buildEditor()
+   {
+      com.google.gwt.dom.client.Document frameDocument = frameElement.getContentDocument();
+      final BodyElement bodyElement = frameDocument.getBody();
+      FrameBodyWidget body = new FrameBodyWidget(bodyElement);
 
       DockLayoutPanel doc = new DockLayoutPanel(Unit.PX);
       doc.setSize("100%", "100%");
-      add(doc);
-      if (params.get(EditorParameters.IS_SHOW_OVERVIEW_PANEL) != null && (Boolean)params.get(EditorParameters.IS_SHOW_OVERVIEW_PANEL) == Boolean.TRUE)
+      body.add(doc, 0, 0);
+
+      if (showOverview)
       {
          overviewRuler = new OverviewRuler(this);
          doc.addEast(overviewRuler, 13);
       }
+
       absPanel = new AbsolutePanel();
       doc.add(absPanel);
-      textArea = new TextArea();
-      DOM.setElementAttribute(textArea.getElement(), "id", getEditorId());
+
+      TextArea textArea = new TextArea();
+      DOM.setElementAttribute(textArea.getElement(), "id", getId());
+      textArea.setVisible(false);
       absPanel.add(textArea);
 
       lineHighlighter = getLineHighlighter();
       absPanel.add(lineHighlighter);
       absPanel.setWidgetPosition(lineHighlighter, 0, 5);
 
-      if (params.get(EditorParameters.CONFIGURATION) != null)
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         configuration = (CodeMirrorConfiguration)params.get(EditorParameters.CONFIGURATION);
-      }
-      else
-      {
-         configuration = new CodeMirrorConfiguration();
-      }
-
-      genericMimeType = (String)params.get(EditorParameters.MIME_TYPE);
-
-      codeAssistant = configuration.getCodeAssistant();
-
-      // validate code at start after the "initCallback" handler has been called
-      if (configuration.canBeValidated())
-      {
-         needValidateCode = true;
-      }
-
-      eventBus.addHandler(EditorTokenListPreparedEvent.TYPE, this);
-      document = new Document(content);
-      document.addDocumentListener(this);
+         @Override
+         public void execute()
+         {
+            editorObject =
+               initCodeMirror(id, "", "100%", readOnly, configuration.getContinuousScanning(),
+                  configuration.isTextWrapping(), showLineNumbers, configuration.getCodeStyles(),
+                  configuration.getCodeParsers(), configuration.getJsDirectory(), configuration.getTabMode().toString());
+         }
+      });
    }
 
    /**
-    * @see com.google.gwt.user.client.ui.Panel#onLoad()
+    * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
     */
    @Override
-   protected void onLoad()
+   public String getMimeType()
    {
-      super.onLoad();
-
-      String width = "";
-      String height = "100%";
-      boolean readOnly = (Boolean)params.get(EditorParameters.IS_READ_ONLY);
-      int continuousScanning = configuration.getContinuousScanning();
-      boolean textWrapping = configuration.isTextWrapping();
-
-      showLineNumbers = (Boolean)params.get(EditorParameters.IS_SHOW_LINE_NUMER);
-      String parserNames = configuration.getCodeParsers();
-      String styleURLs = configuration.getCodeStyles();
-
-      String javaScriptDirectory = configuration.getJsDirectory();
-
-      editorObject =
-         initCodeMirror(editorId, width, height, readOnly, continuousScanning, textWrapping, showLineNumbers,
-            styleURLs, parserNames, javaScriptDirectory, configuration.getTabMode().toString());
-
+      return mimeType;
    }
 
-   private native JavaScriptObject initCodeMirror(String id, String w, String h, boolean readOnly, int cs, boolean tr,
+   @Override
+   protected void onUnload()
+   {
+      try
+      {
+         codeValidateTimer.cancel();
+
+         if (configuration.getParser() != null)
+         {
+            configuration.getParser().stopParsing();
+         }         
+      } catch (Exception e) {
+         Window.alert("Exception > " + e.getMessage());
+         System.out.println("error >>>>>>>>>>>>>>>>>>>>>>>>>>>");
+         e.printStackTrace();
+      }      
+   }
+   
+   private native JavaScriptObject initCodeMirror(String id, String width, String height, boolean readOnly, int cs, boolean tr,
       boolean lineNumbers, String styleURLs, String parserNames, String jsDirectory, String modeTab)
    /*-{
 		var instance = this;
+		var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
+		
 		var changeFunction = function()
 		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContentChanged()();
@@ -252,43 +374,43 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::needUpdateTokenList = true;
 		};
-
-		var editor = $wnd.CodeMirror.fromTextArea(id, {
-			width : w,
-			height : h,
-			parserfile : eval(parserNames),
-			stylesheet : eval(styleURLs),
-			path : jsDirectory,
-			continuousScanning : cs || false,
-			undoDelay : 50, // decrease delay before calling 'onChange' callback
-			lineNumbers : lineNumbers,
-			readOnly : readOnly,
-			textWrapping : tr,
-			tabMode : modeTab,
-			content : "", // to fix bug with blocked deleting function of CodeMirror just after opening file [WBT-223]
-			onChange : changeFunction,
-			reindentOnLoad : false, // to fix problem with getting token list after the loading content
-			onCursorActivity : cursorActivity,
-			onLineNumberClick : onLineNumberClick,
-			onLineNumberDoubleClick : onLineNumberDoubleClick,
-			onLineNumberContextMenu : onLineNumberContextMenu,
-			onLoad : initCallback,
-			autoMatchParens : true,
+		
+		var editor = frame.contentWindow.CodeMirror.fromTextArea(id, {
+			'width' : width,
+			'height' : height,
+			'parserfile' : eval(parserNames),
+			'stylesheet' : eval(styleURLs),
+			'path' : jsDirectory,
+			'continuousScanning' : cs || false,
+			'undoDelay' : 50, // decrease delay before calling 'onChange' callback
+			'lineNumbers' : lineNumbers,
+			'readOnly' : readOnly,
+			'textWrapping' : tr,
+			'tabMode' : modeTab,
+			'content' : "", // to fix bug with blocked deleting function of CodeMirror just after opening file [WBT-223]
+			'onChange' : changeFunction,
+			'reindentOnLoad' : false, // to fix problem with getting token list after the loading content
+			'onCursorActivity' : cursorActivity,
+			'onLineNumberClick' : onLineNumberClick,
+			'onLineNumberDoubleClick' : onLineNumberDoubleClick,
+			'onLineNumberContextMenu' : onLineNumberContextMenu,
+			'onLoad' : initCallback,
+			'autoMatchParens' : true,
 
 			// Take the token before the cursor. If it contains a character in '()[]{}', search for the matching paren/brace/bracket, and
 			// highlight them in green for a moment, or red if no proper match was found.
-			markParen : function(node, ok)
+			'markParen' : function(node, ok)
 			{
 				node.id = ok ? "parenCorrect" : "parenIncorrect";
 			},
 			
-			unmarkParen : function(node)
+			'unmarkParen' : function(node)
 			{
 				node.id = null;
 			},
 
 			// to update outline panel after the new line has being highlighted
-			activeTokens : activeTokensFunction
+			'activeTokens' : activeTokensFunction
 		});
 
 		return editor;
@@ -300,20 +422,31 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private void onInitialized()
    {
       addHighlighterListeners();
-      addHotKeysClickListener();
+      addKeyPressedListener();
       addFocusReceivedListeners();
       addContextMenuListener();
-
-      setText(content);
-
+      
       this.needUpdateTokenList = true; // update token list after the document had been loaded and reindented
       // turn on code validation time
       if (configuration.canBeValidated())
       {
-         this.codeValidateTimer.scheduleRepeating(2000);
+         needValidateCode = true;
+         codeValidateTimer.scheduleRepeating(2000);
       }
 
-      eventBus.fireEvent(new EditorInitializedEvent(editorId));
+//      showLineNumbers(showLineNumbers);
+
+      fireEvent(new EditorInitializedEvent(id));      
+      
+      if (initialText != null)
+      {
+         setText(initialText);
+      }
+      
+      if (cursorPositionRow != 0 || cursorPositionCol != 0)
+      {
+         setCursorPosition(cursorPositionRow, cursorPositionCol);
+      }      
    }
 
    private Timer codeValidateTimer = new Timer()
@@ -328,7 +461,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private void onLineNumberDoubleClick(int lineNumber)
    {
       clickHandler.cancel();
-      fireEvent(new LineNumberDoubleClickEvent(lineNumber));
+      fireEvent(new EditorLineNumberDoubleClickEvent(lineNumber));
       if (activeNotification != null)
          activeNotification.update();
    }
@@ -337,20 +470,19 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       event.stopPropagation();
       event.preventDefault();
-      eventBus.fireEvent(new LineNumberContextMenuEvent(lineNumber, event.getClientX(), event.getClientY()));
+      fireEvent(new EditorLineNumberContextMenuEvent(lineNumber, event.getClientX(), event.getClientY()));
    }
 
    private void onContentChanged()
    {
-      this.needUpdateTokenList = true;
+      needUpdateTokenList = true;
       needUpdateDocument = true;
-
-      eventBus.fireEvent(new EditorContentChangedEvent(getEditorId()));
+      fireEvent(new EditorContentChangedEvent(getId()));
    }
 
    private void onCursorActivity(JavaScriptObject cursor)
    {
-      cursorPositionCol = getCursorCol();
+      cursorPositionCol = getCursorColumn();
 
       if (BrowserResolver.CURRENT_BROWSER == Browser.IE)
       {
@@ -371,7 +503,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       // highlight current line
       highlightLine(cursorPositionRow);
 
-      eventBus.fireEvent(new EditorCursorActivityEvent(editorId, cursorPositionRow, cursorPositionCol));
+      fireEvent(new EditorCursorActivityEvent(id, cursorPositionRow, cursorPositionCol));
    }
 
    private void highlightLine(int lineNumber)
@@ -429,22 +561,22 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			currentLine = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::cursorPositionRow;
 		}
 
-		cursorOffsetY = (currentLine - 1) * this.@org.exoplatform.ide.editor.codemirror.CodeMirror::lineHeight;
+		cursorOffsetY = (currentLine - 1) * @org.exoplatform.ide.editor.codemirror.CodeMirror::LINE_HEIGHT;
 		cursorOffsetY -= verticalScrollBarPosition;
 		return cursorOffsetY;
    }-*/;
 
-   private boolean handleShortcut(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
+   private boolean handleKeyPressing(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {
       EditorHotKeyPressedEvent event = new EditorHotKeyPressedEvent(isCtrl, isAlt, isShift, keyCode);
-      eventBus.fireEvent(event);
+      fireEvent(event);
       return event.isHotKeyHandled();
    }
 
    /**
-    * Set listeners of hot keys clicking. Listen "Ctrl+S" key pressing if hotKeyList is null. Listen Ctrl+Space in any case
+    *
     */
-   private native void addHotKeysClickListener()
+   private native void addKeyPressedListener()
    /*-{
 		var instance = this;
 		var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
@@ -459,7 +591,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
                var isAlt = event.altKey;
                var isShift = event.shiftKey;
                
-               var cancelEvent = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::handleShortcut(ZZZI)(isCtrl, isAlt, isShift, keyCode);
+               var cancelEvent = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::handleKeyPressing(ZZZI)(isCtrl, isAlt, isShift, keyCode);
                if (cancelEvent)
                {
                   event.stop();
@@ -496,11 +628,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
-      if (genericMimeType.equals(MimeType.APPLICATION_JAVA))
+      if (mimeType.equals(MimeType.APPLICATION_JAVA))
       {
-         eventBus.fireEvent(new RunCodeAssistantEvent());
+         fireEvent(new RunCodeAssistantEvent());
          return;
       }
+
       int cursorRow = cursorPositionRow;
 
       // calculate cursorOffsetY
@@ -512,13 +645,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       if (needUpdateTokenList)
       {
          needUpdateTokenList = false;
-         this.tokenList = (List<TokenBeenImpl>)getTokenList();
+         tokenList = (List<TokenBeenImpl>)getTokenList();
 
          // to update token's FQNs
          if (configuration.canBeValidated())
          {
             needValidateCode = false;
-            validateCode(this.tokenList);
+            validateCode(tokenList);
          }
       }
 
@@ -528,15 +661,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       // read mimeType
       String currentLineMimeType = getCurrentLineMimeType();
-      if (configuration.canHaveSeveralMimeTypes() && !genericMimeType.equals(currentLineMimeType))
+      if (configuration.canHaveSeveralMimeTypes() && !mimeType.equals(currentLineMimeType))
       {
          selectedTokenList =
             (List<TokenBeenImpl>)CodeValidator.extractCode((List<TokenBeenImpl>)this.tokenList,
                new LinkedList<TokenBeenImpl>(), currentLineMimeType);
       }
 
-      codeAssistant.autocompleteCalled(this, cursorOffsetX, cursorOffsetY, (List<Token>)selectedTokenList,
-         currentLineMimeType, tokenBeforeCursor);
+      if (configuration.getCodeAssistant() != null)
+      {
+         configuration.getCodeAssistant().autocompleteCalled(this, cursorOffsetX, cursorOffsetY, (List<Token>)selectedTokenList,
+            currentLineMimeType, tokenBeforeCursor);         
+      }      
    }
 
    /**
@@ -545,10 +681,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     */
    public int getCursorOffsetX()
    {
-      int cursorOffsetX = (cursorPositionCol - 2) * characterWidth + getAbsoluteLeft() + firstCharacterOffsetLeft; // 8px per symbol
-      if (this.showLineNumbers)
+      int cursorOffsetX = (cursorPositionCol - 2) * CHARACTER_WIDTH + getAbsoluteLeft() + LINE_OFFSET_LEFT; // 8px per symbol
+      if (showLineNumbers)
       {
-         cursorOffsetX += this.lineNumberFieldWidth;
+         cursorOffsetX += LINE_NUMBERS_COLUMN_WIDTH;
       }
       return cursorOffsetX;
    }
@@ -609,17 +745,17 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          if (needUpdateTokenList)
          {
             needUpdateTokenList = false;
-            this.tokenList = (List<TokenBeenImpl>)getTokenList();
+            tokenList = (List<TokenBeenImpl>)getTokenList();
          }
 
-         String mimeType = CodeMirrorParserImpl.getLineMimeType(cursorPositionRow, this.tokenList);
+         String mimeType = CodeMirrorParserImpl.getLineMimeType(cursorPositionRow, tokenList);
          if (mimeType != null)
          {
             return mimeType;
          }
       }
 
-      return genericMimeType;
+      return this.mimeType;
    }
 
    /**
@@ -652,7 +788,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private native void addFocusReceivedListeners()
    /*-{
 		var instance = this;
-        var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
 		var focusReceivedListener = function()
 		{
@@ -681,7 +817,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private void fireEditorFocusReceivedEvent()
    {
-      eventBus.fireEvent(new EditorFocusReceivedEvent(getEditorId()));
+      fireEvent(new EditorFocusReceivedEvent(getId()));
    }
 
    /**
@@ -692,19 +828,21 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       if (needUpdateTokenList && showLineNumbers)
       {
          needValidateCode = true;
-         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+         configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
       }
    }
 
    public void forceValidateCode()
    {
       if (!showLineNumbers)
+      {
          return;
+      }
 
       if (needUpdateTokenList)
       {
          needValidateCode = true;
-         configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+         configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
       }
       else
       {
@@ -748,10 +886,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          // test if this is line with code error
          if (CodeValidator.isExistedCodeError(lineNumber, codeErrorList))
          {
-            codeAssistant.errorMarkClicked(CodeMirror.this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
-               (getAbsoluteTop() + getCursorOffsetY(lineNumber) + codeErrorCorrectionPopupOffsetTop),
-               (getAbsoluteLeft() + lineNumberFieldWidth + codeErrorCorrectionPopupOffsetLeft),
-               (String)params.get(EditorParameters.MIME_TYPE));
+            if (configuration.getCodeAssistant() != null)
+            {
+               configuration.getCodeAssistant().errorMarkClicked(CodeMirror.this, CodeValidator.getCodeErrorList(lineNumber, codeErrorList),
+                  (getAbsoluteTop() + getCursorOffsetY(lineNumber) + codeErrorCorrectionPopupOffsetTop),
+                  (getAbsoluteLeft() + LINE_NUMBERS_COLUMN_WIDTH + codeErrorCorrectionPopupOffsetLeft),
+                  mimeType);
+            }            
          }
 
          try
@@ -759,9 +900,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
             // collect all problems on this line
             if (problems.containsKey(lineNumber))
             {
-               List<Problem> list = problems.get(lineNumber);
+               List<Marker> list = problems.get(lineNumber);
 
-               fireEvent(new ProblemClickEvent(list.toArray(new Problem[list.size()])));
+               fireEvent(new ProblemClickEvent(list.toArray(new Marker[list.size()])));
             }
          }
          catch (Exception e)
@@ -787,12 +928,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getEditorId()
+    * @see org.exoplatform.ide.editor.api.Editor#getId()
     */
    @Override
-   public String getEditorId()
+   public String getId()
    {
-      return editorId;
+      return id;
    }
 
    /**
@@ -805,13 +946,19 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       var editor = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
       return editor.getCode();
    }-*/;
-
+   
    /**
     * @see org.exoplatform.ide.editor.api.Editor#setText(java.lang.String)
     */
    @Override
    public void setText(String text)
    {
+      if (editorObject == null)
+      {
+         initialText = text;
+         return;
+      }
+      
       setText(editorObject, text);
    }
 
@@ -822,13 +969,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 			return;
 		}
 
-        if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::CHROME)
-        {
-          if (text === "")
-          {
+      if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::CHROME)
+      {
+         if (text === "")
+         {
             text = "\n"; // fix error with initial cursor position and size (WBT-324)
-          }
-        }
+         }
+      }
 		editor.setCode(text);
 		editor.focus();
    }-*/;
@@ -841,19 +988,19 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       switch (capability)
       {
-         case CAN_BE_AUTOCOMPLETED :
+         case AUTOCOMPLETION:
             return configuration.canBeAutocompleted();
 
-         case CAN_BE_OUTLINED :
+         case OUTLINE:
             return configuration.canBeOutlined();
 
-         case CAN_BE_VALIDATED :
+         case VALIDATION:
             return configuration.canBeValidated();
 
-         case FIND_AND_REPLACE :
-         case DELETE_CURRENT_LINE :
-         case FORMAT_SOURCE :
-         case GO_TO_POSITION :
+         case FIND_AND_REPLACE:
+         case DELETE_LINES:
+         case FORMAT_SOURCE:
+         case SET_CURSOR_POSITION:
          case SHOW_LINE_NUMBERS :
             return true;
 
@@ -873,22 +1020,40 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private native void formatSource(String text, JavaScriptObject editor)
    /*-{
-		if (text != ' ') {
+		if (text != ' ')
+		{
 			editor.reindent();
 		}
    }-*/;
 
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#showLineNumbers(boolean)
+    */
    public void showLineNumbers(boolean showLineNumbers)
    {
-      this.setLineNumbers(showLineNumbers);
       this.showLineNumbers = showLineNumbers;
-
-      // to show code error marks in the lineNumbers field
+      
+      if (editorObject == null)
+      {
+         return;
+      }
+      
+      showLineNumbersNative(showLineNumbers);
       if (showLineNumbers && configuration.canBeValidated())
       {
-         this.needValidateCode = true;
+         udpateErrorMarks(codeErrorList);
+         needValidateCode = true;
       }
    };
+   
+   /**
+    * @param showLineNumbers
+    */
+   private native void showLineNumbersNative(boolean showLineNumbers)
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      editor.setLineNumbers(showLineNumbers);
+   }-*/;   
 
    /**
     * @see org.exoplatform.ide.editor.api.Editor#setFocus()
@@ -896,14 +1061,14 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public void setFocus()
    {
-      goToPosition(cursorPositionRow, cursorPositionCol);
-
+      setCursorPosition(cursorPositionRow, cursorPositionCol);
       setFocus(editorObject);
    }
 
    private native void setFocus(JavaScriptObject editor)
    /*-{
-		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+		{
 			return;
 		}
 
@@ -911,10 +1076,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#goToPosition(int, int)
+    * @see org.exoplatform.ide.editor.api.Editor#setCursorPosition(int, int)
     */
    @Override
-   public void goToPosition(int row, int column)
+   public void setCursorPosition(int row, int column)
    {
       cursorPositionRow = row;
       cursorPositionCol = column;
@@ -923,7 +1088,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private void fireEditorCursorActivityEvent(String editorId, int cursorRow, int cursorCol)
    {
-      eventBus.fireEvent(new EditorCursorActivityEvent(editorId, cursorRow, cursorCol));
+      fireEvent(new EditorCursorActivityEvent(editorId, cursorRow, cursorCol));
    }
 
    private native void goToPosition(JavaScriptObject editor, int row, int column)
@@ -940,7 +1105,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          {
             editor.selectLines(editor.nthLine(row), column - 1);
             this.@org.exoplatform.ide.editor.codemirror.CodeMirror::highlightLine(I)(row);
-            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getEditorId()(),row,column);
+            this.@org.exoplatform.ide.editor.codemirror.CodeMirror::fireEditorCursorActivityEvent(Ljava/lang/String;II)(this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getId()(),row,column);
          }
       }
    }-*/;
@@ -949,7 +1114,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (editor == null)
+		{
 			return false;
+		}
 
 		return editor.nthLine(lineNumber) !== false;
    }-*/;
@@ -961,7 +1128,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    public native void deleteCurrentLine()
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor == null) {
+		if (editor == null)
+		{
 			return;
 		}
 
@@ -969,15 +1137,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		var currentLine = editor.nthLine(currentLineNumber);
 
 		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser != @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE
-				&& this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getNumberOfLines()() == currentLineNumber) {
+				&& this.@org.exoplatform.ide.editor.codemirror.CodeMirror::getNumberOfLines()() == currentLineNumber)
+      {
 			// clear current line
 			this.@org.exoplatform.ide.editor.codemirror.CodeMirror::clearLastLine()();
-		} else {
+		}
+		else
+		{
 			editor.removeLine(currentLine);
 		}
 
 		currentLineNumber = editor.lineNumber(currentLine);
-		this.@org.exoplatform.ide.editor.codemirror.CodeMirror::goToPosition(II)(currentLineNumber,1);
+		this.@org.exoplatform.ide.editor.codemirror.CodeMirror::setCursorPosition(II)(currentLineNumber,1);
    }-*/;
 
    /**
@@ -987,13 +1158,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (editor == null)
+		{
 			return;
+		}
 
 		var content = editor.getCode();
 		var lastLineHandler = editor.lastLine();
-		if (content.charAt(content.length - 1) == "\n") {
+		if (content.charAt(content.length - 1) == "\n")
+		{
 			editor.setLineContent(lastLineHandler, "");
-		} else {
+		}
+		else
+		{
 			editor.setLineContent(lastLineHandler, "\n");
 		}
    }-*/;
@@ -1006,11 +1182,14 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (editor == null)
+		{
 			return;
+		}
 
 		var isFound = false;
 		var cursor = editor.getSearchCursor(find, true, !caseSensitive); // getSearchCursor(string, atCursor, caseFold) -> cursor
-		if (isFound = cursor.findNext()) {
+		if (isFound = cursor.findNext())
+		{
 			cursor.select();
 		}
 
@@ -1029,15 +1208,20 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private native void replaceFoundedText(JavaScriptObject editor, String find, String replace, boolean caseSensitive)
    /*-{
 		if (editor == null)
+		{
 			return;
+		}
+		
 		var selected = editor.selection();
 
-		if (!caseSensitive) {
+		if (!caseSensitive)
+		{
 			selected = selected.toLowerCase();
 			find = find.toLowerCase();
 		}
 
-		if (selected == find) {
+		if (selected == find)
+		{
 			editor.replaceSelection(replace);
 		}
 
@@ -1055,7 +1239,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private native boolean hasUndoChanges(JavaScriptObject editor)
    /*-{
-		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+		{
 			return false;
 		}
 
@@ -1087,7 +1272,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
    private native boolean hasRedoChanges(JavaScriptObject editor)
    /*-{
-		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)) {
+		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor))
+		{
 			return false;
 		}
 
@@ -1109,7 +1295,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public boolean isReadOnly()
    {
-      return (Boolean)params.get(EditorParameters.IS_READ_ONLY);
+      return readOnly;
    }
 
    @Override
@@ -1144,10 +1330,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorCol()
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorColumn()
     */
    @Override
-   public native int getCursorCol()
+   public native int getCursorColumn()
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		if (!this.@org.exoplatform.ide.editor.codemirror.CodeMirror::checkGenericCodeMirrorObject(Lcom/google/gwt/core/client/JavaScriptObject;)(editor)
@@ -1193,29 +1379,49 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
     */
-   @Override
    public List<? extends Token> getTokenList()
    {
-      return (List<TokenBeenImpl>)configuration.getParser().getTokenList(this.editorId, this.editorObject,
-         this.eventBus);
+      return (List<TokenBeenImpl>)configuration.getParser().getTokenList(id, editorObject);
    }
 
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
     */
-   @Override
    public void getTokenListInBackground()
    {
       if (needUpdateTokenList)
       {
-         configuration.getParser().getTokenListInBackground(this.editorId, this.editorObject, this.eventBus);
+         configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
       }
       else
       {
-         eventBus.fireEvent(new EditorTokenListPreparedEvent(this.editorId, this.tokenList));
+         tokenListReceivedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(id, this.tokenList));
       }
    }
 
+   private EditorTokenListPreparedHandler tokenListReceivedHandler = new EditorTokenListPreparedHandler()
+   {
+      @Override
+      public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
+      {
+         if (!id.equals(event.getEditorId()))
+         {
+            return;
+         }
+
+         if (needUpdateTokenList)
+         {
+            needUpdateTokenList = false;
+            tokenList = (List<TokenBeenImpl>)event.getTokenList();
+         }
+
+         if (needValidateCode)
+         {
+            validateCode(tokenList);
+         }         
+      }
+   };
+   
    /**
     * @see org.exoplatform.ide.editor.api.Editor#replaceTextAtCurrentLine(java.lang.String, int)
     */
@@ -1252,6 +1458,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       return highlighter;
    }
 
+   @Override
    public void insertImportStatement(String fqn)
    {
       if (configuration.canBeValidated())
@@ -1270,37 +1477,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       }
    }
 
-   private HandlerManager getEventBus()
-   {
-      return eventBus;
-   }
-
-   private CodeMirror getCodeMirror()
-   {
-      return this;
-   }
-
-   /**
-    * Set show/hide line numbers and revalidate code if needed
-    * 
-    * @param showLineNumbers
-    */
-   private void setLineNumbers(boolean showLineNumbers)
-   {
-      setLineNumbersNative(showLineNumbers);
-      if (configuration.canBeValidated() && showLineNumbers)
-      {
-         udpateErrorMarks(codeErrorList);
-      }
-   }
-
-   private native void setLineNumbersNative(boolean showLineNumbers)
-   /*-{
-		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor != null)
-			editor.setLineNumbers(showLineNumbers);
-   }-*/;
-
    private native String getLineContent(JavaScriptObject editor, int lineNumber)
    /*-{
 		var handler = editor.nthLine(lineNumber);
@@ -1314,27 +1490,8 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    public String getLineText(int line)
    {
       return getLineContent(editorObject, line);
-   }
-
-   public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
-   {
-      if (!this.editorId.equals(event.getEditorId()))
-      {
-         return;
-      }
-
-      if (needUpdateTokenList)
-      {
-         needUpdateTokenList = false;
-         this.tokenList = (List<TokenBeenImpl>)event.getTokenList();
-      }
-
-      if (needValidateCode)
-      {
-         validateCode(this.tokenList);
-      }
-   }
-
+   }   
+   
    /**
     * Check if CodeMirror editor instance consists of neccessery objects.
     * 
@@ -1347,22 +1504,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 				&& (typeof editor.editor != 'undefined');
    }-*/;
 
-   @Override
-   protected void onUnload()
-   {
-      super.onUnload();
-      if (configuration.canBeValidated())
-      {
-         codeValidateTimer.cancel();
-      }
-
-      eventBus.removeHandler(EditorTokenListPreparedEvent.TYPE, this);
-
-      if (configuration.getParser() != null)
-      {
-         configuration.getParser().stopParsing();
-      }
-   }
 
    /*********************************************************************************
     * 
@@ -1375,46 +1516,46 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /**
     * List of {@link Problem}
     */
-   private Map<Integer, List<Problem>> problems = new HashMap<Integer, List<Problem>>();
+   private Map<Integer, List<Marker>> problems = new HashMap<Integer, List<Marker>>();
 
    /**
     * Visible notification.
     */
-   private Notification activeNotification;
-
-   private KeyHandler handler;
+   private NotificationWidget activeNotification;
 
    private AbsolutePanel absPanel;
 
    private OverviewRuler overviewRuler;
 
    /**
-    * @see org.exoplatform.ide.editor.problem.Markable#markProblem(org.exoplatform.ide.editor.problem.Problem)
+    * @see org.exoplatform.ide.editor.marking.Markable#markProblem(org.exoplatform.ide.editor.marking.Marker)
     */
    @Override
-   public void markProblem(Problem problem)
+   public void markProblem(Marker problem)
    {
       if (!problems.containsKey(problem.getLineNumber()))
-         problems.put(problem.getLineNumber(), new ArrayList<Problem>());
+         problems.put(problem.getLineNumber(), new ArrayList<Marker>());
       problems.get(problem.getLineNumber()).add(problem);
 
       StringBuilder message = new StringBuilder();
-      List<Problem> problemList = problems.get(problem.getLineNumber());
+      List<Marker> problemList = problems.get(problem.getLineNumber());
       boolean hasError = fillMessages(problemList, message);
 
       String markStyle = getStyleForLine(problemList, hasError);
 
       markProblemmeLine(problem.getLineNumber(), message.toString(), markStyle);
       if (overviewRuler != null)
+      {
          overviewRuler.addProblem(problem, message.toString());
+      }
    }
 
    /**
-    * @param problemList
+    * @param markerList
     * @param hasError
     * @return
     */
-   private String getStyleForLine(List<Problem> problemList, boolean hasError)
+   private String getStyleForLine(List<Marker> markerList, boolean hasError)
    {
       String markStyle = null;
       if (hasError)
@@ -1424,7 +1565,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       else
       {
          markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpoint();
-         for (Problem p : problemList)
+         for (Marker p : markerList)
          {
             if (p.isWarning())
             {
@@ -1441,12 +1582,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       return markStyle;
    }
 
-   private boolean fillMessages(List<Problem> problems, StringBuilder message)
+   private boolean fillMessages(List<Marker> markers, StringBuilder message)
    {
       boolean hasError = false;
       List<String> messages = new ArrayList<String>();
 
-      for (Problem p : problems)
+      for (Marker p : markers)
       {
          messages.add(p.getMessage());
          if (!hasError && p.isError())
@@ -1457,7 +1598,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       if (messages.size() == 1)
       {
-         message.append(problems.get(0).getMessage());
+         message.append(markers.get(0).getMessage());
       }
       else
       {
@@ -1472,19 +1613,19 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.editor.problem.Markable#unmarkAllProblems()
+    * @see org.exoplatform.ide.editor.marking.Markable#unmarkAllProblems()
     */
    @Override
    public void unmarkAllProblems()
    {
       removeNotification();
 
-      List<Problem> breakpoins = new ArrayList<Problem>();
+      List<Marker> breakpoins = new ArrayList<Marker>();
       for (Integer key : problems.keySet())
       {
          unmarkNative(key);
-         List<Problem> list = problems.get(key);
-         Problem breakpoint = getBreakpoint(list);
+         List<Marker> list = problems.get(key);
+         Marker breakpoint = getBreakpoint(list);
          if (breakpoint != null)
             breakpoins.add(breakpoint);
          list.clear();
@@ -1492,13 +1633,13 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 
       if (overviewRuler != null)
          overviewRuler.clearProblems();
-      for (Problem p : breakpoins)
+      for (Marker p : breakpoins)
          markProblem(p);
    }
 
-   private Problem getBreakpoint(List<Problem> problems)
+   private Marker getBreakpoint(List<Marker> problems)
    {
-      for (Problem p : problems)
+      for (Marker p : problems)
       {
          if (p.isBreakpoint())
          {
@@ -1521,15 +1662,15 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.editor.problem.Markable#unmarkProblem(org.exoplatform.ide.editor.problem.Problem)
+    * @see org.exoplatform.ide.editor.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.marking.Marker)
     */
    @Override
-   public void unmarkProblem(Problem problem)
+   public void unmarkProblem(Marker problem)
    {
       removeNotification();
       if (problems.containsKey(problem.getLineNumber()))
       {
-         List<Problem> list = problems.get(problem.getLineNumber());
+         List<Marker> list = problems.get(problem.getLineNumber());
          list.remove(problem);
          unmarkNative(problem.getLineNumber());
          if (list.isEmpty())
@@ -1568,9 +1709,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
     * @see org.exoplatform.ide.editor.problem.Markable#addLineNumberDoubleClickHandler(org.exoplatform.ide.editor.problem.LineNumberDoubleClickHandler)
     */
    @Override
-   public HandlerRegistration addLineNumberDoubleClickHandler(LineNumberDoubleClickHandler handler)
+   public HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler)
    {
-      return addHandler(handler, LineNumberDoubleClickEvent.TYPE);
+      return addHandler(handler, EditorLineNumberDoubleClickEvent.TYPE);
    }
 
    /**
@@ -1588,7 +1729,7 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          activeNotification.destroy();
       }
 
-      activeNotification = new Notification(el);
+      activeNotification = new NotificationWidget(el);
    }
 
    /**
@@ -1627,10 +1768,10 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       {
          // TODO supress repetitevly setting error mark if there are several errors in the one line
          lineCodeErrorList = CodeValidator.getCodeErrorList(newCodeError.getLineNumber(), newCodeErrorList);
-         markProblemmeLine(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList),
-            configuration.getCodeErrorMarkStyle());
+         markProblemmeLine(newCodeError.getLineNumber(), CodeValidator.getErrorSummary(lineCodeErrorList), configuration.getCodeErrorMarkStyle());
       }
-      configuration.getParser().getTokenListInBackground(this.editorId, editorObject, eventBus);
+      
+      configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
 
       codeErrorList = newCodeErrorList;
    }
@@ -1647,19 +1788,18 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
 		var instance = this;
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 
-		var over = function(jso) {
+		var over = function(jso)
+		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOver(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
 		};
 
-		var out = function(jso) {
+		var out = function(jso)
+		{
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::markerMouseOut(Lcom/google/gwt/core/client/JavaScriptObject;)(jso);
 		};
 
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.setAttribute("class", markStyle);
-		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1]
-				.setAttribute("title", errorSummary);
-
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("class", markStyle);
+		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].setAttribute("title", errorSummary);
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseover = over;
 		editor.lineNumbers.childNodes[0].childNodes[lineNumber - 1].onmouseout = out;
    }-*/;
@@ -1691,15 +1831,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
          document.addDocumentListener(this);
       }
       return document;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.text.IDocumentListener#documentAboutToBeChanged(org.exoplatform.ide.editor.text.DocumentEvent)
-    */
-   @Override
-   public void documentAboutToBeChanged(DocumentEvent event)
-   {
-      // Nothing to do
    }
 
    @Override
@@ -1755,23 +1886,6 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.keys.KeyManager#addHandler(org.exoplatform.ide.editor.keys.KeyHandler)
-    */
-   @Override
-   public HandlerRegistration addHandler(KeyHandler handler)
-   {
-      this.handler = handler;
-      return new HandlerRegistration()
-      {
-         @Override
-         public void removeHandler()
-         {
-            CodeMirror.this.handler = null;
-         }
-      };
-   }
-
    public native SelectionRange getSelectionRange()
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
@@ -1789,9 +1903,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    private native void addContextMenuListener()
    /*-{
 		var instance = this;
+      var frame = instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::frameElement;
+		
 		var contextMenuListener = function(e) {
 			if (!e)
 				var e = $wnd.event;
+				//var e = frame.contentWindow.event; //TODO
 			instance.@org.exoplatform.ide.editor.codemirror.CodeMirror::onContextMenu(Lcom/google/gwt/dom/client/NativeEvent;)(e);
 		};
 
@@ -1817,9 +1934,9 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    {
       event.stopPropagation();
       event.preventDefault();
-      int x = event.getClientX() + getAbsoluteLeft() + lineNumberFieldWidth;
+      int x = event.getClientX() + getAbsoluteLeft() + LINE_NUMBERS_COLUMN_WIDTH;
       int y = event.getClientY() + getAbsoluteTop();
-      eventBus.fireEvent(new EditorContextMenuEvent(x, y, getEditorId()));
+      fireEvent(new EditorContextMenuEvent(x, y, getId()));
    }
 
    /**
@@ -1871,9 +1988,12 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    /*-{
 		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
 		var frame = editor.frame;
-		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE) {
+		if (this.@org.exoplatform.ide.editor.codemirror.CodeMirror::currentBrowser == @org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser::IE)
+		{
 			frame.contentWindow.document.execCommand(command, false, null);
-		} else {
+		}
+		else
+		{
 			frame.contentDocument.execCommand(command, false, null);
 		}
    }-*/;
@@ -1891,24 +2011,121 @@ public class CodeMirror extends Editor implements EditorTokenListPreparedHandler
    @Override
    public native void selectRange(int startLine, int startOffset, int endLine, int endOffset)
    /*-{
-      try {
+      try
+      {
          var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
          var startHandle = editor.nthLine(startLine);
          var endHandle = editor.nthLine(endLine);
          editor.selectLines(startHandle, startOffset, endHandle, endOffset)
-      } catch (e) {
-        alert('error > ' + e.message);
       }
-
+      catch (e)
+      {
+         this.@org.exoplatform.ide.editor.codemirror.CodeMirror::trace(Ljava/lang/String;)(e.message);
+      }
    }-*/;
+   
+   private void trace(String message)
+   {
+      System.out.println("CodeMirror: " + message);
+   }
    
    /**
     * @see org.exoplatform.ide.editor.problem.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.problem.LineNumberContextMenuHandler)
     */
    @Override
-   public HandlerRegistration addLineNumberContextMenuHandler(LineNumberContextMenuHandler handler)
+   public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler)
    {
-      return addHandler(handler, LineNumberContextMenuEvent.TYPE);
-   }   
+      return addHandler(handler, EditorLineNumberContextMenuEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
+    */
+   @Override
+   public void setReadOnly(boolean readOnly)
+   {
+      this.readOnly = readOnly;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    */
+   @Override
+   public String getName()
+   {
+      return "Source";
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    */
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    */
+   @Override
+   public int getCursorOffsetTop()
+   {
+      return 0;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    */
+   @Override
+   public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
+   {
+      return addHandler(handler, EditorContentChangedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    */
+   @Override
+   public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
+   {
+      return addHandler(handler, EditorContextMenuEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    */
+   @Override
+   public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
+   {
+      return addHandler(handler, EditorCursorActivityEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    */
+   @Override
+   public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
+   {
+      return addHandler(handler, EditorFocusReceivedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    */
+   @Override
+   public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
+   {
+      return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    */
+   @Override
+   public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
+   {
+      return addHandler(handler, EditorInitializedEvent.TYPE);
+   }
    
 }

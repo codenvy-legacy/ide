@@ -57,7 +57,7 @@
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor</artifactId>
+         <artifactId>exo-ide-editor-api</artifactId>
       </dependency>
 
       <dependency>
@@ -159,6 +159,13 @@
          </properties>
 
          <dependencies>
+
+<!-- 
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-editor-codemirror2</artifactId>
+            </dependency>
+ -->
 
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
@@ -503,7 +510,8 @@
                <artifactId>hsqldb</artifactId>
                <scope>runtime</scope>
             </dependency>
-            <!-- 
+
+<!--  
             <dependency>
                <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-common</artifactId>
@@ -516,6 +524,7 @@
                   </exclusion>
                </exclusions>
             </dependency>
+            
             <dependency>
                <groupId>org.apache.shindig</groupId>
                <artifactId>shindig-features</artifactId>
@@ -534,7 +543,8 @@
                <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
-             -->
+ --> 
+ 
             <dependency>
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-api</artifactId>

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 

@@ -16,167 +16,302 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.editor.api;
 
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.text.IDocument;
+
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
+ * This is abstract Editor for eXo IDE<br>
+ * Editor - a visual component designed to display and edit content file.<br>
+ * Furthermore the editor may support additional features (capabilities), such as:
  * 
- * Created by The eXo Platform SAS .
+ * <li>Syntax coloring ; <li>Validation Code (according to the syntax file to be edited); <li>CodeAssistant (autocomlation,
+ * viewing documentation to the code, etc.); <li>Deliver a set of content dependent tokens for alternative interviews (for example
+ * CodeOutline);
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: Editor Feb 9, 2011 4:24:07 PM evgen $
+ * 
  */
-
 public interface Editor extends IsWidget
 {
    
    /**
-    * Returns unique identifier of editor.
+    * Get mime type.
     * 
-    * @return id of editor's element
+    * @return mime type associated with this editor
+    */
+   String getMimeType();
+
+   /**
+    * Get name of editor.
+    * 
+    * @return
+    */
+   String getName();
+
+   /**
+    * @return unique identifier which can be used to found out editor instance in the DOM
     */
    String getId();
    
    /**
-    * Returns editor's text.
-    * 
-    * @return editor's text
+    * @return content of editor
     */
    String getText();
 
    /**
-    * Sets new text in editor.
+    * replace current content of editor by text parameter
     * 
-    * @param text - new text
+    * @param text - new editor content
     */
    void setText(String text);
+
    
    /**
-    * Sets focus into the editor.
+    * @return content of editor
     */
-   void focus();
+   IDocument getDocument();
 
-   /**
-    * Undo latest change of content.
-    */
-   void undo();
-
-   /**
-    * Redo latest change of content.
-    */
-   void redo();
-
-   /**
-    * Determines whether changes in the editor to undo.
-    * 
-    * @return <b>true</b> if changes to undo are presents, <b>false</b> otherwise
-    */
-   boolean hasUndoChanges();
-
-   /**
-    * Determined whether changes in the editor to redo.
-    * 
-    * @return <b>true</b> changes to redo are presents, <b>false</b> otherwise
-    */
-   boolean hasRedoChanges();
-
-   /**
-    * Returns row number of cursor position.
-    * 
-    * @return row number of cursor position
-    */
-   int getCursorRow();
-
-   /**
-    * Returns column number of cursor position.
-    * 
-    * @return column number of cursor position
-    */
-   int getCursorColumn();
    
    /**
-    * Determines whether the editor is opened in read-only mode.
-    *  
-    * @return <b>true</b> if editor is opened in read-only mode, <b>false</b> otherwise
-    */
-   boolean isReadOnly();
-   
-   /**
-    * Check that editor supports feature.
+    * Check that editor support feature
     * 
-    * @param capability feature
+    * @param capability
     * @return true if editor capable do.
     */
-   boolean isCapable(Capability capability);
-   
+   boolean isCapable(EditorCapability capability);
+
    /**
-    * Moves cursor to new position.
-    * If there are now such row or column, then position of cursor will not be changed.
+    * indents code according to content type
+    */
+   void formatSource();
+
+   /**
+    * Displays line numbers if showLineNumbers = true, or hides otherwise
     * 
-    * @param row row number, starts at 1
-    * @param column column number, starts at 1
+    * @param showLineNumbers
+    */
+   void showLineNumbers(boolean showLineNumbers);
+
+   /**
+    * Sets focus into the editor area and displays cursor.
+    */
+   void setFocus();
+
+   /**
+    * Moves cursor to specified position (row, column). If there are now such row or column in the specified row in the text, then cursor
+    * will be stayed as it.
+    * 
+    * @param column
+    * @param row
     */
    void setCursorPosition(int row, int column);
 
    /**
-    * Deletes specified line.
-    * 
-    * @param lineNumber
+    * Delete line content at cursor
+    * @deprecated
     */
-   void deleteLine(int lineNumber);
-   
+   void deleteCurrentLine();
+
    /**
-    * Inserts new line at specified position.
+    * Find and select text
     * 
-    * @param lineNumber
-    * @param text
+    * @param find pattern
+    * @param caseSensitive is pattern case sensitive
+    * @return <code>true</code> if editor text contains par matched to pattern
     */
-   void insetLine(int lineNumber, String text);
-   
+   boolean findAndSelect(String find, boolean caseSensitive);
+
    /**
-    * Shows or hides line numbers.
+    * Replace founded text block
     * 
-    * @param lineNumbers
+    * @param find pattern
+    * @param replace text to replace
+    * @param caseSensitive is pattern case sensetive
     */
-   void showLineNumbers(boolean lineNumbers);
-   
+   void replaceFoundedText(String find, String replace, boolean caseSensitive);
+
    /**
-    * Format text according to type of the content.
+    * @return <b>true</b> if there are any changes which can be undo in editor
     */
-   void format();
-   
+   boolean hasUndoChanges();
+
    /**
-    * Find and select text.
+    * undo latest change of content
+    */
+   void undo();
+
+   /**
+    * @return <b>true</b> if there are any changes which can be redo in editor.
+    */
+   boolean hasRedoChanges();
+
+   /**
+    * redo latest change of content
+    */
+   void redo();
+
+   /**
+    * @return <b>true</b> if content is read-only
+    */
+   boolean isReadOnly();
+
+   /**
+    * Switches editor to read-only mode.
     * 
-    * @param text text to find
-    * @param caseSensitive is case sensitive
-    * @return <b>true</b> if text is found, <b>false</b> otherwise
+    * @param readOnly
     */
-   boolean findText(String text, boolean caseSensitive);
-   
+   void setReadOnly(boolean readOnly);
+
    /**
-    * Replace selected text with new value.
+    * Get cursor row
     * 
-    * @param text new text
+    * @return number of row with cursor
     */
-   void replaceSelection(String text);
-   
+   int getCursorRow();
+
    /**
-    * Get content of the line.
+    * Get cursor column
     * 
-    * @param line number of line. <b>Must be larger 0 and less the file line count</b>
+    * @return number of column with cursor
+    */
+   int getCursorColumn();
+
+   /**
+    * Replaces current line content and set, in this line, cursor position
+    * @deprecated KILL
+    */
+   void replaceTextAtCurrentLine(String line, int cursorPosition);
+
+   /**
+    * Get text of specified line
+    * 
+    * @param line line number. <b>Must be larger 0 and less the file line count</b>
     * @return String content of line
+    * @deprecated
     */
    String getLineText(int line);
    
    /**
-    * Sets new text into specified line.
+    * Sets new text at specified line
     * 
-    * @param line
-    * @param text
+    * @param line line number
+    * @param text new text
+    * @deprecated
     */
    void setLineText(int line, String text);
+
+   /**
+    * Returns the number of lines in document
+    * 
+    * @return number of lines in document
+    * @deprecated Use {@link IDocument#getNumberOfLines()}
+    */
+   int getNumberOfLines();
+
+   /**
+    * Get the range of the selection.
+    * 
+    * @return {@link SelectionRange} range of the selection
+    */
+   SelectionRange getSelectionRange();
+
+   /**
+    * Selects specified range
+    * 
+    * @param startLine start line
+    * @param startChar start character
+    * @param endLine end line
+    * @param endChar end character
+    */
+   void selectRange(int startLine, int startChar, int endLine, int endChar);
+
+   /**
+    * Select all text in editor.
+    */
+   void selectAll();
+
+   /**
+    * Cut selected text in editor.
+    */
+   void cut();
+
+   /**
+    * Copy selected text in editor.
+    */
+   void copy();
+
+   /**
+    * Paste text to editor.
+    */
+   void paste();
+
+   /**
+    * Delete selected text in editor.
+    */
+   void delete();
    
+   /**
+    * Get absolute position of 
+    * 
+    * @return
+    */
+   int getCursorOffsetLeft();
+   
+   /**
+    * @return
+    */
+   int getCursorOffsetTop();
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler);
+   
+   /**
+    * @param handler
+    * @return
+    */
+   HandlerRegistration addInitializedHandler(EditorInitializedHandler handler);
+
+// ??????????????????????????
+//   listen MouseMoveEvent
+//   row, column, mouseX, mouseY
+
 }

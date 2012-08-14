@@ -19,6 +19,32 @@
 
 package org.exoplatform.ide.client.operation.uploadfile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
+import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
+import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
+import org.exoplatform.ide.client.operation.overwrite.ui.AbstarctOverwriteDialog;
+import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Link;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,32 +57,6 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
-
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDELoader;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
-import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
-import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
-import org.exoplatform.ide.client.model.util.IDEMimeTypes;
-import org.exoplatform.ide.client.operation.overwrite.ui.AbstarctOverwriteDialog;
-import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.ExitCodes;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Link;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 
@@ -188,6 +188,40 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       });
    }
 
+   private List<String> getSupportedMimeTypes()
+   {
+      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
+      List<String> mimeTypeList = new ArrayList<String>();
+      for (FileType fileType : fileTypes)
+      {
+         mimeTypeList.add(fileType.getMimeType());
+      }
+
+      return mimeTypeList;
+   }
+
+   private List<String> getMimeTypesByFileName(String fileName)
+   {
+      if (fileName.indexOf(".") < 0)
+      {
+         return getSupportedMimeTypes();
+      }
+
+      String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
+      List<String> mimeTypeList = new ArrayList<String>();
+
+      for (FileType fileType : fileTypes)
+      {
+         if (fileType.getExtension().equalsIgnoreCase(fileExtension))
+         {
+            mimeTypeList.add(fileType.getMimeType());
+         }
+      }
+
+      return mimeTypeList;
+   }   
+   
    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
    {
       @Override
@@ -204,10 +238,10 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          display.getFileNameField().setValue(fileName);
          display.setMimeTypeFieldEnabled(true);
 
-         List<String> mimeTypes = IDEMimeTypes.getSupportedMimeTypes();
+         List<String> mimeTypes = getSupportedMimeTypes();
          Collections.sort(mimeTypes);
 
-         List<String> proposalMimeTypes = IDEMimeTypes.getMimeTypes(event.getFileName());
+         List<String> proposalMimeTypes = getMimeTypesByFileName(event.getFileName());
 
          String[] valueMap = mimeTypes.toArray(new String[0]);
 

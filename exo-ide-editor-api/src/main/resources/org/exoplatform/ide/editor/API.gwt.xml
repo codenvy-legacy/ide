@@ -26,6 +26,9 @@
       <!-- Inherit the core Web Toolkit stuff.                        -->
       <inherits name='com.google.gwt.user.User'/>  
    
+      <source path="text" />
       <source path="api" />
+      <source path="marking" />
+      <source path="runtime" />
 
 </module>

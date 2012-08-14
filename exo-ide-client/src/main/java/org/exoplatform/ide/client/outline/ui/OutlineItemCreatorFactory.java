@@ -21,7 +21,7 @@ package org.exoplatform.ide.client.outline.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
