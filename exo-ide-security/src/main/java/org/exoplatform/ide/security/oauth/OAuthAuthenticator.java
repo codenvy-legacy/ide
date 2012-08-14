@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public interface OAuthAuthenticator_
+public interface OAuthAuthenticator
 {
    /**
     * Get oauth token.
