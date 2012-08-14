@@ -24,6 +24,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
+import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.template.FileTemplates;

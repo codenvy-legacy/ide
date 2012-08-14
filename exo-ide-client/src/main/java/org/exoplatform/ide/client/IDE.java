@@ -46,7 +46,8 @@ import org.exoplatform.ide.client.framework.application.event.ApplicationClosing
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.outline.ui.OutlineItemCreator;
+import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
+import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.Paas;
 import org.exoplatform.ide.client.framework.paas.recent.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
@@ -318,7 +319,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       });
    }
 
-<<<<<<< HEAD
    /**
     * @see org.exoplatform.ide.client.framework.module.IDE#getPaaSes()
     */

@@ -108,7 +108,7 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>buildnumber-maven-plugin</artifactId>
             <configuration>
-                <shortRevisionLength>8</shortRevisionLength>
+               <shortRevisionLength>8</shortRevisionLength>
                <timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
                <doCheck>false</doCheck>
                <doUpdate>false</doUpdate>
@@ -181,12 +181,15 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-gadget</artifactId>
                <exclusions>
-                 <exclusion>
-                    <groupId>com.google.inject</groupId>                                                                                                                                                            
-                   <artifactId>guice</artifactId>
+                  <exclusion>
+                     <groupId>com.google.inject</groupId>
+                     <artifactId>guice</artifactId>
                   </exclusion>
-                 
-                  </exclusions>
+                  <exclusion>
+                     <groupId>com.google.guava</groupId>
+                     <artifactId>guava</artifactId>
+                  </exclusion>
+               </exclusions>
             </dependency>
 
             <dependency>
@@ -213,6 +216,12 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-editor-java</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>com.google.guava</groupId>
+               <artifactId>guava</artifactId>
+               <version>12.0.1</version>
             </dependency>
 
             <dependency>
@@ -269,9 +278,9 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-groovy</artifactId>
                <exclusions>
-                   <exclusion>
-                    <groupId>org.exoplatform.ide</groupId>                                                                                                                                                            
-                   <artifactId>exo-ide-server</artifactId>
+                  <exclusion>
+                     <groupId>org.exoplatform.ide</groupId>
+                     <artifactId>exo-ide-server</artifactId>
                   </exclusion>
                </exclusions>
             </dependency>
@@ -361,7 +370,7 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-googleappengine</artifactId>
             </dependency>
-            
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-python-runtime</artifactId>
@@ -450,12 +459,12 @@
                   </exclusion>
                </exclusions>
             </dependency>
-            
-           <dependency>
-             <groupId>com.google.gwt</groupId>
-             <artifactId>gwt-user</artifactId>
-           </dependency>
-         
+
+            <dependency>
+               <groupId>com.google.gwt</groupId>
+               <artifactId>gwt-user</artifactId>
+            </dependency>
+
             <dependency>
                <groupId>org.exoplatform.jcr</groupId>
                <artifactId>exo.jcr.component.webdav</artifactId>
@@ -483,7 +492,7 @@
                   </exclusion>
                </exclusions>
             </dependency>
-           
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-server</artifactId>
@@ -493,9 +502,9 @@
                      <groupId>xstream</groupId>
                      <artifactId>xstream</artifactId>
                   </exclusion>
-                   <exclusion>
-                    <groupId>com.google.code.guice</groupId>                                                                                                                                                            
-                   <artifactId>guice</artifactId>
+                  <exclusion>
+                     <groupId>com.google.code.guice</groupId>
+                     <artifactId>guice</artifactId>
                   </exclusion>
                </exclusions>
             </dependency>
@@ -543,8 +552,8 @@
                <version>${shindig.version}</version>
                <scope>runtime</scope>
             </dependency>
- --> 
- 
+ -->
+
             <dependency>
                <groupId>org.slf4j</groupId>
                <artifactId>slf4j-api</artifactId>
@@ -651,30 +660,30 @@
                         </configuration>
                      </execution>
                      <execution>
-                  <id>copy-appengine-zip</id>
-                  <phase>process-resources</phase>
-                  <goals>
-                     <goal>copy</goal>
-                  </goals>
-                  <configuration>
-                     <stripVersion>true</stripVersion>
-                     <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
-                     <artifactItems>
-                        <artifactItem>
-                           <groupId>com.google.appengine</groupId>
-                           <artifactId>appengine-java-sdk</artifactId>
-                           <version>${appengine.version}</version>
-                           <type>zip</type>
-                        </artifactItem>
-                         <artifactItem>
-                           <groupId>com.google.appengine</groupId>
-                           <artifactId>appengine-python-sdk</artifactId>
-                           <version>${appengine.version}</version>
-                           <type>zip</type>
-                        </artifactItem>
-                     </artifactItems>
-                  </configuration>
-               </execution>
+                        <id>copy-appengine-zip</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                           <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                           <stripVersion>true</stripVersion>
+                           <outputDirectory>${project.build.directory}/packager-conf/appengine</outputDirectory>
+                           <artifactItems>
+                              <artifactItem>
+                                 <groupId>com.google.appengine</groupId>
+                                 <artifactId>appengine-java-sdk</artifactId>
+                                 <version>${appengine.version}</version>
+                                 <type>zip</type>
+                              </artifactItem>
+                              <artifactItem>
+                                 <groupId>com.google.appengine</groupId>
+                                 <artifactId>appengine-python-sdk</artifactId>
+                                 <version>${appengine.version}</version>
+                                 <type>zip</type>
+                              </artifactItem>
+                           </artifactItems>
+                        </configuration>
+                     </execution>
                   </executions>
                </plugin>
                <plugin>
@@ -715,41 +724,41 @@
                            <tasks>
                               <mkdir dir="target/git/repository/dev-monit" />
                               <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
-                                  overwrite="true" /&gt;
-                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}">
-                           <patternset>
-                              <exclude name="**/bin/**" />
-                              <exclude name="**/demos/**" />
-                              <exclude name="**/src/**" />
-                              <exclude name="**/docs/javadoc/**" />
-                              <exclude name="**/docs/remoteapi/**" />
-                              <exclude name="**/docs/testing/**" />
-                              <exclude name="**/docs/tools/**" />
-                              <exclude name="**/docs/javadoc/**" />
-                              <exclude name="**/ABOUT" />
-                              <exclude name="**/COPYING" />
-                              <exclude name="**/README" />
-                              <exclude name="**/README.ORM" />
-                              <exclude name="**/RELEASE_NOTES" />
-                              <exclude name="**/RELEASE_NOTES.ORM" />
-                           </patternset>
-                        </unzip>
-                        <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/appengine-java-sdk" />
-                        
-                              
-                               <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}">
-                           <patternset>
-                              <exclude name="**/demos/**" />
-                              <exclude name="**/new_project_template/**" />
-                              <exclude name="**/BUGS" />
-                              <exclude name="**/LICENSE" />
-                              <exclude name="**/README" />
-                              <exclude name="**/RELEASE_NOTES" />
-                              <exclude name="**/VERSION" />
-                           </patternset>
-                        </unzip>
-                        <move file="${project.build.directory}/google_appengine" tofile="${project.build.directory}/appengine-python-sdk" />
-                        
+                              overwrite="true" /&gt;
+                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}">
+                                 <patternset>
+                                    <exclude name="**/bin/**" />
+                                    <exclude name="**/demos/**" />
+                                    <exclude name="**/src/**" />
+                                    <exclude name="**/docs/javadoc/**" />
+                                    <exclude name="**/docs/remoteapi/**" />
+                                    <exclude name="**/docs/testing/**" />
+                                    <exclude name="**/docs/tools/**" />
+                                    <exclude name="**/docs/javadoc/**" />
+                                    <exclude name="**/ABOUT" />
+                                    <exclude name="**/COPYING" />
+                                    <exclude name="**/README" />
+                                    <exclude name="**/README.ORM" />
+                                    <exclude name="**/RELEASE_NOTES" />
+                                    <exclude name="**/RELEASE_NOTES.ORM" />
+                                 </patternset>
+                              </unzip>
+                              <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/appengine-java-sdk" />
+
+
+                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}">
+                                 <patternset>
+                                    <exclude name="**/demos/**" />
+                                    <exclude name="**/new_project_template/**" />
+                                    <exclude name="**/BUGS" />
+                                    <exclude name="**/LICENSE" />
+                                    <exclude name="**/README" />
+                                    <exclude name="**/RELEASE_NOTES" />
+                                    <exclude name="**/VERSION" />
+                                 </patternset>
+                              </unzip>
+                              <move file="${project.build.directory}/google_appengine" tofile="${project.build.directory}/appengine-python-sdk" />
+
                            </tasks>
                         </configuration>
                      </execution>
