@@ -40,7 +40,6 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
 {
    protected AuthorizationCodeFlow flow;
    protected String redirectUri;
-   protected String userId;
 
    protected static GoogleClientSecrets loadClientSecrets(String configName) throws IOException
    {
@@ -162,15 +161,7 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
                }
             }
          }
-         if (userId == null)
-         {
-            throw new OAuthAuthenticationException("Missing user ID. ");
-         }
-
-         this.userId = userId;
-
          HttpResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).executeUnparsed();
-
          response.getRequest().addParser(getParser());
          TokenResponse tokenResponse;
 
@@ -183,12 +174,34 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
             throw new OAuthAuthenticationException(e.getMessage());
          }
 
+         if (userId == null)
+         {
+
+         }
          flow.createAndStoreCredential(tokenResponse, userId);
       }
       catch (IOException ioe)
       {
          throw new OAuthAuthenticationException(ioe.getMessage());
       }
+   }
+
+   private String getUserFromURL(AuthorizationCodeResponseUrl authorizationCodeResponseUrl) throws IOException
+   {
+      String state = authorizationCodeResponseUrl.getState();
+      if (!(state == null || state.isEmpty()))
+      {
+         String decoded = URLDecoder.decode(state, "UTF-8");
+         String[] items = decoded.split("&");
+         for (String str : items)
+         {
+            if (str.startsWith("userId="))
+            {
+               return str.substring(7, str.length());
+            }
+         }
+      }
+      return null;
    }
 
    /**

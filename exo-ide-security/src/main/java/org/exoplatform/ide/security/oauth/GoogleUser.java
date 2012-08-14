@@ -19,37 +19,41 @@
 package org.exoplatform.ide.security.oauth;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class User
+public class GoogleUser extends User
 {
-   private String username;
+   private String email;
+   private String name;
 
-   public User(String username)
+   public String getEmail()
    {
-      this.username = username;
+      return email;
    }
 
-   public User()
+   public void setEmail(String email)
    {
+      setUsername(email);
+      this.email = email;
    }
 
-   public String getUsername()
+   public String getName()
    {
-      return username;
+      return name;
    }
 
-   public void setUsername(String username)
+   public void setName(String name)
    {
-      this.username = username;
+      this.name = name;
    }
 
    @Override
    public String toString()
    {
-      return "User{" +
-         "username='" + username + '\'' +
+      return "GoogleUser{" +
+         "email='" + email + '\'' +
+         ", name='" + name + '\'' +
          '}';
    }
 }

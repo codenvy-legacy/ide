@@ -22,34 +22,62 @@ package org.exoplatform.ide.security.oauth;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class User
+public class GitHubUser extends User
 {
-   private String username;
+   private String login;
+   private String name;
+   private String company;
+   private String email;
 
-   public User(String username)
+   public String getLogin()
    {
-      this.username = username;
+      return login;
    }
 
-   public User()
+   public void setLogin(String login)
    {
+      setUsername(login);
+      this.login = login;
    }
 
-   public String getUsername()
+   public String getName()
    {
-      return username;
+      return name;
    }
 
-   public void setUsername(String username)
+   public void setName(String name)
    {
-      this.username = username;
+      this.name = name;
+   }
+
+   public String getCompany()
+   {
+      return company;
+   }
+
+   public void setCompany(String company)
+   {
+      this.company = company;
+   }
+
+   public String getEmail()
+   {
+      return email;
+   }
+
+   public void setEmail(String email)
+   {
+      this.email = email;
    }
 
    @Override
    public String toString()
    {
-      return "User{" +
-         "username='" + username + '\'' +
+      return "GitHubUser{" +
+         "login='" + login + '\'' +
+         ", name='" + name + '\'' +
+         ", company='" + company + '\'' +
+         ", email='" + email + '\'' +
          '}';
    }
 }
