@@ -14,19 +14,16 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.editor.gutter.Gutter.Position;
-
-import com.google.collide.client.editor.gutter.NotificationManager;
-
-import com.google.collide.client.editor.renderer.CurrentLineHighlighter;
-
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.parenmatch.ParenMatchHighlighter;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
 import com.google.collide.client.editor.Buffer.ScrollListener;
 import com.google.collide.client.editor.gutter.Gutter;
+import com.google.collide.client.editor.gutter.Gutter.Position;
 import com.google.collide.client.editor.gutter.LeftGutterManager;
+import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.input.InputController;
+import com.google.collide.client.editor.renderer.CurrentLineHighlighter;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.client.editor.renderer.RenderTimeExecutor;
 import com.google.collide.client.editor.renderer.Renderer;
@@ -50,17 +47,15 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-
-import org.apache.bcel.generic.LUSHR;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
-
 import elemental.events.Event;
 import elemental.html.Element;
+
+import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
  * The presenter for the Collide editor.
