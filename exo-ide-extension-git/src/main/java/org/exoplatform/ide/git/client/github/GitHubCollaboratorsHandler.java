@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -37,51 +36,58 @@ import org.exoplatform.ide.git.shared.GitHubUser;
 import java.util.List;
 
 /**
+ * Provide access via GitHubClientService for getting list of collaborators
+ * and allow invite invite they to eXo IDE community. 
+ * For inviting call REST service from cloud-ide project.
+ * 
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: GetCollaboratorsHandler.java Aug 6, 2012
+ * @version $Id: GitHubCollaboratorsHandler.java Aug 6, 2012
  * 
  */
-public class GetCollaboratorsHandler implements EventHandler
+public class GitHubCollaboratorsHandler
 {
 
    interface Display extends IsView
    {
       void showCollaborators(Collaborators collaborators);
-      
+
       Collaborators getCollaboratorsForInvite();
-      
+
       HasClickHandlers getInviteButton();
-      
+
       HasClickHandlers getCloseButton();
    }
 
    private Display display;
-   
-   
-   public void bindDisplay(){
+
+   public void bindDisplay()
+   {
       display.getCloseButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.getInstance().closeView(display.asView().getId()); 
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       display.getInviteButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
-           doInvite();  
+            doInvite();
          }
       });
    }
 
+   /**
+    * Send invitation to selected collaborators
+    */
    protected void doInvite()
    {
       Collaborators collaboratorsForInvite = display.getCollaboratorsForInvite();
@@ -90,48 +96,45 @@ public class GetCollaboratorsHandler implements EventHandler
       {
          System.out.println("GetCollaboratorsHandler.doInvite()" + gitHubUser.getEmail());
       }
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
-   void onGetCollaborators(GetCollboratorsEvent event)
+   /**
+    * Get list of collaborators of GitHub repository.
+    * Display in pop window wit proposal inviting join to eXo IDE community   
+    * 
+    * @param user
+    * @param repository
+    */
+   public void showCollaborators(String user, String repository)
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
       try
       {
-         GitHubClientService.getInstance().getCollaborators(event.getUser(), event.getRepository(),
+         GitHubClientService.getInstance().getCollaborators(user, repository,
             new AsyncRequestCallback<Collaborators>(unmarshaller)
             {
 
                @Override
                protected void onSuccess(Collaborators result)
                {
-                  showColloborators(result);
-
+                  display = GWT.create(Display.class);
+                  bindDisplay();
+                  IDE.getInstance().openView(display.asView());
+                  display.showCollaborators(result);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO Auto-generated method stub
-
+                  //Nothing todo 
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
-
-   protected void showColloborators(Collaborators result)
-   {
-      display = GWT.create(Display.class);
-      bindDisplay();
-      IDE.getInstance().openView(display.asView());
-      display.showCollaborators(result);
-   }
-   
-   
-   
 }

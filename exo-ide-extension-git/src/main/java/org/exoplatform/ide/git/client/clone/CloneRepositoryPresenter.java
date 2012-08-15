@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
+import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -155,9 +155,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          public void onClick(ClickEvent event)
          {
             doClone(display.getRemoteUriValue().getValue(),//
-                    display.getRemoteNameValue().getValue(),//
-                    display.getWorkDirValue().getValue(),//
-                    display.getProjectType().getValue());
+               display.getRemoteNameValue().getValue(),//
+               display.getWorkDirValue().getValue(),//
+               display.getProjectType().getValue());
          }
       });
 
@@ -344,7 +344,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    {
       String[] userRepo = parseGitHubUrl(remoteUri);
       if (userRepo != null)
-         IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1]));
+      {
+         GitHubCollaboratorsHandler collaboratorsHandler = new GitHubCollaboratorsHandler();
+         collaboratorsHandler.showCollaborators(userRepo[0], userRepo[1]);
+      }
+
    }
 
    /**

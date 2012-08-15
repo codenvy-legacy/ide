@@ -168,7 +168,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.github.GetCollaboratorsHandler.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.GetCollboratorsEvent.samples.ShowGithubSamplesEvent)
+    * @see org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler.samples.GithubSamplesShowHandler#onShowSamples(org.exoplatform.ide.client.GetCollboratorsEvent.samples.ShowGithubSamplesEvent)
     */
    @Override
    public void onShowSamples(ShowSamplesEvent event)

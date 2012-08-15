@@ -48,7 +48,7 @@ import java.util.List;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CollaboratorsViewer.java Aug 6, 2012
  */
-public class CollaboratorsViewer extends ViewImpl implements GetCollaboratorsHandler.Display
+public class CollaboratorsViewer extends ViewImpl implements GitHubCollaboratorsHandler.Display
 {
 
    private static CollaboratorsViewerUiBinder uiBinder = GWT.create(CollaboratorsViewerUiBinder.class);

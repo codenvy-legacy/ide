@@ -194,7 +194,7 @@ public class GitClientServiceImpl extends GitClientService
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&folderid=" + folder.getId();
+      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
          .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
