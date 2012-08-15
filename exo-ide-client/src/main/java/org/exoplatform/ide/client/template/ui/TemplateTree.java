@@ -18,19 +18,21 @@
  */
 package org.exoplatform.ide.client.template.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TreeItem;
 
 import org.exoplatform.gwtframework.ui.client.component.Tree;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.FolderTemplate;
-import org.exoplatform.ide.client.model.template.Template;
+import org.exoplatform.ide.client.framework.template.AbstractTemplate;
+import org.exoplatform.ide.client.framework.template.FileTemplate;
+import org.exoplatform.ide.client.framework.template.FolderTemplate;
+import org.exoplatform.ide.client.framework.template.FolderTemplateImpl;
+import org.exoplatform.ide.client.framework.template.Template;
 
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -74,7 +76,7 @@ public class TemplateTree extends Tree<Template>
          tree.setSelectedItem(rootNode);
       }
 
-      if (getValue() instanceof FolderTemplate)
+      if (getValue() instanceof FolderTemplateImpl)
       {
          FolderTemplate folder = (FolderTemplate)getValue();
          if (folder.getChildren() != null)
@@ -94,7 +96,7 @@ public class TemplateTree extends Tree<Template>
     * @param parentNode node, which will be filled
     * @param children list of templates
     */
-   private void setItems(TreeItem parentNode, List<Template> children)
+   private void setItems(TreeItem parentNode, List<AbstractTemplate> children)
    {
       parentNode.removeItems();
       for (Template template : children)
@@ -130,7 +132,7 @@ public class TemplateTree extends Tree<Template>
             parentNode.setState(true, true);
          }
 
-         if (template instanceof FolderTemplate)
+         if (template instanceof FolderTemplateImpl)
          {
             if (((FolderTemplate)template).getChildren() != null)
             {
@@ -145,9 +147,9 @@ public class TemplateTree extends Tree<Template>
     * 
     * @return List of Templates
     */
-   public List<Template> getSelectedItems()
+   public List<AbstractTemplate> getSelectedItems()
    {
-      List<Template> selectedItems = new ArrayList<Template>();
+      List<AbstractTemplate> selectedItems = new ArrayList<AbstractTemplate>();
 
       // for (ListGridRecord record : getSelection())
       // {
@@ -155,7 +157,7 @@ public class TemplateTree extends Tree<Template>
       // }
       if (tree.getSelectedItem() != null)
       {
-         selectedItems.add((Template)tree.getSelectedItem().getUserObject());
+         selectedItems.add((AbstractTemplate)tree.getSelectedItem().getUserObject());
       }
 
       return selectedItems;

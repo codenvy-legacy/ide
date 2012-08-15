@@ -18,10 +18,16 @@
  */
 package org.exoplatform.ide.extension.openshift.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainControl;
 import org.exoplatform.ide.extension.openshift.client.controls.OpenShiftControlsGroup;
@@ -39,8 +45,7 @@ import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplication
 import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
-import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.Arrays;
 
 /**
  * OpenShift extension to be added to IDE.
@@ -94,6 +99,11 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
+      IDE.getInstance().registerPaaS(
+         new PaaS("OpenShift", "OpenShift", new Image(OpenShiftClientBundle.INSTANCE.openShiftControl()), Arrays
+            .asList(ProjectType.RUBY_ON_RAILS, ProjectType.PHP), true,
+            new org.exoplatform.ide.extension.openshift.client.deploy.recent.DeployApplicationPresenter()));
+
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       // Add controls:

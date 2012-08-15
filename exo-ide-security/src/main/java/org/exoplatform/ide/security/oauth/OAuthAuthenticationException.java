@@ -29,4 +29,9 @@ public final class OAuthAuthenticationException extends Exception
    {
       super(message);
    }
+
+   public OAuthAuthenticationException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

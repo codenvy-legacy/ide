@@ -144,6 +144,18 @@ public interface CloudBeesLocalizationConstant extends Messages
    @Key("loginFailed")
    String loginFailed();
 
+   @Key("creatingProject")
+   String creatingProject();
+
+   @Key("deployToCloudBees")
+   String deployToCloudBees();
+
+   @Key("creatingApplication")
+   String creatingApplication();
+
+   @Key("creatingApplicationFinished")
+   String creatingApplicationFinished(String application);
+
    /*
     * DeployApplicationPresenter
     */

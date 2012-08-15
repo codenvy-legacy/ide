@@ -27,7 +27,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.HasAlignment;
 
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.template.ui.TemplateListGrid;
 
 /**

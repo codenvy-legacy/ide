@@ -28,11 +28,12 @@ import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.template.FileTemplate;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.ProjectTemplateImpl;
+import org.exoplatform.ide.client.framework.template.Template;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.model.template.FileTemplate;
-import org.exoplatform.ide.client.model.template.ProjectTemplate;
-import org.exoplatform.ide.client.model.template.Template;
 
 /**
  * Created by The eXo Platform SAS .
@@ -72,7 +73,7 @@ public class TemplateListGrid<T extends Template> extends ListGrid<T>
       {
          return ImageUtil.getIcon(((FileTemplate)template).getMimeType());
       }
-      else if (template instanceof ProjectTemplate)
+      else if (template instanceof ProjectTemplateImpl)
       {
          return ProjectResolver.getImageForProject(((ProjectTemplate)template).getType());
       }

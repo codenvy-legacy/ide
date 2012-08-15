@@ -19,12 +19,15 @@
 package org.exoplatform.ide.extension.cloudbees.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
@@ -37,6 +40,8 @@ import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresen
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
+
+import java.util.Arrays;
 
 /**
  * CloudBees extention for IDE.
@@ -71,6 +76,10 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    @Override
    public void initialize()
    {
+      IDE.getInstance().registerPaaS(
+         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees()), Arrays
+            .asList(ProjectType.JSP), new org.exoplatform.ide.extension.cloudbees.client.deploy.recent.DeployApplicationPresenter()));
+
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new CloudBeesControl());

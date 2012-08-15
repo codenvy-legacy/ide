@@ -18,15 +18,19 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
+
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
+import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
+import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.cron.CronsHandler;
-import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VaccumIndexesHandlerImpl;
@@ -40,7 +44,7 @@ import org.exoplatform.ide.extension.googleappengine.client.project.AppEnginePro
 import org.exoplatform.ide.extension.googleappengine.client.queues.QueuesHandler;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
 
-import com.google.gwt.core.client.GWT;
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -61,12 +65,16 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    @Override
    public void initialize()
    {
+      IDE.getInstance().registerPaaS(
+         new PaaS("GAE", "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine()), Arrays.asList(
+            ProjectType.GAE_JAVA, ProjectType.GAE_PYTHON), new org.exoplatform.ide.extension.googleappengine.client.deploy.recent.DeployApplicationPresenter()));
+
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new GoogleAppEngineControl());
       IDE.getInstance().addControl(new CreateApplicationControl());
 
-      new DeployApplicationPresenter();
+   //   new DeployApplicationPresenter();
       new AppEngineProjectPresenter();
       new LoginPresenter();
       new RollbackUpdatePresenter();
