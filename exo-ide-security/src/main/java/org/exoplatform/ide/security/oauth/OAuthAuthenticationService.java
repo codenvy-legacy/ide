@@ -22,6 +22,7 @@ import java.net.URI;
 import java.security.Principal;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,7 +38,7 @@ import javax.ws.rs.core.UriInfo;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/appengine/oauth")
+@Path("ide/oauth")
 public class OAuthAuthenticationService
 {
    @Inject
@@ -45,26 +46,26 @@ public class OAuthAuthenticationService
 
    @GET
    @Path("auth")
-   public Response authenticate(@Context SecurityContext security) throws OAuthAuthenticationException
+   public Response authenticate(@Context UriInfo uriInfo,
+                                @Context HttpServletRequest servletRequest) throws OAuthAuthenticationException
    {
-      final Principal principal = security.getUserPrincipal();
-      if (principal == null)
-      {
-         throw new OAuthAuthenticationException("User is not logged in. ");
-      }
-      OAuthAuthenticator oauth = provider.getAuthenticator("google"); // TODO
+      final Principal principal = servletRequest.getUserPrincipal();
+      OAuthAuthenticator oauth = provider.getAuthenticator("github"); // TODO
       if (oauth == null)
       {
          throw new OAuthAuthenticationException("oauth null");
       }
-      return Response.temporaryRedirect(URI.create(oauth.getAuthenticateUrl("", principal.getName()))).build();
+      final String authUrl = oauth.getAuthenticateUrl(uriInfo.getRequestUri().toString(),
+         principal == null ? null : principal.getName());
+      return Response.temporaryRedirect(URI.create(authUrl)).build();
    }
 
    @GET
    @Path("callback")
-   public Response callback(@Context UriInfo uriInfo) throws OAuthAuthenticationException
+   public Response callback(@Context UriInfo uriInfo,
+                            @Context HttpServletRequest servletRequest) throws OAuthAuthenticationException
    {
-      OAuthAuthenticator oauth = provider.getAuthenticator("google"); // TODO
+      OAuthAuthenticator oauth = provider.getAuthenticator("github"); // TODO
       oauth.callback(uriInfo.getRequestUri().toString());
 
       String logoLocation = uriInfo.getBaseUriBuilder().replacePath("/IDE/images/logo/exo_logo.png").build().toString();

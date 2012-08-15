@@ -22,25 +22,16 @@ import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.jackson.JacksonFactory;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 /**
- * Authentication oauth service for google account.
+ * OAuth authentication for google account.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
@@ -72,56 +63,9 @@ public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
    }
 
    @Override
-   protected HttpParser getParser()
-   {
-      return new JsonHttpParser(flow.getJsonFactory());
-   }
-
-   @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      HttpURLConnection urlConnection = null;
-      InputStream urlInputStream = null;
-
-      try
-      {
-         URL url = new URL("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken);
-         urlConnection = (HttpURLConnection)url.openConnection();
-         urlInputStream = urlConnection.getInputStream();
-
-         JsonParser parser = new JsonParser();
-         parser.parse(urlInputStream);
-         JsonValue jsonValue = parser.getJsonObject();
-
-         return ObjectBuilder.createObject(GoogleUser.class, jsonValue);
-      }
-      catch (JsonException e)
-      {
-         throw new OAuthAuthenticationException(e.getMessage(), e);
-      }
-      catch (IOException e)
-      {
-         throw new OAuthAuthenticationException(e.getMessage(), e);
-      }
-      finally
-      {
-         if (urlInputStream != null)
-         {
-            try
-            {
-               urlInputStream.close();
-            }
-            catch (IOException ignored)
-            {
-            }
-         }
-
-         if (urlConnection != null)
-         {
-            urlConnection.disconnect();
-         }
-      }
-
+      return getUser("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
    }
 
    @Override

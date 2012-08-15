@@ -25,11 +25,19 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.HttpParser;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.jackson.JacksonFactory;
+import org.everrest.core.impl.provider.json.JsonException;
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.JsonValue;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -66,7 +74,7 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
       for (String uri : redirectUris)
       {
          // Redirect URI may be in form urn:ietf:wg:oauth:2.0:oob os use java.net.URI instead of java.net.URL
-         this.redirectUrisMap.put(Pattern.compile("[a-z0-9\\-]+\\." + URI.create(uri).getHost()), uri);
+         this.redirectUrisMap.put(Pattern.compile("([a-z0-9\\-]+\\.)?" + URI.create(uri).getHost()), uri);
       }
    }
 
@@ -144,13 +152,22 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
 
       try
       {
-         HttpResponse response = flow.newTokenRequest(code).setRedirectUri(findRedirectUrl(requestUrl)).executeUnparsed();
-         response.getRequest().addParser(getParser());
+         final HttpParser parser = getParser();
+         HttpResponse response = flow.newTokenRequest(code).setRequestInitializer(new HttpRequestInitializer()
+         {
+            @Override
+            public void initialize(HttpRequest request) throws IOException
+            {
+               request.getHeaders().setAccept(parser.getContentType());
+            }
+         }).setRedirectUri(findRedirectUrl(requestUrl)).executeUnparsed();
+         response.getRequest().addParser(parser);
          TokenResponse tokenResponse = response.parseAs(TokenResponse.class);
          String userId = getUserFromURL(authorizationCodeResponseUrl);
          if (userId == null)
          {
-            userId = getUser(tokenResponse.getAccessToken()).getUserId();
+            User user = getUser(tokenResponse.getAccessToken());
+            userId = user.getUserId();
          }
          flow.createAndStoreCredential(tokenResponse, userId);
       }
@@ -183,7 +200,54 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
     *
     * @return instance  of HttpParser
     */
-   protected abstract HttpParser getParser();
+   protected HttpParser getParser()
+   {
+      return new JsonHttpParser(flow.getJsonFactory());
+   }
+
+   protected <U extends User> U getUser(String getUserUrl, Class<U> userClass) throws OAuthAuthenticationException
+   {
+      HttpURLConnection urlConnection = null;
+      InputStream urlInputStream = null;
+
+      try
+      {
+         urlConnection = (HttpURLConnection)new URL(getUserUrl).openConnection();
+         urlInputStream = urlConnection.getInputStream();
+
+         JsonParser parser = new JsonParser();
+         parser.parse(urlInputStream);
+         JsonValue jsonValue = parser.getJsonObject();
+
+         return ObjectBuilder.createObject(userClass, jsonValue);
+      }
+      catch (JsonException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      catch (IOException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage(), e);
+      }
+      finally
+      {
+         if (urlInputStream != null)
+         {
+            try
+            {
+               urlInputStream.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+
+         if (urlConnection != null)
+         {
+            urlConnection.disconnect();
+         }
+      }
+   }
 
    /**
     * Get oauth token.
