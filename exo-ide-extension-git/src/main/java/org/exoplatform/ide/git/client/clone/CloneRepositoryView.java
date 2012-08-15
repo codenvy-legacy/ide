@@ -53,6 +53,8 @@ public class CloneRepositoryView extends ViewImpl implements
    private static final String REMOTE_URI_FIELD_ID = "ideCloneRepositoryViewRemoteUriField";
 
    private static final String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
+   
+   private static final String PROJECT_TYPE_FIELD_ID = "ideCloneRepositoryProjectTypeId";
 
    @UiField
    ImageButton cloneButton;
@@ -87,6 +89,7 @@ public class CloneRepositoryView extends ViewImpl implements
       workdirField.setName(WORKDIR_FIELD_ID);
       remoteUriField.setName(REMOTE_URI_FIELD_ID);
       remoteNameField.setName(REMOTE_NAME_FIELD_ID);
+      projectType.getElement().setId(PROJECT_TYPE_FIELD_ID);
 
       cloneButton.setButtonId(CLONE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);

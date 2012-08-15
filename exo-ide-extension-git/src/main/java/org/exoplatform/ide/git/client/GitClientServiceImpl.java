@@ -27,7 +27,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
@@ -64,9 +63,9 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
-import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.LogRequest;
@@ -85,7 +84,6 @@ import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -196,7 +194,7 @@ public class GitClientServiceImpl extends GitClientService
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
+      String params = "vfsid=" + vfsId + "&folderid=" + folder.getId();
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
          .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())

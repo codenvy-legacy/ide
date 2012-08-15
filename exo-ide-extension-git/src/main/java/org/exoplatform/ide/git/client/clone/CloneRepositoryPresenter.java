@@ -82,7 +82,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       HasValue<String> getRemoteNameValue();
 
       /**
-       * Return list of ptoject types
+       * Return list of project types
        * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getProjectType();
@@ -154,9 +154,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          @Override
          public void onClick(ClickEvent event)
          {
-            doClone(display.getRemoteUriValue().getValue(),
-                    display.getRemoteNameValue().getValue(),
-                    display.getWorkDirValue().getValue(),
+            doClone(display.getRemoteUriValue().getValue(),//
+                    display.getRemoteNameValue().getValue(),//
+                    display.getWorkDirValue().getValue(),//
                     display.getProjectType().getValue());
          }
       });
@@ -296,6 +296,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   /**
+    * Convert folder to project after cloning
+    * @param folder
+    * @param projectType
+    */
    protected void convertFolderToProject(FolderModel folder, String projectType)
    {
       folder.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
@@ -327,14 +332,34 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       }
    }
 
+   /**
+    * Show dialog window with proposal for invite commiters.
+    * In case clone repository from GitHub show Collaborators list (see GitHub REST API http://developer.github.com/v3/repos/collaborators/).
+    * Else on server side we get unique list of commiters: name and email.  
+    * 
+    * @param remoteUri
+    * @param folder
+    */
    protected void showInvitation(String remoteUri, FolderModel folder)
    {
-      String[] userRepo = parseGitUrl(remoteUri);
+      String[] userRepo = parseGitHubUrl(remoteUri);
       if (userRepo != null)
          IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1]));
    }
 
-   private String[] parseGitUrl(String gitUrl)
+   /**
+    * Parse GitHub url. Need extract "user" and "repository" name.
+    * If given Url its GitHub url return array of string first element will be user name, second repository name
+    * else return null.
+    * GitHub url formats:
+    * - https://github.com/user/repo.git
+    * - git@github.com:user/repo.git
+    * - git://github.com/user/repo.git
+    * 
+    * @param gitUrl
+    * @return array of string 
+    */
+   private String[] parseGitHubUrl(String gitUrl)
    {
       if (gitUrl.endsWith("/"))
       {
@@ -344,9 +369,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
       }
-      if (gitUrl.startsWith("git@github.com"))
+      if (gitUrl.startsWith("git@github.com:"))
       {
-         gitUrl = gitUrl.split("git@github.com")[1];
+         gitUrl = gitUrl.split("git@github.com:")[1];
          return gitUrl.split("/");
       }
       else if (gitUrl.startsWith("git://github.com/"))
