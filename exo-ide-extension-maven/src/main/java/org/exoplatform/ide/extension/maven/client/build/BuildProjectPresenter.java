@@ -497,11 +497,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       project.getProperties().add(new StringProperty(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
       try
       {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<Object>()
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
          {
 
             @Override
-            protected void onSuccess(Object result)
+            protected void onSuccess(ItemWrapper result)
             {
                //Nothing todo
             }

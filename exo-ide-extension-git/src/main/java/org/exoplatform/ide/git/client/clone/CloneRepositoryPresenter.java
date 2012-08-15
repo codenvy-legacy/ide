@@ -27,12 +27,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -41,8 +41,13 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 
 /**
  * Presenter for Clone Repository View.
@@ -76,6 +81,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
        */
       HasValue<String> getRemoteNameValue();
 
+      /**
+       * Return list of ptoject types
+       * @return {@link HasValue<{@link String}>}
+       */
       HasValue<String> getProjectType();
 
       /**
@@ -145,7 +154,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          @Override
          public void onClick(ClickEvent event)
          {
-            cloneRepository();
+            doClone(display.getRemoteUriValue().getValue(),
+                    display.getRemoteNameValue().getValue(),
+                    display.getWorkDirValue().getValue(),
+                    display.getProjectType().getValue());
          }
       });
 
@@ -171,8 +183,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          }
       });
 
-      display.setProjectType(ProjectResolver.getProjectsTypes().toArray(
-         new String[ProjectResolver.getProjectsTypes().size()]), ProjectResolver.UNDEFINED);
+      display.setProjectType(
+         ProjectResolver.getProjectsTypes().toArray(new String[ProjectResolver.getProjectsTypes().size()]),
+         ProjectResolver.UNDEFINED);
 
    }
 
@@ -182,43 +195,84 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    @Override
    public void onCloneRepository(CloneRepositoryEvent event)
    {
-      if (makeSelectionCheck())
+      Display d = GWT.create(Display.class);
+      IDE.getInstance().openView(d.asView());
+      bindDisplay(d);
+      display.focusInRemoteUrlField();
+      display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
+      display.enableCloneButton(false);
+   }
+
+   /**
+    * Going to cloning repository.
+    * Clone process flow 3 steps:
+    * - create new folder with name workDir
+    * - clone repository to this folder
+    * - convert folder to project.
+    *  This need because by default project with out file and folder not empty.
+    *  It content ".project" item. Clone is impossible to not empty folder    
+    * @param remoteUri - git url
+    * @param remoteName - remote name (by default origin)
+    * @param workDir - name of target folder 
+    * @param projectType - type of project
+    */
+   private void doClone(final String remoteUri, final String remoteName, //
+      final String workDir, final String projectType)
+   {
+      FolderModel folder = new FolderModel();
+      folder.setName(workDir);
+      try
       {
-         Display d = GWT.create(Display.class);
-         IDE.getInstance().openView(d.asView());
-         bindDisplay(d);
-         display.focusInRemoteUrlField();
-         display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
-         display.enableCloneButton(false);
+         VirtualFileSystem.getInstance().createFolder(vfs.getRoot(),
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder))
+            {
+
+               @Override
+               protected void onSuccess(FolderModel result)
+               {
+                  cloneRepository(remoteUri, remoteName, result, projectType);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+                        : GitExtension.MESSAGES.cloneFailed();
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+         String errorMessage =
+            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+               .cloneFailed();
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
       }
    }
 
    /**
     * Get the necessary parameters values and call the clone repository method.
     */
-   private void cloneRepository()
+   private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
    {
-      final String remoteUri = display.getRemoteUriValue().getValue();
-      String remoteName = display.getRemoteNameValue().getValue();
-      String workDir = display.getWorkDirValue().getValue();
-      String projectType = display.getProjectType().getValue();
       RepoInfo repoInfo = new RepoInfo();
       RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
       try
       {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), workDir, remoteUri, remoteName, projectType,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
             new AsyncRequestCallback<RepoInfo>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(RepoInfo result)
+               protected void onSuccess(final RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-                  ProjectModel projectModel = new ProjectModel(result.getProject());
-                  IDE.fireEvent(new OpenProjectEvent(projectModel));
-                  String[] userRepo = parseGitUrl(result.getRemoteUri());
-                  IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1].split(".git")[0]));
+                  convertFolderToProject(folder, projectType);
+                  showInvitation(result.getRemoteUri(), folder);
                }
 
                @Override
@@ -242,23 +296,70 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   protected void convertFolderToProject(FolderModel folder, String projectType)
+   {
+      folder.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folder.getProperties().add(new StringProperty("vfs:projectType", projectType));
+      ProjectModel project = new ProjectModel();
+      ItemWrapper item = new ItemWrapper(project);
+      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   protected void showInvitation(String remoteUri, FolderModel folder)
+   {
+      String[] userRepo = parseGitUrl(remoteUri);
+      if (userRepo != null)
+         IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1]));
+   }
+
    private String[] parseGitUrl(String gitUrl)
    {
-      String[] userRepo = new String[2];
+      if (gitUrl.endsWith("/"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
+      }
+      if (gitUrl.endsWith(".git"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
+      }
       if (gitUrl.startsWith("git@github.com"))
       {
          gitUrl = gitUrl.split("git@github.com")[1];
-         userRepo = gitUrl.split("/");
+         return gitUrl.split("/");
       }
       else if (gitUrl.startsWith("git://github.com/"))
       {
          gitUrl = gitUrl.split("git://github.com/")[1];
-         userRepo = gitUrl.split("/");
+         return gitUrl.split("/");
       }
-      //      else {
-      //         git://github.com/eXoIDE/java-web-project.git
-      //      }
-      return userRepo;
+      else if (gitUrl.startsWith("https://github.com/"))
+      {
+         gitUrl = gitUrl.split("git://github.com/")[1];
+         return gitUrl.split("/");
+      }
+      return null;
    }
 
    @Override

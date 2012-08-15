@@ -59,6 +59,8 @@ import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
+import org.exoplatform.ide.vfs.server.RequestContext;
+import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
@@ -82,6 +84,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Providers;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -197,26 +201,14 @@ public class GitService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public RepoInfo clone(@QueryParam("projectType") @DefaultValue("Undefined") String projectType,//
-                         CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+   public RepoInfo clone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      if (vfs == null)
-      {
-         throw new VirtualFileSystemException(
-            "Can't resolve path on the Local File System : Virtual file system not initialized");
-      }
-      vfs.getInfo().getRoot().getId();
-      Project project = vfs.createProject(vfs.getInfo().getRoot().getId(), 
-                                          request.getWorkingDir(),
-                                          projectType, null);
-      projectId = project.getId();
       GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.clone(request);
-         return new RepoInfo(request.getRemoteUri(),project);
+         return new RepoInfo(request.getRemoteUri());
       }
       finally
       {

@@ -83,6 +83,7 @@ import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 
@@ -181,26 +182,29 @@ public class GitClientServiceImpl extends GitClientService
          .requestStatusHandler(new InitRequestStatusHandler(projectName)).send(callback);
    }
 
+   
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String vfsId, String workDir, String remoteUri, String remoteName, String projectType,
+   public void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
       AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, workDir);
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectType=" + projectType;
+      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
+
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-         .requestStatusHandler(new CloneRequestStatusHandler(workDir, remoteUri)).data(marshaller.marshal())
+         .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
+
 
    /**
     * @throws RequestException

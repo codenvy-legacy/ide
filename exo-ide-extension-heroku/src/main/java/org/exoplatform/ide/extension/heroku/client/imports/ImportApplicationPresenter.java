@@ -48,8 +48,9 @@ import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -106,7 +107,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    /**
     * Project to be binded with Heroku application.
     */
-   private ProjectModel project;
+   private FolderModel project;
 
    /**
     * Heroku application to import.
@@ -232,19 +233,19 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       }
 
       FolderModel parent = (FolderModel)vfs.getRoot();
-      ProjectModel model = new ProjectModel();
+      FolderModel model = new FolderModel();
       model.setName(display.getProjectName().getValue());
-      model.setProjectType(ProjectResolver.RAILS);
+//      model.setProjectType(ProjectResolver.RAILS);
       model.setParent(parent);
 
       final boolean deployPublicKey = display.getDeployPublicKey().getValue();
       try
       {
-         VirtualFileSystem.getInstance().createProject(parent,
-            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(model))
+         VirtualFileSystem.getInstance().createFolder(parent,
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model))
             {
                @Override
-               protected void onSuccess(ProjectModel result)
+               protected void onSuccess(FolderModel result)
                {
                   project = result;
                   if (deployPublicKey)
@@ -329,17 +330,19 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    private void updateProperties()
    {
       project.getProperties().add(new StringProperty("heroku-application", herokuApplication));
+      project.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties().add(new StringProperty("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<Object>()
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
          {
             @Override
-            protected void onSuccess(Object result)
+            protected void onSuccess(ItemWrapper result)
             {
                IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
                   .importApplicationSuccess(herokuApplication), Type.INFO));
-               IDE.fireEvent(new OpenProjectEvent(project));
+               IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
             }
 
             @Override

@@ -31,6 +31,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 
@@ -260,19 +261,18 @@ public abstract class GitClientService
     */
    public abstract void push(String vfsId, ProjectModel project, String[] refSpec, String remote, boolean force,
       AsyncRequestCallback<String> callback) throws RequestException;
-
    /**
     * Clones one remote repository to local one.
     * 
     * @param vfsId virtual file system id
+    * @param project project (root of GIT repository)
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
-    * @param projectType 
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void cloneRepository(String vfsId, String workDir, String remoteUri, String remoteName,
-      String projectType, AsyncRequestCallback<RepoInfo> callback) throws RequestException;
+   public abstract void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -400,4 +400,5 @@ public abstract class GitClientService
    
    public abstract void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
             throws RequestException;
+
 }

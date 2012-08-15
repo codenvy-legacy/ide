@@ -354,52 +354,53 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private void cloneRepository(ProjectData repo, final ProjectModel project)
    {
-      String remoteUri = repo.getRepositoryUrl();
-      if (!remoteUri.endsWith(".git"))
-      {
-         remoteUri += ".git";
-      }
-      try
-      {
-         JobManager.get().showJobSeparated();
-
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
-            new AsyncRequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new ProjectCreatedEvent(project));
-                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-                  if (paas != null)
-                  {
-                     // FIXME
-                     // timer for allowing project to create fully
-                     // find better solution!!!!!!!!!
-                     new Timer()
-                     {
-                        @Override
-                        public void run()
-                        {
-                           paas.deploy(project);
-                        }
-                     }.schedule(2000);
-                  }
-
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e);
-      }
+      //TODO
+//      String remoteUri = repo.getRepositoryUrl();
+//      if (!remoteUri.endsWith(".git"))
+//      {
+//         remoteUri += ".git";
+//      }
+//      try
+//      {
+//         JobManager.get().showJobSeparated();
+//
+//         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
+//            new AsyncRequestCallback<RepoInfo>()
+//            {
+//               @Override
+//               protected void onSuccess(RepoInfo result)
+//               {
+//                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+//                  IDE.fireEvent(new ProjectCreatedEvent(project));
+//                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
+//                  if (paas != null)
+//                  {
+//                     // FIXME
+//                     // timer for allowing project to create fully
+//                     // find better solution!!!!!!!!!
+//                     new Timer()
+//                     {
+//                        @Override
+//                        public void run()
+//                        {
+//                           paas.deploy(project);
+//                        }
+//                     }.schedule(2000);
+//                  }
+//
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  handleError(exception);
+//               }
+//            });
+//      }
+//      catch (RequestException e)
+//      {
+//         handleError(e);
+//      }
    }
 
    private void handleError(Throwable t)
