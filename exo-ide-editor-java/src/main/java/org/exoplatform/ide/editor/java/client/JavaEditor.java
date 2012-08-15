@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.collide.codemirror2.SyntaxType;
+
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.editor.gutter.Gutter;
@@ -43,6 +45,7 @@ public class JavaEditor extends CollabEditor
          editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
             .workspaceEditorCss().leftGutterBase());
       breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(), JavaClientBundle.INSTANCE);
+      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(SyntaxType.JAVA, new JavaAutocompleter());
    }
 
    /**

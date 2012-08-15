@@ -14,6 +14,10 @@
 
 package com.google.collide.client.code;
 
+import com.google.collide.client.util.logging.Log;
+
+import com.google.collide.client.code.autocomplete.integration.AutocompleterFacade;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.autoindenter.Autoindenter;
 import com.google.collide.client.code.EditableContentArea.Content;
@@ -67,8 +71,8 @@ public class EditorBundle implements Content {
 //    CubeClientWrapper cubeClientWrapper = new CubeClientWrapper(
 //        appContext.getFrontendApi().GET_CODE_GRAPH);
 //    CubeClient cubeClient = cubeClientWrapper.getCubeClient();
-//    AutocompleterFacade autocompleter = AutocompleterFacade.create(
-//        editor, cubeClient, appContext.getResources());
+    AutocompleterFacade autocompleter = AutocompleterFacade.create(
+        editor, appContext.getResources());
 
 //    GoToDefinitionHandler goToDefinition = new GoToDefinitionHandler(currentPlace,
 //        editor,
@@ -95,7 +99,7 @@ public class EditorBundle implements Content {
     final EditorBundle editorBundle = new EditorBundle(documentManager,
         editor,
         editorErrorListener,
-        //autocompleter,
+        autocompleter,
 //        null, //goToDefinition,
         selectionRestorer,
 //        debuggingModelController,
@@ -109,7 +113,7 @@ public class EditorBundle implements Content {
     return editorBundle;
   }
 
-//  private final AutocompleterFacade autocompleter;
+  private final AutocompleterFacade autocompleter;
   private Autoindenter autoindenter;
   private final DocumentManager documentManager;
   private final Editor editor;
@@ -138,7 +142,7 @@ public class EditorBundle implements Content {
   private EditorBundle(DocumentManager documentManager,
       Editor editor,
       EditorErrorListener editorErrorListener,
-//      AutocompleterFacade autoCompleter,
+      AutocompleterFacade autoCompleter,
 //      GoToDefinitionHandler goToDefinition,
       SelectionRestorer selectionRestorer,
 //      DebuggingModelController debuggingModelController,
@@ -151,7 +155,7 @@ public class EditorBundle implements Content {
     this.documentManager = documentManager;
     this.editor = editor;
     this.editorErrorListener = editorErrorListener;
-//    this.autocompleter = autoCompleter;
+    this.autocompleter = autoCompleter;
 //    this.goToDefinition = goToDefinition;
     this.selectionRestorer = selectionRestorer;
 //    this.debuggingModelController = debuggingModelController;
@@ -192,7 +196,7 @@ public class EditorBundle implements Content {
   public void cleanup() {
     reset();
 //    goToDefinition.cleanup();
-//    autocompleter.cleanup();
+    autocompleter.cleanup();
     editorErrorListener.cleanup();
     editor.cleanup();
 //    outlineController.cleanup();
@@ -276,11 +280,11 @@ public class EditorBundle implements Content {
 //    debuggingModelController.setDocument(document, path, parser);
 //    outlineController.onDocumentChanged(parser);
 
-//    try {
-//      autocompleter.editorContentsReplaced(path, parser);
-//    } catch (Throwable t) {
-//      Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
-//    }
+    try {
+      autocompleter.editorContentsReplaced(path, parser);
+    } catch (Throwable t) {
+      Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
+    }
 
     syntaxHighlighter = SyntaxHighlighter.create(document,
         editor.getRenderer(),
@@ -325,4 +329,11 @@ public class EditorBundle implements Content {
 //  public OutlineController getOutlineController() {
 //    return outlineController;
 //  }
+  
+  /**
+   * @return the autocompleter
+   */
+  public AutocompleterFacade getAutocompleter(){
+    return autocompleter;
+  }
 }

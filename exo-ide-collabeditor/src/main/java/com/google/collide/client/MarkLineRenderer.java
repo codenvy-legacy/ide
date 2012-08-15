@@ -164,9 +164,8 @@ public class MarkLineRenderer implements LineRenderer
                }
 
             }
-            catch (BadLocationException e)
+            catch (BadLocationException ignore)
             {
-               e.printStackTrace();
             }
          }
          chunkLenght.add(line.length() - chars);
