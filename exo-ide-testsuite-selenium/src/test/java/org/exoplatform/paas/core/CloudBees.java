@@ -11,8 +11,6 @@ public class CloudBees extends AbstractTestModule
       private interface Locators
       {
          String VIEW_ID = "";
-         
-
       }
       
       @FindBy(xpath = Locators.VIEW_ID)
