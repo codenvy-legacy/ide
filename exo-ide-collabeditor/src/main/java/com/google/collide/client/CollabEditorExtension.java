@@ -23,6 +23,9 @@ import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.user.client.DOM;
+import elemental.dom.Node;
+
 import org.exoplatform.ide.client.framework.module.Extension;
 
 /**
@@ -52,6 +55,9 @@ public class CollabEditorExtension extends Extension
 //    XhrWarden.watch();
 //
       com.google.collide.client.Resources resources = context.getResources();
+      com.google.gwt.user.client.Element div = DOM.createDiv();
+      div.setId(AppContext.GWT_ROOT);
+      Elements.getBody().appendChild((Node)div);
 //
 //    // TODO: Figure out why when we use the + operator to concat,
 //    // these Strings don't at compile time converge to a single String literal.
@@ -107,8 +113,8 @@ public class CollabEditorExtension extends Extension
 //    styleBuilder.append(resources.fileHistoryCss().getText());
 //    styleBuilder.append(resources.timelineCss().getText());
 //    styleBuilder.append(resources.timelineNodeCss().getText());
-//    styleBuilder.append(resources.popupCss().getText());
-//    styleBuilder.append(resources.tooltipCss().getText());
+      styleBuilder.append(resources.popupCss().getText());
+      styleBuilder.append(resources.tooltipCss().getText());
 //    styleBuilder.append(resources.sliderCss().getText());
       styleBuilder.append(resources.editableContentAreaCss().getText());
 //    styleBuilder.append(resources.workspaceLocationBreadcrumbsCss().getText());
@@ -122,7 +128,7 @@ public class CollabEditorExtension extends Extension
       styleBuilder.append(resources.parenMatchHighlighterCss().getText());
 //    styleBuilder.append(resources.awesomeBoxHostCss().getText());
 //    styleBuilder.append(resources.awesomeBoxComponentCss().getText());
-//    styleBuilder.append(resources.coachmarkCss().getText());
+      styleBuilder.append(resources.coachmarkCss().getText());
 //    styleBuilder.append(resources.sidebarListCss().getText());
 //
 //    /*

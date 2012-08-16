@@ -685,6 +685,15 @@ public class DtoClientImpls {
     public final native boolean hasMessage() /*-{
       return this.hasOwnProperty("message");
     }-*/;
+    
+    public final native boolean isError() /*-{
+      return this["isError"];
+    }-*/;
+    
+    public final native CodeErrorImpl setError(boolean error) /*-{
+      this["isError"] = error;
+      return this;
+    }-*/;
 
     public static native CodeErrorImpl make() /*-{
       return {

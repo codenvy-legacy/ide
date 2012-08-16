@@ -355,7 +355,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     HorizontalAlign hAlign = positioner.getHorizontalAlignment();
     switch (positioner.getVerticalAlignment()) {
       case TOP:
-        contentElement.addClassName(css.tooltipAbove());
+         contentElement.addClassName(css.tooltipAbove());
         break;
       case BOTTOM:
         if (hAlign == HorizontalAlign.RIGHT) {
@@ -460,6 +460,17 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
 
       contentElement.addClassName(css.tooltip());
       Element triangle = Elements.createDivElement(css.triangle());
+      switch (positioner.getHorizontalAlignment())
+      {
+         case LEFT :
+            break;
+         case RIGHT :
+            triangle.getStyle().setRight("3px");
+            break;
+         default :
+            triangle.getStyle().setLeft("50%");
+            break;
+      }
       contentElement.appendChild(triangle);
       setPositionStyle();
     }
@@ -481,6 +492,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
       showTimer.cancel();
       showTimer.run();
     } else {
+      showTimer.cancel();
       showTimer.schedule(SHOW_DELAY);
     }
   }

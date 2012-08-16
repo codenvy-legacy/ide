@@ -2127,5 +2127,15 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       return addHandler(handler, EditorInitializedEvent.TYPE);
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addProblems(org.exoplatform.ide.editor.marking.Marker[])
+    */
+   @Override
+   public void addProblems(Marker[] problems)
+   {
+      for(Marker m : problems)
+         markProblem(m);
+   }
    
 }

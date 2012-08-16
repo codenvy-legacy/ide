@@ -57,6 +57,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -64,8 +65,10 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -208,12 +211,14 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                return;
 
             boolean hasError = false;
+            List<Marker> markers = new ArrayList<Marker>();
             for (IProblem p : unit.getProblems())
             {
-               editor.markProblem(new ProblemImpl(p));
+               markers.add(new ProblemImpl(p));
                if (p.isError())
                   hasError = true;
             }
+            editor.addProblems(markers.toArray(new Marker[markers.size()]));
             if (hasError)
                checkBuildStatus();
          }

@@ -18,24 +18,6 @@
  */
 package com.google.collide.client;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.IDocument;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -53,6 +35,24 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.text.IDocument;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -78,7 +78,7 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    private boolean initialized;
 
-   private final class TextListenerImpl implements TextListener 
+   private final class TextListenerImpl implements TextListener
    {
 
       /**
@@ -90,7 +90,7 @@ public class CollabEditor extends Widget implements Editor, Markable
          fireEvent(new EditorContentChangedEvent(getId()));
          udateDocument();
       }
-      
+
    }
 
    public CollabEditor(String mimeType)
@@ -109,8 +109,10 @@ public class CollabEditor extends Widget implements Editor, Markable
          EditableContentArea.create(v, CollabEditorExtension.get().getContext(), editorBundle);
       contentArea.setContent(editorBundle);
       notificationManager = editor.getLeftGutterNotificationManager();
+      notificationManager.setErrorListener(editorBundle.getErrorListener());
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
+
    }
 
    /**
@@ -543,10 +545,11 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       int scrollLeft = editor.getBuffer().getScrollLeft();
       Position position = editor.getSelection().getCursorPosition();
-      int offsetLeft = getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
-         + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
-         + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
-      
+      int offsetLeft =
+         getElement().getAbsoluteLeft() + editor.getLeftGutter().getWidth()
+            + editor.getLeftGutterNotificationManager().getLeftGutter().getWidth()
+            + editor.getBuffer().convertColumnToX(position.getLine(), position.getColumn());
+
       return offsetLeft - scrollLeft + 2;
    }
 
@@ -558,8 +561,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       int scrollTop = editor.getBuffer().getScrollTop();
       Position position = editor.getSelection().getCursorPosition();
-      int offsetTop = getElement().getAbsoluteTop()
-               + editor.getBuffer().convertLineNumberToY(position.getLineNumber());
+      int offsetTop = getElement().getAbsoluteTop() + editor.getBuffer().convertLineNumberToY(position.getLineNumber());
       return offsetTop - scrollTop + 1;
    }
 
@@ -621,6 +623,15 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addProblems(org.exoplatform.ide.editor.marking.Marker[])
+    */
+   @Override
+   public void addProblems(Marker[] problems)
+   {
+      notificationManager.addProblems(problems);
    }
 
 }
