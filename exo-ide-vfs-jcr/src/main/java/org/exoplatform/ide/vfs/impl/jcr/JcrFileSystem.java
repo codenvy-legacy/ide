@@ -1194,7 +1194,7 @@ public class JcrFileSystem implements VirtualFileSystem
     */
    @Path("item/{id}")
    @Override
-   public void updateItem(@PathParam("id") String id, //
+   public Item updateItem(@PathParam("id") String id, //
                           List<ConvertibleProperty> properties, //
                           @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
@@ -1238,6 +1238,7 @@ public class JcrFileSystem implements VirtualFileSystem
                ChangeEvent.ChangeType.PROPERTIES_UPDATED)
             );
          }
+         return fromItemData(data, PropertyFilter.ALL_FILTER);
       }
       finally
       {

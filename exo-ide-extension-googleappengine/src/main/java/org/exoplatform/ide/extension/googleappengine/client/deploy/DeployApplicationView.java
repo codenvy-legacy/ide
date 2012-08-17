@@ -56,7 +56,7 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
    {
       super();
       initWidget(uiBinder.createAndBindUi(this));
-      setHeight("60px");
+      setHeight("160px");
    }
 
    /**

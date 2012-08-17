@@ -320,10 +320,10 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
    {
       try
       {
-         VirtualFileSystem.getInstance().updateItem(currentProject, null, new AsyncRequestCallback<Object>()
+         VirtualFileSystem.getInstance().updateItem(currentProject, null, new AsyncRequestCallback<ItemWrapper>()
          {
             @Override
-            protected void onSuccess(Object result)
+            protected void onSuccess(ItemWrapper result)
             {
                IDE.getInstance().closeView(display.asView().getId());
             }

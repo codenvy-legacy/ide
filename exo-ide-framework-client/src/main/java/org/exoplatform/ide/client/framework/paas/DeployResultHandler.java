@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -21,19 +21,13 @@ package org.exoplatform.ide.client.framework.paas;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CompositeProvider.java Dec 2, 2011 12:21:09 PM vereshchaka $
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 26, 2012 5:56:12 PM anya $
  * 
  */
-public interface PaasComponent
+public interface DeployResultHandler
 {
+   void onDeployFinished(boolean success);
 
-   void getView(String projectName, PaasCallback paasCallback);
-
-   void validate();
-
-   void deploy(ProjectModel project);
-   
-   void createProject(ProjectModel project);
-
+   void onProjectCreated(ProjectModel project);
 }

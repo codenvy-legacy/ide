@@ -809,7 +809,8 @@ public interface VirtualFileSystem
    @POST
    @Path("item")
    @Consumes({MediaType.APPLICATION_JSON})
-   void updateItem(String id, List<ConvertibleProperty> properties, String lockToken) throws ItemNotFoundException,
+   @Produces({MediaType.APPLICATION_JSON})
+   Item updateItem(String id, List<ConvertibleProperty> properties, String lockToken) throws ItemNotFoundException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**

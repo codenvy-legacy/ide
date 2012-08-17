@@ -47,9 +47,9 @@ public class ShowSamplesView extends ViewImpl implements ShowSamplesPresenter.Di
 
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
 
-   private static final int HEIGHT = 345;
+   private static final int HEIGHT = 365;
 
-   private static final int WIDTH = 550;
+   private static final int WIDTH = 580;
 
    /**
     * 

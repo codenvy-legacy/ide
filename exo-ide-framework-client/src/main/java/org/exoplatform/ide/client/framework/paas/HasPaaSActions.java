@@ -16,14 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.openshift.client.deploy.recent;
+package org.exoplatform.ide.client.framework.paas;
+
+import com.google.gwt.user.client.ui.Composite;
+
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
- * @version $
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 24, 2012 12:44:17 PM anya $
  * 
  */
-public interface PullCompleteCallback
+public interface HasPaaSActions
 {
-   void onPullComplete(boolean success);
+   void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler);
+   
+   void deploy(ProjectModel project, DeployResultHandler deployResultHandler);
+
+   Composite getDeployView(String projectName, ProjectType projectType);
 }

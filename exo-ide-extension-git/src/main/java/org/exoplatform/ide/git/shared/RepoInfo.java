@@ -16,23 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.deploy.recent;
+package org.exoplatform.ide.git.shared;
 
-import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link DeployApplicationEvent} event.
+ * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 16, 2012 4:47:31 PM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: RepoInfo.java Aug 10, 2012
  */
-public interface DeployApplicationHandler extends EventHandler
+public class RepoInfo
 {
-   /**
-    * Perform deploying application to Google App Engine.
-    * 
-    * @param event
-    */
-   void onDeployApplication(DeployApplicationEvent event);
+   private String remoteUri;
+
+   public RepoInfo(String remoteUri)
+   {
+      this.remoteUri = remoteUri;
+   }
+
+   public RepoInfo()
+   {
+   }
+
+   public String getRemoteUri()
+   {
+      return remoteUri;
+   }
+
+   public void setRemoteUri(String remoteUri)
+   {
+      this.remoteUri = remoteUri;
+   }
+
 }

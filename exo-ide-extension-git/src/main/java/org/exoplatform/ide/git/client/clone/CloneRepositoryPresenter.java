@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -173,19 +174,17 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String remoteUri = display.getRemoteUriValue().getValue();
       String remoteName = display.getRemoteNameValue().getValue();
-
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, remoteName,
-            new AsyncRequestCallback<String>()
+            new AsyncRequestCallback<RepoInfo>()
             {
 
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-
                }
 
                @Override

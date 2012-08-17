@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
-import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
@@ -61,9 +60,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       IDE.getInstance().addControl(new ProjectPaaSControl());
 
       new CreateProjectPresenter();
-
-      new DeployProjectToPaasPresenter();
-
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();

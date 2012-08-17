@@ -26,14 +26,13 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPresenter;
-import org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter;
@@ -78,7 +77,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    {
       IDE.getInstance().registerPaaS(
          new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees()), Arrays
-            .asList(ProjectType.JSP), new org.exoplatform.ide.extension.cloudbees.client.deploy.recent.DeployApplicationPresenter()));
+            .asList(ProjectType.JSP), new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -93,7 +92,6 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
-      new DeployApplicationPresenter();
       new CreateAccountPresenter();
    }
 

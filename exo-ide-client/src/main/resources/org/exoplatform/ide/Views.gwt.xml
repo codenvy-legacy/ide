@@ -113,10 +113,6 @@
       <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
-      <when-type-is class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display" />
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
       <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display" />
    </replace-with>

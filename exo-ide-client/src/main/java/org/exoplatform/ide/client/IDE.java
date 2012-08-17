@@ -48,8 +48,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
@@ -86,8 +85,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
 
    private ControlsRegistration controlsRegistration;
-
-   private List<Paas> paasRegistration;
 
    private List<PaaS> registeredPaaS;
 
@@ -159,8 +156,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration.addControlsFormatter(new NewItemControlsFormatter());
       controlsRegistration.addControlsFormatter(new ViewControlsFormatter());
       controlsRegistration.addControlsFormatter(new EditControlsFormatter());
-
-      paasRegistration = new ArrayList<Paas>();
 
       IDEForm ideForm = new IDEForm();
       presenter = new IDEPresenter(ideForm, controlsRegistration);
@@ -273,24 +268,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    public void addControlsFormatter(ControlsFormatter controlsFormatter)
    {
       controlsRegistration.addControlsFormatter(controlsFormatter);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#getPaases()
-    */
-   @Override
-   public List<Paas> getPaases()
-   {
-      return paasRegistration;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.module.IDE#addPaas(org.exoplatform.ide.client.framework.paas.Paas)
-    */
-   @Override
-   public void addPaas(Paas paas)
-   {
-      paasRegistration.add(paas);
    }
 
    public void addWindowCloseHandler()

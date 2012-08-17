@@ -75,12 +75,14 @@ import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -144,7 +146,7 @@ public class GitClientServiceImpl extends GitClientService
     * Loader to be displayed.
     */
    private Loader loader;
-   
+
    private Loader emptyLoader = new EmptyLoader();
 
    /**
@@ -162,8 +164,8 @@ public class GitClientServiceImpl extends GitClientService
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
-   public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
-      throws RequestException
+   public void init(String vfsId, String projectid, String projectName, boolean bare,
+      AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + INIT;
 
@@ -180,19 +182,20 @@ public class GitClientServiceImpl extends GitClientService
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException
+   public void cloneRepository(String vfsId, Folder folder, String remoteUri, String remoteName,
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
+      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-         .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri)).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+         .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
    /**
@@ -603,8 +606,6 @@ public class GitClientServiceImpl extends GitClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-  
-
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String,
@@ -634,5 +635,4 @@ public class GitClientServiceImpl extends GitClientService
       url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
-
 }

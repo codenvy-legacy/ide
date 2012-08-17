@@ -27,18 +27,22 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.PaasCallback;
-import org.exoplatform.ide.client.framework.paas.PaasComponent;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -51,20 +55,20 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 2, 2011 10:17:23 AM vereshchaka $
  */
-public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComponent, VfsChangedHandler
+public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSActions, VfsChangedHandler
 {
    interface Display
    {
@@ -102,24 +106,19 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
     */
    private String warUrl;
 
-   private PaasCallback paasCallback;
-
    private String projectName;
 
    private ProjectModel project;
 
+   private DeployResultHandler deployResultHandler;
+
    public DeployApplicationPresenter()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-
-      IDE.getInstance().addPaas(
-         new Paas("CloudFoundry", this, Arrays.asList(ProjectResolver.RAILS, ProjectResolver.SERVLET_JSP,
-            ProjectResolver.SPRING)));
    }
 
    public void bindDisplay()
    {
-
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -159,7 +158,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
             display.getUrlField().setValue(url);
          }
       });
-
    }
 
    /**
@@ -197,6 +195,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
 
       try
       {
+         JobManager.get().showJobSeparated();
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
             CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
 
@@ -224,6 +223,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                         msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
                      }
                   }
+                  deployResultHandler.onDeployFinished(true);
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
@@ -231,6 +231,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                @Override
                protected void onFailure(Throwable exception)
                {
+                  deployResultHandler.onDeployFinished(false);
                   IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
                   super.onFailure(exception);
                }
@@ -238,6 +239,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
       }
       catch (RequestException e)
       {
+         deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -299,8 +301,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                   String urlSufix = server.substring(server.indexOf("."));
                   display.getUrlField().setValue(name + urlSufix);
                   url = display.getUrlField().getValue();
-
-                  paasCallback.onViewReceived(display.getView());
                }
 
                @Override
@@ -316,26 +316,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#getView()
-    */
-   @Override
-   public void getView(String projectName, PaasCallback paasCallback)
-   {
-      this.paasCallback = paasCallback;
-      this.projectName = projectName;
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      getServers();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate()
-    */
-   @Override
    public void validate()
    {
       LoggedInHandler validateHandler = new LoggedInHandler()
@@ -355,7 +335,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
                @Override
                protected void onSuccess(String result)
                {
-                  paasCallback.onValidate(true);
+                  beforeDeploy();
                }
             });
       }
@@ -366,12 +346,28 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy()
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void deploy(final ProjectModel project)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      this.project = project;
+      this.vfs = event.getVfsInfo();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
+   {
+      this.deployResultHandler = deployResultHandler;
+      // TODO validate
+      createProject(projectTemplate);
+   }
+
+   private void beforeDeploy()
+   {
       try
       {
          VirtualFileSystem.getInstance().getChildren(project,
@@ -408,17 +404,67 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, PaasComp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
+    *      org.exoplatform.ide.client.framework.project.ProjectType)
     */
    @Override
-   public void onVfsChanged(VfsChangedEvent event)
+   public Composite getDeployView(String projectName, ProjectType projectType)
    {
-      this.vfs = event.getVfsInfo();
+      this.projectName = projectName;
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+      }
+      bindDisplay();
+      getServers();
+      return display.getView();
    }
 
+   private void createProject(ProjectTemplate projectTemplate)
+   {
+      final Loader loader = new GWTLoader();
+      loader.setMessage(lb.creatingProject());
+      loader.show();
+      try
+      {
+         TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+            projectTemplate.getName(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            {
+
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  loader.hide();
+                  project = result;
+                  deployResultHandler.onProjectCreated(project);
+                  beforeDeploy();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
    @Override
-   public void createProject(ProjectModel project)
+   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
    {
+      this.project = project;
+      this.deployResultHandler = deployResultHandler;
+      beforeDeploy();
    }
-
 }

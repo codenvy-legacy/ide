@@ -128,6 +128,7 @@ public class ProjectResolver
 
       projectTypes.put(Language.JAVA,
          Arrays.asList(ProjectType.GAE_JAVA, ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING));
+      projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
       projectTypes.put(Language.NODE_JS, Arrays.asList(ProjectType.NODE_JS));
@@ -138,6 +139,8 @@ public class ProjectResolver
       languageImages.put(Language.PHP, IconImageBundle.INSTANCE.phpType());
       languageImages.put(Language.RUBY, IconImageBundle.INSTANCE.rubyType());
       languageImages.put(Language.PYTHON, IconImageBundle.INSTANCE.pythonType());
+      languageImages.put(Language.GROOVY, IconImageBundle.INSTANCE.groovyType());
+      languageImages.put(Language.JAVASCRIPT, IconImageBundle.INSTANCE.jsType());
 
       sortedTypes.add(UNDEFINED);
       sortedTypes.add(EXO_APP);

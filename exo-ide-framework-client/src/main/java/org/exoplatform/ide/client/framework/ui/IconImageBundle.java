@@ -81,6 +81,12 @@ public interface IconImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/python_type.png")
    ImageResource pythonType();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/groovy_type.png")
+   ImageResource groovyType();
+   
+   @Source("org/exoplatform/ide/client/bundled-images/projects/js_type.png")
+   ImageResource jsType();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/ruby_type.png")
    ImageResource rubyType();

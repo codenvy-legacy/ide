@@ -439,14 +439,16 @@ public class VirtualFileSystem
     * @param callback callback user has to implement to handle response
     * @throws RequestException
     */
-   public void updateItem(Item item, String lockToken, AsyncRequestCallback<Object> callback) throws RequestException
+   public void updateItem(Item item, String lockToken, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
    {
       String url = item.getLinkByRelation(Link.REL_SELF).getHref();
       url += (lockToken != null) ? "?lockToken=" + lockToken : "";
       loader.setMessage("Updating item...");
       AsyncRequest.build(RequestBuilder.POST, url)
          .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(item.getProperties()).toString())
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).loader(loader).send(callback);
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .loader(loader).send(callback);
    }
    
    

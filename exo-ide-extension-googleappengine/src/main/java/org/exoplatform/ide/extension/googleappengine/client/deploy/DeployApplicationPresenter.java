@@ -29,15 +29,19 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.PaasCallback;
-import org.exoplatform.ide.client.framework.paas.PaasComponent;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -49,9 +53,8 @@ import org.exoplatform.ide.extension.googleappengine.shared.User;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.Arrays;
 
 /**
  * Presenter for deploying application to Google App Engine, can be as a part of deployment step in wizard.
@@ -60,8 +63,8 @@ import java.util.Arrays;
  * @version $Id: May 16, 2012 5:51:08 PM anya $
  * 
  */
-public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements PaasComponent,
-   DeployApplicationHandler, ProjectBuiltHandler
+public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements HasPaaSActions,
+   ProjectBuiltHandler, DeployApplicationHandler
 {
    interface Display
    {
@@ -74,7 +77,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       Composite getView();
    }
 
-   private PaasCallback paasCallback;
+   private DeployResultHandler deployResultHandler;
 
    private Display display;
 
@@ -95,22 +98,14 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    private ProjectModel builtProject;
 
+   private String projectName;
+
+   private ProjectTemplate projectTemplate;
+
    public DeployApplicationPresenter()
    {
-      IDE.getInstance().addPaas(
-         new Paas("Google App Engine", this, Arrays.asList(ProjectResolver.APP_ENGINE_JAVA,
-            ProjectResolver.APP_ENGINE_PYTHON))
-         {
-            @Override
-            public boolean isFirstInDeployments()
-            {
-               return true;
-            }
-         });
-
-      IDE.getInstance().addControl(new DeployApplicationControl());
-
       IDE.addHandler(DeployApplicationEvent.TYPE, this);
+      IDE.getInstance().addControl(new DeployApplicationControl());
    }
 
    /**
@@ -142,76 +137,6 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#getView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.paas.PaasCallback)
-    */
-   @Override
-   public void getView(String projectName, PaasCallback paasCallback)
-   {
-      this.paasCallback = paasCallback;
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      display.getUseExisting().setValue(false);
-      display.enableApplicationIdField(false);
-      display.getApplicationIdField().setValue("");
-
-      this.paasCallback.onViewReceived(display.getView());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate()
-    */
-   @Override
-   public void validate()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            applicationId = display.getApplicationIdField().getValue();
-            // Check user is logged to Google App Engine.
-            isUserLogged(true);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
-   @Override
-   public void deploy(final ProjectModel project)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            if (useExisted)
-            {
-               setApplicationId(applicationId, project);
-            }
-            else
-            {
-               IDE.fireEvent(new CreateApplicationEvent());
-            }
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#createProject(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
-   @Override
-   public void createProject(ProjectModel project)
-   {
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent)
     */
    @Override
@@ -228,7 +153,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       if (isAppEngineProject())
       {
          applicationUrl = null;
-         if (ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
+         if (ProjectType.JAVA.equals(project.getProjectType()))
          {
             buildProject(project);
          }
@@ -349,10 +274,6 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                   if (!result.isAuthenticated())
                   {
                      IDE.fireEvent(new LoginEvent());
-                     if (wizardStep)
-                     {
-                        paasCallback.onValidate(false);
-                     }
                      return;
                   }
                   if (wizardStep)
@@ -361,11 +282,10 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                      {
                         Dialogs.getInstance().showError(
                            GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationEmptyIdMessage());
-                        paasCallback.onValidate(false);
                      }
                      else
                      {
-                        paasCallback.onValidate(true);
+                        createProject(projectTemplate);
                      }
                   }
                   else
@@ -381,20 +301,120 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                protected void onFailure(Throwable exception)
                {
                   super.onFailure(exception);
-                  if (wizardStep)
-                  {
-                     paasCallback.onValidate(false);
-                  }
-                  // TODO check response
                }
             });
       }
       catch (RequestException e)
       {
-         if (wizardStep)
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
+   {
+      this.projectTemplate = projectTemplate;
+      this.deployResultHandler = deployResultHandler;
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
          {
-            paasCallback.onValidate(false);
+            applicationId = display.getApplicationIdField().getValue();
+            // Check user is logged to Google App Engine.
+            isUserLogged(true);
          }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
+    *      org.exoplatform.ide.client.framework.project.ProjectType)
+    */
+   @Override
+   public Composite getDeployView(String projectName, ProjectType projectType)
+   {
+      this.projectName = projectName;
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      display.getUseExisting().setValue(false);
+      display.enableApplicationIdField(false);
+      display.getApplicationIdField().setValue("");
+      return display.getView();
+   }
+
+   private void createProject(ProjectTemplate projectTemplate)
+   {
+      final Loader loader = new GWTLoader();
+      // TODO
+      loader.setMessage("Creating project...");
+      loader.show();
+      try
+      {
+         TemplateService.getInstance().createProjectFromTemplate(currentVfs.getId(), currentVfs.getRoot().getId(),
+            projectName, projectTemplate.getName(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            {
+
+               @Override
+               protected void onSuccess(final ProjectModel result)
+               {
+                  loader.hide();
+                  deployResultHandler.onProjectCreated(result);
+
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
+                     {
+                        if (useExisted)
+                        {
+                           setApplicationId(applicationId, result);
+                        }
+                        else
+                        {
+                           IDE.fireEvent(new CreateApplicationEvent());
+                        }
+                     }
+                  });
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
+   {
+      this.deployResultHandler = deployResultHandler;
+      if (useExisted)
+      {
+         setApplicationId(applicationId, project);
+      }
+      else
+      {
+         IDE.fireEvent(new CreateApplicationEvent());
       }
    }
 }

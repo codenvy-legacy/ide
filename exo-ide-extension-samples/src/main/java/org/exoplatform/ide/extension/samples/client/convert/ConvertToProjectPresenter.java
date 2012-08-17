@@ -480,11 +480,11 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       item.getProperties().add(new StringProperty("vfs:projectType", projectType));
       try
       {
-         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<Object>()
+         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>()
          {
 
             @Override
-            protected void onSuccess(Object result)
+            protected void onSuccess(ItemWrapper result)
             {
                IDE.getInstance().closeView(display.asView().getId());
                IDE.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
