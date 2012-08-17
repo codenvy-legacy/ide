@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
  * Presenter for log in Google App Engine operation. The view must be pointed in Views.gwt.xml.
@@ -130,16 +130,16 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private void isUserLogged()
    {
-      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
       try
       {
          GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(User result)
+               protected void onSuccess(GaeUser result)
                {
                   IDE.fireEvent(new SetLoggedUserStateEvent(result.isAuthenticated()));
                   if (!result.isAuthenticated())

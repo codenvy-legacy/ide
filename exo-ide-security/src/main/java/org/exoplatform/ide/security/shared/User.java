@@ -16,23 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.shared;
+package org.exoplatform.ide.security.shared;
 
 /**
+ * Represents an User with unique identifier. Have such interface to be able use GWT AutoBean feature. Any interface
+ * that represents an User should extend this interface.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface User
 {
-   String getName();
+   String getId();
 
-   void setName(String name);
-
-   boolean isAuthenticated();
-
-   void setAuthenticated(boolean authenticated);
-
-   String getAuthenticationType();
-
-   void setAuthenticationType(String type);
+   void setId(String id);
 }

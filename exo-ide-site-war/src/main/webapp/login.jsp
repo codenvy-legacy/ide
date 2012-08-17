@@ -18,18 +18,28 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 --%>
-<%@page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page session="true" %>
+<%@ page import="org.exoplatform.ide.security.openid.OpenIDUser" %>
 
-<%@page import="org.exoplatform.ide.authentication.openid.OpenIDUser" %>
-<%@page import="java.net.URLEncoder" %>
-
+<%-- Login over Open ID in popup mode --%>
 <%
-   OpenIDUser user = (OpenIDUser)session.getAttribute("openid.user");
-   if (user != null)
+    OpenIDUser user = (OpenIDUser)session.getAttribute("openid.user");
+    if (user != null)
+    {
+       session.removeAttribute("openid.user");
+       response.sendRedirect("j_security_check?j_username=" + user.getId() + "&j_password=" + user.getPassword());
+       return;
+    }
+%>
+
+<%-- Login over Open ID or OAuth --%>
+<%
+   String username  = request.getParameter("username");
+   String password  = request.getParameter("password");
+   if (!(username == null || password == null))
    {
-      session.removeAttribute("openid.user");
-      response.sendRedirect("j_security_check?j_username=" + URLEncoder.encode(user.getAttribute("email")) +
-                                            "&j_password=" + URLEncoder.encode(user.getIdentifier().getIdentifier()));
+      response.sendRedirect("j_security_check?j_username=" + username + "&j_password=" + password);
       return;
    }
 %>
@@ -120,10 +130,11 @@
             xmlHttp.send(body);
          }
 
+
          function open_popup(provider)
          {
             var popup = new Popup(
-                '<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/popup_login.jsp',
+                '<%= request.getContextPath() %>/rest/ide/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/popup_login.jsp',
                 "/site/index.html",
                 450,
                 500);
@@ -173,10 +184,15 @@
                   </table>
                </form>
                <div id="federatedloginFormId">
-                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/auth/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
-                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account</button>
-                  <!--button onclick="open_popup('google');">
-                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account popup</button-->
+                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=google&mode=federated_login&scope=https://www.googleapis.com/auth/userinfo.profile&scope=https://www.googleapis.com/auth/userinfo.email&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/site/index.html');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OAuth)</button>
+                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=github&scope=user&scope=repo&mode=federated_login&redirect_after_login=/site/index.html');">
+                     <img src="octocat.png" />&nbsp; Sign in with a GitHub Account(OAuth)</button>
+                  <br/>
+                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OpenId)</button>
+                  <button onclick="open_popup('google');">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OpenId Popup)</button>
                </div>
                <div id="registerForm" style="display:none;">
                   <table border="0" cellspacing="5">

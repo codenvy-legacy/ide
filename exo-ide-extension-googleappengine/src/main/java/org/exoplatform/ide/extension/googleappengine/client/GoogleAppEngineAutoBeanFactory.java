@@ -24,7 +24,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
  * The interface for the {@link AutoBean} generator.
@@ -39,7 +39,7 @@ public interface GoogleAppEngineAutoBeanFactory extends AutoBeanFactory
 
    AutoBean<Backend> backend();
    
-   AutoBean<User> user();
+   AutoBean<GaeUser> user();
 
    AutoBean<ApplicationInfo> applicationInfo();
 }

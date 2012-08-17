@@ -18,26 +18,31 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import org.exoplatform.ide.security.shared.User;
+
 /**
+ * Represents GitHub user.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class GitHubUser extends User
+public class GitHubUser implements User
 {
-   private String login;
    private String name;
    private String company;
    private String email;
 
-   public String getLogin()
+   @Override
+   public final String getId()
    {
-      return login;
+      return email;
    }
 
-   public void setLogin(String login)
+   @Override
+   public final void setId(String id)
    {
-      setUserId(login);
-      this.login = login;
+      // JSON response from Github API contains key 'id' but it has different purpose.
+      // Ignore calls of this method. Email address is used as user identifier.
    }
 
    public String getName()
@@ -74,7 +79,7 @@ public class GitHubUser extends User
    public String toString()
    {
       return "GitHubUser{" +
-         "login='" + login + '\'' +
+         "id='" + getId() + '\'' +
          ", name='" + name + '\'' +
          ", company='" + company + '\'' +
          ", email='" + email + '\'' +

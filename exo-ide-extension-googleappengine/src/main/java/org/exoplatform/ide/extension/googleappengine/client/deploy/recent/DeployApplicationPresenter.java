@@ -50,7 +50,7 @@ import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplica
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -261,16 +261,16 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     */
    private void isUserLogged(final boolean wizardStep)
    {
-      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
       try
       {
          GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(User result)
+               protected void onSuccess(GaeUser result)
                {
                   if (!result.isAuthenticated())
                   {

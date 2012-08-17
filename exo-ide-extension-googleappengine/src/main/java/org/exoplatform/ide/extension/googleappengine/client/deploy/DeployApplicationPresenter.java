@@ -27,7 +27,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -45,7 +44,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
@@ -55,10 +54,9 @@ import java.util.Arrays;
 
 /**
  * Presenter for deploying application to Google App Engine, can be as a part of deployment step in wizard.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:51:08 PM anya $
- * 
  */
 public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements PaasComponent,
    DeployApplicationHandler, ProjectBuiltHandler
@@ -78,19 +76,13 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    private Display display;
 
-   /**
-    * Google App Engine application's id.
-    */
+   /** Google App Engine application's id. */
    private String applicationId;
 
-   /**
-    * Flag points, whether to use existed GAE application or create new one.
-    */
+   /** Flag points, whether to use existed GAE application or create new one. */
    private boolean useExisted;
 
-   /**
-    * Application's war URL (for Java only).
-    */
+   /** Application's war URL (for Java only). */
    private String applicationUrl;
 
    private ProjectModel builtProject;
@@ -113,9 +105,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       IDE.addHandler(DeployApplicationEvent.TYPE, this);
    }
 
-   /**
-    * Bind display with presenter.
-    */
+   /** Bind display with presenter. */
    public void bindDisplay()
    {
       display.getUseExisting().addValueChangeHandler(new ValueChangeHandler<Boolean>()
@@ -162,9 +152,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       this.paasCallback.onViewReceived(display.getView());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate()
-    */
+   /** @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate() */
    @Override
    public void validate()
    {
@@ -180,9 +168,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
+   /** @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel) */
    @Override
    public void deploy(final ProjectModel project)
    {
@@ -203,26 +189,20 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#createProject(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
+   /** @see org.exoplatform.ide.client.framework.paas.PaasComponent#createProject(org.exoplatform.ide.vfs.client.model.ProjectModel) */
    @Override
    public void createProject(ProjectModel project)
    {
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent)
-    */
+   /** @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent) */
    @Override
    public void onDeployApplication(DeployApplicationEvent event)
    {
       isUserLogged(false);
    }
 
-   /**
-    * Before deploying check application type. If it is Java - build it before deploy.
-    */
+   /** Before deploying check application type. If it is Java - build it before deploy. */
    private void beforeDeploy(ProjectModel project)
    {
       if (isAppEngineProject())
@@ -243,9 +223,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
    }
 
-   /**
-    * Perform deploying application to Google App Engine.
-    */
+   /** Perform deploying application to Google App Engine. */
    public void deployApplication(final ProjectModel project)
    {
       try
@@ -277,9 +255,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
    }
 
-   /**
-    * Build Java project before deploy.
-    */
+   /** Build Java project before deploy. */
    private void buildProject(ProjectModel project)
    {
       this.applicationUrl = null;
@@ -288,9 +264,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       IDE.fireEvent(new BuildProjectEvent(project));
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
-    */
+   /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent) */
    @Override
    public void onProjectBuilt(ProjectBuiltEvent event)
    {
@@ -304,8 +278,9 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Sets the application's id to configuration file (appengine-web.xml or app.yaml).
-    * 
-    * @param appId application's id
+    *
+    * @param appId
+    *    application's id
     */
    private void setApplicationId(String appId, final ProjectModel project)
    {
@@ -330,21 +305,21 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Checks if user is logged to Google App Engine.
-    * 
+    *
     * @param wizardStep
     */
    private void isUserLogged(final boolean wizardStep)
    {
-      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
       try
       {
          GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(User result)
+               protected void onSuccess(GaeUser result)
                {
                   if (!result.isAuthenticated())
                   {

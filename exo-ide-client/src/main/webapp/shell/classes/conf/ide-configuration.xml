@@ -470,25 +470,32 @@
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
-   </component>
-
-<!-- End Google AppEngine  -->     
-
-<!--
-   ***************************************************************************************
-   ********************************** OpenID Support *************************************
-   ***************************************************************************************
--->
+<!-- End Google AppEngine  -->
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
+      <type>org.exoplatform.ide.security.login.FederatedLoginApplication</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
+      <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
    </component>
 
-  
+   <!--
+      ***************************************************************************************
+      ********************************** OAuth Support *************************************
+      ***************************************************************************************
+   -->
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
+   </component>
+
 </configuration>

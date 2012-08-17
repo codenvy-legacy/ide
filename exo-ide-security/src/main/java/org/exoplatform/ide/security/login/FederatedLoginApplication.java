@@ -16,17 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.authentication.openid;
+package org.exoplatform.ide.security.login;
+
+import org.exoplatform.ide.security.oauth.OAuthAuthenticationService;
+import org.exoplatform.ide.security.openid.OpenIDAuthenticationService;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
+ * Deploys service required for OpenID and OAuth authentication.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface UserStore
+public class FederatedLoginApplication extends Application
 {
-   void put(String userID, OpenIDUser user);
+   private final Set<Class<?>> classes;
 
-   OpenIDUser get(String userID);
+   public FederatedLoginApplication()
+   {
+      classes = new HashSet<Class<?>>(2);
+      classes.add(OpenIDAuthenticationService.class);
+      classes.add(OAuthAuthenticationService.class);
+   }
 
-   void remove(String userID);
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      return classes;
+   }
 }

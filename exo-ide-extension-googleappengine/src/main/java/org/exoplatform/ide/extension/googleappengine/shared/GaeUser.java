@@ -16,39 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.authentication.openid;
+package org.exoplatform.ide.extension.googleappengine.shared;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import org.exoplatform.ide.security.shared.User;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class InMemoryUserStore implements UserStore
+public interface GaeUser extends User
 {
-   private final ConcurrentMap<String, OpenIDUser> store;
+   boolean isAuthenticated();
 
-   public InMemoryUserStore()
-   {
-      store = new ConcurrentHashMap<String, OpenIDUser>();
-   }
-
-   @Override
-   public void put(String userID, OpenIDUser user)
-   {
-      store.put(userID, user);
-   }
-
-   @Override
-   public OpenIDUser get(String userID)
-   {
-      return store.get(userID);
-   }
-
-   @Override
-   public void remove(String userID)
-   {
-      store.remove(userID);
-   }
+   void setAuthenticated(boolean authenticated);
 }

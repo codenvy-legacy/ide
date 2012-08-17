@@ -166,7 +166,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             int clientHeight = Window.getClientHeight();
             int clientWidth = Window.getClientWidth();
             loginWithGoogleAccount(getAuthorizationContext()
-                  + "/ide/auth/openid/authenticate?popup=&favicon=&openid_provider=google&redirect_after_login=/IDE/popup_login.jsp",//
+                  + "/ide/openid/authenticate?popup=&favicon=&openid_provider=google&redirect_after_login=/IDE/popup_login.jsp",//
                getAuthorizationPageURL(), 450, 500, clientWidth, clientHeight);
             IDE.getInstance().closeView(display.asView().getId());
 
