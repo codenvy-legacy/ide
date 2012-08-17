@@ -76,7 +76,7 @@ public class ProjectExplorer extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

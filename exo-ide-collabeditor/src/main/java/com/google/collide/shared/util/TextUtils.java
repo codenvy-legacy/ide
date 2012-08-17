@@ -244,7 +244,7 @@ public class TextUtils {
     return column;
   }
 
-  private static int skipNonwhitespaceSimilar(String text, int column, boolean forward) {
+  public static int skipNonwhitespaceSimilar(String text, int column, boolean forward) {
     if (isValidIdentifierCharacter(text.charAt(column))) {
       return skipIdentifier(text, column, forward);
     } else {

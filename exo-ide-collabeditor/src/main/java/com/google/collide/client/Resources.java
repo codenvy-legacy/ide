@@ -14,13 +14,13 @@
 
 package com.google.collide.client;
 
-import com.google.collide.client.editor.gutter.GutterNotificationResources;
-
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.editor.Editor;
+import com.google.collide.client.editor.gutter.GutterNotificationResources;
 import com.google.collide.client.editor.renderer.LineNumberRenderer;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
+import com.google.collide.client.ui.popup.Popup;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc. Make sure you
@@ -34,11 +34,11 @@ public interface Resources extends
     LineNumberRenderer.Resources,
     com.google.collide.client.code.EditableContentArea.Resources,
     com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
-    GutterNotificationResources
+    GutterNotificationResources,
     // TODO: Once we have actual consumers of the Tooltip class, we
     // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,
-//    Popup.Resources
+    Popup.Resources
     {
 
   /**

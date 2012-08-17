@@ -33,7 +33,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public interface Markable
 {
-
+    
+   void addProblems(Marker[] problems);
+   
    /**
     * Marks problem
     * 

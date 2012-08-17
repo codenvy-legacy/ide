@@ -14,19 +14,19 @@
 
 package com.google.collide.client.code;
 
-import com.google.collide.client.util.logging.Log;
-
-import com.google.collide.client.code.autocomplete.integration.AutocompleterFacade;
+import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 
 import com.google.collide.client.AppContext;
 import com.google.collide.client.autoindenter.Autoindenter;
 import com.google.collide.client.code.EditableContentArea.Content;
+import com.google.collide.client.code.autocomplete.integration.AutocompleterFacade;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver;
 import com.google.collide.client.code.errorrenderer.ErrorRenderer;
 import com.google.collide.client.code.lang.LanguageHelper;
 import com.google.collide.client.code.lang.LanguageHelperResolver;
 import com.google.collide.client.code.parenmatch.ParenMatchHighlighter;
+import com.google.collide.client.code.popup.EditorPopupController;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
@@ -37,6 +37,7 @@ import com.google.collide.client.syntaxhighlighter.SyntaxHighlighter;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.client.util.UserActivityManager;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.shared.document.Document;
@@ -64,8 +65,8 @@ public class EditorBundle implements Content {
     EditorErrorListener editorErrorListener = new EditorErrorListener(
         editor, errorReceiver, new ErrorRenderer(appContext.getResources()));
 
-//    EditorPopupController editorPopupController = EditorPopupController.create(
-//        appContext.getResources(), editor);
+    EditorPopupController editorPopupController = EditorPopupController.create(
+        appContext.getResources(), editor);
 
 //    // TODO: clean this up when things stabilize.
 //    CubeClientWrapper cubeClientWrapper = new CubeClientWrapper(
@@ -107,7 +108,7 @@ public class EditorBundle implements Content {
 //        null,//cubeClientWrapper,
 //        outlineController,
         appContext.getUserActivityManager(),
-//        editorPopupController,
+        editorPopupController,
         appContext.getResources().workspaceEditorCss());
 
     return editorBundle;
@@ -132,7 +133,7 @@ public class EditorBundle implements Content {
   private SyntaxHighlighter syntaxHighlighter;
   private final EditorErrorListener editorErrorListener;
   private final UserActivityManager userActivityManager;
-//  private final EditorPopupController editorPopupController;
+  private final EditorPopupController editorPopupController;
   private ParenMatchHighlighter matchHighlighter;
   private RootActionExecutor.Remover languageActionsRemover;
   private RootActionExecutor.Remover textActionsRemover;
@@ -150,7 +151,7 @@ public class EditorBundle implements Content {
 //      CubeClientWrapper cubeClientWrapper,
 //      OutlineController outlineController,
       UserActivityManager userActivityManager,
-//      EditorPopupController editorPopupController,
+      EditorPopupController editorPopupController,
       Editor.Css editorCss) {
     this.documentManager = documentManager;
     this.editor = editor;
@@ -163,7 +164,7 @@ public class EditorBundle implements Content {
 //    this.cubeClientWrapper = cubeClientWrapper;
 //    this.outlineController = outlineController;
     this.userActivityManager = userActivityManager;
-//    this.editorPopupController = editorPopupController;
+    this.editorPopupController = editorPopupController;
     this.editorCss = editorCss;
   }
 
@@ -201,7 +202,7 @@ public class EditorBundle implements Content {
     editor.cleanup();
 //    outlineController.cleanup();
 //    cubeClientWrapper.cleanup();
-//    editorPopupController.cleanup();
+    editorPopupController.cleanup();
 //    debuggingModelController.cleanup();
 
     // TODO: remove
@@ -335,5 +336,17 @@ public class EditorBundle implements Content {
    */
   public AutocompleterFacade getAutocompleter(){
     return autocompleter;
+  }
+  
+  /**
+   * @return the editorPopupController
+   */
+  public EditorPopupController getEditorPopupController()
+  {
+    return editorPopupController;
+  }
+  
+  public ErrorListener getErrorListener(){
+     return editorErrorListener;
   }
 }
