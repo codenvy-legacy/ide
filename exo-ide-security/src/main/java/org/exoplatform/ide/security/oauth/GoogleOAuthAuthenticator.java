@@ -24,10 +24,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
-
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.security.shared.User;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -39,14 +38,14 @@ import java.util.HashSet;
  */
 public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   public GoogleOAuthAuthenticator() throws IOException
+   public GoogleOAuthAuthenticator(InitParams initParams)
    {
-      this(new MemoryCredentialStore(), loadClientSecrets("google_client_secrets.json"));
+      this(new MemoryCredentialStore(), createClientSecrets(initParams));
    }
 
-   public GoogleOAuthAuthenticator(CredentialStore credentialStore) throws IOException
+   public GoogleOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
    {
-      this(credentialStore, loadClientSecrets("google_client_secrets.json"));
+      this(credentialStore, createClientSecrets(initParams));
    }
 
    protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
@@ -56,7 +55,9 @@ public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
             new NetHttpTransport(),
             new JacksonFactory(),
             clientSecrets, Collections.<String>emptyList())
-            .setCredentialStore(credentialStore).build(),
+            .setCredentialStore(credentialStore)
+            .setApprovalPrompt("auto")
+            .setAccessType("online").build(),
          new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
 

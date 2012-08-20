@@ -27,10 +27,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
-
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.security.shared.User;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -42,14 +41,14 @@ import java.util.HashSet;
  */
 public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   public GitHubOAuthAuthenticator() throws IOException
+   public GitHubOAuthAuthenticator(InitParams initParams)
    {
-      this(new MemoryCredentialStore(), loadClientSecrets("github_client_secrets.json"));
+      this(new MemoryCredentialStore(), createClientSecrets(initParams));
    }
 
-   public GitHubOAuthAuthenticator(CredentialStore credentialStore) throws IOException
+   public GitHubOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
    {
-      this(credentialStore, loadClientSecrets("github_client_secrets.json"));
+      this(credentialStore, createClientSecrets(initParams));
    }
 
    protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)

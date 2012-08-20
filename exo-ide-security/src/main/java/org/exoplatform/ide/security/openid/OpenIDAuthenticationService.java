@@ -146,14 +146,6 @@ public class OpenIDAuthenticationService
          final String tmpPassword = NameGenerator.generate(null, 16);
          // LoginModule may check userId|password from the FederatedLoginList.
          loginList.add(email, tmpPassword);
-         if ((Boolean)session.getAttribute("openid.popup"))
-         {
-            // Have different workflow for 'popup' mode.
-            // Save user in session and do not add id and temporary password in redirect URL.
-            session.setAttribute("openid.user", new OpenIDUser(email, tmpPassword));
-            return Response.temporaryRedirect(URI.create(redirectAfterLogin)).build();
-         }
-         //
          return Response.temporaryRedirect(
             UriBuilder.fromPath(redirectAfterLogin)
                .queryParam("username", email)
