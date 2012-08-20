@@ -16,42 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.shared;
+package org.exoplatform.ide.git.shared;
+
+import java.util.List;
 
 /**
- * Represents user's credentials.
+ * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Mar 28, 2012 12:44:37 PM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: Commiters.java Aug 3, 2012
  */
-public interface Credentials
+public interface Commiters
 {
-   /**
-    * Get login.
-    * 
-    * @return {@link String} login
-    */
-   public String getLogin();
+   
+   List<GitUser> getCommiters();
+   
+   void setCommiters(List<GitUser> commiters);
 
-   /**
-    * Set login.
-    * 
-    * @param login
-    */
-   public void setLogin(String login);
-
-   /**
-    * Get password.
-    * 
-    * @return {@link String} password
-    */
-   public String getPassword();
-
-   /**
-    * Set the password.
-    * 
-    * @param password password.
-    */
-   public void setPassword(String password);
 }

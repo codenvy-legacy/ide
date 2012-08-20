@@ -162,6 +162,6 @@ public class UpdateTest extends JcrFileSystemTest
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, rawData.getBytes(), null);
-      assertEquals(204, response.getStatus());
+      assertEquals(200, response.getStatus());
    }
 }

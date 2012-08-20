@@ -102,4 +102,6 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
    {
       this.vfs = event.getVfsInfo();
    }
+   
+  
 }

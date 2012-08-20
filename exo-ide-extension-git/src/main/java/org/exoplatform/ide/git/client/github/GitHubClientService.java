@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client;
+package org.exoplatform.ide.git.client.github;
 
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.shared.Collaborators;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.List;
 
@@ -32,20 +33,16 @@ import java.util.List;
  * @version $Id: SamplesClientService.java Sep 2, 2011 12:34:16 PM vereshchaka $
  * 
  */
-public abstract class SamplesClientService
+public abstract class GitHubClientService
 {
-   public enum Paas {
-      CLOUDBEES, CLOUDFOUNDRY, HEROKU, OPENSHIFT;
-   }
+   private static GitHubClientService instance;
 
-   private static SamplesClientService instance;
-
-   public static SamplesClientService getInstance()
+   public static GitHubClientService getInstance()
    {
       return instance;
    }
 
-   protected SamplesClientService()
+   protected GitHubClientService()
    {
       instance = this;
    }
@@ -55,7 +52,7 @@ public abstract class SamplesClientService
     * 
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException;
+   public abstract void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException;
 
    /**
     * Get the list of available public repositories from GitHub user.
@@ -63,7 +60,7 @@ public abstract class SamplesClientService
     * @param userName Name of GitHub User
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesByUser(String userName, AsyncRequestCallback<List<Repository>> callback)
+   public abstract void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
       throws RequestException;
 
    /**
@@ -74,4 +71,16 @@ public abstract class SamplesClientService
     * @param callback callback the client has to implement
     */
    public abstract void loginGitHub(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
+   
+   
+   /**
+    * Get list of collaborators of GitHub repository.
+    * For detail see GitHub REST API http://developer.github.com/v3/repos/collaborators/. 
+    * 
+    * @param user
+    * @param repository
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback) throws RequestException;
 }

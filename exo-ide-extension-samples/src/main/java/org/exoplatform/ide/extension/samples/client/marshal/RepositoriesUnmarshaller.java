@@ -28,7 +28,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.List;
 
@@ -39,17 +39,17 @@ import java.util.List;
  * @version $Id:  Apr 2, 2012 10:39:45 AM anya $
  *
  */
-public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>>
+public class RepositoriesUnmarshaller implements Unmarshallable<List<GitHubRepository>>
 {
    /**
     * Repositories list.
     */
-   private List<Repository> repositories;
+   private List<GitHubRepository> repositories;
 
    /**
     * @param repositories extended repositories
     */
-   public RepositoriesUnmarshaller(List<Repository> repositories)
+   public RepositoriesUnmarshaller(List<GitHubRepository> repositories)
    {
       this.repositories = repositories;
    }
@@ -71,8 +71,8 @@ public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>
       {
          JSONValue value = jsonArray.get(i);
          String payload = value.isObject().toString();
-         AutoBean<Repository> autoBean =
-            AutoBeanCodex.decode(SamplesExtension.AUTO_BEAN_FACTORY, Repository.class, payload);
+         AutoBean<GitHubRepository> autoBean =
+            AutoBeanCodex.decode(SamplesExtension.AUTO_BEAN_FACTORY, GitHubRepository.class, payload);
          repositories.add(autoBean.as());
       }
    }
@@ -81,7 +81,7 @@ public class RepositoriesUnmarshaller implements Unmarshallable<List<Repository>
     * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
    @Override
-   public List<Repository> getPayload()
+   public List<GitHubRepository> getPayload()
    {
       return repositories;
    }

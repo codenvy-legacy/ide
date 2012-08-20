@@ -16,29 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client;
+package org.exoplatform.ide.git.client;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.extension.samples.shared.Credentials;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.shared.Collaborators;
+import org.exoplatform.ide.git.shared.Commiters;
+import org.exoplatform.ide.git.shared.Credentials;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 /**
- * The interface for the AutoBean generator.
+ * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: SamplesAutoBeanFactory.java Mar 25, 2012 10:51:13 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: GitAutoBeanFactory.java Aug 3, 2012
  */
-public interface SamplesAutoBeanFactory extends AutoBeanFactory
+public interface GitAutoBeanFactory extends AutoBeanFactory
 {
+   AutoBean<Commiters> commiters();
+
    /**
     * A factory method for a log entry bean.
     * 
-    * @return an {@link AutoBean} of type {@link Repository}
+    * @return an {@link AutoBean} of type {@link GitHubRepository}
     */
-   AutoBean<Repository> repositoryExt();
+   AutoBean<GitHubRepository> repositoryExt();
 
    /**
     * Factory method for GitHub credentials bean.
@@ -46,4 +49,7 @@ public interface SamplesAutoBeanFactory extends AutoBeanFactory
     * @return {@link AutoBean} of type {@link Credentials}
     */
    AutoBean<Credentials> githubCredentials();
+
+   AutoBean<Collaborators> collaborators();
+
 }

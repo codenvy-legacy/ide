@@ -16,12 +16,13 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.server.rest;
+package org.exoplatform.ide.git.server.rest;
 
-import org.exoplatform.ide.extension.samples.server.Github;
-import org.exoplatform.ide.extension.samples.server.GithubException;
-import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.server.github.Github;
+import org.exoplatform.ide.git.server.github.GithubException;
+import org.exoplatform.ide.git.shared.Collaborators;
+import org.exoplatform.ide.git.shared.GitHubCredentials;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -34,6 +35,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -62,7 +64,7 @@ public class GithubService
    @Path("list/user")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Repository[] listRepositoriesByUser(@QueryParam("username") String userName) throws IOException,
+   public GitHubRepository[] listRepositoriesByUser(@QueryParam("username") String userName) throws IOException,
       GithubException, ParsingResponseException, InvalidArgumentException
    {
       return github.listRepositories(userName);
@@ -80,9 +82,19 @@ public class GithubService
    @Path("list")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Repository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+   public GitHubRepository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
       VirtualFileSystemException
    {
       return github.listRepositories();
+   }
+   
+   
+   @GET
+   @Path("collaborators/{user}/{repository}")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository) throws IOException, GithubException, ParsingResponseException,
+      VirtualFileSystemException
+   {
+      return github.getCollaborators(user, repository);
    }
 }

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.shared;
+package org.exoplatform.ide.git.shared;
 
 
 /**
@@ -45,7 +45,7 @@ public class GitHubCredentials implements Credentials
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.shared.Credentials#getLogin()
+    * @see org.exoplatform.ide.git.shared.Credentials#getLogin()
     */
    public String getLogin()
    {
@@ -53,7 +53,7 @@ public class GitHubCredentials implements Credentials
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.shared.Credentials#getPassword()
+    * @see org.exoplatform.ide.git.shared.Credentials#getPassword()
     */
    public String getPassword()
    {
@@ -61,7 +61,7 @@ public class GitHubCredentials implements Credentials
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.shared.Credentials#setLogin(java.lang.String)
+    * @see org.exoplatform.ide.git.shared.Credentials#setLogin(java.lang.String)
     */
    @Override
    public void setLogin(String login)
@@ -70,7 +70,7 @@ public class GitHubCredentials implements Credentials
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.shared.Credentials#setPassword(java.lang.String)
+    * @see org.exoplatform.ide.git.shared.Credentials#setPassword(java.lang.String)
     */
    @Override
    public void setPassword(String password)

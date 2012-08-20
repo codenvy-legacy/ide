@@ -16,12 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.server;
+package org.exoplatform.ide.git.server.github;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ide.extension.samples.shared.Credentials;
-import org.exoplatform.ide.extension.samples.shared.GitHubCredentials;
+import org.exoplatform.ide.git.shared.Credentials;
+import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;

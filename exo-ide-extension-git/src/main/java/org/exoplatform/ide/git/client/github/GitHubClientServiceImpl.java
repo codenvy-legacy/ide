@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client;
+package org.exoplatform.ide.git.client.github;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -28,19 +28,21 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.samples.shared.Credentials;
-import org.exoplatform.ide.extension.samples.shared.Repository;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.shared.Collaborators;
+import org.exoplatform.ide.git.shared.Credentials;
+import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.List;
 
 /**
- * Implementation for {@link SamplesClientService}.
+ * Implementation for {@link GitHubClientService}.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientServiceImpl.java Sep 2, 2011 12:34:27 PM vereshchaka $
  * 
  */
-public class SamplesClientServiceImpl extends SamplesClientService
+public class GitHubClientServiceImpl extends GitHubClientService
 {
    private static final String BASE_URL = "/ide/github";
 
@@ -49,6 +51,8 @@ public class SamplesClientServiceImpl extends SamplesClientService
    private static final String LOGIN = BASE_URL + "/login";
 
    private static final String LIST_USER = BASE_URL + "/list/user";
+   
+   private static final String COLLABORATORS = BASE_URL + "/collaborators";
 
    /**
     * REST service context.
@@ -62,7 +66,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    public static final String SUPPORT = "support";
 
-   public SamplesClientServiceImpl(String restContext, Loader loader)
+   public GitHubClientServiceImpl(String restContext, Loader loader)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
@@ -70,10 +74,10 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesList(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesList(AsyncRequestCallback<List<Repository>> callback) throws RequestException
+   public void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException
    {
       String url = restServiceContext + LIST;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
@@ -81,11 +85,11 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#getRepositoriesByUser(java.lang.String,
+    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getRepositoriesByUser(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<Repository>> callback)
+   public void getRepositoriesByUser(String userName, AsyncRequestCallback<List<GitHubRepository>> callback)
       throws RequestException
    {
       String params = (userName != null) ? "?username=" + userName : "";
@@ -95,7 +99,7 @@ public class SamplesClientServiceImpl extends SamplesClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.samples.client.SamplesClientService#loginGitHub(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.git.client.github.GitHubClientService#loginGitHub(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -104,12 +108,22 @@ public class SamplesClientServiceImpl extends SamplesClientService
    {
       String url = restServiceContext + LOGIN;
 
-      Credentials credentialsBean = SamplesExtension.AUTO_BEAN_FACTORY.githubCredentials().as();
+      Credentials credentialsBean = GitExtension.AUTO_BEAN_FACTORY.githubCredentials().as();
       credentialsBean.setLogin(login);
       credentialsBean.setPassword(password);
       String credentials = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(credentialsBean)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+   
+   
+   @Override
+   public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      
    }
 }

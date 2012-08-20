@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.shared;
+package org.exoplatform.ide.git.shared;
 
 /**
  * GitHub repository, taken from API v3.
@@ -25,7 +25,7 @@ package org.exoplatform.ide.extension.samples.shared;
  * @version $Id: Mar 29, 2012 12:41:47 PM anya $
  * 
  */
-public interface Repository
+public interface GitHubRepository
 {
    /**
     * Get repository's name.

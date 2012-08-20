@@ -42,4 +42,12 @@ public class CloneRepositoryControl extends GitControl
       setEnableState(EnableState.BEFORE_INIT);
       setGroupName(GroupNames.ACTIONS);
    }
+   
+   
+   @Override
+   protected void updateControlState()
+   {
+       setVisible(true);
+       setEnabled(true);
+   }
 }

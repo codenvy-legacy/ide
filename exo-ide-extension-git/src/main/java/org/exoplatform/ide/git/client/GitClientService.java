@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
@@ -271,7 +272,7 @@ public abstract class GitClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void cloneRepository(String vfsId, Folder folder, String remoteUri, String remoteName,
+   public abstract void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
       AsyncRequestCallback<RepoInfo> callback) throws RequestException;
 
    /**
@@ -396,4 +397,9 @@ public abstract class GitClientService
     */
    public abstract void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
+   
+   
+   public abstract void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+            throws RequestException;
+
 }

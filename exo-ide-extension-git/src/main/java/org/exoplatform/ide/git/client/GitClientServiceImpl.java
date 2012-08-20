@@ -63,6 +63,7 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.FetchRequest;
@@ -81,8 +82,8 @@ import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -136,6 +137,8 @@ public class GitClientServiceImpl extends GitClientService
    public static final String REMOVE = "/ide/git/rm";
 
    public static final String RESET = "/ide/git/reset";
+   
+   public static final String COMMITERS = "/ide/git/commiters";
 
    /**
     * REST service context.
@@ -146,7 +149,7 @@ public class GitClientServiceImpl extends GitClientService
     * Loader to be displayed.
     */
    private Loader loader;
-
+   
    private Loader emptyLoader = new EmptyLoader();
 
    /**
@@ -164,8 +167,8 @@ public class GitClientServiceImpl extends GitClientService
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
     */
-   public void init(String vfsId, String projectid, String projectName, boolean bare,
-      AsyncRequestCallback<String> callback) throws RequestException
+   public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + INIT;
 
@@ -177,12 +180,13 @@ public class GitClientServiceImpl extends GitClientService
          .requestStatusHandler(new InitRequestStatusHandler(projectName)).send(callback);
    }
 
+   
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String vfsId, Folder folder, String remoteUri, String remoteName,
+   public void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
       AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
@@ -195,8 +199,10 @@ public class GitClientServiceImpl extends GitClientService
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
          .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
+
 
    /**
     * @throws RequestException
@@ -606,6 +612,8 @@ public class GitClientServiceImpl extends GitClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
+  
+
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#merge(java.lang.String, java.lang.String,
@@ -635,4 +643,15 @@ public class GitClientServiceImpl extends GitClientService
       url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
    }
+   
+   @Override
+   public void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + COMMITERS;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params)
+      .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
 }

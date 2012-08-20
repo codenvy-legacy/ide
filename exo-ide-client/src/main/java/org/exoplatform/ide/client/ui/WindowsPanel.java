@@ -144,7 +144,6 @@ public class WindowsPanel extends LayoutPanel implements HasViews, HasClosingVie
 
       WindowController controller = new WindowController(view, window);
       windowControllers.put(view.getId(), controller);
-
    }
 
    /**
