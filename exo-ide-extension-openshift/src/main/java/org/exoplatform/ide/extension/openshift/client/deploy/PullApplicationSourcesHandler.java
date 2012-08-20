@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -93,20 +94,14 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
 
       String remoteBranch =
          remoteBranches != null && !remoteBranches.isEmpty() ? remoteBranches.get(0).getDisplayName() : localBranch;
-      // Form the refspec. User points only the branch names:
-
-      //      System.out.println("remote name [" + remoteName + "]");
-      //      System.out.println("local branch [" + localBranch + "]");
-      //      System.out.println("remote branch [" + remoteBranch + "]");
 
       String refs =
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
 
-      //      System.out.println("refs [" + refs + "]");
-
       try
       {
+         JobManager.get().showJobSeparated();
          GitClientService.getInstance().pull(vfs.getId(), project, refs, remoteName, new AsyncRequestCallback<String>()
          {
             @Override

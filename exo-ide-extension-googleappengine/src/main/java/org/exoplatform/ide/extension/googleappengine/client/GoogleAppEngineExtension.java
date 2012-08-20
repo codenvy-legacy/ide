@@ -25,12 +25,13 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.cron.CronsHandler;
+import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.dos.DosHandler;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.UpdateIndexesHandlerImpl;
 import org.exoplatform.ide.extension.googleappengine.client.indexes.VaccumIndexesHandlerImpl;
@@ -67,7 +68,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    {
       IDE.getInstance().registerPaaS(
          new PaaS("GAE", "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine()), Arrays.asList(
-            ProjectType.GAE_JAVA, ProjectType.GAE_PYTHON), new org.exoplatform.ide.extension.googleappengine.client.deploy.recent.DeployApplicationPresenter()));
+            ProjectType.GAE_JAVA, ProjectType.GAE_PYTHON), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

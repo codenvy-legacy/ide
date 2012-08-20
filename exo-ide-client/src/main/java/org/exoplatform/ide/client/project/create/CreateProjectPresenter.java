@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -22,15 +22,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,287 +42,267 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.event.CreateProjectHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.Paas;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.Language;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateListUnmarshaller;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.hotkeys.HotKeyHelper.KeyCode;
-import org.exoplatform.ide.client.project.deploy.DeployProjectToPaasEvent;
-import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
-import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-import org.exoplatform.ide.client.template.TemplatesMigratedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version @version $Id: $
  */
-
-public class CreateProjectPresenter implements CreateProjectHandler, ViewClosedHandler, TemplatesMigratedHandler,
-   VfsChangedHandler
+public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler,
+   DeployResultHandler
 {
-
-   /**
-    * Display interface, that templates view have to implement.
-    */
-   public interface Display extends IsView
+   interface Display extends IsView
    {
+      void setProjectTypes(List<Object> values);
 
-      /**
-       * Get cancel button for registration click handlers.
-       * 
-       * @return Cancel button
-       */
+      SingleSelectionModel<Object> getSingleSelectionModel();
+
       HasClickHandlers getCancelButton();
 
-      /**
-       * Get next button for registration click handlers.
-       * 
-       * @return Next button
-       */
+      HasClickHandlers getBackButton();
+
       HasClickHandlers getNextButton();
 
-      /**
-       * Get Finish button for registration click handlers.
-       * 
-       * @return Finish button
-       */
       HasClickHandlers getFinishButton();
 
-      /**
-       * Returns project name field.
-       * 
-       * @return
-       */
       HasValue<String> getNameField();
 
-      /**
-       * Returns project name field.
-       * 
-       * @return
-       */
-      HasKeyPressHandlers nameTextField();
+      HasValue<String> getErrorLabel();
 
-      /**
-       * Get the list of selected templates in list grid.
-       * 
-       * @return
-       */
-      List<ProjectTemplate> getSelectedTemplates();
+      ListGridItem<PaaS> getTargetGrid();
 
-      /**
-       * Get the template list grid for registration handlers.
-       * 
-       * @return
-       */
-      ListGridItem<ProjectTemplate> getTemplateListGrid();
+      ListGridItem<ProjectTemplate> getTemplatesGrid();
 
-      /**
-       * Enables or disables Next button.
-       * 
-       * @param enabled
-       */
-      void setNextButtonEnabled(boolean enabled);
+      void selectTarget(PaaS target);
 
-      /**
-       * Shows or hides Next button.
-       * 
-       * @param visible
-       */
-      void setNextButtonVisible(boolean visible);
+      void selectTemplate(ProjectTemplate projectTemplate);
 
-      /**
-       * Enables or disables Finish button.
-       * 
-       * @param enabled
-       */
-      void setFinishButtonEnabled(boolean enabled);
+      void enableNextButton(boolean enabled);
 
-      /**
-       * Shows or hides Finish button.
-       * 
-       * @param visible
-       */
-      void setFinishButtonVisible(boolean visible);
+      void enableFinishButton(boolean enabled);
 
-      /**
-       * Give focus to name field.
-       */
-      void focusInNameField();
+      void showCreateProjectStep();
 
-      /**
-       * Selects all of the text in name field.
-       */
-      void selectAllTextInNameField();
+      void showDeployProjectStep();
 
-      /**
-       * Enables or disabled project name field.
-       * 
-       * @param enabled
-       */
-      void setProjectNameFieldEnabled(boolean enabled);
+      void showChooseTemlateStep();
+
+      void setDeployView(Composite deployView);
    }
 
-   protected Display display;
+   private Display display;
+
+   private boolean isDeployStep = false;
+
+   private boolean isChooseTemplateStep = false;
 
    private VirtualFileSystemInfo vfsInfo;
 
-   /**
-    * The list of templates to display. This list must be initialized by subclasses, because it depends on type of template (file
-    * of project).
-    */
-   protected List<ProjectTemplate> projectTemplates;
+   private ProjectType selectedProjectType;
 
-   /**
-    * The list of templates, that selected in list of templates.
-    */
-   protected List<ProjectTemplate> selectedTemplates;
+   private ProjectTemplate selectedTemplate;
 
-   private boolean isTemplatesMigrated = false;
+   private List<ProjectTemplate> allProjectTemplates;
 
-   /**
-    * Comparator for sorting project templates.
-    */
-   private static final Comparator<ProjectTemplate> PROJECT_TEMPLATE_COMPARATOR = new ProjectTemplateComparator();
+   private List<ProjectTemplate> availableProjectTemplates = new ArrayList<ProjectTemplate>();
+
+   private PaaS currentPaaS;
+
+   private PaaS selectedTarget;
 
    public CreateProjectPresenter()
    {
       IDE.getInstance().addControl(new CreateProjectControl());
 
       IDE.addHandler(CreateProjectEvent.TYPE, this);
-      IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(TemplatesMigratedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
-   /**
-    * 
-    */
    public void bindDisplay()
    {
-      /*
-       * If name field is empty - disable create button
-       */
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String value = event.getValue().trim();
 
-            if (value == null || value.isEmpty())
+         @Override
+         public void onSelectionChange(SelectionChangeEvent event)
+         {
+            if (display.getSingleSelectionModel().getSelectedObject() != null)
             {
-               display.setNextButtonEnabled(false);
-               display.setFinishButtonEnabled(false);
+               if (display.getSingleSelectionModel().getSelectedObject() instanceof ProjectType)
+               {
+                  selectedProjectType = (ProjectType)display.getSingleSelectionModel().getSelectedObject();
+                  List<PaaS> values =
+                     getAvailableTargets((ProjectType)display.getSingleSelectionModel().getSelectedObject());
+                  display.getTargetGrid().setValue(values);
+                  display.selectTarget(values.get(0));
+               }
+               else if (display.getSingleSelectionModel().getSelectedObject() instanceof LanguageItem)
+               {
+                  selectedProjectType = null;
+                  display.getTargetGrid().setValue(new ArrayList<PaaS>());
+               }
             }
             else
             {
-               display.setNextButtonEnabled(true);
-               display.setFinishButtonEnabled(true);
+               List<PaaS> values = new ArrayList<PaaS>();
+               values.add(new NoneTarget());
+               display.getTargetGrid().setValue(values);
+               display.selectTarget(values.get(0));
             }
+            updateButtonState();
          }
+
       });
 
-      display.nameTextField().addKeyPressHandler(new KeyPressHandler()
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
+
          @Override
-         public void onKeyPress(KeyPressEvent event)
+         public void onValueChange(ValueChangeEvent<String> event)
          {
-            if (KeyCode.ENTER == event.getNativeEvent().getKeyCode())
-            {
-               if (hasPaasForDeployment())
-               {
-                  goToNextStep();
-               }
-               else
-               {
-                  createProject();
-               }
-            }
+            updateButtonState();
          }
       });
 
-      /*
-       * Add click handler for create button
-       */
-      display.getNextButton().addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            goToNextStep();
-         }
-      });
-
-      /*
-       * Close action on cancel button
-       */
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
+
+         @Override
          public void onClick(ClickEvent event)
          {
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
-      display.getFinishButton().addClickHandler(new ClickHandler()
+      display.getBackButton().addClickHandler(new ClickHandler()
       {
+
          @Override
          public void onClick(ClickEvent event)
          {
-            createProject();
+            goBack();
          }
       });
 
-      /*
-       * If template selected - than copy template name to name field and enable create button
-       */
-      display.getTemplateListGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>()
+      display.getNextButton().addClickHandler(new ClickHandler()
       {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (!isChooseTemplateStep)
+            {
+               validateProjectName(display.getNameField().getValue());
+            }
+            else
+            {
+               goNext();
+            }
+         }
+      });
+
+      display.getTargetGrid().addSelectionHandler(new SelectionHandler<PaaS>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<PaaS> event)
+         {
+            selectedTarget = event.getSelectedItem();
+            availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
+            updateButtonState();
+         }
+      });
+
+      display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>()
+      {
+
+         @Override
          public void onSelection(SelectionEvent<ProjectTemplate> event)
          {
-            selectedTemplates = display.getSelectedTemplates();
-
-            display.setFinishButtonVisible(!hasPaasForDeployment());
-            display.setNextButtonVisible(hasPaasForDeployment());
-            display.focusInNameField();
-            display.selectAllTextInNameField();
+            selectedTemplate = event.getSelectedItem();
+            updateButtonState();
          }
       });
 
-      /*
-       * Disable buttons and name field, because no template is selected
-       */
-      display.setNextButtonEnabled(false);
-      display.setFinishButtonEnabled(false);
-   }
-
-   private void goToNextStep()
-   {
-      String name = display.getNameField().getValue();
-      if (name == null || name.isEmpty())
+      display.getFinishButton().addClickHandler(new ClickHandler()
       {
-         name = display.getSelectedTemplates().get(0).getName();
-      }
 
-      String type = display.getSelectedTemplates().get(0).getType();
-      IDE.eventBus().fireEvent(
-         new DeployProjectToPaasEvent(name, type, display.getSelectedTemplates().get(0).getName()));
-      IDE.getInstance().closeView(display.asView().getId());
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (isDeployStep)
+            {
+               doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
+            }
+            else if (isChooseTemplateStep)
+            {
+               createProject(selectedTemplate);
+            }
+            else if (availableProjectTemplates.size() == 1)
+            {
+               createProject(availableProjectTemplates.get(0));
+            }
+            else
+            {
+               createProject(null);
+            }
+         }
+      });
    }
 
+   /**
+    * Update the enabled/disabled state of the buttons.
+    */
+   private void updateButtonState()
+   {
+      boolean enabled =
+         display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+            && selectedProjectType != null;
+      boolean noneDeploy = (selectedTarget == null || selectedTarget instanceof NoneTarget);
+
+      if (isChooseTemplateStep)
+      {
+         display.enableFinishButton(enabled && noneDeploy && selectedTemplate != null);
+         display.enableNextButton(enabled && !noneDeploy && selectedTemplate != null);
+      }
+      else if (isDeployStep)
+      {
+         display.enableFinishButton(true);
+      }
+      else
+      {
+         boolean hasTemplatesToChoose = availableProjectTemplates != null && availableProjectTemplates.size() > 1;
+         display.enableFinishButton(enabled && noneDeploy && !hasTemplatesToChoose);
+         display.enableNextButton(enabled && (!noneDeploy || hasTemplatesToChoose));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -332,105 +312,36 @@ public class CreateProjectPresenter implements CreateProjectHandler, ViewClosedH
       }
    }
 
-   private boolean hasPaasForDeployment()
-   {
-      if (selectedTemplates == null || selectedTemplates.size() != 1)
-      {
-         return false;
-      }
-
-      ProjectTemplate template = selectedTemplates.get(0);
-      String projectType = template.getType();
-
-      for (Paas paas : IDE.getInstance().getPaases())
-      {
-         if (paas.getSupportedProjectTypes().contains(projectType))
-         {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
    /**
-    * @see org.exoplatform.ide.client.template.TemplatesMigratedHandler#onTemplatesMigrated(org.exoplatform.ide.client.template.TemplatesMigratedEvent)
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
-   @Override
-   public void onTemplatesMigrated(TemplatesMigratedEvent event)
-   {
-      isTemplatesMigrated = true;
-   }
-
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
+      this.vfsInfo = event.getVfsInfo();
    }
 
    /**
     * @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateProjectEvent)
     */
    @Override
-   public void onCreateProject(final CreateProjectEvent createProjectEvent)
+   public void onCreateProject(CreateProjectEvent event)
    {
-      if (vfsInfo == null)
+      if (display == null)
       {
-         Dialogs.getInstance().showError("Vfs info is not received. Can't create project.");
-         return;
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
       }
-
-      if (display != null)
-      {
-         return;
-      }
-
-      if (isTemplatesMigrated)
-      {
-         showCreateProjectForm(createProjectEvent.getProjectName(), createProjectEvent.getProjectType());
-         return;
-      }
-
-      IDE.fireEvent(new MigrateTemplatesEvent(new TemplatesMigratedCallback()
-      {
-         @Override
-         public void onTemplatesMigrated()
-         {
-            showCreateProjectForm(createProjectEvent.getProjectName(), createProjectEvent.getProjectType());
-         }
-      }));
-   }
-
-   private void showCreateProjectForm(String projectName, String projectType)
-   {
-      display = GWT.create(Display.class);
-      bindDisplay();
-      IDE.getInstance().openView(display.asView());
-      display.getNameField().setValue(projectName != null ? projectName : "untitled");
-
-      display.setNextButtonVisible(false);
-      display.setFinishButtonVisible(true);
-      display.setNextButtonEnabled(false);
-      display.setFinishButtonEnabled(false);
-      display.setProjectNameFieldEnabled(false);
-
-      /*
-       * Refresh template list grid
-       */
-      if (projectTemplates == null)
-      {
-         refreshTemplateList(projectType);
-      }
-      else
-      {
-         fillTemplatesListGrid(projectType);
-      }
+      display.showCreateProjectStep();
+      isDeployStep = false;
+      getProjectTemplates();
    }
 
    /**
-    * Refresh List of the templates
+    * Get the list of available project templates.
     */
-   private void refreshTemplateList(final String projectType)
+   private void getProjectTemplates()
    {
       try
       {
@@ -441,9 +352,18 @@ public class CreateProjectPresenter implements CreateProjectHandler, ViewClosedH
                @Override
                protected void onSuccess(List<ProjectTemplate> result)
                {
-                  projectTemplates = result;
-                  Collections.sort(projectTemplates, PROJECT_TEMPLATE_COMPARATOR);
-                  fillTemplatesListGrid(projectType);
+                  allProjectTemplates = result;
+                  List<Object> tree = formProjectTree(result);
+                  display.setProjectTypes(tree);
+                  if (!tree.isEmpty())
+                  {
+                     display.getSingleSelectionModel().setSelected(tree.get(0), true);
+                  }
+
+                  if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
+                  {
+                     display.getNameField().setValue("untitled");
+                  }
                }
 
                @Override
@@ -461,69 +381,151 @@ public class CreateProjectPresenter implements CreateProjectHandler, ViewClosedH
    }
 
    /**
-    * Fill templates list grid.
-    * 
-    * @param projectType
+    * Go to previous step.
     */
-   private void fillTemplatesListGrid(final String projectType)
+   private void goBack()
    {
-      display.getTemplateListGrid().setValue(projectTemplates);
-      if (projectTemplates != null && projectTemplates.size() > 0)
+      if (isDeployStep)
       {
-         if (projectType != null)
+         isDeployStep = false;
+         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1 && !selectedTarget.isProvidesTemplate())
          {
-            for (ProjectTemplate template : projectTemplates)
-            {
-               if (template.getType().equals(projectType))
-               {
-                  display.getTemplateListGrid().selectItem(template);
-                  updateButtonsState();
-                  return;
-               }
-            }
+            goToTemplatesStep();
          }
+         else
+         {
+            goToProjectStep();
+         }
+      }
+      else if (isChooseTemplateStep)
+      {
+         isChooseTemplateStep = false;
+         goToProjectStep();
+      }
+      updateButtonState();
+   }
 
-         ProjectTemplate templateToSelect = projectTemplates.get(0);
-         display.getTemplateListGrid().selectItem(templateToSelect);
+   /**
+    * Go to next step.
+    */
+   private void goNext()
+   {
+      if (isChooseTemplateStep)
+      {
+         isChooseTemplateStep = false;
+         goToDeployStep();
+      }
+      else
+      {
+         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1 && !selectedTarget.isProvidesTemplate())
+         {
+            goToTemplatesStep();
+         }
+         else
+         {
+            goToDeployStep();
+         }
+      }
+      updateButtonState();
+   }
 
-         updateButtonsState();
+   /**
+    * Move to deploy project step.
+    */
+   private void goToDeployStep()
+   {
+      isDeployStep = true;
+
+      String projectName = display.getNameField().getValue();
+      for (PaaS paas : IDE.getInstance().getPaaSes())
+      {
+         if (paas.getId().equals(selectedTarget.getId()))
+         {
+            currentPaaS = paas;
+            if (paas.getPaaSActions() != null)
+            {
+               display.showDeployProjectStep();
+               isDeployStep = true;
+               display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType));
+               display.enableFinishButton(true);
+            }
+            else
+            {
+               Dialogs.getInstance().showError(
+                  org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noRegistedDeployAction(paas.getTitle()));
+            }
+            return;
+         }
       }
    }
 
    /**
-    * Updates visibility of Next and Finish buttons.
+    * Move to choosing project template step.
     */
-   private void updateButtonsState()
+   private void goToTemplatesStep()
    {
-      display.setFinishButtonVisible(!hasPaasForDeployment());
-      display.setNextButtonVisible(hasPaasForDeployment());
-      display.setFinishButtonEnabled(true);
-      display.setNextButtonEnabled(true);
-      display.setProjectNameFieldEnabled(true);
+      isChooseTemplateStep = true;
+      display.getTemplatesGrid().setValue(availableProjectTemplates);
+      display.showChooseTemlateStep();
    }
 
    /**
-    * Creates project without deployment.
+    * Move to project's data step.
     */
-   private void createProject()
+   private void goToProjectStep()
    {
-      final IDELoader loader = new IDELoader();
+      display.showCreateProjectStep();
+   }
+
+   /**
+    * Get the list of targets, where project with pointed project type can be deployed.
+    * 
+    * @param projectType
+    * @return {@link List} of {@link PaaS}
+    */
+   private List<PaaS> getAvailableTargets(ProjectType projectType)
+   {
+      List<PaaS> values = new ArrayList<PaaS>();
+      values.add(new NoneTarget());
+      for (PaaS paas : IDE.getInstance().getPaaSes())
+      {
+         if (paas.getSupportedProjectTypes().contains(projectType))
+         {
+            values.add(paas);
+         }
+      };
+      return values;
+   }
+
+   private void createProject(ProjectTemplate projectTemplate)
+   {
+      if (projectTemplate == null)
+      {
+         Dialogs.getInstance().showError(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTempate());
+         return;
+      }
+
+      if (vfsInfo == null || vfsInfo.getRoot() == null)
+      {
+         Dialogs.getInstance().showError(
+            org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.createProjectErrorVFSInfoNotSets());
+         return;
+      }
+
       try
       {
          String parentId = vfsInfo.getRoot().getId();
          String projectName = display.getNameField().getValue();
-         String projectType = display.getSelectedTemplates().get(0).getType();
-         String templateName = display.getSelectedTemplates().get(0).getName();
-
-         loader.show();
-
-         TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName, templateName,
+         IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
+         IDELoader.getInstance().show();
+         TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
+            projectTemplate.getName(),
             new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
             {
                @Override
                protected void onSuccess(final ProjectModel result)
                {
-                  loader.hide();
+                  IDELoader.getInstance().hide();
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new ProjectCreatedEvent(result));
                }
@@ -531,16 +533,192 @@ public class CreateProjectPresenter implements CreateProjectHandler, ViewClosedH
                @Override
                protected void onFailure(Throwable exception)
                {
-                  loader.hide();
+                  IDELoader.getInstance().hide();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
-         loader.hide();
+         IDELoader.getInstance().hide();
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler#onDeployFinished(boolean)
+    */
+   @Override
+   public void onDeployFinished(boolean success)
+   {
+      if (success && display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   private void doDeploy(ProjectTemplate projectTemplate)
+   {
+      if (currentPaaS != null)
+      {
+         if (projectTemplate != null || currentPaaS.isProvidesTemplate())
+         {
+            currentPaaS.getPaaSActions().deploy(projectTemplate, this);
+         }
+         else
+         {
+            Dialogs.getInstance().showError(
+               org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noProjectTemplateForTarget(currentPaaS.getTitle()));
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model.ProjectModel)
+    */
+   @Override
+   public void onProjectCreated(ProjectModel project)
+   {
+      IDE.fireEvent(new ProjectCreatedEvent(project));
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   /**
+    * Prepare project tree to be displayed, where project types are grouped by language.
+    * 
+    * @param projectTemplates available project templates
+    * @return {@link List}
+    */
+   private List<Object> formProjectTree(List<ProjectTemplate> projectTemplates)
+   {
+      List<Object> tree = new ArrayList<Object>();
+
+      // Display project types, that are not included in any language group:
+      for (ProjectTemplate projectTemplate : projectTemplates)
+      {
+         boolean found = false;
+         for (Language lang : Language.values())
+         {
+            if (ProjectResolver.getProjectTypesByLanguage(lang).contains(
+               ProjectType.fromValue(projectTemplate.getType())))
+            {
+               found = true;
+               break;
+            }
+         }
+         if (!found)
+         {
+            tree.add(ProjectType.fromValue(projectTemplate.getType()));
+         }
+      }
+
+      for (Language lang : Language.values())
+      {
+         List<ProjectType> types = ProjectResolver.getProjectTypesByLanguage(lang);
+         List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+         for (ProjectTemplate projectTemplate : projectTemplates)
+         {
+            ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
+            if (types.contains(projectType) && !projectTypes.contains(projectType))
+            {
+               projectTypes.add(projectType);
+            }
+         }
+         if (!projectTypes.isEmpty())
+         {
+            tree.add(new LanguageItem(lang, projectTypes));
+         }
+      }
+      return tree;
+   }
+
+   /**
+    * Get the list of project templates, that are suitable to pointed project type and deploy target.
+    * 
+    * @param projectType project's type
+    * @param target deploy target
+    * @return {@link List} list of {@link ProjectTemplate}
+    */
+   private List<ProjectTemplate> getProjectTemplates(ProjectType projectType, PaaS target)
+   {
+      List<ProjectTemplate> templates = new ArrayList<ProjectTemplate>();
+
+      // Get templates by project's type:
+      if (target instanceof NoneTarget)
+      {
+         for (ProjectTemplate projectTemplate : allProjectTemplates)
+         {
+            if (projectTemplate.getType().equals(projectType.value()))
+            {
+               templates.add(projectTemplate);
+            }
+         }
+         return templates;
+      }
+
+      // Get templates by project type and it's deploy target:
+      for (ProjectTemplate projectTemplate : allProjectTemplates)
+      {
+         if (projectTemplate.getType().equals(projectType.value())
+            && (projectTemplate.getTargets() == null || projectTemplate.getTargets().contains(target.getId())))
+         {
+            templates.add(projectTemplate);
+         }
+      }
+      return templates;
+   }
+
+   private class NoneTarget extends PaaS
+   {
+      public NoneTarget()
+      {
+         super("none", "None", null, null);
+      }
+   }
+
+   /**
+    * Validates project name for existence.
+    * 
+    * @param projectName project's name
+    */
+   private void validateProjectName(final String projectName)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+            ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  for (Item item : result)
+                  {
+                     if (projectName.equals(item.getName()))
+                     {
+                        display.getErrorLabel().setValue(
+                           org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
+                              .createProjectFromTemplateProjectExists(projectName));
+                        return;
+                     }
+                  }
+                  display.getErrorLabel().setValue("");
+                  goNext();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
+      }
+
+   }
 }

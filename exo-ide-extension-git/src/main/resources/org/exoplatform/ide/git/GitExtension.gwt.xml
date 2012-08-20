@@ -26,6 +26,10 @@
    <inherits name='com.google.gwt.json.JSON' />
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    
+   <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+  
+   <inherits name="org.exoplatform.ide.vfs.VFS" />
+   
    <inherits name='org.exoplatform.ide.git.Views' />
 
    <source path="client"/>

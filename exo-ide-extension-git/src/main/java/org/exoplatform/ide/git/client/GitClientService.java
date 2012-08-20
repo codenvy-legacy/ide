@@ -24,12 +24,16 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.Branch;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.MergeResult;
 import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.List;
 
@@ -268,8 +272,8 @@ public abstract class GitClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException;
+   public abstract void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -393,4 +397,9 @@ public abstract class GitClientService
     */
    public abstract void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
+   
+   
+   public abstract void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+            throws RequestException;
+
 }

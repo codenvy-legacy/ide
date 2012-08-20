@@ -63,6 +63,7 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.FetchRequest;
@@ -75,11 +76,13 @@ import org.exoplatform.ide.git.shared.PushRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
 import org.exoplatform.ide.git.shared.StatusRequest;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -134,6 +137,8 @@ public class GitClientServiceImpl extends GitClientService
    public static final String REMOVE = "/ide/git/rm";
 
    public static final String RESET = "/ide/git/reset";
+   
+   public static final String COMMITERS = "/ide/git/commiters";
 
    /**
     * REST service context.
@@ -175,25 +180,29 @@ public class GitClientServiceImpl extends GitClientService
          .requestStatusHandler(new InitRequestStatusHandler(projectName)).send(callback);
    }
 
+   
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.git.client.GitClientService#cloneRepository(java.lang.String, java.lang.String, java.lang.String)
     */
    @Override
-   public void cloneRepository(String vfsId, ProjectModel project, String remoteUri, String remoteName,
-      AsyncRequestCallback<String> callback) throws RequestException
+   public void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
-      CloneRequest cloneRequest = new CloneRequest(remoteUri, project.getId());
+      CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + project.getId();
+      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-         .requestStatusHandler(new CloneRequestStatusHandler(project.getName(), remoteUri)).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+         .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
+
 
    /**
     * @throws RequestException
@@ -633,6 +642,16 @@ public class GitClientServiceImpl extends GitClientService
       String url = restServiceContext + RO_URL;
       url += "?vfsid=" + vfsId + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.GET, url).send(callback);
+   }
+   
+   @Override
+   public void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + COMMITERS;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
+      AsyncRequest.build(RequestBuilder.GET, url + "?" + params)
+      .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
 }

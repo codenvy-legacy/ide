@@ -25,7 +25,5 @@ package org.exoplatform.ide.extension.openshift.client.deploy;
  */
 public interface PullCompleteCallback
 {
-   
    void onPullComplete(boolean success);
-
 }

@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateApplicationControl;
 import org.exoplatform.ide.extension.openshift.client.controls.CreateDomainControl;
@@ -102,7 +102,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().registerPaaS(
          new PaaS("OpenShift", "OpenShift", new Image(OpenShiftClientBundle.INSTANCE.openShiftControl()), Arrays
             .asList(ProjectType.RUBY_ON_RAILS, ProjectType.PHP), true,
-            new org.exoplatform.ide.extension.openshift.client.deploy.recent.DeployApplicationPresenter()));
+            new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -127,7 +127,6 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new UserInfoPresenter();
       new UpdatePublicKeyCommandHandler();
 
-      new DeployApplicationPresenter();
       new OpenShiftProjectPresenter();
    }
 

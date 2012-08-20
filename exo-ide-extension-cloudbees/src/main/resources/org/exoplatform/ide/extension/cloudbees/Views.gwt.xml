@@ -40,10 +40,6 @@
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudbees.client.deploy.recent.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.deploy.recent.DeployApplicationPresenter.Display" />
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectView">
       <when-type-is class="org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter.Display" />
    </replace-with>

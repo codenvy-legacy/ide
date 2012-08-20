@@ -395,11 +395,12 @@ public class MockVFS implements VirtualFileSystem
 
    @Override
    @Path("item/{id:.*}")
-   public void updateItem(@PathParam("id") String id, //
+   public Item updateItem(@PathParam("id") String id, //
                           List<ConvertibleProperty> properties, //
                           @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
+      return null;
    }
 
    @Override

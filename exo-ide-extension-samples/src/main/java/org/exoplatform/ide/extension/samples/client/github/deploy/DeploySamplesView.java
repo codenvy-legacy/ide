@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 
+import java.util.LinkedHashMap;
+
 /**
  * View to deploy samples imported from GitHub.
  * 
@@ -46,9 +48,9 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
 
    private static final String TITLE = SamplesExtension.LOCALIZATION_CONSTANT.importLoadDialogTitle();
 
-   private static final int HEIGHT = 345;
+   private static final int HEIGHT = 365;
 
-   private static final int WIDTH = 550;
+   private static final int WIDTH = 580;
 
    interface DeploySamplesViewUiBinder extends UiBinder<Widget, DeploySamplesView>
    {
@@ -70,7 +72,7 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
 
    @UiField
    ImageButton backButton;
-   
+
    @UiField
    FlowPanel paasPanel;
 
@@ -126,19 +128,10 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaasValueMap(java.lang.String[])
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaaSView(com.google.gwt.user.client.ui.Composite)
     */
    @Override
-   public void setPaasValueMap(String[] values)
-   {
-      selectPaasField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaas(com.google.gwt.user.client.ui.Composite)
-    */
-   @Override
-   public void setPaas(Composite composite)
+   public void setPaaSView(Composite composite)
    {
       if (paasPanel.getWidgetCount() > 0)
       {
@@ -157,5 +150,14 @@ public class DeploySamplesView extends ViewImpl implements DeploySamplesPresente
       {
          paasPanel.remove(0);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display#setPaaSValues(java.util.LinkedHashMap)
+    */
+   @Override
+   public void setPaaSValues(LinkedHashMap<String, String> values)
+   {
+      selectPaasField.setValueMap(values);
    }
 }

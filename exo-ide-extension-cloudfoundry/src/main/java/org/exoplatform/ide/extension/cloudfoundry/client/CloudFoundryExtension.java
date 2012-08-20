@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
@@ -89,7 +89,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().registerPaaS(
          new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry()), Arrays
             .asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING),
-            new org.exoplatform.ide.extension.cloudfoundry.client.deploy.recent.DeployApplicationPresenter()));
+            new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -99,7 +99,6 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().addControl(new ApplicationsControl());
       IDE.getInstance().addControl(new SwitchAccountControl());
 
-      new DeployApplicationPresenter();
       new CreateApplicationPresenter();
       new LoginPresenter();
       new StartApplicationPresenter();

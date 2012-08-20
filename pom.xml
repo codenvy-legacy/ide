@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.8-CR01</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.8-CR01</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M9</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M10-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -890,7 +890,6 @@
       <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
-      <!--module>exo-ide-packaging-gadget-war</module --> 
       <module>exo-ide-shell</module>
 
       <module>exo-ide-git-server</module>

@@ -14,11 +14,13 @@
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-ui</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -50,21 +52,28 @@
          <version>3.0.4</version>
       </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-api</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-testframework</artifactId>
-         <scope>test</scope>
-      </dependency>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-framework-client</artifactId>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-editor-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-editor</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-testframework</artifactId>
+			<scope>test</scope>
+		</dependency>
 
       <dependency>
          <groupId>junit</groupId>

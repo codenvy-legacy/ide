@@ -18,33 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.deploy;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.job.JobManager;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.PaasCallback;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -52,9 +25,40 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.LinkedHashMap;
 
 /**
  * Presenter for deploying samples imported from GitHub.
@@ -78,12 +82,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
       void enableFinishButton(boolean enable);
 
-      void setPaasValueMap(String[] values);
+      void setPaaSValues(LinkedHashMap<String, String> values);
 
-      void setPaas(Composite composite);
+      void setPaaSView(Composite composite);
 
       void hidePaas();
-
    }
 
    /**
@@ -104,56 +107,23 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private VirtualFileSystemInfo vfs;
 
-   //-----new----------------
-   private Paas paas;
-   
-   private List<String> paases;
+   private PaaS selectedPaaS;
 
-   private List<Paas> paasList;
-   
-   private PaasCallback paasCallback = new PaasCallback()
+   private DeployResultHandler deployResultHandler = new DeployResultHandler()
    {
-      @Override
-      public void onViewReceived(Composite composite)
-      {
-         if (composite != null)
-         {
-            display.setPaas(composite);
-         }
-         else
-         {
-            paas = null;
-            display.hidePaas();
-            display.getSelectPaasField().setValue("None");
-         }
-      }
-
-      @Override
-      public void onValidate(boolean result)
-      {
-         if (result)
-         {
-            createEmptyProject();
-         }
-         // if form isn't valid, then do nothing
-         // all validation messages must be shown by paases
-      }
-
       @Override
       public void onProjectCreated(ProjectModel project)
       {
       }
 
       @Override
-      public void projectCreationFailed()
+      public void onDeployFinished(boolean success)
       {
+         if (success && display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
-
-      @Override
-      public void onDeploy(boolean result)
-      {
-      }
-
    };
 
    public DeploySamplesPresenter()
@@ -178,13 +148,13 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onClick(ClickEvent event)
          {
-            if (paas != null)
+            if (selectedPaaS != null && !selectedPaaS.getPaaSActions().validate())
             {
-               paas.validate();
+               Dialogs.getInstance().showError("Please, fill all required fields.");
             }
             else
             {
-               createEmptyProject();
+               createFolder();
             }
          }
       });
@@ -204,28 +174,42 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            
             String value = event.getValue();
-            if ("None".equals(value))
+            if ("none".equals(value))
             {
                display.hidePaas();
-               paas = null;
+               selectedPaaS = null;
             }
             else
             {
-               for (Paas cpaas : paasList)
+               for (PaaS paas : IDE.getInstance().getPaaSes())
                {
-                  if (cpaas.getName().equals(value))
+                  if (paas.getId().equals(value))
                   {
-                     paas = cpaas;
-                     paas.getView(data.getName(), paasCallback);
+                     selectedPaaS = paas;
+                     Composite view =
+                        selectedPaaS.getPaaSActions().getDeployView(data.getName(),
+                           ProjectType.fromValue(data.getType()));
+                     openView(view);
                   }
                }
             }
-            
          }
       });
+   }
 
+   private void openView(Composite view)
+   {
+      if (view != null)
+      {
+         display.setPaaSView(view);
+      }
+      else
+      {
+         selectedPaaS = null;
+         display.hidePaas();
+         display.getSelectPaasField().setValue("none");
+      }
    }
 
    /**
@@ -252,12 +236,9 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
          bindDisplay();
-         paases = new ArrayList<String>();
-         paases.add("None");
-         paases.addAll(getPaasValues());
-         display.setPaasValueMap(paases.toArray(new String[paases.size()]));
-         paas = null;
-         display.getSelectPaasField().setValue("None");
+         display.setPaaSValues(getPaasValues());
+         selectedPaaS = null;
+         display.getSelectPaasField().setValue("none");
          return;
       }
       else
@@ -265,18 +246,25 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          IDE.fireEvent(new ExceptionThrownEvent("Show Deployment Wizard View must be null"));
       }
    }
-   
-   private List<String> getPaasValues()
-   {
-      List<String> paases = new ArrayList<String>();
-      this.paasList = IDE.getInstance().getPaases();
-      for (Paas paas : this.paasList)
-      {
-         if (paas.getSupportedProjectTypes().contains(data.getType()))
-         {
-            paases.add(paas.getName());
-         }
 
+   private LinkedHashMap<String, String> getPaasValues()
+   {
+      LinkedHashMap<String, String> paases = new LinkedHashMap<String, String>();
+      paases.put("none", "None");
+      for (PaaS paas : IDE.getInstance().getPaaSes())
+      {
+         try
+         {
+            if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(data.getType())))
+            {
+               paases.put(paas.getId(), paas.getTitle());
+            }
+         }
+         catch (IllegalArgumentException e)
+         {
+            // TODO
+            return paases;
+         }
       }
       return paases;
    }
@@ -317,26 +305,21 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    // ---------------projects creation------------------------
-
-   private void createEmptyProject()
+   private void createFolder()
    {
       FolderModel parent = (FolderModel)vfs.getRoot();
-      ProjectModel model = new ProjectModel();
+      FolderModel model = new FolderModel();
       model.setName(data.getName());
-      model.setProjectType(data.getType());
       model.setParent(parent);
       try
       {
-         VirtualFileSystem.getInstance().createProject(
-            parent,
-            new AsyncRequestCallback<ProjectModel>(
-               new ProjectUnmarshaller(model))
+         VirtualFileSystem.getInstance().createFolder(parent,
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model))
             {
                @Override
-               protected void onSuccess(ProjectModel result)
+               protected void onSuccess(FolderModel result)
                {
-                  cloneRepository(data, result);
-                  closeView();
+                  cloneFolder(data, result);
                }
 
                @Override
@@ -352,43 +335,25 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
-   private void cloneRepository(ProjectData repo, final ProjectModel project)
+   private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
       String remoteUri = repo.getRepositoryUrl();
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";
       }
-
       try
       {
          JobManager.get().showJobSeparated();
-         
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, remoteUri, null,
-            new AsyncRequestCallback<String>()
+
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
+            new AsyncRequestCallback<RepoInfo>()
             {
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new ProjectCreatedEvent(project));
-                  IDE.fireEvent(new RefreshBrowserEvent(project.getParent()));
-
-                  if (paas != null)
-                  {
-                     // FIXME
-                     // timer for allowing project to create fully
-                     // find better solution!!!!!!!!!
-                     new Timer()
-                     {
-                        @Override
-                        public void run()
-                        {
-                           paas.deploy(project);
-                        }
-                     }.schedule(2000);
-                  }
-                  
+                  convertToProject(folder);
                }
 
                @Override
@@ -401,6 +366,45 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       catch (RequestException e)
       {
          handleError(e);
+      }
+   }
+
+   private void convertToProject(FolderModel folderModel)
+   {
+      String projectType = data.getType();
+      folderModel.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folderModel.getProperties().add(new StringProperty("vfs:projectType", projectType));
+
+      ItemWrapper item = new ItemWrapper(new ProjectModel());
+      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(folderModel, null,
+            new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  if (selectedPaaS != null)
+                  {
+                     selectedPaaS.getPaaSActions().deploy((ProjectModel)result.getItem(), deployResultHandler);
+                  }
+                  IDE.getInstance().closeView(display.asView().getId());
+                  IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+                  IDE.fireEvent(new RefreshBrowserEvent(vfs.getRoot()));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

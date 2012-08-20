@@ -198,7 +198,7 @@ public class EventsTest extends JcrFileSystemTest
       headers.put("Content-Type", contentType);
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, properties.getBytes(), null);
-      assertEquals(204, response.getStatus());
+      assertEquals(200, response.getStatus());
 
       assertEquals(1, listener.events.size());
       assertEquals(ChangeEvent.ChangeType.PROPERTIES_UPDATED, listener.events.get(0).getType());

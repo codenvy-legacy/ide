@@ -364,6 +364,13 @@ public interface GitConnection
     * @return user associated with this connection
     */
    GitUser getUser();
+   
+   /**
+    * Gel list of commiters in current repository.   
+    * @return
+    * @throws GitException
+    */
+   List<GitUser> getCommiters() throws GitException;
 
    /**
     * Close connection, release associated resources.

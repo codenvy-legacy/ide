@@ -62,5 +62,5 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display" />
    </replace-with>
-
+   
 </module>

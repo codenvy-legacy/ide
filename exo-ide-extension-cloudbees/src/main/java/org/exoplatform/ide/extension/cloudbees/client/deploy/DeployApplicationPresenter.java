@@ -27,34 +27,38 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.PaasCallback;
-import org.exoplatform.ide.client.framework.paas.PaasComponent;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,7 +66,7 @@ import java.util.List;
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
  * 
  */
-public class DeployApplicationPresenter implements ApplicationBuiltHandler, PaasComponent, VfsChangedHandler
+public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasPaaSActions, VfsChangedHandler
 {
    interface Display
    {
@@ -80,7 +84,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       void setDomainValues(String[] domains);
 
       Composite getView();
-
    }
 
    private static final CloudBeesLocalizationConstant lb = CloudBeesExtension.LOCALIZATION_CONSTANT;
@@ -98,22 +101,19 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
     */
    private String warUrl;
 
-   private PaasCallback paasCallback;
-
    private String projectName;
 
    private ProjectModel project;
 
+   private DeployResultHandler deployResultHandler;
+
    public DeployApplicationPresenter()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-
-      IDE.getInstance().addPaas(new Paas("CloudBees", this, Arrays.asList(ProjectResolver.SERVLET_JSP)));
    }
 
    public void bindDisplay()
    {
-
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -172,14 +172,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                   {
                      getDomains();
                   }
-               }, new LoginCanceledHandler()
-               {
-                  @Override
-                  public void onLoginCanceled()
-                  {
-                     paasCallback.onViewReceived(null);
-                  }
-               })
+               }, null)
             {
                @Override
                protected void onSuccess(List<String> result)
@@ -189,7 +182,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                   display.getNameField().setValue(projectName);
                   name = display.getNameField().getValue();
                   display.getUrlField().setValue(domain + "/" + name);
-                  paasCallback.onViewReceived(display.getView());
                }
             });
       }
@@ -210,6 +202,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
          }
       };
 
+      JobManager.get().showJobSeparated();
       try
       {
          AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
@@ -254,6 +247,7 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
 
                   IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
+                  deployResultHandler.onDeployFinished(true);
                }
 
                @Override
@@ -261,59 +255,17 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
                {
                   IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
                      .deployApplicationFailureMessage(), Type.INFO));
+                  deployResultHandler.onDeployFinished(false);
                   super.onFailure(exception);
                }
             });
       }
       catch (RequestException e)
       {
+         deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),
             Type.INFO));
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#getView()
-    */
-   @Override
-   public void getView(String projectName, PaasCallback paasCallback)
-   {
-      this.paasCallback = paasCallback;
-      this.projectName = projectName;
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      getDomains();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate()
-    */
-   @Override
-   public void validate()
-   {
-      name = display.getNameField().getValue();
-      if (name == null || name.isEmpty())
-      {
-         Dialogs.getInstance().showError("Name field must be not empty");
-         paasCallback.onValidate(false);
-      }
-      else
-      {
-         paasCallback.onValidate(true);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy()
-    */
-   @Override
-   public void deploy(ProjectModel project)
-   {
-      this.project = project;
-      buildApplication();
    }
 
    /**
@@ -325,9 +277,97 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, Paas
       this.vfs = event.getVfsInfo();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
    @Override
-   public void createProject(ProjectModel project)
+   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
+      this.deployResultHandler = deployResultHandler;
+      name = display.getNameField().getValue();
+      if (name == null || name.isEmpty())
+      {
+         Dialogs.getInstance().showError("Name field must be not empty");
+      }
+      else
+      {
+         createProject(projectTemplate);
+      }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
+    *      org.exoplatform.ide.client.framework.project.ProjectType)
+    */
+   @Override
+   public Composite getDeployView(String projectName, ProjectType projectType)
+   {
+      this.projectName = projectName;
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+      }
+      bindDisplay();
+      getDomains();
+      return display.getView();
+   }
+
+   private void createProject(ProjectTemplate projectTemplate)
+   {
+      final Loader loader = new GWTLoader();
+      loader.setMessage(lb.creatingProject());
+      loader.show();
+      try
+      {
+         TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+            projectTemplate.getName(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            {
+
+               @Override
+               protected void onSuccess(ProjectModel result)
+               {
+                  loader.hide();
+                  project = result;
+                  deployResultHandler.onProjectCreated(project);
+                  buildApplication();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
+   {
+      this.project = project;
+      this.deployResultHandler = deployResultHandler;
+      buildApplication();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
+   }
 }

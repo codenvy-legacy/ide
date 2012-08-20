@@ -26,90 +26,92 @@
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
    <ui:style>
-      .selectAndInputWrapperBox {
-      position: absolute;
-      right: 1px;
-      left: 100px;
-      }
-
       .formLine {
-      margin-top: 8px;
+      	margin-top: 8px;
       }
-
+      
       .cancelBbutton {
-      position: absolute;
-      right: 200px;
+      	position: absolute;
+      	right: 200px;
       }
       
       .buttonsBox {
-      display: block;
-      margin: 0 8px;
+      	display: block;
+      	margin: 0 8px;
       }
-
+      
       .rightButton {
-      position: absolute;
-      right: 0;
+      	position: absolute;
+      	right: 0;
       }
-
+      
       .formLine {
-      margin-top:
-      8px;
+      	margin-top: 8px;
       }
-
+      
       .topBox {
-      background-color: #eef6ff;
-      vertical-align: middle;
-      border-bottom: 1px solid #A6ABAF;
-      width: 100%;
-      height: 60px;
+      	background-color: #eef6ff;
+      	vertical-align: middle;
+      	border-bottom: 1px solid #A6ABAF;
+      	width: 100%;
+      	height: 60px;
       }
-
+      
       .labelValue {
-      font-weight: bold;
+      	font-weight: bold;
       }
-
+      
       .labelSubtitle {
-      font-weight: bold;
-      font-align: center;
+      	font-weight: bold;
+      	font-align: center;
       }
-
+      
       .middle {
-      position: absolute;
-      right: 100px;
+      	position: absolute;
+      	right: 100px;
       }
-
+      
       .labelTitle {
-      font-size: medium;
-      font-weight: bold;
-      vertical-align: middle;
-      padding-left: 10px;
-      padding-top: 10px;
+      	font-size: medium;
+      	font-weight: bold;
+      	vertical-align: middle;
+      	padding-left: 10px;
+      	padding-top: 10px;
       }
-
+      
       .labelDescription {
-      font-style: italic;
-      vertical-align: middle;
-      padding-left: 10px;
-      padding-top: 5px;
+      	font-style: italic;
+      	vertical-align: middle;
+      	padding-left: 10px;
+      	padding-top: 5px;
       }
-
+      
       .innerBox {
-      display: block;
-      margin: 0 8px;
+      	display: block;
+      	margin: 0 8px;
       }
-
+      
       .leftFloat {
-      float: left;
+      	float: left;
       }
-
+      
       .right {
-      position: absolute;
-      right: 0;
+      	position: absolute;
+      	right: 0;
       }
-
+      
       .middle {
-      position: absolute;
-      right: 100px;
+      	position: absolute;
+      	right: 100px;
+      }
+      
+      .center {
+      	margin-right: auto;
+      	margin-left: auto;
+      }
+      
+      .labelAling {
+      	margin-top: 4px;
       }
    </ui:style>
    <g:LayoutPanel>
@@ -121,17 +123,18 @@
       </g:layer>
 
       <!-- panel to select source of project -->
-      <g:layer top="80px" height="30px">
-         <g:FlowPanel width="auto" styleName="{resource.css.innerBox}">
-            <g:Label text="{locale.wizardDeploymentPaas}" width="90px" styleName="{resource.css.leftFloat}"></g:Label>
-            <g:FlowPanel width="10px" styleName="{resource.css.leftFloat}"></g:FlowPanel>
-            <g:SimplePanel styleName="{style.selectAndInputWrapperBox}">
+      <g:layer top="70px" height="25px">
+         <g:DockLayoutPanel unit="PX" width="94%" styleName="{style.center}">
+            <g:west size="70">
+               <f:Label value="{locale.wizardDeploymentPaas}" width="70px" styleName="{style.labelAling}"></f:Label>
+            </g:west>
+            <g:center>
                <f:SelectItem ui:field="selectPaasField" width="100%" height="22px"></f:SelectItem>
-            </g:SimplePanel>
-         </g:FlowPanel>
+            </g:center>
+         </g:DockLayoutPanel>
       </g:layer>
-      
-      <g:layer top="110px" height="150px">
+
+      <g:layer top="100px" height="190px">
          <!-- Panel to show selected PaaS -->
          <g:FlowPanel ui:field="paasPanel">
 

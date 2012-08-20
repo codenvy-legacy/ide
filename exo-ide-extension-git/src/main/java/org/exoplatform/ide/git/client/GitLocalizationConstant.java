@@ -303,9 +303,12 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("view.clone.remote_uri_field_title")
    String cloneRemoteUriFieldTitle();
 
+
    @Key("view.clone.remote_name_field_title")
    String cloneRemoteNameFieldTitle();
 
+   @Key("view.clone.select_project_type_title")
+   String cloneProjectType();
    // Commit
 
    @Key("view.commit.commit_message")
