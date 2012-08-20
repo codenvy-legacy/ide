@@ -335,6 +335,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       }
       display.showCreateProjectStep();
       isDeployStep = false;
+      isChooseTemplateStep = false;
       getProjectTemplates();
    }
 
