@@ -511,10 +511,6 @@
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
-   </component>
 
 <!-- End Google AppEngine  -->   
 
@@ -550,18 +546,42 @@
       <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
    </component>
 
+   <!-- Google AppEngine  -->
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+   </component>
+
+   <!-- End Google AppEngine  -->
+
+   <component>
+      <type>org.exoplatform.ide.security.login.FederatedLoginApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
+   </component>
+
    <!--
-   ***************************************************************************************
-   ********************************** OpenID Support *************************************
-   ***************************************************************************************
+      ***************************************************************************************
+      ********************************** OAuth Support *************************************
+      ***************************************************************************************
    -->
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
+      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
+      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
    </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
+   </component>
+
 
 </configuration>

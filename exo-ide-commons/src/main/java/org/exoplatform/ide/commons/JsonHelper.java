@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.helper;
+package org.exoplatform.ide.commons;
 
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
@@ -25,76 +25,23 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Map;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * @deprecated use org.exoplatform.ide.commons.JsonHelper
  */
 public class JsonHelper
 {
-   /** Use StringBuilder instead of StringBuffer as it done in {@link java.io.StringWriter}. */
-   public static class FastStrWriter extends Writer
-   {
-      private final StringBuilder buf;
-
-      public FastStrWriter()
-      {
-         buf = new StringBuilder();
-      }
-
-      @Override
-      public void write(int c)
-      {
-         buf.append((char)c);
-      }
-
-      @Override
-      public void write(char[] cbuf)
-      {
-         buf.append(cbuf);
-      }
-
-      @Override
-      public void write(char[] cbuf, int off, int len)
-      {
-         buf.append(cbuf, off, len);
-      }
-
-      @Override
-      public void write(String str)
-      {
-         buf.append(str);
-      }
-
-      @Override
-      public void write(String str, int off, int len)
-      {
-         buf.append(str, off, len);
-      }
-
-      @Override
-      public String toString()
-      {
-         return buf.toString();
-      }
-
-      @Override
-      public void flush()
-      {
-      }
-
-      @Override
-      public void close()
-      {
-      }
-   }
-
    @SuppressWarnings("unchecked")
    public static <O> String toJson(O instance)
    {
@@ -102,15 +49,23 @@ public class JsonHelper
       {
          JsonValue json;
          if (instance.getClass().isArray())
+         {
             json = JsonGenerator.createJsonArray(instance);
+         }
          else if (instance instanceof Collection)
+         {
             json = JsonGenerator.createJsonArray((Collection<?>)instance);
+         }
          else if (instance instanceof Map)
+         {
             json = JsonGenerator.createJsonObjectFromMap((Map<String, ?>)instance);
+         }
          else
+         {
             json = JsonGenerator.createJsonObject(instance);
+         }
 
-         Writer w = new FastStrWriter();
+         Writer w = new StringWriter();
          json.writeTo(new JsonWriter(w));
          return w.toString();
       }
@@ -124,10 +79,23 @@ public class JsonHelper
    @SuppressWarnings({"unchecked", "rawtypes"})
    public static <O> O fromJson(String json, Class<O> klass, Type type) throws ParsingResponseException
    {
+      return fromJson(parseJson(json), klass, type);
+   }
+
+   public static <O> O fromJson(InputStream json, Class<O> klass, Type type) throws ParsingResponseException
+   {
+      return fromJson(parseJson(json), klass, type);
+   }
+
+   public static <O> O fromJson(Reader json, Class<O> klass, Type type) throws ParsingResponseException
+   {
+      return fromJson(parseJson(json), klass, type);
+   }
+
+   private static <O> O fromJson(JsonValue jsonValue, Class<O> klass, Type type) throws ParsingResponseException
+   {
       try
       {
-         JsonValue jsonValue = parseJson(json);
-
          O instance;
          if (klass.isArray())
          {
@@ -155,12 +123,22 @@ public class JsonHelper
       }
    }
 
-   public static JsonValue parseJson(String json) throws ParsingResponseException
+   private static JsonValue parseJson(String json) throws ParsingResponseException
+   {
+      return parseJson(new StringReader(json));
+   }
+
+   private static JsonValue parseJson(InputStream json) throws ParsingResponseException
+   {
+      return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
+   }
+
+   private static JsonValue parseJson(Reader json) throws ParsingResponseException
    {
       try
       {
          JsonParser parser = new JsonParser();
-         parser.parse(new StringReader(json));
+         parser.parse(json);
          return parser.getJsonObject();
       }
       catch (JsonException jsone)

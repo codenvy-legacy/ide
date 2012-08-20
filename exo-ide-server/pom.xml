@@ -255,6 +255,10 @@
                <groupId>net.sourceforge.nekohtml</groupId>
                <artifactId>nekohtml</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>com.google.code.guice</groupId>
+               <artifactId>guice</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
    </dependencies>

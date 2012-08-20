@@ -21,6 +21,7 @@ package org.exoplatform.ide.helper;
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated use org.exoplatform.ide.commons.ParsingResponseException
  */
 @SuppressWarnings("serial")
 public class ParsingResponseException extends Exception

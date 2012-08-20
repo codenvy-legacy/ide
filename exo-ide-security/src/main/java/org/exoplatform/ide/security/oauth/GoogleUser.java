@@ -18,14 +18,31 @@
  */
 package org.exoplatform.ide.security.oauth;
 
+import org.exoplatform.ide.security.shared.User;
+
 /**
+ * Represents Google user.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GoogleUser extends User
+public class GoogleUser implements User
 {
    private String email;
    private String name;
+
+   @Override
+   public final String getId()
+   {
+      return email;
+   }
+
+   @Override
+   public final void setId(String id)
+   {
+      // JSON response from Google API contains key 'id' but it has different purpose.
+      // Ignore calls of this method. Email address is used as user identifier.
+   }
 
    public String getEmail()
    {
@@ -34,7 +51,7 @@ public class GoogleUser extends User
 
    public void setEmail(String email)
    {
-      setUserId(email);
+      setId(email);
       this.email = email;
    }
 
@@ -52,7 +69,8 @@ public class GoogleUser extends User
    public String toString()
    {
       return "GoogleUser{" +
-         "email='" + email + '\'' +
+         "id='" + getId() + '\'' +
+         ", email='" + email + '\'' +
          ", name='" + name + '\'' +
          '}';
    }

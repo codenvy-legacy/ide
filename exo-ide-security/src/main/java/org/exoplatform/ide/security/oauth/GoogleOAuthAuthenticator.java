@@ -25,10 +25,11 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
+import org.exoplatform.ide.security.shared.User;
+
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * OAuth authentication for google account.
@@ -38,9 +39,6 @@ import java.util.List;
  */
 public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   private static final List<String> SCOPE = Arrays.asList("https://www.googleapis.com/auth/appengine.admin",
-      "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email");
-
    public GoogleOAuthAuthenticator() throws IOException
    {
       this(new MemoryCredentialStore(), loadClientSecrets("google_client_secrets.json"));
@@ -57,7 +55,7 @@ public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
          new GoogleAuthorizationCodeFlow.Builder(
             new NetHttpTransport(),
             new JacksonFactory(),
-            clientSecrets, SCOPE)
+            clientSecrets, Collections.<String>emptyList())
             .setCredentialStore(credentialStore).build(),
          new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
@@ -65,7 +63,7 @@ public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
    @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      return getUser("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
+      return getJson("https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken, GoogleUser.class);
    }
 
    @Override

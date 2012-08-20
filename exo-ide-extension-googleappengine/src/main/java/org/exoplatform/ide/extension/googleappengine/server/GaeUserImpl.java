@@ -18,23 +18,33 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class UserImpl implements User
+public class GaeUserImpl implements GaeUser
 {
-   private String name;
+   private String id;
    private boolean authenticated;
-   private String type;
 
-   public UserImpl(String name, boolean authenticated, String type)
+   public GaeUserImpl(String id, boolean authenticated)
    {
-      this.name = name;
+      this.id = id;
       this.authenticated = authenticated;
-      this.type = type;
+   }
+
+   @Override
+   public String getId()
+   {
+      return id;
+   }
+
+   @Override
+   public void setId(String id)
+   {
+      this.id = id;
    }
 
    @Override
@@ -47,39 +57,5 @@ public class UserImpl implements User
    public void setAuthenticated(boolean authenticated)
    {
       this.authenticated = authenticated;
-   }
-
-   @Override
-   public String getName()
-   {
-      return name;
-   }
-
-   @Override
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   @Override
-   public String getAuthenticationType()
-   {
-      return type;
-   }
-
-   @Override
-   public void setAuthenticationType(String type)
-   {
-      this.type = type;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "UserImpl{" +
-         "name='" + name + '\'' +
-         ", authenticated=" + authenticated +
-         ", type='" + type + '\'' +
-         '}';
    }
 }

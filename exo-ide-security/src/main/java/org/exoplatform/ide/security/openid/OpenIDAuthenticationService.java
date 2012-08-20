@@ -16,8 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.authentication.openid;
+package org.exoplatform.ide.security.openid;
 
+import org.exoplatform.ide.commons.NameGenerator;
+import org.exoplatform.ide.security.login.FederatedLoginList;
+import org.exoplatform.ide.security.openid.extensions.UIExtension;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.openid4java.OpenIDException;
@@ -27,8 +30,6 @@ import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.discovery.Identifier;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.AuthSuccess;
-import org.openid4java.message.MessageExtension;
-import org.openid4java.message.Parameter;
 import org.openid4java.message.ParameterList;
 import org.openid4java.message.ax.AxMessage;
 import org.openid4java.message.ax.FetchRequest;
@@ -38,7 +39,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -47,39 +47,40 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-@Path("ide/auth/openid")
-public class OpenIDAuthenticator
+@Path("ide/openid")
+public class OpenIDAuthenticationService
 {
-   private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticator.class);
+   private static final Log LOG = ExoLogger.getLogger(OpenIDAuthenticationService.class);
 
-   private static final Map<String, OpenIDProvider> openIdProviders;
+   private static final Map<String, String> openIdProviders;
 
    static
    {
-      openIdProviders = new HashMap<String, OpenIDProvider>(1);
-
-      openIdProviders.put("google", new OpenIDProvider("https://www.google.com/accounts/o8/id",
-         "http://www.google.com/favicon.ico", "Sign in with a Google Account"));
-      // yahoo => http://open.login.yahooapis.com/openid20/www.yahoo.com/xrds
-      // facebook => http://www.facebook.com/openid/xrds.php
+      openIdProviders = new HashMap<String, String>(1);
+      openIdProviders.put("google", "https://www.google.com/accounts/o8/id");
    }
 
-   @Inject
-   private UserStore userStore;
+   private final FederatedLoginList loginList;
+
+   public OpenIDAuthenticationService(FederatedLoginList loginList)
+   {
+      this.loginList = loginList;
+   }
 
    @Path("authenticate")
    @GET
    public Response authenticate(@Context UriInfo uriInfo, @Context HttpServletRequest servletRequest) throws OpenIDException
    {
       final String openIDProviderName = uriInfo.getQueryParameters().getFirst("openid_provider");
-      final OpenIDProvider openIDProvider = openIdProviders.get(openIDProviderName);
-      if (openIDProvider == null)
+      final String discoveryUrl = openIdProviders.get(openIDProviderName);
+      if (discoveryUrl == null)
       {
          LOG.error("Unsupported OpenID provider {} ", openIDProviderName);
          throw new WebApplicationException(Response
@@ -96,7 +97,7 @@ public class OpenIDAuthenticator
       }
 
       ConsumerManager consumerManager = new ConsumerManager();
-      DiscoveryInformation discovered = consumerManager.associate(consumerManager.discover(openIDProvider.getDiscoveryUrl()));
+      DiscoveryInformation discovered = consumerManager.associate(consumerManager.discover(discoveryUrl));
       session.setAttribute("openid.consumer", consumerManager);
       session.setAttribute("openid.discovered", discovered);
 
@@ -141,13 +142,24 @@ public class OpenIDAuthenticator
          FetchResponse fetchResp = (FetchResponse)authSuccess.getExtension(AxMessage.OPENID_NS_AX);
          final String email = (String)fetchResp.getAttributeValues("email").get(0);
 
-         final OpenIDUser user = new OpenIDUser(identifier);
-         user.setAttribute("email", email);
-
-         userStore.put(email, user);
-         session.setAttribute("openid.user", user);
-
-         return Response.temporaryRedirect(URI.create((String)session.getAttribute("openid.redirect_after_login"))).build();
+         final String redirectAfterLogin = (String)session.getAttribute("openid.redirect_after_login");
+         final String tmpPassword = NameGenerator.generate(null, 16);
+         // LoginModule may check userId|password from the FederatedLoginList.
+         loginList.add(email, tmpPassword);
+         if ((Boolean)session.getAttribute("openid.popup"))
+         {
+            // Have different workflow for 'popup' mode.
+            // Save user in session and do not add id and temporary password in redirect URL.
+            session.setAttribute("openid.user", new OpenIDUser(email, tmpPassword));
+            return Response.temporaryRedirect(URI.create(redirectAfterLogin)).build();
+         }
+         //
+         return Response.temporaryRedirect(
+            UriBuilder.fromPath(redirectAfterLogin)
+               .queryParam("username", email)
+               .queryParam("password", tmpPassword)
+               .build()
+         ).build();
       }
       finally
       {
@@ -155,60 +167,6 @@ public class OpenIDAuthenticator
          session.removeAttribute("openid.consumer");
          session.removeAttribute("openid.popup");
          session.removeAttribute("openid.redirect_after_login");
-      }
-   }
-
-   private static class UIExtension implements MessageExtension
-   {
-      private final ParameterList params;
-
-      UIExtension(String mode, boolean showFavicon)
-      {
-         this.params = new ParameterList();
-         if (mode != null)
-         {
-            this.params.set(new Parameter("mode", mode));
-         }
-         this.params.set(new Parameter("icon", Boolean.toString(showFavicon)));
-      }
-
-      UIExtension(boolean showFavicon)
-      {
-         this(null, showFavicon);
-      }
-
-      UIExtension()
-      {
-         this(null, false);
-      }
-
-      @Override
-      public String getTypeUri()
-      {
-         return "http://specs.openid.net/extensions/ui/1.0";
-      }
-
-      @Override
-      public ParameterList getParameters()
-      {
-         return this.params;
-      }
-
-      @Override
-      public void setParameters(ParameterList params)
-      {
-      }
-
-      @Override
-      public boolean providesIdentifier()
-      {
-         return false;
-      }
-
-      @Override
-      public boolean signRequired()
-      {
-         return true;
       }
    }
 }

@@ -28,10 +28,11 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
 
+import org.exoplatform.ide.security.shared.User;
+
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * OAuth authentication  for github account.
@@ -41,8 +42,6 @@ import java.util.List;
  */
 public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   private static final List<String> SCOPE = Arrays.asList("user", "repo");
-
    public GitHubOAuthAuthenticator() throws IOException
    {
       this(new MemoryCredentialStore(), loadClientSecrets("github_client_secrets.json"));
@@ -65,7 +64,7 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
                clientSecrets.getDetails().getClientSecret()),
             clientSecrets.getDetails().getClientId(),
             clientSecrets.getDetails().getAuthUri())
-            .setScopes(SCOPE)
+            .setScopes(Collections.<String>emptyList())
             .setCredentialStore(credentialStore).build(),
          new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
@@ -73,7 +72,7 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
    @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      return getUser("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
+      return getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
    }
 
    @Override
