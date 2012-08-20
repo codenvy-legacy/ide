@@ -33,6 +33,9 @@ import org.exoplatform.ide.security.shared.User;
 import java.util.Collections;
 import java.util.HashSet;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 /**
  * OAuth authentication  for github account.
  *
@@ -71,7 +74,21 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
    @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      return getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
+      GitHubUser user = getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
+      final String email = user.getEmail();
+      if (email == null || email.isEmpty())
+      {
+         throw new OAuthAuthenticationException("Could not login. Please setup email in your GitHub public profile. ");
+      }
+      try
+      {
+         new InternetAddress(email).validate();
+      }
+      catch (AddressException e)
+      {
+         throw new OAuthAuthenticationException(e.getMessage());
+      }
+      return user;
    }
 
    @Override

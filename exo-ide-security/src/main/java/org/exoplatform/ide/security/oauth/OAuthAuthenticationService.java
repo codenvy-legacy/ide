@@ -110,7 +110,8 @@ public class OAuthAuthenticationService
    {
       URL requestUrl = getRequestUrl(uriInfo);
       Map<String, List<String>> params = getRequestParameters(getState(requestUrl));
-      OAuthAuthenticator oauth = providers.getAuthenticator(getParameter(params, "oauth_provider"));
+      final String providerName = getParameter(params, "oauth_provider");
+      OAuthAuthenticator oauth = providers.getAuthenticator(providerName);
       final List<String> scopes = params.get("scope");
       final String userId = oauth.callback(requestUrl, scopes == null ? Collections.<String>emptyList() : scopes);
       final String redirectAfterLogin = getParameter(params, "redirect_after_login");
@@ -124,6 +125,7 @@ public class OAuthAuthenticationService
             UriBuilder.fromPath(redirectAfterLogin)
                .queryParam("username", userId)
                .queryParam("password", tmpPassword)
+               .queryParam("oauth_provider", providerName)
                .build()
          ).build();
       }
