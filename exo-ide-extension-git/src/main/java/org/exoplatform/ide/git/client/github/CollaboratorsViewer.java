@@ -18,6 +18,22 @@
  */
 package org.exoplatform.ide.git.client.github;
 
+import com.google.gwt.user.client.Event;
+
+import com.google.gwt.dom.client.NativeEvent;
+
+import com.google.gwt.event.logical.shared.ResizeEvent;
+
+import com.google.gwt.dom.client.Style.Unit;
+
+import com.google.gwt.user.client.DOM;
+
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
+
+import com.google.gwt.event.logical.shared.AttachEvent;
+
+import com.google.gwt.event.logical.shared.AttachEvent;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -65,59 +81,109 @@ public class CollaboratorsViewer extends ViewImpl implements GitHubCollaborators
 
    @UiField
    Button inviteButton;
-   
+
    List<GitHubUser> gitHubUsers = new ArrayList<GitHubUser>();
+
+   private int width = 0;
+
+   private int height = 0;
 
    public CollaboratorsViewer()
    {
-      super("Collaborators", ViewType.MODAL, "Collaborators", null, 1000, 450);
+      super("Collaborators", ViewType.MODAL, "Collaborators", null);
       add(uiBinder.createAndBindUi(this));
    }
 
    @Override
    public void showCollaborators(final Collaborators collaborators)
    {
-      grid.resize(4, 4);
-      int numRows = grid.getRowCount();
-      int numColumns = grid.getColumnCount();
+      List<GitHubUser> users = collaborators.getCollaborators();
+      List<GitHubUser> usersWithMail = new ArrayList<GitHubUser>();
+      for (GitHubUser gitHubUser : users)
+      {
+
+         if (gitHubUser.getEmail() != null && !gitHubUser.getEmail().isEmpty())
+            usersWithMail.add(gitHubUser);
+      }
+      usersWithMail.add(usersWithMail.get(0));
+      usersWithMail.add(usersWithMail.get(1));
+      usersWithMail.add(usersWithMail.get(2));
+      usersWithMail.add(usersWithMail.get(3));
+      usersWithMail.add(usersWithMail.get(4));
+      usersWithMail.add(usersWithMail.get(5));
+      usersWithMail.add(usersWithMail.get(0));
+      usersWithMail.add(usersWithMail.get(1));
+      usersWithMail.add(usersWithMail.get(2));
+      usersWithMail.add(usersWithMail.get(3));
+      int numRows = 0;
+      int numColumns = 0;
+      switch (usersWithMail.size())
+      {
+         case 1 :
+         case 2 :
+            numRows = 1;
+            numColumns = 3;
+            width = 570;
+            height = 140;
+            break;
+         case 3 :
+         case 4 :
+            numRows = 2;
+            numColumns = 2;
+            width = 570;
+            height = 230;
+            break;
+         case 5 :
+         case 6 :
+            numRows = 2;
+            numColumns = 3;
+            width = 850;
+            height = 230;
+            break;
+         case 7 :
+         case 8 :
+         case 9 :
+            numRows = 3;
+            numColumns = 3;
+            width = 850;
+            height = 330;
+            break;
+         case 10 :
+         case 11 :
+         case 12 :
+            numRows = 3;
+            numColumns = 4;
+            width = 1000;
+            height = 330;
+            break;
+         default :
+            numRows = 4;
+            numColumns = 4;
+            width = 1000;
+            height = 420;
+            break;
+      }
+      grid.resize(numRows, numColumns);
       int z = 0;
       for (int row = 0; row < numRows; row++)
       {
          for (int col = 0; col < numColumns; col++)
          {
-//            GitHubUser gitHubUser = 
-            DockPanel dock = new DockPanel();
-            dock.setSpacing(4);
-            dock.setHorizontalAlignment(DockPanel.ALIGN_LEFT);
-            final GitHubUser gitHubUser = collaborators.getCollaborators().get(z++);
-            Image avatar = new Image(gitHubUser.getAvatarUrl());
-            avatar.setPixelSize(80, 80);
-            dock.add(avatar, DockPanel.WEST);
-            dock.add(new HTML(gitHubUser.getName()), DockPanel.NORTH);
-            dock.add(new HTML(gitHubUser.getEmail()), DockPanel.NORTH);
-            dock.add(new HTML(gitHubUser.getCompany()), DockPanel.NORTH);
-            CheckBox inviteCheckBox = new CheckBox("Invite");
-            inviteCheckBox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+            if (z < usersWithMail.size())
             {
-
-               @Override
-               public void onValueChange(ValueChangeEvent<Boolean> event)
-               {
-                  addInvite(gitHubUser);
-
-               }
-            });
-            dock.add(inviteCheckBox, DockPanel.SOUTH);
-            grid.setWidget(row, col, dock);
+               Widget inviteWidget = buildInviteWidget(usersWithMail.get(z++));
+               width += inviteWidget.getOffsetHeight() + 4;
+               height += inviteWidget.getOffsetHeight() + 4;
+               grid.setWidget(row, col, inviteWidget);
+            }
          }
       }
-
+      setPixelSize(width, height);
    }
 
    protected void addInvite(GitHubUser gitHubUser)
    {
-     gitHubUsers.add(gitHubUser);
-      
+      gitHubUsers.add(gitHubUser);
    }
 
    @Override
@@ -139,6 +205,30 @@ public class CollaboratorsViewer extends ViewImpl implements GitHubCollaborators
    public HasClickHandlers getCloseButton()
    {
       return closeButton;
+   }
+
+   private Widget buildInviteWidget(final GitHubUser collaborator)
+   {
+      DockPanel dock = new DockPanel();
+      dock.setSpacing(4);
+      dock.setHorizontalAlignment(DockPanel.ALIGN_LEFT);
+      Image avatar = new Image(collaborator.getAvatarUrl());
+      avatar.setPixelSize(80, 80);
+      dock.add(avatar, DockPanel.WEST);
+      dock.add(new HTML(collaborator.getName()), DockPanel.NORTH);
+      dock.add(new HTML(collaborator.getEmail()), DockPanel.NORTH);
+      dock.add(new HTML(collaborator.getCompany()), DockPanel.NORTH);
+      CheckBox inviteCheckBox = new CheckBox("Invite");
+      inviteCheckBox.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<Boolean> event)
+         {
+            addInvite(collaborator);
+         }
+      });
+      dock.add(inviteCheckBox, DockPanel.SOUTH);
+      return dock;
    }
 
 }

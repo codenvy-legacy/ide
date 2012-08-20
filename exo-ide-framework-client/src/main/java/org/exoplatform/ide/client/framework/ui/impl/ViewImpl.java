@@ -30,6 +30,8 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.Border;
+import org.exoplatform.gwtframework.ui.client.window.HasViewContainer;
+import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.BeforeViewLoseActivityEvent;
@@ -115,6 +117,9 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
     * User defined content which will be displayed in this view.
     */
    private Widget viewWidget;
+
+   
+   private Window viewContainer;
 
    /**
     * Creates a new instance of this View implementation with specified parameters.
@@ -521,5 +526,25 @@ public class ViewImpl extends LayoutPanel implements View, IsView, HasChangeView
    public void setCanShowContextMenu(boolean canShowContextMenu)
    {
       this.canShowContextMenu = canShowContextMenu;
+   }
+
+   
+   @Override
+   public void onResizeViewContainer()
+   {
+      
+   }
+   
+   @Override
+   public Window getViewContainer()
+   {
+      return viewContainer;
+   }
+   
+   @Override
+   public void setViewContainer(Window window)
+   {
+     this.viewContainer = window;
+      
    }
 }

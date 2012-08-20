@@ -18,8 +18,10 @@
  */
 package org.exoplatform.ide.client.framework.ui.api;
 
+
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.exoplatform.gwtframework.ui.client.window.HasViewContainer;
 import org.exoplatform.ide.client.framework.ui.api.event.HasBeforeViewLoseActivityHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.HasViewLostActivityHandler;
 
@@ -34,7 +36,7 @@ import com.google.gwt.user.client.ui.Image;
  * @version $
  */
 
-public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActivityHandler, IsWidget
+public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActivityHandler, IsWidget, HasViewContainer
 {
 
    /**
@@ -139,5 +141,6 @@ public interface View extends HasBeforeViewLoseActivityHandler, HasViewLostActiv
    boolean isActive();
 
    boolean closeOnEscape();
-
+   
+ 
 }
