@@ -383,4 +383,15 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       this.project = project;
       createApplication();
    }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return display.getApplicationNameField().getValue() != null
+         && !display.getApplicationNameField().getValue().isEmpty() && display.getTypeField().getValue() != null
+         && !display.getTypeField().getValue().isEmpty();
+   }
 }

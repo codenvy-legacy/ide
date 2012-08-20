@@ -350,7 +350,8 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel, org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
     */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
@@ -360,4 +361,13 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       buildApplication();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
+   }
 }

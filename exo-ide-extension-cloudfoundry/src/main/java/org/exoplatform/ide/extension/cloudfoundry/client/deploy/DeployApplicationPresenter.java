@@ -316,14 +316,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       }
    }
 
-   public void validate()
+   public void performValidation()
    {
       LoggedInHandler validateHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
          {
-            validate();
+            performValidation();
          }
       };
 
@@ -466,5 +466,15 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       this.project = project;
       this.deployResultHandler = deployResultHandler;
       beforeDeploy();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
+         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
    }
 }

@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -147,8 +148,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          @Override
          public void onClick(ClickEvent event)
          {
-            // TODO validation
-            createFolder();
+            if (selectedPaaS != null && !selectedPaaS.getPaaSActions().validate())
+            {
+               Dialogs.getInstance().showError("Please, fill all required fields.");
+            }
+            else
+            {
+               createFolder();
+            }
          }
       });
 
@@ -246,9 +253,17 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       paases.put("none", "None");
       for (PaaS paas : IDE.getInstance().getPaaSes())
       {
-         if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(data.getType())))
+         try
          {
-            paases.put(paas.getId(), paas.getTitle());
+            if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(data.getType())))
+            {
+               paases.put(paas.getId(), paas.getTitle());
+            }
+         }
+         catch (IllegalArgumentException e)
+         {
+            // TODO
+            return paases;
          }
       }
       return paases;

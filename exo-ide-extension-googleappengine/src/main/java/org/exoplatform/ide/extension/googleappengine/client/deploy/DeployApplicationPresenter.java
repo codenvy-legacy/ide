@@ -417,4 +417,13 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
          IDE.fireEvent(new CreateApplicationEvent());
       }
    }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return true;
+   }
 }
