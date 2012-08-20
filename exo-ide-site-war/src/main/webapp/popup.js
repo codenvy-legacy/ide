@@ -27,7 +27,33 @@ function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight)
             window.clearInterval(popupCloseHandlerIntervalId);
             //console.log("stop interval " + popupCloseHandlerIntervalId);
          }
-         window.location.replace(redirectAfterLogin);
+      }
+      else
+      {
+         var href;
+         try
+         {
+            href = popupWindow.location.href;
+         }
+         catch (error)
+         {}
+
+         if (href
+            && (popupWindow.location.pathname == redirectAfterLogin
+            || popupWindow.location.pathname == "/IDE/Application.html"
+            || popupWindow.location.pathname.match("j_security_check$")
+            ))
+         {
+            //console.log(href);
+            popupWindow.close();
+            popupWindow = null;
+            if (popupCloseHandlerIntervalId)
+            {
+               window.clearInterval(popupCloseHandlerIntervalId);
+               //console.log("stop interval " + popupCloseHandlerIntervalId);
+            }
+            window.location.replace(href);
+         }
       }
    }
 
@@ -39,6 +65,6 @@ function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight)
       popupWindow = window.open(this.authUrl,
                                 'popup',
                                 'width=' + this.popupWindowWidth + ',height=' + this.popupWindowHeight + ',left=' + x + ',top=' + y);
-      popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 100);
+      popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 50);
    }
 }

@@ -19,19 +19,6 @@
 
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
-<%@ page session="true" %>
-<%@ page import="org.exoplatform.ide.security.openid.OpenIDUser" %>
-
-<%-- Login over Open ID in popup mode --%>
-<%
-    OpenIDUser user = (OpenIDUser)session.getAttribute("openid.user");
-    if (user != null)
-    {
-       session.removeAttribute("openid.user");
-       response.sendRedirect("j_security_check?j_username=" + user.getId() + "&j_password=" + user.getPassword());
-       return;
-    }
-%>
 
 <%-- Login over Open ID or OAuth --%>
 <%
@@ -130,14 +117,24 @@
             xmlHttp.send(body);
          }
 
-
-         function open_popup(provider)
+         function open_popup_openid(provider)
          {
             var popup = new Popup(
-                '<%= request.getContextPath() %>/rest/ide/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/popup_login.jsp',
+                '<%= request.getContextPath() %>/rest/ide/openid/authenticate?popup=&favicon=&openid_provider=' + provider + '&redirect_after_login=/site/index.html',
                 "/site/index.html",
                 450,
                 500);
+            popup.open_window();
+         }
+
+         function open_popup_oauth(provider, scopes)
+         {
+            var url = '<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=' + provider + '&mode=federated_login&redirect_after_login=/site/index.html';
+            for (var i = 0; i < scopes.length; i++)
+            {
+               url += ('&scope=' + scopes[i]);
+            }
+            var popup = new Popup(url, "/site/index.html", 450, 500);
             popup.open_window();
          }
       </script>
@@ -189,9 +186,15 @@
                   <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=github&scope=user&scope=repo&mode=federated_login&redirect_after_login=/site/index.html');">
                      <img src="octocat.png" />&nbsp; Sign in with a GitHub Account(OAuth)</button>
                   <br/>
+                  <button onclick="open_popup_oauth('google', ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/appengine.admin'])">
+                     <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OAuth Popup)</button>
+                  <button onclick="open_popup_oauth('github', ['user', 'repo'])">
+                     <img src="octocat.png" />&nbsp; Sign in with a GitHub Account (OAuth Popup)</button>
+                  <br/>
+                  <br/>
                   <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/openid/authenticate?openid_provider=google&favicon=&redirect_after_login=/site/index.html');">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OpenId)</button>
-                  <button onclick="open_popup('google');">
+                  <button onclick="open_popup_openid('google');">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OpenId Popup)</button>
                </div>
                <div id="registerForm" style="display:none;">

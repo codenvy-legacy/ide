@@ -29,6 +29,8 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.json.JsonHttpParser;
 import com.google.api.client.json.jackson.JacksonFactory;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.ParsingResponseException;
 
@@ -59,6 +61,22 @@ public abstract class BaseOAuthAuthenticator implements OAuthAuthenticator
          return GoogleClientSecrets.load(new JacksonFactory(), secrets);
       }
       throw new IOException("Cannot load client secrets. File '" + configName + "' not found. ");
+   }
+
+   public static GoogleClientSecrets createClientSecrets(InitParams initParams)
+   {
+      final String type = ContainerUtils.readValueParam(initParams, "type");
+      if (!("installed".equals(type) || "web".equals(type)))
+      {
+         throw new IllegalArgumentException("Invalid credentials type " + type + " .Must be 'web' or 'installed'. ");
+      }
+      GoogleClientSecrets.Details cfg = new GoogleClientSecrets.Details();
+      cfg.setClientId(ContainerUtils.readValueParam(initParams, "client-id"))
+         .setClientSecret(ContainerUtils.readValueParam(initParams, "client-secret"))
+         .setAuthUri(ContainerUtils.readValueParam(initParams, "auth-uri"))
+         .setTokenUri(ContainerUtils.readValueParam(initParams, "token-uri"))
+         .setRedirectUris(ContainerUtils.readValuesParam(initParams, "redirect-uris"));
+      return "web".equals(type) ? new GoogleClientSecrets().setWeb(cfg) : new GoogleClientSecrets().setInstalled(cfg);
    }
 
    protected final AuthorizationCodeFlow flow;

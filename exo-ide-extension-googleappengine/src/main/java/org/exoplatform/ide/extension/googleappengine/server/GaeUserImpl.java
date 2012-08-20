@@ -48,6 +48,19 @@ public class GaeUserImpl implements GaeUser
    }
 
    @Override
+   public String getEmail()
+   {
+      // Not need email address in this case.
+      return null;
+   }
+
+   @Override
+   public void setEmail(String id)
+   {
+      // Not need email address in this case.
+   }
+
+   @Override
    public boolean isAuthenticated()
    {
       return authenticated;

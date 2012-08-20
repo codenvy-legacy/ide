@@ -166,7 +166,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             int clientHeight = Window.getClientHeight();
             int clientWidth = Window.getClientWidth();
             loginWithGoogleAccount(getAuthorizationContext()
-                  + "/ide/openid/authenticate?popup=&favicon=&openid_provider=google&redirect_after_login=/IDE/popup_login.jsp",//
+               + "/ide/oauth/authenticate"
+               + "?oauth_provider=google"
+               + "&mode=federated_login"
+               + "&scope=https://www.googleapis.com/auth/userinfo.profile"
+               + "&scope=https://www.googleapis.com/auth/userinfo.email"
+               + "&scope=https://www.googleapis.com/auth/appengine.admin"
+               + "&redirect_after_login=" + getAuthorizationPageURL(),//
                getAuthorizationPageURL(), 450, 500, clientWidth, clientHeight);
             IDE.getInstance().closeView(display.asView().getId());
 
@@ -391,39 +397,62 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    public static native void loginWithGoogleAccount(String authUrl, String redirectAfterLogin, int popupWindowWidth,
       int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-		function Popup(authUrl, redirectAfterLogin, popupWindowWidth,
-				popupWindowHeight) {
-			this.authUrl = authUrl;
-			this.redirectAfterLogin = redirectAfterLogin;
-			this.popupWindowWidth = popupWindowWidth;
-			this.popupWindowHeight = popupWindowHeight;
+         function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight) {
+            this.authUrl = authUrl;
+            this.redirectAfterLogin = redirectAfterLogin;
+            this.popupWindowWidth = popupWindowWidth;
+            this.popupWindowHeight = popupWindowHeight;
 
-			var popup_close_handler = function() {
-				if (!popupWindow || popupWindow.closed) {
-					popupWindow = null;
-					if (popupCloseHandlerIntervalId) {
-						window.clearInterval(popupCloseHandlerIntervalId);
-					}
-					window.location.replace(redirectAfterLogin);
-				}
-			}
+         var popup_close_handler = function() {
+            if (!popupWindow || popupWindow.closed)
+            {
+               //console.log("closed popup")
+               popupWindow = null;
+               if (popupCloseHandlerIntervalId)
+               {
+                  window.clearInterval(popupCloseHandlerIntervalId);
+                  //console.log("stop interval " + popupCloseHandlerIntervalId);
+               }
+            }
+            else
+            {
+               var href;
+               try
+               {
+                  href = popupWindow.location.href;
+               }
+               catch (error)
+               {}
 
-			this.open_window = function() {
-				var x = Math.max(0, Math.round(clientWidth / 2)
-						- Math.round(this.popupWindowWidth / 2));
-				var y = Math.max(0, Math.round(clientHeight / 2)
-						- Math.round(this.popupWindowHeight / 2));
-				popupWindow = window.open(this.authUrl, 'popup', 'width='
-						+ this.popupWindowWidth + ',height='
-						+ this.popupWindowHeight + ',left=' + x + ',top=' + y);
-				popupCloseHandlerIntervalId = window.setInterval(
-						popup_close_handler, 100);
-			}
-		}
+               if (href
+                  && (popupWindow.location.pathname == redirectAfterLogin
+                  || popupWindow.location.pathname == "/IDE/Application.html"
+                  || popupWindow.location.pathname.match("j_security_check$")
+                  ))
+               {
+                  //console.log(href);
+                  popupWindow.close();
+                  popupWindow = null;
+                  if (popupCloseHandlerIntervalId)
+                  {
+                     window.clearInterval(popupCloseHandlerIntervalId);
+                     //console.log("stop interval " + popupCloseHandlerIntervalId);
+                  }
+                  window.location.replace(href);
+               }
+            }
+         }
 
-		var popup = new Popup(authUrl, redirectAfterLogin, popupWindowWidth,
-				popupWindowHeight);
-		popup.open_window();
+         this.open_window = function() {
+            var x = Math.max(0, Math.round(clientWidth / 2) - Math.round(this.popupWindowWidth / 2));
+            var y = Math.max(0, Math.round(clientHeight / 2) - Math.round(this.popupWindowHeight / 2));
+            popupWindow = window.open(this.authUrl, 'popup', 'width=' + this.popupWindowWidth + ',height=' + this.popupWindowHeight + ',left=' + x + ',top=' + y);
+            popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 100);
+         }
+      }
+
+      var popup = new Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight);
+      popup.open_window();
    }-*/;
 
 }

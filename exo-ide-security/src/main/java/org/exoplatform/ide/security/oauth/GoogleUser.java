@@ -44,11 +44,13 @@ public class GoogleUser implements User
       // Ignore calls of this method. Email address is used as user identifier.
    }
 
+   @Override
    public String getEmail()
    {
       return email;
    }
 
+   @Override
    public void setEmail(String email)
    {
       setId(email);
