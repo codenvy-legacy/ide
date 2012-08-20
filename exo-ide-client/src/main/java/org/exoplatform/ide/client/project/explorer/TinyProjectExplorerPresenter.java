@@ -168,6 +168,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    public TinyProjectExplorerPresenter()
    {
+      IDE.getInstance().addControl(new OpenProjectControl());
+      
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -251,6 +253,15 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.getLinkWithEditorButton().addClickHandler(linkWithEditorButtonClickHandler);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
+
+      display.getProjectsListGrid().addSelectionHandler(new SelectionHandler<ProjectModel>()
+      {
+         @Override
+         public void onSelection(SelectionEvent<ProjectModel> event)
+         {
+            IDE.fireEvent(new ProjectSelectedEvent(event.getSelectedItem()));
+         }
+      });
 
       display.getProjectsListGrid().addDoubleClickHandler(new DoubleClickHandler()
       {
@@ -446,7 +457,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       final Folder folder = foldersToRefresh.get(0);
-      //remove folder hear to open sever folder simultaneously
+      // remove folder hear to open sever folder simultaneously
       foldersToRefresh.remove(folder);
       refreshFolderProperties(folder);
       try
@@ -479,7 +490,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private void folderContentReceived(Folder folder, List<Item> result)
    {
-      //      loader.hide();
+      // loader.hide();
       for (Item i : result)
       {
          if (i instanceof ItemContext)
@@ -512,7 +523,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.getBrowserTree().setValue(folder);
       display.changeFolderIcon(folder, false);
-      //display.asView().setViewVisible();
+      // display.asView().setViewVisible();
 
       refreshNextFolder();
    }
@@ -717,6 +728,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private void loadProject()
    {
       display.setProjectExplorerTreeVisible(true);
+      IDE.fireEvent(new ProjectSelectedEvent(null));
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       display.asView().setTitle(openedProject.getName());
@@ -872,20 +884,20 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      //      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
-      //      if (display.asView().isViewVisible())
-      //      {
-      //         if (display.selectItem(editorActiveFile.getId()))
-      //         {
-      //            return;
-      //         }
-      //      }
-      //      else
-      //      {
-      //         // First we need activate project explorer because
-      //         // code below do not select item in tree.
-      //         display.asView().activate();
-      //      }
+      // // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
+      // if (display.asView().isViewVisible())
+      // {
+      // if (display.selectItem(editorActiveFile.getId()))
+      // {
+      // return;
+      // }
+      // }
+      // else
+      // {
+      // // First we need activate project explorer because
+      // // code below do not select item in tree.
+      // display.asView().activate();
+      // }
 
       // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
@@ -1126,6 +1138,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   if (openedProject != null)
                   {
                      display.setProjectsListGridVisible(false);
+                     IDE.fireEvent(new ProjectSelectedEvent(null));
                      display.setProjectNotOpenedPanelVisible(false);
                      return;
                   }
@@ -1145,6 +1158,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   if (projects.size() == 0)
                   {
                      display.setProjectsListGridVisible(false);
+                     IDE.fireEvent(new ProjectSelectedEvent(null));
                      display.setProjectNotOpenedPanelVisible(true);
                   }
                   else
