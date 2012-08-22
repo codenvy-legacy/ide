@@ -27,12 +27,12 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.core.impl.provider.json.ObjectValue;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 

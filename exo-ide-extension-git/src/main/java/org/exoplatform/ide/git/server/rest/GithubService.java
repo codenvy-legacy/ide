@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.git.server.github.Github;
 import org.exoplatform.ide.git.server.github.GithubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 

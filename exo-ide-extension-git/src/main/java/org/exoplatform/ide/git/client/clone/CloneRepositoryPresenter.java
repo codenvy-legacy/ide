@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.github.GetCollboratorsEvent;
+import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -272,6 +272,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   convertFolderToProject(folder, projectType);
+                  //TODO: not good, comment temporary need found other may 
+                  // for inviting collaborators 
+                 // showInvitation(result.getRemoteUri());
                }
 
                @Override
@@ -337,13 +340,16 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * Else on server side we get unique list of commiters: name and email.  
     * 
     * @param remoteUri
-    * @param folder
     */
-   protected void showInvitation(String remoteUri, FolderModel folder)
+   protected void showInvitation(String remoteUri)
    {
       String[] userRepo = parseGitHubUrl(remoteUri);
       if (userRepo != null)
-         IDE.fireEvent(new GetCollboratorsEvent(userRepo[0], userRepo[1]));
+      {
+         GitHubCollaboratorsHandler collaboratorsHandler = new GitHubCollaboratorsHandler();
+         collaboratorsHandler.showCollaborators(userRepo[0], userRepo[1]);
+      }
+
    }
 
    /**

@@ -125,7 +125,6 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 
       new ShowProjectGitReadOnlyUrlPresenter();
       
-      new GetCommitersHandler();
    }
 
    /**

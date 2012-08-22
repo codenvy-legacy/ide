@@ -12,7 +12,7 @@
 		}
 	</ui:style>
 	<g:HTMLPanel>
-		<g:Grid ui:field="grid" width="460px" height="244px" />
+		<g:Grid ui:field="grid" width="100%" />
 		<g:Button text="Close" ui:field="closeButton" />
 		<g:Button text="Invite" ui:field="inviteButton" />
 	</g:HTMLPanel>

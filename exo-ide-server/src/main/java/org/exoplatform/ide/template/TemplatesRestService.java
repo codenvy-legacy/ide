@@ -30,8 +30,8 @@ import org.exoplatform.ide.FileTemplate;
 import org.exoplatform.ide.FolderTemplate;
 import org.exoplatform.ide.ProjectTemplate;
 import org.exoplatform.ide.Template;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -453,20 +453,6 @@ public class TemplatesRestService
    private List<ProjectTemplate> getProjectTemplates() throws URISyntaxException, IOException, ParsingResponseException
    {
       List<ProjectTemplate> projectTemplateList = new ArrayList<ProjectTemplate>();
-      // String templateContent = readTemplates(PROJECT_TEMPLATE);
-      // JsonValue jsonValue = JsonHelper.parseJson(templateContent);
-      // if (jsonValue.getElement("templates") != null)
-      // {
-      // ArrayValue jsonTemplateArray = (ArrayValue)jsonValue.getElement("templates");
-      // Iterator<JsonValue> arrIterator = jsonTemplateArray.getElements();
-      //
-      // while (arrIterator.hasNext())
-      // {
-      // ObjectValue obj = (ObjectValue)arrIterator.next();
-      // projectTemplateList.add(parseProjectTemplateObject(obj));
-      // }
-      // }
-
       URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
       if (url != null)
       {
@@ -474,15 +460,18 @@ public class TemplatesRestService
          File[] projects = projectsFolder.listFiles(projectsZipFilter);
          for (File f : projects)
          {
-            ZipFile zip = new ZipFile(f);
-            ZipArchiveEntry entry = zip.getEntry(".project");
-            // if zip not contains ".project" file then search in next archive
-            if (entry == null)
-               continue;
-            JsonParser jp = new JsonParser();
+            ZipFile zip = null;
+            InputStream prjDescrStream = null;
             try
             {
-               jp.parse(zip.getInputStream(entry));
+               zip = new ZipFile(f);
+               ZipArchiveEntry entry = zip.getEntry(".project");
+               // if zip not contains ".project" file then search in next archive
+               if (entry == null)
+                  continue;
+               JsonParser jp = new JsonParser();
+               prjDescrStream = zip.getInputStream(entry);
+               jp.parse(prjDescrStream);
                ConvertibleProperty[] array =
                   (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
                List<ConvertibleProperty> properties = Arrays.asList(array);
@@ -493,6 +482,12 @@ public class TemplatesRestService
             catch (JsonException e)
             {
                throw new RuntimeException(e.getMessage(), e);
+            }
+            finally {
+               if (zip != null)
+                  zip.close();
+               if (prjDescrStream != null)
+                  prjDescrStream.close();
             }
 
          }
@@ -669,12 +664,6 @@ public class TemplatesRestService
     */
    private void checkConfigNode(VirtualFileSystem vfs) throws VirtualFileSystemException
    {
-      // String _workspace = workspace;
-      // if (_workspace == null)
-      // {
-      // _workspace = repository.getConfiguration().getDefaultWorkspaceName();
-      // }
-
       try
       {
          vfs.createFolder(vfs.getInfo().getRoot().getId(), config.substring(1));
@@ -683,22 +672,6 @@ public class TemplatesRestService
       {
          // skip exception handling
       }
-      // Session sys = null;
-      // try
-      // {
-      // // Create node for users configuration under system session.
-      // sys = ((ManageableRepository)repository).getSystemSession(_workspace);
-      // if (!(sys.itemExists(config)))
-      // {
-      // org.exoplatform.ide.Utils.putFolders(sys, config);
-      // sys.save();
-      // }
-      // }
-      // finally
-      // {
-      // if (sys != null)
-      // sys.logout();
-      // }
    }
 
    /**
