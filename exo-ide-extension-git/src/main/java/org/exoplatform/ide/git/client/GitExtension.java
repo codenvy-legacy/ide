@@ -124,6 +124,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new MergePresenter();
 
       new ShowProjectGitReadOnlyUrlPresenter();
+      
    }
 
    /**

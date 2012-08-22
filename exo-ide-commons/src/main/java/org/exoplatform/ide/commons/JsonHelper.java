@@ -123,17 +123,17 @@ public class JsonHelper
       }
    }
 
-   private static JsonValue parseJson(String json) throws ParsingResponseException
+   public static JsonValue parseJson(String json) throws ParsingResponseException
    {
       return parseJson(new StringReader(json));
    }
 
-   private static JsonValue parseJson(InputStream json) throws ParsingResponseException
+   public static JsonValue parseJson(InputStream json) throws ParsingResponseException
    {
       return parseJson(new InputStreamReader(json, Charset.forName("UTF-8")));
    }
 
-   private static JsonValue parseJson(Reader json) throws ParsingResponseException
+   public static JsonValue parseJson(Reader json) throws ParsingResponseException
    {
       try
       {

@@ -103,7 +103,6 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
-import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitFile;
