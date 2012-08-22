@@ -238,6 +238,7 @@
          <groupId>com.google.guava</groupId>
          <artifactId>guava</artifactId>
          <version>r09</version>
+         <scope>provided</scope>
       </dependency>
       
       <dependency>
