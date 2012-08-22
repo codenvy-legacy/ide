@@ -295,7 +295,7 @@
 
 <!-- GitHub support -->
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.rest.GitHubServiceApplication</type>
+      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
    </component>
 
    <component>
