@@ -30,6 +30,7 @@
    <inherits name="org.exoplatform.ide.editor.gtmpl.GtmplEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.chromattic.ChromatticEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.java.JavaEditorExtension" />
+   <inherits name="org.exoplatform.ide.editor.java.JdtEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.jsp.JspEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.ruby.RubyEditorExtension" />
    <inherits name="org.exoplatform.ide.editor.php.PhpEditorExtension" />

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client;
+package org.exoplatform.ide.editor.java;
 
 import com.google.collide.client.Resources;
 
@@ -33,7 +33,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import elemental.html.Element;
 
-import org.exoplatform.ide.editor.java.client.Breakpoint.Type;
+import org.exoplatform.ide.editor.java.Breakpoint.Type;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

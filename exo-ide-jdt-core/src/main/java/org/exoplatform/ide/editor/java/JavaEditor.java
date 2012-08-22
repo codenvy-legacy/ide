@@ -16,7 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.client;
+package org.exoplatform.ide.editor.java;
+
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
+import org.exoplatform.ide.editor.text.Document;
 
 import com.google.collide.codemirror2.SyntaxType;
 
@@ -54,6 +59,16 @@ public class JavaEditor extends CollabEditor
    public BreakpointGutterManager getBreakPointManager()
    {
       return breakPointManager;
+   }
+   
+   /**
+    * @see com.google.collide.client.CollabEditor#setText(java.lang.String)
+    */
+   @Override
+   public void setText(String text)
+   {
+      super.setText(text);
+      getHoverPresenter().addHover(Document.DEFAULT_CONTENT_TYPE, new JavaTypeHover(IDE.eventBus()));
    }
    
    /**
