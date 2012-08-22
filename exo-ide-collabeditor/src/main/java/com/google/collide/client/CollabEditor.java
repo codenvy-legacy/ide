@@ -23,6 +23,7 @@ import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.hover.HoverPresenter;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
@@ -75,6 +76,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    protected NotificationManager notificationManager;
 
    protected DocumentAdaptor documentAdaptor;
+   
+   private HoverPresenter hoverPresenter;
 
    private boolean initialized;
 
@@ -112,6 +115,61 @@ public class CollabEditor extends Widget implements Editor, Markable
       notificationManager.setErrorListener(editorBundle.getErrorListener());
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
+//      editor.getMouseHoverManager().addMouseHoverListener(new MouseHoverListener()
+//      {
+//
+//         @Override
+//         public void onMouseHover(int x, int y, LineInfo lineInfo, int column)
+//         {
+//            if(notificationManager.getMarkers().hasKey(lineInfo.number()))
+//            {
+//            
+//               int startColumn = TextUtils.skipNonwhitespaceSimilar(lineInfo.line().getText(), column, false) +1;
+//               int endColumn = TextUtils.skipNonwhitespaceSimilar(lineInfo.line().getText(), column, true);
+//               int lineOffset = 0;
+//               try
+//               {
+//                  lineOffset = document.getLineOffset(lineInfo.number());
+//               }
+//               catch (BadLocationException e)
+//               {
+//                  e.printStackTrace();
+//               }
+//               int pointOffset = lineOffset + column;
+//               JsoArray<Marker> jsoArray = notificationManager.getMarkers().get(lineInfo.number());
+//               
+//               Marker mark = null;
+//               for(Marker m : jsoArray.asIterable())
+//               {
+//                  if(m.getStart() <= pointOffset && pointOffset<= m.getEnd())
+//                  {
+//                     mark = m;
+//                     break;
+//                  }
+//               }
+//               if(mark != null)
+//               {
+//               final String wordAtColumn = mark.getMessage();
+//               editorBundle.getEditorPopupController().showPopup(lineInfo,
+//                  startColumn,
+//                  endColumn, null,
+//                  new PopupRenderer()
+//                  {
+//
+//                     @Override
+//                     public elemental.html.Element renderDom()
+//                     {
+//                        DivElement el = Elements.createDivElement("");
+//                        el.setTextContent(wordAtColumn);
+//                        return el;
+//                     }
+//                  }, null, VerticalAlign.BOTTOM, true, 400);
+//               }
+//            }
+//            else
+//               editorBundle.getEditorPopupController().hide();
+//         }
+//      });
 
    }
 
@@ -171,6 +229,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
       document.addDocumentListener(documentAdaptor);
+      hoverPresenter = new HoverPresenter(this,editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
@@ -634,4 +693,19 @@ public class CollabEditor extends Widget implements Editor, Markable
       notificationManager.addProblems(problems);
    }
 
+   /**
+    * @return the hoverPresenter
+    */
+   public HoverPresenter getHoverPresenter()
+   {
+      return hoverPresenter;
+   }
+   
+   /**
+    * @return the editorBundle
+    */
+   public EditorBundle getEditorBundle()
+   {
+      return editorBundle;
+   }
 }

@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -40,7 +39,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -463,35 +461,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    public INameEnvironment getNameEnvironment()
    {
       return NAME_ENVIRONMENT;
-   }
-
-   private class StringUnmarshaller implements Unmarshallable<StringBuilder>
-   {
-
-      protected StringBuilder builder;
-
-      /**
-       * @param callback
-       */
-      public StringUnmarshaller(StringBuilder builder)
-      {
-         this.builder = builder;
-      }
-
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-       */
-      @Override
-      public void unmarshal(Response response)
-      {
-         builder.append(response.getText());
-      }
-
-      @Override
-      public StringBuilder getPayload()
-      {
-         return builder;
-      }
    }
 
 }

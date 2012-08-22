@@ -57,6 +57,7 @@ public class EditorPopupController {
      */
     Element renderDom();
   }
+  
 
   /**
    * Interface for controlling the popup after it has been shown
@@ -232,6 +233,7 @@ public class EditorPopupController {
 
     popup.setContentElement(renderer.renderDom());
     popup.setCaptureOutsideClickOnClose(shouldCaptureOutsideClickOnClose);
+    
     setPopupPartnersEnabled(popupPartnerElements, true);
 
     final Timer showTimer = new Timer() {

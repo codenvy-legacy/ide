@@ -16,50 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client;
+package org.exoplatform.ide.editor.java.hover;
 
-import org.exoplatform.ide.editor.java.Breakpoint;
-import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import com.google.gwt.resources.client.CssResource;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 11:39:59 AM Mar 28, 2012 evgen $
- * 
+ * @version $Id:
+ *
  */
-public class EditorBreakPoint extends Breakpoint
+public interface HoverStyle extends CssResource
 {
 
-   private String message;
-
-   private final BreakPoint breakPoint;
-
-   /**
-    * @param lineNumber
-    * @param message
-    */
-
-   public EditorBreakPoint(BreakPoint breakPoint, String message)
-   {
-      super(Type.BREAKPOINT, breakPoint.getLocation().getLineNumber(), message);
-      this.breakPoint = breakPoint;
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.problem.Problem#getLineNumber()
-    */
-   @Override
-   public int getLineNumber()
-   {
-      return breakPoint.getLocation().getLineNumber();
-   }
-
-   /**
-    * @return the breakPoint
-    */
-   public BreakPoint getBreakPoint()
-   {
-      return breakPoint;
-   }
+   String javaFqn();
 
 }

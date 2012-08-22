@@ -37,10 +37,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -219,7 +220,15 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
    @Override
    public String getMemberJavaDoc(String fqn, Set<String> dependencys) throws CodeAssistantException
    {
-      return getJavadoc("/member-doc?fqn=" + fqn, dependencys);
+      try
+      {
+         return getJavadoc("/member-doc?fqn=" + URLEncoder.encode(fqn, "UTF-8"), dependencys);
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         LOG.error("Can't encode fqn.", e);
+         return null;
+      }
    }
 
    /**

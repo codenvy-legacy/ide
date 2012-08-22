@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.editor.java.client;
+package org.exoplatform.ide.editor.java;
 
 import com.google.collide.codemirror2.Token;
 import com.google.collide.json.shared.JsonArray;
@@ -36,7 +36,7 @@ import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 import javax.annotation.Nonnull;
 
 /**
- * Implementation that adds JS-specific cases.
+ * Implementation that adds Java-specific cases.
  */
 class JavaExplicitAutocompleter extends ExplicitAutocompleter
 {

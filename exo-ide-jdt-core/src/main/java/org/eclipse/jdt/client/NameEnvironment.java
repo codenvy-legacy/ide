@@ -19,7 +19,6 @@
 package org.eclipse.jdt.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
