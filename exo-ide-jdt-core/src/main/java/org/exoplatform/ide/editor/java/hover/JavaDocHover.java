@@ -34,9 +34,13 @@ import org.eclipse.jdt.client.StringUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.CompletionProposalLabelProvider;
 import org.eclipse.jdt.client.core.BindingKey;
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
+import org.eclipse.jdt.client.core.dom.ITypeBinding;
+import org.eclipse.jdt.client.core.dom.IVariableBinding;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
+import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.SimpleType;
 import org.eclipse.jdt.client.ui.BindingLabelProvider;
 import org.eclipse.jdt.client.ui.JavaElementLabels;
@@ -58,6 +62,8 @@ public class JavaDocHover extends AbstractJavaHover
 
    private final HoverResources resources;
 
+   private BindingLabelProvider prov;
+
    /**
     * @param eventBus
     */
@@ -66,6 +72,7 @@ public class JavaDocHover extends AbstractJavaHover
       super(eventBus);
       this.resources = resources;
       labelProvider = new CompletionProposalLabelProvider();
+      prov = new BindingLabelProvider(JavaElementLabels.ALL_DEFAULT, 0);
    }
 
    /**
@@ -85,11 +92,7 @@ public class JavaDocHover extends AbstractJavaHover
       {
 
          SimpleType st = (SimpleType)parentNode;
-         Element docElement = DOM.createDiv();
-         ImageResource image = labelProvider.getTypeImage(st.getFlags());
-         addImage(docElement, image);         
-         addFqn(docElement, st.resolveBinding().getQualifiedName());
-         loadJavaDoc(st.resolveBinding().getQualifiedName(), true, docElement);
+         Element docElement = getDocForType(st.resolveBinding());
          return docElement;
 
       }
@@ -107,13 +110,51 @@ public class JavaDocHover extends AbstractJavaHover
                + "%40"
                + (methodSignature).replaceAll("\\.", "/");
          Element div = DOM.createDiv();
-         BindingLabelProvider prov = new BindingLabelProvider(JavaElementLabels.ALL_DEFAULT, 0);
          addImage(div, labelProvider.createMethodImage(methodDeclaration.getModifiers()));
          addFqn(div, methodDeclaration.getReturnType().getName() + " "+ className + "." + prov.getText(methodDeclaration));
          loadJavaDoc(url, false, div);
          return div;
       }
+      if(coveringNode instanceof SimpleName)
+      {
+         SimpleName nn = (SimpleName)coveringNode;
+         IBinding binding = nn.resolveBinding();
+         if(binding.getKind() == IBinding.VARIABLE)
+         {
+            IVariableBinding var = (IVariableBinding)binding;
+            if(var.isField())
+            {
+               String className = var.getDeclaringClass().getBinaryName();
+               String url =
+                        className
+                           + "%23" + nn.getFullyQualifiedName();
+               Element div = DOM.createDiv();
+               addImage(div, labelProvider.createMethodImage(var.getModifiers()));
+               addFqn(div, var.getType().getName() + " "+ className + "." + prov.getText(var));
+               loadJavaDoc(url, false, div);
+               return div;
+            }
+         }
+         if(binding.getKind() == IBinding.TYPE)
+         {
+            return getDocForType((ITypeBinding)binding);
+         }
+      }
       return null;
+   }
+
+   /**
+    * @param type
+    * @return
+    */
+   private Element getDocForType(ITypeBinding type)
+   {
+      Element docElement = DOM.createDiv();
+      ImageResource image = labelProvider.getTypeImage(type.getModifiers());
+      addImage(docElement, image);         
+      addFqn(docElement, type.getQualifiedName());
+      loadJavaDoc(type.getBinaryName(), true, docElement);
+      return docElement;
    }
    
    private void addFqn(Element docElement, String fqn)
