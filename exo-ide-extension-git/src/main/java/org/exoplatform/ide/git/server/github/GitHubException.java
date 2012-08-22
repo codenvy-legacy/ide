@@ -25,7 +25,7 @@ package org.exoplatform.ide.git.server.github;
  * @version $Id: GithubException.java Aug 29, 2011 11:36:57 AM vereshchaka $
  */
 @SuppressWarnings("serial")
-public class GithubException extends Exception
+public class GitHubException extends Exception
 {
    /**
     * HTTP status of response from GitHub server.
@@ -42,7 +42,7 @@ public class GithubException extends Exception
     * @param message text message
     * @param contentType content type of response from GitHub server
     */
-   public GithubException(int responseStatus, String message, String contentType)
+   public GitHubException(int responseStatus, String message, String contentType)
    {
       super(message);
       this.responseStatus = responseStatus;

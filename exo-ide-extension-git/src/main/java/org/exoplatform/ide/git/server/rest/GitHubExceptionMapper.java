@@ -18,45 +18,28 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.exoplatform.ide.git.server.github.GitHubException;
 
-import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: SamplesServiceApplication.java Sep 2, 2011 12:20:58 PM vereshchaka $
+ * @version $Id: SamplesServiceExceptionMapper.java Sep 2, 2011 12:22:10 PM vereshchaka $
  */
-public class GithubServiceApplication extends Application
+@Provider
+public class GitHubExceptionMapper implements ExceptionMapper<GitHubException>
 {
-   private Set<Class<?>> classes;
-
-   private Set<Object> singletons;
-
-   public GithubServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(GithubService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new GithubExceptionMapper());
-   }
 
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Set<Class<?>> getClasses()
+   public Response toResponse(GitHubException e)
    {
-      return classes;
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
+      return Response.status(e.getResponseStatus()).header("JAXRS-Body-Provided", "Error-Message")
+         .entity(e.getMessage()).type(e.getContentType()).build();
    }
 
 }

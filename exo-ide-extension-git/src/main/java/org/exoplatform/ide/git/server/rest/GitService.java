@@ -59,13 +59,10 @@ import org.exoplatform.ide.git.shared.TagDeleteRequest;
 import org.exoplatform.ide.git.shared.TagListRequest;
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
-import org.exoplatform.ide.vfs.server.RequestContext;
-import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;
@@ -73,7 +70,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -84,8 +80,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Providers;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>

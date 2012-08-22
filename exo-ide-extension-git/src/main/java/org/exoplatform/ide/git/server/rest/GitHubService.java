@@ -19,8 +19,8 @@
 package org.exoplatform.ide.git.server.rest;
 
 import org.exoplatform.ide.commons.ParsingResponseException;
-import org.exoplatform.ide.git.server.github.Github;
-import org.exoplatform.ide.git.server.github.GithubException;
+import org.exoplatform.ide.git.server.github.GitHub;
+import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
@@ -47,16 +47,16 @@ import javax.ws.rs.core.MediaType;
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
 @Path("ide/github")
-public class GithubService
+public class GitHubService
 {
    @Inject
-   Github github;
+   GitHub github;
 
-   public GithubService()
+   public GitHubService()
    {
    }
 
-   protected GithubService(Github github)
+   protected GitHubService(GitHub github)
    {
       this.github = github;
    }
@@ -65,7 +65,7 @@ public class GithubService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public GitHubRepository[] listRepositoriesByUser(@QueryParam("username") String userName) throws IOException,
-      GithubException, ParsingResponseException, InvalidArgumentException
+      GitHubException, ParsingResponseException, InvalidArgumentException
    {
       return github.listRepositories(userName);
    }
@@ -73,7 +73,7 @@ public class GithubService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws IOException, GithubException, ParsingResponseException,
+   public void login(Map<String, String> credentials) throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
       github.login(new GitHubCredentials(credentials.get("login"), credentials.get("password")));
@@ -82,7 +82,7 @@ public class GithubService
    @Path("list")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
       return github.listRepositories();
@@ -92,7 +92,7 @@ public class GithubService
    @GET
    @Path("collaborators/{user}/{repository}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository) throws IOException, GithubException, ParsingResponseException,
+   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository) throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
       return github.getCollaborators(user, repository);

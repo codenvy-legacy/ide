@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Github.java Sep 5, 2011 12:08:04 PM vereshchaka $
  */
-public class Github
+public class GitHub
 {
    private String userName;
 
@@ -56,12 +56,12 @@ public class Github
 
    private final GitHubAuthenticator authenticator;
 
-   public Github(InitParams initParams, GitHubAuthenticator authenticator)
+   public GitHub(InitParams initParams, GitHubAuthenticator authenticator)
    {
       this(readValueParam(initParams, "github-user"), authenticator);
    }
 
-   public Github(String userName, GitHubAuthenticator authenticator)
+   public GitHub(String userName, GitHubAuthenticator authenticator)
    {
       this.userName = userName;
       this.authenticator = authenticator;
@@ -84,11 +84,11 @@ public class Github
     * @param user name of user
     * @return an array of repositories
     * @throws IOException if any i/o errors occurs
-    * @throws GithubException if GitHub server return unexpected or error status for request
+    * @throws GitHubException if GitHub server return unexpected or error status for request
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws InvalidArgumentException
     */
-   public GitHubRepository[] listRepositories(String user) throws IOException, GithubException, ParsingResponseException,
+   public GitHubRepository[] listRepositories(String user) throws IOException, GitHubException, ParsingResponseException,
       InvalidArgumentException
    {
       user = (user == null || user.isEmpty()) ? userName : user;
@@ -116,7 +116,7 @@ public class Github
       }
    }
 
-   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GithubException
+   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GitHubException
    {
       String url = "https://api.github.com/repos/" + user + "/" + repository + "/collaborators";
       String method = "GET";
@@ -153,10 +153,10 @@ public class Github
     * 
     * @param credentials user's credentials
     * @throws IOException
-    * @throws GithubException
+    * @throws GitHubException
     * @throws VirtualFileSystemException
     */
-   public void login(Credentials credentials) throws IOException, GithubException, VirtualFileSystemException
+   public void login(Credentials credentials) throws IOException, GitHubException, VirtualFileSystemException
    {
       HttpURLConnection http = null;
       try
@@ -182,17 +182,17 @@ public class Github
     * 
     * @return array of the repositories
     * @throws IOException
-    * @throws GithubException
+    * @throws GitHubException
     * @throws ParsingResponseException
     * @throws VirtualFileSystemException
     */
-   public GitHubRepository[] listRepositories() throws IOException, GithubException, ParsingResponseException,
+   public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
       GitHubCredentials credentials = authenticator.readCredentials();
       if (credentials == null)
       {
-         throw new GithubException(401, "Authentication required.\n", "text/plain");
+         throw new GitHubException(401, "Authentication required.\n", "text/plain");
       }
       return getRepositories(credentials);
    }
@@ -202,10 +202,10 @@ public class Github
     * @return
     * @throws ParsingResponseException
     * @throws IOException
-    * @throws GithubException
+    * @throws GitHubException
     */
    private GitHubRepository[] getRepositories(GitHubCredentials credentials) throws ParsingResponseException, IOException,
-      GithubException
+      GitHubException
    {
       String url = "https://api.github.com/user/repos";
       String response = doJsonRequest(url, "GET", credentials, 200);
@@ -309,10 +309,10 @@ public class Github
     * @param success expected success code of request
     * @return response
     * @throws IOException
-    * @throws GithubException
+    * @throws GitHubException
     */
    private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success)
-      throws IOException, GithubException
+      throws IOException, GitHubException
    {
       HttpURLConnection http = null;
       try
@@ -348,7 +348,7 @@ public class Github
       }
    }
 
-   static GithubException fault(HttpURLConnection http) throws IOException
+   static GitHubException fault(HttpURLConnection http) throws IOException
    {
       InputStream errorStream = null;
       try
@@ -356,15 +356,15 @@ public class Github
          int responseCode = http.getResponseCode();
          errorStream = http.getErrorStream();
          if (errorStream == null)
-            return new GithubException(responseCode, null, null);
+            return new GitHubException(responseCode, null, null);
 
          int length = http.getContentLength();
          String body = readBody(errorStream, length);
 
          if (body != null)
-            return new GithubException(responseCode, body, http.getContentType());
+            return new GitHubException(responseCode, body, http.getContentType());
 
-         return new GithubException(responseCode, null, null);
+         return new GitHubException(responseCode, null, null);
       }
       finally
       {

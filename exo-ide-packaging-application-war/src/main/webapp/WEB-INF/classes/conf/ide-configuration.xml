@@ -295,11 +295,11 @@
 
 <!-- GitHub support -->
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
+      <type>org.exoplatform.ide.extension.samples.server.rest.GitHubServiceApplication</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.Github</type>
+      <type>org.exoplatform.ide.git.server.github.GitHub</type>
       <init-params>
          <value-param>
             <name>github-user</name>
@@ -309,7 +309,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <type>org.exoplatform.ide.git.server.github.GitHubAuthenticator</type>
       <init-params>
          <value-param>
             <name>workspace</name>
