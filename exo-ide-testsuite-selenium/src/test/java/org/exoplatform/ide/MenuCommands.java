@@ -222,6 +222,10 @@ public interface MenuCommands
       public static final String LOCK_FILE = "Lock File";
 
       public static final String UNLOCK_FILE = "Unlock File";
+      
+      public static final String  MOVE_LINE_UP = "Move Line Up";
+      
+      public static final String  MOVE_LINE_DOWN = "Move Line Down";
 
       public static final String LUCK_UNLOCK_FILE = "Lock " + "\\" + " Unlock File";
 
