@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
@@ -271,6 +272,9 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                   convertFolderToProject(folder, projectType);
+                  //TODO: not good, comment temporary need found other may 
+                  // for inviting collaborators 
+                 // showInvitation(result.getRemoteUri());
                }
 
                @Override
@@ -329,7 +333,65 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
- 
+
+   /**
+    * Show dialog window with proposal for invite commiters.
+    * In case clone repository from GitHub show Collaborators list (see GitHub REST API http://developer.github.com/v3/repos/collaborators/).
+    * Else on server side we get unique list of commiters: name and email.  
+    * 
+    * @param remoteUri
+    */
+   protected void showInvitation(String remoteUri)
+   {
+      String[] userRepo = parseGitHubUrl(remoteUri);
+      if (userRepo != null)
+      {
+         GitHubCollaboratorsHandler collaboratorsHandler = new GitHubCollaboratorsHandler();
+         collaboratorsHandler.showCollaborators(userRepo[0], userRepo[1]);
+      }
+
+   }
+
+   /**
+    * Parse GitHub url. Need extract "user" and "repository" name.
+    * If given Url its GitHub url return array of string first element will be user name, second repository name
+    * else return null.
+    * GitHub url formats:
+    * - https://github.com/user/repo.git
+    * - git@github.com:user/repo.git
+    * - git://github.com/user/repo.git
+    * 
+    * @param gitUrl
+    * @return array of string 
+    */
+   private String[] parseGitHubUrl(String gitUrl)
+   {
+      if (gitUrl.endsWith("/"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
+      }
+      if (gitUrl.endsWith(".git"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
+      }
+      if (gitUrl.startsWith("git@github.com:"))
+      {
+         gitUrl = gitUrl.split("git@github.com:")[1];
+         return gitUrl.split("/");
+      }
+      else if (gitUrl.startsWith("git://github.com/"))
+      {
+         gitUrl = gitUrl.split("git://github.com/")[1];
+         return gitUrl.split("/");
+      }
+      else if (gitUrl.startsWith("https://github.com/"))
+      {
+         gitUrl = gitUrl.split("git://github.com/")[1];
+         return gitUrl.split("/");
+      }
+      return null;
+   }
+
    @Override
    protected boolean makeSelectionCheck()
    {

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.java.client.Breakpoint;
+import org.exoplatform.ide.editor.java.Breakpoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 
 /**

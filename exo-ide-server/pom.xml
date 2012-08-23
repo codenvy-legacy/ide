@@ -14,6 +14,10 @@
 
    <dependencies>
       <dependency>
+      	<groupId>org.exoplatform.ide</groupId>
+      	<artifactId>exo-ide-commons</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.container</artifactId>
          <exclusions>
@@ -234,6 +238,7 @@
          <groupId>com.google.guava</groupId>
          <artifactId>guava</artifactId>
          <version>r09</version>
+         <scope>provided</scope>
       </dependency>
       
       <dependency>

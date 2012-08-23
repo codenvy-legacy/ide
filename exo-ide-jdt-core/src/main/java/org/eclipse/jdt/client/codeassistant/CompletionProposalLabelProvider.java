@@ -748,6 +748,11 @@ public class CompletionProposalLabelProvider
    ImageResource createMethodImageDescriptor(CompletionProposal proposal)
    {
       final int flags = proposal.getFlags();
+      return createMethodImage(flags);
+   }
+   
+   public ImageResource createMethodImage(int flags)
+   {
       if (Modifier.isPublic(flags))
          return JavaClientBundle.INSTANCE.publicMethod();
       else if (Modifier.isProtected(flags))

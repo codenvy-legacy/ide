@@ -57,9 +57,7 @@ public class Builder
       {
          // Prevent running builder methods asynchronously in EverRest framework.
          // Builder uses BuildService that has own thread pool for running build jobs.
-         throw new WebApplicationException(Response
-            .status(400)
-            .entity("Builder does not support asynchronous mode. ")
+         throw new WebApplicationException(Response.status(400).entity("Builder does not support asynchronous mode. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
    }
@@ -71,11 +69,7 @@ public class Builder
    {
       MavenBuildTask task = tasks.build(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
-      return Response
-         .status(202)
-         .location(location)
-         .entity(location.toString())
-         .type(MediaType.TEXT_PLAIN).build();
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
    }
 
    @POST
@@ -85,27 +79,18 @@ public class Builder
    {
       MavenBuildTask task = tasks.dependenciesList(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
-      return Response
-         .status(202)
-         .location(location)
-         .entity(location.toString())
-         .type(MediaType.TEXT_PLAIN).build();
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
    }
 
    @POST
    @Path("dependencies/copy")
    @Consumes("application/zip")
-   public Response dependenciesCopy(@Context UriInfo uriInfo,
-                                    @QueryParam("classifier") String classifier,
-                                    InputStream data) throws IOException
+   public Response dependenciesCopy(@Context UriInfo uriInfo, @QueryParam("classifier") String classifier,
+      InputStream data) throws IOException
    {
       MavenBuildTask task = tasks.dependenciesCopy(data, classifier);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
-      return Response
-         .status(202)
-         .location(location)
-         .entity(location.toString())
-         .type(MediaType.TEXT_PLAIN).build();
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
    }
 
    @GET
@@ -122,25 +107,38 @@ public class Builder
                InvocationResultImpl result = task.getInvocationResult();
                if (0 == result.getExitCode())
                {
-                  return Response
-                     .status(200)
-                     .entity("{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
-                        + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
-                        + "\",\"time\":\"" + Long.toString(result.getResult().getTime()) + "\"}")
-                     .type(MediaType.APPLICATION_JSON).build();
+
+                  if (result.getResult() != null)
+                  {
+                     result.getResult().getTime();
+                     return Response
+                        .status(200)
+                        .entity(
+                           "{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
+                              + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
+                              + "\",\"time\":\"" + Long.toString(result.getResult().getTime()) + "\"}")
+                        .type(MediaType.APPLICATION_JSON).build();
+                  }
+                  else
+                  {
+                     return Response
+                        .status(200)
+                        .entity(
+                           "{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\"\",\"time\":\""
+                              + Long.toString(System.currentTimeMillis()) + "\"}").type(MediaType.APPLICATION_JSON)
+                        .build();
+                  }
                }
                else
                {
                   CommandLineException cle = result.getExecutionException();
                   if (cle != null)
                   {
-                     return Response
-                        .status(200)
+                     return Response.status(200)
                         .entity("{\"status\":\"FAILED\",\"error\":\"" + cle.getMessage() + "\"}")
                         .type(MediaType.APPLICATION_JSON).build();
                   }
-                  return Response
-                     .status(200)
+                  return Response.status(200)
                      .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + "}")
                      .type(MediaType.APPLICATION_JSON).build();
                }
@@ -154,15 +152,10 @@ public class Builder
                throw new WebApplicationException(e);
             }
          }
-         return Response
-            .status(200)
-            .entity("{\"status\":\"IN_PROGRESS\"}")
-            .type(MediaType.APPLICATION_JSON).build();
+         return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
       }
       // Incorrect task ID.
-      throw new WebApplicationException(Response
-         .status(404)
-         .entity("Job " + buildID + " not found. ")
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 
@@ -174,9 +167,7 @@ public class Builder
       if (task == null)
       {
          // Incorrect task ID.
-         throw new WebApplicationException(Response
-            .status(404)
-            .entity("Job " + buildID + " not found. ")
+         throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
             .type(MediaType.TEXT_PLAIN).build());
       }
    }
@@ -191,9 +182,7 @@ public class Builder
          return Response.ok(task.getLogger().getLogReader(), MediaType.TEXT_PLAIN).build();
       }
       // Incorrect task ID.
-      throw new WebApplicationException(Response
-         .status(404)
-         .entity("Job " + buildID + " not found. ")
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 
@@ -230,10 +219,8 @@ public class Builder
                }
 
                // Job is failed - nothing for download.
-               throw new WebApplicationException(Response
-                  .status(404)
-                  .entity("Job failed. There is nothing for download. ")
-                  .type(MediaType.TEXT_PLAIN).build());
+               throw new WebApplicationException(Response.status(404)
+                  .entity("Job failed. There is nothing for download. ").type(MediaType.TEXT_PLAIN).build());
             }
             catch (MavenInvocationException e)
             {
@@ -246,16 +233,10 @@ public class Builder
          }
          // Sent location to check status method.
          final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
-         return Response
-            .status(202)
-            .location(location)
-            .entity(location.toString())
-            .type(MediaType.TEXT_PLAIN).build();
+         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
       }
       // Incorrect task ID.
-      throw new WebApplicationException(Response
-         .status(404)
-         .entity("Job " + buildID + " not found. ")
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
          .type(MediaType.TEXT_PLAIN).build());
    }
 }

@@ -83,7 +83,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler, SupportedProjectResolver
 {
 
-   static String DOC_CONTEXT;
+   public static String DOC_CONTEXT;
 
    static String REST_CONTEXT;
 

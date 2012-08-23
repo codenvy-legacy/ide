@@ -26,6 +26,10 @@
          <artifactId>exo-ide-server</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-commons</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.eclipse.jgit</groupId>
          <artifactId>org.eclipse.jgit</artifactId>
       </dependency>

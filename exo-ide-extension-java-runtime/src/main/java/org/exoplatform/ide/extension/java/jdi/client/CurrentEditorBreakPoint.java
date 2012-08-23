@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import org.exoplatform.ide.editor.java.client.Breakpoint;
+import org.exoplatform.ide.editor.java.Breakpoint;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

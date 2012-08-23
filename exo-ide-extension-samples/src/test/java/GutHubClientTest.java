@@ -1,6 +1,6 @@
 import junit.framework.Assert;
 
-import org.exoplatform.ide.git.server.github.Github;
+import org.exoplatform.ide.git.server.github.GitHub;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubUser;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class GutHubClientTest
    @Test
    public void testGetCollaborators() throws Exception
    {
-     Github github = new Github("eXoIDE", null);
+     GitHub github = new GitHub("eXoIDE", null);
      Collaborators collaborators = github.getCollaborators("eXoIDE", "rails-demo");
      Assert.assertEquals(1, collaborators.getCollaborators().size());
      GitHubUser user = collaborators.getCollaborators().get(0);
