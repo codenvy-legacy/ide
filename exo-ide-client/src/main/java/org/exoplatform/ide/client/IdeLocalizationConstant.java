@@ -285,6 +285,9 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.showHiddenFiles.title")
    String showHiddenFilesControlTitle();
 
+   @Key("control.inviteGoogleContacts.title")
+   String inviteGoogleContactsControlTitle();
+
    /*
     * DOWNLOAD CONTROL
     */
@@ -608,4 +611,10 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("progress.remove.finished.button")
    String progressRemoveAllFinished();
+
+   /**************************************************************************
+    * InviteGoogleContactsView
+    *************************************************************************/
+   @Key("view.inviteGoogleContacts.inviteButton.title")
+   String inviteButton();
 }
