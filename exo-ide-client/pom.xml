@@ -176,6 +176,18 @@
             </dependency>
  -->
 
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <version>12.0.1</version>
+      </dependency>
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava-gwt</artifactId>
+         <version>12.0.1</version>
+      </dependency>
+ 
+
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-vfs-jcr</artifactId>
