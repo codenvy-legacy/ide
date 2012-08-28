@@ -35,8 +35,10 @@ public class CodeMirrorConfiguration
 
    public static final String CODEMIRROR_START_PAGE = CODEMIRROR_DIRECTORY + "/codemirror.html";
 
-   public final static String PATH = GWT.getModuleBaseURL() + CODEMIRROR_DIRECTORY + "/";
+   //public final static String PATH = GWT.getModuleBaseURL() + CODEMIRROR_DIRECTORY + "/";
 
+   public final static String PATH = CODEMIRROR_DIRECTORY + "/";
+   
    private String jsDirectory = PATH + "js/";   
 
    private boolean isTextWrapping = false;
