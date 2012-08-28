@@ -52,7 +52,8 @@ public abstract class GitHubClientService
     * 
     * @param callback the callback client has to implement
     */
-   public abstract void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback) throws RequestException;
+   public abstract void getRepositoriesList(AsyncRequestCallback<List<GitHubRepository>> callback)
+      throws RequestException;
 
    /**
     * Get the list of available public repositories from GitHub user.
@@ -70,17 +71,27 @@ public abstract class GitHubClientService
     * @param password user's password
     * @param callback callback the client has to implement
     */
-   public abstract void loginGitHub(String login, String password, AsyncRequestCallback<String> callback) throws RequestException;
-   
-   
+   public abstract void loginGitHub(String login, String password, AsyncRequestCallback<String> callback)
+      throws RequestException;
+
    /**
-    * Get list of collaborators of GitHub repository.
-    * For detail see GitHub REST API http://developer.github.com/v3/repos/collaborators/. 
+    * Get list of collaborators of GitHub repository. For detail see GitHub REST API
+    * http://developer.github.com/v3/repos/collaborators/.
     * 
     * @param user
     * @param repository
     * @param callback
     * @throws RequestException
     */
-   public abstract void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback) throws RequestException;
+   public abstract void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
+      throws RequestException;
+
+   /**
+    * Get the GitHub oAuth token for the pointed user.
+    * 
+    * @param user user's id
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getUserToken(String user, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
 }

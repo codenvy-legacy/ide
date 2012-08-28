@@ -104,8 +104,8 @@
                <g:south size="60">
                   <g:FlowPanel styleName="{style.indents10}">
                      <f:Label text="Name" height="18px" width="45px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
-                     <f:TextInput ui:field="projectNameField" width="170px" styleName="{style.floatLeft}"></f:TextInput>
-                     <f:SelectItem ui:field="projectTypeField" width="90px" styleName="{style.floatRight}"></f:SelectItem>
+                     <f:TextInput ui:field="projectNameField" width="140px" styleName="{style.floatLeft}"></f:TextInput>
+                     <f:SelectItem ui:field="projectTypeField" width="140px" styleName="{style.floatRight}"></f:SelectItem>
                      <g:Label text="{locale.importFromGithubSelectProjectType}" height="18px" width="115px" addStyleNames="{style.floatRight} {style.label}"></g:Label>
                      <g:CheckBox ui:field="readOnlyModeField" HTML="{locale.gitReadOnly}" styleName="{style.checkbox}"></g:CheckBox>
                   </g:FlowPanel>
