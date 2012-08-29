@@ -68,6 +68,8 @@
 					<g:Label text="or"></g:Label>
 					<c:ImageButton ui:field="loginGoogleButton" width="160px"
 						buttonId="ideLoginViewLoginGoogleButton" text="Use Google Account"/>
+					<c:ImageButton ui:field="loginGitHubButton" width="160px"
+						buttonId="ideLoginViewLoginGoogleButton" text="Use GitHub Account"/>	
 				</g:HorizontalPanel>
 				<c:ImageButton ui:field="cancelButton" text="Cancel"
 					width="90px" buttonId="ideLoginViewCancelButton" imageName="cancel" />
