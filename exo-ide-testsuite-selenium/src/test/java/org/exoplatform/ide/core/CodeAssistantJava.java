@@ -275,7 +275,7 @@ public class CodeAssistantJava extends AbstractTestModule
     */
    public void openForm() throws Exception
    {
-      IDE().EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
+      IDE().JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
       (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
       {
 
