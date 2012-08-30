@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
@@ -29,6 +30,8 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
@@ -36,16 +39,23 @@ import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper;
 import org.exoplatform.ide.client.operation.uploadfile.UploadHelper.ErrorData;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -61,7 +71,7 @@ import java.util.List;
  */
 
 public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, ItemsSelectedHandler,
-   FileSelectedHandler
+   FileSelectedHandler, ViewVisibilityChangedHandler
 {
 
    public interface Display extends IsView
@@ -93,6 +103,10 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
    protected List<Item> selectedItems;
 
+   private boolean isNavigatorViewVisible;
+
+   private boolean isProjectExplorerViewVisible;
+
    public UploadZipPresenter()
    {
       IDE.getInstance().addControl(new UploadZipControl());
@@ -100,6 +114,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       IDE.addHandler(UploadZipEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
    @Override
@@ -125,10 +140,14 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          public void onClick(ClickEvent event)
          {
-            display.getUploadForm().setAction(getUploadUrl(selectedItems.get(0)));
-            // server handle only hidden overwrite field, but not form check box item "Overwrite"
-            display.setOverwriteHiddedField(display.getOverwriteAllField().getValue());
-            display.getUploadForm().submit();
+            if (isNavigatorViewVisible)
+            {
+               submit();
+            }
+            else if (isProjectExplorerViewVisible)
+            {
+               doSubmit(selectedItems.get(0));
+            }
          }
       });
 
@@ -158,6 +177,67 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       display.getFileUploadInput().addFileSelectedHandler(this);
       display.setUploadButtonEnabled(false);
+   }
+
+   /**
+    * Creates new folder in the selected folder for the zip content and upload zip-content into created folder.
+    * New folder has the name same as a zip-file name without extension.
+    */
+   private void submit()
+   {
+      String zipFileName = display.getFileNameField().getValue();
+      String[] splittedFileName = zipFileName.split("\\.");
+      String newFolderName;
+      if (splittedFileName.length == 0 || splittedFileName[0].isEmpty())
+      {
+         newFolderName = "untitled";
+      }
+      else
+      {
+         newFolderName = zipFileName.split("\\.")[0];
+      }
+
+      Folder baseFolder =
+         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
+            : (Folder)selectedItems.get(0);
+
+      FolderModel newFolder = new FolderModel();
+      newFolder.setName(newFolderName);
+      try
+      {
+         VirtualFileSystem.getInstance().createFolder(baseFolder,
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+            {
+               @Override
+               protected void onSuccess(FolderModel result)
+               {
+                  doSubmit(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Do submit a zip file.
+    * 
+    * @param parentFolder folder for the zip content
+    */
+   private void doSubmit(Item parent)
+   {
+      display.getUploadForm().setAction(getUploadUrl(parent));
+      // server handle only hidden overwrite field, but not form check box item "Overwrite"
+      display.setOverwriteHiddedField(display.getOverwriteAllField().getValue());
+      display.getUploadForm().submit();
    }
 
    private String getUploadUrl(Item item)
@@ -260,6 +340,24 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
    private void closeView()
    {
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
+    */
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      if (event.getView() instanceof NavigatorDisplay)
+      {
+         isNavigatorViewVisible = true;
+         isProjectExplorerViewVisible = false;
+      }
+      else if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         isNavigatorViewVisible = false;
+         isProjectExplorerViewVisible = true;
+      }
    }
 
 }
