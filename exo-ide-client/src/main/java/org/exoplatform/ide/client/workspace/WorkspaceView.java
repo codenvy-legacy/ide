@@ -60,7 +60,7 @@ public class WorkspaceView extends Composite implements Display
     * implement HasHTML instead of HasText.
     */
    @Inject
-   public WorkspaceView()
+   protected WorkspaceView()
    {
       initWidget(uiBinder.createAndBindUi(this));
    }
