@@ -310,4 +310,13 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    {
       return readOnlyModeField;
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setBackButtonVisible(boolean)
+    */
+   @Override
+   public void setBackButtonVisible(boolean visible)
+   {
+      backButton.setVisible(visible);
+   }
 }

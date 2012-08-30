@@ -649,4 +649,10 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/progress_remall.gif")
    ImageResource progresRemall();
+   
+   /*
+    *  Third party icons
+    */
+   @Source("org/exoplatform/ide/public/images/github-icon.png")
+   ImageResource gitHubIconSmall();
 }

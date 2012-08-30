@@ -24,6 +24,7 @@ import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
@@ -49,6 +50,9 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/github")
 public class GitHubService
 {
+   @Inject
+   GitHubOAuthAuthenticator oauth;
+
    @Inject
    GitHub github;
 
@@ -87,14 +91,22 @@ public class GitHubService
    {
       return github.listRepositories();
    }
-   
-   
+
    @GET
    @Path("collaborators/{user}/{repository}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository) throws IOException, GitHubException, ParsingResponseException,
-      VirtualFileSystemException
+   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository)
+      throws IOException, GitHubException, ParsingResponseException, VirtualFileSystemException
    {
       return github.getCollaborators(user, repository);
+   }
+
+   @GET
+   @Path("token/{userid}")
+   @Produces(MediaType.TEXT_PLAIN)
+   public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException,
+      ParsingResponseException, VirtualFileSystemException
+   {
+      return oauth.getToken(userId);
    }
 }

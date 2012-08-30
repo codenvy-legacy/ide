@@ -31,13 +31,13 @@ import org.junit.Test;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: GutHubClientTest.java Aug 6, 2012
  */
-public class GutHubClientTest
+public class GitHubClientTest
 {
    
    @Test
    public void testGetCollaborators() throws Exception
    {
-     GitHub github = new GitHub("eXoIDE", null);
+     GitHub github = new GitHub("eXoIDE", null, null);
      Collaborators collaborators = github.getCollaborators("eXoIDE", "rails-demo");
      Assert.assertEquals(1, collaborators.getCollaborators().size());
      GitHubUser user = collaborators.getCollaborators().get(0);

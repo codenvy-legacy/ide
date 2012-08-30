@@ -43,12 +43,16 @@ import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEven
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 
 import java.util.ArrayList;
@@ -65,7 +69,7 @@ import java.util.Set;
  * 
  */
 public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
-   GithubStep<ProjectData>, ApplicationSettingsReceivedHandler
+   GithubStep<ProjectData>, ApplicationSettingsReceivedHandler, UserInfoReceivedHandler
 {
    public interface Display extends IsView
    {
@@ -154,6 +158,13 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       void setNextButtonEnabled(boolean enabled);
 
       /**
+       * Set the visibility state of the "Back" button.
+       * 
+       * @param visible
+       */
+      void setBackButtonVisible(boolean visible);
+
+      /**
        * Give focus to login field.
        */
       void focusInLoginField();
@@ -172,6 +183,8 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
        */
       void showImportStep(boolean show);
    }
+
+   private UserInfo userInfo;
 
    private final String GITHUB_USER = "GitHubUser";
 
@@ -201,6 +214,11 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    private boolean isLoginStep = true;
 
    /**
+    * 
+    */
+   private String userToken = null;
+
+   /**
     * Map of read-only URLs. Key is ssh Git URL - value is read-only Git URL.
     */
    private HashMap<String, String> readonlyUrls = new HashMap<String, String>();
@@ -210,6 +228,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ShowImportFromGithubEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
    /**
@@ -363,6 +382,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    @Override
    public void onShowImportFromGithub(ShowImportFromGithubEvent event)
    {
+      if (userInfo != null)
+      {
+         getToken(userInfo.getName());
+         return;
+      }
+
       openView();
       goToLogin();
    }
@@ -445,6 +470,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       isLoginStep = false;
       display.showImportStep(true);
       display.setNextButtonEnabled(false);
+      display.setBackButtonVisible(userToken == null || userToken.isEmpty());
       getUserRepos();
    }
 
@@ -506,6 +532,54 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                display.getLoginResult().setValue(SamplesExtension.LOCALIZATION_CONSTANT.importFromGithubLoginFailed());
             }
          });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
+    */
+   @Override
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      this.userInfo = event.getUserInfo();
+   }
+
+   private void getToken(String user)
+   {
+      userToken = null;
+      try
+      {
+         GitHubClientService.getInstance().getUserToken(user,
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            {
+
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  userToken = result.toString();
+                  if (result.toString() == null || result.toString().isEmpty())
+                  {
+                     openView();
+                     goToLogin();
+                  }
+                  else
+                  {
+                     openView();
+                     goToImport();
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  openView();
+                  goToLogin();
+               }
+            });
       }
       catch (RequestException e)
       {

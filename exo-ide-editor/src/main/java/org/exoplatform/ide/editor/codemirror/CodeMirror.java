@@ -868,7 +868,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          }
 
          List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(tokenList);
-
          udpateErrorMarks(newCodeErrorList);
       }
    }
@@ -1398,6 +1397,14 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          tokenListReceivedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(id, this.tokenList));
       }
    }
+   
+   private EditorTokenListPreparedHandler tokenListPreparedHandler;
+   
+   public void getTokenList(EditorTokenListPreparedHandler tokenListPreparedHandler)
+   {
+      this.tokenListPreparedHandler = tokenListPreparedHandler;
+      getTokenListInBackground();
+   }
 
    private EditorTokenListPreparedHandler tokenListReceivedHandler = new EditorTokenListPreparedHandler()
    {
@@ -1418,7 +1425,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          if (needValidateCode)
          {
             validateCode(tokenList);
-         }         
+         }
+         
+         if (tokenListPreparedHandler != null)
+         {
+            tokenListPreparedHandler.onEditorTokenListPrepared(event);
+         }
+         
       }
    };
    
@@ -1772,7 +1785,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       }
       
       configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
-
       codeErrorList = newCodeErrorList;
    }
 

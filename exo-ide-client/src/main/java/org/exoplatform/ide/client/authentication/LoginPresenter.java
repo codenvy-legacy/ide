@@ -77,6 +77,8 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       HasClickHandlers getLoginButton();
 
       HasClickHandlers getLoginGoogleButton();
+      
+      HasClickHandlers getLoginGitHubButton();
 
       HasClickHandlers getCancelButton();
 
@@ -176,6 +178,27 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                getAuthorizationPageURL(), 450, 500, clientWidth, clientHeight);
             IDE.getInstance().closeView(display.asView().getId());
 
+         }
+      });
+      
+      
+      display.getLoginGitHubButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            int clientHeight = Window.getClientHeight();
+            int clientWidth = Window.getClientWidth();
+            loginWithGoogleAccount(getAuthorizationContext()
+               + "/ide/oauth/authenticate"
+               + "?oauth_provider=github"
+               + "&mode=federated_login"
+               + "&scope=user&scope=repo"
+               + "&redirect_after_login=" + getAuthorizationPageURL(),//
+               getAuthorizationPageURL(), 980, 500, clientWidth, clientHeight);
+            IDE.getInstance().closeView(display.asView().getId());
+            
          }
       });
 

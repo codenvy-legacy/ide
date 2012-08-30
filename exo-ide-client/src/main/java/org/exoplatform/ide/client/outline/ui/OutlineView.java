@@ -171,8 +171,8 @@ public class OutlineView extends ViewImpl implements org.exoplatform.ide.client.
       {
          return;
       }
+      
       outlineAvailable = available;
-
       outlineDisabledPanel.setVisible(!available);
       outlineTree.setVisible(available);
    }

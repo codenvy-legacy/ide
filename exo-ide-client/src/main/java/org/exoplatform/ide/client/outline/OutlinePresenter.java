@@ -34,11 +34,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
@@ -50,6 +47,7 @@ import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
@@ -70,8 +68,8 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * 
  */
 public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorContentChangedHandler,
-   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler, ViewOpenedHandler,
-   ApplicationSettingsReceivedHandler, EditorTokenListPreparedHandler
+   EditorCursorActivityHandler, ShowOutlineHandler, ViewClosedHandler,
+   ApplicationSettingsReceivedHandler
 {
 
    /**
@@ -130,8 +128,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private ApplicationSettings applicationSettings;
 
-   private boolean isOutlineViewOpened = false;
-
    private Timer selectOutlineTimer = new Timer()
    {
       @Override
@@ -164,12 +160,11 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       IDE.addHandler(ShowOutlineEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+//      IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorContentChangedEvent.TYPE, this);
       IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
-      IDE.addHandler(EditorTokenListPreparedEvent.TYPE, this);
 
       IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
    }
@@ -194,9 +189,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          // TODO temporary solution not to open Outline for Java files, but save settings:
          if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
          {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
          }
       }
    }
@@ -211,9 +206,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          // TODO temporary solution not to open Outline for Java files, but save settings:
          if (activeFile != null && !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
          {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
+            display = GWT.create(Display.class);
+            IDE.getInstance().openView(display.asView());
+            bindDisplay();
          }
          return;
       }
@@ -235,19 +230,16 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          display = null;
       }
 
-      if (event.getView() instanceof OutlineDisplay)
-      {
-         isOutlineViewOpened = false;
-      }
+//      if (event.getView() instanceof OutlineDisplay)
+//      {
+//         isOutlineViewOpened = false;
+//      }
    }
 
-   public void bindDisplay(Display d)
+   public void bindDisplay()
    {
-      display = d;
-
       display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
       {
-
          @Override
          public void onSelectionChange(SelectionChangeEvent event)
          {
@@ -296,9 +288,51 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
       
-      //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      //activeEditor.getTokenListInBackground();
+      if (activeEditor instanceof CodeMirror)
+      {
+         CodeMirror codeMirror = (CodeMirror)activeEditor;
+         codeMirror.getTokenList(new EditorTokenListPreparedHandler()
+         {
+            @Override
+            public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
+            {
+               tokenListReceived(event);
+            }
+         });
+      }
    }
+   
+   /**
+    * @param event
+    */
+   public void tokenListReceived(EditorTokenListPreparedEvent event)
+   {
+      if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId()))
+      {
+         return;
+      }
+
+      tokens = (List<TokenBeenImpl>)event.getTokenList();
+      display.setValue(tokens);
+
+      // TODO Solution for updating tree (flush, refresh doesn't help):
+      if (tokens != null && !tokens.isEmpty())
+      {
+         selectToken(tokens.get(0));
+      }
+
+      if (activeEditor != null)
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               selectTokenByRow(tokens);
+            }
+         });
+      }
+   }   
 
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
@@ -327,6 +361,18 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
    {
       activeFile = event.getFile();
       activeEditor = event.getEditor();
+      
+      if (display == null)
+      {
+         return;
+      }
+      
+      if (activeFile == null)
+      {
+         display.setOutlineAvailable(false);
+         return;
+      }
+      
       // TODO temporary solution to close Outline for Java files:
       if (activeFile != null && MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
       {
@@ -335,20 +381,6 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
             IDE.getInstance().closeView(display.asView().getId());
          }
          return;
-      }
-
-      if (display == null)
-      {
-         if (isOutlineViewOpened)
-         {
-            Display d = GWT.create(Display.class);
-            IDE.getInstance().openView((View)d);
-            bindDisplay(d);
-         }
-         else
-         {
-            return;
-         }
       }
 
       refreshOutlineTimer.cancel();
@@ -431,49 +463,7 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       currentRow = event.getRow();
       selectOutlineTimer.cancel();
       selectOutlineTimer.schedule(100);
-   }
-
-   @SuppressWarnings("unchecked")
-   public void onEditorTokenListPrepared(EditorTokenListPreparedEvent event)
-   {
-      if (event.getTokenList() == null || display == null || !activeEditor.getId().equals(event.getEditorId()))
-      {
-         return;
-      }
-
-      tokens = (List<TokenBeenImpl>)event.getTokenList();
-      display.setValue(tokens);
-
-      // TODO Solution for updating tree (flush, refresh doesn't help):
-      if (tokens != null && !tokens.isEmpty())
-      {
-         selectToken(tokens.get(0));
-      }
-
-      if (activeEditor != null)
-      {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               selectTokenByRow(tokens);
-            }
-         });
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler#onViewOpened(org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent)
-    */
-   @Override
-   public void onViewOpened(ViewOpenedEvent event)
-   {
-      if (event.getView() instanceof OutlineDisplay)
-      {
-         isOutlineViewOpened = true;
-      }
-   }
+   }   
 
    private boolean selectTokenByRow(List<TokenBeenImpl> tokens)
    {
