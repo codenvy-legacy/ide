@@ -21,8 +21,6 @@
    <inherits name='org.exoplatform.ide.editor.API' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <entry-point class="com.google.collide.client.CollabEditorExtension" />
-     <!-- Restrict the build to Chrome, FF and english only for now. -->
-  <set-property name="user.agent" value="safari,gecko1_8" />
     <!-- This provides deferred binding for the client windowing system.
 This can be used to make labels for "native" accelerators, etc. -->
     <define-property name="webide.clientOs" values="macintosh,windows,x11,other"/>
