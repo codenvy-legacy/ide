@@ -48,7 +48,7 @@
 
    <servlet>
       <servlet-name>EverrestServlet</servlet-name>
-      <servlet-class>org.everrest.core.servlet.EverrestServlet</servlet-class>
+      <servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
    </servlet>
 
    <servlet-mapping>
