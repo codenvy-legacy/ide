@@ -16,39 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor;
+package org.exoplatform.ide;
+
+import org.exoplatform.ide.util.UserActivityManager;
+
+import com.google.gwt.core.client.GWT;
 
 /**
- *  A checked exception indicating a editor cannot be initialized 
- *  correctly. The message text provides a further description of the problem.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class EditorInitException extends Exception
+public class AppContext
 {
+   private Resources resources = GWT.create(Resources.class);
 
    /**
-    * 
+    * @return the resources
     */
-   private static final long serialVersionUID = 1L;
-
-   /**
-    * @param message
-    * @param cause
-    */
-   public EditorInitException(String message, Throwable cause)
+   public Resources getResources()
    {
-      super(message, cause);
+      return resources;
    }
 
    /**
-    * @param message
+    * @return
     */
-   public EditorInitException(String message)
+   public UserActivityManager getUserActivityManager()
    {
-      super(message);
+      // TODO Auto-generated method stub
+      return null;
    }
-
-   
 }

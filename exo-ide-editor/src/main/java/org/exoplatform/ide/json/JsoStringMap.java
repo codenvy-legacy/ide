@@ -83,7 +83,7 @@ public final class JsoStringMap<T> extends JavaScriptObject implements JsonStrin
     for (key in this) {
       if (Object.prototype.hasOwnProperty.call(this, key)) {
         callback.
-        @com.google.collide.json.shared.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
+        @org.exoplatform.ide.json.JsonStringMap.IterationCallback::onIteration(Ljava/lang/String;Ljava/lang/Object;)
         (key, this[key]);
       }
     }

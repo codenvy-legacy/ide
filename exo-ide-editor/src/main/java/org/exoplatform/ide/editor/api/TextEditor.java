@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.texteditor;
+package org.exoplatform.ide.editor.api;
 
-import org.exoplatform.ide.editor.Editor;
 
 /**
  * Interface to a text editor. This interface defines functional extensions to

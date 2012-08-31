@@ -16,9 +16,8 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor;
+package org.exoplatform.ide.editor.api;
 
-import org.exoplatform.ide.texteditor.SelectionProvider;
 import org.exoplatform.ide.ui.ActionBars;
 import org.exoplatform.ide.ui.MenuManager;
 

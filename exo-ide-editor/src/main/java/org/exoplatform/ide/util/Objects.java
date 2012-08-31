@@ -16,14 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.texteditor;
+package org.exoplatform.ide.util;
+
 
 /**
+ * Helper functions that can operate on any {@code Object}.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public interface SelectionProvider
+public class Objects
 {
-
+   /**
+    * Determines whether two possibly-null objects are equal. Returns:
+    *
+    * <ul>
+    * <li>{@code true} if {@code a} and {@code b} are both null.
+    * <li>{@code true} if {@code a} and {@code b} are both non-null and they are
+    *     equal according to {@link Object#equals(Object)}.
+    * <li>{@code false} in all other situations.
+    * </ul>
+    *
+    * <p>This assumes that any non-null objects passed to this function conform
+    * to the {@code equals()} contract.
+    */
+   public static boolean equal( Object a, Object b) {
+     return a == b || (a != null && a.equals(b));
+   }
 }
