@@ -16,7 +16,9 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.googlecode.gwt.test.GwtTest;
+import com.googlecode.gwt.test.GwtTestWithMockito;
+
+import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS
@@ -24,20 +26,22 @@ import com.googlecode.gwt.test.GwtTest;
  *          exo@exoplatform.com
  * Aug 6, 2012  
  */
-public class WorkspaceViewTest extends GwtTest
+public class WorkspaceViewTest extends GwtTestWithMockito
 {
 
-   // currently nothing to test here
-   
    /**
    * {@inheritDoc}
    */
    @Override
    public String getModuleName()
    {
-      return "org.exoplatform.ide.client.IDE";
+      return "org.exoplatform.ide.IDE";
    }
    
-     
+   @Test
+   public void shouldSelectOnClick()
+   {
+      // unable to test cell widgets with gwt-test-utils
+   }
 
 }

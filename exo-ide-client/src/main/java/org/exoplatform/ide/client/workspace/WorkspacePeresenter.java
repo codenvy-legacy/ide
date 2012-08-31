@@ -63,7 +63,7 @@ public class WorkspacePeresenter implements Presenter
    ProjectExplorerPresenter projectExpolorerPresenter;
 
    @Inject
-   public WorkspacePeresenter(Display display, ProjectExplorerPresenter projectExpolorerPresenter,
+   protected WorkspacePeresenter(Display display, ProjectExplorerPresenter projectExpolorerPresenter,
       EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService)
    {
       super();
