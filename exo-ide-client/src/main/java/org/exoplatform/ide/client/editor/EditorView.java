@@ -16,7 +16,11 @@
  */
 package org.exoplatform.ide.client.editor;
 
+import com.google.gwt.dom.client.Style.Position;
+
 import org.exoplatform.ide.client.editor.EditorPresenter.Display;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -38,14 +42,16 @@ import com.google.inject.Inject;
 public class EditorView extends Composite implements Display
 {
 
-   interface EditorUiBinder extends UiBinder<Widget, EditorView>
-   {
-   }
+   private final BaseTextEditor editor;
 
-   private static EditorUiBinder uiBinder = GWT.create(EditorUiBinder.class);
-
-   @UiField
-   TextArea textArea;
+   //   interface EditorUiBinder extends UiBinder<Widget, EditorView>
+   //   {
+   //   }
+   //
+   //   private static EditorUiBinder uiBinder = GWT.create(EditorUiBinder.class);
+   //
+   //   @UiField
+   //   TextArea textArea;
 
    /**
     * Because this class has a default constructor, it can
@@ -59,16 +65,25 @@ public class EditorView extends Composite implements Display
     * implement HasHTML instead of HasText.
     */
    @Inject
-   public EditorView()
+   public EditorView(BaseTextEditor editor)
    {
-      initWidget(uiBinder.createAndBindUi(this));
+      this.editor = editor;
+      initWidget(editor.asWidget());
    }
 
    /**
-   * {@inheritDoc}
-   */
-   public HasText getTextArea()
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#getEditor()
+    */
+   public Editor getEditor()
    {
-      return textArea;
+      return editor;
    }
+
+//   /**
+//   * {@inheritDoc}
+//   */
+//   public HasText getTextArea()
+//   {
+//      return textArea;
+//   }
 }

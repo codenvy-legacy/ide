@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ide.client.editor;
 
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.inject.Inject;
 
 import com.google.gwt.user.client.ui.HasText;
@@ -23,6 +27,9 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 
 import org.exoplatform.ide.client.presenter.Presenter;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.EditorInitException;
+import org.exoplatform.ide.editor.api.EditorInput;
 
 /**
  * 
@@ -44,7 +51,8 @@ public class EditorPresenter implements Presenter
     */
    public interface Display extends IsWidget
    {
-      HasText getTextArea();
+//      HasText getTextArea();
+      Editor getEditor();
    }
 
    Display display;
@@ -69,9 +77,37 @@ public class EditorPresenter implements Presenter
     * 
     * @param text
     */
-   public void setText(String text)
+   public void setText(final String text)
    {
-      display.getTextArea().setText(text);
+//      display.getTextArea().setText(text);
+      try
+      {
+         display.getEditor().init(null, new EditorInput()
+         {
+            
+            public String getToolTipText()
+            {
+               // TODO Auto-generated method stub
+               return null;
+            }
+            
+            public String getName()
+            {
+               return text;
+            }
+            
+            public ImageResource getImageResource()
+            {
+               // TODO Auto-generated method stub
+               return null;
+            }
+         });
+      }
+      catch (EditorInitException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
 }
