@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
@@ -45,8 +46,10 @@ import org.exoplatform.ide.extension.heroku.client.project.HerokuProjectPresente
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -66,6 +69,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    public static final HerokuLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(HerokuLocalizationConstant.class);
 
    public static final HerokuCredentialsConstant CREDENTIALS_CONSTANT = GWT.create(HerokuCredentialsConstant.class);
+
+   private static final String ID = "Heroku";
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
@@ -111,4 +116,9 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new SwitchAccountControl());
    }
 
+   public static boolean canBeDeployedToHeroku(ProjectModel project)
+   {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+      return (targets != null && targets.contains(ID));
+   }
 }

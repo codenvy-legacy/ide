@@ -297,4 +297,10 @@ public interface IdePreferencesLocalizationConstant extends Constants
 
    @Key("show.preferences.view.title")
    String showPreferencesViewTitle();
+
+   /*
+    * InviteGoogleContactsView
+    */
+   @Key("inviteGoogleContactsTitle.title")
+   String inviteGoogleContactsTitle();
 }

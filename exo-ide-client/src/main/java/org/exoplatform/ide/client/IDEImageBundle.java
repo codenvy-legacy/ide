@@ -443,6 +443,12 @@ public interface IDEImageBundle extends ClientBundle
    @Source("../public/images/bundled/help/restServicesDiscovery_Disabled.png")
    ImageResource restServicesDiscoveryDisabled();
 
+   @Source("../public/images/bundled/help/google.png")
+   ImageResource google();
+
+   @Source("../public/images/bundled/help/google_Disabled.png")
+   ImageResource googleDisabled();
+
    /*
     * OUTLINE
     */
@@ -629,6 +635,9 @@ public interface IDEImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/public/images/filetype/txt.png")
    ImageResource textFile();
 
+   @Source("bundled-images/welcome/noPhoto.gif")
+   ImageResource noPhoto();
+
    /*
     * Progress images
     */
@@ -640,4 +649,10 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/progress_remall.gif")
    ImageResource progresRemall();
+   
+   /*
+    *  Third party icons
+    */
+   @Source("org/exoplatform/ide/public/images/github-icon.png")
+   ImageResource gitHubIconSmall();
 }

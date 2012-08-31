@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.preferences;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
+import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.about.AboutIDEPresenter;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -26,11 +27,13 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
+import org.exoplatform.ide.client.framework.invite.GoogleContactsServiceImpl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
 import org.exoplatform.ide.client.hotkeys.HotKeysPreferenceItem;
@@ -77,6 +80,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new RestServicesDiscoveryPresenter();
       new ShowHotKeysPresenter();
       new PreferencesPresenter();
+      new InviteGoogleContactsPresenter();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
@@ -85,6 +89,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
       new HotKeyManager(controls, applicationSettings);
+      new GoogleContactsServiceImpl(IDELoader.getInstance(), applicationConfiguration.getContext());
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

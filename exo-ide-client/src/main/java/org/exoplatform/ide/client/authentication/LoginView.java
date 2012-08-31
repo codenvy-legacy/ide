@@ -57,6 +57,9 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
    ImageButton loginGoogleButton;
 
    @UiField
+   ImageButton loginGitHubButton;
+
+   @UiField
    ImageButton cancelButton;
 
    @UiField
@@ -67,10 +70,11 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
 
    public LoginView()
    {
-      super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 430, 290);
+      super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 540, 290);
       add(uiBinder.createAndBindUi(this));
       passwordField.setName("ideLoginViewPasswordField");
       loginGoogleButton.setImage(new Image("http://www.google.com/favicon.ico"));
+      loginGitHubButton.setImage(new Image(IDEImageBundle.INSTANCE.gitHubIconSmall()));
    }
 
    @Override
@@ -102,11 +106,17 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
    {
       return passwordField;
    }
-   
+
    @Override
    public HasClickHandlers getLoginGoogleButton()
    {
-     return loginGoogleButton;
+      return loginGoogleButton;
+   }
+
+   @Override
+   public HasClickHandlers getLoginGitHubButton()
+   {
+      return loginGitHubButton;
    }
 
 }

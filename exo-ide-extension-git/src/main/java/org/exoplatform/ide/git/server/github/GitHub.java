@@ -33,8 +33,10 @@ import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,15 +58,18 @@ public class GitHub
 
    private final GitHubAuthenticator authenticator;
 
-   public GitHub(InitParams initParams, GitHubAuthenticator authenticator)
+   private final GitHubOAuthAuthenticator oauth;
+
+   public GitHub(InitParams initParams, GitHubAuthenticator authenticator, GitHubOAuthAuthenticator oauth)
    {
-      this(readValueParam(initParams, "github-user"), authenticator);
+      this(readValueParam(initParams, "github-user"), authenticator, oauth);
    }
 
-   public GitHub(String userName, GitHubAuthenticator authenticator)
+   public GitHub(String userName, GitHubAuthenticator authenticator, GitHubOAuthAuthenticator oauth)
    {
       this.userName = userName;
       this.authenticator = authenticator;
+      this.oauth = oauth;
    }
 
    private static String readValueParam(InitParams initParams, String paramName)
@@ -88,8 +93,8 @@ public class GitHub
     * @throws ParsingResponseException if any error occurs when parse response body
     * @throws InvalidArgumentException
     */
-   public GitHubRepository[] listRepositories(String user) throws IOException, GitHubException, ParsingResponseException,
-      InvalidArgumentException
+   public GitHubRepository[] listRepositories(String user) throws IOException, GitHubException,
+      ParsingResponseException, InvalidArgumentException
    {
       user = (user == null || user.isEmpty()) ? userName : user;
       if (user == null)
@@ -116,7 +121,8 @@ public class GitHub
       }
    }
 
-   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException, GitHubException
+   public Collaborators getCollaborators(String user, String repository) throws IOException, ParsingResponseException,
+      GitHubException
    {
       String url = "https://api.github.com/repos/" + user + "/" + repository + "/collaborators";
       String method = "GET";
@@ -189,12 +195,15 @@ public class GitHub
    public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
+      String oauthToken = oauth.getToken(getUserId());
       GitHubCredentials credentials = authenticator.readCredentials();
-      if (credentials == null)
+
+      if (credentials == null && (oauthToken == null || oauthToken.isEmpty()))
       {
          throw new GitHubException(401, "Authentication required.\n", "text/plain");
       }
-      return getRepositories(credentials);
+      
+      return getRepositories(credentials, oauthToken);
    }
 
    /**
@@ -204,12 +213,13 @@ public class GitHub
     * @throws IOException
     * @throws GitHubException
     */
-   private GitHubRepository[] getRepositories(GitHubCredentials credentials) throws ParsingResponseException, IOException,
-      GitHubException
+   private GitHubRepository[] getRepositories(GitHubCredentials credentials, String oauthToken)
+      throws ParsingResponseException, IOException, GitHubException
    {
       String url = "https://api.github.com/user/repos";
+      url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
+      
       String response = doJsonRequest(url, "GET", credentials, 200);
-
       JsonValue reposArray = JsonHelper.parseJson(response);
       if (reposArray == null || !reposArray.isArray())
          return null;
@@ -408,4 +418,8 @@ public class GitHub
       http.setRequestProperty("Authorization", "Basic " + new String(base64, "ISO-8859-1"));
    }
 
+   private String getUserId()
+   {
+      return ConversationState.getCurrent().getIdentity().getUserId();
+   }
 }
