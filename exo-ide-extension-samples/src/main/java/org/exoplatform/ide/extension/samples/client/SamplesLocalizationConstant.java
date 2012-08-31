@@ -52,6 +52,9 @@ public interface SamplesLocalizationConstant extends Messages
    @Key("button.convert")
    String convertButton();
 
+   @Key("button.authenticate")
+   String authenticateButton();
+
    /*
     * WelcomeView
     */
@@ -246,4 +249,13 @@ public interface SamplesLocalizationConstant extends Messages
 
    @Key("git.read.only")
    String gitReadOnly();
+
+   @Key("user.not.found")
+   String userNotFound();
+
+   @Key("login.oauth.title")
+   String loginOAuthTitle();
+
+   @Key("login.oauth.label")
+   String loginOAuthLabel();
 }
