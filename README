@@ -1,3 +1,12 @@
 ide2 by WBT Team
 ============================
 eXo IDE 2
+
+
+Howto run IDE 2 demo application:
+1) Open in text editor exo-ide-client/src/main/java/org/exoplatform/ide/server/services/FileSystemSeriveImpl.java and set HOME variable to proper path to any Folder in your file system containing text files.
+2) Build all IDE2 modules from the root of the project:
+mvn clean install
+3) Go to exo-ide-client GWT application folder and run
+mvn gwt:run
+4) Wait until button "Launch Default Browser" appears in the top panel of the window. Click it and IDE will appear in a browser window.
