@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -105,8 +104,6 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
    private boolean isNavigatorViewVisible;
 
-   private boolean isProjectExplorerViewVisible;
-
    public UploadZipPresenter()
    {
       IDE.getInstance().addControl(new UploadZipControl());
@@ -142,9 +139,9 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
          {
             if (isNavigatorViewVisible)
             {
-               submit();
+               createParentFolderAndSubmit();
             }
-            else if (isProjectExplorerViewVisible)
+            else
             {
                doSubmit(selectedItems.get(0));
             }
@@ -183,7 +180,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
     * Creates new folder in the selected folder for the zip content and upload zip-content into created folder.
     * New folder has the name same as a zip-file name without extension.
     */
-   private void submit()
+   private void createParentFolderAndSubmit()
    {
       String zipFileName = display.getFileNameField().getValue();
       String[] splittedFileName = zipFileName.split("\\.");
@@ -350,13 +347,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
    {
       if (event.getView() instanceof NavigatorDisplay)
       {
-         isNavigatorViewVisible = true;
-         isProjectExplorerViewVisible = false;
-      }
-      else if (event.getView() instanceof ProjectExplorerDisplay)
-      {
-         isNavigatorViewVisible = false;
-         isProjectExplorerViewVisible = true;
+         isNavigatorViewVisible = event.getView().isViewVisible();
       }
    }
 
