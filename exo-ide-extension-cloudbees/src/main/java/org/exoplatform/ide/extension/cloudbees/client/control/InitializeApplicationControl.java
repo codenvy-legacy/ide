@@ -18,24 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.control;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientBundle;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationEvent;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
  * Control for initializing application on CloudBees.
@@ -43,8 +35,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-public class InitializeApplicationControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ItemsSelectedHandler, ViewVisibilityChangedHandler
+public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
@@ -52,12 +43,6 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    private static final String TITLE = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlTitle();
 
    private static final String PROMPT = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlPrompt();
-
-   private VirtualFileSystemInfo vfsInfo;
-
-   private List<Item> selectedItems = new ArrayList<Item>();
-
-   private boolean isProjectExplorerVisible;
 
    public InitializeApplicationControl()
    {
@@ -74,51 +59,27 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    @Override
    public void initialize()
    {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
       setVisible(true);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
     */
    @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
+   public void onProjectClosed(ProjectClosedEvent event)
    {
-      selectedItems = event.getSelectedItems();
-      refresh();
+      setEnabled(false);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */
    @Override
-   public void onVfsChanged(VfsChangedEvent event)
+   public void onProjectOpened(ProjectOpenedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
-      refresh();
-   }
-
-   /**
-    * 
-    */
-   private void refresh()
-   {
-      setEnabled(vfsInfo != null && selectedItems.size() > 0 && isProjectExplorerVisible);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler#onViewVisibilityChanged(org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent)
-    */
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
-   {
-      if (event.getView() instanceof ProjectExplorerDisplay)
-      {
-         isProjectExplorerVisible = event.getView().isViewVisible();
-         refresh();
-      }
+      setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
    }
 }

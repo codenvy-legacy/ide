@@ -75,6 +75,7 @@ import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -87,6 +88,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
@@ -114,6 +116,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -169,7 +172,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    public TinyProjectExplorerPresenter()
    {
       IDE.getInstance().addControl(new OpenProjectControl());
-      
+
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -761,7 +764,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       openedProject = new ProjectModel(event.getProject());
-      loadProject();
+      if (isOldProjectType(openedProject))
+      {
+         setTargets(openedProject);
+      }
+      else
+      {
+         loadProject();
+      }
    }
 
    @Override
@@ -782,7 +792,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       else
       {
-         loadProject();
+         if (isOldProjectType(openedProject))
+         {
+            setTargets(openedProject);
+         }
+         else
+         {
+            loadProject();
+         }
       }
    }
 
@@ -1196,4 +1213,53 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
+   /**
+    * TODO Temporary method.
+    * 
+    * Detected whether project type is deprecated or not.
+    * 
+    * @param project
+    * @return <code>true</code> if deprecated
+    */
+   private boolean isOldProjectType(ProjectModel project)
+   {
+      return ProjectResolver.deprecatedTypes.contains(project.getProjectType())
+         && project.getPropertyValues(ProjectProperties.TARGET.value()) == null;
+   }
+
+   /**
+    * TODO Temporary method.
+    * 
+    * Is used to detect and set targets to deprecated project types (to support them).
+    * 
+    * @param project
+    */
+   private void setTargets(ProjectModel project)
+   {
+      ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
+      project.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), targets));
+
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               loadProject();
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
 }

@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesContr
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
+import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
 import org.exoplatform.ide.git.client.GitAutoBeanFactory;
@@ -81,6 +82,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
 
       new StartPagePresenter();
       new ConvertToProjectPresenter();
+      new OAuthLoginPresenter();
 
       // Import from GitHub
       GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();
