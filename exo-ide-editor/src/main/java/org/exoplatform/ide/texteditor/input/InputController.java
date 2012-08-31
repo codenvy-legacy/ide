@@ -16,7 +16,6 @@ package org.exoplatform.ide.texteditor.input;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.thirdparty.guava.common.annotations.VisibleForTesting;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -53,401 +52,480 @@ import org.exoplatform.ide.util.loging.Log;
  * The lifecycle of this class is tied to the editor that owns it.
  *
  */
-public class InputController {
+public class InputController
+{
 
-  // TODO: move to elemental
-  private static final String EVENT_TEXTINPUT = "textInput";
+   // TODO: move to elemental
+   private static final String EVENT_TEXTINPUT = "textInput";
 
-  final InputScheme nativeScheme;
-//  final InputScheme vimScheme;
+   final InputScheme nativeScheme;
 
-  private Document document;
-  private Editor editor;
-  private DocumentMutator editorDocumentMutator;
-  private final TextAreaElement inputElement;
-  private InputScheme activeInputScheme = null;
-  private final ListenerManager<KeyListener> keyListenerManager = ListenerManager.create();
-  private final ListenerManager<NativeKeyUpListener> nativeKeyUpListenerManager = ListenerManager
-      .create();
-  private SelectionModel selection;
-  private ViewportModel viewport;
-  private final RootActionExecutor actionExecutor;
+   //  final InputScheme vimScheme;
 
-  public InputController() {
-    inputElement = createInputElement();
-    actionExecutor = new RootActionExecutor();
-    nativeScheme = new DefaultScheme(this);
-//    vimScheme = new VimScheme(this);
-  }
+   private Document document;
 
-  public Document getDocument() {
-    return document;
-  }
+   private Editor editor;
 
-  public Editor getEditor() {
-    return editor;
-  }
+   private DocumentMutator editorDocumentMutator;
 
-  public DocumentMutator getEditorDocumentMutator() {
-    return editorDocumentMutator;
-  }
+   private final TextAreaElement inputElement;
 
-  public Element getInputElement() {
-    return inputElement;
-  }
+   private InputScheme activeInputScheme = null;
 
-  public String getInputText() {
-    return inputElement.getValue();
-  }
+   private final ListenerManager<KeyListener> keyListenerManager = ListenerManager.create();
 
-  public ListenerRegistrar<KeyListener> getKeyListenerRegistrar() {
-    return keyListenerManager;
-  }
+   private final ListenerManager<NativeKeyUpListener> nativeKeyUpListenerManager = ListenerManager.create();
 
-  public ListenerRegistrar<NativeKeyUpListener> getNativeKeyUpListenerRegistrar() {
-    return nativeKeyUpListenerManager;
-  }
+   private SelectionModel selection;
 
-  public SelectionModel getSelection() {
-    return selection;
-  }
+   private ViewportModel viewport;
 
-  public void handleDocumentChanged(Document document, SelectionModel selection,
-      ViewportModel viewport) {
-    this.document = document;
-    this.selection = selection;
-    this.viewport = viewport;
-  }
+   private final RootActionExecutor actionExecutor;
 
-  public void initializeFromEditor(Editor editor, DocumentMutator editorDocumentMutator) {
-    this.editor = editor;
-    this.editorDocumentMutator = editorDocumentMutator;
+   public InputController()
+   {
+      inputElement = createInputElement();
+      actionExecutor = new RootActionExecutor();
+      nativeScheme = new DefaultScheme(this);
+      //    vimScheme = new VimScheme(this);
+   }
 
-    editor.getReadOnlyListenerRegistrar().add(new ReadOnlyListener() {
-      @Override
-      public void onReadOnlyChanged(boolean isReadOnly) {
-        handleReadOnlyChanged(isReadOnly);
+   public Document getDocument()
+   {
+      return document;
+   }
+
+   public Editor getEditor()
+   {
+      return editor;
+   }
+
+   public DocumentMutator getEditorDocumentMutator()
+   {
+      return editorDocumentMutator;
+   }
+
+   public Element getInputElement()
+   {
+      return inputElement;
+   }
+
+   public String getInputText()
+   {
+      return inputElement.getValue();
+   }
+
+   public ListenerRegistrar<KeyListener> getKeyListenerRegistrar()
+   {
+      return keyListenerManager;
+   }
+
+   public ListenerRegistrar<NativeKeyUpListener> getNativeKeyUpListenerRegistrar()
+   {
+      return nativeKeyUpListenerManager;
+   }
+
+   public SelectionModel getSelection()
+   {
+      return selection;
+   }
+
+   public void handleDocumentChanged(Document document, SelectionModel selection, ViewportModel viewport)
+   {
+      this.document = document;
+      this.selection = selection;
+      this.viewport = viewport;
+   }
+
+   public void initializeFromEditor(Editor editor, DocumentMutator editorDocumentMutator)
+   {
+      this.editor = editor;
+      this.editorDocumentMutator = editorDocumentMutator;
+
+      editor.getReadOnlyListenerRegistrar().add(new ReadOnlyListener()
+      {
+         @Override
+         public void onReadOnlyChanged(boolean isReadOnly)
+         {
+            handleReadOnlyChanged(isReadOnly);
+         }
+      });
+
+      handleReadOnlyChanged(editor.isReadOnly());
+   }
+
+   private void handleReadOnlyChanged(boolean isReadOnly)
+   {
+      if (isReadOnly)
+      {
+         setActiveInputScheme(new ReadOnlyScheme(this));
       }
-    });
-
-    handleReadOnlyChanged(editor.isReadOnly());
-  }
-
-  private void handleReadOnlyChanged(boolean isReadOnly) {
-    if (isReadOnly) {
-      setActiveInputScheme(new ReadOnlyScheme(this));
-    } else {
-      setActiveInputScheme(nativeScheme);
-    }
-  }
-
-  public void setActiveInputScheme(InputScheme inputScheme) {
-    if (this.activeInputScheme != null) {
-      this.activeInputScheme.teardown();
-    }
-    this.activeInputScheme = inputScheme;
-    this.activeInputScheme.setup();
-  }
-
-  public void setInputText(String text) {
-    inputElement.setValue(text);
-  }
-
-  public void setSelection(SelectionModel selection) {
-    this.selection = selection;
-  }
-
-  boolean dispatchKeyPress(final SignalEvent signalEvent) {
-    class KeyDispatcher implements Dispatcher<KeyListener> {
-      boolean handled;
-
-      @Override
-      public void dispatch(KeyListener listener) {
-        handled |= listener.onKeyPress(signalEvent);
+      else
+      {
+         setActiveInputScheme(nativeScheme);
       }
-    }
+   }
 
-    KeyDispatcher keyDispatcher = new KeyDispatcher();
-    keyListenerManager.dispatch(keyDispatcher);
-
-    return keyDispatcher.handled;
-  }
-
-  boolean dispatchKeyUp(final Event event) {
-    class NativeKeyUpDispatcher implements Dispatcher<Editor.NativeKeyUpListener> {
-      boolean handled;
-
-      @Override
-      public void dispatch(NativeKeyUpListener listener) {
-        handled |= listener.onNativeKeyUp(event);
+   public void setActiveInputScheme(InputScheme inputScheme)
+   {
+      if (this.activeInputScheme != null)
+      {
+         this.activeInputScheme.teardown();
       }
-    }
+      this.activeInputScheme = inputScheme;
+      this.activeInputScheme.setup();
+   }
 
-    NativeKeyUpDispatcher nativeKeyUpDispatcher = new NativeKeyUpDispatcher();
-    nativeKeyUpListenerManager.dispatch(nativeKeyUpDispatcher);
+   public void setInputText(String text)
+   {
+      inputElement.setValue(text);
+   }
 
-    return nativeKeyUpDispatcher.handled;
-  }
+   public void setSelection(SelectionModel selection)
+   {
+      this.selection = selection;
+   }
 
-  private TextAreaElement createInputElement() {
-    final TextAreaElement inputElement = Elements.createTextAreaElement();
+   boolean dispatchKeyPress(final SignalEvent signalEvent)
+   {
+      class KeyDispatcher implements Dispatcher<KeyListener>
+      {
+         boolean handled;
 
-    // Ensure it is offscreen
-    inputElement.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
-    inputElement.getStyle().setLeft("-100000px");
-    inputElement.getStyle().setTop("0");
-    inputElement.getStyle().setHeight("1px");
-    inputElement.getStyle().setWidth("1px");
-    /*
-     * Firefox doesn't seem to respect just the NOWRAP value, so we need to set
-     * the legacy wrap attribute.
-     */
-    inputElement.setAttribute("wrap", "off");
-    inputElement.setAttribute("autocorrect", "off");
-    inputElement.setAttribute("autocapitalize", "off");
-
-    // Attach listeners
-    /*
-     * For text events, call inputHandler.handleInput(event, text) if the text
-     * entered was > 1 character -> from a paste event. This gets fed directly
-     * into the document. Single keypresses all get captured by signalEventListener
-     * and passed through the shortcut system.
-     *
-     * TODO: This isn't actually true, there could be paste events
-     * of only one character. Change this to check if the event was a clipboard
-     * event.
-     */
-    inputElement.addEventListener(EVENT_TEXTINPUT, new EventListener() {
-      @Override
-      public void handleEvent(Event event) {
-        /*
-         * TODO: figure out best event to listen to. Tried "input",
-         * but see http://code.google.com/p/chromium/issues/detail?id=76516
-         */
-        String text = ((TextEvent) event).getData();
-        if (text.length() <= 1) {
-          return;
-        }
-        setInputText("");
-        activeInputScheme.handleEvent(SignalEventUtils.create(event), text);
+         @Override
+         public void dispatch(KeyListener listener)
+         {
+            handled |= listener.onKeyPress(signalEvent);
+         }
       }
-    }, false);
 
-    if (UserAgent.isFirefox()) {
-      inputElement.addEventListener(Event.INPUT, new EventListener() {
-        @Override
-        public void handleEvent(Event event) {
-          /*
-           * TODO: FF doesn't support textInput, and Chrome's input
-           * is buggy.
-           */
-          String text = getInputText();
-          if (text.length() <= 1) {
-            return;
-          }
-          setInputText("");
+      KeyDispatcher keyDispatcher = new KeyDispatcher();
+      keyListenerManager.dispatch(keyDispatcher);
 
-          activeInputScheme.handleEvent(SignalEventUtils.create(event), text);
+      return keyDispatcher.handled;
+   }
 
-          event.preventDefault();
-          event.stopPropagation();
-        }
+   boolean dispatchKeyUp(final Event event)
+   {
+      class NativeKeyUpDispatcher implements Dispatcher<Editor.NativeKeyUpListener>
+      {
+         boolean handled;
+
+         @Override
+         public void dispatch(NativeKeyUpListener listener)
+         {
+            handled |= listener.onNativeKeyUp(event);
+         }
+      }
+
+      NativeKeyUpDispatcher nativeKeyUpDispatcher = new NativeKeyUpDispatcher();
+      nativeKeyUpListenerManager.dispatch(nativeKeyUpDispatcher);
+
+      return nativeKeyUpDispatcher.handled;
+   }
+
+   private TextAreaElement createInputElement()
+   {
+      final TextAreaElement inputElement = Elements.createTextAreaElement();
+
+      // Ensure it is offscreen
+      inputElement.getStyle().setPosition(CSSStyleDeclaration.Position.ABSOLUTE);
+      inputElement.getStyle().setLeft("-100000px");
+      inputElement.getStyle().setTop("0");
+      inputElement.getStyle().setHeight("1px");
+      inputElement.getStyle().setWidth("1px");
+      /*
+       * Firefox doesn't seem to respect just the NOWRAP value, so we need to set
+       * the legacy wrap attribute.
+       */
+      inputElement.setAttribute("wrap", "off");
+      inputElement.setAttribute("autocorrect", "off");
+      inputElement.setAttribute("autocapitalize", "off");
+
+      // Attach listeners
+      /*
+       * For text events, call inputHandler.handleInput(event, text) if the text
+       * entered was > 1 character -> from a paste event. This gets fed directly
+       * into the document. Single keypresses all get captured by signalEventListener
+       * and passed through the shortcut system.
+       *
+       * TODO: This isn't actually true, there could be paste events
+       * of only one character. Change this to check if the event was a clipboard
+       * event.
+       */
+      inputElement.addEventListener(EVENT_TEXTINPUT, new EventListener()
+      {
+         @Override
+         public void handleEvent(Event event)
+         {
+            /*
+             * TODO: figure out best event to listen to. Tried "input",
+             * but see http://code.google.com/p/chromium/issues/detail?id=76516
+             */
+            String text = ((TextEvent)event).getData();
+            if (text.length() <= 1)
+            {
+               return;
+            }
+            setInputText("");
+            activeInputScheme.handleEvent(SignalEventUtils.create(event), text);
+         }
       }, false);
-    }
 
-    EventListener signalEventListener = new EventListener() {
-      @Override
-      public void handleEvent(Event event) {
-        SignalEvent signalEvent = SignalEventUtils.create(event);
-        if (signalEvent != null) {
-           if(selection.hasSelection() && signalEvent.getCommandKey() &&
-                    (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120)){
-              Position[] selectionRange = selection.getSelectionRange(true);
-              String selectionText = LineUtils.getText(
-                  selectionRange[0].getLine(), selectionRange[0].getColumn(),
-                  selectionRange[1].getLine(), selectionRange[1].getColumn());
-              setInputText(selectionText);
-              inputElement.select();
-           }
-          processSignalEvent(signalEvent);
-        } else if ("keyup".equals(event.getType())) {
-          boolean handled = dispatchKeyUp(event);
-          if (handled) {
-            // Prevent any browser handling.
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        }
+      if (UserAgent.isFirefox())
+      {
+         inputElement.addEventListener(Event.INPUT, new EventListener()
+         {
+            @Override
+            public void handleEvent(Event event)
+            {
+               /*
+                * TODO: FF doesn't support textInput, and Chrome's input
+                * is buggy.
+                */
+               String text = getInputText();
+               if (text.length() <= 1)
+               {
+                  return;
+               }
+               setInputText("");
+
+               activeInputScheme.handleEvent(SignalEventUtils.create(event), text);
+
+               event.preventDefault();
+               event.stopPropagation();
+            }
+         }, false);
       }
-    };
-    
-    /*
-     * Attach to all of key events, and the SignalEvent logic will filter
-     * appropriately
-     */
-    if (!UserAgent.isFirefox()){
-       inputElement.addEventListener(Event.COPY, signalEventListener, false);
-    }
 
-    inputElement.addEventListener(Event.CUT, signalEventListener, false);
-    inputElement.addEventListener(Event.KEYDOWN, signalEventListener, false);
-    inputElement.addEventListener(Event.KEYPRESS, signalEventListener, false);
-    inputElement.addEventListener(Event.KEYUP, signalEventListener, false);
-    inputElement.addEventListener(Event.PASTE, signalEventListener, false);
-
-    return inputElement;
-  }
-
-  @VisibleForTesting
-  public void processSignalEvent(SignalEvent signalEvent) {
-    boolean handled = dispatchKeyPress(signalEvent);
-
-    if (!handled) {
-      if (signalEvent.isCopyEvent() || signalEvent.isCutEvent()) {
-        prepareForCopy();
-        if (signalEvent.isCutEvent() && selection.hasSelection()) {
-          selection.deleteSelection(editorDocumentMutator);
-        }
-
-        // These events are special cased, nothing else should happen.
-        return;
-      }
+      EventListener signalEventListener = new EventListener()
+      {
+         @Override
+         public void handleEvent(Event event)
+         {
+            SignalEvent signalEvent = SignalEventUtils.create(event);
+            if (signalEvent != null)
+            {
+               if (selection.hasSelection() && signalEvent.getCommandKey()
+                  && (signalEvent.getKeyCode() == 99 || signalEvent.getKeyCode() == 120))
+               {
+                  Position[] selectionRange = selection.getSelectionRange(true);
+                  String selectionText =
+                     LineUtils.getText(selectionRange[0].getLine(), selectionRange[0].getColumn(),
+                        selectionRange[1].getLine(), selectionRange[1].getColumn());
+                  setInputText(selectionText);
+                  inputElement.select();
+               }
+               processSignalEvent(signalEvent);
+            }
+            else if ("keyup".equals(event.getType()))
+            {
+               boolean handled = dispatchKeyUp(event);
+               if (handled)
+               {
+                  // Prevent any browser handling.
+                  event.preventDefault();
+                  event.stopPropagation();
+               }
+            }
+         }
+      };
 
       /*
-       * Send all keypresses through here.
+       * Attach to all of key events, and the SignalEvent logic will filter
+       * appropriately
        */
-      try {
-        handled = activeInputScheme.handleEvent(signalEvent, "");
-      } catch (Throwable t) {
-        Log.error(getClass(), t);
+      if (!UserAgent.isFirefox())
+      {
+         inputElement.addEventListener(Event.COPY, signalEventListener, false);
       }
-    }
 
-    if (handled) {
-      // Prevent any browser handling.
-      signalEvent.preventDefault();
-      signalEvent.stopPropagation();
-      setInputText("");
-    }
-  }
+      inputElement.addEventListener(Event.CUT, signalEventListener, false);
+      inputElement.addEventListener(Event.KEYDOWN, signalEventListener, false);
+      inputElement.addEventListener(Event.KEYPRESS, signalEventListener, false);
+      inputElement.addEventListener(Event.KEYUP, signalEventListener, false);
+      inputElement.addEventListener(Event.PASTE, signalEventListener, false);
 
+      return inputElement;
+   }
 
-  public void prepareForCopy() {
-    if (!selection.hasSelection()) {
-      // TODO: Discuss Ctrl-X feature.
-      return;
-    }
+   public void processSignalEvent(SignalEvent signalEvent)
+   {
+      boolean handled = dispatchKeyPress(signalEvent);
 
-    Position[] selectionRange = selection.getSelectionRange(true);
-    String selectionText = LineUtils.getText(
-        selectionRange[0].getLine(), selectionRange[0].getColumn(),
-        selectionRange[1].getLine(), selectionRange[1].getColumn());
-    setInputText(selectionText);
-    inputElement.select();
+      if (!handled)
+      {
+         if (signalEvent.isCopyEvent() || signalEvent.isCutEvent())
+         {
+            prepareForCopy();
+            if (signalEvent.isCutEvent() && selection.hasSelection())
+            {
+               selection.deleteSelection(editorDocumentMutator);
+            }
 
-    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-      @Override
-      public void execute() {
-        /*
-         * The text has been copied by now, so clear it (if the text was large,
-         * it would cause slow layout)
-         */
-        setInputText("");
+            // These events are special cased, nothing else should happen.
+            return;
+         }
+
+         /*
+          * Send all keypresses through here.
+          */
+         try
+         {
+            handled = activeInputScheme.handleEvent(signalEvent, "");
+         }
+         catch (Throwable t)
+         {
+            Log.error(getClass(), t);
+         }
       }
-    });
-  }
 
-  /**
-   * Add a tab character to the beginning of each line in the current selection,
-   * or at the current cursor position if no text is selected.
-   */
-  // TODO: This should probably be a setting, tabs or spaces
-  public void handleTab() {
-    if (selection.hasMultilineSelection()) {
-      indentSelection();
-    } else {
-      getEditorDocumentMutator().insertText(selection.getCursorLine(),
-          selection.getCursorLineNumber(), selection.getCursorColumn(),
-          LineDimensionsUtils.getTabAsSpaces());
-    }
-  }
+      if (handled)
+      {
+         // Prevent any browser handling.
+         signalEvent.preventDefault();
+         signalEvent.stopPropagation();
+         setInputText("");
+      }
+   }
 
-  public void indentSelection() {
-    selection.adjustSelectionIndentation(
-        editorDocumentMutator, LineDimensionsUtils.getTabAsSpaces(), true);
-  }
+   public void prepareForCopy()
+   {
+      if (!selection.hasSelection())
+      {
+         // TODO: Discuss Ctrl-X feature.
+         return;
+      }
 
-  /**
-   * Removes the indentation from the beginning of each line of a multiline
-   * selection.
-   */
-  public void dedentSelection() {
-    selection.adjustSelectionIndentation(
-        editorDocumentMutator, LineDimensionsUtils.getTabAsSpaces(), false);
-  }
+      Position[] selectionRange = selection.getSelectionRange(true);
+      String selectionText =
+         LineUtils.getText(selectionRange[0].getLine(), selectionRange[0].getColumn(), selectionRange[1].getLine(),
+            selectionRange[1].getColumn());
+      setInputText(selectionText);
+      inputElement.select();
 
-  /**
-   * Delete a character around the current cursor, and take care of joining lines
-   * together if the delete removes a newline. This is used to implement backspace
-   * and delete, depending upon the afterCursor argument.
-   *
-   * @param afterCursor if true, delete the character to the right of the cursor
-   */
-  public void deleteCharacter(boolean afterCursor) {
-    if (tryDeleteSelection()) {
-      return;
-    }
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            /*
+             * The text has been copied by now, so clear it (if the text was large,
+             * it would cause slow layout)
+             */
+            setInputText("");
+         }
+      });
+   }
 
-    Line cursorLine = selection.getCursorLine();
-    int cursorLineNumber = selection.getCursorLineNumber();
-    int deleteColumn = !afterCursor ? selection.getCursorColumn() - 1 : selection.getCursorColumn();
-    if (cursorLine.hasColumn(deleteColumn)) {
-      getEditorDocumentMutator().deleteText(cursorLine, cursorLineNumber, deleteColumn, 1);
-    } else if (deleteColumn < 0 && cursorLine.getPreviousLine() != null) {
-      // Join the lines
-      Line previousLine = cursorLine.getPreviousLine();
-      getEditorDocumentMutator().deleteText(previousLine, cursorLineNumber - 1,
-          previousLine.getText().length() - 1, 1);
-    }
-  }
+   /**
+    * Add a tab character to the beginning of each line in the current selection,
+    * or at the current cursor position if no text is selected.
+    */
+   // TODO: This should probably be a setting, tabs or spaces
+   public void handleTab()
+   {
+      if (selection.hasMultilineSelection())
+      {
+         indentSelection();
+      }
+      else
+      {
+         getEditorDocumentMutator().insertText(selection.getCursorLine(), selection.getCursorLineNumber(),
+            selection.getCursorColumn(), LineDimensionsUtils.getTabAsSpaces());
+      }
+   }
 
-  public void deleteWord(boolean afterCursor) {
-    if (tryDeleteSelection()) {
-      return;
-    }
+   public void indentSelection()
+   {
+      selection.adjustSelectionIndentation(editorDocumentMutator, LineDimensionsUtils.getTabAsSpaces(), true);
+   }
 
-    Line cursorLine = selection.getCursorLine();
-    int cursorColumn = selection.getCursorColumn();
+   /**
+    * Removes the indentation from the beginning of each line of a multiline
+    * selection.
+    */
+   public void dedentSelection()
+   {
+      selection.adjustSelectionIndentation(editorDocumentMutator, LineDimensionsUtils.getTabAsSpaces(), false);
+   }
 
-    boolean mergeWithPreviousLine = cursorColumn == 0 && !afterCursor;
-    boolean mergeWithNextLine = cursorColumn == cursorLine.length() - 1 && afterCursor;
-    if (mergeWithPreviousLine || mergeWithNextLine) {
-      // Re-use delete character logic
-      deleteCharacter(afterCursor);
-      return;
-    }
+   /**
+    * Delete a character around the current cursor, and take care of joining lines
+    * together if the delete removes a newline. This is used to implement backspace
+    * and delete, depending upon the afterCursor argument.
+    *
+    * @param afterCursor if true, delete the character to the right of the cursor
+    */
+   public void deleteCharacter(boolean afterCursor)
+   {
+      if (tryDeleteSelection())
+      {
+         return;
+      }
 
-    int otherColumn =
-        afterCursor ? TextUtils.findNextWord(cursorLine.getText(), cursorColumn, true) : TextUtils
-            .findPreviousWord(cursorLine.getText(), cursorColumn, false);
-    editorDocumentMutator.deleteText(cursorLine, Math.min(otherColumn, cursorColumn),
-        Math.abs(otherColumn - cursorColumn));
-  }
+      Line cursorLine = selection.getCursorLine();
+      int cursorLineNumber = selection.getCursorLineNumber();
+      int deleteColumn = !afterCursor ? selection.getCursorColumn() - 1 : selection.getCursorColumn();
+      if (cursorLine.hasColumn(deleteColumn))
+      {
+         getEditorDocumentMutator().deleteText(cursorLine, cursorLineNumber, deleteColumn, 1);
+      }
+      else if (deleteColumn < 0 && cursorLine.getPreviousLine() != null)
+      {
+         // Join the lines
+         Line previousLine = cursorLine.getPreviousLine();
+         getEditorDocumentMutator().deleteText(previousLine, cursorLineNumber - 1, previousLine.getText().length() - 1,
+            1);
+      }
+   }
 
-  private boolean tryDeleteSelection() {
-    if (selection.hasSelection()) {
-      selection.deleteSelection(editorDocumentMutator);
-      return true;
-    } else {
-      return false;
-    }
-  }
+   public void deleteWord(boolean afterCursor)
+   {
+      if (tryDeleteSelection())
+      {
+         return;
+      }
 
-  ViewportModel getViewportModel() {
-    return viewport;
-  }
+      Line cursorLine = selection.getCursorLine();
+      int cursorColumn = selection.getCursorColumn();
 
-  public RootActionExecutor getActionExecutor() {
-    return actionExecutor;
-  }
+      boolean mergeWithPreviousLine = cursorColumn == 0 && !afterCursor;
+      boolean mergeWithNextLine = cursorColumn == cursorLine.length() - 1 && afterCursor;
+      if (mergeWithPreviousLine || mergeWithNextLine)
+      {
+         // Re-use delete character logic
+         deleteCharacter(afterCursor);
+         return;
+      }
+
+      int otherColumn =
+         afterCursor ? TextUtils.findNextWord(cursorLine.getText(), cursorColumn, true) : TextUtils.findPreviousWord(
+            cursorLine.getText(), cursorColumn, false);
+      editorDocumentMutator.deleteText(cursorLine, Math.min(otherColumn, cursorColumn),
+         Math.abs(otherColumn - cursorColumn));
+   }
+
+   private boolean tryDeleteSelection()
+   {
+      if (selection.hasSelection())
+      {
+         selection.deleteSelection(editorDocumentMutator);
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+
+   ViewportModel getViewportModel()
+   {
+      return viewport;
+   }
+
+   public RootActionExecutor getActionExecutor()
+   {
+      return actionExecutor;
+   }
 }

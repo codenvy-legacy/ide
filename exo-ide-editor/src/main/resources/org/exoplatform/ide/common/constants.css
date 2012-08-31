@@ -49,7 +49,7 @@
 @def landingTitleFontSize 20px;
 @def titleFontSize 16px;
 @def secondaryTextFontSize 11px;
-@eval scrollbarSize com.google.collide.client.common.Constants.SCROLLBAR_SIZE+"px";
+@eval scrollbarSize org.exoplatform.ide.common.Constants.SCROLLBAR_SIZE+"px";
 @def largeLabel 14px;
 @def largeDropdownLabel 12px;
 
@@ -65,7 +65,7 @@
 
 /* zIndex */
 @def popupZIndex 20000;
-@eval dropdownZIndex com.google.collide.client.ui.dropdown.DropdownController.DROPDOWN_ZINDEX;
+@def dropdownZIndex 200;
 @def statusMessageZIndex 20010;
 @def contextMenuZIndex 20020;
 @def tooltipZIndex 20030;
@@ -79,7 +79,7 @@
 @def awesomeBarHeight 27px;
 
 /* Duration */
-@eval alertTransitionDuration com.google.collide.client.util.AnimationUtils.ALERT_TRANSITION_DURATION+"s";
-@eval longTransitionDuration com.google.collide.client.util.AnimationUtils.LONG_TRANSITION_DURATION+"s"; 
-@eval mediumTransitionDuration com.google.collide.client.util.AnimationUtils.MEDIUM_TRANSITION_DURATION+"s";
-@eval shortTransitionDuration com.google.collide.client.util.AnimationUtils.SHORT_TRANSITION_DURATION+"s";
+@eval alertTransitionDuration org.exoplatform.ide.util.AnimationUtils.ALERT_TRANSITION_DURATION+"s";
+@eval longTransitionDuration org.exoplatform.ide.util.AnimationUtils.LONG_TRANSITION_DURATION+"s"; 
+@eval mediumTransitionDuration org.exoplatform.ide.util.AnimationUtils.MEDIUM_TRANSITION_DURATION+"s";
+@eval shortTransitionDuration org.exoplatform.ide.util.AnimationUtils.SHORT_TRANSITION_DURATION+"s";

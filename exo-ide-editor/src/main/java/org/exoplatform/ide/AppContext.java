@@ -31,6 +31,25 @@ public class AppContext
 {
    private Resources resources = GWT.create(Resources.class);
 
+   private UserActivityManager userActivityManager;
+
+   /**
+    * 
+    */
+   public AppContext()
+   {
+      resources.appCss().ensureInjected();
+      resources.baseCss().ensureInjected();
+      resources.editableContentAreaCss().ensureInjected();
+      resources.editorSelectionLineRendererCss().ensureInjected();
+      resources.lineNumberRendererCss().ensureInjected();
+      resources.workspaceEditorBufferCss().ensureInjected();
+      resources.workspaceEditorCss().ensureInjected();
+      resources.workspaceEditorCursorCss().ensureInjected();
+
+      this.userActivityManager = new UserActivityManager();
+   }
+
    /**
     * @return the resources
     */
@@ -44,7 +63,6 @@ public class AppContext
     */
    public UserActivityManager getUserActivityManager()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return userActivityManager;
    }
 }

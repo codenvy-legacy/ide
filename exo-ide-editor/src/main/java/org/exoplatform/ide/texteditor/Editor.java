@@ -16,7 +16,6 @@ package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.thirdparty.guava.common.annotations.VisibleForTesting;
 import elemental.events.Event;
 import elemental.html.Element;
 
@@ -363,10 +362,6 @@ public class Editor extends UiComponent<Editor.View>
       this.editorFontDimensionsCalculator = editorFontDimensionsCalculator;
       this.renderTimeExecutor = renderTimeExecutor;
 
-      //TODO (evgen) set left gutter notification configurable
-      Gutter leftNotificationGutter =
-         createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss()
-            .leftGutterNotification());
       Gutter leftGutter =
          createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
@@ -701,7 +696,6 @@ public class Editor extends UiComponent<Editor.View>
       return id;
    }
 
-   @VisibleForTesting
    public InputController getInput()
    {
       return input;

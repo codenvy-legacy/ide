@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.text;
 
+import org.exoplatform.ide.text.store.DocumentTextStore;
+
 /**
  * Default document implementation. Uses a {@link org.eclipse.jface.text.GapTextStore} wrapped inside a
  * {@link org.eclipse.jface.text.CopyOnWriteTextStore} as text store.
@@ -45,14 +47,19 @@ package org.exoplatform.ide.text;
  */
 public class Document extends AbstractDocument
 {
-   
+
    private static final String[] delimeters = {"\n"};
+
+   private DocumentTextStore textStore;
+
    /** Creates a new empty document. */
    public Document()
    {
       super();
-      setTextStore(new CopyOnWriteTextStore(new GapTextStore()));
-      setLineTracker(new ConfigurableLineTracker(delimeters));
+      ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
+      textStore = new DocumentTextStore(lineTracker);
+      setTextStore(textStore);
+      setLineTracker(lineTracker);
       completeInitialization();
    }
 
@@ -64,8 +71,10 @@ public class Document extends AbstractDocument
    public Document(String initialContent)
    {
       super();
-      setTextStore(new CopyOnWriteTextStore(new GapTextStore()));
-      setLineTracker(new DefaultLineTracker());
+      ConfigurableLineTracker lineTracker = new ConfigurableLineTracker(delimeters);
+      textStore = new DocumentTextStore(lineTracker);
+      setTextStore(textStore);
+      setLineTracker(lineTracker);
       getStore().set(initialContent);
       getTracker().set(initialContent);
       completeInitialization();
@@ -133,6 +142,14 @@ public class Document extends AbstractDocument
          return rIndex == -1 || nIndex - rIndex != 1;
 
       return false;
+   }
+
+   /**
+   * @return the textStore
+   */
+   public DocumentTextStore getTextStore()
+   {
+      return textStore;
    }
 
 }

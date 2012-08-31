@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.google.gwt.user.client.ui.SimplePanel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -43,7 +45,7 @@ public class WorkspaceView extends Composite implements Display
    private static WorspaceViewUiBinder uiBinder = GWT.create(WorspaceViewUiBinder.class);
 
    @UiField
-   ScrollPanel centerPanel;
+   SimplePanel centerPanel;
 
    @UiField
    ScrollPanel leftPanel;

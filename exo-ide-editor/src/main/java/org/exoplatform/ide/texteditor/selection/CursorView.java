@@ -52,7 +52,7 @@ public class CursorView extends UiComponent<CursorView.View>
 
    public interface Resources extends ClientBundle
    {
-      @Source({"CursorView.css", "org/exoplatform/ide/common/constants.css"})
+      @Source({"CursorView.css", "org/exoplatform/ide/texteditor/constants.css"})
       Css workspaceEditorCursorCss();
    }
 
