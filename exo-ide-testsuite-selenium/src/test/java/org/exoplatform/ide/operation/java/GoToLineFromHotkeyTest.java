@@ -33,13 +33,13 @@ public class GoToLineFromHotkeyTest extends ServicesJavaTextFuctionTest
    {
       try
       {
-          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
       }
    }
-   
+
    @Test
    public void goToLineFromKeys() throws Exception
    {
@@ -48,10 +48,14 @@ public class GoToLineFromHotkeyTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
       waitEditorIsReady(PROJECT);
+
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "l");
-      IDE.GOTOLINE.wait();
+      IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.goToLine(5);
-      IDE.STATUSBAR.waitCursorPositionAt("5:1");
+      IDE.STATUSBAR.waitCursorPositionAt("5 : 1");
+
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_RIGHT.toString());
+      IDE.STATUSBAR.waitCursorPositionAt("5 : 2");
    }
-   
+
 }
