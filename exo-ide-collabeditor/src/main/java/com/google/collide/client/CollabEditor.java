@@ -367,7 +367,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean hasUndoChanges()
    {
-      return editor.isMutatingDocumentFromUndoOrRedo();
+      return true;
    }
 
    /**
@@ -385,7 +385,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean hasRedoChanges()
    {
-      return editor.isMutatingDocumentFromUndoOrRedo();
+      return true;
    }
 
    /**
@@ -499,8 +499,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void selectAll()
    {
-      // TODO Auto-generated method stub
-
+      editor.getSelection().selectAll();
    }
 
    /**
