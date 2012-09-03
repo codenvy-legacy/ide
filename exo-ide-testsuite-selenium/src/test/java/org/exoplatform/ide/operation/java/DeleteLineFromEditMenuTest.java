@@ -55,16 +55,12 @@ public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.goToLine(1);
-      IDE.STATUSBAR.waitCursorPositionAt("1:1");
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      String code = IDE.EDITOR.getTextFromCodeEditor(0);
+      String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      //pause for deleting
+      Thread.sleep(200);
       assertFalse(code.contains("package sumcontroller;"));
-
-      //return file to initial state
-      //timeout need for reparse new state in code editor 
-      Thread.sleep(500);
-      //call undo command and check begining state
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "z");
-      assertTrue(code.contains("package sumcontroller;"));
+      
    }
 }
