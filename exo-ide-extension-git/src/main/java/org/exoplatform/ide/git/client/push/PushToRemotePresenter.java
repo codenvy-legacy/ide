@@ -241,6 +241,10 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                protected void onFailure(Throwable exception)
                {
                   handleError(exception);
+                  if (remote != null && remote.startsWith("https://"))
+                  {
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
+                  }
                }
             });
       }
