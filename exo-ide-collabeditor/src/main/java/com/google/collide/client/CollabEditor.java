@@ -261,8 +261,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean isCapable(EditorCapability capability)
    {
-      // TODO Auto-generated method stub
-      return false;
+      switch (capability)
+      {
+         case SET_CURSOR_POSITION:
+            return true;
+         default :
+            return false;
+      }
    }
 
    /**
@@ -467,8 +472,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    public SelectionRange getSelectionRange()
    {
       SelectionModel selection = editor.getSelection();
-      return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn() + 1,
-         selection.getCursorLineNumber() + 1, selection.getCursorColumn() + 1);
+      return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn(),
+         selection.getCursorLineNumber() + 1, selection.getCursorColumn());
    }
 
    /**
