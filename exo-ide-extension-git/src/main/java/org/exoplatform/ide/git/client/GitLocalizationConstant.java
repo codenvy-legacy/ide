@@ -196,6 +196,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("messages.delete_success")
    String deleteGitRepositorySuccess();
+   
+   @Key("messages.use.ssh.protocol")
+   String useSshProtocol();
+   
 
    // Unmarshaller Errors
    @Key("merge.unmarshal.failed")
