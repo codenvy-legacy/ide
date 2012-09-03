@@ -333,31 +333,29 @@ public class TextUtilities
    public static Map removeDocumentPartitioners(IDocument document)
    {
       Map partitioners = new HashMap();
-      if (document instanceof IDocumentExtension3)
+
+      String[] partitionings = document.getPartitionings();
+      for (int i = 0; i < partitionings.length; i++)
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         String[] partitionings = extension3.getPartitionings();
-         for (int i = 0; i < partitionings.length; i++)
-         {
-            IDocumentPartitioner partitioner = extension3.getDocumentPartitioner(partitionings[i]);
-            if (partitioner != null)
-            {
-               extension3.setDocumentPartitioner(partitionings[i], null);
-               partitioner.disconnect();
-               partitioners.put(partitionings[i], partitioner);
-            }
-         }
-      }
-      else
-      {
-         IDocumentPartitioner partitioner = document.getDocumentPartitioner();
+         IDocumentPartitioner partitioner = document.getDocumentPartitioner(partitionings[i]);
          if (partitioner != null)
          {
-            document.setDocumentPartitioner(null);
+            document.setDocumentPartitioner(partitionings[i], null);
             partitioner.disconnect();
-            partitioners.put(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
+            partitioners.put(partitionings[i], partitioner);
          }
       }
+      //      }
+      //      else
+      //      {
+      //         IDocumentPartitioner partitioner = document.getDocumentPartitioner();
+      //         if (partitioner != null)
+      //         {
+      //            document.setDocumentPartitioner(null);
+      //            partitioner.disconnect();
+      //            partitioners.put(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
+      //         }
+      //      }
       return partitioners;
    }
 
@@ -372,26 +370,23 @@ public class TextUtilities
     */
    public static void addDocumentPartitioners(IDocument document, Map partitioners)
    {
-      if (document instanceof IDocumentExtension3)
+      Iterator e = partitioners.keySet().iterator();
+      while (e.hasNext())
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         Iterator e = partitioners.keySet().iterator();
-         while (e.hasNext())
-         {
-            String partitioning = (String)e.next();
-            IDocumentPartitioner partitioner = (IDocumentPartitioner)partitioners.get(partitioning);
-            partitioner.connect(document);
-            extension3.setDocumentPartitioner(partitioning, partitioner);
-         }
-         partitioners.clear();
-      }
-      else
-      {
-         IDocumentPartitioner partitioner =
-            (IDocumentPartitioner)partitioners.get(IDocumentExtension3.DEFAULT_PARTITIONING);
+         String partitioning = (String)e.next();
+         IDocumentPartitioner partitioner = (IDocumentPartitioner)partitioners.get(partitioning);
          partitioner.connect(document);
-         document.setDocumentPartitioner(partitioner);
+         document.setDocumentPartitioner(partitioning, partitioner);
       }
+      partitioners.clear();
+      //      }
+      //      else
+      //      {
+      //         IDocumentPartitioner partitioner =
+      //            (IDocumentPartitioner)partitioners.get(IDocumentExtension3.DEFAULT_PARTITIONING);
+      //         partitioner.connect(document);
+      //         document.setDocumentPartitioner(partitioner);
+      //      }
    }
 
    /**
@@ -409,20 +404,16 @@ public class TextUtilities
    public static String getContentType(IDocument document, String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.getContentType(partitioning, offset, preferOpenPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return IDocument.DEFAULT_CONTENT_TYPE;
-         }
+         return document.getContentType(partitioning, offset, preferOpenPartitions);
+      }
+      catch (BadPartitioningException x)
+      {
+         return IDocument.DEFAULT_CONTENT_TYPE;
       }
 
-      return document.getContentType(offset);
+      //      return document.getContentType(offset);
    }
 
    /**
@@ -440,20 +431,15 @@ public class TextUtilities
    public static ITypedRegion getPartition(IDocument document, String partitioning, int offset,
       boolean preferOpenPartitions) throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.getPartition(partitioning, offset, preferOpenPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return new TypedRegion(0, document.getLength(), IDocument.DEFAULT_CONTENT_TYPE);
-         }
+         return document.getPartition(partitioning, offset, preferOpenPartitions);
       }
-
-      return document.getPartition(offset);
+      catch (BadPartitioningException x)
+      {
+         return new TypedRegion(0, document.getLength(), IDocument.DEFAULT_CONTENT_TYPE);
+      }
+      //      return document.getPartition(offset);
    }
 
    /**
@@ -471,20 +457,16 @@ public class TextUtilities
    public static ITypedRegion[] computePartitioning(IDocument document, String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.computePartitioning(partitioning, offset, length, includeZeroLengthPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return new ITypedRegion[0];
-         }
+         return document.computePartitioning(partitioning, offset, length, includeZeroLengthPartitions);
+      }
+      catch (BadPartitioningException x)
+      {
+         return new ITypedRegion[0];
       }
 
-      return document.computePartitioning(offset, length);
+      //      return document.computePartitioning(offset, length);
    }
 
    // /**

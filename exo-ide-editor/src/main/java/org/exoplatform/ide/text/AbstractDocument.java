@@ -49,8 +49,7 @@ import java.util.Map;
  * @see org.eclipse.jface.text.ITextStore
  * @see org.eclipse.jface.text.ILineTracker
  */
-public abstract class AbstractDocument implements IDocument, IDocumentExtension, IDocumentExtension2,
-   IDocumentExtension3
+public abstract class AbstractDocument implements IDocument
 {
 
    /**
@@ -60,31 +59,6 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
     */
    private static final boolean DEBUG = false;
 
-   /**
-    * Inner class to bundle a registered post notification replace operation together with its owner.
-    * 
-    * @since 2.0
-    */
-   static private class RegisteredReplace
-   {
-      /** The owner of this replace operation. */
-      IDocumentListener fOwner;
-
-      /** The replace operation */
-      IDocumentExtension.IReplace fReplace;
-
-      /**
-       * Creates a new bundle object.
-       * 
-       * @param owner the document listener owning the replace operation
-       * @param replace the replace operation
-       */
-      RegisteredReplace(IDocumentListener owner, IDocumentExtension.IReplace replace)
-      {
-         fOwner = owner;
-         fReplace = replace;
-      }
-   }
 
    /** The document's text store */
    private ITextStore fStore;
@@ -876,16 +850,14 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
       }
 
       // IDocumentExtension
-      ++fReentranceCount;
-      try
-      {
-         if (fReentranceCount == 1)
-            executePostNotificationChanges();
-      }
-      finally
-      {
-         --fReentranceCount;
-      }
+//      ++fReentranceCount;
+//      try
+//      {
+//      }
+//      finally
+//      {
+//         --fReentranceCount;
+//      }
    }
 
    /**
@@ -1429,30 +1401,6 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
          fPostNotificationChanges.clear();
    }
 
-   /**
-    * Executes all registered post notification changes. The process is repeated until no new post notification changes are added.
-    * 
-    * @since 2.0
-    */
-   private void executePostNotificationChanges()
-   {
-
-      if (fStoppedCount > 0)
-         return;
-
-      while (fPostNotificationChanges != null)
-      {
-         List changes = fPostNotificationChanges;
-         fPostNotificationChanges = null;
-
-         Iterator e = changes.iterator();
-         while (e.hasNext())
-         {
-            RegisteredReplace replace = (RegisteredReplace)e.next();
-            replace.fReplace.perform(this, replace.fOwner);
-         }
-      }
-   }
 
    /*
     * @see org.eclipse.jface.text.IDocumentExtension2#acceptPostNotificationReplaces ()
@@ -1473,38 +1421,12 @@ public abstract class AbstractDocument implements IDocument, IDocumentExtension,
    }
 
    /*
-    * @see org.eclipse.jface.text.IDocumentExtension#registerPostNotificationReplace (org.eclipse.jface.text.IDocumentListener,
-    * org.eclipse.jface.text.IDocumentExtension.IReplace)
-    * @since 2.0
-    */
-   public void registerPostNotificationReplace(IDocumentListener owner, IDocumentExtension.IReplace replace)
-   {
-      if (fAcceptPostNotificationReplaces)
-      {
-         if (fPostNotificationChanges == null)
-            fPostNotificationChanges = new ArrayList(1);
-         fPostNotificationChanges.add(new RegisteredReplace(owner, replace));
-      }
-   }
-
-   /*
     * @see org.eclipse.jface.text.IDocumentExtension#stopPostNotificationProcessing()
     * @since 2.0
     */
    public void stopPostNotificationProcessing()
    {
       ++fStoppedCount;
-   }
-
-   /*
-    * @see org.eclipse.jface.text.IDocumentExtension#resumePostNotificationProcessing ()
-    * @since 2.0
-    */
-   public void resumePostNotificationProcessing()
-   {
-      --fStoppedCount;
-      if (fStoppedCount == 0 && fReentranceCount == 0)
-         executePostNotificationChanges();
    }
 
    /**
