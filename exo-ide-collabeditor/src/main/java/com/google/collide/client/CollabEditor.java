@@ -261,8 +261,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean isCapable(EditorCapability capability)
    {
-      // TODO Auto-generated method stub
-      return false;
+      switch (capability)
+      {
+         case SET_CURSOR_POSITION:
+            return true;
+         default :
+            return false;
+      }
    }
 
    /**
