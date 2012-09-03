@@ -35,23 +35,21 @@ public class SelectAllDeleteCopyPasteFromShortKeysTest extends ServicesJavaTextF
    {
       try
       {
-          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
       }
    }
 
-   
    @Test
    public void selectAllTextCutDeleteCopyAndPasteTest() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openSpringJavaTetsFile (PROJECT);
-      waitEditorIsReady(PROJECT);
-      
+      openSpringJavaTetsFile(PROJECT);
+
       IDE.JAVAEDITOR.setCursorToJavaEditor(0);
       String compare = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "a");
@@ -68,8 +66,11 @@ public class SelectAllDeleteCopyPasteFromShortKeysTest extends ServicesJavaTextF
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.DELETE.toString());
       assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "v");
+
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      //need for reparse in java editor
+      Thread.sleep(5000);
       assertEquals(compareAfterEdit, IDE.JAVAEDITOR.getTextFromJavaEditor(0));
    }
-   
-   
+
 }
