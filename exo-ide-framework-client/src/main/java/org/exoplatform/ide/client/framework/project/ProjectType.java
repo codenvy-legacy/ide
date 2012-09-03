@@ -26,8 +26,8 @@ package org.exoplatform.ide.client.framework.project;
  * 
  */
 public enum ProjectType {
-   PHP("PHP"), JSP("JSP"), JAVA("Java"), GAE_JAVA("Google App Engine Java"), JAVASCRIPT("JavaScript"), NODE_JS("nodejs"), GAE_PYTHON(
-      "Google App Engine Python"), RUBY_ON_RAILS("Rails"), RUBY("Ruby"), SPRING("Spring"), EXO("eXo"), UNDEFINED(
+   PHP("PHP"), JSP("JSP"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("nodejs"), PYTHON(
+      "Python"), DJANGO("Django"), RUBY_ON_RAILS("Rails"), RUBY("Ruby"), SPRING("Spring"), EXO("eXo"), UNDEFINED(
       "Undefined");
 
    /**

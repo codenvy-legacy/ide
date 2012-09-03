@@ -1,8 +1,11 @@
 package org.exoplatform.ide.operation.java;
 
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -10,17 +13,18 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.Map;
 
-public class UndoRedoFromEditMenu extends ServicesJavaTextFuction
+public class SelectAllFromEditMenuTest extends ServicesJavaTextFuctionTest
 {
-   private static final String PROJECT = UndoRedoFromEditMenu.class.getSimpleName();
+
+   private static final String PROJECT = SelectAllFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
    {
-
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/java/calc.zip";
 
       try
@@ -37,7 +41,7 @@ public class UndoRedoFromEditMenu extends ServicesJavaTextFuction
    {
       try
       {
-          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -45,28 +49,29 @@ public class UndoRedoFromEditMenu extends ServicesJavaTextFuction
    }
 
    @Test
-   public void undoRedoFromUi() throws Exception
+   public void selectAllTesUi() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
       waitEditorIsReady(PROJECT);
-      
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.END.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "//type1");
+      IDE.JAVAEDITOR.setCursorToJavaEditor(0);
+
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SELECT_ALL);
+      //need for setting selection area
+      Thread.sleep(500);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.BACK_SPACE.toString());
+      //need for reparce in java editor
+      Thread.sleep(500);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark("SumController.java");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " //type2");
-      IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark("SumController.java");
+      IDE.LOADER.waitClosed();
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
-      assertFalse(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("//type1 //type2"));
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("//type1 //type2"));
+
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains(
+         "public class SumController extends AbstractController {"));
    }
 
 }

@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import java.util.Map;
 
-public class TextEditFomContextMenu extends ServicesJavaTextFuction
+public class TextEditFomContextMenuTest extends ServicesJavaTextFuctionTest
 {
-   private static final String PROJECT = FormatJavaCodeFromEditMenu.class.getSimpleName();
+   private static final String PROJECT = FormatJavaCodeFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()

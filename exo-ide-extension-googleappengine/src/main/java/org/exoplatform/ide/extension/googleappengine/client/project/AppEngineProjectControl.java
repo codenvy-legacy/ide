@@ -26,8 +26,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
@@ -82,10 +80,7 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       boolean isAppEngine =
-         ProjectType.GAE_JAVA.value().equals(event.getProject().getProjectType())
-            || ProjectType.GAE_PYTHON.value().equals(event.getProject().getProjectType())
-            || ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType())
-            || ProjectResolver.APP_ENGINE_PYTHON.equals(event.getProject().getProjectType());
+         event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
       setVisible(isAppEngine);
       setEnabled(isAppEngine);
    }

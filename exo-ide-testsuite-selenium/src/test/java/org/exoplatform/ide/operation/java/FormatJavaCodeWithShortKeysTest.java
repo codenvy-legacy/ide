@@ -12,9 +12,9 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class FormatJavaCodeWithShortKeys extends ServicesJavaTextFuction
+public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuctionTest
 {
-   private static final String PROJECT = FormatJavaCodeWithShortKeys.class.getSimpleName();
+   private static final String PROJECT = FormatJavaCodeWithShortKeysTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()

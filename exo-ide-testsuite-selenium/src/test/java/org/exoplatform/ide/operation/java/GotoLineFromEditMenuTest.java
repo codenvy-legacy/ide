@@ -1,7 +1,6 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.assertFalse;
-
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
@@ -11,9 +10,10 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class DeleteCurrentLineWithKeys extends ServicesJavaTextFuction
+public class GotoLineFromEditMenuTest extends ServicesJavaTextFuctionTest
 {
-   private static final String PROJECT = DeleteCurrentLineWithKeys.class.getSimpleName();
+
+   private static final String PROJECT = GotoLineFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -42,18 +42,21 @@ public class DeleteCurrentLineWithKeys extends ServicesJavaTextFuction
    }
 
    @Test
-   public void deleteCurrentLineWithKeys() throws Exception
+   public void checkGoToLineWithUI() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.LOADER.waitClosed();
       openSpringJavaTetsFile(PROJECT);
       waitEditorIsReady(PROJECT);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      IDE.GOTOLINE.waitOpened();
+      IDE.GOTOLINE.goToLine(15);
+      IDE.STATUSBAR.waitCursorPositionAt("15 : 1");
 
-      IDE.GOTOLINE.goToLine(1);
-      IDE.STATUSBAR.waitCursorPositionAt("1:1");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "d");
-      String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
-      assertFalse(code.contains("package sumcontroller;"));
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_RIGHT.toString());
+      IDE.STATUSBAR.waitCursorPositionAt("15 : 2");
    }
+
 }

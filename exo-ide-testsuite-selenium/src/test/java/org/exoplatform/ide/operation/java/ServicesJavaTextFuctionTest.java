@@ -2,7 +2,7 @@ package org.exoplatform.ide.operation.java;
 
 import org.exoplatform.ide.BaseTest;
 
-public class ServicesJavaTextFuction extends BaseTest
+public class ServicesJavaTextFuctionTest extends BaseTest
 {
   
    public void waitEditorIsReady(String PROJECT) throws Exception

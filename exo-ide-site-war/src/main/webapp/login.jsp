@@ -181,12 +181,12 @@
                   </table>
                </form>
                <div id="federatedloginFormId">
-                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=google&mode=federated_login&scope=https://www.googleapis.com/auth/userinfo.profile&scope=https://www.googleapis.com/auth/userinfo.email&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/site/index.html');">
+                  <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=google&mode=federated_login&scope=https://www.googleapis.com/auth/userinfo.profile&scope=https://www.googleapis.com/auth/userinfo.email&scope=https://www.googleapis.com/auth/appengine.admin&scope=https://www.google.com/m8/feeds&redirect_after_login=/site/index.html');">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OAuth)</button>
                   <button onclick="window.location.replace('<%= request.getContextPath() %>/rest/ide/oauth/authenticate?oauth_provider=github&scope=user&scope=repo&mode=federated_login&redirect_after_login=/site/index.html');">
                      <img src="octocat.png" />&nbsp; Sign in with a GitHub Account(OAuth)</button>
                   <br/>
-                  <button onclick="open_popup_oauth('google', ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/appengine.admin'])">
+                  <button onclick="open_popup_oauth('google', ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/appengine.admin', 'https://www.google.com/m8/feeds'])">
                      <img src="http://www.google.com/favicon.ico" />&nbsp; Sign in with a Google Account (OAuth Popup)</button>
                   <button onclick="open_popup_oauth('github', ['user', 'repo'])">
                      <img src="octocat.png" />&nbsp; Sign in with a GitHub Account (OAuth Popup)</button>

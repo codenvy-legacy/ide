@@ -1,11 +1,8 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -13,14 +10,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
 
 import java.util.Map;
 
-public class SelectAllFromEditMenu extends ServicesJavaTextFuction
+public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuctionTest
 {
-
-   private static final String PROJECT = SelectAllFromEditMenu.class.getSimpleName();
+   private static final String PROJECT = DeleteLineFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -47,25 +42,25 @@ public class SelectAllFromEditMenu extends ServicesJavaTextFuction
       {
       }
    }
-
+   
    @Test
-   public void selectAllTesUi() throws Exception
+   public void deleteCurrentLineUi() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openSpringJavaTetsFile(PROJECT);
+      openSpringJavaTetsFile (PROJECT);
       waitEditorIsReady(PROJECT);
-      IDE.JAVAEDITOR.setCursorToJavaEditor(0);
-    
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SELECT_ALL);
-      //need for setting selection area
-      Thread.sleep(500);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SPACE.toString());
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains(
-         "public class SumController extends AbstractController {"));
+      
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
+      IDE.GOTOLINE.waitOpened();
+      IDE.GOTOLINE.goToLine(1);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
+      String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      //pause for deleting
+      Thread.sleep(200);
+      assertFalse(code.contains("package sumcontroller;"));
+      
    }
-
 }

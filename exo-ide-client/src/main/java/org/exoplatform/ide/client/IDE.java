@@ -52,6 +52,7 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsControl;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;

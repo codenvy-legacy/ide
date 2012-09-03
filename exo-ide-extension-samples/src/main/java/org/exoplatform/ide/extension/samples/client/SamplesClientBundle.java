@@ -43,12 +43,20 @@ public interface SamplesClientBundle extends ClientBundle
    /*
     * Buttons
     */
-
+   @Source("org/exoplatform/ide/extension/samples/client/images/github_logo.png")
+   ImageResource gitHubLogo();
+   
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome.png")
    ImageResource welcome();
 
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome-disabled.png")
    ImageResource welcomeDisabled();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github.png")
+   ImageResource gitHub();
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github_Disabled.png")
+   ImageResource gitHubDisabled();
 
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/ok.png")
    ImageResource ok();

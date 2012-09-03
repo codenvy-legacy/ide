@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import java.util.Map;
 
-public class FormatJavaCodeFromEditMenu extends ServicesJavaTextFuction
+public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuctionTest
 {
-   private static final String PROJECT = FormatJavaCodeFromEditMenu.class.getSimpleName();
+   private static final String PROJECT = FormatJavaCodeFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()

@@ -252,4 +252,8 @@
       <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsView">
+      <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display" />
+   </replace-with>
+
 </module>

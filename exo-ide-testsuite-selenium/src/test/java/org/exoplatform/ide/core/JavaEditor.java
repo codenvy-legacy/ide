@@ -212,6 +212,74 @@ public class JavaEditor extends AbstractTestModule
       }
    }
    
+   /**
+    * Move cursor in Java editor left to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move left
+    * @throws Exception
+    */
+   public void moveCursorLeft(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_LEFT.toString());
+      }
+   }
+   
+   
+   /**
+    * Move cursor in Javaeditor right to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move right
+    * @throws Exception
+    */
+   public void moveCursorRight(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_RIGHT.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+   }
+
+   
+   
+   /**
+    * Move cursor in Javaeditor down to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move right
+    * @throws Exception
+    */
+   public void moveCursorDown(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_DOWN.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+   }
+   
+   
+   /**
+    * Move cursor in Javaeditor up to pointed number of symbols.
+    * 
+    * @param tabIndex index of the tab
+    * @param rows number of symbols to move right
+    * @throws Exception
+    */
+   public void moveCursorUp(int tabIndex, int symbols) throws Exception
+   {
+      for (int i = 0; i < symbols; i++)
+      {
+         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_UP.toString());
+         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      }
+   }
+   
+   
    
    
    /**

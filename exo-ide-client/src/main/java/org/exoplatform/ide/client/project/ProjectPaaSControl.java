@@ -29,9 +29,11 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -98,14 +100,17 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
     */
    private boolean isDeployed(ProjectModel project)
    {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+
       return project.getPropertyValue("cloudbees-application") != null
          || project.getPropertyValue("heroku-application") != null
          || project.getPropertyValue("openshift-express-application") != null
          || project.getPropertyValue("cloudfoundry-application") != null
-         || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
-         || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())
+        /* TODO || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
+         || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())*/
          || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
-         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType());
+         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
+         || (targets != null && targets.contains("GAE"));
    }
 
    /**

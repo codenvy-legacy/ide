@@ -1,18 +1,17 @@
 package org.exoplatform.ide.operation.java;
 
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class GoToLineFromHotkey extends ServicesJavaTextFuction
+public class ShowHideLineFromEditMenuTest extends ServicesJavaTextFuctionTest
 {
-
-   private static final String PROJECT = GoToLineFromHotkey.class.getSimpleName();
+   private static final String PROJECT = ShowHideLineFromEditMenuTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
@@ -33,7 +32,7 @@ public class GoToLineFromHotkey extends ServicesJavaTextFuction
    {
       try
       {
-          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -41,17 +40,17 @@ public class GoToLineFromHotkey extends ServicesJavaTextFuction
    }
    
    @Test
-   public void goToLineFromKeys() throws Exception
+   public void showHideLineNumbersFromUi() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openSpringJavaTetsFile(PROJECT);
+      openSpringJavaTetsFile (PROJECT);
       waitEditorIsReady(PROJECT);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "l");
-      IDE.GOTOLINE.wait();
-      IDE.GOTOLINE.goToLine(5);
-      IDE.STATUSBAR.waitCursorPositionAt("5:1");
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.HIDE_LINE_NUMBERS);
+      IDE.JAVAEDITOR.waitLineCloseNumberPanel(0);
+      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SHOW_LINE_NUMBERS);
+      IDE.JAVAEDITOR.waitLineNumberPanel(0);
    }
-   
 }

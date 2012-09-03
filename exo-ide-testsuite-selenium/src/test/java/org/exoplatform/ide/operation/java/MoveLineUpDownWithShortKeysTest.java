@@ -14,10 +14,10 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class MoveLineUpDownWithShortKeys extends ServicesJavaTextFuction
+public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
 {
 
-   private static final String PROJECT = MoveLineUpDownWithShortKeys.class.getSimpleName();
+   private static final String PROJECT = MoveLineUpDownWithShortKeysTest.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
