@@ -80,7 +80,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new RestServicesDiscoveryPresenter();
       new ShowHotKeysPresenter();
       new PreferencesPresenter();
-      new InviteGoogleContactsPresenter();
+      //new InviteGoogleContactsPresenter();
    }
 
    public void onInitializeServices(InitializeServicesEvent event)
