@@ -84,7 +84,7 @@ import org.exoplatform.ide.core.ProjectsMenu;
 import org.exoplatform.ide.core.DeployForm;
 import org.exoplatform.ide.core.PaasAuthorization;
 import org.exoplatform.ide.core.JavaEditor;
-import org.exoplatform.ide.operation.java.SelectAllFromEditMenu;
+import org.exoplatform.ide.operation.java.SelectAllFromEditMenuTest;
 
 
 /**
