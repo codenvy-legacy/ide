@@ -28,6 +28,7 @@ import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
@@ -263,6 +264,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       switch (capability)
       {
+         case DELETE_LINES:
          case SET_CURSOR_POSITION:
             return true;
          default :
@@ -330,8 +332,15 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void deleteCurrentLine()
    {
-      // TODO Auto-generated method stub
-
+      SelectionModel selection = editor.getSelection();
+      int rowsCountToDelete = selection.getCursorLineNumber() - selection.getBaseLineNumber() + 1;
+      int baseLineNumber = selection.getBaseLineNumber();
+      while (rowsCountToDelete > 0)
+      {
+         Line currentLine1 = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
+         editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
+         rowsCountToDelete--;
+      }
    }
 
    /**
