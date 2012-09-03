@@ -147,7 +147,7 @@ public class OpenIDAuthenticationService
          // LoginModule may check userId|password from the FederatedLoginList.
          loginList.add(email, tmpPassword);
          return Response.temporaryRedirect(
-            UriBuilder.fromPath(redirectAfterLogin)
+            UriBuilder.fromUri(redirectAfterLogin)
                .queryParam("username", email)
                .queryParam("password", tmpPassword)
                .build()
