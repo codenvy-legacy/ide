@@ -263,8 +263,15 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       switch (capability)
       {
+         case AUTOCOMPLETION:
+         case OUTLINE:
+         case VALIDATION:
+         case FIND_AND_REPLACE:
+         case DELETE_LINES:
+         case FORMAT_SOURCE:
          case SET_CURSOR_POSITION:
             return true;
+
          default :
             return false;
       }
