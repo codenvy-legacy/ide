@@ -28,6 +28,7 @@ import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
@@ -263,8 +264,15 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       switch (capability)
       {
+         case AUTOCOMPLETION:
+         case OUTLINE:
+         case VALIDATION:
+         case FIND_AND_REPLACE:
+         case DELETE_LINES:
+         case FORMAT_SOURCE:
          case SET_CURSOR_POSITION:
             return true;
+
          default :
             return false;
       }
@@ -330,8 +338,15 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void deleteCurrentLine()
    {
-      // TODO Auto-generated method stub
-
+      SelectionModel selection = editor.getSelection();
+      int rowsCountToDelete = selection.getCursorLineNumber() - selection.getBaseLineNumber() + 1;
+      int baseLineNumber = selection.getBaseLineNumber();
+      while (rowsCountToDelete > 0)
+      {
+         Line currentLine1 = editor.getDocument().getLineFinder().findLine(baseLineNumber).line();
+         editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
+         rowsCountToDelete--;
+      }
    }
 
    /**
@@ -340,7 +355,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean findAndSelect(String find, boolean caseSensitive)
    {
-      // TODO Auto-generated method stub
+      editor.getSearchModel().setQuery(find);
       return false;
    }
 
@@ -350,8 +365,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void replaceFoundedText(String find, String replace, boolean caseSensitive)
    {
-      // TODO Auto-generated method stub
-
+      editor.getSearchModel().setQuery(find);
+      editor.getSearchModel().getMatchManager().replaceMatch(replace);
    }
 
    /**
@@ -360,7 +375,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean hasUndoChanges()
    {
-      return editor.isMutatingDocumentFromUndoOrRedo();
+      return true;
    }
 
    /**
@@ -378,7 +393,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean hasRedoChanges()
    {
-      return editor.isMutatingDocumentFromUndoOrRedo();
+      return true;
    }
 
    /**
@@ -472,8 +487,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    public SelectionRange getSelectionRange()
    {
       SelectionModel selection = editor.getSelection();
-      return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn() + 1,
-         selection.getCursorLineNumber() + 1, selection.getCursorColumn() + 1);
+      return new SelectionRange(selection.getBaseLineNumber() + 1, selection.getBaseColumn(),
+         selection.getCursorLineNumber() + 1, selection.getCursorColumn());
    }
 
    /**
@@ -492,8 +507,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void selectAll()
    {
-      // TODO Auto-generated method stub
-
+      editor.getSelection().selectAll();
    }
 
    /**
