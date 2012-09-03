@@ -25,7 +25,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 
@@ -77,9 +76,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (event.getProject() != null
-         && (ProjectType.GAE_JAVA.value().equals(event.getProject().getProjectType()) || ProjectType.GAE_PYTHON.value()
-            .equals(event.getProject().getProjectType())))
+      if (event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject()))
       {
          setEnabled(true);
       }

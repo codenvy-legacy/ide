@@ -16,54 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.project;
+package org.exoplatform.ide.extension.samples.client.oauth;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Defined types of projects.
+ * Event occurs, when user tries to login to GiHub.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Jul 24, 2012 12:15:43 PM anya $
+ * @version $Id: Aug 30, 2012 10:33:01 AM anya $
  * 
  */
-public enum ProjectType {
-   PHP("PHP"), JSP("JSP"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("nodejs"), PYTHON(
-      "Python"), DJANGO("Django"), RUBY_ON_RAILS("Rails"), RUBY("Ruby"), SPRING("Spring"), EXO("eXo"), UNDEFINED(
-      "Undefined");
+public class OAuthLoginEvent extends GwtEvent<OAuthLoginHandler>
+{
+   /**
+    * Type used to register the event.
+    */
+   public static final GwtEvent.Type<OAuthLoginHandler> TYPE = new GwtEvent.Type<OAuthLoginHandler>();
 
    /**
-    * Project's type name.
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   private String type;
-
-   /**
-    * @param type project's typ name
-    */
-   private ProjectType(String type)
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<OAuthLoginHandler> getAssociatedType()
    {
-      this.type = type;
+      return TYPE;
    }
 
    /**
-    * @return {@link String} project's type value
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
-   public String value()
+   @Override
+   protected void dispatch(OAuthLoginHandler handler)
    {
-      return type;
+      handler.onOAuthLogin(this);
    }
 
-   /**
-    * @param v project's type value
-    * @return {@link ProjectType}
-    */
-   public static ProjectType fromValue(String v)
-   {
-      for (ProjectType c : ProjectType.values())
-      {
-         if (c.type.equals(v))
-         {
-            return c;
-         }
-      }
-      throw new IllegalArgumentException(v);
-   }
 }

@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.heroku.client.control;
 
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientBundle;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent;
@@ -29,9 +34,9 @@ import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent
  * @version $Id: May 26, 2011 2:27:45 PM anya $
  * 
  */
-public class CreateApplicationControl extends AbstractHerokuControl
+public class CreateApplicationControl extends AbstractHerokuControl implements ProjectOpenedHandler,
+   ProjectClosedHandler
 {
-
    public CreateApplicationControl()
    {
       super(HerokuExtension.LOCALIZATION_CONSTANT.createApplicationControlId());
@@ -42,4 +47,32 @@ public class CreateApplicationControl extends AbstractHerokuControl
          HerokuClientBundle.INSTANCE.createApplicationDisabled());
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.heroku.client.control.AbstractHerokuControl#initialize()
+    */
+   @Override
+   public void initialize()
+   {
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      setVisible(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      setEnabled(false);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
+   }
 }

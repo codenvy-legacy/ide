@@ -26,7 +26,9 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.backends.BackendsHandler;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationControl;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter;
@@ -44,8 +46,10 @@ import org.exoplatform.ide.extension.googleappengine.client.pagespeed.PageSpeedH
 import org.exoplatform.ide.extension.googleappengine.client.project.AppEngineProjectPresenter;
 import org.exoplatform.ide.extension.googleappengine.client.queues.QueuesHandler;
 import org.exoplatform.ide.extension.googleappengine.client.rollback.RollbackUpdatePresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -60,6 +64,8 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
    public static final GAELocalization GAE_LOCALIZATION = GWT.create(GAELocalization.class);
 
+   private static final String ID = "GAE";
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */
@@ -67,15 +73,15 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("GAE", "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine()), Arrays.asList(
-            ProjectType.GAE_JAVA, ProjectType.GAE_PYTHON), new DeployApplicationPresenter()));
+         new PaaS(ID, "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine()), Arrays.asList(
+            ProjectType.JAVA, ProjectType.PYTHON, ProjectType.DJANGO), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new GoogleAppEngineControl());
       IDE.getInstance().addControl(new CreateApplicationControl());
 
-   //   new DeployApplicationPresenter();
+      // new DeployApplicationPresenter();
       new AppEngineProjectPresenter();
       new LoginPresenter();
       new RollbackUpdatePresenter();
@@ -101,5 +107,14 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
       new GoogleAppEngineClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       new CreateApplicationPresenter(event.getApplicationConfiguration().getContext());
       new AccountsHandler();
+   }
+
+   public static boolean isAppEngineProject(ProjectModel project)
+   {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+
+      return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
+         || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
+         || (targets != null && targets.contains(ID));
    }
 }

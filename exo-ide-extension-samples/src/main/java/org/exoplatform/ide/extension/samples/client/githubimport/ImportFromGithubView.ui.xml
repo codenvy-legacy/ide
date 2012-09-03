@@ -81,37 +81,26 @@
          </g:FlowPanel>
       </g:layer>
       <g:layer top="60px" bottom="35px">
-         <g:FlowPanel>
-            <g:FlowPanel ui:field="loginStep" styleName="{style.indents20}">
-               <g:Label text="{locale.importFromGithubLogin}"></g:Label>
-               <f:TextInput ui:field="loginField" height="22px" width="100%"></f:TextInput>
-               <g:FlowPanel width="100%" height="10px"></g:FlowPanel>
-               <g:Label text="{locale.loginViewPasswordField}"></g:Label>
-               <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"></f:PasswordTextInput>
-               <f:Label ui:field="loginResult" styleName="{style.errorLabel}"></f:Label>
-            </g:FlowPanel>
-
-            <g:DockLayoutPanel ui:field="importStep" width="100%" height="100%">
-               <g:center>
-                  <f:Border margin="10">
-                     <f:layer top="0px" bottom="0">
-                        <g:ScrollPanel>
-                           <e:GitHubProjectsListGrid width="100%" ui:field="repositoriesGrid" height="100%"></e:GitHubProjectsListGrid>
-                        </g:ScrollPanel>
-                     </f:layer>
-                  </f:Border>
-               </g:center>
-               <g:south size="60">
-                  <g:FlowPanel styleName="{style.indents10}">
-                     <f:Label text="Name" height="18px" width="45px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
-                     <f:TextInput ui:field="projectNameField" width="140px" styleName="{style.floatLeft}"></f:TextInput>
-                     <f:SelectItem ui:field="projectTypeField" width="140px" styleName="{style.floatRight}"></f:SelectItem>
-                     <g:Label text="{locale.importFromGithubSelectProjectType}" height="18px" width="115px" addStyleNames="{style.floatRight} {style.label}"></g:Label>
-                     <g:CheckBox ui:field="readOnlyModeField" HTML="{locale.gitReadOnly}" styleName="{style.checkbox}"></g:CheckBox>
-                  </g:FlowPanel>
-               </g:south>
-            </g:DockLayoutPanel>
-         </g:FlowPanel>
+         <g:DockLayoutPanel ui:field="importStep" width="100%" height="100%">
+            <g:center>
+               <f:Border margin="10">
+                  <f:layer top="0px" bottom="0">
+                     <g:ScrollPanel>
+                        <e:GitHubProjectsListGrid width="100%" ui:field="repositoriesGrid" height="100%"></e:GitHubProjectsListGrid>
+                     </g:ScrollPanel>
+                  </f:layer>
+               </f:Border>
+            </g:center>
+            <g:south size="60">
+               <g:FlowPanel styleName="{style.indents10}">
+                  <f:Label text="Name" height="18px" width="45px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+                  <f:TextInput ui:field="projectNameField" width="140px" styleName="{style.floatLeft}"></f:TextInput>
+                  <f:SelectItem ui:field="projectTypeField" width="140px" styleName="{style.floatRight}"></f:SelectItem>
+                  <g:Label text="{locale.importFromGithubSelectProjectType}" height="18px" width="115px" addStyleNames="{style.floatRight} {style.label}"></g:Label>
+                  <g:CheckBox ui:field="readOnlyModeField" HTML="{locale.gitReadOnly}" styleName="{style.checkbox}"></g:CheckBox>
+               </g:FlowPanel>
+            </g:south>
+         </g:DockLayoutPanel>
       </g:layer>
 
       <g:layer height="22px" bottom="10">
@@ -120,9 +109,6 @@
                disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
             <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.nextButton}" imageResource="{resource.next}"
                disabledImageResource="{resource.nextDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
-            <g:FlowPanel width="5px" height="22px" styleName="{style.floatRight}"></g:FlowPanel>
-            <f:ImageButton ui:field="backButton" width="90" height="22" text="{locale.backButton}" imageResource="{resource.back}"
-               disabledImageResource="{resource.backDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
          </g:FlowPanel>
       </g:layer>
    </g:LayoutPanel>
