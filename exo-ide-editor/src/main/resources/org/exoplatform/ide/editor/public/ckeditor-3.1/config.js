@@ -9,9 +9,14 @@ CKEDITOR.config.toolbar_IDE = [
 ];
 
 CKEDITOR.config.width = "100%";
+CKEDITOR.config.height = "100%";
 //CKEDITOR.config.height = "100%";     // does not supported still in CKEditor 3.0
-CKEDITOR.config.minWidth = "100px";
-CKEDITOR.config.minHeight = "100px";
+//CKEDITOR.config.minWidth = "100px";
+//CKEDITOR.config.minHeight = "100px";
+
+CKEDITOR.config.minWidth = "100%";
+CKEDITOR.config.minHeight = "100%";
+
 CKEDITOR.dialog.minHeight = 50;
 CKEDITOR.dialog.minWidth = 50;
 /*
