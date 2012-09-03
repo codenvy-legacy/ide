@@ -407,7 +407,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    }
 
    private native String getAuthorizationPageURL() /*-{
-		return $wnd.authorizationPageURL;
+		return $wnd.location.protocol + '//' + $wnd.location.host + $wnd.authorizationPageURL;
    }-*/;
 
    private native String getSecurityCheckURL() /*-{
@@ -450,6 +450,8 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                if (href
                   && (popupWindow.location.pathname == redirectAfterLogin
                   || popupWindow.location.pathname == "/IDE/Application.html"
+                  || popupWindow.location.pathname == "/cloud/profile.jsp"
+                  || popupWindow.location.pathname == "/cloud/ide.jsp"
                   || popupWindow.location.pathname.match("j_security_check$")
                   ))
                {
@@ -470,7 +472,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
             var x = Math.max(0, Math.round(clientWidth / 2) - Math.round(this.popupWindowWidth / 2));
             var y = Math.max(0, Math.round(clientHeight / 2) - Math.round(this.popupWindowHeight / 2));
             popupWindow = window.open(this.authUrl, 'popup', 'width=' + this.popupWindowWidth + ',height=' + this.popupWindowHeight + ',left=' + x + ',top=' + y);
-            popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 100);
+            popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 50);
          }
       }
 
