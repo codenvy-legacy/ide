@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-import org.everrest.core.impl.uri.UriBuilderImpl;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.security.login.FederatedLoginList;
 import org.exoplatform.services.log.ExoLogger;
@@ -122,13 +121,13 @@ public class OAuthAuthenticationService
          final String tmpPassword = NameGenerator.generate(null, 16);
          // LoginModule may check userId|password from the FederatedLoginList.
          loginList.add(userId, tmpPassword);
-         UriBuilder builder = new UriBuilderImpl();
-         URI uri = builder.host(requestUrl.getHost())
-                   .path(redirectAfterLogin)
-                   .queryParam("username", userId)
-                   .queryParam("password", tmpPassword)
-                   .queryParam("oauth_provider", providerName).build();
-         return Response.temporaryRedirect(uri).build();
+         return Response.temporaryRedirect(
+            UriBuilder.fromUri(redirectAfterLogin)
+               .queryParam("username", userId)
+               .queryParam("password", tmpPassword)
+               .queryParam("oauth_provider", providerName)
+               .build()
+         ).build();
       }
       return Response.temporaryRedirect(URI.create(redirectAfterLogin)).build();
    }
