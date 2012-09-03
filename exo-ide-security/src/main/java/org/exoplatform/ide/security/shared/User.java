@@ -33,5 +33,5 @@ public interface User
 
    String getEmail();
 
-   void setEmail(String id);
+   void setEmail(String email);
 }
