@@ -355,7 +355,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public boolean findAndSelect(String find, boolean caseSensitive)
    {
-      // TODO Auto-generated method stub
+      editor.getSearchModel().setQuery(find);
       return false;
    }
 
@@ -365,8 +365,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void replaceFoundedText(String find, String replace, boolean caseSensitive)
    {
-      // TODO Auto-generated method stub
-
+      editor.getSearchModel().setQuery(find);
+      editor.getSearchModel().getMatchManager().replaceMatch(replace);
    }
 
    /**
