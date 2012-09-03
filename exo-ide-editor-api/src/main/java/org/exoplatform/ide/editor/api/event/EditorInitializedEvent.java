@@ -19,10 +19,14 @@
 
 package org.exoplatform.ide.editor.api.event;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Fires just after editor has initialized (loaded and displayed). Created by The eXo Platform SAS .
+ * Fires just after {@link Editor} has been initialized (loaded and displayed).
+ * 
+ * Created by The eXo Platform SAS .
  * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
@@ -33,16 +37,29 @@ public class EditorInitializedEvent extends GwtEvent<EditorInitializedHandler>
 
    public static final GwtEvent.Type<EditorInitializedHandler> TYPE = new GwtEvent.Type<EditorInitializedHandler>();
 
-   private String editorId;
+   /**
+    * Editor instance.
+    */
+   private Editor editor;
 
-   public EditorInitializedEvent(String editorId)
+   /**
+    * Creates new instance of {@link EditorInitializedEvent}.
+    * 
+    * @param editor
+    */
+   public EditorInitializedEvent(Editor editor)
    {
-      this.editorId = editorId;
+      this.editor = editor;
    }
 
-   public String getEditorId()
+   /**
+    * Returns {@link Editor} instance.
+    * 
+    * @return
+    */
+   public Editor getEditor()
    {
-      return editorId;
+      return editor;
    }
 
    @Override

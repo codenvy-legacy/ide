@@ -184,8 +184,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       
       new IDEDebug();
 
-      IDE.getInstance().addControl(new InviteGoogleContactsControl());
-
       // initialize extensions
       for (Extension ext : getExtensions())
       {
