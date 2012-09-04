@@ -133,7 +133,7 @@ public class CollabEditor extends Widget implements Editor, Markable
          public void onFocusChange(boolean hasFocus)
          {
             if (hasFocus)
-            fireEvent(new EditorFocusReceivedEvent(id));
+            fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
          }
       });
       
@@ -214,7 +214,7 @@ public class CollabEditor extends Widget implements Editor, Markable
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
-                  fireEvent(new EditorCursorActivityEvent(id, lineInfo.number() +1 , column +1));
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() +1 , column +1));
                }
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
@@ -223,7 +223,7 @@ public class CollabEditor extends Widget implements Editor, Markable
                @Override
                public void onContextMenu(int x, int y)
                {
-                  fireEvent(new EditorContextMenuEvent(x, y, id));
+                  fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
          }
