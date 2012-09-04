@@ -107,8 +107,6 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    /**
     * Creates a new instance of LoginDialog.
-    * 
-    * @param eventBus
     */
    public LoginPresenter()
    {
@@ -147,7 +145,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    /**
     * Creates and shows new Login View.
     * 
-    * @param loginCompleteHandler
+    * @param asyncRequest
     */
    public void showLoginDialog(final AsyncRequest asyncRequest)
    {
@@ -167,7 +165,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
             int clientHeight = Window.getClientHeight();
             int clientWidth = Window.getClientWidth();
-            loginWithGoogleAccount(getAuthorizationContext()
+            loginWithOAuth(getAuthorizationContext()
                + "/ide/oauth/authenticate"
                + "?oauth_provider=google"
                + "&mode=federated_login"
@@ -175,7 +173,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                + "&scope=https://www.googleapis.com/auth/userinfo.email"
                + "&scope=https://www.googleapis.com/auth/appengine.admin"
                + "&redirect_after_login=" + getAuthorizationPageURL(),//
-               getAuthorizationPageURL(), 450, 500, clientWidth, clientHeight);
+               getAuthorizationErrorPageURL(), 980, 500, clientWidth, clientHeight);
             IDE.getInstance().closeView(display.asView().getId());
 
          }
@@ -190,13 +188,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          {
             int clientHeight = Window.getClientHeight();
             int clientWidth = Window.getClientWidth();
-            loginWithGoogleAccount(getAuthorizationContext()
+            loginWithOAuth(getAuthorizationContext()
                + "/ide/oauth/authenticate"
                + "?oauth_provider=github"
                + "&mode=federated_login"
                + "&scope=user&scope=repo"
                + "&redirect_after_login=" + getAuthorizationPageURL(),//
-               getAuthorizationPageURL(), 980, 500, clientWidth, clientHeight);
+               getAuthorizationErrorPageURL(), 980, 500, clientWidth, clientHeight);
             IDE.getInstance().closeView(display.asView().getId());
             
          }
@@ -410,6 +408,10 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 		return $wnd.location.protocol + '//' + $wnd.location.host + $wnd.authorizationPageURL;
    }-*/;
 
+   private native String getAuthorizationErrorPageURL() /*-{
+		return $wnd.location.protocol + '//' + $wnd.location.host + $wnd.authorizationErrorPageURL;
+   }-*/;
+
    private native String getSecurityCheckURL() /*-{
 		return $wnd.securityCheckURL;
    }-*/;
@@ -418,11 +420,11 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 		return $wnd.authorizationContext;
    }-*/;
 
-   public static native void loginWithGoogleAccount(String authUrl, String redirectAfterLogin, int popupWindowWidth,
+   public static native void loginWithOAuth(String authUrl, String errorPageUrl, int popupWindowWidth,
       int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-         function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight) {
+         function Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight) {
             this.authUrl = authUrl;
-            this.redirectAfterLogin = redirectAfterLogin;
+            this.errorPageUrl = errorPageUrl;
             this.popupWindowWidth = popupWindowWidth;
             this.popupWindowHeight = popupWindowHeight;
 
@@ -447,23 +449,27 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
                catch (error)
                {}
 
-               if (href
-                  && (popupWindow.location.pathname == redirectAfterLogin
-                  || popupWindow.location.pathname == "/IDE/Application.html"
-                  || popupWindow.location.pathname == "/cloud/profile.jsp"
-                  || popupWindow.location.pathname == "/cloud/ide.jsp"
-                  || popupWindow.location.pathname.match("j_security_check$")
-                  ))
+               if (href)
                {
-                  //console.log(href);
-                  popupWindow.close();
-                  popupWindow = null;
-                  if (popupCloseHandlerIntervalId)
+                  console.log(href);
+                  var path = popupWindow.location.pathname;
+                  if (path == "/IDE/Application.html" // for local ide bundle
+                     || path == "/cloud/profile.jsp"
+                     || path == "/cloud/ide.jsp")
                   {
-                     window.clearInterval(popupCloseHandlerIntervalId);
-                     //console.log("stop interval " + popupCloseHandlerIntervalId);
+                     popupWindow.close();
+                     popupWindow = null;
+                     if (popupCloseHandlerIntervalId)
+                     {
+                        window.clearInterval(popupCloseHandlerIntervalId);
+                        //console.log("stop interval " + popupCloseHandlerIntervalId);
+                     }
                   }
-                  window.location.replace(href);
+                  else if (path.match("j_security_check$"))
+                  {
+                     console.log("login failed");
+                     popupWindow.location.replace(errorPageUrl);
+                  }
                }
             }
          }
@@ -476,7 +482,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          }
       }
 
-      var popup = new Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight);
+      var popup = new Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight);
       popup.open_window();
    }-*/;
 
