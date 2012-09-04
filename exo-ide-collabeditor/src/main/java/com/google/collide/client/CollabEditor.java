@@ -18,6 +18,12 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.editor.Buffer.ContextMenuListener;
+
+import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
+
+import com.google.collide.client.editor.FocusManager.FocusListener;
+
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -43,12 +49,17 @@ import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.marking.Markable;
@@ -115,62 +126,17 @@ public class CollabEditor extends Widget implements Editor, Markable
       notificationManager.setErrorListener(editorBundle.getErrorListener());
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
-//      editor.getMouseHoverManager().addMouseHoverListener(new MouseHoverListener()
-//      {
-//
-//         @Override
-//         public void onMouseHover(int x, int y, LineInfo lineInfo, int column)
-//         {
-//            if(notificationManager.getMarkers().hasKey(lineInfo.number()))
-//            {
-//            
-//               int startColumn = TextUtils.skipNonwhitespaceSimilar(lineInfo.line().getText(), column, false) +1;
-//               int endColumn = TextUtils.skipNonwhitespaceSimilar(lineInfo.line().getText(), column, true);
-//               int lineOffset = 0;
-//               try
-//               {
-//                  lineOffset = document.getLineOffset(lineInfo.number());
-//               }
-//               catch (BadLocationException e)
-//               {
-//                  e.printStackTrace();
-//               }
-//               int pointOffset = lineOffset + column;
-//               JsoArray<Marker> jsoArray = notificationManager.getMarkers().get(lineInfo.number());
-//               
-//               Marker mark = null;
-//               for(Marker m : jsoArray.asIterable())
-//               {
-//                  if(m.getStart() <= pointOffset && pointOffset<= m.getEnd())
-//                  {
-//                     mark = m;
-//                     break;
-//                  }
-//               }
-//               if(mark != null)
-//               {
-//               final String wordAtColumn = mark.getMessage();
-//               editorBundle.getEditorPopupController().showPopup(lineInfo,
-//                  startColumn,
-//                  endColumn, null,
-//                  new PopupRenderer()
-//                  {
-//
-//                     @Override
-//                     public elemental.html.Element renderDom()
-//                     {
-//                        DivElement el = Elements.createDivElement("");
-//                        el.setTextContent(wordAtColumn);
-//                        return el;
-//                     }
-//                  }, null, VerticalAlign.BOTTOM, true, 400);
-//               }
-//            }
-//            else
-//               editorBundle.getEditorPopupController().hide();
-//         }
-//      });
-
+      editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
+      {
+         
+         @Override
+         public void onFocusChange(boolean hasFocus)
+         {
+            if (hasFocus)
+            fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
+         }
+      });
+      
    }
 
    /**
@@ -242,6 +208,24 @@ public class CollabEditor extends Widget implements Editor, Markable
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
+            editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
+            {
+               
+               @Override
+               public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
+               {
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() +1 , column +1));
+               }
+            });
+            editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
+            {
+               
+               @Override
+               public void onContextMenu(int x, int y)
+               {
+                  fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
+               }
+            });
          }
       });
    }
@@ -283,8 +267,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void formatSource()
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -293,8 +276,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void showLineNumbers(boolean showLineNumbers)
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -446,8 +428,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void replaceTextAtCurrentLine(String line, int cursorPosition)
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -456,8 +437,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public String getLineText(int line)
    {
-      // TODO Auto-generated method stub
-      return null;
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -466,8 +446,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void setLineText(int line, String text)
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -496,8 +475,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void selectRange(int startLine, int startChar, int endLine, int endChar)
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -515,8 +493,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void cut()
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -525,8 +502,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void copy()
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -535,8 +511,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void paste()
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -545,8 +520,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public void delete()
    {
-      // TODO Auto-generated method stub
-
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -610,8 +584,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorLineNumberContextMenuEvent.TYPE);
    }
 
    /**
@@ -648,8 +621,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorContentChangedEvent.TYPE);
    }
 
    /**
@@ -658,8 +630,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorContextMenuEvent.TYPE);
    }
 
    /**
@@ -668,8 +639,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorCursorActivityEvent.TYPE);
    }
 
    /**
@@ -678,8 +648,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorFocusReceivedEvent.TYPE);
    }
 
    /**
@@ -688,8 +657,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorHotKeyPressedEvent.TYPE);
    }
 
    /**
@@ -698,8 +666,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return addHandler(handler, EditorInitializedEvent.TYPE);
    }
 
    /**

@@ -486,10 +486,27 @@
       ***************************************************************************************
    -->
 
-   <component>
-      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+<component>....                                                                                                                                                                                             
+      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>                                                                                                                                 
+      <init-params>                                                                                                                                                                                            
+         <value-param>                                                                                                                                                                                         
+            <name>type</name>                                                                                                                                                                                  
+            <value>installed</value>                                                                                                                                                                                 
+         </value-param>                                                                                                                                                                                        
+         <value-param>                                                                                                                                                                                         
+         <name>client-id</name>                                                                                                                                                                                
+            <value>854018091723.apps.googleusercontent.com</value>                                                                                                            
+            </value-param>                                                                                                                                                                                     
+         <value-param>                                                                                                                                                                                         
+            <name>client-secret</name>                                                                                                                                                                         
+            <value>C8vg2Yf8I3_GfZyHPZsN_2nZ</value>                                                                                                                                                            
+         </value-param>                                                                                                                                                                                        
+         <values-param>                                                                                                                                                                                        
+         <name>redirect-uris</name>                                                                                                                                                                            
+           <value>http://localhost:8888/rest/ide/oauth/callback</value>                                                                                                                 
+         </values-param>                                                                                                                                                                                       
+      </init-params>                                                                                                                                                                                           
    </component>
-
    <component>
       <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
    </component>
