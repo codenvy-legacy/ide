@@ -351,4 +351,13 @@ class EditDocument implements IDocument
    {
       throw new UnsupportedOperationException();
    }
+
+   /**
+    * @see org.exoplatform.ide.text.IDocument#replace(int, int, java.lang.String, long)
+    */
+   @Override
+   public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException
+   {
+      throw new UnsupportedOperationException();
+   }
 }

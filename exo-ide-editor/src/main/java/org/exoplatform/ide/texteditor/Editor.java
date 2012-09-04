@@ -52,7 +52,7 @@ import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
 
 /**
- * The presenter for the Collide editor.
+ * The presenter for the editor.
  *
  *  This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.text;
 
+
 /**
  * An <code>IDocument</code> represents text providing support for
  * <ul>
@@ -126,6 +127,21 @@ public interface IDocument
     * @return the modification stamp of this document or <code>UNKNOWN_MODIFICATION_STAMP</code>
     */
    long getModificationStamp();
+   
+   /**
+    * Substitutes the given text for the specified document range.
+    * Sends a <code>DocumentEvent</code> to all registered <code>IDocumentListener</code>.
+    *
+    * @param offset the document offset
+    * @param length the length of the specified range
+    * @param text the substitution text
+    * @param modificationStamp of the document after replacing
+    * @exception BadLocationException if the offset is invalid in this document
+    *
+    * @see DocumentEvent
+    * @see IDocumentListener
+    */
+   void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException;
 
    /**
     * Returns the existing partitionings for this document. This includes the default partitioning.
