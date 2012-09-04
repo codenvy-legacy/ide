@@ -4,14 +4,13 @@ import org.exoplatform.ide.BaseTest;
 
 public class ServicesJavaTextFuctionTest extends BaseTest
 {
-  
+
    public void waitEditorIsReady(String PROJECT) throws Exception
    {
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
          + "SimpleSum.java.java");
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
    }
-   
 
    public void waitFormatTestIsReady(String PROJECT) throws Exception
    {
@@ -19,6 +18,15 @@ public class ServicesJavaTextFuctionTest extends BaseTest
          + "SumController.java");
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
    }
+
+   
+   public void waitJavaCommentTestIsReady(String PROJECT) throws Exception
+   {
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+   }
+   
    
    public void openSpringJavaTetsFile(String PROJECT) throws Exception
    {
@@ -33,9 +41,9 @@ public class ServicesJavaTextFuctionTest extends BaseTest
          + "SumController.java");
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
          + "SumController.java");
-      waitEditorIsReady(PROJECT);
+      waitFormatTestIsReady(PROJECT);
    }
-   
+
    public void openJavaClassForFormat(String PROJECT) throws Exception
    {
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
@@ -51,7 +59,21 @@ public class ServicesJavaTextFuctionTest extends BaseTest
          + "SimpleSum.java");
       waitEditorIsReady(PROJECT);
    }
-   
-   
-   
+
+   public void openJavaCommenTest(String PROJECT) throws Exception
+   {
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      waitJavaCommentTestIsReady(PROJECT);
+   }
+
 }

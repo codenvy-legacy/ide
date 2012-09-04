@@ -49,7 +49,7 @@ public class GotoLineFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+      
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.goToLine(15);
