@@ -107,6 +107,25 @@ public interface IDocument
    
    /** The identifier of the default partitioning. */
    final static String DEFAULT_PARTITIONING = "__dftl_partitioning"; //$NON-NLS-1$
+   
+   /**
+    * The unknown modification stamp.
+    */
+   long UNKNOWN_MODIFICATION_STAMP= -1;
+   
+   /**
+    * Returns the modification stamp of this document. The modification stamp
+    * is updated each time a modifying operation is called on this document. If
+    * two modification stamps of the same document are identical then the document
+    * content is too, however, same content does not imply same modification stamp.
+    * <p>
+    * The magnitude or sign of the numerical difference between two modification stamps
+    * is not significant.
+    * </p>
+    *
+    * @return the modification stamp of this document or <code>UNKNOWN_MODIFICATION_STAMP</code>
+    */
+   long getModificationStamp();
 
    /**
     * Returns the existing partitionings for this document. This includes the default partitioning.

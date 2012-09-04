@@ -342,4 +342,13 @@ class EditDocument implements IDocument
    {
       throw new UnsupportedOperationException();
    }
+
+   /**
+    * @see org.exoplatform.ide.text.IDocument#getModificationStamp()
+    */
+   @Override
+   public long getModificationStamp()
+   {
+      throw new UnsupportedOperationException();
+   }
 }
