@@ -85,136 +85,141 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
       }
    }
 
+   @After
+   public final void closeEditor()
+   {
+      try
+      {
+         IDE.EDITOR.forcedClosureFile(1);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
    @Test
    public void removeBlockComment() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-   //   openJavaRemoveCommenTest(PROJECT);
+      openJavaRemoveCommenTest(PROJECT);
+      IDE.GOTOLINE.goToLine(30);
+      //after fix problem in status bar uncomment 
+      //assertEquals("30 : 6", IDE.STATUSBAR.getCursorPosition());
 
-      //-------on this moment go to line does not work in java editor
-      // after fix this block with GOTOLINE method can be uncomment
-      //on this moment we go to line 30 with cursor
+      for (int i = 0; i < 3; i++)
+      {
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+      }
 
-      //IDE.GOTOLINE.goToLine(30);
+      for (int i = 0; i < 23; i++)
+      {
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+      }
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      //need wait for reparce
+      Thread.sleep(4000);
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      assertFalse(content.contains("/*numbers.add(2);"));
+      assertFalse(content.contains("numbers.add(5);*/"));
 
-      IDE.EDITOR.moveCursorDown(0, 30);
-      IDE.EDITOR.moveCursorRight(0, 5);
-      Thread.sleep(10000);
-      //   assertEquals("30 : 6", IDE.STATUSBAR.getCursorPosition());
-
-      //      for (int i = 0; i < 3; i++)
-      //      {
-      //         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
-      //      }
-      //
-      //      for (int i = 0; i < 17; i++)
-      //      {
-      //         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
-      //      }
-      //      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      //
-      //      String content = IDE.EDITOR.getTextFromCodeEditor(0);
-      //      assertFalse(content.contains("/*numbers.add(2);"));
-      //      assertFalse(content.contains("numbers.add(5);*/"));
-      //      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
 
    }
 
-   // @Test
+   @Test
    public void removeBlockCommentByInnerSelection() throws Exception
    {
       driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
+      openJavaRemoveCommenTest(PROJECT);
       IDE.GOTOLINE.goToLine(31);
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("31 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      //after fix problem in status bar uncomment
+      //assertEquals("31 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 1; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
-      for (int i = 0; i < 15; i++)
+      for (int i = 0; i < 22; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      //need wait for reparce
+      Thread.sleep(4000);
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+
    }
 
-   //@Test
+   @Test
    public void removeBlockCommentByStartSelection() throws Exception
    {
       driver.navigate().refresh();
+      driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
+      openJavaRemoveCommenTest(PROJECT);
 
       IDE.GOTOLINE.goToLine(29);
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      //after fix problem in status bar uncomment
+      // assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
-      for (int i = 0; i < 15; i++)
+      for (int i = 0; i < 22; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+
    }
 
-   // @Test
+    @Test
    public void removeBlockCommentByEndSelection() throws Exception
    {
       driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
+      openJavaRemoveCommenTest(PROJECT);
 
       IDE.GOTOLINE.goToLine(32);
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("32 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      //after fix problem in status bar uncomment
+      //assertEquals("32 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
-      for (int i = 0; i < 15; i++)
+      for (int i = 0; i < 22; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+
    }
 
 }

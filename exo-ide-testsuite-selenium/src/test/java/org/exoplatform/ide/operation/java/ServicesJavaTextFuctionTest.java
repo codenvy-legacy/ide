@@ -8,7 +8,7 @@ public class ServicesJavaTextFuctionTest extends BaseTest
    public void waitEditorIsReady(String PROJECT) throws Exception
    {
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
-         + "SimpleSum.java.java");
+         + "SimpleSum.java");
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
    }
 
@@ -24,6 +24,14 @@ public class ServicesJavaTextFuctionTest extends BaseTest
    {
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
          + "JavaCommentsTest.java");
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+   }
+   
+   
+   public void waitJavaRemoveCommentTestIsReady(String PROJECT) throws Exception
+   {
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
    }
    
@@ -76,4 +84,22 @@ public class ServicesJavaTextFuctionTest extends BaseTest
       waitJavaCommentTestIsReady(PROJECT);
    }
 
+   public void openJavaRemoveCommenTest (String PROJECT) throws Exception
+   {
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest");
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      waitJavaRemoveCommentTestIsReady(PROJECT);   
+   }
+   
+   
+   
 }
