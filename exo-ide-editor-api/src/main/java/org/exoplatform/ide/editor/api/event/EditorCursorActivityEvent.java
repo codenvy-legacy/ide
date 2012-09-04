@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.editor.api.event;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -34,29 +36,60 @@ public class EditorCursorActivityEvent extends GwtEvent<EditorCursorActivityHand
    public static final GwtEvent.Type<EditorCursorActivityHandler> TYPE =
       new GwtEvent.Type<EditorCursorActivityHandler>();
 
-   private String editorId;
+   /**
+    * {@link Editor} instance.
+    */
+   private Editor editor;
 
+   /**
+    * Cursor row.
+    */
    private int row;
 
+   /**
+    * Cursor column.
+    */
    private int column;
 
-   public EditorCursorActivityEvent(String editorId, int row, int column)
+   /**
+    * Creates new instance of {@link EditorCursorActivityEvent}.
+    * 
+    * @param editor
+    * @param row
+    * @param column
+    */
+   public EditorCursorActivityEvent(Editor editor, int row, int column)
    {
-      this.editorId = editorId;
+      this.editor = editor;
       this.row = row;
       this.column = column;
    }
 
-   public String getEditorId()
+   /**
+    * Returns {@link Editor} instance.
+    * 
+    * @return
+    */
+   public Editor getEditor()
    {
-      return editorId;
+      return editor;
    }
 
+   /**
+    * Returns cursor column.
+    * 
+    * @return
+    */
    public int getColumn()
    {
       return column;
    }
 
+   /**
+    * Returns cursor row.
+    * 
+    * @return
+    */
    public int getRow()
    {
       return row;

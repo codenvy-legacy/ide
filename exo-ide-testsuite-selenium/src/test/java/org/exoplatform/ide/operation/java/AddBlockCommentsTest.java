@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,28 +39,41 @@ import java.util.Map;
  * @version $Id: Apr 17, 2012 1:16:23 PM anya $
  * 
  */
-public class AddBlockCommentsTest extends BaseTest
+public class AddBlockCommentsTest extends ServicesJavaTextFuctionTest
 {
    private static final String PROJECT = AddBlockCommentsTest.class.getSimpleName();
 
    private static final String FILE_NAME = "JavaCommentsTest.java";
 
+   
    @BeforeClass
    public static void setUp()
    {
-      final String filePath = "src/test/resources/org/exoplatform/ide/operation/java/" + FILE_NAME;
+      final String filePath = "src/test/resources/org/exoplatform/ide/operation/java/JavaCommentsTest.zip";
 
       try
       {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.APPLICATION_JAVA, filePath);
+         Map<String, Link> project = VirtualFileSystemUtils.importZipProject(PROJECT, filePath);
       }
       catch (Exception e)
       {
       }
    }
 
+   @After
+   public void closeTab()
+   {
+      try
+      {
+         IDE.EDITOR.closeTabIgnoringChanges(1);
+        
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
+   
    @AfterClass
    public static void tearDown()
    {
@@ -72,35 +86,36 @@ public class AddBlockCommentsTest extends BaseTest
       }
    }
 
+   
    @Test
    public void addBlockComment() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.WELCOME_PAGE.close();
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      openJavaCommenTest(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
-      IDE.EDITOR.moveCursorDown(0, 28);
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorDown(0, 28);
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      
+      //after adding ability show number of the string into new java - editor,  this  block should be uncommenting 
+      //assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 15; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
-      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
       assertTrue(content.contains("/*numbers.add(1);"));
       assertTrue(content.contains("numbers.add(6);*/"));
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      
    }
 
    @Test
@@ -109,45 +124,46 @@ public class AddBlockCommentsTest extends BaseTest
       driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      openJavaCommenTest(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
 
-      IDE.EDITOR.moveCursorDown(0, 29);
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("30 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorDown(0, 29);
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      
+      //after adding ability show number of the string into new java - editor,  this  block should be uncommenting 
+      //assertEquals("30 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 15; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
-      String content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
 
       assertTrue(content.contains("/*numbers.add(2);"));
       assertTrue(content.contains("numbers.add(4);*/"));
 
       IDE.GOTOLINE.goToLine(29);
-      IDE.EDITOR.moveCursorRight(0, 6);
+      IDE.JAVAEDITOR.moveCursorRight(0, 6);
       assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 15; i++)
       {
-         IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
-      content = IDE.EDITOR.getTextFromCodeEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
       assertTrue(content.contains("/*numbers.add(1);"));
       assertTrue(content.contains("numbers.add(6);*/"));
       assertFalse(content.contains("/*numbers.add(2);"));

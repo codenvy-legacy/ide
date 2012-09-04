@@ -39,9 +39,14 @@ import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -63,8 +68,6 @@ public class CKEditor extends AbsolutePanel implements Editor
 
    
    private String initialContent;
-   
-   private HandlerManager eventBus;
    
    private boolean readOnly;
 
@@ -89,80 +92,43 @@ public class CKEditor extends AbsolutePanel implements Editor
    {
       this.mimeType = mimeType;
       id = "CKEditor - " + String.valueOf(this.hashCode());
+
+      if (configuration == null)
+      {
+         configuration = new CKEditorConfiguration();
+      }
       this.configuration = configuration;
+
       if (mimeType.equals(MimeType.TEXT_HTML))
       {
          CKEditorConfiguration.setFullPage(true);
       }
-   }
 
-//   public CKEditor(String initialContent, String mimeType, CKEditorConfiguration configuration, HandlerManager eventBus, boolean readOnly)
-//   {
-//
-//      label = new Label();
-//      DOM.setElementAttribute(label.getElement(), "id", id);
-//      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
-//      add(label);
-//
-//      if (configuration == null)
-//      {
-//         configuration = new CKEditorConfiguration();
-//      }
-//      
-//      this.configuration = configuration;   
-//
-//      // switch on CKEditor fullPage mode only for html-files
-//      if (mimeType.equals(MimeType.TEXT_HTML))
-//      {
-//         CKEditorConfiguration.setFullPage(true);
-//      }
-//   }
-   
-//   /**
-//    * @see org.exoplatform.ide.editor.api.Editor#newInstance()
-//    */
-//   @Override
-//   public Editor newInstance()
-//   {
-//      return new CKEditor(mimeType, editorDescription, fileExtension, configuration);
-//   }
-//
-//   @Override
-//   protected void onLoad()
-//   {
-//      super.onLoad();
-//   }
-//   
-//   @Override
-//   protected void onUnload()
-//   {
-//      super.onUnload();
-//   }
-   
-   /**
-    * @see com.google.gwt.user.client.ui.Widget#onLoad()
-    */
-   protected void onLoad()
-   {
       label = new Label();
       DOM.setElementAttribute(label.getElement(), "id", id);
-      DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+      //DOM.setElementAttribute(label.getElement(), "style", "overflow: auto; width: 100%; height: 100%;"); // to show scrollbars
+      DOM.setElementAttribute(label.getElement(), "style", "overflow: hidden; position:absolute; left:0px; top:0px; width: 100%; height: 100%;");      
       add(label);
-
+   }
+   
+   @Override
+   protected void onLoad()
+   {
       try
       {
-         super.onLoad();
          editorObject = initCKEditor(id,
                CKEditorConfiguration.BASE_PATH,
                CKEditorConfiguration.TOOLBAR.toString(), // aditional default configuration can be found in config.js
-               CKEditorConfiguration.THEME.toString(), CKEditorConfiguration.SKIN.toString(),
-               CKEditorConfiguration.LANGUAGE.toString(), CKEditorConfiguration.CONTINUOUS_SCANNING,
+               CKEditorConfiguration.THEME.toString(),
+               CKEditorConfiguration.SKIN.toString(),
+               CKEditorConfiguration.LANGUAGE.toString(),
+               CKEditorConfiguration.CONTINUOUS_SCANNING,
                CKEditorConfiguration.isFullPage());
       }
       catch (Exception e)
       {
          e.printStackTrace();
-      }      
+      }
    }
 
    /*
@@ -268,24 +234,122 @@ public class CKEditor extends AbsolutePanel implements Editor
 
    private void onContentChanged()
    {
-      eventBus.fireEvent(new EditorContentChangedEvent(id));
+      fireEvent(new EditorContentChangedEvent(this));
    }
 
    private void onCursorActivity()
    {
-      eventBus.fireEvent(new EditorCursorActivityEvent(id, 0, 0));
+      fireEvent(new EditorCursorActivityEvent(this, 0, 0));
    }
 
    private void onFocusReceived()
    {
-      eventBus.fireEvent(new EditorFocusReceivedEvent(id));
+      fireEvent(new EditorFocusReceivedEvent(this));
    }
 
+//   private void onInitialized()
+//   {
+//      fireEvent(new EditorInitializedEvent(this));
+//      setText(initialContent);
+//   }
+   
+   
+   
    private void onInitialized()
    {
+      updateDimensions();
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateDimensions();
+         }
+      });
+
+      fireEvent(new EditorInitializedEvent(this));
       setText(initialContent);
-      eventBus.fireEvent(new EditorInitializedEvent(id));
    }
+   
+   /**
+    * This hack method is needs to automatically update size of CKEditor toolbar and frame.
+    */
+   private void updateDimensions() {
+      Element spanElement = label.getElement().getFirstChild().cast();
+      tuneElement(spanElement, false);
+
+      Element span1Element = spanElement.getFirstChildElement().cast();
+      tuneElement(span1Element, false);
+      
+      Element span2Element = span1Element.getFirstChildElement().cast();
+      tuneElement(span2Element, false);
+      
+      Element tableElement = span2Element.getFirstChildElement().cast();
+      tuneElement(tableElement, true);
+      
+      Element tBodyElement = tableElement.getFirstChildElement().cast();
+      
+      Element tr1Element = tBodyElement.getChild(0).cast();
+      Element tr1TDElement = tr1Element.getFirstChildElement().cast();
+      tr1TDElement.getStyle().setPosition(Position.RELATIVE);
+      
+      Element tr2Element = tBodyElement.getChild(1).cast();
+      tr2Element.getStyle().setHeight(100, Unit.PCT);
+      
+      Element tr2TDElement = tr2Element.getFirstChildElement().cast();
+      tr2TDElement.getStyle().setPosition(Position.RELATIVE);
+      tr2TDElement.getStyle().setWidth(100, Unit.PCT);
+      tr2TDElement.getStyle().setProperty("height", "auto");
+      
+      Element iFrameElement = tr2TDElement.getFirstChildElement().cast();
+      if ("cke_browser_gecko".equals(span1Element.getClassName()))
+      {
+         iFrameElement.getStyle().setPosition(Position.RELATIVE);
+      }
+      else
+      {
+         iFrameElement.getStyle().setPosition(Position.ABSOLUTE);
+      }
+   }
+   
+   private void tuneElement(Element e, boolean absolutePosition)
+   {
+      if (absolutePosition)
+      {
+         e.getStyle().setPosition(Position.ABSOLUTE);
+      }
+      else
+      {
+         e.getStyle().setPosition(Position.RELATIVE);
+      }
+
+      e.getStyle().setLeft(0, Unit.PX);
+      e.getStyle().setTop(0, Unit.PX);
+      e.getStyle().setWidth(100, Unit.PCT);
+      e.getStyle().setHeight(100, Unit.PCT);
+      e.getStyle().setOverflow(Overflow.HIDDEN);
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
    public String getText()
    {
@@ -376,25 +440,6 @@ public class CKEditor extends AbsolutePanel implements Editor
       }
    }-*/;
 
-   @Deprecated
-   public native void formatSource()
-   /*-{
-   }-*/;
-
-   public native void replaceText(String text)
-   /*-{
-      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
-      if (editor != null)
-      {
-         // TODO
-      }
-   }-*/;
-
-   @Deprecated
-   public native void setLineNumbers(boolean showLineNumbers)
-   /*-{
-   }-*/;
-
    public native void setFocus()
    /*-{
       var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;
@@ -408,27 +453,6 @@ public class CKEditor extends AbsolutePanel implements Editor
          }, 200);
       }
    }-*/;
-
-   public native boolean hasRedoChanges()
-   /*-{
-      return true;
-   }-*/;
-
-   public native boolean hasUndoChanges()
-   /*-{
-      return true;
-   }-*/;
-
-   public boolean canFormatSource()
-   {
-      return false;
-   }
-
-   public boolean canSetLineNumbers()
-   {
-      return false;
-   }
-
 
    private native void restoreNativeAlertAndConfirm()
    /*-{
@@ -500,7 +524,7 @@ public class CKEditor extends AbsolutePanel implements Editor
       return readOnly;
    }
 
-   public int getLabelOffsetHeight()
+   private int getLabelOffsetHeight()
    {
       return label.getOffsetHeight();
    }
@@ -552,71 +576,10 @@ public class CKEditor extends AbsolutePanel implements Editor
       })();
    }-*/;
 
-   public boolean canDeleteCurrentLine()
-   {
-      return false;
-   }
-
-   public boolean canFindAndReplace()
-   {
-      return false;
-   }
-
-   public boolean canGoToLine(int lineNumber)
-   {
-      return false;
-   }
-
-   public boolean canGoToLine()
-   {
-      return false;
-   }
-
-   public void deleteCurrentLine()
-   {
-   }
-
-   public void goToLine(int lineNumber)
-   {
-   }
-
-   public void setCursorPosition(int row, int column)
-   {
-   }
-
-   public int getCursorColumn()
-   {
-      return 0;
-   }
-
-   public int getCursorRow()
-   {
-      return 0;
-   }
-
-   public boolean findAndSelect(String find, boolean caseSensitive)
-   {
-      return false;
-   }
-
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
-   {
-   }
-
-   private HandlerManager getEventBus()
-   {
-      return eventBus;
-   }
-
-   private CKEditorConfiguration getConfiguration()
-   {
-      return configuration;
-   }
-   
    private boolean handleShortcut(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {      
       EditorHotKeyPressedEvent event = new EditorHotKeyPressedEvent(isCtrl, isAlt, isShift, keyCode);
-      eventBus.fireEvent(event);
+      fireEvent(event);
       return event.isHotKeyHandled();
    }   
 
@@ -693,16 +656,6 @@ public class CKEditor extends AbsolutePanel implements Editor
       }
    }
 
-   @Override
-   public void replaceTextAtCurrentLine(String line, int cursorPosition)
-   {
-   }
-
-   @Override
-   public void showLineNumbers(boolean showLineNumbers)
-   {
-   }
-
    /**
     * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
     */
@@ -710,15 +663,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    public String getMimeType()
    {
       return mimeType;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getLineText(int)
-    */
-   @Override
-   public String getLineText(int line)
-   {
-      return null;
    }
 
    /**
@@ -804,22 +748,6 @@ public class CKEditor extends AbsolutePanel implements Editor
       }
    }-*/;
 
-   @Override
-   public void setLineText(int line, String text)
-   {
-   }
-
-   @Override
-   public int getNumberOfLines()
-   {
-      return 0;
-   }
-
-   @Override
-   public void selectRange(int startLine, int startChar, int endLine, int endChar)
-   {
-   }
-
    /**
     * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
     */
@@ -836,24 +764,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    public String getName()
    {
       return "Design";
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
-    */
-   @Override
-   public int getCursorOffsetLeft()
-   {
-      return 0;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
-    */
-   @Override
-   public int getCursorOffsetTop()
-   {
-      return 0;
    }
 
    /**
@@ -909,5 +819,99 @@ public class CKEditor extends AbsolutePanel implements Editor
    {
       return addHandler(handler, EditorInitializedEvent.TYPE);
    }
-   
+
+   @Override
+   public void formatSource()
+   {
+   }
+
+   @Override
+   public void showLineNumbers(boolean showLineNumbers)
+   {
+   }
+
+   @Override
+   public void setCursorPosition(int row, int column)
+   {
+   }
+
+   @Override
+   public void deleteCurrentLine()
+   {
+   }
+
+   @Override
+   public boolean findAndSelect(String find, boolean caseSensitive)
+   {
+      return false;
+   }
+
+   @Override
+   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
+   {
+   }
+
+   @Override
+   public boolean hasUndoChanges()
+   {
+      return false;
+   }
+
+   @Override
+   public boolean hasRedoChanges()
+   {
+      return false;
+   }
+
+   @Override
+   public int getCursorRow()
+   {
+      return 0;
+   }
+
+   @Override
+   public int getCursorColumn()
+   {
+      return 0;
+   }
+
+   @Override
+   public void replaceTextAtCurrentLine(String line, int cursorPosition)
+   {
+   }
+
+   @Override
+   public String getLineText(int line)
+   {
+      return null;
+   }
+
+   @Override
+   public void setLineText(int line, String text)
+   {
+   }
+
+   @Override
+   public int getNumberOfLines()
+   {
+      return 0;
+   }
+
+   @Override
+   public void selectRange(int startLine, int startChar, int endLine, int endChar)
+   {
+   }
+
+   @Override
+   public int getCursorOffsetLeft()
+   {
+      return 0;
+   }
+
+   @Override
+   public int getCursorOffsetTop()
+   {
+      return 0;
+   }
+
 }

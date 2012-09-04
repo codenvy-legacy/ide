@@ -95,14 +95,13 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    private final class TextListenerImpl implements TextListener
    {
-
       /**
        * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
        */
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
-         fireEvent(new EditorContentChangedEvent(getId()));
+         fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          udateDocument();
       }
 
@@ -157,7 +156,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    @Override
    protected void onLoad()
    {
-      fireEvent(new EditorInitializedEvent(id));
+      fireEvent(new EditorInitializedEvent(this));
       super.onLoad();
    }
 

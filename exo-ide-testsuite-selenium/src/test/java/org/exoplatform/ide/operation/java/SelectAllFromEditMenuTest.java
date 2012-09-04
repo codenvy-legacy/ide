@@ -57,13 +57,19 @@ public class SelectAllFromEditMenuTest extends ServicesJavaTextFuctionTest
       openSpringJavaTetsFile(PROJECT);
       waitEditorIsReady(PROJECT);
       IDE.JAVAEDITOR.setCursorToJavaEditor(0);
-    
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SELECT_ALL);
       //need for setting selection area
       Thread.sleep(500);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SPACE.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.BACK_SPACE.toString());
+      //need for reparce in java editor
+      Thread.sleep(500);
+      IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
       assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+
       assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains(
          "public class SumController extends AbstractController {"));
    }

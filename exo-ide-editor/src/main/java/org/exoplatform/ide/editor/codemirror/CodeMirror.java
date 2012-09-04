@@ -436,7 +436,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
 //      showLineNumbers(showLineNumbers);
 
-      fireEvent(new EditorInitializedEvent(id));      
+      fireEvent(new EditorInitializedEvent(this));      
       
       if (initialText != null)
       {
@@ -477,7 +477,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       needUpdateTokenList = true;
       needUpdateDocument = true;
-      fireEvent(new EditorContentChangedEvent(getId()));
+      fireEvent(new EditorContentChangedEvent(this));
    }
 
    private void onCursorActivity(JavaScriptObject cursor)
@@ -503,7 +503,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       // highlight current line
       highlightLine(cursorPositionRow);
 
-      fireEvent(new EditorCursorActivityEvent(id, cursorPositionRow, cursorPositionCol));
+      fireEvent(new EditorCursorActivityEvent(this, cursorPositionRow, cursorPositionCol));
    }
 
    private void highlightLine(int lineNumber)
@@ -817,7 +817,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void fireEditorFocusReceivedEvent()
    {
-      fireEvent(new EditorFocusReceivedEvent(getId()));
+      fireEvent(new EditorFocusReceivedEvent(this));
    }
 
    /**
@@ -1087,7 +1087,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void fireEditorCursorActivityEvent(String editorId, int cursorRow, int cursorCol)
    {
-      fireEvent(new EditorCursorActivityEvent(editorId, cursorRow, cursorCol));
+      fireEvent(new EditorCursorActivityEvent(this, cursorRow, cursorCol));
    }
 
    private native void goToPosition(JavaScriptObject editor, int row, int column)
@@ -1948,7 +1948,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       event.preventDefault();
       int x = event.getClientX() + getAbsoluteLeft() + LINE_NUMBERS_COLUMN_WIDTH;
       int y = event.getClientY() + getAbsoluteTop();
-      fireEvent(new EditorContextMenuEvent(x, y, getId()));
+      fireEvent(new EditorContextMenuEvent(this, x, y));
    }
 
    /**
