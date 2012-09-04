@@ -18,22 +18,21 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.login;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -93,22 +92,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    @Override
    public void onLogin(LoginEvent event)
    {
-      if (display == null)
-      {
-         Display display = GWT.create(Display.class);
-         bindDisplay(display);
-         IDE.getInstance().openView(display.asView());
-      }
-      UrlBuilder builder = new UrlBuilder();
-      builder.setProtocol(Window.Location.getProtocol()).setHost(Window.Location.getHost())
-         .setPath(GoogleAppEngineClientService.getInstance().getAuthUrl());
-      if (Window.Location.getPort() != null && !Window.Location.getPort().isEmpty())
-      {
-         builder.setPort(Integer.parseInt(Window.Location.getPort()));
-      }
-
-      final String url = builder.buildString();
-      display.setLoginLocation(url);
+      String authUrl = Utils.getAuthorizationContext()//
+         + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+         + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+         + "&redirect_after_login="//
+         + Utils.getAuthorizationPageURL();
+      JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
+      authWindow.loginWithOAuth();
    }
 
    private void doLogin()
@@ -149,7 +139,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                      {
                         IDE.getInstance().closeView(display.asView().getId());
                      }
-                     // Window.open(url, "_blank", null);
                   }
                }
 
