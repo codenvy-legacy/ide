@@ -98,6 +98,8 @@ public class InviteGoogleContactsPresenter implements InviteGoogleContactsHandle
 
    public InviteGoogleContactsPresenter()
    {
+      IDE.getInstance().addControl(new InviteGoogleContactsControl());
+
       IDE.addHandler(InviteGoogleContactsEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }

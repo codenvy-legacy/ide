@@ -195,12 +195,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          // try to remove application.
          try
          {
-            LOG.error("Application {} failed to start, cause: {}", name, e.getMessage());
+            LOG.warn("Application {} failed to start, cause: {}", name, e.getMessage());
             cloudfoundry.deleteApplication(cloudfoundry.getTarget(), name, null, null, true);
          }
          catch (Exception e1)
          {
-            LOG.error("Unable delete failed application {}, cause: {}", name, e.getMessage());
+            LOG.warn("Unable delete failed application {}, cause: {}", name, e.getMessage());
          }
 
          throw new ApplicationRunnerException(e.getMessage(), e, logs);

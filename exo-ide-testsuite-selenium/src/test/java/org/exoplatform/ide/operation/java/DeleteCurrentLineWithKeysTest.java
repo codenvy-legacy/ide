@@ -48,10 +48,10 @@ public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+     
 
       IDE.GOTOLINE.goToLine(1);
-      IDE.STATUSBAR.waitCursorPositionAt("1:1");
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "d");
       String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
       assertFalse(code.contains("package sumcontroller;"));

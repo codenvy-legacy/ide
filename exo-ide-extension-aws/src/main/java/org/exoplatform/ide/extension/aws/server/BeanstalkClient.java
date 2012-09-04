@@ -16,22 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.security.shared;
+package org.exoplatform.ide.extension.aws.server;
 
 /**
- * Represents an User with unique identifier. Have such interface to be able use GWT AutoBean feature. Any interface
- * that represents an User should extend this interface.
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Created by The eXo Platform SAS.
+ * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: BeanstalkClient.java Aug 23, 2012
  */
-public interface User
+public class BeanstalkClient
 {
-   String getId();
 
-   void setId(String id);
-
-   String getEmail();
-
-   void setEmail(String email);
 }

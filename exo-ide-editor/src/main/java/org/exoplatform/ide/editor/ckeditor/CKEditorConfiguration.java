@@ -108,8 +108,10 @@ public class CKEditorConfiguration
    public final static boolean READ_ONLY = false;
 
    public final static int CONTINUOUS_SCANNING = 100;
+   
+   public final static String CKEDITOR_DIRECTORY = "ckeditor-3.1";
 
-   public final static String BASE_PATH = GWT.getModuleBaseURL() + "ckeditor/";
+   public final static String BASE_PATH = GWT.getModuleBaseURL() + CKEDITOR_DIRECTORY + "/";
 
    public enum StartupMode {
       WYSIWYG("wysiwyg"), SOURCE("source");

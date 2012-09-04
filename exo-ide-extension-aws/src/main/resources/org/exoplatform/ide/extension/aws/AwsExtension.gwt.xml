@@ -20,26 +20,17 @@
 -->
 
 <module>
-	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE' />
+   <inherits name="com.google.gwt.user.User" />
+   <inherits name='com.google.gwt.core.Core'/>
+   <inherits name='com.google.gwt.user.Debug' />
+   <inherits name='com.google.gwt.xml.XML' />
+   <inherits name='com.google.gwt.json.JSON' />
+   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
+   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   
+   <inherits name='org.exoplatform.ide.extension.cloudfoundry.Views' />
 
-	<!-- Inherit the core Web Toolkit stuff. -->
-	<inherits name='com.google.gwt.user.User' />
-	<inherits name='com.google.gwt.user.Debug' />
-	<inherits name='com.google.gwt.xml.XML' />
-	<inherits name='com.google.gwt.json.JSON' />
-	<inherits name="com.google.gwt.resources.Resources" />
-
-	<inherits name='org.exoplatform.gwtframework.commons.Commons' />
-	<inherits name='org.exoplatform.gwtframework.ui.UI' />
-	<inherits name='org.exoplatform.ide.editor.API' />
-
-	<source path="api" />
-	<source path="ckeditor" />
-	<source path="codeassistant" />
-	<source path="codemirror" />
-
-	<!-- Load FCKEditor files. -->
-	<script src="ckeditor-3.1/ckeditor.js" />
-	<script src="ckeditor-3.1/config.js" />
-
+   <source path="client"/>
+   <source path="shared"/>
+   <entry-point class='org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension' />
 </module>

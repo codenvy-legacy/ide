@@ -76,7 +76,7 @@ public class DocumentAdaptor implements IDocumentListener
          
 //         LineInfo lineIn = editorDocument.getLineFinder().findLine(lineNumber);
 //         mutator.deleteText(lineIn.line(), 0, lineIn.line().length());
-         mutator.insertText(line, col, event.fText);
+         mutator.insertText(line, lineInfo.number(), col, event.fText, false);
 //         setLineText(lineNumber, b.toString());
       }
       catch (BadLocationException e)

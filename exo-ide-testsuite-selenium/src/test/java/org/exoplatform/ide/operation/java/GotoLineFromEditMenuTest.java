@@ -49,13 +49,14 @@ public class GotoLineFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+      
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.goToLine(15);
-      IDE.STATUSBAR.waitCursorPositionAt("15:1");
+      IDE.STATUSBAR.waitCursorPositionAt("15 : 1");
+
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_RIGHT.toString());
-      IDE.STATUSBAR.waitCursorPositionAt("15:2");
+      IDE.STATUSBAR.waitCursorPositionAt("15 : 2");
    }
 
 }

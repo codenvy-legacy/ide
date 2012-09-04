@@ -752,9 +752,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onOpenProject(OpenProjectEvent event)
    {
+      boolean viewWasOpened = display != null;
+
       ensureProjectExplorerDisplayCreated();
 
-      if (openedProject != null)
+      if (viewWasOpened && openedProject != null)
       {
          if (openedProject.getId().equals(event.getProject().getId())
             && openedProject.getName().equals(event.getProject().getName()))

@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.editor.api.event;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -34,16 +36,29 @@ public class EditorContentChangedEvent extends GwtEvent<EditorContentChangedHand
    public static final GwtEvent.Type<EditorContentChangedHandler> TYPE =
       new GwtEvent.Type<EditorContentChangedHandler>();
 
-   private String editorId;
+   /**
+    * {@link Editor} instance.
+    */
+   private Editor editor;
 
-   public EditorContentChangedEvent(String editorId)
+   /**
+    * Creates new instance of {@link EditorContentChangedEvent}.
+    * 
+    * @param editor
+    */
+   public EditorContentChangedEvent(Editor editor)
    {
-      this.editorId = editorId;
+      this.editor = editor;
    }
 
-   public String getEditorId()
+   /**
+    * Returns {@link Editor} instance.
+    * 
+    * @return
+    */
+   public Editor getEditor()
    {
-      return editorId;
+      return editor;
    }
 
    @Override
