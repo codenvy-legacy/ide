@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.api.event;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -41,13 +43,13 @@ public class EditorContextMenuEvent extends GwtEvent<EditorContextMenuHandler>
    private int x, y;
 
    /**
-    * Editor's id.
+    * {@link Editor} instance.
     */
-   private String editorId;
+   private Editor editor;
 
-   public EditorContextMenuEvent(int x, int y, String editorId)
+   public EditorContextMenuEvent(Editor editor, int x, int y)
    {
-      this.editorId = editorId;
+      this.editor = editor;
       this.x = x;
       this.y = y;
    }
@@ -87,10 +89,12 @@ public class EditorContextMenuEvent extends GwtEvent<EditorContextMenuHandler>
    }
 
    /**
-    * @return the editorId
+    * Returns {@link Editor} instance.
+    * 
+    * @return
     */
-   public String getEditorId()
+   public Editor getEditor()
    {
-      return editorId;
+      return editor;
    }
 }

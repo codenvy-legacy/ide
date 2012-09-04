@@ -19,6 +19,8 @@
 
 package org.exoplatform.ide.editor.api.event;
 
+import org.exoplatform.ide.editor.api.Editor;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -33,20 +35,29 @@ public class EditorFocusReceivedEvent extends GwtEvent<EditorFocusReceivedHandle
 
    public static final GwtEvent.Type<EditorFocusReceivedHandler> TYPE = new GwtEvent.Type<EditorFocusReceivedHandler>();
 
-   private String editorId;
+   /**
+    * {@link Editor} instance.
+    */
+   private Editor editor;
 
    /**
+    * Creates new instance of {@link EditorFocusReceivedEvent}.
     * 
-    * @param editorId
+    * @param editorId 
     */
-   public EditorFocusReceivedEvent(String editorId)
+   public EditorFocusReceivedEvent(Editor editor)
    {
-      this.editorId = editorId;
+      this.editor = editor;
    }
 
-   public String getEditorId()
+   /**
+    * Returns {@link Editor} instance.
+    * 
+    * @return
+    */
+   public Editor getEditor()
    {
-      return this.editorId;
+      return editor;
    }
 
    @Override
