@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
+import com.google.gwt.user.client.Window;
+
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -88,4 +90,8 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
    {
       return GoogleAppEngineExtension.isAppEngineProject(currentProject);
    }
+   
+  
+   
+   
 }
