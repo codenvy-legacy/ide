@@ -79,7 +79,7 @@ public class Editor extends AbstractTestModule
 
       String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
 
-      String DESIGN_BUTTON_ID = "DesignButtonID";
+      String DESIGN_BUTTON_XPATH = "//div[@title='Design']//div[text()='Design']";
 
       String SOURCE_BUTTON_ID = "SourceButtonID";
 
@@ -946,7 +946,7 @@ public class Editor extends AbstractTestModule
     */
    public void clickDesignButton() throws Exception
    {
-      editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
+      editor.findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
    }
 
    public void selectCkEditorIframe(int tabIndex)

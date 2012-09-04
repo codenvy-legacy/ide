@@ -90,7 +90,7 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      openJavaRemoveCommenTest(PROJECT);
+   //   openJavaRemoveCommenTest(PROJECT);
 
       //-------on this moment go to line does not work in java editor
       // after fix this block with GOTOLINE method can be uncomment

@@ -48,7 +48,7 @@ public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+     
 
       IDE.GOTOLINE.goToLine(1);
       IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
