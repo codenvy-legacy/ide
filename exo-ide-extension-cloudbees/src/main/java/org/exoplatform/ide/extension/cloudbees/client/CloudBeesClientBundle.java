@@ -101,4 +101,10 @@ public interface CloudBeesClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/cloudbees/images/create_account_Disabled.png")
    ImageResource createAccountDisabled();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/switchAccount.png")
+   ImageResource switchAccount();
+   
+   @Source("org/exoplatform/ide/extension/cloudbees/images/switchAccount_Disabled.png")
+   ImageResource switchAccountDisabled();
 }
