@@ -317,7 +317,7 @@ public class Buffer extends UiComponent<Buffer.View>
         @Override
         public boolean onClick(int clickCount, MouseEvent event) {
           // The buffer area does not include the scrollable's padding
-          int bufferClientLeft = css.scrollableLeftPadding();
+          int bufferClientLeft = css.scrollableLeftPadding() + 8;
           int bufferClientTop = 0;
           for (Element element = scrollableElement; element.getOffsetParent() != null;
               element = element.getOffsetParent()) {

@@ -104,7 +104,8 @@ public class HoverPresenter
    private void showHover(TextHover hover, int offset, LineInfo lineInfo)
    {
       IRegion hoverRegion = hover.getHoverRegion(collabEditor, offset);
-      if(hoverRegion.equals(currentRegion) && currentPopup.isVisibleOrPending())
+      
+      if(hoverRegion.equals(currentRegion) && (currentPopup != null || currentPopup.isVisibleOrPending()))
       {
          return;
       }
