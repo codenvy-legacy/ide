@@ -46,11 +46,13 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,7 +79,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       HasClickHandlers getLoginButton();
 
       HasClickHandlers getLoginGoogleButton();
-      
+
       HasClickHandlers getLoginGitHubButton();
 
       HasClickHandlers getCancelButton();
@@ -127,7 +129,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-     //nothing to do
+      //nothing to do
    }
 
    /**
@@ -162,41 +164,37 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
          @Override
          public void onClick(ClickEvent event)
          {
+            String authUrl = Utils.getAuthorizationContext()//
+               + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+               + "&scope=https://www.googleapis.com/auth/userinfo.profile"//
+               + "&scope=https://www.googleapis.com/auth/userinfo.email"//
+               + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+               + "&redirect_after_login="//
+               + Utils.getAuthorizationPageURL();
 
-            int clientHeight = Window.getClientHeight();
-            int clientWidth = Window.getClientWidth();
-            loginWithOAuth(getAuthorizationContext()
-               + "/ide/oauth/authenticate"
-               + "?oauth_provider=google"
-               + "&mode=federated_login"
-               + "&scope=https://www.googleapis.com/auth/userinfo.profile"
-               + "&scope=https://www.googleapis.com/auth/userinfo.email"
-               + "&scope=https://www.googleapis.com/auth/appengine.admin"
-               + "&redirect_after_login=" + getAuthorizationPageURL(),//
-               getAuthorizationErrorPageURL(), 980, 500, clientWidth, clientHeight);
+            JsPopUpOAuthWindow authWindow =
+               new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+            authWindow.loginWithOAuth();
             IDE.getInstance().closeView(display.asView().getId());
 
          }
       });
-      
-      
+
       display.getLoginGitHubButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
-            int clientHeight = Window.getClientHeight();
-            int clientWidth = Window.getClientWidth();
-            loginWithOAuth(getAuthorizationContext()
-               + "/ide/oauth/authenticate"
-               + "?oauth_provider=github"
-               + "&mode=federated_login"
-               + "&scope=user&scope=repo"
-               + "&redirect_after_login=" + getAuthorizationPageURL(),//
-               getAuthorizationErrorPageURL(), 980, 500, clientWidth, clientHeight);
+            String authUrl = Utils.getAuthorizationContext()//
+               + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"//
+               + "&scope=user&scope=repo&redirect_after_login="//
+               + Utils.getAuthorizationPageURL();
+            JsPopUpOAuthWindow authWindow =
+               new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+            authWindow.loginWithOAuth();
             IDE.getInstance().closeView(display.asView().getId());
-            
+
          }
       });
 
@@ -299,7 +297,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
    private void hiddenLoadAuthorizationPage(final AsyncRequest asyncRequest)
    {
-      String authorizationPageURL = getAuthorizationPageURL();
+      String authorizationPageURL = Utils.getAuthorizationPageURL();
       try
       {
          if (authorizationPageURL == null)
@@ -343,7 +341,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       try
       {
-         String securityCheckURL = getSecurityCheckURL();
+         String securityCheckURL = Utils.getSecurityCheckURL();
          if (securityCheckURL == null)
          {
             throw new Exception(
@@ -403,87 +401,5 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
    {
       login = event.getUserInfo().getName();
    }
-
-   private native String getAuthorizationPageURL() /*-{
-		return $wnd.location.protocol + '//' + $wnd.location.host + $wnd.authorizationPageURL;
-   }-*/;
-
-   private native String getAuthorizationErrorPageURL() /*-{
-		return $wnd.location.protocol + '//' + $wnd.location.host + $wnd.authorizationErrorPageURL;
-   }-*/;
-
-   private native String getSecurityCheckURL() /*-{
-		return $wnd.securityCheckURL;
-   }-*/;
-
-   private native String getAuthorizationContext() /*-{
-		return $wnd.authorizationContext;
-   }-*/;
-
-   public static native void loginWithOAuth(String authUrl, String errorPageUrl, int popupWindowWidth,
-      int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-         function Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight) {
-            this.authUrl = authUrl;
-            this.errorPageUrl = errorPageUrl;
-            this.popupWindowWidth = popupWindowWidth;
-            this.popupWindowHeight = popupWindowHeight;
-
-         var popup_close_handler = function() {
-            if (!popupWindow || popupWindow.closed)
-            {
-               //console.log("closed popup")
-               popupWindow = null;
-               if (popupCloseHandlerIntervalId)
-               {
-                  window.clearInterval(popupCloseHandlerIntervalId);
-                  //console.log("stop interval " + popupCloseHandlerIntervalId);
-               }
-            }
-            else
-            {
-               var href;
-               try
-               {
-                  href = popupWindow.location.href;
-               }
-               catch (error)
-               {}
-
-               if (href)
-               {
-                  console.log(href);
-                  var path = popupWindow.location.pathname;
-                  if (path == "/IDE/Application.html" // for local ide bundle
-                     || path == "/cloud/profile.jsp"
-                     || path == "/cloud/ide.jsp")
-                  {
-                     popupWindow.close();
-                     popupWindow = null;
-                     if (popupCloseHandlerIntervalId)
-                     {
-                        window.clearInterval(popupCloseHandlerIntervalId);
-                        //console.log("stop interval " + popupCloseHandlerIntervalId);
-                     }
-                  }
-                  else if (path.match("j_security_check$"))
-                  {
-                     console.log("login failed");
-                     popupWindow.location.replace(errorPageUrl);
-                  }
-               }
-            }
-         }
-
-         this.open_window = function() {
-            var x = Math.max(0, Math.round(clientWidth / 2) - Math.round(this.popupWindowWidth / 2));
-            var y = Math.max(0, Math.round(clientHeight / 2) - Math.round(this.popupWindowHeight / 2));
-            popupWindow = window.open(this.authUrl, 'popup', 'width=' + this.popupWindowWidth + ',height=' + this.popupWindowHeight + ',left=' + x + ',top=' + y);
-            popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 50);
-         }
-      }
-
-      var popup = new Popup(authUrl, errorPageUrl, popupWindowWidth, popupWindowHeight);
-      popup.open_window();
-   }-*/;
 
 }
