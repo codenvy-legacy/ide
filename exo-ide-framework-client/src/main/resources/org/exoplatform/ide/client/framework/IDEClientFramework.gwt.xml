@@ -48,6 +48,7 @@
    <source path="documentation" />
    <source path="editor" />
    <source path="event" />
+   <source path="invite" />
    <source path="job" />
    <source path="module" />
    <source path="navigation" />

@@ -266,11 +266,11 @@
 
 <!-- GitHub support -->
    <component>
-      <type>org.exoplatform.ide.git.server.rest.GithubServiceApplication</type>
+      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.git.server.github.Github</type>
+      <type>org.exoplatform.ide.git.server.github.GitHub</type>
       <init-params>
          <value-param>
             <name>github-user</name>
@@ -486,10 +486,28 @@
       ***************************************************************************************
    -->
 
+
    <component>
       <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+      <init-params>
+         <value-param>
+            <name>type</name>
+            <value>installed</value>
+         </value-param>
+         <value-param>
+            <name>client-id</name>
+            <value>854018091723.apps.googleusercontent.com</value>
+         </value-param>
+         <value-param>
+            <name>client-secret</name>
+            <value>C8vg2Yf8I3_GfZyHPZsN_2nZ</value>
+         </value-param>
+         <values-param>
+            <name>redirect-uris</name>
+            <value>http://localhost</value>
+         </values-param>
+      </init-params>
    </component>
-
    <component>
       <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
    </component>

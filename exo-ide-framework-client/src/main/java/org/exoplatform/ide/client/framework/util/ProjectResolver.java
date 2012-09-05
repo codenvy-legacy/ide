@@ -100,6 +100,9 @@ public class ProjectResolver
    @Deprecated
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
+   public static List<String> deprecatedTypes = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, EXO_APP, PHP, RAILS,
+      SERVLET_JSP, SPRING, STATIC_WEB);
+   
    static
    {
       if (IconImageBundle.INSTANCE != null)
@@ -122,17 +125,16 @@ public class ProjectResolver
          projectImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject());
          projectImages.put(ProjectType.RUBY, IconImageBundle.INSTANCE.rubyProject());
          projectImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject());
-         projectImages.put(ProjectType.GAE_JAVA, IconImageBundle.INSTANCE.gaeJavaProject());
-         projectImages.put(ProjectType.GAE_PYTHON, IconImageBundle.INSTANCE.gaePythonProject());
+         projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
+         projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
       }
 
-      projectTypes.put(Language.JAVA,
-         Arrays.asList(ProjectType.GAE_JAVA, ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING));
+      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
       projectTypes.put(Language.NODE_JS, Arrays.asList(ProjectType.NODE_JS));
-      projectTypes.put(Language.PYTHON, Arrays.asList(ProjectType.GAE_PYTHON));
+      projectTypes.put(Language.PYTHON, Arrays.asList(ProjectType.PYTHON, ProjectType.DJANGO));
       projectTypes.put(Language.RUBY, Arrays.asList(ProjectType.RUBY, ProjectType.RUBY_ON_RAILS));
 
       languageImages.put(Language.JAVA, IconImageBundle.INSTANCE.javaType());
@@ -215,6 +217,42 @@ public class ProjectResolver
    public static List<ProjectType> getProjectTypesByLanguage(Language language)
    {
       return projectTypes.get(language);
+   }
+
+   /**
+    * TODO temporary method.
+    * 
+    * Is used to support projects with deprecated types.
+    */
+   public static ArrayList<String> resolveProjectTarget(String projectType)
+   {
+      ArrayList<String> targets = new ArrayList<String>();
+      if (APP_ENGINE_JAVA.equals(projectType) || APP_ENGINE_PYTHON.equals(projectType))
+      {
+         targets.add("GAE");
+      }
+
+      if (PHP.equals(projectType))
+      {
+         targets.add("OpenShift");
+      }
+
+      if (RAILS.equals(projectType) || SPRING.equals(projectType) || SERVLET_JSP.equals(projectType))
+      {
+         targets.add("CloudFoundry");
+      }
+
+      if (SERVLET_JSP.equals(projectType))
+      {
+         targets.add("CloudBees");
+      }
+
+      if (RAILS.equals(projectType))
+      {
+         targets.add("Heroku");
+      }
+
+      return targets;
    }
 
 }

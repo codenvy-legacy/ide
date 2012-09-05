@@ -134,6 +134,94 @@
     ]
 },
 {
+    "command": ["git remote add"],
+    "path": "/ide/git/remote-add",
+    "method": "POST",
+    "description" : "Adds a remote named <name> for the repository at <url>.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "BODY",
+	  "options":["-n", "--name"],
+	  "hasArg": true,
+	  "mandatory": true
+      },
+      {
+	  "name": "url",
+	  "type": "BODY",
+	  "options":["-u", "--url"],
+	  "hasArg": true,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["git remote rm"],
+    "path": "/ide/git/remote-delete/{name}",
+    "method": "POST",
+    "description" : "Remove the remote repository. All remote-tracking branches and configuration settings for the remote are removed.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "name",
+	  "type": "PATH",
+	  "options":[],
+	  "hasArg": true,
+	  "mandatory": true
+      }
+    ]
+},
+{
+    "command": ["git remote list"],
+    "path": "/ide/git/remote-list",
+    "method": "POST",
+    "description" : "Show a list of existing remotes.",
+    "params": [
+      {
+	  "name": "$vfsid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+       {
+	  "name": "$projectid",
+	  "type": "QUERY",
+	  "options":[],
+	  "mandatory": true
+      },
+      {
+	  "name": "verbose",
+	  "type": "BODY",
+	  "options":["-v", "--verbose"],
+	  "hasArg": false,
+	  "mandatory": false
+      }
+    ]
+},
+{
     "command": ["vmc login"],
     "path": "/ide/cloudfoundry/login",
     "method": "POST",

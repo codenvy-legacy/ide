@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.edit.event.ShowLineNumbersEvent;
@@ -91,14 +92,13 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHa
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.SelectionRange;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.user.client.Timer;
@@ -109,15 +109,14 @@ import com.google.gwt.user.client.ui.Image;
  * @version $Id: EditorController Mar 21, 2011 5:22:10 PM evgen $
  * 
  */
-public class EditorController implements EditorContentChangedHandler,
-   EditorActiveFileChangedHandler, EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler,
-   ShowLineNumbersHandler, EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler,
-   EditorReplaceFileHandler, EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler,
-   EditorContextMenuHandler, EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
+public class EditorController implements EditorContentChangedHandler, EditorActiveFileChangedHandler,
+   EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler, ShowLineNumbersHandler,
+   EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
+   EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorContextMenuHandler,
+   EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
-   ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler,
-   EditorCutTextHandler, EditorCopyTextHandler, EditorPasteTextHandler, EditorDeleteTextHandler,
-   EditorInitializedHandler
+   ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
+   EditorPasteTextHandler, EditorDeleteTextHandler
 {
 
    private static final String CLOSE_FILE = org.exoplatform.ide.client.IDE.EDITOR_CONSTANT
@@ -133,19 +132,18 @@ public class EditorController implements EditorContentChangedHandler,
 
    private Map<String, FileModel> openedFiles = new LinkedHashMap<String, FileModel>();
 
-   //private LinkedHashMap<String, String> openedEditorsDescription = new LinkedHashMap<String, String>();
-
    private Map<String, String> lockTokens;
 
    /**
-    * Key: View Id
-    * Value: EditorView instance
+    * Key: View Id Value: EditorView instance
     */
    private Map<String, EditorView> editorViewList = new HashMap<String, EditorView>();
 
    private boolean waitForEditorInitialized = false;
 
    private boolean isAfterSaveAs = false;
+
+   private SelectionRange selectionBeforeContextMenu = null;
 
    public EditorController()
    {
@@ -203,11 +201,11 @@ public class EditorController implements EditorContentChangedHandler,
    public void onEditorContentChanged(EditorContentChangedEvent event)
    {
       Editor editor = getEditorFromView(activeFile.getId());
-      if (editor == null || !event.getEditorId().equals(editor.getId()))
+      if (editor == null || !event.getEditor().getId().equals(editor.getId()))
       {
          return;
       }
-      
+
       String path = activeFile.getId();
 
       if (ignoreContentChangedList.contains(path))
@@ -227,7 +225,7 @@ public class EditorController implements EditorContentChangedHandler,
    {
       try
       {
-         if(openedFiles.get(activeFile.getId()) != null)
+         if (openedFiles.get(activeFile.getId()) != null)
          {
             editorViewList.get(activeFile.getId()).activate();
          }
@@ -403,6 +401,9 @@ public class EditorController implements EditorContentChangedHandler,
       editorViewList.get(activeFile.getId()).activate();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorOpenFileHandler#onEditorOpenFile(org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent)
+    */
    public void onEditorOpenFile(EditorOpenFileEvent event)
    {
       FileModel file = event.getFile();
@@ -410,7 +411,7 @@ public class EditorController implements EditorContentChangedHandler,
       {
          return;
       }
-      
+
       if (openedFiles.get(file.getId()) != null)
       {
          FileModel openedFile = openedFiles.get(file.getId());
@@ -418,170 +419,36 @@ public class EditorController implements EditorContentChangedHandler,
          view.setViewVisible();
          if (event.getCursorPosition() != null)
          {
-            view.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
+            view.getEditor().setCursorPosition(event.getCursorPosition().getRow(),
+               event.getCursorPosition().getColumn());
          }
          return;
       }
-      
-      try 
+
+      try
       {
-         Editor []editors = IDE.getInstance().getFileTypeRegistry().getEditors(file.getMimeType());
+         Editor[] editors = IDE.getInstance().getFileTypeRegistry().getEditors(file.getMimeType());
          EditorView editorView = new EditorView(file, isReadOnly(file), editors, 0);
-//         editorView.getEditor().setText(file.getContent());
-         
-         ignoreContentChangedList.add(file.getId());
+         if(!MimeType.APPLICATION_JAVA.equals(file.getMimeType()))
+           ignoreContentChangedList.add(file.getId());
          openedFiles.put(file.getId(), file);
          editorViewList.put(file.getId(), editorView);
          waitForEditorInitialized = true;
          activeFile = file;
          IDE.getInstance().openView(editorView);
-         
          if (event.getCursorPosition() != null)
          {
-            editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
+            editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(),
+               event.getCursorPosition().getColumn());
          }
-         
+
          IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
-      } catch (EditorNotFoundException e) {
+      }
+      catch (EditorNotFoundException e)
+      {
          e.printStackTrace();
          Dialogs.getInstance().showError("Editor for " + file.getMimeType() + " not found!");
-      }            
-
-      
-//      List<Editor> supportedEditors = new ArrayList<Editor>();
-//      try 
-//      {
-//         Editor[] editorsToOpen = IDE.getInstance().getEditors(file.getMimeType());
-//         for (Editor e : editorsToOpen) 
-//         {
-//            supportedEditors.add(e);
-//         }
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent("Editor not found for type " + e.getMimeType()));
-//         return;
-//      }
-      
-//      List<Editor> supportedEditors = getSupportedEditors(event.getEditorProducer(), file);
-//      EditorView editorView =
-//         new EditorView(file, isReadOnly(file), IDE.eventBus(), supportedEditors, getNumberOfEditorToShow(event.getEditorProducer()) - 1);
-
-//      EditorView editorView = new EditorView(file, isReadOnly(file), supportedEditors, 0);
-//      editorsViews.put(file.getId(), editorView);
-//      waitForEditorInitialized = true;
-//      IDE.getInstance().openView(editorView);
-      
-      
-      
-//      if (editorsViews.containsKey(file.getId()))
-//      {
-//         editorsViews.put(file.getId(), editorView);
-//      }
-//      else
-//      {
-//         editorsViews.put(file.getId(), editorView);
-//         waitForEditorInitialized = true;
-//         IDE.getInstance().openView(editorView);
-//      }
-
-//      activeFile = file;
-//      
-//      editorView.getEditor().setText(file.getContent());
-//      
-//      if (event.getCursorPosition() != null)
-//      {
-//         editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
-//      }
-      
-   }
-   
-   
-//   public void onEditorOpenFile(EditorOpenFileEvent event)
-//   {
-//      FileModel file = event.getFile();
-//
-//      if (file == null)
-//      {
-//         return;
-//      }
-//      
-//      if (openedFiles.get(file.getId()) != null)
-//      {
-//         FileModel openedFile = openedFiles.get(file.getId());
-//         EditorView openedFileEditorView = editorsViews.get(openedFile.getId());
-//
-//         if (!event.getEditor().getDescription().equals(openedEditorsDescription.get(file.getId())))
-//         {
-//            openedFileEditorView.switchToEditor(getNumberOfEditorToShow(event.getEditor()) - 1);
-//            openedEditorsDescription.put(file.getId(), event.getEditor().getDescription());
-//         }
-//
-//         openedFileEditorView.setViewVisible();
-//         if (event.getCursorPosition() != null)
-//         {
-//            openedFileEditorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
-//         }
-//         return;
-//      }
-//
-//      ignoreContentChangedList.add(file.getId());
-//      openedFiles.put(file.getId(), file);
-//      openedEditorsDescription.put(file.getId(), event.getEditor().getDescription());
-//
-//      List<Editor> supportedEditors = new ArrayList<Editor>();
-//      try 
-//      {
-//         Editor[] editorsToOpen = IDE.getInstance().getEditors(file.getMimeType());
-//         for (Editor e : editorsToOpen) 
-//         {
-//            supportedEditors.add(e);
-//         }
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent("Editor not found for type " + e.getMimeType()));
-//         return;
-//      }
-//      
-////      List<Editor> supportedEditors = getSupportedEditors(event.getEditorProducer(), file);
-////      EditorView editorView =
-////         new EditorView(file, isReadOnly(file), IDE.eventBus(), supportedEditors, getNumberOfEditorToShow(event.getEditorProducer()) - 1);
-//
-//      EditorView editorView = new EditorView(file, isReadOnly(file), supportedEditors, 0);
-//      editorsViews.put(file.getId(), editorView);
-//      waitForEditorInitialized = true;
-//      IDE.getInstance().openView(editorView);
-//      
-//      
-//      
-////      if (editorsViews.containsKey(file.getId()))
-////      {
-////         editorsViews.put(file.getId(), editorView);
-////      }
-////      else
-////      {
-////         editorsViews.put(file.getId(), editorView);
-////         waitForEditorInitialized = true;
-////         IDE.getInstance().openView(editorView);
-////      }
-//
-//      activeFile = file;
-//      
-//      editorView.getEditor().setText(file.getContent());
-//      
-//      if (event.getCursorPosition() != null)
-//      {
-//         editorView.getEditor().setCursorPosition(event.getCursorPosition().getRow(), event.getCursorPosition().getColumn());
-//      }
-//      
-//      //IDE.fireEvent(new EditorFileOpenedEvent(file, editorView.getEditor(), openedFiles));
-//   }
-
-   // TODO
-   @Override
-   public void onEditorInitialized(EditorInitializedEvent event)
-   {
+      }
    }
 
    /**
@@ -811,7 +678,7 @@ public class EditorController implements EditorContentChangedHandler,
             IDE.fireEvent(new EditorActiveFileChangedEvent(null, null));
             return;
          }
-         
+
          final EditorView editorView = (EditorView)event.getView();
          activeFile = editorView.getFile();
 
@@ -865,101 +732,100 @@ public class EditorController implements EditorContentChangedHandler,
 
    }
 
-//   /**
-//    * Read applicationSettings and return true if there are more than one editors for file with mimeType.
-//    * 
-//    * @param mimeType
-//    * @return
-//    * @throws EditorNotFoundException
-//    */
-//   private List<Editor> getSupportedEditorsForMimeType(String mimeType)
-//   {
-//      try
-//      {
-//         Editor []editors = IDE.getInstance().getEditors(mimeType);
-//         List<Editor> editorList = new ArrayList<Editor>();
-//         for (Edi) {            
-//         }
-//         editorList.addAll(editors);
-//         return new ArrayList<Editor>();
-//         return EditorFactory.getEditors(mimeType);
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//      
-//      return null;
-//   }
+   // /**
+   // * Read applicationSettings and return true if there are more than one editors for file with mimeType.
+   // *
+   // * @param mimeType
+   // * @return
+   // * @throws EditorNotFoundException
+   // */
+   // private List<Editor> getSupportedEditorsForMimeType(String mimeType)
+   // {
+   // try
+   // {
+   // Editor []editors = IDE.getInstance().getEditors(mimeType);
+   // List<Editor> editorList = new ArrayList<Editor>();
+   // for (Edi) {
+   // }
+   // editorList.addAll(editors);
+   // return new ArrayList<Editor>();
+   // return EditorFactory.getEditors(mimeType);
+   // }
+   // catch (EditorNotFoundException e)
+   // {
+   // IDE.fireEvent(new ExceptionThrownEvent(e));
+   // }
+   //
+   // return null;
+   // }
 
-//   private List<Editor> getSupportedEditors(FileModel file)
-//   {
-//      boolean isLineNumbers = true;
-//      if (applicationSettings.getValueAsBoolean("line-numbers") != null)
-//      {
-//         isLineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
-//      }
-//
-//      // create editors for source/design view
-//      List<Editor> supportedEditors = new ArrayList<Editor>();      
-//      
-//      List<EditorProducer> supportedEditorProducers = getSupportedEditorProducers(file.getMimeType());
-//      for (EditorProducer supportedEditorProducer : supportedEditorProducers)
-//      {
-////         HashMap<String, Object> params = new HashMap<String, Object>();
-////         params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
-////         params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
-//         Editor editor = supportedEditorProducer.createEditor(file.getContent(), IDE.eventBus(), params);
-//         supportedEditors.add(editor);
-//         DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
-//      }
-//
-//      return supportedEditors;
-//   }
+   // private List<Editor> getSupportedEditors(FileModel file)
+   // {
+   // boolean isLineNumbers = true;
+   // if (applicationSettings.getValueAsBoolean("line-numbers") != null)
+   // {
+   // isLineNumbers = applicationSettings.getValueAsBoolean("line-numbers");
+   // }
+   //
+   // // create editors for source/design view
+   // List<Editor> supportedEditors = new ArrayList<Editor>();
+   //
+   // List<EditorProducer> supportedEditorProducers = getSupportedEditorProducers(file.getMimeType());
+   // for (EditorProducer supportedEditorProducer : supportedEditorProducers)
+   // {
+   // // HashMap<String, Object> params = new HashMap<String, Object>();
+   // // params.put(EditorParameters.IS_READ_ONLY, isReadOnly(file));
+   // // params.put(EditorParameters.IS_SHOW_LINE_NUMER, isLineNumbers);
+   // Editor editor = supportedEditorProducer.createEditor(file.getContent(), IDE.eventBus(), params);
+   // supportedEditors.add(editor);
+   // DOM.setStyleAttribute(editor.getElement(), "zIndex", "0");
+   // }
+   //
+   // return supportedEditors;
+   // }
 
-//   /**
-//    * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime
-//    * type.
-//    * 
-//    * @param editorProducer
-//    * @return
-//    */
-//   private int getNumberOfEditorToShow(Editor editor)
-//   {
-//      try
-//      {
-//         // create editors for source/design view
-//         //List<Editor> supportedEditors = getSupportedEditorProducers(editor.getMimeType());
-//         Editor[] editors = IDE.getInstance().getEditors(editor.getMimeType());
-//
-//         int i = 1;
-//         for (Editor e : editors)
-//         {
-//            if (editor.getDescription().equals(e.getDescription()))
-//            {
-//               return i;
-//            }
-//            i++;
-//         }
-//
-//      }
-//      catch (EditorNotFoundException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//
-//      //    for (EditorProducer supportedEditorProducer : supportedEditorProducers)
-//      //    {
-//      //       if (editorProducer.getDescription().equals(supportedEditorProducer.getDescription()))
-//      //       {
-//      //          return i;
-//      //       }
-//      //       i++;
-//      //    }
-//
-//      return 1;
-//   }
-
+   // /**
+   // * Return number from 1 of editor created by editorProducer to show in view among the supported editor producer for some mime
+   // * type.
+   // *
+   // * @param editorProducer
+   // * @return
+   // */
+   // private int getNumberOfEditorToShow(Editor editor)
+   // {
+   // try
+   // {
+   // // create editors for source/design view
+   // //List<Editor> supportedEditors = getSupportedEditorProducers(editor.getMimeType());
+   // Editor[] editors = IDE.getInstance().getEditors(editor.getMimeType());
+   //
+   // int i = 1;
+   // for (Editor e : editors)
+   // {
+   // if (editor.getDescription().equals(e.getDescription()))
+   // {
+   // return i;
+   // }
+   // i++;
+   // }
+   //
+   // }
+   // catch (EditorNotFoundException e)
+   // {
+   // IDE.fireEvent(new ExceptionThrownEvent(e));
+   // }
+   //
+   // // for (EditorProducer supportedEditorProducer : supportedEditorProducers)
+   // // {
+   // // if (editorProducer.getDescription().equals(supportedEditorProducer.getDescription()))
+   // // {
+   // // return i;
+   // // }
+   // // i++;
+   // // }
+   //
+   // return 1;
+   // }
 
    /**
     * @see org.exoplatform.ide.editor.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.api.event.EditorContextMenuEvent)
@@ -967,6 +833,8 @@ public class EditorController implements EditorContentChangedHandler,
    @Override
    public void onEditorContextMenu(EditorContextMenuEvent event)
    {
+      // TODO rememeber selected text in editor, when context menu was called:
+      selectionBeforeContextMenu = getEditorFromView(activeFile.getId()).getSelectionRange();
       IDE.fireEvent(new ShowContextMenuEvent(event.getX(), event.getY(), getEditorFromView(activeFile.getId())));
    }
 
@@ -985,6 +853,14 @@ public class EditorController implements EditorContentChangedHandler,
    @Override
    public void onEditorDeleteText(EditorDeleteTextEvent event)
    {
+      // TODO fixes the deselection problem, when context menu is called in editor:
+      if (selectionBeforeContextMenu != null)
+      {
+         getEditorFromView(activeFile.getId()).selectRange(selectionBeforeContextMenu.getStartLine(),
+            selectionBeforeContextMenu.getStartSymbol(), selectionBeforeContextMenu.getEndLine(),
+            selectionBeforeContextMenu.getEndSymbol());
+         selectionBeforeContextMenu = null;
+      }
       getEditorFromView(activeFile.getId()).delete();
    }
 

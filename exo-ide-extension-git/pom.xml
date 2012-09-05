@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M10-SNAPSHOT</version>
+      <version>1.2.0-M11-SNAPSHOT</version>
    </parent>
 
    <groupId>org.exoplatform.ide</groupId>
@@ -43,6 +43,11 @@
          <artifactId>jsr311-api</artifactId>
       </dependency>
 
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-security</artifactId>
+      </dependency>
+
       <!-- CLIENT SIDE -->
       <dependency>
          <groupId>com.google.gwt</groupId>
@@ -66,17 +71,17 @@
          <artifactId>exo-ide-framework-client</artifactId>
          <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
-      	<groupId>org.exoplatform.ide</groupId>
-      	<artifactId>exo-ide-editor-api</artifactId>
-      	<scope>provided</scope>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-api</artifactId>
+         <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
-      	<groupId>org.exoplatform.ide</groupId>
-      	<artifactId>exo-ide-editor</artifactId>
-      	<scope>provided</scope>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>

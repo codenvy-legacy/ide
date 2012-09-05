@@ -57,6 +57,7 @@ public class OAuthAuthenticationService
    private static final Log LOG = ExoLogger.getLogger(OAuthAuthenticationService.class);
 
    private final OAuthAuthenticatorProvider providers;
+
    private final FederatedLoginList loginList;
 
    public OAuthAuthenticationService(OAuthAuthenticatorProvider providers, FederatedLoginList loginList)
@@ -91,16 +92,15 @@ public class OAuthAuthenticationService
     */
    @GET
    @Path("authenticate")
-   public Response authenticate(@Context UriInfo uriInfo,
-                                @Context SecurityContext securityContext)
+   public Response authenticate(@Context UriInfo uriInfo, @Context SecurityContext securityContext)
    {
       OAuthAuthenticator oauth = getAuthenticator(uriInfo.getQueryParameters().getFirst("oauth_provider"));
       final URL requestUrl = getRequestUrl(uriInfo);
       final List<String> scopes = uriInfo.getQueryParameters().get("scope");
       final Principal principal = securityContext.getUserPrincipal();
-      final String authUrl = oauth.getAuthenticateUrl(requestUrl,
-         principal == null ? null : principal.getName(),
-         scopes == null ? Collections.<String>emptyList() : scopes);
+      final String authUrl =
+         oauth.getAuthenticateUrl(requestUrl, principal == null ? null : principal.getName(), scopes == null
+            ? Collections.<String> emptyList() : scopes);
       return Response.temporaryRedirect(URI.create(authUrl)).build();
    }
 
@@ -113,7 +113,7 @@ public class OAuthAuthenticationService
       final String providerName = getParameter(params, "oauth_provider");
       OAuthAuthenticator oauth = providers.getAuthenticator(providerName);
       final List<String> scopes = params.get("scope");
-      final String userId = oauth.callback(requestUrl, scopes == null ? Collections.<String>emptyList() : scopes);
+      final String userId = oauth.callback(requestUrl, scopes == null ? Collections.<String> emptyList() : scopes);
       final String redirectAfterLogin = getParameter(params, "redirect_after_login");
       final String mode = getParameter(params, "mode");
       if ("federated_login".equals(mode))
@@ -122,7 +122,7 @@ public class OAuthAuthenticationService
          // LoginModule may check userId|password from the FederatedLoginList.
          loginList.add(userId, tmpPassword);
          return Response.temporaryRedirect(
-            UriBuilder.fromPath(redirectAfterLogin)
+            UriBuilder.fromUri(redirectAfterLogin)
                .queryParam("username", userId)
                .queryParam("password", tmpPassword)
                .queryParam("oauth_provider", providerName)
@@ -234,8 +234,7 @@ public class OAuthAuthenticationService
 
    @GET
    @Path("invalidate")
-   public Response invalidate(@Context UriInfo uriInfo,
-                              @Context SecurityContext security)
+   public Response invalidate(@Context UriInfo uriInfo, @Context SecurityContext security)
    {
       final Principal principal = security.getUserPrincipal();
       OAuthAuthenticator oauth = getAuthenticator(uriInfo.getQueryParameters().getFirst("oauth_provider"));
@@ -254,10 +253,8 @@ public class OAuthAuthenticationService
       if (oauth == null)
       {
          LOG.error("Unsupported OAuth provider {} ", oauthProviderName);
-         throw new WebApplicationException(Response
-            .status(400)
-            .entity("Unsupported OAuth provider " + oauthProviderName)
-            .type(MediaType.TEXT_PLAIN).build());
+         throw new WebApplicationException(Response.status(400)
+            .entity("Unsupported OAuth provider " + oauthProviderName).type(MediaType.TEXT_PLAIN).build());
       }
       return oauth;
    }

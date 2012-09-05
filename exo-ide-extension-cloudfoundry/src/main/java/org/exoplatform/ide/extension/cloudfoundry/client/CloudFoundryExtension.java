@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.control.ApplicationsControl;
@@ -45,8 +46,10 @@ import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationP
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * CloudFoundry extention for IDE.
@@ -70,7 +73,9 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
     * Default CloudFoundry server.
     */
    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
-
+   
+   private static final String ID = "CloudFoundry";
+   
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
@@ -111,5 +116,11 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new CloudFoundryProjectPresenter();
       new ManageServicesPresenter();
       new CreateServicePresenter();
+   }
+   
+   public static boolean canBeDeployedToCF(ProjectModel project)
+   {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+      return (targets != null && targets.contains(ID));
    }
 }

@@ -4,13 +4,19 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M10-SNAPSHOT</version>
+      <version>1.2.0-M11-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
 
    <dependencies>
 
+      <dependency>
+    <groupId>com.google.code.findbugs</groupId>
+    <artifactId>jsr305</artifactId>
+    <version>1.3.9</version>
+</dependency>
+      
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>

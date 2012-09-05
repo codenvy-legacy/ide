@@ -51,8 +51,10 @@ public class GitHubClientServiceImpl extends GitHubClientService
    private static final String LOGIN = BASE_URL + "/login";
 
    private static final String LIST_USER = BASE_URL + "/list/user";
-   
+
    private static final String COLLABORATORS = BASE_URL + "/collaborators";
+
+   private static final String TOKEN = BASE_URL + "/token";
 
    /**
     * REST service context.
@@ -116,14 +118,23 @@ public class GitHubClientServiceImpl extends GitHubClientService
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).data(credentials)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
-   
-   
+
    @Override
    public void getCollaborators(String user, String repository, AsyncRequestCallback<Collaborators> callback)
       throws RequestException
    {
       String url = restServiceContext + COLLABORATORS + "/" + user + "/" + repository;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-      
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.github.GitHubClientService#getUserToken(java.lang.String,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getUserToken(String user, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   {
+      String url = restServiceContext + TOKEN + "/" + user;
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 }

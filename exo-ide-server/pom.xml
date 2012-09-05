@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M10-SNAPSHOT</version>
+      <version>1.2.0-M11-SNAPSHOT</version>
    </parent>
 
    <artifactId>exo-ide-server</artifactId>
@@ -265,6 +265,26 @@
                <artifactId>guice</artifactId>
             </exclusion>
          </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-security</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.github.dcarter.gdata-java-client</groupId>
+         <artifactId>gdata-core-1.0</artifactId>
+         <version>1.47.1</version>
+      </dependency>
+      <dependency>
+         <groupId>com.github.dcarter.gdata-java-client</groupId>
+         <artifactId>gdata-client-1.0</artifactId>
+         <version>1.47.1</version>
+      </dependency>
+      <dependency>
+         <groupId>com.github.dcarter.gdata-java-client</groupId>
+         <artifactId>gdata-contacts-3.0</artifactId>
+         <version>1.47.1</version>
       </dependency>
    </dependencies>
    <build>

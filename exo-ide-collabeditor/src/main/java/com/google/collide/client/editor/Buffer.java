@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor;
 
+import java.util.ListResourceBundle;
+
 import com.google.collide.client.AppContext;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
@@ -141,6 +143,12 @@ public class Buffer extends UiComponent<Buffer.View>
    */
   public interface MouseClickListener {
     void onMouseClick(int x, int y);
+  }
+  /**
+   * Listener that is called when there is a Context menu called
+   */
+  public interface ContextMenuListener{
+     void onContextMenu(int x, int y);
   }
 
   /**
@@ -297,11 +305,8 @@ public class Buffer extends UiComponent<Buffer.View>
       scrollableElement.addEventListener(Event.CONTEXTMENU, new EventListener() {
         @Override
         public void handleEvent(Event evt) {
-          /*
-           * TODO: eventually have our context menu, but for now
-           * disallow browser's since it's confusing that it does not have copy
-           * nor paste options
-           */
+          MouseEvent e = (MouseEvent)evt;
+          getDelegate().onContextMenu(e.getClientX(), e.getClientY());
           evt.stopPropagation();
           evt.preventDefault();
         }
@@ -312,7 +317,7 @@ public class Buffer extends UiComponent<Buffer.View>
         @Override
         public boolean onClick(int clickCount, MouseEvent event) {
           // The buffer area does not include the scrollable's padding
-          int bufferClientLeft = css.scrollableLeftPadding();
+          int bufferClientLeft = css.scrollableLeftPadding() + 8;
           int bufferClientTop = 0;
           for (Element element = scrollableElement; element.getOffsetParent() != null;
               element = element.getOffsetParent()) {
@@ -516,6 +521,8 @@ public class Buffer extends UiComponent<Buffer.View>
     void onScroll(int scrollTop);
 
     void onScrollableResize(int height, int viewportHeight, int scrollTop);
+    
+    void onContextMenu(int clientX, int clientY);
   }
 
   private final CoordinateMap coordinateMap;
@@ -526,6 +533,9 @@ public class Buffer extends UiComponent<Buffer.View>
   private final ListenerManager<MouseClickListener> mouseClickListenerManager =
       ListenerManager.create();
   private final ListenerManager<MouseDragListener> mouseDragListenerManager =
+      ListenerManager.create();
+  
+  private final ListenerManager<ContextMenuListener> contextMenuListenerManager =
       ListenerManager.create();
 
   private final ListenerManager<MouseMoveListener> mouseMoveListenerManager =
@@ -701,6 +711,20 @@ public class Buffer extends UiComponent<Buffer.View>
             listener.onResize(Buffer.this, height, viewportHeight, scrollTop);
           }
         });
+      }
+
+      @Override
+      public void onContextMenu(final int clientX, final int clientY)
+      {
+         contextMenuListenerManager.dispatch(new Dispatcher<Buffer.ContextMenuListener>()
+         {
+
+            @Override
+            public void dispatch(ContextMenuListener listener)
+            {
+               listener.onContextMenu(clientX, clientY);
+            }
+         });
       }
     });
   }
@@ -897,6 +921,10 @@ public class Buffer extends UiComponent<Buffer.View>
   public ListenerRegistrar<MouseDragListener> getMouseDragListenerRegistrar() {
     return mouseDragListenerManager;
   }
+  
+  public ListenerRegistrar<ContextMenuListener> getContenxtMenuListenerRegistrar() {
+     return contextMenuListenerManager;
+  }  
 
   // TODO: Make it package-private.
   public ListenerRegistrar<MouseMoveListener> getMouseMoveListenerRegistrar() {
