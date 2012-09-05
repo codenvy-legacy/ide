@@ -38,7 +38,7 @@ public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
    {
       try
       {
-              VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -52,15 +52,15 @@ public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+
       IDE.GOTOLINE.goToLine(19);
       IDE.STATUSBAR.waitCursorPositionAt("19:1");
-      
+
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_UP.toString());
-      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());  
+      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
 
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_DOWN.toString());
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());  
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
    }
 
 }

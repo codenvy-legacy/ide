@@ -20,7 +20,6 @@ public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuctionTest
    public static void setUp()
    {
       final String filePath = "src/test/resources/org/exoplatform/ide/operation/java/FormatTextTest.zip";
-
       try
       {
          Map<String, Link> project = VirtualFileSystemUtils.importZipProject(PROJECT, filePath);
@@ -45,18 +44,27 @@ public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuctionTest
    @Test
    public void selectAllDeleteUndoRedoTest() throws Exception
    {
+      final String codeAfterEdit =
+         "package sumcontroller;" + "\n" + "   int c = 225;" + "\n" + "      return a + b;" + "\n"
+            + "   //For Find/replase test" + "\n" + "}" + "\n" + "public class SimpleSum" + "\n" + "{"
+            + "\n" + "   int d = 1;" + "\n" + "   public int sumForEdit(int a, int b)" + "\n" + "   {" + "\n" + "   }"
+            + "\n" + "   int ss = sumForEdit(c, d);" + "\n" + "   String ONE = \"\";" + "\n"+"   String one = \"\";";
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
       String initialText = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
       //need for format text
+      String initialText2 = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      System.out.println("<<<<<<<<<<<<<<<<<<<<<:" + "\n" + initialText2);
       Thread.sleep(500);
 
       //After applying format function to java editor this method should be rewrite.
       //We should compare all text after formatting
-      assertFalse(initialText.equals(IDE.JAVAEDITOR.getTextFromJavaEditor(0)));
+      assertEquals(IDE.JAVAEDITOR.getTextFromJavaEditor(0), codeAfterEdit);
 
    }
 
