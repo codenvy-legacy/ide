@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -53,6 +54,9 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       projectTypes.add(ProjectResolver.SERVLET_JSP);
       projectTypes.add(ProjectResolver.SPRING);
       projectTypes.add(ProjectResolver.APP_ENGINE_JAVA);
+      projectTypes.add(ProjectType.JAVA.value());
+      projectTypes.add(ProjectType.SPRING.value());
+      projectTypes.add(ProjectType.JSP.value());
    }
 
    /**

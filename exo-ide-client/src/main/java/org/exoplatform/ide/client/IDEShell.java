@@ -58,6 +58,10 @@ public class IDEShell implements EntryPoint
                t.printStackTrace();
             }
          }
+         else
+         {
+            e.printStackTrace();
+         }
       }
    }
 
