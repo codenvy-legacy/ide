@@ -29,9 +29,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
-
-import java.util.HashSet;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -46,8 +43,6 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
 
    private boolean isJavaFile = false;
 
-   private HashSet<String> supportedProjectType = new HashSet<String>();
-
    /**
     * 
     */
@@ -58,9 +53,6 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
       setPrompt("Clean Project");
       setImages(JdtClientBundle.INSTANCE.clean(), JdtClientBundle.INSTANCE.cleanDisabled());
       setEvent(new CleanProjectEvent());
-      supportedProjectType.add(ProjectResolver.SERVLET_JSP);
-      supportedProjectType.add(ProjectResolver.SPRING);
-      supportedProjectType.add(ProjectResolver.APP_ENGINE_JAVA);
    }
 
    /**
@@ -92,7 +84,7 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      isJavaProject = supportedProjectType.contains(event.getProject().getProjectType());
+      isJavaProject = JdtExtension.get().isProjectSupported(event.getProject().getProjectType());
       updateEnabling();
    }
 
