@@ -61,6 +61,7 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
@@ -100,6 +101,9 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       projectTypes.add(ProjectResolver.SERVLET_JSP);
       projectTypes.add(ProjectResolver.SPRING);
       projectTypes.add(ProjectResolver.APP_ENGINE_JAVA);
+      projectTypes.add(ProjectType.JAVA.value());
+      projectTypes.add(ProjectType.SPRING.value());
+      projectTypes.add(ProjectType.JSP.value());
    }
 
    /**
