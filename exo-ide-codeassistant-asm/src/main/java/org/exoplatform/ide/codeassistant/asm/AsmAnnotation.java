@@ -57,6 +57,9 @@ public class AsmAnnotation implements Annotation
    @Override
    public AnnotationParameter[] getAnnotationParameters()
    {
+      if(annotationNode.values == null)
+         return new AnnotationParameter[0];
+      
       AnnotationParameter[] param = new AnnotationParameter[annotationNode.values.size() / 2];
       int i = 0;
       for (Iterator iterator = annotationNode.values.iterator(); iterator.hasNext();)
