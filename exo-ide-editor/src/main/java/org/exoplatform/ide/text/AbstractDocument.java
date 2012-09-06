@@ -79,19 +79,19 @@ public abstract class AbstractDocument implements IDocument
    /** All registered document position updaters */
    private List<IPositionUpdater> fPositionUpdaters;
 
-   //   /**
-   //    * The list of post notification changes
-   //    * 
-   //    */
-   //
-   //   private List fPostNotificationChanges;
+//   /**
+//    * The list of post notification changes
+//    * 
+//    */
+//
+//   private List fPostNotificationChanges;
 
-   /**
-    * The reentrance count for post notification changes.
-    * 
-    */
-   private int fReentranceCount = 0;
-
+//   /**
+//    * The reentrance count for post notification changes.
+//    * 
+//    */
+//   private int fReentranceCount = 0;
+//
    /**
     * Indicates whether post notification change processing has been stopped.
     * 
@@ -172,7 +172,7 @@ public abstract class AbstractDocument implements IDocument
     */
    protected AbstractDocument()
    {
-      // fModificationStamp= getNextModificationStamp();
+      fModificationStamp = getNextModificationStamp();
    }
 
    /**
@@ -653,68 +653,68 @@ public abstract class AbstractDocument implements IDocument
       }
    }
 
-   //   /**
-   //    * Fires the given document event to all registers document listeners informing them about the forthcoming document
-   //    * manipulation. Uses a robust iterator.
-   //    * 
-   //    * @param event the event to be sent out
-   //    */
-   //   protected void fireDocumentAboutToBeChanged(DocumentEvent event)
-   //   {
-   //
-   //      // IDocumentExtension
-   //      if (fReentranceCount == 0)
-   //         flushPostNotificationChanges();
-   //
-   //      if (fDocumentPartitioners != null)
-   //      {
-   //         Iterator e = fDocumentPartitioners.values().iterator();
-   //         while (e.hasNext())
-   //         {
-   //            IDocumentPartitioner p = (IDocumentPartitioner)e.next();
-   //            // if (p instanceof IDocumentPartitionerExtension3) {
-   //            // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
-   //            // if (extension.getActiveRewriteSession() != null)
-   //            // continue;
-   //            // }
-   //            try
-   //            {
-   //               p.documentAboutToBeChanged(event);
-   //            }
-   //            catch (Exception ex)
-   //            {
-   //               log(ex);
-   //            }
-   //         }
-   //      }
-   //
-   //      Object[] listeners = fPrenotifiedDocumentListeners.getListeners();
-   //      for (int i = 0; i < listeners.length; i++)
-   //      {
-   //         try
-   //         {
-   //            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
-   //         }
-   //         catch (Exception ex)
-   //         {
-   //            log(ex);
-   //         }
-   //      }
-   //
-   //      listeners = fDocumentListeners.getListeners();
-   //      for (int i = 0; i < listeners.length; i++)
-   //      {
-   //         try
-   //         {
-   //            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
-   //         }
-   //         catch (Exception ex)
-   //         {
-   //            log(ex);
-   //         }
-   //      }
-   //
-   //   }
+   /**
+    * Fires the given document event to all registers document listeners informing them about the forthcoming document
+    * manipulation. Uses a robust iterator.
+    * 
+    * @param event the event to be sent out
+    */
+   protected void fireDocumentAboutToBeChanged(DocumentEvent event)
+   {
+
+      // IDocumentExtension
+//      if (fReentranceCount == 0)
+//         flushPostNotificationChanges();
+
+      if (fDocumentPartitioners != null)
+      {
+         Iterator<IDocumentPartitioner> e = fDocumentPartitioners.values().iterator();
+         while (e.hasNext())
+         {
+            IDocumentPartitioner p = e.next();
+            // if (p instanceof IDocumentPartitionerExtension3) {
+            // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
+            // if (extension.getActiveRewriteSession() != null)
+            // continue;
+            // }
+            try
+            {
+               p.documentAboutToBeChanged(event);
+            }
+            catch (Exception ex)
+            {
+               log(ex);
+            }
+         }
+      }
+
+      Object[] listeners = fPrenotifiedDocumentListeners.getListeners();
+      for (int i = 0; i < listeners.length; i++)
+      {
+         try
+         {
+            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+         }
+         catch (Exception ex)
+         {
+            log(ex);
+         }
+      }
+
+      listeners = fDocumentListeners.getListeners();
+      for (int i = 0; i < listeners.length; i++)
+      {
+         try
+         {
+            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+         }
+         catch (Exception ex)
+         {
+            log(ex);
+         }
+      }
+
+   }
 
    /**
     * Updates document partitioning and document positions according to the specification given by the document event.
@@ -1262,7 +1262,7 @@ public abstract class AbstractDocument implements IDocument
          throw new BadLocationException();
 
       DocumentEvent e = new DocumentEvent(this, pos, length, text);
-      //      fireDocumentAboutToBeChanged(e);
+      fireDocumentAboutToBeChanged(e);
 
       getStore().replace(pos, length, text);
       getTracker().replace(pos, length, text);
@@ -1308,7 +1308,7 @@ public abstract class AbstractDocument implements IDocument
       int length = getStore().getLength();
 
       DocumentEvent e = new DocumentEvent(this, 0, length, text);
-      //      fireDocumentAboutToBeChanged(e);
+      fireDocumentAboutToBeChanged(e);
 
       getStore().set(text);
       getTracker().set(text);
@@ -1368,16 +1368,15 @@ public abstract class AbstractDocument implements IDocument
       return fFindReplaceDocumentAdapter;
    }
 
-   //   /**
-   //    * Flushes all registered post notification changes.
-   //    * 
-   //    * @since 2.0
-   //    */
-   //   private void flushPostNotificationChanges()
-   //   {
-   //      if (fPostNotificationChanges != null)
-   //         fPostNotificationChanges.clear();
-   //   }
+//   /**
+//    * Flushes all registered post notification changes.
+//    * 
+//    */
+//   private void flushPostNotificationChanges()
+//   {
+//      if (fPostNotificationChanges != null)
+//         fPostNotificationChanges.clear();
+//   }
 
    /*
     * @see org.eclipse.jface.text.IDocumentExtension2#acceptPostNotificationReplaces ()
@@ -1927,7 +1926,8 @@ public abstract class AbstractDocument implements IDocument
     * @return a list of the positions in the region
     * @throws BadPositionCategoryException if category is undefined in this document
     */
-   private List<Position> getStartingPositions(String category, int offset, int length) throws BadPositionCategoryException
+   private List<Position> getStartingPositions(String category, int offset, int length)
+      throws BadPositionCategoryException
    {
       List<Position> positions = fPositions.get(category);
       if (positions == null)
@@ -1950,7 +1950,8 @@ public abstract class AbstractDocument implements IDocument
     * @throws BadPositionCategoryException if category is undefined in this document
     * @since 3.4
     */
-   private List<Position> getEndingPositions(String category, int offset, int length) throws BadPositionCategoryException
+   private List<Position> getEndingPositions(String category, int offset, int length)
+      throws BadPositionCategoryException
    {
       List<Position> positions = fEndPositions.get(category);
       if (positions == null)

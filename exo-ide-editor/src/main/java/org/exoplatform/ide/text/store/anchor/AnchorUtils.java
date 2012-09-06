@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.text.store.anchor;
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.store.DocumentMutator;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.Position;
@@ -62,7 +62,7 @@ public final class AnchorUtils {
    * with {@code text}.
    */
   public static void setTextBetweenAnchors(String text, Anchor begin, Anchor end,
-      DocumentMutator documentMutator) {
+      TextStoreMutator documentMutator) {
      Assert.isTrue(begin.isAttached(), "begin must be attached");
      Assert.isTrue(begin.isLineAnchor(), "begin must be line anchor");
      Assert.isTrue(end.isLineAnchor(), "end must be line anchor");

@@ -141,7 +141,11 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          try
          {
-            fDocumentUndoManager.fDocument.replace(fStart, fText.length(), fPreservedText, fUndoModificationStamp);
+            if (fDocumentUndoManager.fDocument instanceof IDocument)
+               ((IDocument)fDocumentUndoManager.fDocument).replace(fStart, fText.length(), fPreservedText,
+                  fUndoModificationStamp);
+            else
+               fDocumentUndoManager.fDocument.replace(fStart, fText.length(), fPreservedText);
          }
          catch (BadLocationException x)
          {
@@ -155,61 +159,64 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          if (isValid())
          {
-
-            long docStamp = fDocumentUndoManager.fDocument.getModificationStamp();
-
-            // Normal case: an undo is valid if its redo will restore
-            // document to its current modification stamp
-            boolean canUndo =
-               docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp >= getRedoModificationStamp();
-
-            /*
-             * Special case to check if the answer is false. If the last
-             * document change was empty, then the document's modification
-             * stamp was incremented but nothing was committed. The
-             * operation being queried has an older stamp. In this case
-             * only, the comparison is different. A sequence of document
-             * changes that include an empty change is handled correctly
-             * when a valid commit follows the empty change, but when
-             * #canUndo() is queried just after an empty change, we must
-             * special case the check. The check is very specific to prevent
-             * false positives. see
-             * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98245
-             */
-            if (!canUndo && this == fDocumentUndoManager.fHistory.getUndoOperation(fDocumentUndoManager.fUndoContext)
-            // this is the latest operation
-               && this != fDocumentUndoManager.fCurrent
-               // there is a more current operation not on the stack
-               && !fDocumentUndoManager.fCurrent.isValid()
-               // the current operation is not a valid document
-               // modification
-               && fDocumentUndoManager.fCurrent.fUndoModificationStamp !=
-               // the invalid current operation has a document stamp
-               IDocument.UNKNOWN_MODIFICATION_STAMP)
+            if (fDocumentUndoManager.fDocument instanceof IDocument)
             {
-               canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
-            }
-            /*
-             * When the composite is the current operation, it may hold the
-             * timestamp of a no-op change. We check this here rather than
-             * in an override of canUndo() in UndoableCompoundTextChange simply to
-             * keep all the special case checks in one place.
-             */
-            if (!canUndo && this == fDocumentUndoManager.fHistory.getUndoOperation(fDocumentUndoManager.fUndoContext) && // this is the latest operation
-               this instanceof UndoableCompoundTextChange && this == fDocumentUndoManager.fCurrent && // this is the current operation
-               this.fStart == -1 && // the current operation text is not valid
-               fDocumentUndoManager.fCurrent.fRedoModificationStamp != IDocument.UNKNOWN_MODIFICATION_STAMP)
-            {
-               // but it has a redo stamp
-               canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
-            }
-            return canUndo;
+               long docStamp = ((IDocument)fDocumentUndoManager.fDocument).getModificationStamp();
 
+               // Normal case: an undo is valid if its redo will restore
+               // document to its current modification stamp
+               boolean canUndo =
+                  docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp >= getRedoModificationStamp();
+
+               /*
+                * Special case to check if the answer is false. If the last
+                * document change was empty, then the document's modification
+                * stamp was incremented but nothing was committed. The
+                * operation being queried has an older stamp. In this case
+                * only, the comparison is different. A sequence of document
+                * changes that include an empty change is handled correctly
+                * when a valid commit follows the empty change, but when
+                * #canUndo() is queried just after an empty change, we must
+                * special case the check. The check is very specific to prevent
+                * false positives. see
+                * https://bugs.eclipse.org/bugs/show_bug.cgi?id=98245
+                */
+               if (!canUndo
+                  && this == fDocumentUndoManager.fHistory.getUndoOperation(fDocumentUndoManager.fUndoContext)
+                  // this is the latest operation
+                  && this != fDocumentUndoManager.fCurrent
+                  // there is a more current operation not on the stack
+                  && !fDocumentUndoManager.fCurrent.isValid()
+                  // the current operation is not a valid document
+                  // modification
+                  && fDocumentUndoManager.fCurrent.fUndoModificationStamp !=
+                  // the invalid current operation has a document stamp
+                  IDocument.UNKNOWN_MODIFICATION_STAMP)
+               {
+                  canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
+               }
+               /*
+                * When the composite is the current operation, it may hold the
+                * timestamp of a no-op change. We check this here rather than
+                * in an override of canUndo() in UndoableCompoundTextChange simply to
+                * keep all the special case checks in one place.
+                */
+               if (!canUndo
+                  && this == fDocumentUndoManager.fHistory.getUndoOperation(fDocumentUndoManager.fUndoContext) && // this is the latest operation
+                  this instanceof UndoableCompoundTextChange && this == fDocumentUndoManager.fCurrent && // this is the current operation
+                  this.fStart == -1 && // the current operation text is not valid
+                  fDocumentUndoManager.fCurrent.fRedoModificationStamp != IDocument.UNKNOWN_MODIFICATION_STAMP)
+               {
+                  // but it has a redo stamp
+                  canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
+               }
+               return canUndo;
+
+            }
+            // if there is no timestamp to check, simply return true per the
+            // 3.0.1 behavior
+            return true;
          }
-         // if there is no timestamp to check, simply return true per the
-         // 3.0.1 behavior
-         //         return true;
-
          return false;
       }
 
@@ -220,10 +227,14 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          if (isValid())
          {
-
-            long docStamp = fDocumentUndoManager.fDocument.getModificationStamp();
-            return docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp == getUndoModificationStamp();
-
+            if (fDocumentUndoManager.fDocument instanceof IDocument)
+            {
+               long docStamp = ((IDocument)fDocumentUndoManager.fDocument).getModificationStamp();
+               return docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp == getUndoModificationStamp();
+            }
+            // if there is no timestamp to check, simply return true per the
+            // 3.0.1 behavior
+            return true;
          }
          return false;
       }
@@ -271,7 +282,11 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          try
          {
-            fDocumentUndoManager.fDocument.replace(fStart, fEnd - fStart, fText, fRedoModificationStamp);
+            if (fDocumentUndoManager.fDocument instanceof IDocument)
+               ((IDocument)fDocumentUndoManager.fDocument)
+                  .replace(fStart, fEnd - fStart, fText, fRedoModificationStamp);
+            else
+               fDocumentUndoManager.fDocument.replace(fStart, fEnd - fStart, fText);
          }
          catch (BadLocationException x)
          {
@@ -367,7 +382,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
        * created as a result of the commit.
        *
        * @return <code>true</code> if the change was committed and created
-       *			a new <code>fCurrent</code>, <code>false</code> if not
+       *       a new <code>fCurrent</code>, <code>false</code> if not
        */
       protected boolean attemptCommit()
       {
@@ -448,7 +463,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    {
 
       /** The list of individual changes */
-      private List fChanges = new ArrayList();
+      private List<UndoableTextChange> fChanges = new ArrayList<DocumentUndoManager.UndoableTextChange>();
 
       /**
        * Creates a new compound text change.
@@ -481,7 +496,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
          {
             UndoableTextChange c;
 
-            c = (UndoableTextChange)fChanges.get(0);
+            c = fChanges.get(0);
             fDocumentUndoManager.fireDocumentUndo(c.fStart, c.fPreservedText, c.fText, null,
                DocumentUndoEvent.ABOUT_TO_UNDO, true);
 
@@ -813,7 +828,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    private ListenerList fDocumentUndoListeners;
 
    /** The list of clients connected. */
-   private List fConnected;
+   private List<Object> fConnected;
 
    /**
     *
@@ -828,7 +843,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
       fDocument = document;
       fHistory = OperationHistoryFactory.getOperationHistory();
       fUndoContext = new ObjectUndoContext(fDocument);
-      fConnected = new ArrayList();
+      fConnected = new ArrayList<Object>();
       fDocumentUndoListeners = new ListenerList(ListenerList.IDENTITY);
    }
 
@@ -1329,7 +1344,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
     * Return whether or not any clients are connected to the receiver.
     *
     * @return <code>true</code> if the receiver is connected to
-    * 			clients, <code>false</code> if it is not
+    *          clients, <code>false</code> if it is not
     */
    boolean isConnected()
    {
@@ -1378,11 +1393,12 @@ public class DocumentUndoManager implements IDocumentUndoManager
       UndoableTextChange cmd = new UndoableTextChange(this);
       cmd.fStart = cmd.fEnd = 0;
       cmd.fText = cmd.fPreservedText = ""; //$NON-NLS-1$
-
-      cmd.fRedoModificationStamp = fDocument.getModificationStamp();
-      if (op != null)
-         cmd.fUndoModificationStamp = ((UndoableTextChange)op).fRedoModificationStamp;
-
+      if (fDocument instanceof IDocument)
+      {
+         cmd.fRedoModificationStamp = ((IDocument)fDocument).getModificationStamp();
+         if (op != null)
+            cmd.fUndoModificationStamp = ((UndoableTextChange)op).fRedoModificationStamp;
+      }
       addToOperationHistory(cmd);
    }
 

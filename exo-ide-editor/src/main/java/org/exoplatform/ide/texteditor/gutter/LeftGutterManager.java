@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor.gutter;
 
-import org.exoplatform.ide.text.store.Document;
+import org.exoplatform.ide.text.store.TextStore;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
 
@@ -23,12 +23,12 @@ public class LeftGutterManager
 
    private final Buffer buffer;
 
-   private Document document;
+   private TextStore document;
 
-   private Document.LineCountListener lineCountListener = new Document.LineCountListener()
+   private TextStore.LineCountListener lineCountListener = new TextStore.LineCountListener()
    {
       @Override
-      public void onLineCountChanged(Document document, int lineCount)
+      public void onLineCountChanged(TextStore document, int lineCount)
       {
          updateWidthFromLineCount(lineCount);
       }
@@ -49,7 +49,7 @@ public class LeftGutterManager
       return gutter;
    }
 
-   public void handleDocumentChanged(Document newDocument)
+   public void handleDocumentChanged(TextStore newDocument)
    {
 
       if (lineCountListenerRemover != null)

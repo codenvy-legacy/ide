@@ -344,32 +344,31 @@ public class DefaultScheme extends InputScheme {
       }
     });
 
-    //TODO (evgen) add undo/redo functionality
-//    /**
-//     * UNDO (ACTION+Z) - undo the most recent document action
-//     *
-//     * @see Editor#undo()
-//     */
-//    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'z') {
-//      @Override
-//      public boolean event(InputScheme scheme, SignalEvent event) {
-//        scheme.getInputController().getEditor().undo();
-//        return true;
-//      }
-//    });
-//
-//    /**
-//     * REDO (ACTION+Y) - redo the last undone document action
-//     *
-//     * @see Editor#redo()
-//     */
-//    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'y') {
-//      @Override
-//      public boolean event(InputScheme scheme, SignalEvent event) {
-//        scheme.getInputController().getEditor().redo();
-//        return true;
-//      }
-//    });
+    /**
+     * UNDO (ACTION+Z) - undo the most recent document action
+     *
+     * @see Editor#undo()
+     */
+    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'z') {
+      @Override
+      public boolean event(InputScheme scheme, SignalEvent event) {
+        scheme.getInputController().getEditor().undo();
+        return true;
+      }
+    });
+
+    /**
+     * REDO (ACTION+Y) - redo the last undone document action
+     *
+     * @see Editor#redo()
+     */
+    defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'y') {
+      @Override
+      public boolean event(InputScheme scheme, SignalEvent event) {
+        scheme.getInputController().getEditor().redo();
+        return true;
+      }
+    });
 //
 //    /**
 //     * Find Next (ACTION+G) - Goto next match

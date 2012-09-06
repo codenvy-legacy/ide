@@ -22,8 +22,8 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.store.Document;
-import org.exoplatform.ide.text.store.DocumentMutator;
+import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.Position;
@@ -208,7 +208,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     }
   }
 
-  public static SelectionModel create(Document document, Buffer buffer) {
+  public static SelectionModel create(TextStore document, Buffer buffer) {
     ListenerRegistrar.RemoverManager removalManager = new ListenerRegistrar.RemoverManager();
     SelectionModel selection = new SelectionModel(document, buffer, removalManager);
     removalManager.track(buffer.getMouseDragListenerRegistrar().add(selection));
@@ -216,7 +216,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     return selection;
   }
 
-  private Anchor createSelectionAnchor(Line line, int lineNumber, int column, Document document,
+  private Anchor createSelectionAnchor(Line line, int lineNumber, int column, TextStore document,
       AnchorListener anchorListener) {
     Anchor anchor =
         document.getAnchorManager().createAnchor(SELECTION_ANCHOR_TYPE, line, lineNumber, column);
@@ -237,7 +237,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   /** The cursor of the selection */
   private final Anchor cursorAnchor;
   private final ListenerManager<CursorListener> cursorListenerManager;
-  private final Document document;
+  private final TextStore document;
   /**
    * While the user is dragging, this defines the lower bound for the minimum
    * selection that must be selected regardless of where the user's mouse
@@ -266,7 +266,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   private ViewportModel viewport;
 
   private SelectionModel(
-      Document document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager) {
+      TextStore document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager) {
     this.document = document;
     this.buffer = buffer;
     this.removerManager = removerManager;
@@ -277,7 +277,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     selectionListenerManager = ListenerManager.create();
   }
 
-  public void deleteSelection(DocumentMutator documentMutator) {
+  public void deleteSelection(TextStoreMutator documentMutator) {
     Assert.isTrue(hasSelection(), "can't delete selection when there is no selection");
     Position[] selectionRange = getSelectionRange(true);
     /*
@@ -905,7 +905,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     }
   }
 
-  public void toggleComments(final DocumentMutator documentMutator,
+  public void toggleComments(final TextStoreMutator documentMutator,
       final RegExp commentChecker, final String commentHead) {
     if (hasSelection()) {
       runWithEarlierAnchorPlacementStrategy(
@@ -923,7 +923,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   private void toggleCommentsAssumingEarlierSelectionAnchorWontShift(
-      DocumentMutator documentMutator, RegExp commentChecker, String commentHead) {
+      TextStoreMutator documentMutator, RegExp commentChecker, String commentHead) {
     new ToggleCommentsController(commentChecker, commentHead).processLines(documentMutator, this);
   }
 
@@ -932,7 +932,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
    * selection.
    */
   public void adjustSelectionIndentation(
-      final DocumentMutator documentMutator, final String tabString, final boolean indent) {
+      final TextStoreMutator documentMutator, final String tabString, final boolean indent) {
     runWithEarlierAnchorPlacementStrategy(InsertionPlacementStrategy.EARLIER, new Runnable() {
       @Override
       public void run() {
@@ -943,7 +943,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   private void adjustSelectionIndentationAssumingEarlierSelectionAnchorWontShift(
-      final DocumentMutator documentMutator, final String tabString, final boolean indent) {
+      final TextStoreMutator documentMutator, final String tabString, final boolean indent) {
     Position[] selectionRange = getSelectionRange(false);
     Line terminator = selectionRange[1].getLine();
     if (selectionRange[1].getColumn() != 0 || !hasSelection()) {

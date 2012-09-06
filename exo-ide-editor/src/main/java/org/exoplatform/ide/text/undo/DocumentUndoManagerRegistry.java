@@ -47,7 +47,7 @@ public final class DocumentUndoManagerRegistry
       private IDocumentUndoManager undoManager;
    }
 
-   private static Map fgFactory = new HashMap();
+   private static Map<IDocument, Record> fgFactory = new HashMap<IDocument, DocumentUndoManagerRegistry.Record>();
 
    private DocumentUndoManagerRegistry()
    {
@@ -83,7 +83,7 @@ public final class DocumentUndoManagerRegistry
    public static void disconnect(IDocument document)
    {
       Assert.isNotNull(document);
-      Record record = (Record)fgFactory.get(document);
+      Record record = fgFactory.get(document);
       record.count--;
       if (record.count == 0)
          fgFactory.remove(document);

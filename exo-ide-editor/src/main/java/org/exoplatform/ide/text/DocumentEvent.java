@@ -74,7 +74,7 @@ public class DocumentEvent
       fText = text;
       //
       // if (fDocument instanceof IDocumentExtension4)
-      // fModificationStamp= ((IDocumentExtension4)fDocument).getModificationStamp();
+      fModificationStamp= fDocument.getModificationStamp();
       // else
       // fModificationStamp= IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
    }

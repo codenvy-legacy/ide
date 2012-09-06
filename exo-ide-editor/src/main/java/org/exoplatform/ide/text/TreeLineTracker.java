@@ -46,7 +46,6 @@ import java.util.ListIterator;
  * document and <var>l</var> is the sum of the number of removed, added or modified lines.
  * </p>
  * 
- * @since 3.2
  */
 abstract class TreeLineTracker implements ILineTracker
 {
@@ -168,12 +167,12 @@ abstract class TreeLineTracker implements ILineTracker
     */
    TreeLineTracker(ListLineTracker tracker)
    {
-      final List lines = tracker.getLines();
+      final List<Line> lines = tracker.getLines();
       final int n = lines.size();
       if (n == 0)
          return;
 
-      Line line = (Line)lines.get(0);
+      Line line = lines.get(0);
       String delim = line.delimiter;
       if (delim == null)
          delim = NO_DELIM;
@@ -1375,7 +1374,7 @@ abstract class TreeLineTracker implements ILineTracker
       int width = WIDTH * leaves;
       String empty = "."; //$NON-NLS-1$
 
-      List roots = new LinkedList();
+      List<Node> roots = new LinkedList<TreeLineTracker.Node>();
       roots.add(fRoot);
       StringBuffer buf = new StringBuffer((width + 1) * depth);
       int indents = leaves;
@@ -1387,12 +1386,12 @@ abstract class TreeLineTracker implements ILineTracker
          indents /= 2;
          int spaces = Math.max(0, indents * WIDTH - WIDTH / 2);
          // print nodes
-         for (ListIterator it = roots.listIterator(); it.hasNext();)
+         for (ListIterator<Node> it = roots.listIterator(); it.hasNext();)
          {
             // pad before
             buf.append(space, 0, spaces);
 
-            Node node = (Node)it.next();
+            Node node = it.next();
             String box;
             // replace the node with its children
             if (node == null)

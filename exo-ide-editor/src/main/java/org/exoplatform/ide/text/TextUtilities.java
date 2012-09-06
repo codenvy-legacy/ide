@@ -193,15 +193,15 @@ public class TextUtilities
     * @return returns the merged document event
     * @throws BadLocationException might be thrown if document is not in the correct state with respect to document events
     */
-   public static DocumentEvent mergeUnprocessedDocumentEvents(IDocument unprocessedDocument, List documentEvents)
+   public static DocumentEvent mergeUnprocessedDocumentEvents(IDocument unprocessedDocument, List<DocumentEvent> documentEvents)
       throws BadLocationException
    {
 
       if (documentEvents.size() == 0)
          return null;
 
-      final Iterator iterator = documentEvents.iterator();
-      final DocumentEvent firstEvent = (DocumentEvent)iterator.next();
+      final Iterator<DocumentEvent> iterator = documentEvents.iterator();
+      final DocumentEvent firstEvent = iterator.next();
 
       // current merged event
       final IDocument document = unprocessedDocument;
@@ -265,14 +265,14 @@ public class TextUtilities
     * @return returns the merged document event
     * @throws BadLocationException might be thrown if document is not in the correct state with respect to document events
     */
-   public static DocumentEvent mergeProcessedDocumentEvents(List documentEvents) throws BadLocationException
+   public static DocumentEvent mergeProcessedDocumentEvents(List<DocumentEvent> documentEvents) throws BadLocationException
    {
 
       if (documentEvents.size() == 0)
          return null;
 
-      final ListIterator iterator = documentEvents.listIterator(documentEvents.size());
-      final DocumentEvent firstEvent = (DocumentEvent)iterator.previous();
+      final ListIterator<DocumentEvent> iterator = documentEvents.listIterator(documentEvents.size());
+      final DocumentEvent firstEvent = iterator.previous();
 
       // current merged event
       final IDocument document = firstEvent.getDocument();
@@ -330,9 +330,9 @@ public class TextUtilities
     * @param document the document
     * @return the map containing the removed partitioners (key type: {@link String}, value type: {@link IDocumentPartitioner})
     */
-   public static Map removeDocumentPartitioners(IDocument document)
+   public static Map<String, IDocumentPartitioner> removeDocumentPartitioners(IDocument document)
    {
-      Map partitioners = new HashMap();
+      Map<String, IDocumentPartitioner> partitioners = new HashMap<String, IDocumentPartitioner>();
 
       String[] partitionings = document.getPartitionings();
       for (int i = 0; i < partitionings.length; i++)
@@ -368,13 +368,13 @@ public class TextUtilities
     *           {@link IDocumentPartitioner})
     * @since 3.0
     */
-   public static void addDocumentPartitioners(IDocument document, Map partitioners)
+   public static void addDocumentPartitioners(IDocument document, Map<String, IDocumentPartitioner> partitioners)
    {
-      Iterator e = partitioners.keySet().iterator();
+      Iterator<String> e = partitioners.keySet().iterator();
       while (e.hasNext())
       {
-         String partitioning = (String)e.next();
-         IDocumentPartitioner partitioner = (IDocumentPartitioner)partitioners.get(partitioning);
+         String partitioning = e.next();
+         IDocumentPartitioner partitioner = partitioners.get(partitioning);
          partitioner.connect(document);
          document.setDocumentPartitioner(partitioning, partitioner);
       }

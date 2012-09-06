@@ -30,9 +30,9 @@ import org.exoplatform.ide.common.Constants;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
-import org.exoplatform.ide.text.store.Document;
-import org.exoplatform.ide.text.store.Document.LineCountListener;
-import org.exoplatform.ide.text.store.Document.LineListener;
+import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.TextStore.LineCountListener;
+import org.exoplatform.ide.text.store.TextStore.LineListener;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.anchor.ReadOnlyAnchor;
@@ -644,7 +644,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
 
    private final ListenerManager<SpacerListener> spacerListenerManager = ListenerManager.create();
 
-   private Document document;
+   private TextStore document;
 
    private final int editorLineHeight;
 
@@ -986,7 +986,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
       return spacerListenerManager;
    }
 
-   public Document getDocument()
+   public TextStore getDocument()
    {
       return document;
    }
@@ -1079,7 +1079,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
       return getView().getWidth();
    }
 
-   public void handleDocumentChanged(Document newDocument)
+   public void handleDocumentChanged(TextStore newDocument)
    {
       documentChangedRemoverManager.remove();
 
@@ -1094,7 +1094,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    }
 
    @Override
-   public void onLineAdded(Document document, final int lineNumber, final JsonArray<Line> addedLines)
+   public void onLineAdded(TextStore document, final int lineNumber, final JsonArray<Line> addedLines)
    {
       renderTimeExecutor.execute(new Runnable()
       {
@@ -1108,7 +1108,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    }
 
    @Override
-   public void onLineRemoved(final Document document, final int lineNumber, final JsonArray<Line> removedLines)
+   public void onLineRemoved(final TextStore document, final int lineNumber, final JsonArray<Line> removedLines)
    {
       renderTimeExecutor.execute(new Runnable()
       {
@@ -1127,7 +1127,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    }
 
    @Override
-   public void onLineCountChanged(Document document, int lineCount)
+   public void onLineCountChanged(TextStore document, int lineCount)
    {
       updateBufferHeight();
    }

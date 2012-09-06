@@ -18,7 +18,7 @@ package org.exoplatform.ide.text.store;
 /**
  * An interface that allows mutation of a document.
  */
-public interface DocumentMutator {
+public interface TextStoreMutator {
 
   /**
    * Deletes the text from the given start point ({@code line} and
@@ -36,7 +36,7 @@ public interface DocumentMutator {
   TextChange deleteText(Line line, int column, int deleteCount);
 
   /**
-   * Similar to {@link DocumentMutator#deleteText(Line, int, int)} but accepts a
+   * Similar to {@link TextStoreMutator#deleteText(Line, int, int)} but accepts a
    * line number for more efficient deletion.
    *
    * @return {@code null} if no changes applied
@@ -45,7 +45,7 @@ public interface DocumentMutator {
 
   /**
    * Similar to
-   * {@link DocumentMutator#insertText(Line, int, int, String, boolean)} but
+   * {@link TextStoreMutator#insertText(Line, int, int, String, boolean)} but
    * uses the default behavior.
    *
    * @return {@code null} if no changes applied
@@ -53,7 +53,7 @@ public interface DocumentMutator {
   TextChange insertText(Line line, int column, String text);
 
   /**
-   * Similar to {@link DocumentMutator#insertText(Line, int, String)} but
+   * Similar to {@link TextStoreMutator#insertText(Line, int, String)} but
    * accepts a line number for more efficient insertion.
    *
    * @return {@code null} if no changes applied
