@@ -60,10 +60,13 @@ public class SelectAllDeleteCopyPasteFromShortKeysTest extends ServicesJavaTextF
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "v");
       assertEquals(compare, IDE.JAVAEDITOR.getTextFromJavaEditor(0));
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " //type for compare");
+      Thread.sleep(2000);
       String compareAfterEdit = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "a");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "c");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.DELETE.toString());
+      Thread.sleep(2000);
       assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "v");
 

@@ -102,6 +102,7 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       openJavaRemoveCommenTest(PROJECT);
       IDE.GOTOLINE.goToLine(30);
       //after fix problem in status bar uncomment 

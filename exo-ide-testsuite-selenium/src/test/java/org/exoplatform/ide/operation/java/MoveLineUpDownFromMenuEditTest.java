@@ -51,7 +51,7 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuctionTest
       openSpringJavaTetsFile(PROJECT);
 
       IDE.GOTOLINE.goToLine(19);
-      IDE.STATUSBAR.waitCursorPositionAt("19:1");
+      IDE.STATUSBAR.waitCursorPositionAt("19 : 1");
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_UP);
       assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());

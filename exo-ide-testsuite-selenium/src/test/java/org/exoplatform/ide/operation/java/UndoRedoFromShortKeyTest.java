@@ -63,13 +63,17 @@ public class UndoRedoFromShortKeyTest extends ServicesJavaTextFuctionTest
 
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "z");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "z");
+      //need for reparse on staging
+      Thread.sleep(2000);
       assertFalse(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("//type1 //type2"));
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "y");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "y");
+      Thread.sleep(2000);
       assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("//type1 //type2"));
       //set file in the initial state
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "z");
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "z");
+      Thread.sleep(2000);
       assertFalse(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("//type1 //type2"));
 
    }
