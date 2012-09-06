@@ -146,8 +146,10 @@ public class CloudBeesService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public CloudBeesUser addUserToAccount(@PathParam("account") String account, CloudBeesUser user) throws Exception
+   public CloudBeesUser addUserToAccount(@PathParam("account") String account,
+                                         @QueryParam("existing_user") boolean existingUser,
+                                         CloudBeesUser user) throws Exception
    {
-      return cloudbees.createUser(account, user);
+      return cloudbees.createUser(account, user, existingUser);
    }
 }
