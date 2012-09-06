@@ -82,9 +82,7 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      boolean enabled =
-         ProjectResolver.APP_ENGINE_JAVA.equals(event.getProject().getProjectType())
-            || ProjectResolver.APP_ENGINE_PYTHON.equals(event.getProject().getProjectType());
+      boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
       setEnabled(enabled);
    }
 }
