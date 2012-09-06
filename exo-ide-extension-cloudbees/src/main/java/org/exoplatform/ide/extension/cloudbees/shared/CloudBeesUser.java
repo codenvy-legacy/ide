@@ -46,6 +46,10 @@ public interface CloudBeesUser
 
    void setPassword(String password);
 
+   String getRole();
+
+   void setRole(String role);
+
    //
 
    String getId();

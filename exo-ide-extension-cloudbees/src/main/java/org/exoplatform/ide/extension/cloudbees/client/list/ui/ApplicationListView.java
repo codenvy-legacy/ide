@@ -58,7 +58,7 @@ public class ApplicationListView extends ViewImpl implements Display
    public ApplicationListView()
    {
       super(ID, ViewType.POPUP, CloudBeesExtension.LOCALIZATION_CONSTANT.appListViewTitle(), new Image(
-         CloudBeesClientBundle.INSTANCE.appList()), 775, 230);
+         CloudBeesClientBundle.INSTANCE.appList()), 775, 270);
       add(uiBinder.createAndBindUi(this));
    }
 
