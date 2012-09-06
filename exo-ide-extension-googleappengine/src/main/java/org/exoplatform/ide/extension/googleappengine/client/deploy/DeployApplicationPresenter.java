@@ -27,6 +27,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -41,12 +42,14 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
+import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
@@ -126,21 +129,21 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       });
    }
 
-
- /*  *//** @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate() *//*
+   /*  *//** @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate() */
+   /*
    @Override
    public void validate()
    {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            applicationId = display.getApplicationIdField().getValue();
-            // Check user is logged to Google App Engine.
-            isUserLogged(true);
-         }
-      });
+   Scheduler.get().scheduleDeferred(new ScheduledCommand()
+   {
+   @Override
+   public void execute()
+   {
+   applicationId = display.getApplicationIdField().getValue();
+   // Check user is logged to Google App Engine.
+   isUserLogged(true);
+   }
+   });
    }*/
 
    /** @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent) */
@@ -271,7 +274,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                {
                   if (!result.isAuthenticated())
                   {
-                     IDE.fireEvent(new LoginEvent());
+                     new OAuthLoginView();
                      return;
                   }
                   if (wizardStep)

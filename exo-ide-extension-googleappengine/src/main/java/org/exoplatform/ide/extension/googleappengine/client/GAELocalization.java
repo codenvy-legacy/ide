@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -357,4 +359,10 @@ public interface GAELocalization extends com.google.gwt.i18n.client.Messages
 
    @Key("backends.update.finished")
    String backendsUpdateFinished();
+   
+   @Key("login.oauth.title")
+   String loginOAuthTitle();
+
+   @Key("login.oauth.label")
+   String loginOAuthLabel();
 }
