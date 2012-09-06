@@ -35,8 +35,9 @@ import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.text.edits.InsertEdit;
 import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
 
 /**
  * 
@@ -49,7 +50,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
 {
 
    /**
-    * Currenlty active editor
+    * Currenlty active editor.
     */
    private Editor editor;
 
@@ -64,7 +65,7 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
    }
 
    /**
-    * Moves selection up
+    * Moves selection up.
     * 
     * @see org.exoplatform.ide.client.framework.editor.event.EditorMoveLineDownHandler#onEditorMoveLineDown(org.exoplatform.ide.client.framework.editor.event.EditorMoveLineDownEvent)
     */
@@ -77,8 +78,31 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
       }
 
       int lines = editor.getDocument().getNumberOfLines();
-      int row = editor.getCursorRow();
-      if (row == lines || row+1 > lines)
+      int cursorRow = editor.getCursorRow();
+      int cursorColumn = editor.getCursorColumn();
+      if (cursorRow == lines || cursorRow + 1 > lines)
+      {
+         return;
+      }
+
+      SelectionRange selectionRange = editor.getSelectionRange();
+
+      int startLineNum = selectionRange.getStartLine();
+      int endLineNum = selectionRange.getEndLine();
+      int endSymbol = selectionRange.getEndSymbol();
+      // when user select text from down to up in CollabEditor
+      if (startLineNum > endLineNum)
+      {
+         startLineNum = selectionRange.getEndLine();
+         endLineNum = selectionRange.getStartLine();
+         endSymbol = selectionRange.getStartSymbol();
+      }
+
+      if (endSymbol == 0 && startLineNum != endLineNum)
+      {
+         endLineNum--;
+      }
+      if (startLineNum >= lines || endLineNum >= lines)
       {
          return;
       }
@@ -87,52 +111,32 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
       MultiTextEdit multiEdit = new MultiTextEdit();
       try
       {
-         IRegion currentLineInformation = document.getLineInformation(row-1);
-         String currentLineContent = document.get(currentLineInformation.getOffset(), currentLineInformation.getLength());
-         int currentLineOffset = document.getLineOffset(row-1);
-
-         IRegion nextLineInformation = document.getLineInformation(row);
+         IRegion nextLineInformation = document.getLineInformation(endLineNum);
          String nextLineContent = document.get(nextLineInformation.getOffset(), nextLineInformation.getLength());
-         int nextLineOffset = document.getLineOffset(row);
+         int nextLineOffset = nextLineInformation.getOffset();
+         int nextLineLength = nextLineInformation.getLength();
+         if (document.getLineDelimiter(endLineNum) != null)
+         {
+            nextLineLength++;
+         }
 
-         multiEdit.addChild(new ReplaceEdit(currentLineOffset, currentLineInformation.getLength(), nextLineContent));
-         multiEdit.addChild(new ReplaceEdit(nextLineOffset, nextLineInformation.getLength(), currentLineContent));
+         multiEdit.addChild(new InsertEdit(document.getLineOffset(startLineNum - 1), nextLineContent + "\n"));
+         multiEdit.addChild(new DeleteEdit(nextLineOffset, nextLineLength));
          multiEdit.apply(document);
 
-         editor.setCursorPosition(row + 1, 1);
+         if (editor instanceof CodeMirror)
+         {
+            editor.selectRange(startLineNum + 1, 0, endLineNum + 2, 0);
+         }
       }
       catch (BadLocationException e)
       {
          Log.info(e.getMessage());
       }
-
-//      SelectionRange selectionRange = editor.getSelectionRange();
-//      int start = selectionRange.getStartLine();
-//      int end = selectionRange.getEndLine();
-//      if (selectionRange.getEndSymbol() == 0 && selectionRange.getStartLine() != selectionRange.getEndLine())
-//      {
-//         end--;
-//      }
-//
-//      if (start >= lines - 1 || end >= lines - 1)
-//      {
-//         return;
-//      }
-//
-//      String nextLineText = editor.getLineText(end + 1);
-//      for (int i = end; i >= start; i--)
-//      {
-//         String lineText = editor.getLineText(i);
-//         editor.setLineText(i + 1, lineText);
-//      }
-//
-//      editor.setLineText(start, nextLineText);
-//      editor.selectRange(start + 1, 0, end + 2, 0);
-//      editor.setCursorPosition(row + 1, 0);
    }
 
    /**
-    * Moves selection down
+    * Moves selection down.
     * 
     * @see org.exoplatform.ide.client.framework.editor.event.EditorMoveLineUpHandler#onEditorMoveLineUp(org.exoplatform.ide.client.framework.editor.event.EditorMoveLineUpEvent)
     */
@@ -145,53 +149,52 @@ public class MoveLineUpDownManager implements EditorMoveLineUpHandler, EditorMov
       }
 
       SelectionRange selectionRange = editor.getSelectionRange();
-      int row = editor.getCursorRow();
+      int cursorRow = editor.getCursorRow();
+      int cursorColumn = editor.getCursorColumn();
 
-      if (selectionRange.getStartLine() == 1)
+      int startLineNum = selectionRange.getStartLine();
+      int endLineNum = selectionRange.getEndLine();
+      int endSymbol = selectionRange.getEndSymbol();
+      // when user select text from down to up in CollabEditor
+      if (startLineNum > endLineNum)
+      {
+         startLineNum = selectionRange.getEndLine();
+         endLineNum = selectionRange.getStartLine();
+         endSymbol = selectionRange.getStartSymbol();
+      }
+
+      if (startLineNum == 1)
       {
          return;
+      }
+
+      if (endSymbol == 0 && startLineNum != endLineNum)
+      {
+         endLineNum--;
       }
 
       IDocument document = editor.getDocument();
       MultiTextEdit multiEdit = new MultiTextEdit();
       try
       {
-         IRegion currentLineInformation = document.getLineInformation(row-1);
-         String currentLineContent = document.get(currentLineInformation.getOffset(), currentLineInformation.getLength());
-         int currentLineOffset = document.getLineOffset(row-1);
-
-         IRegion previousLineInformation = document.getLineInformation(row-2);
+         IRegion previousLineInformation = document.getLineInformation(startLineNum - 2);
          String previousLineContent = document.get(previousLineInformation.getOffset(), previousLineInformation.getLength());
-         int previousLineOffset = document.getLineOffset(row-2);
+         int previousLineOffset = previousLineInformation.getOffset();
+         int previousLineLength = previousLineInformation.getLength() + 1;
 
-         multiEdit.addChild(new ReplaceEdit(currentLineOffset, currentLineInformation.getLength(), previousLineContent));
-         multiEdit.addChild(new ReplaceEdit(previousLineOffset, previousLineInformation.getLength(), currentLineContent));
+         multiEdit.addChild(new InsertEdit(document.getLineOffset(endLineNum), previousLineContent + "\n"));
+         multiEdit.addChild(new DeleteEdit(previousLineOffset, previousLineLength));
          multiEdit.apply(document);
 
-         editor.setCursorPosition(row - 1, 1);
+         if (editor instanceof CodeMirror)
+         {
+            editor.selectRange(startLineNum - 1, 0, endLineNum, 0);
+         }
       }
       catch (BadLocationException e)
       {
          Log.info(e.getMessage());
       }
-
-//      int start = selectionRange.getStartLine();
-//      int end = selectionRange.getEndLine();
-//      if (selectionRange.getEndSymbol() == 0 && selectionRange.getStartLine() != selectionRange.getEndLine())
-//      {
-//         end--;
-//      }
-//
-//      String prevLineText = editor.getLineText(start - 1);
-//      for (int i = start; i <= end; i++)
-//      {
-//         String lineText = editor.getLineText(i);
-//         editor.setLineText(i - 1, lineText);
-//      }
-//
-//      editor.setLineText(end, prevLineText);
-//      editor.selectRange(start - 1, 0, end, 0);
-//      editor.setCursorPosition(row - 1, 0);
    }
 
    /**
