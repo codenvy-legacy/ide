@@ -34,6 +34,9 @@ public interface SamplesLocalizationConstant extends Messages
    /*
     * Buttons
     */
+   @Key("button.ok")
+   String okButton();
+   
    @Key("button.cancel")
    String cancelButton();
 
