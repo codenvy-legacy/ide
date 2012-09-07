@@ -13,13 +13,11 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.TypeInfoStorage;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
 import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
@@ -36,105 +34,105 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
    /** Triggers for types. Do not modify. */
    private final static char[] GENERIC_TYPE_TRIGGERS = new char[]{'.', '\t', '[', '(', '<', ' '};
 
-   /**
-    * Short-lived context information object for generic types. Currently, these are only created after inserting a type proposal,
-    * as core doesn't give us the correct type proposal from within SomeType<|>.
-    */
-   private static class ContextInformation implements IContextInformation
-   {
-      private final String fInformationDisplayString;
-
-      private final String fContextDisplayString;
-
-      private final Image fImage;
-
-      private final int fPosition;
-
-      ContextInformation(LazyGenericTypeProposal proposal)
-      {
-         // don't cache the proposal as content assistant
-         // might hang on to the context info
-         fContextDisplayString = proposal.getDisplayString();
-         fInformationDisplayString = computeContextString(proposal);
-         fImage = proposal.getImage();
-         fPosition = proposal.getReplacementOffset() + proposal.getReplacementString().indexOf('<') + 1;
-      }
-
-      /*
-       * @see org.eclipse.jface.text.contentassist.IContextInformation#getContextDisplayString()
-       */
-      public String getContextDisplayString()
-      {
-         return fContextDisplayString;
-      }
-
-      /*
-       * @see org.eclipse.jface.text.contentassist.IContextInformation#getImage()
-       */
-      public Image getImage()
-      {
-         return fImage;
-      }
-
-      /*
-       * @see org.eclipse.jface.text.contentassist.IContextInformation#getInformationDisplayString()
-       */
-      public String getInformationDisplayString()
-      {
-         return fInformationDisplayString;
-      }
-
-      private String computeContextString(LazyGenericTypeProposal proposal)
-      {
-         TypeArgumentProposal[] proposals = new TypeArgumentProposal[0];// proposal.computeTypeArgumentProposals();
-         if (proposals.length == 0)
-            return null;
-
-         StringBuffer buf = new StringBuffer();
-         for (int i = 0; i < proposals.length; i++)
-         {
-            buf.append(proposals[i].getDisplayName());
-            if (i < proposals.length - 1)
-               buf.append(", "); //$NON-NLS-1$
-         }
-         return buf.toString();
-      }
-
-      /*
-       * @see org.eclipse.jface.text.contentassist.IContextInformationExtension#getContextInformationPosition()
-       */
-      public int getContextInformationPosition()
-      {
-         return fPosition;
-      }
-
-      /*
-       * @see java.lang.Object#equals(java.lang.Object)
-       */
-      @Override
-      public boolean equals(Object obj)
-      {
-         if (obj instanceof ContextInformation)
-         {
-            ContextInformation ci = (ContextInformation)obj;
-            return getContextInformationPosition() == ci.getContextInformationPosition()
-               && getInformationDisplayString().equals(ci.getInformationDisplayString());
-         }
-         return false;
-      }
-
-      /*
-       * @see java.lang.Object#hashCode()
-       * @since 3.1
-       */
-      @Override
-      public int hashCode()
-      {
-         int low = fContextDisplayString != null ? fContextDisplayString.hashCode() : 0;
-         return fPosition << 24 | fInformationDisplayString.hashCode() << 16 | low;
-      }
-
-   }
+//   /**
+//    * Short-lived context information object for generic types. Currently, these are only created after inserting a type proposal,
+//    * as core doesn't give us the correct type proposal from within SomeType<|>.
+//    */
+//   private static class ContextInformation implements org.exoplatform.ide.editor.api.contentassist.ContextInformation
+//   {
+//      private final String fInformationDisplayString;
+//
+//      private final String fContextDisplayString;
+//
+//      private final Image fImage;
+//
+//      private final int fPosition;
+//
+//      ContextInformation(LazyGenericTypeProposal proposal)
+//      {
+//         // don't cache the proposal as content assistant
+//         // might hang on to the context info
+//         fContextDisplayString = proposal.getDisplayString();
+//         fInformationDisplayString = computeContextString(proposal);
+//         fImage = proposal.getImage();
+//         fPosition = proposal.getReplacementOffset() + proposal.getReplacementString().indexOf('<') + 1;
+//      }
+//
+//      /*
+//       * @see org.eclipse.jface.text.contentassist.IContextInformation#getContextDisplayString()
+//       */
+//      public String getContextDisplayString()
+//      {
+//         return fContextDisplayString;
+//      }
+//
+//      /*
+//       * @see org.eclipse.jface.text.contentassist.IContextInformation#getImage()
+//       */
+//      public Image getImage()
+//      {
+//         return fImage;
+//      }
+//
+//      /*
+//       * @see org.eclipse.jface.text.contentassist.IContextInformation#getInformationDisplayString()
+//       */
+//      public String getInformationDisplayString()
+//      {
+//         return fInformationDisplayString;
+//      }
+//
+//      private String computeContextString(LazyGenericTypeProposal proposal)
+//      {
+//         TypeArgumentProposal[] proposals = new TypeArgumentProposal[0];// proposal.computeTypeArgumentProposals();
+//         if (proposals.length == 0)
+//            return null;
+//
+//         StringBuffer buf = new StringBuffer();
+//         for (int i = 0; i < proposals.length; i++)
+//         {
+//            buf.append(proposals[i].getDisplayName());
+//            if (i < proposals.length - 1)
+//               buf.append(", "); //$NON-NLS-1$
+//         }
+//         return buf.toString();
+//      }
+//
+//      /*
+//       * @see org.eclipse.jface.text.contentassist.IContextInformationExtension#getContextInformationPosition()
+//       */
+//      public int getContextInformationPosition()
+//      {
+//         return fPosition;
+//      }
+//
+//      /*
+//       * @see java.lang.Object#equals(java.lang.Object)
+//       */
+//      @Override
+//      public boolean equals(Object obj)
+//      {
+//         if (obj instanceof ContextInformation)
+//         {
+//            ContextInformation ci = (ContextInformation)obj;
+//            return getContextInformationPosition() == ci.getContextInformationPosition()
+//               && getInformationDisplayString().equals(ci.getInformationDisplayString());
+//         }
+//         return false;
+//      }
+//
+//      /*
+//       * @see java.lang.Object#hashCode()
+//       * @since 3.1
+//       */
+//      @Override
+//      public int hashCode()
+//      {
+//         int low = fContextDisplayString != null ? fContextDisplayString.hashCode() : 0;
+//         return fPosition << 24 | fInformationDisplayString.hashCode() << 16 | low;
+//      }
+//
+//   }
 
    private static final class TypeArgumentProposal
    {
@@ -870,7 +868,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
     * @see org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal#computeContextInformation()
     */
    @Override
-   protected IContextInformation computeContextInformation()
+   protected org.exoplatform.ide.editor.api.contentassist.ContextInformation computeContextInformation()
    {
       // try
       // {

@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.util.ModelUtil;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;
@@ -393,7 +393,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal
     * @since 3.3
     */
    @Override
-   protected IContextInformation computeContextInformation()
+   protected ContextInformation computeContextInformation()
    {
       char[] signature = fProposal.getSignature();
       char[][] typeParameters = Signature.getTypeArguments(signature);

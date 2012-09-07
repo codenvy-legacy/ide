@@ -46,7 +46,7 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -516,14 +516,14 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal
     * @since 3.4
     */
    @Override
-   public final IContextInformation getContextInformation()
+   public final ContextInformation getContextInformation()
    {
       if (!fIsContextInformationComputed)
          setContextInformation(computeContextInformation());
       return super.getContextInformation();
    }
 
-   protected IContextInformation computeContextInformation()
+   protected ContextInformation computeContextInformation()
    {
       try
       {

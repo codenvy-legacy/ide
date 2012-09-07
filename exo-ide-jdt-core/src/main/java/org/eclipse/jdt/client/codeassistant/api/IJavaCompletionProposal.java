@@ -8,7 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.exoplatform.ide.editor.api.contentassist;
+package org.eclipse.jdt.client.codeassistant.api;
+
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 
 /**
  * A completion proposal with a relevance value. The relevance value is used to sort the completion proposals. Proposals with

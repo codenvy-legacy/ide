@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.templates;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -62,7 +62,7 @@ public class MultiVariableGuess
       private Image fImage;
 
       /** The context information of this proposal */
-      private IContextInformation fContextInformation;
+      private ContextInformation fContextInformation;
 
       /** The additional info of this proposal */
       private Widget fAdditionalProposalInfo;
@@ -94,7 +94,7 @@ public class MultiVariableGuess
        * @param additionalProposalInfo the additional information associated with this proposal
        */
       public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition,
-         Image image, String displayString, IContextInformation contextInformation, Widget additionalProposalInfo)
+         Image image, String displayString, ContextInformation contextInformation, Widget additionalProposalInfo)
       {
          Assert.isNotNull(replacementString);
          Assert.isTrue(replacementOffset >= 0);
@@ -137,7 +137,7 @@ public class MultiVariableGuess
       /*
        * @see ICompletionProposal#getContextInformation()
        */
-      public IContextInformation getContextInformation()
+      public ContextInformation getContextInformation()
       {
          return fContextInformation;
       }

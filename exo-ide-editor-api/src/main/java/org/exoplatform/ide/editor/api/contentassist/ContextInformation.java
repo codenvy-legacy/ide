@@ -23,13 +23,11 @@ import com.google.gwt.user.client.ui.Image;
  * </ul>
  * </p>
  * <p>
- * The interface can be implemented by clients. By default, clients use
- * {@link org.eclipse.jface.text.contentassist.ContextInformation} as the standard implementer of this interface.
  * </p>
  * 
- * @see IContentAssistProcessor
+ * @see ContentAssistProcessor
  */
-public interface IContextInformation
+public interface ContextInformation
 {
 
    /**

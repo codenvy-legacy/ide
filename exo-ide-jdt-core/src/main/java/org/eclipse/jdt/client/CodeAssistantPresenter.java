@@ -30,6 +30,7 @@ import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalC
 import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
@@ -55,7 +56,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JavaPreferencesSettings;
 import org.eclipse.jdt.client.JdtClientBundle;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.Flags;
 import org.eclipse.jdt.client.core.Messages;
@@ -29,7 +30,6 @@ import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.internal.corext.util.JdtFlags;
 import org.eclipse.jdt.client.internal.corext.util.Strings;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;

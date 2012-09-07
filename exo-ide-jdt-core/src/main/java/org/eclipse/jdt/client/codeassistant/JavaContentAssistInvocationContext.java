@@ -14,12 +14,12 @@ import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.TypeInfoStorage;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory.RHSHistory;
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.text.IDocument;
 
 /**

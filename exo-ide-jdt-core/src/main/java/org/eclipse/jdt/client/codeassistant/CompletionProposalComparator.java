@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 import java.util.Comparator;
 

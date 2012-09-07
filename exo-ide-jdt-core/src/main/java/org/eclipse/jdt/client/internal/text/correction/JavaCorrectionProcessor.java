@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.internal.text.correction;
 
 import org.eclipse.jdt.client.codeassistant.CompletionProposalComparator;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.codeassistant.api.IQuickFixProcessor;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -30,7 +31,6 @@ import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.MultiStatus;
 import org.eclipse.jdt.client.runtime.Status;
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

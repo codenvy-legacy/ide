@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.templates.api.DocumentTemplateContext;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
@@ -22,8 +23,7 @@ import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -481,7 +481,7 @@ public class TemplateProposal implements IJavaCompletionProposal
    /*
     * @see ICompletionProposal#getContextInformation()
     */
-   public IContextInformation getContextInformation()
+   public ContextInformation getContextInformation()
    {
       return null;
    }

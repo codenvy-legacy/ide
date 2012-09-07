@@ -80,7 +80,7 @@ public interface CompletionProposal
     * 
     * @return the context information for this proposal or <code>null</code>
     */
-   IContextInformation getContextInformation();
+   ContextInformation getContextInformation();
    
    /**
     * Applies the proposed completion to the given document. The insertion has been triggered by entering the given character at

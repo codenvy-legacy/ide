@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.internal.text.correction.ICommandAccess;
@@ -25,8 +26,7 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.IDocument;
 
@@ -243,7 +243,7 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    /*
     * @see ICompletionProposal#getContextInformation()
     */
-   public IContextInformation getContextInformation()
+   public ContextInformation getContextInformation()
    {
       return null;
    }

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
+import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.NamingConventions;
 import org.eclipse.jdt.client.core.dom.AST;
@@ -92,7 +93,6 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionPr
 import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

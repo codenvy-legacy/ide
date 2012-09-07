@@ -44,7 +44,7 @@ public interface ContentAssistProcessor
     * @param offset an offset within the document for which context information should be computed
     * @return an array of context information objects or <code>null</code> if no context could be found
     */
-   IContextInformation[] computeContextInformation(Editor viewer, int offset);
+   ContextInformation[] computeContextInformation(Editor viewer, int offset);
 
    /**
     * Returns the characters which when entered by the user should
