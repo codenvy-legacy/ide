@@ -25,41 +25,33 @@ import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpParser;
-import com.google.api.client.http.UrlEncodedParser;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
-import org.everrest.core.impl.provider.json.JsonException;
-import org.everrest.core.impl.provider.json.JsonParser;
-import org.everrest.core.impl.provider.json.JsonValue;
-import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.security.shared.User;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 /**
- * Authentication oauth service for github account.
+ * OAuth authentication  for github account.
  *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
 public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   private static final List<String> SCOPE = Arrays.asList("user", "repo");
-
-   public GitHubOAuthAuthenticator() throws IOException
+   public GitHubOAuthAuthenticator(InitParams initParams)
    {
-      this(new MemoryCredentialStore(), loadClientSecrets("github_client_secrets.json"));
+      this(new MemoryCredentialStore(), createClientSecrets(initParams));
    }
 
-   public GitHubOAuthAuthenticator(CredentialStore credentialStore) throws IOException
+   public GitHubOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
    {
-      this(credentialStore, loadClientSecrets("github_client_secrets.json"));
+      this(credentialStore, createClientSecrets(initParams));
    }
 
    protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
@@ -74,61 +66,29 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
                clientSecrets.getDetails().getClientSecret()),
             clientSecrets.getDetails().getClientId(),
             clientSecrets.getDetails().getAuthUri())
-            .setScopes(SCOPE)
+            .setScopes(Collections.<String>emptyList())
             .setCredentialStore(credentialStore).build(),
          new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
 
    @Override
-   protected HttpParser getParser()
-   {
-      return new UrlEncodedParser();
-   }
-
-   @Override
    public User getUser(String accessToken) throws OAuthAuthenticationException
    {
-      HttpURLConnection urlConnection = null;
-      InputStream urlInputStream = null;
-
+      GitHubUser user = getJson("https://api.github.com/user?access_token=" + accessToken, GitHubUser.class);
+      final String email = user.getEmail();
+      if (email == null || email.isEmpty())
+      {
+         throw new OAuthAuthenticationException("Could not login. Please setup email in your GitHub public profile. ");
+      }
       try
       {
-         URL url = new URL("https://api.github.com/user?access_token=" + accessToken);
-         urlConnection = (HttpURLConnection)url.openConnection();
-         urlInputStream = urlConnection.getInputStream();
-
-         JsonParser parser = new JsonParser();
-         parser.parse(urlInputStream);
-         JsonValue jsonValue = parser.getJsonObject();
-
-         return ObjectBuilder.createObject(GitHubUser.class, jsonValue);
+         new InternetAddress(email).validate();
       }
-      catch (JsonException e)
+      catch (AddressException e)
       {
-         throw new OAuthAuthenticationException(e.getMessage(), e);
+         throw new OAuthAuthenticationException(e.getMessage());
       }
-      catch (IOException e)
-      {
-         throw new OAuthAuthenticationException(e.getMessage(), e);
-      }
-      finally
-      {
-         if (urlInputStream != null)
-         {
-            try
-            {
-               urlInputStream.close();
-            }
-            catch (IOException ignored)
-            {
-            }
-         }
-
-         if (urlConnection != null)
-         {
-            urlConnection.disconnect();
-         }
-      }
+      return user;
    }
 
    @Override

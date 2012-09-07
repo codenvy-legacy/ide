@@ -150,6 +150,7 @@ public class JGitConnection implements GitConnection
 {
    // -------------------------
    private final Repository repository;
+
    private final GitUser user;
 
    /**
@@ -456,7 +457,7 @@ public class JGitConnection implements GitConnection
          try
          {
             dirCache = repository.lockDirCache();
-//            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
+            //            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
             DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
@@ -526,11 +527,9 @@ public class JGitConnection implements GitConnection
 
          String branch = Repository.shortenRefName(repository.getRef(Constants.HEAD).getLeaf().getName());
 
-         return new Revision(branch,
-            commit.getId().getName(),
-            commit.getFullMessage(),
-            (long)commit.getCommitTime() * 1000,
-            new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress()));
+         return new Revision(branch, commit.getId().getName(), commit.getFullMessage(),
+            (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
+               committerIdentity.getEmailAddress()));
       }
       catch (NoHeadException e)
       {
@@ -714,11 +713,9 @@ public class JGitConnection implements GitConnection
          {
             RevCommit commit = revIterator.next();
             PersonIdent committerIdentity = commit.getCommitterIdent();
-            commits.add(new Revision(
-               commit.getId().getName(),
-               commit.getFullMessage(),
-               (long)commit.getCommitTime() * 1000,
-               new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress())));
+            commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
+               (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
+                  .getEmailAddress())));
          }
          return new LogPage(commits);
       }
@@ -735,6 +732,34 @@ public class JGitConnection implements GitConnection
          }
          throw new GitException(e.getMessage(), e);
       }
+   }
+
+   /** @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest) */
+   @Override
+   public List<GitUser> getCommiters() throws GitException
+   {
+      List<GitUser> gitUsers = new ArrayList<GitUser>();
+      try
+      {
+         LogCommand logCommand = new Git(repository).log();
+         Iterator<RevCommit> revIterator = logCommand.call().iterator();
+         while (revIterator.hasNext())
+         {
+            RevCommit commit = revIterator.next();
+            PersonIdent committerIdentity = commit.getCommitterIdent();
+            GitUser gitUser = new GitUser(committerIdentity.getName(), committerIdentity.getEmailAddress());
+            if (!gitUsers.contains(gitUser))
+            {
+               gitUsers.add(gitUser);
+            }
+         }
+      }
+      catch (NoHeadException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      
+      return gitUsers;
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#merge(org.exoplatform.ide.git.shared.MergeRequest) */
@@ -1313,7 +1338,8 @@ public class JGitConnection implements GitConnection
          else if (resetType == ResetType.HARD)
          {
             //DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
-            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
+            DirCacheCheckout_Copy dirCacheCheckout =
+               new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
          }

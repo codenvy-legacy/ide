@@ -34,8 +34,11 @@ import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesContr
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
+import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
+import org.exoplatform.ide.git.client.GitAutoBeanFactory;
+import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
@@ -50,7 +53,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    /**
     * The generator of an {@link AutoBean}.
     */
-   public static final SamplesAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(SamplesAutoBeanFactory.class);
+   public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
 
    public static final SamplesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(SamplesLocalizationConstant.class);
@@ -61,7 +64,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new SamplesClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new GitHubClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());
    }
 
@@ -79,6 +82,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
 
       new StartPagePresenter();
       new ConvertToProjectPresenter();
+      new OAuthLoginPresenter();
 
       // Import from GitHub
       GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();

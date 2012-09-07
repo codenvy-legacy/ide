@@ -40,6 +40,7 @@ public class LogPage extends Log implements InfoPage
 {
    // The same as C git does.
    private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy ZZZZZ";
+
    private static final DateFormat dateFormat;
 
    static

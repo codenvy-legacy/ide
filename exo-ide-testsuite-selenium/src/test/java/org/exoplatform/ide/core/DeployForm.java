@@ -28,6 +28,8 @@ public class DeployForm extends AbstractTestModule
 
       String LIST = "//option[text()='%s']";
 
+      String GETTEXT_FROM_PASS_FIELD = "option[value=%s]";
+
    }
 
    @FindBy(id = Locators.VIEW_LOCATOR)
@@ -97,14 +99,29 @@ public class DeployForm extends AbstractTestModule
       select.click();
    }
 
+   
+   /**
+    * return true if name is selected
+    * @param name
+    * @return
+    */
+   public boolean paasNameIsSelected(String name)
+   {
+      WebElement element = driver().findElement(By.cssSelector(String.format(Locators.GETTEXT_FROM_PASS_FIELD, name)));
+      return element.isSelected();
+   }
+
    /**
     * click on PaaS option form
+    * @throws InterruptedException 
     */
-   public void selectAndClickOnPaasInList(String selectionName)
+   public void selectAndClickOnPaasInList(String selectionName) throws InterruptedException
    {
+      //select.click();
       WebElement namePaas = driver().findElement(By.xpath(String.format(Locators.LIST, selectionName)));
-      new Actions(driver()).moveToElement(namePaas).build().perform();
       namePaas.click();
+      new Actions(driver()).moveToElement(namePaas).build().perform();
+      new Actions(driver()).click(namePaas).build().perform();
    }
 
 }

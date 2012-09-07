@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.fest.assertions.Assertions.*;
 
+import org.exoplatform.ide.codeassistant.asm.test.AnnotationWithAnnotationParameter;
 import org.exoplatform.ide.codeassistant.asm.test.Bar;
 import org.exoplatform.ide.codeassistant.jvm.shared.Annotation;
 import org.exoplatform.ide.codeassistant.jvm.shared.AnnotationParameter;
@@ -150,6 +151,17 @@ public class AnnotationExtractorTest
       assertThat(parameter.getName()).isEqualTo("bar");
       assertThat(parameter.getValue().getArrayType()).containsOnly("String", "aaa", "bbb");
    }
+   
+   @Test
+   public void shouldChecIfDefaultParameterHasDefaultValue() throws Exception
+   {
+      TypeInfo cd = ClassParser.parse(AnnotationWithAnnotationParameter.class);
+      AnnotationValue defaultValue = cd.getMethods().get(0).getAnnotationDefault();
+      Annotation annotation = defaultValue.getAnnotation();
+      assertThat(annotation.getAnnotationParameters()).isEmpty();
+      
+   }
+   
    @Test
    public void shouldExtractAnnotationArrayDefaultParameter() throws Exception
    {

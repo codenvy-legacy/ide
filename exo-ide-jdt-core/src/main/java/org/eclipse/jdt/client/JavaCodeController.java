@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -40,7 +39,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -57,6 +55,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.marking.Markable;
+import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -64,8 +63,10 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -204,16 +205,26 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             Markable editor = editors.get(file.getId());
             editor.unmarkAllProblems();
             IDE.fireEvent(new UpdateOutlineEvent(unit, file));
-            if (unit.getProblems().length == 0 || editor == null)
-               return;
-
-            boolean hasError = false;
-            for (IProblem p : unit.getProblems())
+            IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
+            List<Marker> markers = new ArrayList<Marker>();
+            if (tasks != null)
             {
-               editor.markProblem(new ProblemImpl(p));
-               if (p.isError())
-                  hasError = true;
+               for (IProblem p : tasks)
+               {
+                  markers.add(new ProblemImpl(p));
+               }
             }
+            boolean hasError = false;
+            if (unit.getProblems().length != 0 || editor != null)
+            {
+               for (IProblem p : unit.getProblems())
+               {
+                  markers.add(new ProblemImpl(p));
+                  if (p.isError())
+                     hasError = true;
+               }
+            }
+            editor.addProblems(markers.toArray(new Marker[markers.size()]));
             if (hasError)
                checkBuildStatus();
          }
@@ -346,7 +357,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onCancelParse(CancelParseEvent event)
    {
-      if(activeFile == null)
+      if (activeFile == null)
          return;
       if (workingParsers.containsKey(activeFile.getId()))
       {
@@ -458,35 +469,6 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    public INameEnvironment getNameEnvironment()
    {
       return NAME_ENVIRONMENT;
-   }
-
-   private class StringUnmarshaller implements Unmarshallable<StringBuilder>
-   {
-
-      protected StringBuilder builder;
-
-      /**
-       * @param callback
-       */
-      public StringUnmarshaller(StringBuilder builder)
-      {
-         this.builder = builder;
-      }
-
-      /**
-       * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-       */
-      @Override
-      public void unmarshal(Response response)
-      {
-         builder.append(response.getText());
-      }
-
-      @Override
-      public StringBuilder getPayload()
-      {
-         return builder;
-      }
    }
 
 }

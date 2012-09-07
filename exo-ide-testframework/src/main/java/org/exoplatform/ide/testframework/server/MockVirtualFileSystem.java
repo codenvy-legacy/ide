@@ -220,9 +220,10 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public void updateItem(String id, List<ConvertibleProperty> properties, String lockToken)
+   public Item updateItem(String id, List<ConvertibleProperty> properties, String lockToken)
       throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
+      return null;
    }
 
    @Override

@@ -49,9 +49,6 @@ public class GadgetEditorExtension extends Extension
    @Override
    public void initialize()
    {
-      //IDE.getInstance().addEditor(new CKEditorProducer(MimeType.GOOGLE_GADGET, "CKEditor OpenSocial Gadget editor", "gadget", Images.INSTANCE.gadgetImage(), false, new CKEditorConfiguration()));
-      //IDE.getInstance().addEditor(new GadgetCodeMirrorEditor());
-      
       IDE.getInstance().getFileTypeRegistry().addFileType(new FileType(MimeType.GOOGLE_GADGET, "gadget", Images.INSTANCE.gadgetImage()),
          new EditorCreator()
          {
@@ -74,10 +71,10 @@ public class GadgetEditorExtension extends Extension
             @Override
             public Editor createEditor()
             {
-               return new CKEditor(MimeType.GOOGLE_GADGET, new CKEditorConfiguration());
+               return new CKEditor(MimeType.GOOGLE_GADGET);
             }
          });
-      
+
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.GOOGLE_GADGET, "CodeMirror OpenSocial Gadget editor", "gadget",
 //         new CodeMirrorConfiguration()
 //            .setGenericParsers("['parsegadgetxml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']")

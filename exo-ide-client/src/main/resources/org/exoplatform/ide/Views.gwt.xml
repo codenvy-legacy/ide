@@ -108,17 +108,9 @@
    <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectView">
       <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display" />
    </replace-with>
-   
-   <replace-with class="org.exoplatform.ide.client.project.create.recent.CreateProjectView">
-      <when-type-is class="org.exoplatform.ide.client.project.create.recent.CreateProjectPresenter.Display" />
-   </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
       <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display" />
-   </replace-with>
-
-   <replace-with class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasView">
-      <when-type-is class="org.exoplatform.ide.client.project.deploy.DeployProjectToPaasPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
@@ -258,6 +250,10 @@
 
    <replace-with class="org.exoplatform.ide.client.preferences.PreferencesView">
       <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsView">
+      <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display" />
    </replace-with>
 
 </module>

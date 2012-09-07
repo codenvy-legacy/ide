@@ -26,10 +26,9 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
- * Control for create project from template command.
+ * Control for creating new project.
  * 
  * Created by The eXo Platform SAS .
  * 
@@ -40,17 +39,12 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 public class CreateProjectControl extends SimpleControl implements IDEControl, VfsChangedHandler
 {
 
-   public static final String ID = "Project/New/Create Project(OLD)...";
+   public static final String ID = "Project/New/Create Project...";
 
-   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl() + "(OLD)";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
 
-   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl() + "(OLD)";
+   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl();
 
-   private VirtualFileSystemInfo vfsInfo;
-
-   /**
-    * 
-    */
    public CreateProjectControl()
    {
       super(ID);
@@ -67,10 +61,7 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
    public void initialize()
    {
       setVisible(true);
-
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-
-      updateEnabling();
    }
 
    /**
@@ -79,65 +70,6 @@ public class CreateProjectControl extends SimpleControl implements IDEControl, V
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      vfsInfo = event.getVfsInfo();
-      updateEnabling();
+      setEnabled(event.getVfsInfo() != null);
    }
-
-   /**
-    * 
-    */
-   private void updateEnabling()
-   {
-      setEnabled(vfsInfo != null);
-   }
-
-   // /**
-   // * @see
-   // org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-   // */
-   // public void onItemsSelected(ItemsSelectedEvent event)
-   // {
-   // if (event.getSelectedItems().size() != 1)
-   // {
-   // folderItemSelected = false;
-   // updateEnabling();
-   // return;
-   // }
-   //
-   // if(event.getSelectedItems().get(0) instanceof ProjectModel)
-   // {
-   // folderItemSelected = false;
-   // updateEnabling();
-   // return;
-   // }
-   // folderItemSelected = true;
-   // updateEnabling();
-   // }
-
-   // protected void updateEnabling()
-   // {
-   // if (entryPoint == null)
-   // {
-   // setVisible(false);
-   // setEnabled(false);
-   // return;
-   // }
-   //
-   // setVisible(true);
-   //
-   // if (!browserSelected)
-   // {
-   // setEnabled(false);
-   // return;
-   // }
-   // if (folderItemSelected)
-   // {
-   // setEnabled(true);
-   // }
-   // else
-   // {
-   // setEnabled(false);
-   // }
-   // }
-
 }

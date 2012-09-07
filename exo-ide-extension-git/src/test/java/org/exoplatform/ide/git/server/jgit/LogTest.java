@@ -37,7 +37,7 @@ public class LogTest extends BaseTest
       addFile(workDir, "t-log1", "AAA\n");
       git.add().addFilepattern(".").call();
       git.commit().setMessage("log\ntest").setCommitter("andrey", "andrey@mail.com").call();
-
+      
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       getDefaultConnection().log(new LogRequest()).writeTo(out);
       // TODO test output.

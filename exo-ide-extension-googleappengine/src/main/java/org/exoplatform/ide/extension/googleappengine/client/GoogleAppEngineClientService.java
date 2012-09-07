@@ -19,13 +19,12 @@
 package org.exoplatform.ide.extension.googleappengine.client;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -120,7 +119,7 @@ public abstract class GoogleAppEngineClientService
 
    public abstract void logout(AsyncRequestCallback<Object> callback) throws RequestException;
 
-   public abstract void getLoggedUser(GoogleAppEngineAsyncRequestCallback<User> callback) throws RequestException;
+   public abstract void getLoggedUser(GoogleAppEngineAsyncRequestCallback<GaeUser> callback) throws RequestException;
 
    public abstract void setApplicationId(String vfsId, String projectId, String appId,
       GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException;

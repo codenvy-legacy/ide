@@ -95,7 +95,7 @@ public class ErrorRenderer implements LineRenderer {
         // Error ends at current line.
         errorLength = nextError.getErrorEnd().getColumn() + 1 - linePosition;
       }
-      renderErrorAndProceed(target, errorLength);
+      renderErrorAndProceed(target, errorLength, nextError.isError());
     } else {
       // Wait until we get to the next error.
       renderNothingAndProceed(target, nextError.getErrorStart().getColumn() - linePosition);
@@ -107,11 +107,11 @@ public class ErrorRenderer implements LineRenderer {
     return false;
   }
 
-  private void renderErrorAndProceed(Target target, int characterCount) {
+  private void renderErrorAndProceed(Target target, int characterCount, boolean isError) {
     Log.debug(getClass(), "Rendering " + characterCount
         + " characters with error style at position " + linePosition + ", next line position: "
         + (linePosition + characterCount));
-    target.render(characterCount, css.lineRendererError());
+    target.render(characterCount, isError ? css.lineRendererError(): css.lineWarning());
     linePosition += characterCount;
     nextErrorIndex++;
   }
@@ -182,7 +182,7 @@ public class ErrorRenderer implements LineRenderer {
     DtoClientImpls.CodeErrorImpl newError = DtoClientImpls.CodeErrorImpl.make()
         .setErrorStart(newErrorStart)
         .setErrorEnd(newErrorEnd)
-        .setMessage(oldError.getMessage());
+        .setMessage(oldError.getMessage()).setError(oldError.isError());
     Log.debug(getClass(), "Migrated error [" + codeErrorToString(oldError)
         + "] to [" + codeErrorToString(newError) + "]");
     return newError;

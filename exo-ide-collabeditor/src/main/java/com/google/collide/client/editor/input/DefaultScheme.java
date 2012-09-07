@@ -14,6 +14,8 @@
 
 package com.google.collide.client.editor.input;
 
+import com.google.collide.shared.document.Line;
+
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -225,7 +227,20 @@ public class DefaultScheme extends InputScheme {
 
     // Single / multi-line comment / uncomment.
     defaultMode.bindAction(CommonActions.TOGGLE_COMMENT,
-        ModifierKeys.ACTION, KeyboardEvent.KeyCode.SLASH);
+        ModifierKeys.ACTION, 47);
+//    defaultMode.addShortcut(new StreamShortcut("/*\n")
+//   {
+//      
+//      @Override
+//      public boolean event(InputScheme scheme, SignalEvent event)
+//      {
+//         // TODO Auto-generated method stub
+//         Line line = scheme.getInputController().getSelection().getCursorLine();
+//         int column = scheme.getInputController().getSelection().getCursorColumn();
+//         scheme.getInputController().getEditorDocumentMutator().insertText(line, column, "*\n*/");
+//         return false;
+//      }
+//   });
 
     // Multi-line indenting and dedenting.
 

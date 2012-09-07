@@ -38,8 +38,11 @@
 	<source path="codeassistant" />
 	<source path="codemirror" />
 
+	<!-- Styles for notifications -->
+	<stylesheet src="codemirror-0.94/notifications.css" />
+
 	<!-- Load FCKEditor files. -->
-	<script src="ckeditor/ckeditor.js" />
-	<script src="ckeditor/config.js" />
+	<script src="ckeditor-3.1/ckeditor.js" />
+	<script src="ckeditor-3.1/config.js" />
 
 </module>

@@ -32,6 +32,8 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent;
+import org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -46,7 +48,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class DeleteItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler
+   ViewActivatedHandler, ProjectSelectedHandler
 {
 
    private static final String ID = "File/Delete...";
@@ -69,6 +71,8 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
 
    private List<Item> selectedItems;
 
+   private ProjectModel selectedProject;
+
    /**
     * 
     */
@@ -90,6 +94,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ProjectSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -131,19 +136,28 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
 
       setShowInContextMenu(navigatorSelected);
 
-      if (selectedItems == null || selectedItems.size() != 1)
+      if ((selectedItems == null || selectedItems.size() != 1) && selectedProject == null)
       {
          setEnabled(false);
          return;
       }
-
-      if (selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
+      else if (selectedItems != null && !selectedItems.isEmpty()
+         && selectedItems.get(0).getId().equals(vfsInfo.getRoot().getId()))
       {
          setEnabled(false);
          return;
       }
-
       setEnabled(navigatorSelected);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler#onProjectSelected(org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent)
+    */
+   @Override
+   public void onProjectSelected(ProjectSelectedEvent event)
+   {
+      this.selectedProject = event.getProject();
+      updateState();
    }
 
 }

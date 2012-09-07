@@ -26,7 +26,7 @@ package org.exoplatform.ide.client.framework.project;
  * 
  */
 public enum Language {
-   PHP("PHP"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("Node.js"), PYTHON("Python"), RUBY("Ruby");
+   PHP("PHP"), GROOVY("Groovy"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("Node.js"), PYTHON("Python"), RUBY("Ruby");
 
    private String value;
 

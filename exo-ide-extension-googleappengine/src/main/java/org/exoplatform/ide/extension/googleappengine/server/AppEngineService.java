@@ -23,6 +23,8 @@ import com.google.apphosting.utils.config.BackendsXml;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
+import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -65,14 +67,34 @@ public class AppEngineService
 
    @Inject
    private AppEngineClient client;
-
+   @Inject
+   private GoogleOAuthAuthenticator oauth;
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
 
    @GET
+   @Path("user")
+   @Produces(MediaType.APPLICATION_JSON)
+   public GaeUser getUser(@Context SecurityContext security) throws Exception
+   {
+      final String userId = getUserId(/*security*/);
+      boolean authenticated;
+      try
+      {
+         authenticated = oauth.getToken(userId) != null;
+      }
+      catch (IOException e)
+      {
+         // Error when try to refresh access token. User may try re-authenticate.
+         authenticated = false;
+      }
+      return new GaeUserImpl(userId, authenticated);
+   }
+
+   @GET
    @Path("backend/configure")
    public void configureBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                                @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.configureBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -82,7 +104,7 @@ public class AppEngineService
    @Path("cron/info")
    @Produces(MediaType.APPLICATION_JSON)
    public List<CronEntry> cronInfo(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                                   @Context SecurityContext security) throws Exception
    {
       return client.cronInfo(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -91,7 +113,7 @@ public class AppEngineService
    @GET
    @Path("backend/delete")
    public void deleteBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                             @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.deleteBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -101,7 +123,7 @@ public class AppEngineService
    @Path("resource_limits")
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, Long> getResourceLimits(@QueryParam("vfsid") String vfsId,
-      @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
+                                              @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
    {
       return client.getResourceLimits(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -111,7 +133,7 @@ public class AppEngineService
    @Path("backends/list")
    @Produces(MediaType.APPLICATION_JSON)
    public List<BackendsXml.Entry> listBackends(@QueryParam("vfsid") String vfsId,
-      @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
+                                               @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
    {
       return client.listBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -121,8 +143,8 @@ public class AppEngineService
    @Path("logs")
    @Produces(MediaType.TEXT_PLAIN)
    public Reader requestLogs(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("num_days") int numDays, @QueryParam("log_severity") String logSeverity,
-      @Context SecurityContext security) throws Exception
+                             @QueryParam("num_days") int numDays, @QueryParam("log_severity") String logSeverity,
+                             @Context SecurityContext security) throws Exception
    {
       return client.requestLogs(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, numDays, logSeverity, getUserId(/*security*/));
@@ -131,7 +153,7 @@ public class AppEngineService
    @GET
    @Path("rollback")
    public void rollback(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                        @Context SecurityContext security) throws Exception
    {
       client.rollback(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -140,7 +162,7 @@ public class AppEngineService
    @GET
    @Path("backend/rollback")
    public void rollbackBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                               @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.rollbackBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -149,7 +171,7 @@ public class AppEngineService
    @GET
    @Path("backends/rollback")
    public void rollbackAllBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                                   @Context SecurityContext security) throws Exception
    {
       client.rollbackAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -158,8 +180,8 @@ public class AppEngineService
    @GET
    @Path("backend/set_state")
    public void setBackendState(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @QueryParam("backend_state") String backendState,
-      @Context SecurityContext security) throws Exception
+                               @QueryParam("backend_name") String backendName, @QueryParam("backend_state") String backendState,
+                               @Context SecurityContext security) throws Exception
    {
       client.setBackendState(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, backendState, getUserId(/*security*/));
@@ -169,7 +191,7 @@ public class AppEngineService
    @Path("update")
    @Produces(MediaType.APPLICATION_JSON)
    public ApplicationInfo update(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("bin") URL bin, @Context SecurityContext security) throws Exception
+                                 @QueryParam("bin") URL bin, @Context SecurityContext security) throws Exception
    {
       return client.update(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          bin, getUserId(/*security*/));
@@ -178,7 +200,7 @@ public class AppEngineService
    @GET
    @Path("backends/update_all")
    public void updateAllBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                                 @Context SecurityContext security) throws Exception
    {
       client.updateAllBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -187,7 +209,7 @@ public class AppEngineService
    @GET
    @Path("backend/update")
    public void updateBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                             @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
    {
       client.updateBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -196,7 +218,7 @@ public class AppEngineService
    @GET
    @Path("backends/update")
    public void updateBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @QueryParam("backends_name") List<String> backendNames, @Context SecurityContext security) throws Exception
+                              @QueryParam("backends_name") List<String> backendNames, @Context SecurityContext security) throws Exception
    {
       client.updateBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendNames, getUserId(/*security*/));
@@ -205,7 +227,7 @@ public class AppEngineService
    @GET
    @Path("cron/update")
    public void updateCron(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                          @Context SecurityContext security) throws Exception
    {
       client.updateCron(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -214,7 +236,7 @@ public class AppEngineService
    @GET
    @Path("dos/update")
    public void updateDos(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                         @Context SecurityContext security) throws Exception
    {
       client.updateDos(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -223,7 +245,7 @@ public class AppEngineService
    @GET
    @Path("indexes/update")
    public void updateIndexes(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                             @Context SecurityContext security) throws Exception
    {
       client.updateIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -232,7 +254,7 @@ public class AppEngineService
    @GET
    @Path("pagespeed/update")
    public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                               @Context SecurityContext security) throws Exception
    {
       client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -241,7 +263,7 @@ public class AppEngineService
    @GET
    @Path("queues/update")
    public void updateQueues(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                            @Context SecurityContext security) throws Exception
    {
       client.updateQueues(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -250,7 +272,7 @@ public class AppEngineService
    @GET
    @Path("vacuum_indexes")
    public void vacuumIndexes(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-      @Context SecurityContext security) throws Exception
+                             @Context SecurityContext security) throws Exception
    {
       client.vacuumIndexes(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          getUserId(/*security*/));
@@ -260,8 +282,8 @@ public class AppEngineService
    {
       return ConversationState.getCurrent().getIdentity().getUserId();
    }
-   
-   
+
+
    @GET
    @Path("change-appid/{vfsid}/{projectid}")
    public Response changeApplicationId(@PathParam("vfsid") String vfsId, //
@@ -304,10 +326,13 @@ public class AppEngineService
 
    /**
     * Change appengine-web.xml file setting application's id.
-    * 
-    * @param vfs virtual file system
-    * @param path path to project's root
-    * @param appId application's id
+    *
+    * @param vfs
+    *    virtual file system
+    * @param path
+    *    path to project's root
+    * @param appId
+    *    application's id
     */
    private void changeAppEngXml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
       IOException
@@ -322,10 +347,13 @@ public class AppEngineService
 
    /**
     * Change app.yaml file setting application's id.
-    * 
-    * @param vfs virtual file system
-    * @param path path to project's root
-    * @param appId application's id
+    *
+    * @param vfs
+    *    virtual file system
+    * @param path
+    *    path to project's root
+    * @param appId
+    *    application's id
     */
    private void changeAppEngYaml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
       IOException

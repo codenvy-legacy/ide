@@ -20,10 +20,10 @@
 package org.exoplatform.ide.client.project.list;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -53,7 +53,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    private static final String PROMPT = "Open Project...";
 
    private VirtualFileSystemInfo vfsInfo;
-   
+
    private boolean projectExplorerSelected = false;
 
    /**
@@ -93,7 +93,6 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
          setEnabled(false);
          return;
       }
-
       setEnabled(true);
       setVisible(true);
    }
@@ -132,7 +131,5 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    public void onViewActivated(ViewActivatedEvent event)
    {
       projectExplorerSelected = event.getView().getId().equals(TinyProjectExplorerView.ID);
-
    }
-
 }

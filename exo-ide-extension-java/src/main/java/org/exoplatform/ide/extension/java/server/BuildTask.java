@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
+import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.log.ExoLogger;
@@ -29,6 +31,9 @@ import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.TimerTask;
 
 /**
@@ -91,7 +96,12 @@ public abstract class BuildTask extends TimerTask
             cancel();
             if (Status.SUCCESSFUL == buildStatus.getStatus())
             {
-               buildSuccess(buildStatus.getDownloadUrl());
+               
+               if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
+               {
+                  new URL(buildStatus.getDownloadUrl());//validation download URL 
+                  buildSuccess(buildStatus.getDownloadUrl());
+               }
             }
             else
                LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: "
@@ -99,7 +109,27 @@ public abstract class BuildTask extends TimerTask
          }
 
       }
-      catch (Exception e)
+      catch (BuilderException e)
+      {
+         cancel();
+         LOG.error("Copy dependency of the '" + project.getPath() + " failed", e);
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         cancel();
+         LOG.error("Copy dependency of the '" + project.getPath() + " failed", e);
+      }
+      catch (JsonException e)
+      {
+         cancel();
+         LOG.error("Copy dependency of the '" + project.getPath() + " failed. Can't parse server response", e);
+      }
+      catch (MalformedURLException e)
+      {
+         cancel();
+         LOG.error("Copy dependency of the '" + project.getPath() + " failed. Get not valid download URL", e);
+      }
+      catch (IOException e)
       {
          cancel();
          LOG.error("Copy dependency of the '" + project.getPath() + " failed", e);

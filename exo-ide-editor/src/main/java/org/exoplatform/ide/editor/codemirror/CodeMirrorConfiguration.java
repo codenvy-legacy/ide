@@ -33,9 +33,9 @@ public class CodeMirrorConfiguration
    
    public static final String CODEMIRROR_DIRECTORY = "codemirror-0.94";
 
-   public static final String CODEMIRROR_START_PAGE = CODEMIRROR_DIRECTORY + "/codemirror.html";
-
    public final static String PATH = GWT.getModuleBaseURL() + CODEMIRROR_DIRECTORY + "/";
+   
+   public static final String CODEMIRROR_START_PAGE = PATH + "codemirror.html";
 
    private String jsDirectory = PATH + "js/";   
 
@@ -62,7 +62,8 @@ public class CodeMirrorConfiguration
 
    private boolean canHaveSeveralMimeTypes = false;
 
-   private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
+   //private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
+   private String codeErrorMarkStyle = CodeMirrorStyles.CODE_ERROR_MARK_STYLE;
    
    private TabMode tabMode = TabMode.SPACES;
    

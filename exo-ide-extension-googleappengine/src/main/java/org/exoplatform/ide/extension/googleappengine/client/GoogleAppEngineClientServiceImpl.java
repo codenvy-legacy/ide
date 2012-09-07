@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.googleappengine.client;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,37 +32,32 @@ import org.exoplatform.ide.extension.googleappengine.client.model.Backend;
 import org.exoplatform.ide.extension.googleappengine.client.model.CronEntry;
 import org.exoplatform.ide.extension.googleappengine.client.model.ResourceLimit;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
 /**
  * Implementation of {@link GoogleAppEngineClientService}.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 15, 2012 5:23:28 PM anya $
- * 
  */
 public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientService
 {
-   /**
-    * REST service context.
-    */
+   /** REST service context. */
    private String restServiceContext;
 
-   /**
-    * Loader to be displayed.
-    */
+   /** Loader to be displayed. */
    private Loader loader;
+
+   private final String AUTH_URL = "/ide/oauth/authenticate";
+
+   private final String LOGOUT = "/ide/oauth/invalidate";
 
    private final String APP_ENGINE = "/ide/appengine/";
 
-   private final String AUTH_URL = APP_ENGINE + "oauth/auth";
-
-   private final String LOGOUT = APP_ENGINE + "oauth/invalidate";
-
-   private final String USER = APP_ENGINE + "oauth/user";
+   private final String USER = APP_ENGINE + "user";
 
    private final String BACKEND_CONFIGURE = APP_ENGINE + "backend/configure";
 
@@ -106,8 +100,10 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    private final String SET_APP_ID = APP_ENGINE + "change-appid";
 
    /**
-    * @param restServiceContext REST service context
-    * @param loader loader to be displayed on request
+    * @param restServiceContext
+    *    REST service context
+    * @param loader
+    *    loader to be displayed on request
     */
    public GoogleAppEngineClientServiceImpl(String restServiceContext, Loader loader)
    {
@@ -116,13 +112,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#configureBackend(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#configureBackend(String,
+    *      String, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void configureBackend(String vfsId, String projectId, String backendName,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                                GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + BACKEND_CONFIGURE;
 
@@ -134,8 +129,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#cronInfo(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#cronInfo(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void cronInfo(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<List<CronEntry>> callback)
@@ -151,13 +146,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#deleteBackend(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#deleteBackend(String,
+    *      String, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void deleteBackend(String vfsId, String projectId, String backendName,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                             GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + BACKEND_DELETE;
 
@@ -170,12 +164,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getResourceLimits(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getResourceLimits(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void getResourceLimits(String vfsId, String projectId,
-      GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException
+                                 GoogleAppEngineAsyncRequestCallback<List<ResourceLimit>> callback) throws RequestException
    {
       String url = restServiceContext + RESOURCE_LIMITS;
 
@@ -187,8 +181,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#listBackends(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#listBackends(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void listBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<List<Backend>> callback)
@@ -204,13 +198,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#requestLogs(java.lang.String,
-    *      java.lang.String, int, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#requestLogs(String,
+    *      String, int, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void requestLogs(String vfsId, String projectId, int numDays, String logSeverity,
-      GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException
+                           GoogleAppEngineAsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = restServiceContext + LOGS;
 
@@ -229,8 +222,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollback(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollback(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void rollback(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -245,13 +238,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollbackBackend(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollbackBackend(String,
+    *      String, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void rollbackBackend(String vfsId, String projectId, String backendName,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                               GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + BACKEND_ROLLBACK;
 
@@ -263,8 +255,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollbackAllBackends(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#rollbackAllBackends(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void rollbackAllBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -279,13 +271,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#setBackendState(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#setBackendState(String,
+    *      String, String, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void setBackendState(String vfsId, String projectId, String backendName, String backendState,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                               GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + BACKEND_SET_STATE;
 
@@ -297,12 +288,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#update(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#update(String,
+    *      ProjectModel, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void update(String vfsId, ProjectModel project, String bin,
-      GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
+                      GoogleAppEngineAsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
       String url = restServiceContext + UPDATE;
 
@@ -318,8 +309,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateAllBackends(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateAllBackends(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateAllBackends(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -335,13 +326,12 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateBackend(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateBackend(String,
+    *      String, String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateBackend(String vfsId, String projectId, String backendName,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                             GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + BACKEND_UPDATE;
 
@@ -354,8 +344,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateCron(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateCron(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateCron(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -370,8 +360,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateDos(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateDos(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateDos(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -386,8 +376,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateIndexes(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateIndexes(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateIndexes(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -402,8 +392,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updatePagespeed(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updatePagespeed(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updatePagespeed(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -418,8 +408,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateQueues(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#updateQueues(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void updateQueues(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -434,8 +424,8 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#vacuumIndexes(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#vacuumIndexes(String,
+    *      String, GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void vacuumIndexes(String vfsId, String projectId, GoogleAppEngineAsyncRequestCallback<Object> callback)
@@ -449,34 +439,31 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getAuthUrl(org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback)
-    */
+   /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getAuthUrl() */
    @Override
    public String getAuthUrl()
    {
-      return restServiceContext + AUTH_URL;
+      return restServiceContext + AUTH_URL +
+         "?oauth_provider=google&scope=https://www.googleapis.com/auth/appengine.admin&redirect_after_login=/IDE/success_oauth.html";
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#logout(org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback)
-    */
+   /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#logout(AsyncRequestCallback) */
    @Override
    public void logout(AsyncRequestCallback<Object> callback) throws RequestException
    {
-      String url = restServiceContext + LOGOUT;
+      String url = restServiceContext + LOGOUT + "?oauth_provider=google";
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#setApplicationId(java.lang.String,
-    *      java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#setApplicationId(String,
+    *      String, String,
     *      org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback)
     */
    @Override
    public void setApplicationId(String vfsId, String projectId, String appId,
-      GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
+                                GoogleAppEngineAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + SET_APP_ID + "/" + vfsId + "/" + projectId;
 
@@ -486,11 +473,9 @@ public class GoogleAppEngineClientServiceImpl extends GoogleAppEngineClientServi
       AsyncRequest.build(RequestBuilder.GET, url + params).loader(loader).send(callback);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getLoggedUser(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
+   /** @see org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService#getLoggedUser(GoogleAppEngineAsyncRequestCallback) */
    @Override
-   public void getLoggedUser(GoogleAppEngineAsyncRequestCallback<User> callback) throws RequestException
+   public void getLoggedUser(GoogleAppEngineAsyncRequestCallback<GaeUser> callback) throws RequestException
    {
       String url = restServiceContext + USER;
 

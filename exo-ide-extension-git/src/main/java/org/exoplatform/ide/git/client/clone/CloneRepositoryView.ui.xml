@@ -58,7 +58,10 @@
             <f:TextInput ui:field="remoteUriField" addStyleNames="{style.spacingBottom}" width="100%" height="20px"></f:TextInput>
 
             <g:Label styleName="{style.label}" text="{locale.cloneRemoteNameFieldTitle}"></g:Label>
-            <f:TextInput ui:field="remoteNameField" width="100%" height="20px"></f:TextInput>
+            <f:TextInput ui:field="remoteNameField" addStyleNames="{style.spacingBottom}" width="100%" height="20px"></f:TextInput>
+            
+            <g:Label styleName="{style.label}" text="{locale.cloneProjectType}"></g:Label>
+            <f:SelectItem ui:field="projectType" width="100%" height="22px"></f:SelectItem>
          </g:FlowPanel>
       </f:layer>
 

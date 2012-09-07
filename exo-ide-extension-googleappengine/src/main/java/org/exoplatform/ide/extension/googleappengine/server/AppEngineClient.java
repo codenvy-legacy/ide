@@ -27,11 +27,10 @@ import com.google.appengine.tools.admin.IdeAppAdmin;
 import com.google.appengine.tools.admin.ResourceLimits;
 import com.google.appengine.tools.admin.UpdateListener;
 import com.google.apphosting.utils.config.BackendsXml;
-
-import org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator;
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoImpl;
+import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -66,9 +65,9 @@ import static org.exoplatform.ide.commons.ZipUtils.unzip;
  */
 public class AppEngineClient
 {
-   private final OAuthAuthenticator authenticator;
+   private final GoogleOAuthAuthenticator authenticator;
 
-   public AppEngineClient(OAuthAuthenticator authenticator)
+   public AppEngineClient(GoogleOAuthAuthenticator authenticator)
    {
       this.authenticator = authenticator;
    }

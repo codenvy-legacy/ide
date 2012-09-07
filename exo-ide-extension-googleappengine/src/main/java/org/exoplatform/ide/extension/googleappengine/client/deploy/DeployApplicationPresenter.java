@@ -29,39 +29,43 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.paas.Paas;
-import org.exoplatform.ide.client.framework.paas.PaasCallback;
-import org.exoplatform.ide.client.framework.paas.PaasComponent;
+import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
+import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.googleappengine.shared.User;
+import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
+import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-
-import java.util.Arrays;
 
 /**
  * Presenter for deploying application to Google App Engine, can be as a part of deployment step in wizard.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:51:08 PM anya $
- * 
  */
-public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements PaasComponent,
-   DeployApplicationHandler, ProjectBuiltHandler
+public class DeployApplicationPresenter extends GoogleAppEnginePresenter implements HasPaaSActions,
+   ProjectBuiltHandler, DeployApplicationHandler
 {
    interface Display
    {
@@ -74,48 +78,32 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       Composite getView();
    }
 
-   private PaasCallback paasCallback;
+   private DeployResultHandler deployResultHandler;
 
    private Display display;
 
-   /**
-    * Google App Engine application's id.
-    */
+   /** Google App Engine application's id. */
    private String applicationId;
 
-   /**
-    * Flag points, whether to use existed GAE application or create new one.
-    */
+   /** Flag points, whether to use existed GAE application or create new one. */
    private boolean useExisted;
 
-   /**
-    * Application's war URL (for Java only).
-    */
+   /** Application's war URL (for Java only). */
    private String applicationUrl;
 
    private ProjectModel builtProject;
 
+   private String projectName;
+
+   private ProjectTemplate projectTemplate;
+
    public DeployApplicationPresenter()
    {
-      IDE.getInstance().addPaas(
-         new Paas("Google App Engine", this, Arrays.asList(ProjectResolver.APP_ENGINE_JAVA,
-            ProjectResolver.APP_ENGINE_PYTHON))
-         {
-            @Override
-            public boolean isFirstInDeployments()
-            {
-               return true;
-            }
-         });
-
-      IDE.getInstance().addControl(new DeployApplicationControl());
-
       IDE.addHandler(DeployApplicationEvent.TYPE, this);
+      IDE.getInstance().addControl(new DeployApplicationControl());
    }
 
-   /**
-    * Bind display with presenter.
-    */
+   /** Bind display with presenter. */
    public void bindDisplay()
    {
       display.getUseExisting().addValueChangeHandler(new ValueChangeHandler<Boolean>()
@@ -141,94 +129,28 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       });
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#getView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.paas.PaasCallback)
+   /*  *//** @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate() */
+   /*
+    * @Override public void validate() { Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+    * @Override public void execute() { applicationId = display.getApplicationIdField().getValue(); // Check user is logged to
+    * Google App Engine. isUserLogged(true); } }); }
     */
-   @Override
-   public void getView(String projectName, PaasCallback paasCallback)
-   {
-      this.paasCallback = paasCallback;
 
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-      bindDisplay();
-      display.getUseExisting().setValue(false);
-      display.enableApplicationIdField(false);
-      display.getApplicationIdField().setValue("");
-
-      this.paasCallback.onViewReceived(display.getView());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate()
-    */
-   @Override
-   public void validate()
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            applicationId = display.getApplicationIdField().getValue();
-            // Check user is logged to Google App Engine.
-            isUserLogged(true);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
-   @Override
-   public void deploy(final ProjectModel project)
-   {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            if (useExisted)
-            {
-               setApplicationId(applicationId, project);
-            }
-            else
-            {
-               IDE.fireEvent(new CreateApplicationEvent());
-            }
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.PaasComponent#createProject(org.exoplatform.ide.vfs.client.model.ProjectModel)
-    */
-   @Override
-   public void createProject(ProjectModel project)
-   {
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent)
-    */
+   /** @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent) */
    @Override
    public void onDeployApplication(DeployApplicationEvent event)
    {
       isUserLogged(false);
    }
 
-   /**
-    * Before deploying check application type. If it is Java - build it before deploy.
-    */
+   /** Before deploying check application type. If it is Java - build it before deploy. */
    private void beforeDeploy(ProjectModel project)
    {
       if (isAppEngineProject())
       {
          applicationUrl = null;
-         if (ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
+         if (ProjectType.JAVA.value().equals(project.getProjectType())
+            || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
          {
             buildProject(project);
          }
@@ -243,9 +165,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
    }
 
-   /**
-    * Perform deploying application to Google App Engine.
-    */
+   /** Perform deploying application to Google App Engine. */
    public void deployApplication(final ProjectModel project)
    {
       try
@@ -277,9 +197,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
    }
 
-   /**
-    * Build Java project before deploy.
-    */
+   /** Build Java project before deploy. */
    private void buildProject(ProjectModel project)
    {
       this.applicationUrl = null;
@@ -288,9 +206,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       IDE.fireEvent(new BuildProjectEvent(project));
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
-    */
+   /** @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent) */
    @Override
    public void onProjectBuilt(ProjectBuiltEvent event)
    {
@@ -335,24 +251,27 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
     */
    private void isUserLogged(final boolean wizardStep)
    {
-      AutoBean<User> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
-      AutoBeanUnmarshaller<User> unmarshaller = new AutoBeanUnmarshaller<User>(user);
+      AutoBean<GaeUser> user = GoogleAppEngineExtension.AUTO_BEAN_FACTORY.user();
+      AutoBeanUnmarshaller<GaeUser> unmarshaller = new AutoBeanUnmarshaller<GaeUser>(user);
       try
       {
          GoogleAppEngineClientService.getInstance().getLoggedUser(
-            new GoogleAppEngineAsyncRequestCallback<User>(unmarshaller)
+            new GoogleAppEngineAsyncRequestCallback<GaeUser>(unmarshaller)
             {
 
                @Override
-               protected void onSuccess(User result)
+               protected void onSuccess(GaeUser result)
                {
                   if (!result.isAuthenticated())
                   {
-                     IDE.fireEvent(new LoginEvent());
-                     if (wizardStep)
-                     {
-                        paasCallback.onValidate(false);
-                     }
+                     String authUrl = Utils.getAuthorizationContext()//
+                        + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+                        + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+                        + "&redirect_after_login="//
+                        + Utils.getAuthorizationPageURL();
+                     JsPopUpOAuthWindow authWindow =
+                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
+                     authWindow.loginWithOAuth();
                      return;
                   }
                   if (wizardStep)
@@ -361,11 +280,10 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                      {
                         Dialogs.getInstance().showError(
                            GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationEmptyIdMessage());
-                        paasCallback.onValidate(false);
                      }
                      else
                      {
-                        paasCallback.onValidate(true);
+                        createProject(projectTemplate);
                      }
                   }
                   else
@@ -381,20 +299,129 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                protected void onFailure(Throwable exception)
                {
                   super.onFailure(exception);
-                  if (wizardStep)
-                  {
-                     paasCallback.onValidate(false);
-                  }
-                  // TODO check response
                }
             });
       }
       catch (RequestException e)
       {
-         if (wizardStep)
-         {
-            paasCallback.onValidate(false);
-         }
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
+   {
+      this.projectTemplate = projectTemplate;
+      this.deployResultHandler = deployResultHandler;
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            applicationId = display.getApplicationIdField().getValue();
+            // Check user is logged to Google App Engine.
+            isUserLogged(true);
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
+    *      org.exoplatform.ide.client.framework.project.ProjectType)
+    */
+   @Override
+   public Composite getDeployView(String projectName, ProjectType projectType)
+   {
+      this.projectName = projectName;
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+      }
+      display.getUseExisting().setValue(false);
+      display.enableApplicationIdField(false);
+      display.getApplicationIdField().setValue("");
+      return display.getView();
+   }
+
+   private void createProject(ProjectTemplate projectTemplate)
+   {
+      final Loader loader = new GWTLoader();
+      // TODO
+      loader.setMessage("Creating project...");
+      loader.show();
+      try
+      {
+         TemplateService.getInstance().createProjectFromTemplate(currentVfs.getId(), currentVfs.getRoot().getId(),
+            projectName, projectTemplate.getName(),
+            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
+            {
+
+               @Override
+               protected void onSuccess(final ProjectModel result)
+               {
+                  loader.hide();
+                  deployResultHandler.onProjectCreated(result);
+
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
+                     {
+                        if (useExisted)
+                        {
+                           setApplicationId(applicationId, result);
+                        }
+                        else
+                        {
+                           IDE.fireEvent(new CreateApplicationEvent());
+                        }
+                     }
+                  });
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  loader.hide();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    */
+   @Override
+   public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
+   {
+      this.deployResultHandler = deployResultHandler;
+      if (useExisted)
+      {
+         setApplicationId(applicationId, project);
+      }
+      else
+      {
+         IDE.fireEvent(new CreateApplicationEvent());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#validate()
+    */
+   @Override
+   public boolean validate()
+   {
+      return true;
    }
 }

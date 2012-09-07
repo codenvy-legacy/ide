@@ -79,7 +79,7 @@ public class Editor extends AbstractTestModule
 
       String DEBUG_EDITOR_PREVIOUS_ACTIVE_FILE_URL = "debug-editor-previous-active-file-url";
 
-      String DESIGN_BUTTON_ID = "DesignButtonID";
+      String DESIGN_BUTTON_XPATH = "//div[@title='Design']//div[text()='Design']";
 
       String SOURCE_BUTTON_ID = "SourceButtonID";
 
@@ -106,6 +106,8 @@ public class Editor extends AbstractTestModule
 
       String IFRAME_SELECTOR = "//div[@panel-id='editor']//div[@class='CodeMirror-wrapping']/iframe";
 
+      String IFRAME = "iframe";
+
    }
 
    private WebElement editor;
@@ -115,6 +117,9 @@ public class Editor extends AbstractTestModule
 
    @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
    private WebElement editorCodemirr;
+
+   @FindBy(tagName = Locators.IFRAME)
+   private WebElement iframe;
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -128,6 +133,24 @@ public class Editor extends AbstractTestModule
       WebElement tab =
          editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, index)));
       return tab.getText().trim();
+   }
+
+   /**
+    * waiting while switch between ckeditor on codeeditor
+    * 
+    * @param numCodeEditor
+    */
+   public void waitIframe()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return iframe != null && iframe.isDisplayed();
+         }
+      });
    }
 
    /**
@@ -419,7 +442,7 @@ public class Editor extends AbstractTestModule
     */
    public void waitNoContentModificationMark(final String title)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -724,6 +747,8 @@ public class Editor extends AbstractTestModule
       String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
       WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
       driver().switchTo().frame(editorFrame);
+      waitIframe();
+      driver().switchTo().frame(iframe);
       return editorFrame;
    }
 
@@ -921,7 +946,7 @@ public class Editor extends AbstractTestModule
     */
    public void clickDesignButton() throws Exception
    {
-      editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
+      editor.findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
    }
 
    public void selectCkEditorIframe(int tabIndex)
@@ -986,7 +1011,7 @@ public class Editor extends AbstractTestModule
    public void openContextMenu(int editorIndex) throws Exception
    {
       selectIFrameWithEditor(0);
-   //   editorCodemirr.sendKeys(Keys.chord(Keys.SHIFT, Keys.F10));
+      //   editorCodemirr.sendKeys(Keys.chord(Keys.SHIFT, Keys.F10));
       new Actions(driver()).contextClick(editorCodemirr).perform();
       IDE().selectMainFrame();
    }

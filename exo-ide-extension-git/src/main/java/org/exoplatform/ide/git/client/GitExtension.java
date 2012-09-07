@@ -71,6 +71,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
+   
+   public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -122,6 +124,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new MergePresenter();
 
       new ShowProjectGitReadOnlyUrlPresenter();
+      
    }
 
    /**

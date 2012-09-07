@@ -295,11 +295,11 @@
 
 <!-- GitHub support -->
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
+      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.Github</type>
+      <type>org.exoplatform.ide.git.server.github.GitHub</type>
       <init-params>
          <value-param>
             <name>github-user</name>
@@ -309,7 +309,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <type>org.exoplatform.ide.git.server.github.GitHubAuthenticator</type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -394,8 +394,8 @@
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
-
-   <component>
+   
+    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
       <init-params>
          <object-param>
@@ -511,10 +511,6 @@
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
-   
-   <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
-   </component>
 
 <!-- End Google AppEngine  -->   
 
@@ -550,6 +546,43 @@
       <type>org.exoplatform.ide.shell.server.CLIResourceFactory</type>
    </component>
 
+   <!-- Google AppEngine  -->
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
+   </component>
+
+   <!-- End Google AppEngine  -->
+
+   <component>
+      <type>org.exoplatform.ide.security.login.FederatedLoginApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
+   </component>
+
+   <!--
+      ***************************************************************************************
+      ********************************** OAuth Support *************************************
+      ***************************************************************************************
+   -->
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
+   </component>
+
 <!-- 
 ***************************************************************************************
 ******************************* WebSocket Support *************************************
@@ -568,20 +601,6 @@
             <value>30</value>
          </value-param>
       </init-params>
-   </component>
-
-<!--
-***************************************************************************************
-********************************** OpenID Support *************************************
-***************************************************************************************
--->
-
-   <component>
-      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
    </component>
 
 </configuration>

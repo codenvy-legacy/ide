@@ -52,10 +52,10 @@ public class RestConversationState
    @RolesAllowed("users")
    public IdeUser whoami()
    {
-      ConversationState curentState = ConversationState.getCurrent();
-      if (curentState != null)
+      ConversationState currentState = ConversationState.getCurrent();
+      if (currentState != null)
       {
-         Identity identity = curentState.getIdentity();
+         Identity identity = currentState.getIdentity();
          IdeUser user = new IdeUser(identity.getUserId(), identity.getGroups(), identity.getRoles());
          if (log.isDebugEnabled())
             log.info("Getting user identity: " + identity.getUserId());

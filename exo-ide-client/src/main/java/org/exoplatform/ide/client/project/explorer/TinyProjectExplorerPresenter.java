@@ -75,6 +75,7 @@ import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -87,6 +88,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.settings.SettingsService;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
@@ -114,6 +116,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,6 +171,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    public TinyProjectExplorerPresenter()
    {
+      IDE.getInstance().addControl(new OpenProjectControl());
+
       IDE.addHandler(ShowProjectExplorerEvent.TYPE, this);
 
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -251,6 +256,15 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.getLinkWithEditorButton().addClickHandler(linkWithEditorButtonClickHandler);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
+
+      display.getProjectsListGrid().addSelectionHandler(new SelectionHandler<ProjectModel>()
+      {
+         @Override
+         public void onSelection(SelectionEvent<ProjectModel> event)
+         {
+            IDE.fireEvent(new ProjectSelectedEvent(event.getSelectedItem()));
+         }
+      });
 
       display.getProjectsListGrid().addDoubleClickHandler(new DoubleClickHandler()
       {
@@ -446,7 +460,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       final Folder folder = foldersToRefresh.get(0);
-      //remove folder hear to open sever folder simultaneously
+      // remove folder hear to open sever folder simultaneously
       foldersToRefresh.remove(folder);
       refreshFolderProperties(folder);
       try
@@ -479,7 +493,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private void folderContentReceived(Folder folder, List<Item> result)
    {
-      //      loader.hide();
+      // loader.hide();
       for (Item i : result)
       {
          if (i instanceof ItemContext)
@@ -512,7 +526,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
       display.getBrowserTree().setValue(folder);
       display.changeFolderIcon(folder, false);
-      //display.asView().setViewVisible();
+      // display.asView().setViewVisible();
 
       refreshNextFolder();
    }
@@ -717,6 +731,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private void loadProject()
    {
       display.setProjectExplorerTreeVisible(true);
+      IDE.fireEvent(new ProjectSelectedEvent(null));
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       display.asView().setTitle(openedProject.getName());
@@ -737,9 +752,11 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onOpenProject(OpenProjectEvent event)
    {
+      boolean viewWasOpened = display != null;
+
       ensureProjectExplorerDisplayCreated();
 
-      if (openedProject != null)
+      if (viewWasOpened && openedProject != null)
       {
          if (openedProject.getId().equals(event.getProject().getId())
             && openedProject.getName().equals(event.getProject().getName()))
@@ -749,7 +766,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
 
       openedProject = new ProjectModel(event.getProject());
-      loadProject();
+      if (isOldProjectType(openedProject))
+      {
+         setTargets(openedProject);
+      }
+      else
+      {
+         loadProject();
+      }
    }
 
    @Override
@@ -770,7 +794,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
       else
       {
-         loadProject();
+         if (isOldProjectType(openedProject))
+         {
+            setTargets(openedProject);
+         }
+         else
+         {
+            loadProject();
+         }
       }
    }
 
@@ -872,20 +903,20 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      //      // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
-      //      if (display.asView().isViewVisible())
-      //      {
-      //         if (display.selectItem(editorActiveFile.getId()))
-      //         {
-      //            return;
-      //         }
-      //      }
-      //      else
-      //      {
-      //         // First we need activate project explorer because
-      //         // code below do not select item in tree.
-      //         display.asView().activate();
-      //      }
+      // // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
+      // if (display.asView().isViewVisible())
+      // {
+      // if (display.selectItem(editorActiveFile.getId()))
+      // {
+      // return;
+      // }
+      // }
+      // else
+      // {
+      // // First we need activate project explorer because
+      // // code below do not select item in tree.
+      // display.asView().activate();
+      // }
 
       // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
@@ -1126,6 +1157,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   if (openedProject != null)
                   {
                      display.setProjectsListGridVisible(false);
+                     IDE.fireEvent(new ProjectSelectedEvent(null));
                      display.setProjectNotOpenedPanelVisible(false);
                      return;
                   }
@@ -1145,6 +1177,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   if (projects.size() == 0)
                   {
                      display.setProjectsListGridVisible(false);
+                     IDE.fireEvent(new ProjectSelectedEvent(null));
                      display.setProjectNotOpenedPanelVisible(true);
                   }
                   else
@@ -1182,4 +1215,53 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
+   /**
+    * TODO Temporary method.
+    * 
+    * Detected whether project type is deprecated or not.
+    * 
+    * @param project
+    * @return <code>true</code> if deprecated
+    */
+   private boolean isOldProjectType(ProjectModel project)
+   {
+      return ProjectResolver.deprecatedTypes.contains(project.getProjectType())
+         && project.getPropertyValues(ProjectProperties.TARGET.value()) == null;
+   }
+
+   /**
+    * TODO Temporary method.
+    * 
+    * Is used to detect and set targets to deprecated project types (to support them).
+    * 
+    * @param project
+    */
+   private void setTargets(ProjectModel project)
+   {
+      ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
+      project.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), targets));
+
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               loadProject();
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
 }

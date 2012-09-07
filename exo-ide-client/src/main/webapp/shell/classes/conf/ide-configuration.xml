@@ -266,11 +266,11 @@
 
 <!-- GitHub support -->
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.rest.GithubServiceApplication</type>
+      <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.Github</type>
+      <type>org.exoplatform.ide.git.server.github.GitHub</type>
       <init-params>
          <value-param>
             <name>github-user</name>
@@ -280,7 +280,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.extension.samples.server.GitHubAuthenticator</type>
+      <type>org.exoplatform.ide.git.server.github.GitHubAuthenticator</type>
       <init-params>
          <value-param>
             <name>workspace</name>
@@ -470,16 +470,20 @@
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
 
+<!-- End Google AppEngine  -->
+
    <component>
-      <type>org.exoplatform.ide.extension.googleappengine.server.oauth.OAuthAuthenticator</type>
+      <type>org.exoplatform.ide.security.login.FederatedLoginApplication</type>
    </component>
 
-<!-- End Google AppEngine  -->     
+   <component>
+      <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
+   </component>
 
 <!-- 
-***************************************************************************************
-***************************** WebSocket Support ***************************************
-***************************************************************************************
+   ***************************************************************************************
+   ***************************** WebSocket Support ***************************************
+   ***************************************************************************************
 -->
 
    <component>
@@ -496,18 +500,41 @@
       </init-params>
    </component>
 
-<!--
-   ***************************************************************************************
-   ********************************** OpenID Support *************************************
-   ***************************************************************************************
--->
+   <!--
+      ***************************************************************************************
+      ********************************** OAuth Support *************************************
+      ***************************************************************************************
+   -->
+
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.OpenIDAuthenticatorApplication</type>
+      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+      <init-params>
+         <value-param>
+            <name>type</name>
+            <value>installed</value>
+         </value-param>
+         <value-param>
+            <name>client-id</name>
+            <value>854018091723.apps.googleusercontent.com</value>
+         </value-param>
+         <value-param>
+            <name>client-secret</name>
+            <value>C8vg2Yf8I3_GfZyHPZsN_2nZ</value>
+         </value-param>
+         <values-param>
+            <name>redirect-uris</name>
+            <value>http://localhost</value>
+         </values-param>
+      </init-params>
+   </component>
+   <component>
+      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.authentication.openid.InMemoryUserStore</type>
+      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
    </component>
 
+  
 </configuration>

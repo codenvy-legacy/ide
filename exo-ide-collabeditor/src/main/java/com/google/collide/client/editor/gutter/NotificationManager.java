@@ -18,25 +18,32 @@
  */
 package com.google.collide.client.editor.gutter;
 
-import com.google.collide.client.editor.NotificationWidget;
+import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
 
-import com.google.collide.client.MarkLineRenderer;
 import com.google.collide.client.Resources;
+import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Editor.DocumentListener;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
+import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
+import com.google.collide.client.ui.menu.PositionController.Position;
+import com.google.collide.client.ui.menu.PositionController.Positioner;
+import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
+import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
+import com.google.collide.client.ui.tooltip.Tooltip;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.JsIntegerMap;
+import com.google.collide.dto.CodeError;
+import com.google.collide.dto.FilePosition;
+import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;
+import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
 import com.google.collide.json.client.JsoArray;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.shared.document.Document;
-import com.google.collide.shared.document.Line;
-import com.google.collide.shared.document.LineFinder;
 import com.google.collide.shared.document.LineInfo;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.shared.HandlerRegistration;
-import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
@@ -88,6 +95,32 @@ public class NotificationManager implements DocumentListener
       }
    }
 
+   private class HtmlTooltipRenderer implements TooltipRenderer
+   {
+
+      private String message;
+
+      /**
+       * @see com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer#renderDom()
+       */
+      @Override
+      public Element renderDom()
+      {
+         Element content = Elements.createDivElement();
+         content.setInnerHTML(message);
+         return content;
+      }
+
+      /**
+       * @param message the message to set
+       */
+      public void setMessage(String message)
+      {
+         this.message = message;
+      }
+
+   }
+
    private Buffer buffer;
 
    private Gutter leftGutter;
@@ -96,13 +129,9 @@ public class NotificationManager implements DocumentListener
 
    private final JsoArray<Element> elements = JsoArray.create();
 
-   private JsoArray<Integer> highligetLines = JsoArray.create();
-
    private final Resources res;
 
    private final Editor editor;
-
-   private MarkLineRenderer markLineRenderer;
 
    private IDocument document;
 
@@ -113,6 +142,12 @@ public class NotificationManager implements DocumentListener
    private int errors, warnings;
 
    private JsoArray<NotificationMark> overviewMarks = JsoArray.<NotificationManager.NotificationMark> create();
+
+   private PositionerBuilder rightPositioner;
+
+   private PositionerBuilder leftPositioner;
+
+   private ErrorListener errorListener;
 
    /**
     * @param buffer
@@ -127,6 +162,12 @@ public class NotificationManager implements DocumentListener
       this.buffer = editor.getBuffer();
       this.leftGutter = gutter;
       this.res = res;
+      rightPositioner =
+         new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(HorizontalAlign.RIGHT).setPosition(Position.OVERLAP)
+            .setVerticalAlign(VerticalAlign.TOP);
+      leftPositioner =
+         new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(HorizontalAlign.LEFT).setPosition(Position.OVERLAP)
+            .setVerticalAlign(VerticalAlign.TOP);
    }
 
    /**
@@ -141,32 +182,13 @@ public class NotificationManager implements DocumentListener
       StringBuilder message = new StringBuilder();
       JsoArray<Marker> problemList = markers.get(lineNumber);
       boolean hasError = fillMessages(problemList, message);
-      NotificationMark m = new NotificationMark(res.notificationCss());
+
+      NotificationMark m = new NotificationMark(message.toString(), res, leftPositioner, new HtmlTooltipRenderer());
       m.setTopPosition(buffer.calculateLineTop(lineNumber), "px");
-      m.setMessage(message.toString());
       m.setStyleName(getStyleForLine(problemList, hasError));
       elements.add(m.getElement());
       leftGutter.addUnmanagedElement(m.getElement());
-      LineInfo line = editor.getDocument().getLineFinder().findLine(lineNumber);
-      int length = problem.getEnd() - problem.getStart();
-      try
-      {
-         int lines = document.getNumberOfLines(problem.getStart(), length);
-         editor.getRenderer().requestRenderLine(line.line());
-         highligetLines.add(line.number());
-         Line nextLine = line.line();
-         for (int i = 1; i < lines; i++)
-         {
-            line.moveToNext();
-            nextLine = line.line();
-            highligetLines.add(line.number());
-            editor.getRenderer().requestRenderLine(nextLine);
-         }
-      }
-      catch (BadLocationException e)
-      {
-         e.printStackTrace();
-      }
+
       addOverviewMark(problem, message.toString());
 
    }
@@ -177,7 +199,8 @@ public class NotificationManager implements DocumentListener
     */
    private void addOverviewMark(Marker problem, String string)
    {
-      NotificationMark mark = new NotificationMark(problem, string, res.notificationCss(), editor);
+      NotificationMark mark =
+         new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
       mark.setTopPosition((100 * problem.getLineNumber()) / document.getNumberOfLines(), "%");
       overviewGutter.addUnmanagedElement(mark.getElement());
       overviewMarks.add(mark);
@@ -223,20 +246,13 @@ public class NotificationManager implements DocumentListener
             if (p.isWarning())
             {
                markStyle = res.notificationCss().markWarning();
-
             }
+            else
+               markStyle = res.notificationCss().markTask();
          }
       }
       return markStyle;
    }
-
-//   private Element createElement(int lineNumber)
-//   {
-//      Element element = Elements.createDivElement();
-//      // Line 0 will be rendered as Line 1
-//      element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
-//      return element;
-//   }
 
    private boolean fillMessages(JsoArray<Marker> markers, StringBuilder message)
    {
@@ -273,8 +289,8 @@ public class NotificationManager implements DocumentListener
     */
    public void unmarkProblem(Marker problem)
    {
-      // TODO Auto-generated method stub
-
+      //TODO
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -288,29 +304,16 @@ public class NotificationManager implements DocumentListener
       }
 
       JsArrayNumber keys = markers.getKeys();
-      LineFinder lineFinder = editor.getDocument().getLineFinder();
       for (int i = 0; i < keys.length(); i++)
       {
          double line = keys.get(i);
          markers.erase((int)line);
       }
-
+      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
       markers = JsIntegerMap.<JsoArray<Marker>> create();
       elements.clear();
-      markLineRenderer.clear();
-      for (Integer i : highligetLines.asIterable())
-      {
-         try
-         {
-            editor.getRenderer().requestRenderLine(lineFinder.findLine(i).line());
-         }
-         catch (IndexOutOfBoundsException ignore)
-         {
-         }
-      }
       errors = 0;
       warnings = 0;
-      highligetLines = JsoArray.create();
       for (NotificationMark m : overviewMarks.asIterable())
       {
          overviewGutter.removeUnmanagedElement(m.getElement());
@@ -362,42 +365,50 @@ public class NotificationManager implements DocumentListener
    public void onDocumentChanged(Document oldDocument, Document newDocument)
    {
       document = newDocument.<IDocument> getTag("IDocument");
-      markLineRenderer = new MarkLineRenderer(res.workspaceEditorCss(), this, document);
-      editor.addLineRenderer(markLineRenderer);
-      bottomMark = new NotificationMark(res.notificationCss());
+      bottomMark = new NotificationMark("", res, rightPositioner, new HtmlTooltipRenderer());
       bottomMark.getElement().getStyle().setBottom(2, "px");
       overviewGutter.addUnmanagedElement(bottomMark.getElement());
    }
 
    private static class NotificationMark extends CompositeView<Marker> implements EventListener
    {
-      private final NotificationCss css;
+      private final GutterNotificationResources res;
 
       private Editor editor;
 
-      private NotificationWidget notification;
+      private Tooltip tooltip;
+
+      private final PositionerBuilder positionerBuilder;
+
+      private final HtmlTooltipRenderer renderer;
 
       /**
+       * @param message 
+       * @param tooltipRenderer 
        * 
        */
-      public NotificationMark(NotificationCss css)
+      public NotificationMark(String message, GutterNotificationResources res, PositionerBuilder positionerBuilder,
+         HtmlTooltipRenderer tooltipRenderer)
       {
-         this.css = css;
+         this.res = res;
+         this.positionerBuilder = positionerBuilder;
+         this.renderer = tooltipRenderer;
          Element element = Elements.createDivElement();
          setElement(element);
-         element.addEventListener(Event.MOUSEOUT, this, false);
-         element.addEventListener(Event.MOUSEOVER, this, false);
          element.addEventListener(Event.MOUSEDOWN, this, false);
+         Positioner p = positionerBuilder.buildAnchorPositioner(getElement());
+         tooltipRenderer.setMessage(message);
+         tooltip = new Tooltip.Builder(res, getElement(), p).setTooltipRenderer(tooltipRenderer).build();
       }
 
       /**
        * 
        */
-      public NotificationMark(Marker marker, String message, NotificationCss css, Editor editor)
+      public NotificationMark(Marker marker, String message, GutterNotificationResources res, Editor editor,
+         PositionerBuilder positionerBuilder, HtmlTooltipRenderer tooltipRenderer)
       {
-         this(css);
+         this(message, res, positionerBuilder, tooltipRenderer);
          this.editor = editor;
-         setMessage(message);
          setStyleName(getStyleName(marker));
          setDelegate(marker);
       }
@@ -412,7 +423,10 @@ public class NotificationManager implements DocumentListener
        */
       public void setMessage(String message)
       {
-         getElement().setAttribute("title", message);
+         tooltip.destroy();
+         Positioner p = positionerBuilder.buildAnchorPositioner(getElement());
+         renderer.setMessage(message);
+         tooltip = new Tooltip.Builder(res, getElement(), p).setTooltipRenderer(renderer).build();
       }
 
       /**
@@ -429,19 +443,6 @@ public class NotificationManager implements DocumentListener
                editor.getSelection().setCursorPosition(lineInfo, 0);
             }
          }
-         if (evt.getType().equals(Event.MOUSEOVER))
-         {
-            if (getElement().hasAttribute("title") && getElement().getAttribute("title").isEmpty())
-               return;
-            if (notification == null)
-               notification = new NotificationWidget((com.google.gwt.user.client.Element)getElement(), css.popupNotification());
-         }
-         if (evt.getType().equals(Event.MOUSEOUT))
-         {
-            if (notification != null)
-               notification.destroy();
-            notification = null;
-         }
 
       }
 
@@ -453,21 +454,73 @@ public class NotificationManager implements DocumentListener
       {
          if (problem.isError())
          {
-            return css.overviewMarkError();
+            return res.notificationCss().overviewMarkError();
          }
 
          if (problem.isWarning())
          {
-            return css.overviewMarkWarning();
+            return res.notificationCss().overviewMarkWarning();
          }
 
          // default
-         return css.overviewMarkError();
+         return res.notificationCss().overviewMarkTask();
       }
 
       public void setTopPosition(int top, String unit)
       {
          getElement().getStyle().setTop(top, unit);
       }
+   }
+
+   /**
+    * @param problems
+    */
+   public void addProblems(Marker[] problems)
+   {
+      JsoArray<CodeError> errors = JsoArray.create();
+      for (Marker m : problems)
+      {
+         if (m.isError() || m.isWarning())
+         {
+            CodeErrorImpl error = CodeErrorImpl.make();
+            error.setMessage(m.getMessage());
+            error.setErrorEnd(getFilePosition(m.getEnd()));
+            error.setErrorStart(getFilePosition(m.getStart()));
+            error.setError(m.isError());
+            errors.add(error);
+         }
+         addProblem(m);
+      }
+      errorListener.onErrorsChanged(errors);
+
+   }
+
+   /**
+    * @param offset
+    * @return
+    */
+   private FilePosition getFilePosition(int offset)
+   {
+      FilePositionImpl position = FilePositionImpl.make();
+      int lineNumber;
+      try
+      {
+         lineNumber = document.getLineOfOffset(offset);
+         position.setLineNumber(lineNumber);
+         position.setColumn(offset - document.getLineOffset(lineNumber));
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
+      return position;
+   }
+
+   /**
+    * @param errorListener
+    */
+   public void setErrorListener(ErrorListener errorListener)
+   {
+      this.errorListener = errorListener;
    }
 }

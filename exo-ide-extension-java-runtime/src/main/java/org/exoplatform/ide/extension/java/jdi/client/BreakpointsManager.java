@@ -35,9 +35,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.java.client.Breakpoint;
-import org.exoplatform.ide.editor.java.client.BreakpointGutterManager;
-import org.exoplatform.ide.editor.java.client.JavaEditor;
+import org.exoplatform.ide.editor.java.Breakpoint;
+import org.exoplatform.ide.editor.java.BreakpointGutterManager;
+import org.exoplatform.ide.editor.java.JavaEditor;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;

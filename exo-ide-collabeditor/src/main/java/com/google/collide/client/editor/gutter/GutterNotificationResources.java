@@ -18,16 +18,15 @@
  */
 package com.google.collide.client.editor.gutter;
 
+import com.google.collide.client.ui.tooltip.Tooltip.Resources;
 import com.google.gwt.resources.client.ImageResource;
-
-import com.google.gwt.resources.client.ClientBundle;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public interface GutterNotificationResources extends ClientBundle
+public interface GutterNotificationResources extends Resources
 {
 
    @Source({"GutterNotification.css", "com/google/collide/client/editor/constants.css"})
@@ -38,5 +37,8 @@ public interface GutterNotificationResources extends ClientBundle
 
    @Source("mark-warning.png")
    ImageResource markWarning();
+   
+   @Source("taskmrk.gif")
+   ImageResource markTask();
 
 }

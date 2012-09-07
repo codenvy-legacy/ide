@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.extension.heroku.client;
 
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.heroku.client.apps.ManageApplicationsPresenter;
 import org.exoplatform.ide.extension.heroku.client.control.AddKeyControl;
@@ -46,8 +46,10 @@ import org.exoplatform.ide.extension.heroku.client.project.HerokuProjectPresente
 import org.exoplatform.ide.extension.heroku.client.rake.RakeCommandPresenter;
 import org.exoplatform.ide.extension.heroku.client.rename.RenameApplicationPresenter;
 import org.exoplatform.ide.extension.heroku.client.stack.ChangeStackPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Heroku extension to be added to IDE Application.
@@ -68,6 +70,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
 
    public static final HerokuCredentialsConstant CREDENTIALS_CONSTANT = GWT.create(HerokuCredentialsConstant.class);
 
+   private static final String ID = "Heroku";
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
@@ -84,9 +88,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku()),
-            Arrays.asList(ProjectType.RUBY_ON_RAILS),
-            new org.exoplatform.ide.extension.heroku.client.deploy.recent.DeployApplicationPresenter()));
+         new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku()), Arrays
+            .asList(ProjectType.RUBY_ON_RAILS), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -106,7 +109,6 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       new ChangeStackPresenter();
       new LogsPresenter();
 
-      new DeployApplicationPresenter();
       new HerokuProjectPresenter();
       new ImportApplicationPresenter();
 
@@ -114,4 +116,9 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().addControl(new SwitchAccountControl());
    }
 
+   public static boolean canBeDeployedToHeroku(ProjectModel project)
+   {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+      return (targets != null && targets.contains(ID));
+   }
 }

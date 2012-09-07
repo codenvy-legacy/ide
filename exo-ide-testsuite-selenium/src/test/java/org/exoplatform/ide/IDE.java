@@ -83,6 +83,8 @@ import org.exoplatform.ide.core.OrginizeImport;
 import org.exoplatform.ide.core.ProjectsMenu;
 import org.exoplatform.ide.core.DeployForm;
 import org.exoplatform.ide.core.PaasAuthorization;
+import org.exoplatform.ide.core.JavaEditor;
+import org.exoplatform.ide.operation.java.SelectAllFromEditMenuTest;
 
 
 /**
@@ -231,6 +233,8 @@ public class IDE
    public DeployForm DEPLOY;
    
    public PaasAuthorization PAASAUTORIZATION;
+   
+   public JavaEditor JAVAEDITOR;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -298,6 +302,7 @@ public class IDE
       PROJECTMENU = PageFactory.initElements(driver, ProjectsMenu.class);
       DEPLOY = PageFactory.initElements(driver, DeployForm.class);
       PAASAUTORIZATION = PageFactory.initElements(driver, PaasAuthorization.class);
+      JAVAEDITOR = PageFactory.initElements (driver,JavaEditor.class);
    }
 
    public Selenium getSelenium()

@@ -5,13 +5,18 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M10-SNAPSHOT</version>
+      <version>1.2.0-M11-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-security</artifactId>
-   <version>1.2.0-M10-SNAPSHOT</version>
+   <version>1.2.0-M11-SNAPSHOT</version>
    <name>eXo IDE :: Extension :: Security</name>
 
    <dependencies>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-commons</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -76,16 +81,12 @@
                <groupId>net.sourceforge.nekohtml</groupId>
                <artifactId>nekohtml</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>com.google.code.guice</groupId>
+               <artifactId>guice</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
-
-      <!--
-            <dependency>
-               <groupId>org.exoplatform.ide</groupId>
-               <artifactId>exo-ide-extension-googleappengine</artifactId>
-               <version>1.2.0-M9-SNAPSHOT</version>
-            </dependency>
-      -->
 
    </dependencies>
 

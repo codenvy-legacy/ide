@@ -34,6 +34,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @deprecated use org.exoplatform.ide.commons.JsonHelper
  */
 public class JsonHelper
 {

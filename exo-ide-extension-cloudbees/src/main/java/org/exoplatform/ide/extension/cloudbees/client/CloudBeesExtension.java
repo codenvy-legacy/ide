@@ -26,22 +26,24 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.recent.PaaS;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
 import org.exoplatform.ide.extension.cloudbees.client.delete.DeleteApplicationPresenter;
-import org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeApplicationPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.list.ApplicationListPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.project.CloudBeesProjectPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.update.UpdateApplicationPresenter;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * CloudBees extention for IDE.
@@ -60,7 +62,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
 
    public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudBeesLocalizationConstant.class);
-
+   
+   private static final String ID = "CloudBees";
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
@@ -78,7 +81,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    {
       IDE.getInstance().registerPaaS(
          new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees()), Arrays
-            .asList(ProjectType.JSP), new org.exoplatform.ide.extension.cloudbees.client.deploy.recent.DeployApplicationPresenter()));
+            .asList(ProjectType.JSP),
+            new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -93,8 +97,12 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
-      new DeployApplicationPresenter();
       new CreateAccountPresenter();
    }
 
+   public static boolean canBeDeployedToCB(ProjectModel project)
+   {
+      List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
+      return (targets != null && targets.contains(ID));
+   }
 }

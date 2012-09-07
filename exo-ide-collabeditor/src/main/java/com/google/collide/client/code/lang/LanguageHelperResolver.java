@@ -30,6 +30,7 @@ public class LanguageHelperResolver {
   private final JsonStringMap<LanguageHelper> mapping;
 
   private LanguageHelperResolver() {
+     //TODO (evgen) configure this
     mapping = JsonCollections.createMap();
     mapping.put(SyntaxType.CSS.getName(), new NoneLanguageHelper());
     mapping.put(SyntaxType.CPP.getName(), new NoneLanguageHelper());
@@ -37,7 +38,7 @@ public class LanguageHelperResolver {
     mapping.put(SyntaxType.GO.getName(), new NoneLanguageHelper());
     mapping.put(SyntaxType.HTML.getName(), new NoneLanguageHelper());
     mapping.put(SyntaxType.NONE.getName(), new NoneLanguageHelper());
-    mapping.put(SyntaxType.JAVA.getName(), new NoneLanguageHelper());
+    mapping.put(SyntaxType.JAVA.getName(), new JsLanguageHelper());
     mapping.put(SyntaxType.JS.getName(), new JsLanguageHelper());
     mapping.put(SyntaxType.PHP.getName(), new NoneLanguageHelper());
     mapping.put(SyntaxType.PY.getName(), new PyLanguageHelper());

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.git.server.rest;
 
+import org.exoplatform.ide.git.server.CommitersBean;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitConnectionFactory;
 import org.exoplatform.ide.git.server.GitException;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.git.shared.BranchDeleteRequest;
 import org.exoplatform.ide.git.shared.BranchListRequest;
 import org.exoplatform.ide.git.shared.CloneRequest;
 import org.exoplatform.ide.git.shared.CommitRequest;
+import org.exoplatform.ide.git.shared.Commiters;
 import org.exoplatform.ide.git.shared.DiffRequest;
 import org.exoplatform.ide.git.shared.FetchRequest;
 import org.exoplatform.ide.git.shared.GitUser;
@@ -46,6 +48,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
 import org.exoplatform.ide.git.shared.RemoteUpdateRequest;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.git.shared.ResetRequest;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.git.shared.RmRequest;
@@ -60,7 +63,6 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;
@@ -198,13 +200,14 @@ public class GitService
    @Path("clone")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void clone(@QueryParam("usewebsocket") boolean useWebSocket,
+   @Produces(MediaType.APPLICATION_JSON)
+   public RepoInfo clone(@QueryParam("usewebsocket") boolean useWebSocket,
                      final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       if (!useWebSocket)
       {
-         doClone(request);
+         return doClone(request);
       }
       else
       {
@@ -232,6 +235,7 @@ public class GitService
                }
             }
          }.run();
+         return null;
       }
    }
 
@@ -588,6 +592,21 @@ public class GitService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return gitUrlResolver.resolve(uriInfo, vfs, projectId);
    }
+   
+   @GET
+   @Path("commiters")
+   public Commiters getCommiters(@Context UriInfo uriInfo) throws VirtualFileSystemException, GitException
+   {
+      GitConnection gitConnection = getGitConnection();
+      try
+      {
+         return new CommitersBean(gitConnection.getCommiters());
+      }
+      finally
+      {
+         gitConnection.close();
+      }
+   }
 
    protected GitConnection getGitConnection() throws GitException, LocalPathResolveException,
       VirtualFileSystemException
@@ -620,13 +639,14 @@ public class GitService
       }
    }
 
-   private void doClone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
+   private RepoInfo doClone(CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
       GitConnection gitConnection = getGitConnection();
       try
       {
          gitConnection.clone(request);
+         return new RepoInfo(request.getRemoteUri());
       }
       finally
       {

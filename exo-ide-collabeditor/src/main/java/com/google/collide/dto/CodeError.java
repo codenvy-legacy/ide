@@ -33,4 +33,9 @@ public interface CodeError {
    * @return file position where this error ends (inclusive)
    */
   FilePosition getErrorEnd();
+  
+  /**
+   * @return true if this error and false if warning
+   */
+  boolean isError();
 }

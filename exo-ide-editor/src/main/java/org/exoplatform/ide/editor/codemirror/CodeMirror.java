@@ -436,7 +436,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
 //      showLineNumbers(showLineNumbers);
 
-      fireEvent(new EditorInitializedEvent(id));      
+      fireEvent(new EditorInitializedEvent(this));      
       
       if (initialText != null)
       {
@@ -477,7 +477,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    {
       needUpdateTokenList = true;
       needUpdateDocument = true;
-      fireEvent(new EditorContentChangedEvent(getId()));
+      fireEvent(new EditorContentChangedEvent(this));
    }
 
    private void onCursorActivity(JavaScriptObject cursor)
@@ -503,7 +503,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       // highlight current line
       highlightLine(cursorPositionRow);
 
-      fireEvent(new EditorCursorActivityEvent(id, cursorPositionRow, cursorPositionCol));
+      fireEvent(new EditorCursorActivityEvent(this, cursorPositionRow, cursorPositionCol));
    }
 
    private void highlightLine(int lineNumber)
@@ -817,7 +817,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void fireEditorFocusReceivedEvent()
    {
-      fireEvent(new EditorFocusReceivedEvent(getId()));
+      fireEvent(new EditorFocusReceivedEvent(this));
    }
 
    /**
@@ -868,7 +868,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          }
 
          List<CodeLine> newCodeErrorList = configuration.getCodeValidator().getCodeErrorList(tokenList);
-
          udpateErrorMarks(newCodeErrorList);
       }
    }
@@ -1088,7 +1087,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void fireEditorCursorActivityEvent(String editorId, int cursorRow, int cursorCol)
    {
-      fireEvent(new EditorCursorActivityEvent(editorId, cursorRow, cursorCol));
+      fireEvent(new EditorCursorActivityEvent(this, cursorRow, cursorCol));
    }
 
    private native void goToPosition(JavaScriptObject editor, int row, int column)
@@ -1398,6 +1397,14 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          tokenListReceivedHandler.onEditorTokenListPrepared(new EditorTokenListPreparedEvent(id, this.tokenList));
       }
    }
+   
+   private EditorTokenListPreparedHandler tokenListPreparedHandler;
+   
+   public void getTokenList(EditorTokenListPreparedHandler tokenListPreparedHandler)
+   {
+      this.tokenListPreparedHandler = tokenListPreparedHandler;
+      getTokenListInBackground();
+   }
 
    private EditorTokenListPreparedHandler tokenListReceivedHandler = new EditorTokenListPreparedHandler()
    {
@@ -1418,7 +1425,13 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          if (needValidateCode)
          {
             validateCode(tokenList);
-         }         
+         }
+         
+         if (tokenListPreparedHandler != null)
+         {
+            tokenListPreparedHandler.onEditorTokenListPrepared(event);
+         }
+         
       }
    };
    
@@ -1560,21 +1573,24 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       String markStyle = null;
       if (hasError)
       {
-         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+         //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+         markStyle = CodeMirrorStyles.CODE_MARK_ERROR;
       }
       else
       {
-         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpoint();
+         //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpoint();
+         markStyle = CodeMirrorStyles.CODE_MARK_BREAKPOINT;
          for (Marker p : markerList)
          {
             if (p.isWarning())
             {
-               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
-
+               //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
+               markStyle = CodeMirrorStyles.CODE_MARK_WARNING;
             }
             if (p.isCurrentBreakPoint())
             {
-               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
+               //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
+               markStyle = CodeMirrorStyles.CODE_MARK_BREAKPOINT_CURRENT;
                break;
             }
          }
@@ -1729,7 +1745,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          activeNotification.destroy();
       }
 
-      activeNotification = new NotificationWidget(el);
+      activeNotification = new NotificationWidget(el, getAbsoluteLeft(), getAbsoluteTop());
    }
 
    /**
@@ -1772,7 +1788,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       }
       
       configuration.getParser().getTokenListInBackground(id, editorObject, tokenListReceivedHandler);
-
       codeErrorList = newCodeErrorList;
    }
 
@@ -1936,7 +1951,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       event.preventDefault();
       int x = event.getClientX() + getAbsoluteLeft() + LINE_NUMBERS_COLUMN_WIDTH;
       int y = event.getClientY() + getAbsoluteTop();
-      fireEvent(new EditorContextMenuEvent(x, y, getId()));
+      fireEvent(new EditorContextMenuEvent(this, x, y));
    }
 
    /**
@@ -2126,6 +2141,16 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
    {
       return addHandler(handler, EditorInitializedEvent.TYPE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.marking.Markable#addProblems(org.exoplatform.ide.editor.marking.Marker[])
+    */
+   @Override
+   public void addProblems(Marker[] problems)
+   {
+      for(Marker m : problems)
+         markProblem(m);
    }
    
 }
