@@ -123,7 +123,7 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
    public SelectWorkspacePresenter()
    {
-      IDE.getInstance().addControl(new SelectWorkspaceControl());
+     //TODO IDE.getInstance().addControl(new SelectWorkspaceControl());
 
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
