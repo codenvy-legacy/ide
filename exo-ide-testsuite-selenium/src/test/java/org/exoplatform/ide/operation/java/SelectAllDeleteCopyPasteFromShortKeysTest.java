@@ -12,7 +12,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class SelectAllDeleteCopyPasteFromShortKeysTest extends ServicesJavaTextFuctionTest
+public class SelectAllDeleteCopyPasteFromShortKeysTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = SelectAllDeleteCopyPasteFromShortKeysTest.class.getSimpleName();
 

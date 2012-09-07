@@ -12,7 +12,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class UndoRedoFromShortKeyTest extends ServicesJavaTextFuctionTest
+public class UndoRedoFromShortKeyTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = UndoRedoFromShortKeyTest.class.getSimpleName();

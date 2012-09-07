@@ -38,7 +38,7 @@ import java.util.Map;
  * @version $Id: Apr 17, 2012 1:16:23 PM anya $
  * 
  */
-public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
+public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
 {
 
    //JavaRemoveCommentsTest.java

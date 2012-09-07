@@ -12,7 +12,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuctionTest
+public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = MoveLineUpDownFromMenuEditTest.class.getSimpleName();
 

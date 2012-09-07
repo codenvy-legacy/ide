@@ -14,7 +14,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
+public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = MoveLineUpDownWithShortKeysTest.class.getSimpleName();
