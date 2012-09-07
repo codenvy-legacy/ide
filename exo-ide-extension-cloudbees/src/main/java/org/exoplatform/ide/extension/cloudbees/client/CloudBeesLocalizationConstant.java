@@ -346,4 +346,10 @@ public interface CloudBeesLocalizationConstant extends Messages
 
    @Key("create.account.success")
    String createAccountSuccess(String account);
+   
+   @Key("add.user.success")
+   String addUserSuccess(String user);
+   
+   @Key("create.account.create.new.user")
+   String createAccountCreateNewUser();
 }

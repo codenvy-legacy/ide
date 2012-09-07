@@ -13,7 +13,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuctionTest
+public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = FormatJavaCodeWithShortKeysTest.class.getSimpleName();
 

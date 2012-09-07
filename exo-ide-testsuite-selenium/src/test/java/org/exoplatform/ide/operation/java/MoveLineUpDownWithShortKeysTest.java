@@ -14,7 +14,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
+public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = MoveLineUpDownWithShortKeysTest.class.getSimpleName();
@@ -54,7 +54,7 @@ public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuctionTest
       openSpringJavaTetsFile(PROJECT);
 
       IDE.GOTOLINE.goToLine(19);
-      IDE.STATUSBAR.waitCursorPositionAt("19:1");
+      IDE.STATUSBAR.waitCursorPositionAt("19 : 1");
 
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_UP.toString());
       assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
