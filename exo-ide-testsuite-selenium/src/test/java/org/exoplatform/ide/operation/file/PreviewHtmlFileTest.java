@@ -116,12 +116,10 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.PREVIEW.waitHtmlPreviewOpened();
 
       IDE.PREVIEW.selectPreviewHtmlIFrame();
-
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size() > 0);
      //need for redraw images on staging
-     Thread.sleep(2000);
-     IDE.PREVIEW.waitGtmplPreviewOpened();
-      assertTrue(driver.findElements(
+     //Thread.sleep(2000);
+     assertTrue(driver.findElements(
          By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size() > 0);
       IDE.selectMainFrame();
 
@@ -151,7 +149,10 @@ public class PreviewHtmlFileTest extends BaseTest
       /*
        * 10. Check "Preview" again.
        */
+      IDE.PREVIEW.waitHtmlPreviewOpened();
       assertTrue(IDE.PREVIEW.isHtmlPreviewOpened());
+      //need for redraw images on staging
+     // Thread.sleep(1000);
       IDE.PREVIEW.selectPreviewHtmlIFrame();
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size() > 0);
       assertTrue(driver.findElements(
