@@ -1573,21 +1573,24 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       String markStyle = null;
       if (hasError)
       {
-         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+         //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkError();
+         markStyle = CodeMirrorStyles.CODE_MARK_ERROR;
       }
       else
       {
-         markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpoint();
+         //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpoint();
+         markStyle = CodeMirrorStyles.CODE_MARK_BREAKPOINT;
          for (Marker p : markerList)
          {
             if (p.isWarning())
             {
-               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
-
+               //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkWarning();
+               markStyle = CodeMirrorStyles.CODE_MARK_WARNING;
             }
             if (p.isCurrentBreakPoint())
             {
-               markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
+               //markStyle = CodeMirrorClientBundle.INSTANCE.css().codeMarkBreakpointCurrent();
+               markStyle = CodeMirrorStyles.CODE_MARK_BREAKPOINT_CURRENT;
                break;
             }
          }
@@ -1742,7 +1745,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          activeNotification.destroy();
       }
 
-      activeNotification = new NotificationWidget(el);
+      activeNotification = new NotificationWidget(el, getAbsoluteLeft(), getAbsoluteTop());
    }
 
    /**
