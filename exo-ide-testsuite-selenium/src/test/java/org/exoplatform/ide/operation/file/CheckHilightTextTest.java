@@ -141,6 +141,7 @@ public class CheckHilightTextTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
+      Thread.sleep(3000);
       checkHilightHTML();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -159,6 +160,7 @@ public class CheckHilightTextTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
+Thread.sleep(2000);
       checkHiligtGoogleGadget();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);

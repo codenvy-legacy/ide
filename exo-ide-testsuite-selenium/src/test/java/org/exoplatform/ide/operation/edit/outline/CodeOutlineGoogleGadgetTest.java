@@ -92,7 +92,7 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
-
+Thread.sleep(10000);
       checkTreeCorrectlyCreated();
    }
 

@@ -96,12 +96,12 @@ public class CodeOutLineJavaTest extends CodeAssistantBaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
+      
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
 
       // wait while outline tree is loaded
-      Thread.sleep(TestConstants.SLEEP * 4);
+      Thread.sleep(TestConstants.SLEEP * 10);
       //IDE.OUTLINE.waitOpened();
       
       IDE.OUTLINE.waitOutlineTreeVisible();
