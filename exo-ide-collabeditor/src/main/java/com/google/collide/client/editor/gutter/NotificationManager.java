@@ -306,6 +306,7 @@ public class NotificationManager implements DocumentListener
       }
 
       markers = JsIntegerMap.<JsoArray<Marker>> create();
+      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
       elements.clear();
       errors = 0;
       warnings = 0;
