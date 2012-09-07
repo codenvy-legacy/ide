@@ -296,7 +296,6 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
       {
          display = null;
       }
-
    }
 
    /**
