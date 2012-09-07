@@ -12,13 +12,13 @@
 package org.eclipse.jdt.client.internal.text.correction;
 
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.codeassistant.api.IQuickFixProcessor;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ReplaceCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.TaskMarkerProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 

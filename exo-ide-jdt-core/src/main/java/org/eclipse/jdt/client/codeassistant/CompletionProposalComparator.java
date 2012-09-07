@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 import java.util.Comparator;
 
@@ -23,7 +23,7 @@ import java.util.Comparator;
  * 
  * @since 3.1
  */
-public final class CompletionProposalComparator implements Comparator<ICompletionProposal>
+public final class CompletionProposalComparator implements Comparator<CompletionProposal>
 {
 
    private boolean fOrderAlphabetically;
@@ -51,7 +51,7 @@ public final class CompletionProposalComparator implements Comparator<ICompletio
     * 
     * @since 3.7
     */
-   public int compare(ICompletionProposal p1, ICompletionProposal p2)
+   public int compare(CompletionProposal p1, CompletionProposal p2)
    {
       if (!fOrderAlphabetically)
       {
@@ -70,14 +70,14 @@ public final class CompletionProposalComparator implements Comparator<ICompletio
       return getSortKey(p1).compareToIgnoreCase(getSortKey(p2));
    }
 
-   private String getSortKey(ICompletionProposal p)
+   private String getSortKey(CompletionProposal p)
    {
       if (p instanceof AbstractJavaCompletionProposal)
          return ((AbstractJavaCompletionProposal)p).getSortString();
       return p.getDisplayString();
    }
 
-   private int getRelevance(ICompletionProposal obj)
+   private int getRelevance(CompletionProposal obj)
    {
       if (obj instanceof IJavaCompletionProposal)
       {

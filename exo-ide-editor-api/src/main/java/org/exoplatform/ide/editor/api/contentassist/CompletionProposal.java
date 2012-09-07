@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.client.codeassistant.api;
+package org.exoplatform.ide.editor.api.contentassist;
 
 import com.google.gwt.user.client.ui.Widget;
 
@@ -21,59 +21,12 @@ import org.exoplatform.ide.editor.text.IDocument;
  * to present the proposed completion to the user, to insert the completion should the user select it, and to present context
  * information for the chosen completion once it has been inserted.
  * <p>
- * In order to provide backward compatibility for clients of <code>ICompletionProposal</code>, extension interfaces are used to
- * provide a means of evolution. The following extension interfaces exist:
- * <ul>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension} since version 2.0 introducing the following
- * functions:
- * <ul>
- * <li>handling of trigger characters other than ENTER</li>
- * <li>completion proposal validation for a given offset</li>
- * <li>context information can be freely positioned</li>
- * </ul>
- * </li>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension2} since version 2.1 introducing the following
- * functions:
- * <ul>
- * <li>handling of trigger characters with modifiers</li>
- * <li>visual indication for selection of a proposal</li>
- * </ul>
- * </li>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension3} since version 3.0 introducing the following
- * functions:
- * <ul>
- * <li>provision of a custom information control creator</li>
- * <li>provide a custom completion text and offset for prefix completion</li>
- * </ul>
- * </li>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension4} since version 3.1 introducing the following
- * functions:
- * <ul>
- * <li>specify whether a proposal is automatically insertable</li>
- * </ul>
- * </li>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension5} since version 3.2 introducing the following
- * function:
- * <ul>
- * <li>Allow background computation of the additional info</li>
- * </ul>
- * </li>
- * <li>{@link org.eclipse.jface.text.contentassist.ICompletionProposalExtension6} since version 3.4 introducing the following
- * function:
- * <ul>
- * <li>Allow styled ranges in the display string.</li>
- * </ul>
- * </li>
- * </ul>
- * </p>
- * <p>
- * This interface can be implemented by clients. By default, clients use
- * {@link org.eclipse.jface.text.contentassist.CompletionProposal} as the standard implementer of this interface.
+ * This interface can be implemented by clients
  * </p>
  * 
- * @see IContentAssistProcessor
+ * @see ContentAssistProcessor
  */
-public interface ICompletionProposal
+public interface CompletionProposal
 {
 
    /**
@@ -128,4 +81,42 @@ public interface ICompletionProposal
     * @return the context information for this proposal or <code>null</code>
     */
    IContextInformation getContextInformation();
+   
+   /**
+    * Applies the proposed completion to the given document. The insertion has been triggered by entering the given character at
+    * the given offset. This method assumes that {@link #isValidFor(IDocument, int)} returns <code>true</code> if called for
+    * <code>offset</code>.
+    * 
+    * @param document the document into which to insert the proposed completion
+    * @param trigger the trigger to apply the completion
+    * @param offset the offset at which the trigger has been activated
+    */
+   void apply(IDocument document, char trigger, int offset);
+
+   /**
+    * Returns whether this completion proposal is valid for the given position in the given document.
+    * 
+    * @param document the document for which the proposal is tested
+    * @param offset the offset for which the proposal is tested
+    * @return <code>true</code> iff valid
+    */
+   boolean isValidFor(IDocument document, int offset);
+
+   /**
+    * Returns the characters which trigger the application of this completion proposal.
+    * 
+    * @return the completion characters for this completion proposal or <code>null</code> if no completion other than the new line
+    *         character is possible
+    */
+   char[] getTriggerCharacters();
+   
+   /**
+    * Returns <code>true</code> if the proposal may be automatically inserted, <code>false</code> otherwise. Automatic insertion
+    * can happen if the proposal is the only one being proposed, in which case the content assistant may decide to not prompt the
+    * user with a list of proposals, but simply insert the single proposal. A proposal may veto this behavior by returning
+    * <code>false</code> to a call to this method.
+    * 
+    * @return <code>true</code> if the proposal may be inserted automatically, <code>false</code> if not
+    */
+   boolean isAutoInsertable();
 }

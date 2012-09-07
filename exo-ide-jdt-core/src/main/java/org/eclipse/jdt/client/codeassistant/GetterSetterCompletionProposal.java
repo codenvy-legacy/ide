@@ -12,36 +12,34 @@ package org.eclipse.jdt.client.codeassistant;
 
 import com.google.gwt.user.client.ui.Image;
 
-import java.util.Collection;
-import java.util.Set;
-
 import org.eclipse.jdt.client.JavaPreferencesSettings;
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.Flags;
+import org.eclipse.jdt.client.core.Messages;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
-import org.eclipse.jdt.client.core.Messages;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.GetterSetterUtil;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.internal.corext.util.JdtFlags;
 import org.eclipse.jdt.client.internal.corext.util.Strings;
 import org.eclipse.jdt.client.runtime.CoreException;
-
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.editor.text.TextUtilities;
 
-public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal implements ICompletionProposalExtension4
+import java.util.Collection;
+import java.util.Set;
+
+public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal
 {
 
    public static void evaluateProposals(ITypeBinding type, String prefix, int offset, int length, int relevance,

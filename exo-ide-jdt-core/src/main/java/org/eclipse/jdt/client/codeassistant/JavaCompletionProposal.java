@@ -140,4 +140,13 @@ public class JavaCompletionProposal extends AbstractJavaCompletionProposal
       else
          return string;
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    */
+   @Override
+   public boolean isAutoInsertable()
+   {
+      return false;
+   }
 }

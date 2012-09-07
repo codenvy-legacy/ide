@@ -11,7 +11,6 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.JavaPreferencesSettings;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -47,7 +46,7 @@ import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.editor.text.TextUtilities;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 
-public class OverrideCompletionProposal extends JavaTypeCompletionProposal implements ICompletionProposalExtension4
+public class OverrideCompletionProposal extends JavaTypeCompletionProposal
 {
 
    private String fMethodName;

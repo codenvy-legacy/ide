@@ -11,9 +11,9 @@
 package org.eclipse.jdt.client.internal.text.quickassist;
 
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 /**
  * Interface to be implemented by contributors to the extension point

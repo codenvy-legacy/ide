@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
 

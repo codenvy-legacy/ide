@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.IJavaModelMarker;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -109,6 +108,7 @@ import org.eclipse.jdt.client.ltk.refactoring.TextChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import java.util.ArrayList;

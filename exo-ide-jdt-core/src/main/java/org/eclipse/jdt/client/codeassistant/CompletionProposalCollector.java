@@ -13,7 +13,6 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -27,6 +26,7 @@ import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.util.TypeFinder;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
 

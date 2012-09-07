@@ -14,9 +14,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.internal.text.correction.ICommandAccess;
@@ -28,6 +25,9 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.runtime.Status;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.IDocument;
 
 /**
@@ -442,6 +442,41 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    public void setCommandId(String commandId)
    {
       fCommandId = commandId;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+    */
+   @Override
+   public void apply(IDocument document, char trigger, int offset)
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+    */
+   @Override
+   public boolean isValidFor(IDocument document, int offset)
+   {
+      return false;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+    */
+   @Override
+   public char[] getTriggerCharacters()
+   {
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    */
+   @Override
+   public boolean isAutoInsertable()
+   {
+      return false;
    }
 
 }

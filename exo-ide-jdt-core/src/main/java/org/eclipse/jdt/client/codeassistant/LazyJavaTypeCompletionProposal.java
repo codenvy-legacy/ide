@@ -11,7 +11,6 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.JdtExtension;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -21,6 +20,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.util.ModelUtil;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.TextEdit;

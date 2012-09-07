@@ -16,8 +16,6 @@ import com.google.gwt.user.client.ui.Image;
 import org.eclipse.jdt.client.JavaCodeController;
 import org.eclipse.jdt.client.JavaPreferencesSettings;
 import org.eclipse.jdt.client.JdtExtension;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.ISourceRange;
@@ -48,6 +46,7 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
@@ -61,8 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal implements
-   ICompletionProposalExtension4
+public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal
 {
 
    private final String fDeclarationSignature;

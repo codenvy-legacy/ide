@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 import org.exoplatform.ide.editor.text.IDocument;
 
 /**

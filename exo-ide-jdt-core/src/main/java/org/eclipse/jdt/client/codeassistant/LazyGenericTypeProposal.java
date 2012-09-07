@@ -16,12 +16,11 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.TypeInfoStorage;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformationExtension;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
@@ -41,7 +40,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
     * Short-lived context information object for generic types. Currently, these are only created after inserting a type proposal,
     * as core doesn't give us the correct type proposal from within SomeType<|>.
     */
-   private static class ContextInformation implements IContextInformation, IContextInformationExtension
+   private static class ContextInformation implements IContextInformation
    {
       private final String fInformationDisplayString;
 

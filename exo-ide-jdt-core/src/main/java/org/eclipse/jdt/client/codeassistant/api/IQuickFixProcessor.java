@@ -12,6 +12,7 @@
 package org.eclipse.jdt.client.codeassistant.api;
 
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 /**
  * Interface to be implemented by contributors to the extension point

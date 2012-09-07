@@ -11,12 +11,12 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateEngine;
 import org.eclipse.jdt.client.templates.TemplateProposal;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -14,10 +14,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.templates.api.DocumentTemplateContext;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
@@ -26,6 +22,9 @@ import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.IJavaCompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.BadPositionCategoryException;
@@ -37,7 +36,7 @@ import org.exoplatform.ide.editor.text.IRegion;
 /**
  * A template proposal.
  */
-public class TemplateProposal implements IJavaCompletionProposal, ICompletionProposalExtension4
+public class TemplateProposal implements IJavaCompletionProposal
 {
 
    private final Template fTemplate;
@@ -611,4 +610,32 @@ public class TemplateProposal implements IJavaCompletionProposal, ICompletionPro
    {
       return cursorPosition;
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+    */
+   @Override
+   public void apply(IDocument document, char trigger, int offset)
+   {
+      apply(document);
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+    */
+   @Override
+   public boolean isValidFor(IDocument document, int offset)
+   {
+      return false;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+    */
+   @Override
+   public char[] getTriggerCharacters()
+   {
+      return null;
+   }
+
 }

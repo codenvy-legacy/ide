@@ -13,14 +13,13 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformationExtension;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.IContextInformation;
 
 /**
  * Implementation of the <code>IContextInformation</code> interface.
  */
-public final class ProposalContextInformation implements IContextInformation, IContextInformationExtension
+public final class ProposalContextInformation implements IContextInformation
 {
 
    private final String fContextDisplayString;
