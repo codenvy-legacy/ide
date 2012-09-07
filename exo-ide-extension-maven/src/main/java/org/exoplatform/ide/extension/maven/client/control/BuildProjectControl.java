@@ -25,9 +25,10 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
+import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 
 /**
@@ -84,9 +85,8 @@ public class BuildProjectControl extends SimpleControl implements IDEControl, Pr
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      if(ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || 
-         ProjectResolver.SERVLET_JSP.equals(projectType) ||     
-         ProjectResolver.SPRING.equals(projectType))
-      setEnabled(true);
+      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType))
+         setEnabled(true);
    }
 }

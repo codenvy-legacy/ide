@@ -38,7 +38,7 @@ import java.util.Map;
  * @version $Id: Apr 17, 2012 1:16:23 PM anya $
  * 
  */
-public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
+public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
 {
 
    //JavaRemoveCommentsTest.java
@@ -102,6 +102,7 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuctionTest
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       openJavaRemoveCommenTest(PROJECT);
       IDE.GOTOLINE.goToLine(30);
       //after fix problem in status bar uncomment 
