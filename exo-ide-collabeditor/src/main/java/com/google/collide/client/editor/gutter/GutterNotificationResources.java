@@ -37,5 +37,8 @@ public interface GutterNotificationResources extends Resources
 
    @Source("mark-warning.png")
    ImageResource markWarning();
+   
+   @Source("taskmrk.gif")
+   ImageResource markTask();
 
 }

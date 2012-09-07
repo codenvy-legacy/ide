@@ -13,11 +13,11 @@ package org.eclipse.jdt.client.codeassistant;
 
 import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
 
@@ -257,14 +257,14 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
     * @see ICompletionProposal#getContextInformation()
     */
    @Override
-   public final IContextInformation getContextInformation()
+   public final ContextInformation getContextInformation()
    {
       if (!fContextInformationComputed)
          setContextInformation(computeContextInformation());
       return super.getContextInformation();
    }
 
-   protected IContextInformation computeContextInformation()
+   protected ContextInformation computeContextInformation()
    {
       return null;
    }
@@ -275,7 +275,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
     * @param contextInformation The context information associated with this proposal
     */
    @Override
-   public final void setContextInformation(IContextInformation contextInformation)
+   public final void setContextInformation(ContextInformation contextInformation)
    {
       fContextInformationComputed = true;
       super.setContextInformation(contextInformation);
@@ -572,6 +572,15 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
    // fReplacementLengthComputed= false;
    // super.apply(viewer, trigger, stateMask, offset);
    // }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    */
+   @Override
+   public boolean isAutoInsertable()
+   {
+      return false;
+   }
 
    // /*
    // * @see org.eclipse.jdt.internal.ui.text.java.AbstractJavaCompletionProposal#selected(org.eclipse.jface.text.ITextViewer,

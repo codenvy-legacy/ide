@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorClientBundle;
 import org.exoplatform.ide.editor.marking.Marker;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -69,7 +68,8 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       panel.setWidgetTopBottom(ruler, 0, Unit.PX, 13, Unit.PX);
       setWidth("100%");
       setHeight("100%");
-      setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewPanel());
+      //setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewPanel());
+      setStyleName(CodeMirrorStyles.OVERVIEW_PANEL);
       bottomMark = new Mark();
       panel.add(bottomMark);
       panel.setWidgetBottomHeight(bottomMark, 2, Unit.PX, 10, Unit.PX);
@@ -106,12 +106,14 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       if (!errors.isEmpty())
       {
          bottomMark.setMessage("Errors: " + errors.size());
-         bottomMark.setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewBottomMarkError());
+         //bottomMark.setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewBottomMarkError());
+         bottomMark.setStyleName(CodeMirrorStyles.OVERVIEW_BOTTOM_MARK_ERROR);
       }
       else if (!warnings.isEmpty())
       {
          bottomMark.setMessage("Warnings: " + warnings.size());
-         bottomMark.setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewBottomMarkWarning());
+         //bottomMark.setStyleName(CodeMirrorClientBundle.INSTANCE.css().overviewBottomMarkWarning());
+         bottomMark.setStyleName(CodeMirrorStyles.OVERVIEW_BOTTOM_MARK_WARNING);
       }
    }
 
@@ -133,16 +135,19 @@ public class OverviewRuler extends Composite implements MouseDownHandler
    {
       if (problem.isError())
       {
-         return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
+         //return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
+         return CodeMirrorStyles.OVERVIEW_MARK_ERROR;
       }
       
       if (problem.isWarning())
       {
-         return CodeMirrorClientBundle.INSTANCE.css().overviewMarkWarning();
+         //return CodeMirrorClientBundle.INSTANCE.css().overviewMarkWarning();
+         return CodeMirrorStyles.OVERVIEW_MARK_WARNING;
       }
       
       // default
-      return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
+      //return CodeMirrorClientBundle.INSTANCE.css().overviewMarkError();
+      return CodeMirrorStyles.OVERVIEW_MARK_ERROR;
    }
 
    /**
@@ -202,9 +207,14 @@ public class OverviewRuler extends Composite implements MouseDownHandler
       public void onMouseOver(MouseOverEvent event)
       {
          if (widget.getElement().hasAttribute("title") && widget.getElement().getAttribute("title").isEmpty())
+         {
             return;
+         }
+         
          if (notification == null)
-            notification = new NotificationWidget(getElement());
+         {
+            notification = new NotificationWidget(getElement(), getAbsoluteLeft(), getAbsoluteTop());
+         }
       }
 
       /**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.Position;
@@ -70,7 +70,7 @@ public class VariablePosition extends Position
    /*
     * @see org.eclipse.jface.text.link.ProposalPosition#getChoices()
     */
-   public ICompletionProposal[] getChoices()
+   public CompletionProposal[] getChoices()
    {
       return fGuess.getProposals(fVariable, offset, length);
    }

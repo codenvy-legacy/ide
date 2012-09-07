@@ -11,12 +11,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.CompletionContext;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.text.BadPositionCategoryException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IPositionUpdater;
@@ -52,7 +51,7 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
    /** Tells whether this class is in debug mode. */
    private static final boolean DEBUG = false; //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ResultCollector"));  //$NON-NLS-1$//$NON-NLS-2$
 
-   private ICompletionProposal[][] fChoices; // initialized by guessParameters()
+   private CompletionProposal[][] fChoices; // initialized by guessParameters()
 
    private Position[] fPositions; // initialized by guessParameters()
 
@@ -254,7 +253,7 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
    // return null;
    // }
 
-   private ICompletionProposal[][] guessParameters(char[][] parameterNames)
+   private CompletionProposal[][] guessParameters(char[][] parameterNames)
    {
       // find matches in reverse order. Do this because people tend to declare the variable meant for the last
       // parameter last. That is, local variables for the last parameter in the method completion are more
@@ -269,7 +268,7 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
 
       int count = parameterNames.length;
       fPositions = new Position[count];
-      fChoices = new ICompletionProposal[count][];
+      fChoices = new CompletionProposal[count][];
 
       String[] parameterTypes = getParameterTypes();
       // ParameterGuesser guesser= new ParameterGuesser(getEnclosingElement());

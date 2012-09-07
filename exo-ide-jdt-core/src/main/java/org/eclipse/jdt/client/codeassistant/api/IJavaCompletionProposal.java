@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant.api;
 
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+
 /**
  * A completion proposal with a relevance value. The relevance value is used to sort the completion proposals. Proposals with
  * higher relevance should be listed before proposals with lower relevance.
@@ -17,10 +19,10 @@ package org.eclipse.jdt.client.codeassistant.api;
  * This interface can be implemented by clients.
  * </p>
  * 
- * @see org.eclipse.jface.text.contentassist.ICompletionProposal
+ * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal.text.contentassist.ICompletionProposal
  * @since 2.1
  */
-public interface IJavaCompletionProposal extends ICompletionProposal
+public interface IJavaCompletionProposal extends CompletionProposal
 {
 
    /**

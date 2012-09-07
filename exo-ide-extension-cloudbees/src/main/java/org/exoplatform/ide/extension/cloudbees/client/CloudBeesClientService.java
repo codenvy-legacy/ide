@@ -150,13 +150,14 @@ public abstract class CloudBeesClientService
       throws RequestException;
 
    /**
-    * Adds new user to CloudBees account.
+    * Adds user to CloudBees account.
     * 
     * @param account account's name
     * @param user user's data
-    * @param callback callback
+    * @param isExisting is user exists or create new one
+    * @param callback
     * @throws RequestException
     */
-   public abstract void addUserToAccount(String account, CloudBeesUser user,
+   public abstract void addUserToAccount(String account, CloudBeesUser user, boolean isExisting,
       AsyncRequestCallback<CloudBeesUser> callback) throws RequestException;
 }

@@ -45,9 +45,7 @@ public class NotificationWidget
 
    private String title;
 
-   private int initTop;
-
-   public NotificationWidget(Element targetElement)
+   public NotificationWidget(Element targetElement, int offsetLeft, int offsetTop)
    {
       this.targetElement = targetElement;
 
@@ -60,9 +58,10 @@ public class NotificationWidget
 
       RootPanel.get().add(notificationPanel);
       int left = targetElement.getAbsoluteLeft() + targetElement.getOffsetWidth() + 5;
-      initTop = targetElement.getAbsoluteTop();
-      notificationPanel.getElement().getStyle().setLeft(left, Unit.PX);
-      notificationPanel.getElement().getStyle().setTop(initTop, Unit.PX);
+      int top = targetElement.getAbsoluteTop();
+      
+      notificationPanel.getElement().getStyle().setLeft(left + offsetLeft, Unit.PX);
+      notificationPanel.getElement().getStyle().setTop(top + offsetTop, Unit.PX);
 
       notificationPanel.getElement().setInnerHTML(title);
 

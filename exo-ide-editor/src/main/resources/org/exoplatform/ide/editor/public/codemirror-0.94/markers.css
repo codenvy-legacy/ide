@@ -16,45 +16,49 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-@sprite .exo-code-error-mark
+.exo-code-error-mark
 {
-  gwt-image: "codeErrorMark";
+  /* gwt-image: "codeErrorMark"; */
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  background-image: url("images/code-error-mark.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: scroll;
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
   cursor: pointer;
   width: auto;
   height: auto;
 }
 
-@sprite .exo-code-mark-warning
+.exo-code-mark-warning
 {
-  gwt-image: "markWarning";
+  /* gwt-image: "markWarning"; */
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  background-image: url("images/mark-warning.png");
   background-repeat: no-repeat;
   background-position: left center;
   background-attachment: scroll;
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
   cursor: pointer;
   width: auto;
   height: auto;
 }
 
-@sprite .exo-code-mark-error
+.exo-code-mark-error
 {
-  gwt-image: "markError";
+  /* gwt-image: "markError"; */
+  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
+  background-image: url("images/mark-error.png");
   background-repeat: no-repeat;
   background-position: left center;
   background-attachment: scroll;
-  /* background: transparent url('images/code-error-mark.png') no-repeat scroll center center;  */
   cursor: pointer;
   width: auto;
   height: auto;
 }
 
-@sprite .exo-code-mark-breakpoint
+.exo-code-mark-breakpoint
 {
-  gwt-image: "breakpoint";
+  /* gwt-image: "breakpoint"; */
+  background-image: url("images/breakpoint.gif");
   background-repeat: no-repeat;
   background-position: left center;
   background-attachment: scroll;
@@ -64,9 +68,10 @@
   margin-left: 5px;
 }
 
-@sprite .exo-code-mark-breakpoint-current
+.exo-code-mark-breakpoint-current
 {
-  gwt-image: "breakpointCurrent";
+  /* gwt-image: "breakpointCurrent"; */
+  background-image: url("images/braekpoint-current.gif");
   background-repeat: no-repeat;
   background-position: left center;
   background-attachment: scroll;
