@@ -42,8 +42,7 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
-import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
@@ -60,7 +59,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for deploying application to Google App Engine, can be as a part of deployment step in wizard.
- *
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:51:08 PM anya $
  */
@@ -131,20 +130,10 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /*  *//** @see org.exoplatform.ide.client.framework.paas.PaasComponent#validate() */
    /*
-   @Override
-   public void validate()
-   {
-   Scheduler.get().scheduleDeferred(new ScheduledCommand()
-   {
-   @Override
-   public void execute()
-   {
-   applicationId = display.getApplicationIdField().getValue();
-   // Check user is logged to Google App Engine.
-   isUserLogged(true);
-   }
-   });
-   }*/
+    * @Override public void validate() { Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+    * @Override public void execute() { applicationId = display.getApplicationIdField().getValue(); // Check user is logged to
+    * Google App Engine. isUserLogged(true); } }); }
+    */
 
    /** @see org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationHandler#onDeployApplication(org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent) */
    @Override
@@ -159,7 +148,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       if (isAppEngineProject())
       {
          applicationUrl = null;
-         if (ProjectType.JAVA.equals(project.getProjectType()))
+         if (ProjectType.JAVA.value().equals(project.getProjectType())
+            || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
          {
             buildProject(project);
          }
@@ -229,9 +219,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Sets the application's id to configuration file (appengine-web.xml or app.yaml).
-    *
-    * @param appId
-    *    application's id
+    * 
+    * @param appId application's id
     */
    private void setApplicationId(String appId, final ProjectModel project)
    {
@@ -256,7 +245,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Checks if user is logged to Google App Engine.
-    *
+    * 
     * @param wizardStep
     */
    private void isUserLogged(final boolean wizardStep)
