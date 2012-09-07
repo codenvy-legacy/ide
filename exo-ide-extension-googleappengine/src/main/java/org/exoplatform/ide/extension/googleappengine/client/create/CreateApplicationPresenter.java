@@ -40,6 +40,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
+import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
 /**
@@ -211,7 +212,8 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                {
                   if (!result.isAuthenticated())
                   {
-                     IDE.fireEvent(new LoginEvent());
+//                     IDE.fireEvent(new LoginEvent());
+                     new OAuthLoginView();
                   }
                }
 
