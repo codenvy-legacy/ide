@@ -7,7 +7,7 @@
       	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       	float: left;
-      	margin-bottom: 3px;
+      	margin-top: 3px;
       }
       
       .hlabel {
@@ -36,17 +36,13 @@
       	float: left;
       }
       
-      .spaceBottom {
-      	margin-bottom: 7px;
-      }
-      
       .spaceTop {
       	margin-top: 5px;
       }
       
-      .borderTop {
-      	border-top: 1px solid #CDCDCD;
-      	margin-top: 25px;
+      .borderBottom {
+      	border-bottom: 1px solid #CDCDCD;
+      	margin-bottom: 20px;
       }
       
       .error {
@@ -56,80 +52,94 @@
    <f:Border margin="15" borderColor="transparent">
       <f:layer top="0" bottom="35">
          <g:FlowPanel>
-            <g:DockLayoutPanel width="100%" height="45px" unit="PCT" styleName="{style.spaceBottom}">
-               <g:west size="48">
-                  <g:FlowPanel>
-                     <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountEmailField}"></f:Label>
-                     <f:TextInput ui:field="emailField" addStyleNames="{style.textinput}"></f:TextInput>
-                  </g:FlowPanel>
+            <g:DockLayoutPanel width="100%" height="43px" unit="PX">
+               <g:west size="160">
+                  <f:Label addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountDomainField}"></f:Label>
                </g:west>
                <g:center>
-                  <g:FlowPanel></g:FlowPanel>
-               </g:center>
-               <g:east size="48">
                   <g:FlowPanel>
-                     <f:Label value="{locale.createAccountCompanyField}" addStyleNames="{style.label}"></f:Label>
-                     <f:Label value="{locale.createAccountOptional}" addStyleNames="{style.label} {style.optional}"></f:Label>
-                     <f:TextInput ui:field="companyField" addStyleNames="{style.textinput}"></f:TextInput>
-                  </g:FlowPanel>
-               </g:east>
-            </g:DockLayoutPanel>
-
-            <g:DockLayoutPanel width="100%" height="45px" unit="PCT" styleName="{style.spaceBottom}">
-               <g:west size="48">
-                  <g:FlowPanel>
-                     <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountFirstNameField}"></f:Label>
-                     <f:TextInput ui:field="firstNameField" addStyleNames="{style.textinput}"></f:TextInput>
-                  </g:FlowPanel>
-               </g:west>
-               <g:center>
-                  <g:FlowPanel></g:FlowPanel>
-               </g:center>
-               <g:east size="48">
-                  <g:FlowPanel>
-                     <f:Label isHTML="true" value="{locale.createAccountLastNameField}" addStyleNames="{style.label}"></f:Label>
-                     <f:TextInput ui:field="lastNameField" addStyleNames="{style.textinput}"></f:TextInput>
-                  </g:FlowPanel>
-               </g:east>
-            </g:DockLayoutPanel>
-
-            <g:DockLayoutPanel width="100%" height="45px" unit="PCT">
-               <g:west size="48">
-                  <g:FlowPanel>
-                     <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountPasswordField}"></f:Label>
-                     <f:PasswordTextInput ui:field="passwordField" addStyleNames="{style.textinput}"></f:PasswordTextInput>
-                  </g:FlowPanel>
-               </g:west>
-               <g:center>
-                  <g:FlowPanel></g:FlowPanel>
-               </g:center>
-               <g:east size="48">
-                  <g:FlowPanel>
-                     <f:Label addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountConfirmPasswordField}"></f:Label>
-                     <f:PasswordTextInput ui:field="confirmPasswordField" width="100%" height="26" addStyleNames="{style.textinput}"></f:PasswordTextInput>
-                  </g:FlowPanel>
-               </g:east>
-            </g:DockLayoutPanel>
-            <f:Label ui:field="errorLabel" width="100%" height="20px" addStyleNames="{style.label} {style.error}" isHTML="true"></f:Label>
-
-            <g:DockLayoutPanel width="100%" height="65px" unit="PCT" styleName="{style.borderTop}">
-               <g:west size="48">
-                  <g:FlowPanel styleName="{style.spaceTop}">
-                     <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountUserNameField}"></f:Label>
-                     <f:TextInput ui:field="userNameField" addStyleNames="{style.textinput}"></f:TextInput>
-                  </g:FlowPanel>
-               </g:west>
-               <g:center>
-                  <g:FlowPanel></g:FlowPanel>
-               </g:center>
-               <g:east size="48">
-                  <g:FlowPanel styleName="{style.spaceTop}">
-                     <f:Label addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountDomainField}"></f:Label>
                      <f:TextInput ui:field="domainField" addStyleNames="{style.textinput}"></f:TextInput>
                      <f:Label ui:field="domainErrorLabel" width="100%" height="20px" addStyleNames="{style.label} {style.error}" isHTML="true"></f:Label>
                   </g:FlowPanel>
+               </g:center>
+            </g:DockLayoutPanel>
+
+            <g:DockLayoutPanel width="100%" height="40px" unit="PX" styleName="{style.borderBottom}">
+               <g:west size="160">
+                  <g:FlowPanel>
+                     <f:Label value="{locale.createAccountCompanyField}" addStyleNames="{style.label}"></f:Label>
+                     <f:Label value="{locale.createAccountOptional}" addStyleNames="{style.label} {style.optional}"></f:Label>
+                  </g:FlowPanel>
+               </g:west>
+               <g:center>
+                  <f:TextInput ui:field="companyField" addStyleNames="{style.textinput}"></f:TextInput>
+               </g:center>
+            </g:DockLayoutPanel>
+
+            <g:DockLayoutPanel width="100%" height="40px" unit="PX">
+               <g:west size="60">
+                  <f:Label value="{locale.createAccountEmailField}" isHTML="true" addStyleNames="{style.label}"></f:Label>
+               </g:west>
+               <g:center>
+                  <f:TextInput ui:field="emailField" addStyleNames="{style.textinput}"></f:TextInput>
+               </g:center>
+               <g:east size="120" horizontalAlignment="ALIGN_RIGHT">
+                  <g:CheckBox ui:field="createNewUserField" HTML="{locale.createAccountCreateNewUser}"></g:CheckBox>
+               </g:east>
+               <g:east size="10">
+                  <g:FlowPanel></g:FlowPanel>
                </g:east>
             </g:DockLayoutPanel>
+
+            <g:DisclosurePanel animationEnabled="false" width="100%" ui:field="advancedPanel">
+               <g:FlowPanel>
+                  <g:DockLayoutPanel width="100%" height="45px" unit="PCT">
+                     <g:west size="48">
+                        <g:FlowPanel>
+                           <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountUserNameField}"></f:Label>
+                           <f:TextInput ui:field="userNameField" addStyleNames="{style.textinput}"></f:TextInput>
+                        </g:FlowPanel>
+                     </g:west>
+                  </g:DockLayoutPanel>
+
+                  <g:DockLayoutPanel width="100%" height="45px" unit="PCT" styleName="{style.spaceTop}">
+                     <g:west size="48">
+                        <g:FlowPanel>
+                           <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountFirstNameField}"></f:Label>
+                           <f:TextInput ui:field="firstNameField" addStyleNames="{style.textinput}"></f:TextInput>
+                        </g:FlowPanel>
+                     </g:west>
+                     <g:center>
+                        <g:FlowPanel></g:FlowPanel>
+                     </g:center>
+                     <g:east size="48">
+                        <g:FlowPanel>
+                           <f:Label isHTML="true" value="{locale.createAccountLastNameField}" addStyleNames="{style.label}"></f:Label>
+                           <f:TextInput ui:field="lastNameField" addStyleNames="{style.textinput}"></f:TextInput>
+                        </g:FlowPanel>
+                     </g:east>
+                  </g:DockLayoutPanel>
+
+                  <g:DockLayoutPanel width="100%" height="45px" unit="PCT" styleName="{style.spaceTop}">
+                     <g:west size="48">
+                        <g:FlowPanel>
+                           <f:Label width="100%" addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountPasswordField}"></f:Label>
+                           <f:PasswordTextInput ui:field="passwordField" addStyleNames="{style.textinput}"></f:PasswordTextInput>
+                        </g:FlowPanel>
+                     </g:west>
+                     <g:center>
+                        <g:FlowPanel></g:FlowPanel>
+                     </g:center>
+                     <g:east size="48">
+                        <g:FlowPanel>
+                           <f:Label addStyleNames="{style.label}" isHTML="true" value="{locale.createAccountConfirmPasswordField}"></f:Label>
+                           <f:PasswordTextInput ui:field="confirmPasswordField" width="100%" height="26" addStyleNames="{style.textinput}"></f:PasswordTextInput>
+                        </g:FlowPanel>
+                     </g:east>
+                  </g:DockLayoutPanel>
+                  <f:Label ui:field="errorLabel" width="100%" height="20px" addStyleNames="{style.label} {style.error}" isHTML="true"></f:Label>
+               </g:FlowPanel>
+            </g:DisclosurePanel>
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
