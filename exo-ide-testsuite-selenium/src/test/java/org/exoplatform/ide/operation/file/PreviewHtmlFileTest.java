@@ -118,6 +118,9 @@ public class PreviewHtmlFileTest extends BaseTest
       IDE.PREVIEW.selectPreviewHtmlIFrame();
 
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size() > 0);
+     //need for redraw images on staging
+     Thread.sleep(2000);
+     IDE.PREVIEW.waitGtmplPreviewOpened();
       assertTrue(driver.findElements(
          By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size() > 0);
       IDE.selectMainFrame();

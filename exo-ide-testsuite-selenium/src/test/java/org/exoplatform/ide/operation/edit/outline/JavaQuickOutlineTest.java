@@ -78,7 +78,7 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
    public void quickOutline() throws Exception
    {
       IDE.GOTOLINE.goToLine(24);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.chord(Keys.CONTROL, "o"));
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.chord(Keys.CONTROL, "o"));
       waitForQuickOutlineOpened();
       assertElementPresent("helloworld");
       assertElementPresent("GreetingController");
