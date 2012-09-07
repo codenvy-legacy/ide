@@ -34,7 +34,7 @@
       	float: left;
       }
    </ui:style>
-   <f:Border margin="7" borderColor="transparent">
+   <f:Border margin="15" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
             <g:Label text="{locale.createApplicationViewWorkDirField}"></g:Label>
@@ -51,11 +51,11 @@
                   <f:SelectItem ui:field="typeField" width="100%" height="22px"></f:SelectItem>
                </g:center>
             </g:DockLayoutPanel>
-            <g:FlowPanel width="100%" height="90px"></g:FlowPanel>
+            <g:FlowPanel width="100%" height="40px"></g:FlowPanel>
             <g:FlowPanel width="190px" styleName="{style.center}">
                <f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}"
                   imageResource="{resource.okButton}" addStyleNames="{style.left-float}" disabledImageResource="{resource.okButtonDisabled}"></f:ImageButton>
-               <g:FlowPanel width="10px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
+               <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
                <f:ImageButton ui:field="cancelButton" addStyleNames="{style.left-float}" width="90" height="22" text="{locale.cancelButton}"
                   imageResource="{resource.cancelButton}" disabledImageResource="{resource.cancelButtonDisabled}"></f:ImageButton>
             </g:FlowPanel>

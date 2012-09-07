@@ -28,11 +28,11 @@ import com.cloudbees.api.UploadProgress;
 import org.apache.commons.codec.binary.Base64;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ContainerUtils;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -238,14 +239,15 @@ public class CloudBees extends JenkinsClient
       return null;
    }
 
+
    /**
     * Create user and add it to account.
     *
     * @param account
     *    account for new user
     * @param user
-    *    user.
-    *    Requirements:
+    *    user. If parameter <code>existingUser == false</code> then there are the following requirements for user
+    *    information:
     *    <ul>
     *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getEmail()} must return valid
     *    email address</li>
@@ -258,65 +260,72 @@ public class CloudBees extends JenkinsClient
     *    <li>Method {@link org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser#getPassword()} must return
     *    String 8 characters long at least</li>
     *    </ul>
+    *    If parameter <code>existingUser == true</code> only user email must be set.
+    * @param existingUser <code>true</code> if already existed user add to account
     * @return user info
     * @throws IOException
     *    if any i/o error occurs
     * @throws ParsingResponseException
     *    if error occurs when try to parse JSON response from CB server
-    * @throws UserAlreadyExistsException
-    *    if user already exists
     */
-   public CloudBeesUser createUser(String account, CloudBeesUser user)
-      throws IOException, ParsingResponseException, UserAlreadyExistsException
+   public CloudBeesUser createUser(String account, CloudBeesUser user, boolean existingUser)
+      throws IOException, ParsingResponseException
    {
-      validateUser(user);
+      validateUser(user, existingUser);
       AccountAPIResponse response = makeRequest(
          accountProvisioningAPIEndpoint + "/accounts/" + account + "/users", "POST", JsonHelper.toJson(user));
-      if (response.status == 200)
-      {
-         throw new UserAlreadyExistsException(user);
-      }
       return JsonHelper.fromJson(response.body, CloudBeesUser.class, null);
    }
 
    /** Prevent creation partial user. */
-   private void validateUser(CloudBeesUser user)
+   private void validateUser(CloudBeesUser user, boolean existingUser)
    {
       if (user.getEmail() == null || user.getEmail().isEmpty())
       {
          throw new IllegalArgumentException("Email may not be null or empty. ");
       }
-      try
+      if (!existingUser)
       {
-         new InternetAddress(user.getEmail()).validate();
-      }
-      catch (AddressException e)
-      {
-         throw new IllegalArgumentException("Invalid email. " + e.getMessage());
-      }
-      if (user.getName() == null || user.getName().isEmpty())
-      {
-         throw new IllegalArgumentException("User name may not be null or empty. ");
-      }
-      if (user.getFirst_name() == null || user.getFirst_name().isEmpty())
-      {
-         throw new IllegalArgumentException("User first name may not be null or empty. ");
-      }
-      if (user.getLast_name() == null || user.getLast_name().isEmpty())
-      {
-         throw new IllegalArgumentException("User last name may not be null or empty. ");
-      }
-      if (user.getPassword() == null || user.getPassword().length() < 8)
-      {
-         throw new IllegalArgumentException("User password must have 8 characters at least. ");
+         try
+         {
+            new InternetAddress(user.getEmail()).validate();
+         }
+         catch (AddressException e)
+         {
+            throw new IllegalArgumentException("Invalid email. " + e.getMessage());
+         }
+         if (user.getName() == null || user.getName().isEmpty())
+         {
+            throw new IllegalArgumentException("User name may not be null or empty. ");
+         }
+         if (user.getFirst_name() == null || user.getFirst_name().isEmpty())
+         {
+            throw new IllegalArgumentException("User first name may not be null or empty. ");
+         }
+         if (user.getLast_name() == null || user.getLast_name().isEmpty())
+         {
+            throw new IllegalArgumentException("User last name may not be null or empty. ");
+         }
+         if (user.getPassword() == null || user.getPassword().length() < 8)
+         {
+            throw new IllegalArgumentException("User password must have 8 characters at least. ");
+         }
       }
    }
 
+   private static final Pattern ACCOUNT_NAME_VALIDATOR = Pattern.compile("[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9]+$");
+
    private void validateAccount(CloudBeesAccount account)
    {
-      if (account.getName() == null || account.getName().isEmpty())
+      String accountName = account.getName();
+      if (accountName == null || accountName.isEmpty())
       {
          throw new IllegalArgumentException("Account name may not be null or empty. ");
+      }
+      if (!ACCOUNT_NAME_VALIDATOR.matcher(accountName).matches())
+      {
+         throw new IllegalArgumentException("Invalid account name '" + accountName +
+            "'. Must contains letters, numbers and '-' only, leading with a letter and not end with '-'. ");
       }
    }
 

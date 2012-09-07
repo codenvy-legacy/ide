@@ -289,13 +289,16 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void addUserToAccount(String account, CloudBeesUser user, AsyncRequestCallback<CloudBeesUser> callback)
-      throws RequestException
+   public void addUserToAccount(String account, CloudBeesUser user, boolean isExisting,
+      AsyncRequestCallback<CloudBeesUser> callback) throws RequestException
    {
-      String url = restServiceContext + ACCOUNTS + "/" + account + USERS;
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ACCOUNTS).append("/").append(account).append(USERS);
+      url.append("?existing_user=").append(isExisting);
+
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(user)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
