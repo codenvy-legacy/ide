@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -54,7 +55,7 @@ public class UnmapUrlView extends ViewImpl implements UnmapUrlPresenter.Display
    private static UnmapUrlViewUiBinder uiBinder = GWT.create(UnmapUrlViewUiBinder.class);
    
    @UiField
-   TextBox mapUrlField;
+   TextInput mapUrlField;
    
    @UiField
    ImageButton mapUrlButton;
