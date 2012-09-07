@@ -9,7 +9,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class GoToLineFromHotkeyTest extends ServicesJavaTextFuctionTest
+public class GoToLineFromHotkeyTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = GoToLineFromHotkeyTest.class.getSimpleName();

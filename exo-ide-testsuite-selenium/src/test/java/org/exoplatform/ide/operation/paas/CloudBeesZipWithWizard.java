@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.ResourceBundle;
 
-public class CloudBeesZipWithWizardTest extends BaseTest
+public class CloudBeesZipWithWizard extends BaseTest
 {
    private static final String PROJECT = JspTagsTest.class.getSimpleName();
 

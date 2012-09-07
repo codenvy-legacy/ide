@@ -17,7 +17,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.Map;
 
-public class SelectAllFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class SelectAllFromEditMenuTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = SelectAllFromEditMenuTest.class.getSimpleName();

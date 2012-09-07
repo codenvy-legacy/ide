@@ -16,7 +16,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = FindReplaceFromEditMenuTest.class.getSimpleName();

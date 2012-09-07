@@ -39,7 +39,7 @@ import java.util.Map;
  * @version $Id: Apr 17, 2012 1:16:23 PM anya $
  * 
  */
-public class ToggleCommentTest extends ServicesJavaTextFuctionTest
+public class ToggleCommentTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = ToggleCommentTest.class.getSimpleName();
 
