@@ -87,7 +87,8 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       String projectType = event.getProject().getProjectType();
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType);
+            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+            || ProjectType.JSP.value().equals(projectType);
       setVisible(isJavaProject);
       setEnabled(isJavaProject);
       setShowInContextMenu(isJavaProject);

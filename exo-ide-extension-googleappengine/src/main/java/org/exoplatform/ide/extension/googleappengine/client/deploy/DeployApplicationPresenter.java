@@ -149,7 +149,8 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       {
          applicationUrl = null;
          if (ProjectType.JAVA.value().equals(project.getProjectType())
-            || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType()))
+            || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
+            || ProjectType.JSP.value().equals(project.getProjectType()))
          {
             buildProject(project);
          }
