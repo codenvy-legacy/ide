@@ -26,7 +26,7 @@ package org.exoplatform.ide.client.framework.project;
  * 
  */
 public enum ProjectType {
-   PHP("PHP"), JSP("JSP"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("nodejs"), PYTHON(
+   PHP("PHP"), JSP("Servlet/JSP"), JAVA("Java"), JAVASCRIPT("JavaScript"), NODE_JS("nodejs"), PYTHON(
       "Python"), DJANGO("Django"), RUBY_ON_RAILS("Rails"), RUBY("Ruby"), SPRING("Spring"), EXO("eXo"), UNDEFINED(
       "Undefined");
 
