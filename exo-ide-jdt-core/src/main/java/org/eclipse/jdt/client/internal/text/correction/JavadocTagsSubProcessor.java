@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.AST;
 import org.eclipse.jdt.client.core.dom.ASTNode;

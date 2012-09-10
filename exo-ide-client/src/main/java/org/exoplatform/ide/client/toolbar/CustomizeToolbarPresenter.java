@@ -151,7 +151,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(CustomizeToolbarEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new CustomizeToolbarCommand());
+    //TODO  IDE.getInstance().addControl(new CustomizeToolbarCommand());
    }
 
    @Override

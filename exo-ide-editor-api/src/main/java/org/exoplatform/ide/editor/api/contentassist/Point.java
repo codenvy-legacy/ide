@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.client.codeassistant.api;
+package org.exoplatform.ide.editor.api.contentassist;
 
 import java.awt.Rectangle;
 

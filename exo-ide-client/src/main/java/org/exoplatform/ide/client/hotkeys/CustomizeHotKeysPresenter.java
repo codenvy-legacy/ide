@@ -128,7 +128,7 @@ public class CustomizeHotKeysPresenter implements HotKeyPressedListener, Customi
 
    public CustomizeHotKeysPresenter()
    {
-      IDE.getInstance().addControl(new CustomizeHotKeysControl());
+      // TODO IDE.getInstance().addControl(new CustomizeHotKeysControl());
 
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ControlsUpdatedEvent.TYPE, this);

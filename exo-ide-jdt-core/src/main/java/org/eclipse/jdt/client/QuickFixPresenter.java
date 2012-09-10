@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -43,6 +42,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.marking.Markable;
@@ -241,7 +241,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
       {
          try
          {
-            ICompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
+            CompletionProposal[] proposals = correctionProcessor.computeQuickAssistProposals(QuickFixPresenter.this);
             if (display == null)
             {
                int posX = editor.getCursorOffsetLeft() + 2;
@@ -417,7 +417,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
     * @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal, boolean)
     */
    @Override
-   public void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(CompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {
