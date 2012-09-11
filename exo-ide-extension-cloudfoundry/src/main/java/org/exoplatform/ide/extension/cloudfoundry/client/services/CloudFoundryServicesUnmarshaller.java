@@ -84,6 +84,10 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<Cloudfou
             }
             cloudfoundryServices.setSystem(services);
          }
+         else
+         {
+            cloudfoundryServices.setSystem(new SystemService[0]);
+         }
       }
 
       if (jsonObject.containsKey(Keys.PROVISIONED))
@@ -99,6 +103,10 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<Cloudfou
                   AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, ProvisionedService.class, value).as();
             }
             cloudfoundryServices.setProvisioned(services);
+         }
+         else
+         {
+            cloudfoundryServices.setProvisioned(new ProvisionedService[0]);
          }
       }
 
