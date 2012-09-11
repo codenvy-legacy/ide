@@ -220,8 +220,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    private void startApplication(String name)
    {
       final String projectId =
-         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
-            .getId() : null;
+         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {
@@ -261,7 +261,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                         CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
                   }
-                 
+
                }
             });
       }
@@ -293,8 +293,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    private void stopApplication(final String name)
    {
       final String projectId =
-         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
-            .getId() : null;
+         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {
@@ -361,8 +361,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    private void restartApplication(String name)
    {
       final String projectId =
-         (((ItemContext)selectedItems.get(0)).getProject() != null) ? ((ItemContext)selectedItems.get(0)).getProject()
-            .getId() : null;
+         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {

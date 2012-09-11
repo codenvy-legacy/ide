@@ -10,7 +10,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class GotoLineFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class GotoLineFromEditMenuTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = GotoLineFromEditMenuTest.class.getSimpleName();

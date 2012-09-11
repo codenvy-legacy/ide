@@ -205,16 +205,24 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
             Markable editor = editors.get(file.getId());
             editor.unmarkAllProblems();
             IDE.fireEvent(new UpdateOutlineEvent(unit, file));
-            if (unit.getProblems().length == 0 || editor == null)
-               return;
-
-            boolean hasError = false;
+            IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
             List<Marker> markers = new ArrayList<Marker>();
-            for (IProblem p : unit.getProblems())
+            if (tasks != null)
             {
-               markers.add(new ProblemImpl(p));
-               if (p.isError())
-                  hasError = true;
+               for (IProblem p : tasks)
+               {
+                  markers.add(new ProblemImpl(p));
+               }
+            }
+            boolean hasError = false;
+            if (unit.getProblems().length != 0 || editor != null)
+            {
+               for (IProblem p : unit.getProblems())
+               {
+                  markers.add(new ProblemImpl(p));
+                  if (p.isError())
+                     hasError = true;
+               }
             }
             editor.addProblems(markers.toArray(new Marker[markers.size()]));
             if (hasError)
@@ -349,7 +357,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onCancelParse(CancelParseEvent event)
    {
-      if(activeFile == null)
+      if (activeFile == null)
          return;
       if (workingParsers.containsKey(activeFile.getId()))
       {

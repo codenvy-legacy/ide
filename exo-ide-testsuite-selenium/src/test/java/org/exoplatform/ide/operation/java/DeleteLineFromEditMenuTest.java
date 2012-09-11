@@ -13,7 +13,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = DeleteLineFromEditMenuTest.class.getSimpleName();
 

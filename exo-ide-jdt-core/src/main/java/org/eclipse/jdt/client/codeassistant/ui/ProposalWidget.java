@@ -37,9 +37,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.templates.TemplateProposal;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
@@ -53,11 +53,11 @@ import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 public class ProposalWidget extends Composite implements HasClickHandlers, HasMouseOverHandlers, HasDoubleClickHandlers
 {
 
-   protected ICompletionProposal proposal;
+   protected CompletionProposal proposal;
 
    protected Grid grid;
 
-   public ProposalWidget(ICompletionProposal proposal)
+   public ProposalWidget(CompletionProposal proposal)
    {
       this.proposal = proposal;
 
@@ -96,7 +96,7 @@ public class ProposalWidget extends Composite implements HasClickHandlers, HasMo
    }
 
    /** @return the token */
-   public ICompletionProposal getProposal()
+   public CompletionProposal getProposal()
    {
       return proposal;
    }

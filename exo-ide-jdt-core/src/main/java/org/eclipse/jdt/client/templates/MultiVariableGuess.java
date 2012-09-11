@@ -12,9 +12,9 @@ package org.eclipse.jdt.client.templates;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.Point;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.DocumentEvent;
@@ -40,7 +40,7 @@ public class MultiVariableGuess
    /**
     * Implementation of the <code>ICompletionProposal</code> interface and extension.
     */
-   private static class Proposal implements ICompletionProposal
+   private static class Proposal implements CompletionProposal
    {
 
       /** The string to be displayed in the completion proposal popup */
@@ -62,7 +62,7 @@ public class MultiVariableGuess
       private Image fImage;
 
       /** The context information of this proposal */
-      private IContextInformation fContextInformation;
+      private ContextInformation fContextInformation;
 
       /** The additional info of this proposal */
       private Widget fAdditionalProposalInfo;
@@ -94,7 +94,7 @@ public class MultiVariableGuess
        * @param additionalProposalInfo the additional information associated with this proposal
        */
       public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition,
-         Image image, String displayString, IContextInformation contextInformation, Widget additionalProposalInfo)
+         Image image, String displayString, ContextInformation contextInformation, Widget additionalProposalInfo)
       {
          Assert.isNotNull(replacementString);
          Assert.isTrue(replacementOffset >= 0);
@@ -137,7 +137,7 @@ public class MultiVariableGuess
       /*
        * @see ICompletionProposal#getContextInformation()
        */
-      public IContextInformation getContextInformation()
+      public ContextInformation getContextInformation()
       {
          return fContextInformation;
       }
@@ -208,6 +208,42 @@ public class MultiVariableGuess
          }
          return false;
       }
+
+      /**
+       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+       */
+      @Override
+      public void apply(IDocument document, char trigger, int offset)
+      {
+         apply(document);
+      }
+
+      /**
+       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+       */
+      @Override
+      public boolean isValidFor(IDocument document, int offset)
+      {
+         return false;
+      }
+
+      /**
+       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+       */
+      @Override
+      public char[] getTriggerCharacters()
+      {
+         return null;
+      }
+
+      /**
+       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+       */
+      @Override
+      public boolean isAutoInsertable()
+      {
+         return false;
+      }
    }
 
    private final Map<MultiVariable, Set<MultiVariable>> fDependencies =
@@ -221,7 +257,7 @@ public class MultiVariableGuess
    {
    }
 
-   public ICompletionProposal[] getProposals(final MultiVariable variable, int offset, int length)
+   public CompletionProposal[] getProposals(final MultiVariable variable, int offset, int length)
    {
       MultiVariable master = fBackwardDeps.get(variable);
       Object[] choices;
@@ -235,7 +271,7 @@ public class MultiVariableGuess
 
       if (fDependencies.containsKey(variable))
       {
-         ICompletionProposal[] ret = new ICompletionProposal[choices.length];
+         CompletionProposal[] ret = new CompletionProposal[choices.length];
          for (int i = 0; i < ret.length; i++)
          {
             final Object choice = choices[i];
@@ -260,7 +296,7 @@ public class MultiVariableGuess
          if (choices.length < 2)
             return null;
 
-         ICompletionProposal[] ret = new ICompletionProposal[choices.length];
+         CompletionProposal[] ret = new CompletionProposal[choices.length];
          for (int i = 0; i < ret.length; i++)
             ret[i] = new Proposal(variable.toString(choices[i]), offset, length, offset + length);
 

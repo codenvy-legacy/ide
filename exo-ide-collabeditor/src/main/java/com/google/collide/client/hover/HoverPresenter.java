@@ -51,9 +51,9 @@ public class HoverPresenter
    private final IDocument document;
 
    private final CollabEditor collabEditor;
-   
+
    private IRegion currentRegion;
-   
+
    private Remover currentPopup;
 
    /**
@@ -104,17 +104,19 @@ public class HoverPresenter
    private void showHover(TextHover hover, int offset, LineInfo lineInfo)
    {
       IRegion hoverRegion = hover.getHoverRegion(collabEditor, offset);
-      
-      if(hoverRegion.equals(currentRegion) && (currentPopup != null || currentPopup.isVisibleOrPending()))
-      {
+      if(hoverRegion == null)
          return;
-      }
-      else
+      
+      if (hoverRegion.equals(currentRegion))
       {
-         currentRegion = hoverRegion;
-         if(currentPopup != null)
-         currentPopup.remove();
+         if (currentPopup != null && currentPopup.isVisibleOrPending())
+            return;
       }
+
+      currentRegion = hoverRegion;
+      if (currentPopup != null)
+         currentPopup.remove();
+
       com.google.gwt.user.client.Element element = hover.getHoverInfo(collabEditor, hoverRegion);
       if (element == null)
          return;
@@ -122,12 +124,13 @@ public class HoverPresenter
       try
       {
          lineOffset = document.getLineOffset(lineInfo.number());
-         currentPopup = collabEditor
-            .getEditorBundle()
-            .getEditorPopupController()
-            .showPopup(lineInfo, hoverRegion.getOffset() - lineOffset,
-               (hoverRegion.getOffset() + hoverRegion.getLength()) - lineOffset, null,
-               new PopupRendererImpl((Element)element), null, VerticalAlign.BOTTOM, true, 400);
+         currentPopup =
+            collabEditor
+               .getEditorBundle()
+               .getEditorPopupController()
+               .showPopup(lineInfo, hoverRegion.getOffset() - lineOffset,
+                  (hoverRegion.getOffset() + hoverRegion.getLength()) - lineOffset, null,
+                  new PopupRendererImpl((Element)element), null, VerticalAlign.BOTTOM, true, 400);
       }
       catch (BadLocationException e)
       {

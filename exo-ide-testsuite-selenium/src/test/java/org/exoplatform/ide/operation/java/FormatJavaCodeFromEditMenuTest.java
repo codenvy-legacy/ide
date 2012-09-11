@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = FormatJavaCodeFromEditMenuTest.class.getSimpleName();
 

@@ -1520,6 +1520,22 @@ class ASTConverter
             compilationUnit.accept(recoveryPropagator);
             compilationUnit.setProblems(resizedProblems);
          }
+         int taskLenght = unit.compilationResult.taskCount;
+         if(taskLenght != 0)
+         {
+            CategorizedProblem[] resizedProblems = null;
+            CategorizedProblem[] tasks = unit.compilationResult.tasks;
+            if(taskLenght == tasks.length)
+            {
+               resizedProblems = tasks;
+            }
+            else
+            {
+               System.arraycopy(tasks, 0, (resizedProblems = new CategorizedProblem[taskLenght]), 0,
+                  taskLenght);
+            }
+            compilationUnit.setProperty("tasks", resizedProblems);
+         }
          if (this.resolveBindings)
          {
             lookupForScopes();

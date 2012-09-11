@@ -16,22 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudbees.server;
-
-import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
+package org.exoplatform.ide.codeassistant.asm.test;
 
 /**
- * Thrown if user with the same email already registered.
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * @see CloudBees#createUser(String, org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser)
+ *
  */
-@SuppressWarnings("serial")
-public final class UserAlreadyExistsException extends Exception
-{
-   public UserAlreadyExistsException(CloudBeesUser user)
-   {
-      super("Email address " + user.getEmail() + " already registered. ");
-   }
+public @interface AnnotationWithAnnotationParameter {
+   
+   Bar foo() default @Bar(); 
 }
