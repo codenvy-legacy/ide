@@ -85,6 +85,7 @@ import org.exoplatform.ide.core.DeployForm;
 import org.exoplatform.ide.core.PaasAuthorization;
 import org.exoplatform.ide.core.JavaEditor;
 import org.exoplatform.ide.core.Preferences;
+import org.exoplatform.ide.core.Ssh;
 
 /**
  * 
@@ -237,6 +238,8 @@ public class IDE
 
    public Preferences PREFERENCES;
 
+   public Ssh SSH;
+
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
       this.selenium = selenium;
@@ -305,6 +308,7 @@ public class IDE
       PAASAUTORIZATION = PageFactory.initElements(driver, PaasAuthorization.class);
       JAVAEDITOR = PageFactory.initElements(driver, JavaEditor.class);
       PREFERENCES = PageFactory.initElements(driver, Preferences.class);
+      SSH = PageFactory.initElements(driver, Ssh.class);
    }
 
    public Selenium getSelenium()
