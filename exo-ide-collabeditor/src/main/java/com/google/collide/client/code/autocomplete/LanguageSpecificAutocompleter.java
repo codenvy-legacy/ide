@@ -143,7 +143,7 @@ public abstract class LanguageSpecificAutocompleter {
    * itself (e.g. pre-fetch data).
    */
   protected void attach(
-      DocumentParser parser, AutocompleteController controller, PathUtil filePath) {
+      DocumentParser parser, AutocompleteController controller) {
     Preconditions.checkNotNull(parser);
     documentParser = parser;
     this.controller = controller;

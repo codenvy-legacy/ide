@@ -14,6 +14,8 @@
 
 package org.exoplatform.ide.editor.javascript.client.codemirror;
 
+import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
+
 import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
@@ -28,10 +30,6 @@ import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
-
-import javax.annotation.Nonnull;
-
 /**
  * Implementation that adds JavaScript-specific cases.
  */
@@ -44,7 +42,7 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter
 
    @Override
    protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
-      boolean popupIsShown, @Nonnull DocumentParser parser)
+      boolean popupIsShown, DocumentParser parser)
    {
       if (checkEnterTrigger(signal))
       {

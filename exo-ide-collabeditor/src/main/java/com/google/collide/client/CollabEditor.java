@@ -18,19 +18,15 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.editor.Buffer.ContextMenuListener;
-
-import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
-
-import com.google.collide.client.editor.FocusManager.FocusListener;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.editor.Buffer.ContextMenuListener;
+import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
-import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
@@ -206,7 +202,7 @@ public class CollabEditor extends Widget implements Editor, Markable
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
-            editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
+            editorBundle.setDocument(editorDocument, mimeType, "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {

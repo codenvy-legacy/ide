@@ -14,14 +14,12 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.json.client.JsoStringMap;
-
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.PathUtil;
 import com.google.collide.codemirror2.SyntaxType;
+import com.google.collide.json.client.JsoStringMap;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
@@ -302,15 +300,14 @@ public class Autocompleter {
   /**
    * Setups for the document to be auto-completed.
    */
-  public void reset(PathUtil filePath, DocumentParser parser) {
-    Preconditions.checkNotNull(filePath);
+  public void reset(DocumentParser parser) {
     Preconditions.checkNotNull(parser);
 
     stop();
 
     LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
     this.autocompleteController = new AutocompleteController(autocompleter, callback);
-    autocompleter.attach(parser, autocompleteController, filePath);
+    autocompleter.attach(parser, autocompleteController);
   }
 
   @VisibleForTesting

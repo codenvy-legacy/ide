@@ -14,19 +14,16 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
-import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
-
-import com.google.collide.codemirror2.SyntaxType;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.Autocompleter;
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.PathUtil;
+import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 
@@ -175,12 +172,12 @@ public class AutocompleterFacade {
     documentListeners.remove();
   }
 
-  public void editorContentsReplaced(PathUtil path, DocumentParser parser) {
+  public void editorContentsReplaced(DocumentParser parser) {
     pause();
 //    documentListeners.track(editor.getDocument().getLineListenerRegistrar().add(lineListener));
 //    documentListeners.track(parser.getListenerRegistrar().add(parseListener));
 
-    autocompleter.reset(path, parser);
+    autocompleter.reset(parser);
   }
   
   public void addLanguageSpecificAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter)

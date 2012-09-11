@@ -129,7 +129,7 @@ public class EditorBundle implements Content {
   /*
    * TODO: EditorBundle shouldn't have path. It's here to satisfy legacy dependency
    */
-  private PathUtil path;
+//  private PathUtil path;
   private SyntaxHighlighter syntaxHighlighter;
   private final EditorErrorListener editorErrorListener;
   private final UserActivityManager userActivityManager;
@@ -185,10 +185,10 @@ public class EditorBundle implements Content {
 //  public WorkspaceLocationBreadcrumbs getBreadcrumbs() {
 //    return breadcrumbs;
 //  }
-
-  public PathUtil getPath() {
-    return path;
-  }
+//
+//  public PathUtil getPath() {
+//    return path;
+//  }
 
 //  public DebuggingModelController getDebuggingModelController() {
 //    return debuggingModelController;
@@ -254,16 +254,16 @@ public class EditorBundle implements Content {
   /**
    * Replaces the document for the editor and related components.
    */
-  public void setDocument(Document document, PathUtil path, String fileEditSessionKey) {
+  public void setDocument(Document document,String mimeType, String fileEditSessionKey) {
     selectionRestorer.onBeforeDocumentChanged();
 
     reset();
 
-    this.path = path;
+//    this.path = path;
 
     documentManager.attachToEditor(document, editor);
 
-    Parser codeMirrorParser = CodeMirror2.getParser(path);
+    Parser codeMirrorParser = CodeMirror2.getParser(mimeType);
     parser = codeMirrorParser == null ? null
         : DocumentParser.create(document, codeMirrorParser, userActivityManager);
 
@@ -282,7 +282,7 @@ public class EditorBundle implements Content {
 //    outlineController.onDocumentChanged(parser);
 
     try {
-      autocompleter.editorContentsReplaced(path, parser);
+      autocompleter.editorContentsReplaced(parser);
     } catch (Throwable t) {
       Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
     }
