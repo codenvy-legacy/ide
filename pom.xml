@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.9-GA-SNAPSHOT</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA-SNAPSHOT</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.9-GA-SNAPSHOT</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M10-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M10</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -49,7 +49,7 @@
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <everrest.version>1.0.6-SNAPSHOT</everrest.version>
+      <everrest.version>1.0.6</everrest.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
