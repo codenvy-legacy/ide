@@ -14,6 +14,10 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
+
+import com.google.collide.codemirror2.SyntaxType;
+
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
@@ -33,61 +37,6 @@ import org.waveprotocol.wave.client.common.util.SignalEvent;
  * This class isolates {@link Autocompleter} from the UI.
  */
 public class AutocompleterFacade {
-   
-   static class AutocompleteBoxMock implements AutocompleteBox
-   {
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#isShowing()
-       */
-      @Override
-      public boolean isShowing()
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#consumeKeySignal(com.google.collide.client.code.autocomplete.SignalEventEssence)
-       */
-      @Override
-      public boolean consumeKeySignal(SignalEventEssence signal)
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#setDelegate(com.google.collide.client.code.autocomplete.AutocompleteBox.Events)
-       */
-      @Override
-      public void setDelegate(Events delegate)
-      {
-         // TODO Auto-generated method stub
-         
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#dismiss()
-       */
-      @Override
-      public void dismiss()
-      {
-         // TODO Auto-generated method stub
-         
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#positionAndShow(com.google.collide.client.code.autocomplete.AutocompleteProposals)
-       */
-      @Override
-      public void positionAndShow(AutocompleteProposals items)
-      {
-         // TODO Auto-generated method stub
-         
-      }
-      
-   }
 
   private final Autocompleter autocompleter;
   private final Editor editor;
@@ -145,7 +94,7 @@ public class AutocompleterFacade {
   public static AutocompleterFacade create(
       Editor editor, Resources resources) {
 //    AutocompleteUiController popup = new AutocompleteUiController(editor, resources);
-     AutocompleteBox  popup = new AutocompleteBoxMock();
+     AutocompleteBox  popup = new AutocompleteUiController(editor, resources);
     Autocompleter autocompleter = Autocompleter.create(editor, popup);
     return new AutocompleterFacade(editor, autocompleter);
   }

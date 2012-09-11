@@ -121,7 +121,7 @@ public class CollabEditorExtension extends Extension
 //    styleBuilder.append(resources.awesomeBoxCss().getText());
 //    styleBuilder.append(resources.awesomeBoxSectionCss().getText());
 //    styleBuilder.append(resources.centerPanelCss().getText());
-//    styleBuilder.append(resources.autocompleteComponentCss().getText());
+      styleBuilder.append(resources.autocompleteComponentCss().getText());
 //    styleBuilder.append(resources.runButtonTargetPopupCss().getText());
 //    styleBuilder.append(resources.popupBlockedInstructionalPopupCss().getText());
 //    styleBuilder.append(resources.dropdownWidgetsCss().getText());

@@ -14,6 +14,7 @@
 
 package com.google.collide.client;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.editor.marking.Marker;
 
 import com.google.collide.client.util.ClientImplementationsInjector;
@@ -180,7 +181,7 @@ public class Collide implements EntryPoint {
     contentArea.setContent(editorBundle);
     
     Elements.getBody().appendChild(v.getElement());
-    editorBundle.setDocument(Document.createFromString("package test;\n public class MMM extends Object implements Abb{\n private static final String ds;}"), new PathUtil("test.java"), "");
+    editorBundle.setDocument(Document.createFromString("package test;\n public class MMM extends Object implements Abb{\n private static final String ds;}"), MimeType.APPLICATION_JAVA, "");
 
     
     

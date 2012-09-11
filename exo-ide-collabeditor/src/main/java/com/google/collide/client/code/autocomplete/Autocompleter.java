@@ -26,6 +26,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
+import org.waveprotocol.wave.client.common.util.UserAgent;
 
 /**
  * Class to implement all the autocompletion support that is not specific to a
@@ -251,7 +252,7 @@ public class Autocompleter {
       return true;
     }
 
-    if (isCtrlSpace(trigger)) {
+    if (isActionSpace(trigger)) {
       boxTrigger = trigger;
       scheduleRequestAutocomplete();
       return true;
@@ -284,6 +285,17 @@ public class Autocompleter {
   private static boolean isCtrlSpace(SignalEventEssence trigger) {
     return trigger.ctrlKey && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
   }
+
+  private static boolean isActionSpace(SignalEventEssence trigger) {
+     if (UserAgent.isMac())
+     {
+        return (trigger.metaKey) && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
+     }
+     else
+     {
+        return (trigger.ctrlKey) && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
+     }
+   }
 
   /**
    * Hides popup and prevents further activity.
