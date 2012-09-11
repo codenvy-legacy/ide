@@ -73,33 +73,33 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<Cloudfou
       if (jsonObject.containsKey(Keys.SYSTEM))
       {
          JSONArray systemServices = jsonObject.get(Keys.SYSTEM).isArray();
+         SystemService[] services = new SystemService[systemServices.size()];
          if (systemServices.size() > 0)
          {
-            SystemService[] services = new SystemService[systemServices.size()];
             for (int i = 0; i < systemServices.size(); i++)
             {
                String value = systemServices.get(i).isObject().toString();
                services[i] =
                   AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, SystemService.class, value).as();
             }
-            cloudfoundryServices.setSystem(services);
          }
+         cloudfoundryServices.setSystem(services);
       }
 
       if (jsonObject.containsKey(Keys.PROVISIONED))
       {
          JSONArray provisionedServices = jsonObject.get(Keys.PROVISIONED).isArray();
+         ProvisionedService[] services = new ProvisionedService[provisionedServices.size()];
          if (provisionedServices.size() > 0)
          {
-            ProvisionedService[] services = new ProvisionedService[provisionedServices.size()];
             for (int i = 0; i < provisionedServices.size(); i++)
             {
                String value = provisionedServices.get(i).isObject().toString();
                services[i] =
                   AutoBeanCodex.decode(CloudFoundryExtension.AUTO_BEAN_FACTORY, ProvisionedService.class, value).as();
             }
-            cloudfoundryServices.setProvisioned(services);
          }
+         cloudfoundryServices.setProvisioned(services);
       }
 
    }

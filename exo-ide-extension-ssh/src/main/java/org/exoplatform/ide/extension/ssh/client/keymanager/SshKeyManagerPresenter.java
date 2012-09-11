@@ -296,6 +296,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          display = GWT.create(Display.class);
          bindDisplay();
       }
+      refreshKeys();
       return display.asView();
    }
 
