@@ -31,7 +31,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * Created by The eXo Platform SAS .
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Musienko Maksim</a>
+ * @author <a href="mailto:mmusienko@exoplatform.com">Musienko Maksim</a>
  * @version $
  */
 

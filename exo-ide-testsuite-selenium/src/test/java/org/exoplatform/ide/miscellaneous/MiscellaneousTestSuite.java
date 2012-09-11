@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import org.exoplatform.ide.preferences.CustomizeToolbarTest;
+import org.exoplatform.ide.preferences.HotkeysCustomizationTest;
+import org.exoplatform.ide.preferences.HotkeysFormTest;
+import org.exoplatform.ide.preferences.ShowKeyboardShortcutsTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
