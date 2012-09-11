@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.editor.javascript.client;
 
+import com.google.gwt.resources.client.TextResource;
+
+import com.google.gwt.resources.client.DataResource;
+
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
@@ -61,4 +65,10 @@ public interface JavaScriptClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/javascript/public/images/javascript/javascript.gif")
    ImageResource javaScript();
+
+   @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprima.js")
+   TextResource esprima();
+
+   @Source("org/exoplatform/ide/editor/javascript/client/esprima/esprimaJsContentAssist.js")
+   TextResource esprimaJsContentAssist();
 }

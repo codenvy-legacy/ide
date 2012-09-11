@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.javascript.client;
 
+import com.google.collide.client.util.Elements;
+
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -147,5 +149,6 @@ public class JavaScriptEditorExtension extends Extension
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_JAVASCRIPT, commentsModifier));
+      Elements.injectJs(RESOURCES.esprima().getText() + RESOURCES.esprimaJsContentAssist().getText());
    }
 }
