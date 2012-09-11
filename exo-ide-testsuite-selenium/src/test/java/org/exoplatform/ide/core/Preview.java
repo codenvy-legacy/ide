@@ -36,7 +36,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Preview extends AbstractTestModule
 {
 
-   private static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='idePreviewHTMLView']";
+   private static final String GROOVY_TEMPLATE_PREVIEW = "//div[@view-id='Preview']";
 
    private static final String GADGET_PREVIEW = "//div[@view-id='gadgetpreview']";
 

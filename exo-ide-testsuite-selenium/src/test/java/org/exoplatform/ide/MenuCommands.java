@@ -253,13 +253,13 @@ public interface MenuCommands
 
    public interface Window
    {
-      public static final String WINDOW = "Window";
+      public static final String SHOW_VIEW = "Show View";
 
-      public static final String SELECT_WORKSPACE = "Select Workspace...";
+      public static final String NAVIGATION = "Navigation";
 
-      public static final String CUSTOMIZE_HOTKEYS = "Customize Hotkeys...";
+      public static final String PREFERNCESS = "Preferences...";
 
-      public static final String CUSTOMIZE_TOOLBAR = "Customize Toolbar...";
+      public static final String FORMATTER = "Formatter";
    }
 
    public interface Git
