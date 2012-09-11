@@ -11,6 +11,7 @@ public class SshKeysTest extends BaseTest
    public void sshAddTest() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
+      Thread.sleep(5000);
    }
 }

@@ -71,7 +71,7 @@ public class ShowKeyboardShortcutsTest extends BaseTest
       IDE.SHOW_KEYBOARD_SHORTCUTS.waitClosed();
 
       // change shortcut for Save command
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+//      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);

@@ -96,7 +96,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
@@ -110,7 +110,7 @@ public class HotkeysFormTest extends BaseTest
       // Workaround: Restart HotkeyCustomization form, after restart all elements not selected
       IDE.CUSTOMIZE_HOTKEYS.closeClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindDisabled();
@@ -152,7 +152,7 @@ public class HotkeysFormTest extends BaseTest
       //step 1 bind for CSS command new value, check state elements, save changes
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
@@ -170,7 +170,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.css *");
       IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       assertEquals("Ctrl+M", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
@@ -191,7 +191,7 @@ public class HotkeysFormTest extends BaseTest
 
       //step 1trying bind incorrect values for text files
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+ //     IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_TEXT_FILE);
@@ -250,7 +250,7 @@ public class HotkeysFormTest extends BaseTest
 
       //step 2: preconditioning: Select XML file, set new key bind and
       // check this work hotkey in IDE
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
@@ -268,7 +268,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 3: unbind new hotkey and check this in IDE
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);

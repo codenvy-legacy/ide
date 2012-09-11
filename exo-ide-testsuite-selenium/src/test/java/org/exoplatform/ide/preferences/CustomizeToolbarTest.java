@@ -61,7 +61,7 @@ public class CustomizeToolbarTest extends BaseTest
 
       //step 1 (run CUSTOMIZE TOOLBAR form, delete New * [Popup], press CANCEL button. Run form again and  check "New * [Popup]" element presents)
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       IDE.CUSTOMIZE_TOOLBAR.selectNumElementOnCommandListbar(7);
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnCommandlistbarByName("New *");
@@ -69,7 +69,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
       IDE.CUSTOMIZE_TOOLBAR.cancelClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertTrue(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
 
@@ -78,7 +78,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertFalse(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
 
@@ -91,7 +91,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
       //step 4  (move first element down, check element in new position. Reopen Customize Toolbar form, and check element in new position )
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.moveDownClick();
@@ -99,7 +99,7 @@ public class CustomizeToolbarTest extends BaseTest
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
       IDE.CUSTOMIZE_TOOLBAR.okClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
 
@@ -110,7 +110,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.okClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "Save");
 
@@ -143,7 +143,7 @@ public class CustomizeToolbarTest extends BaseTest
       //      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
       //step 7 (reopen customize toolbar and set default values. Check default elements on commandlist and toolbar)
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       IDE.CUSTOMIZE_TOOLBAR.defaultClick();
       IDE.LOADER.waitClosed();
