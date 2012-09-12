@@ -1241,14 +1241,14 @@ var esprimaJsContentAssist = function() {
 										propType, this.replaceStart - 1);
 								this.proposals.push({ 
 									proposal: removePrefix(this.prefix, res.completion), 
-									description: res.completion + " : " + this.createReadableType(propType) + " (esprima)", 
+									description: res.completion + " : " + this.createReadableType(propType), 
 									positions: res.positions, 
 									escapePosition: this.replaceStart + res.completion.length 
 								});
 							} else {
 								this.proposals.push({
 									proposal: removePrefix(this.prefix, propName),
-									description: propName + " : " + this.createReadableType(propType) + " (esprima)"
+									description: propName + " : " + this.createReadableType(propType)
 								});
 							}
 						}
@@ -1446,5 +1446,5 @@ var esprimaJsContentAssist = function() {
 		EsprimaJavaScriptContentAssistProvider : EsprimaJavaScriptContentAssistProvider
 	};
 };
- prov = esprimaJsContentAssist();
+prov = esprimaJsContentAssist();
 var jsEsprimaContentAssistProvider = new prov.EsprimaJavaScriptContentAssistProvider();
