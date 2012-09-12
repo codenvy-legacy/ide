@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
+import com.google.collide.shared.util.JsonCollections;
+
+import com.google.collide.json.shared.JsonArray;
+
 import com.google.collide.json.client.JsoArray;
 
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -55,16 +62,68 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    @Override
    public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset)
    {
-        JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset);
-      if (jsProposals == null || jsProposals.size()== 0)
-         return null;
-
-      JavaScriptProposal[] prop = new JavaScriptProposal[jsProposals.size()];
-      for (int i = 0; i < jsProposals.size(); i++)
+      Context c = Context.create();
+      String prefix = computatePrefix(viewer.getDocument(), offset);
+      c.setPrefix(prefix);
+      JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
+      JsonArray<CompletionProposal> prop = JsonCollections.createArray();
+      prop.addAll(search);
+      
+      JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset, c);
+      if (jsProposals != null && jsProposals.size() != 0)
       {
-         prop[i] = new JavaScriptProposal(jsProposals.get(i), offset);
+         for (int i= 0; i < jsProposals.size(); i++)
+         {
+            prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
+         }
       }
-      return prop;
+      CompletionProposal[] proposals = new CompletionProposal[prop.size()];
+      for (int i = 0; i < prop.size(); i++)
+      {
+         proposals[i] = prop.get(i);
+      }
+      return proposals;
+   }
+
+   /**
+    * @param document
+    * @param offset
+    * @return
+    */
+   private String computatePrefix(IDocument document, int offset)
+   {
+      try
+      {
+         IRegion lineInfo = document.getLineInformationOfOffset(offset);
+         String line = document.get(lineInfo.getOffset(), lineInfo.getLength());
+         String partLine = line.substring(0, offset - lineInfo.getOffset());
+         for (int i = partLine.length() - 1; i >= 0; i--)
+         {
+            switch (partLine.charAt(i))
+            {
+               case ' ' :
+               case '.' :
+               case '(' :
+               case ')' :
+               case '{' :
+               case '}' :
+               case ';' :
+               case '[' :
+               case ']' :
+               case '"' :
+               case '\'' :
+                  return   partLine.substring(i + 1);
+               default :
+                  break;
+            }
+         }
+
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
+      return "";
    }
 
    /**
