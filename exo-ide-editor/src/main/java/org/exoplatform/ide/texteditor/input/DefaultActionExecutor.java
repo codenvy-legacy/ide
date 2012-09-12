@@ -25,7 +25,7 @@ import org.exoplatform.ide.util.SignalEvent;
 public class DefaultActionExecutor implements ActionExecutor
 {
 
-   private final JsonStringMap<Shortcut> actions = JsonCollections.createMap();
+   private final JsonStringMap<Shortcut> actions = JsonCollections.createStringMap();
 
    @Override
    public boolean execute(String actionName, InputScheme scheme, SignalEvent event)

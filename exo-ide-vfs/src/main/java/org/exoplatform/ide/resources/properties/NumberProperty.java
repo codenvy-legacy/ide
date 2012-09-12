@@ -16,25 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.resources.properties;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
+import org.exoplatform.ide.json.JsonArray;
 
 /**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: NumberProperty.java 65787 2011-02-03 10:03:58Z andrew00x $
  */
-public class GwtTestSuiteVfs extends GWTTestSuite
+public class NumberProperty extends Property<Double>
 {
-   public static Test suite()
+   public NumberProperty()
    {
-      TestSuite suite = new TestSuite("vfs test suite");
-      suite.addTestSuite(GwtTestVfsSerializer.class); suite.addTestSuite(GwtTestVirtualFileSystem.class);
-      return suite;
+      super();
+   }
+
+   public NumberProperty(String name, Double value)
+   {
+      super(name, value);
+   }
+
+   public NumberProperty(String name, JsonArray<Double> value)
+   {
+      super(name, value);
+   }
+
+   public JsonArray<Double> getValue()
+   {
+      return value;
+   }
+
+   public void setValue(JsonArray<Double> value)
+   {
+      this.value = value;
    }
 }

@@ -3,7 +3,7 @@
 <module>
    <inherits name="com.google.gwt.user.User" />
    <inherits name="elemental.Elemental" />
-   <inherits name="org.exoplatform.ide.util.Util" />
+   <inherits name="org.exoplatform.ide.Commons" />
    <source path="" />
 
    <replace-with class="org.exoplatform.ide.util.loging.LogConfig.Enabled">

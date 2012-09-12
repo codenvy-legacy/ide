@@ -16,25 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.resources.model;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
 
 /**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * @version $Id:$
  */
-public class GwtTestSuiteVfs extends GWTTestSuite
+public interface ItemContext
 {
-   public static Test suite()
-   {
-      TestSuite suite = new TestSuite("vfs test suite");
-      suite.addTestSuite(GwtTestVfsSerializer.class); suite.addTestSuite(GwtTestVirtualFileSystem.class);
-      return suite;
-   }
+   Project getProject();
+
+   void setProject(Project project);
+
+   Folder getParent();
+
+   void setParent(Folder parent);
+
+   boolean isPersisted();
 }

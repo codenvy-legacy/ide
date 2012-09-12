@@ -56,7 +56,7 @@ public class Line implements TaggableLine {
     this.document = document;
     this.text = text;
 
-    tags = JsonCollections.createMap();
+    tags = JsonCollections.createStringMap();
   }
 
   public Document getDocument() {
@@ -126,7 +126,7 @@ public class Line implements TaggableLine {
    * interface
    */
   public void clearTags() {
-    tags = JsonCollections.createMap();
+    tags = JsonCollections.createStringMap();
   }
 
   @Override

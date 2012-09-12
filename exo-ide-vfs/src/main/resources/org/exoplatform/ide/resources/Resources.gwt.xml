@@ -33,7 +33,7 @@
     <inherits name='org.exoplatform.gwtframework.commons.Commons' />
 	<!--  inherit css based theme -->
 
-	<source path="client" />
-	<source path="shared" />
+	<source path="" />
+
 
 </module>

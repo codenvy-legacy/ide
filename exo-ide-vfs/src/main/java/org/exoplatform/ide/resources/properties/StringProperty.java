@@ -16,25 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.resources.properties;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import com.google.gwt.junit.tools.GWTTestSuite;
+import org.exoplatform.ide.json.JsonArray;
 
 /**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
+ * @version $Id: StringProperty.java 65773 2011-02-02 13:46:50Z andrew00x $
  */
-public class GwtTestSuiteVfs extends GWTTestSuite
+public class StringProperty extends Property<String>
 {
-   public static Test suite()
+   public StringProperty()
    {
-      TestSuite suite = new TestSuite("vfs test suite");
-      suite.addTestSuite(GwtTestVfsSerializer.class); suite.addTestSuite(GwtTestVirtualFileSystem.class);
-      return suite;
+      super();
+   }
+
+   public StringProperty(String name, String value)
+   {
+      super(name, value);
+   }
+
+   public StringProperty(String name, JsonArray<String> value)
+   {
+      super(name, value);
+   }
+
+   public JsonArray<String> getValue()
+   {
+      return value;
+   }
+
+   public void setValue(JsonArray<String> value)
+   {
+      this.value = value;
    }
 }

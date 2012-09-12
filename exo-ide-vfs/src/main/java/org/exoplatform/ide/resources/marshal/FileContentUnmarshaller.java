@@ -16,25 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.resources.marshal;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import com.google.gwt.http.client.Response;
 
-import com.google.gwt.junit.tools.GWTTestSuite;
+import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**
- * Created by The eXo Platform SAS.
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
  * 
- * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
- * @version $Id: $
  */
-public class GwtTestSuiteVfs extends GWTTestSuite
+public class FileContentUnmarshaller implements Unmarshallable<FileModel>
 {
-   public static Test suite()
+
+   private final FileModel file;
+
+   public FileContentUnmarshaller(FileModel file)
    {
-      TestSuite suite = new TestSuite("vfs test suite");
-      suite.addTestSuite(GwtTestVfsSerializer.class); suite.addTestSuite(GwtTestVirtualFileSystem.class);
-      return suite;
+      this.file = file;
    }
+
+   @Override
+   public FileModel getPayload()
+   {
+      return file;
+   }
+
+   @Override
+   public void unmarshal(Response response) throws UnmarshallerException
+   {
+      file.setContent(response.getText());
+   }
+
 }

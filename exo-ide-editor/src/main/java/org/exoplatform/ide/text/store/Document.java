@@ -161,7 +161,7 @@ public class Document implements DocumentMutator {
 
   private final int id = idCounter++;
   
-  private final JsonStringMap<Object> tags = JsonCollections.createMap();
+  private final JsonStringMap<Object> tags = JsonCollections.createStringMap();
 
   protected Document() {
     firstLine = lastLine = Line.create(this, "");

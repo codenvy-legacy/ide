@@ -72,7 +72,7 @@ public class MouseHoverManager
 
    private final Editor editor;
 
-   private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers = JsonCollections.createMap();
+   private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers = JsonCollections.createStringMap();
 
    /**
     * Current key combination that we will dispatch the mouse hover events for.

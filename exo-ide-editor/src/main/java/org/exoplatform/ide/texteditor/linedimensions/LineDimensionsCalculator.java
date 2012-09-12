@@ -211,7 +211,7 @@ public class LineDimensionsCalculator {
    * A cache used to cache the width of special characters. Would be final
    * except there isn't a fast way to clear a map.
    */
-  private static JsonStringMap<Double> characterWidthCache = JsonCollections.createMap();
+  private static JsonStringMap<Double> characterWidthCache = JsonCollections.createStringMap();
 
   /**
    * A listener which notifies us of dirty lines. We only have to handle the
@@ -641,6 +641,6 @@ public class LineDimensionsCalculator {
    */
   private static void clearCharacterCacheDueToZoomChange() {
     LineDimensionsUtils.markTimeline(LineDimensionsCalculator.class, "Cleared cache due to zoom");
-    characterWidthCache = JsonCollections.createMap();
+    characterWidthCache = JsonCollections.createStringMap();
   }
 }

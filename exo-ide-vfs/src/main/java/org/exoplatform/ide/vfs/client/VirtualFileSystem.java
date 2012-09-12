@@ -383,7 +383,9 @@ public class VirtualFileSystem
    public void getItemByPath(String path, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
    {
       if (path.startsWith("/"))
+      {
          path = path.substring(1);
+      }
       String url = info.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref();
       url = URL.decode(url).replace("[path]", path);
       AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
