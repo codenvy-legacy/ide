@@ -14,6 +14,8 @@
 
 package com.google.collide.client.code;
 
+import com.google.collide.client.CollabEditor;
+
 import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 
 import com.google.collide.client.AppContext;
@@ -58,7 +60,7 @@ public class EditorBundle implements Content {
 //      ParticipantModel participantModel,
 //      OutlineModel outlineModel,
 //      FileTreeModel fileTreeModel,
-      ErrorReceiver errorReceiver) {
+      ErrorReceiver errorReceiver, CollabEditor collEditor) {
 
     final Editor editor = Editor.create(appContext);
 
@@ -73,7 +75,7 @@ public class EditorBundle implements Content {
 //        appContext.getFrontendApi().GET_CODE_GRAPH);
 //    CubeClient cubeClient = cubeClientWrapper.getCubeClient();
     AutocompleterFacade autocompleter = AutocompleterFacade.create(
-        editor, appContext.getResources());
+        editor, collEditor, appContext.getResources());
 
 //    GoToDefinitionHandler goToDefinition = new GoToDefinitionHandler(currentPlace,
 //        editor,

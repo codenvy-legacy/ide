@@ -14,6 +14,10 @@
 
 package com.google.collide.client.code.autocomplete;
 
+import com.google.collide.client.util.logging.Log;
+
+import com.google.collide.client.CollabEditor;
+
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
@@ -25,6 +29,11 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 import org.waveprotocol.wave.client.common.util.UserAgent;
 
@@ -133,15 +142,22 @@ public class Autocompleter {
 
   private final Editor editor;
   private boolean isAutocompleteInsertion = false;
-  private AutocompleteController autocompleteController;
   private final AutocompleteBox popup;
+  private ContentAssistProcessor contentAssistProcessor;
+  private final ContentAssistant contentAssistant;
+
+private final org.exoplatform.ide.editor.api.Editor exoEditor;
 
   /**
    * @param editor
+ * @param contentAssistant 
+ * @param exoEditor 
    */
-   Autocompleter(Editor editor, AutocompleteBox popup){
+   Autocompleter(Editor editor, AutocompleteBox popup, ContentAssistant contentAssistant, org.exoplatform.ide.editor.api.Editor exoEditor){
      this.editor = editor;
      this.popup = popup;
+   this.contentAssistant = contentAssistant;
+   this.exoEditor = exoEditor;
   }
 
   /**
@@ -150,7 +166,7 @@ public class Autocompleter {
    * <p>This method should be called when the code is modified.
    */
   public void refresh() {
-    if (autocompleteController == null) {
+    if (contentAssistProcessor == null) {
       return;
     }
 
@@ -176,9 +192,9 @@ public class Autocompleter {
 
 //  private final OnSelectCommand onSelectCommand = new OnSelectCommand();
 
-  public static Autocompleter create(Editor editor, AutocompleteBox popup)
+  public static Autocompleter create(Editor editor, AutocompleteBox popup, ContentAssistant contentAssistant, org.exoplatform.ide.editor.api.Editor exoEditor)
   {
-     return new Autocompleter(editor, popup);     
+     return new Autocompleter(editor, popup, contentAssistant, exoEditor);     
   }
   
 //  public static Autocompleter create(
@@ -244,18 +260,25 @@ public class Autocompleter {
    * @return {@code true} if event shouldn't be further processed / bubbled
    */
   public boolean processKeyPress(SignalEventEssence trigger) {
-    if (autocompleteController == null) {
-      return false;
-    }
 
     if (popup.isShowing() && popup.consumeKeySignal(trigger)) {
       return true;
     }
-
+    
+    try
+    {
+       String contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
+       contentAssistProcessor = contentAssistant.getContentAssistProcessor(contentType);
+    }
+    catch (BadLocationException e)
+    {
+       Log.error(getClass(), e);
+       return false;
+    }
     if (isActionSpace(trigger)) {
-      boxTrigger = trigger;
-      scheduleRequestAutocomplete();
-      return true;
+         boxTrigger = trigger;
+         scheduleRequestAutocomplete();
+         return true;
     }
 
     LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter();
@@ -282,10 +305,6 @@ public class Autocompleter {
     }
   }
 
-  private static boolean isCtrlSpace(SignalEventEssence trigger) {
-    return trigger.ctrlKey && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
-  }
-
   private static boolean isActionSpace(SignalEventEssence trigger) {
      if (UserAgent.isMac())
      {
@@ -302,9 +321,8 @@ public class Autocompleter {
    */
   private void stop() {
     dismissAutocompleteBox();
-    if (this.autocompleteController != null) {
-      this.autocompleteController.detach();
-      this.autocompleteController = null;
+    if (this.contentAssistProcessor != null) {
+      this.contentAssistProcessor = null;
     }
 //    localPrefixIndexStorage.clear();
   }
@@ -317,27 +335,25 @@ public class Autocompleter {
 
     stop();
 
-    LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
-    this.autocompleteController = new AutocompleteController(autocompleter, callback);
-    autocompleter.attach(parser, autocompleteController);
+//    LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
+//    this.autocompleteController = new AutocompleteController(autocompleter, callback);
+//    autocompleter.attach(parser, autocompleteController);
   }
 
-  @VisibleForTesting
   protected LanguageSpecificAutocompleter getLanguageSpecificAutocompleter() {
-    Preconditions.checkNotNull(autocompleteController);
-    return autocompleteController.getLanguageSpecificAutocompleter();
+    Preconditions.checkNotNull(contentAssistProcessor);
+    //TODO
+    return  NoneAutocompleter.getInstance(); //contentAssistProcessor.getLanguageSpecificAutocompleter();
   }
 
-  @VisibleForTesting
-  AutocompleteController getController() {
-    return autocompleteController;
-  }
+//  AutocompleteController getController() {
+//    return autocompleteController;
+//  }
 
-  @VisibleForTesting
-  SyntaxType getMode() {
-    return (autocompleteController == null)
-        ? SyntaxType.NONE : autocompleteController.getLanguageSpecificAutocompleter().getMode();
-  }
+//  SyntaxType getMode() {
+//    return (autocompleteController == null)
+//        ? SyntaxType.NONE : autocompleteController.getLanguageSpecificAutocompleter().getMode();
+//  }
 
   /**
    * Applies textual and UI changes specified with {@link AutocompleteResult}.
@@ -361,16 +377,16 @@ public class Autocompleter {
     }
   }
 
-  /**
-   * Fetch changes from controller for selected proposal, hide popup;
-   * apply changes.
-   *
-   * @param proposal proposal item selected by user
-   */
-  @VisibleForTesting
-  void reallyFinishAutocompletion(ProposalWithContext proposal) {
-    applyChanges(autocompleteController.finish(proposal));
-  }
+//  /**
+//   * Fetch changes from controller for selected proposal, hide popup;
+//   * apply changes.
+//   *
+//   * @param proposal proposal item selected by user
+//   */
+//  @VisibleForTesting
+//  void reallyFinishAutocompletion(ProposalWithContext proposal) {
+//    applyChanges(contentAssistProcessor.finish(proposal));
+//  }
 
   /**
    * Dismisses the autocomplete box.
@@ -382,9 +398,9 @@ public class Autocompleter {
   public void dismissAutocompleteBox() {
     popup.dismiss();
     boxTrigger = null;
-    if (autocompleteController != null) {
-      autocompleteController.pause();
-    }
+//    if (autocompleteController != null) {
+//      autocompleteController.pause();
+//    }
   }
 
   /**
@@ -393,11 +409,11 @@ public class Autocompleter {
    */
   private void scheduleRequestAutocomplete() {
     final SignalEventEssence trigger = boxTrigger;
-    final AutocompleteController controller = autocompleteController;
+    final ContentAssistProcessor processor = contentAssistProcessor;
     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
       @Override
       public void execute() {
-        requestAutocomplete(controller, trigger);
+        requestAutocomplete(processor, trigger);
       }
     });
   }
@@ -408,21 +424,53 @@ public class Autocompleter {
   }
 
   @VisibleForTesting
-  void requestAutocomplete(AutocompleteController controller, SignalEventEssence trigger) {
-    if (!controller.isAttached()) {
+  void requestAutocomplete(ContentAssistProcessor contentAssistProcessor, SignalEventEssence trigger) {
+    if (contentAssistProcessor == null) {
       return;
     }
     // TODO: If there is only one proposal that gives us nothing
     //               then there are no proposals!
-    AutocompleteProposals proposals = controller.start(editor.getSelection(), trigger);
-    if (AutocompleteProposals.PARSING == proposals && popup.isShowing()) {
-      // Do nothing to avoid flickering.
-    } else if (!proposals.isEmpty()) {
-      popup.positionAndShow(proposals);
-    } else {
-      dismissAutocompleteBox();
-    }
+    IDocument document = exoEditor.getDocument();
+    
+      int offset = getOffset(document);
+      CompletionProposal[] proposals = contentAssistProcessor.computeCompletionProposals(exoEditor, offset);
+      if(proposals != null)
+      {
+         //TODO Show form
+         for(CompletionProposal p : proposals)
+         {
+            System.out.println(p.getDisplayString());
+         }
+      }
+//    if (AutocompleteProposals.PARSING == proposals && popup.isShowing()) {
+//      // Do nothing to avoid flickering.
+//    } else if (!proposals.isEmpty()) {
+//      popup.positionAndShow(proposals);
+//    } else {
+////      dismissAutocompleteBox();
+//       popup.positionAndShow(proposals);
+//    }
   }
+
+/**
+ * @param document
+ * @return
+ * @throws BadLocationException
+ */
+private int getOffset(IDocument document)
+{
+   int lineOffset;
+   try
+   {
+      lineOffset = document.getLineOffset(editor.getSelection().getCursorLineNumber());
+      return lineOffset+  editor.getSelection().getCursorColumn();
+   }
+   catch (BadLocationException e)
+   {
+      Log.error(getClass(), e);
+   }
+   return 0;
+}
 
   @VisibleForTesting
   protected LanguageSpecificAutocompleter getAutocompleter(SyntaxType mode) {

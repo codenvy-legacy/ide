@@ -25,13 +25,13 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id:
  *
  */
-class JsProposal extends JavaScriptObject
+final class JsProposal extends JavaScriptObject
 {
 
    /**
     * 
     */
-   private JsProposal()
+   protected JsProposal()
    {
    }
 

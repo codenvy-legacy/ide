@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
+import com.google.collide.json.client.JsoArray;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -25,15 +27,15 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id:
  *
  */
-class JavaScriptContenassistProvider extends JavaScriptObject
+final class JavaScriptContenassistProvider extends JavaScriptObject
 {
 
-   private JavaScriptContenassistProvider()
+   protected JavaScriptContenassistProvider()
    {
    }
    
-   public native JsProposal[] computeProposals(String buffer, int offset)/*-{
-      return this.computeProposals(buffer, offset);
+   public native JsoArray<JsProposal> computeProposals(String buffer, int offset)/*-{
+      return this['computeProposals'](buffer, offset, {});
    }-*/;
 
 }

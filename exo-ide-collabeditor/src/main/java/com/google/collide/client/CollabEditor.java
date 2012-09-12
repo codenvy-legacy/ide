@@ -18,6 +18,8 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.code.autocomplete.ContentAssistantImpl;
+
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -43,6 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
@@ -85,6 +88,8 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    protected DocumentAdaptor documentAdaptor;
    
+   protected ContentAssistantImpl contentAssistant;
+   
    private HoverPresenter hoverPresenter;
 
    private boolean initialized;
@@ -108,9 +113,10 @@ public class CollabEditor extends Widget implements Editor, Markable
       this.mimeType = mimeType;
 
       id = "CollabEditor - " + hashCode();
+      contentAssistant = new ContentAssistantImpl();
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
-            EditorErrorListener.NOOP_ERROR_RECEIVER);
+            EditorErrorListener.NOOP_ERROR_RECEIVER, this);
       editor = editorBundle.getEditor();
       //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
@@ -688,5 +694,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    public EditorBundle getEditorBundle()
    {
       return editorBundle;
+   }
+
+   /**
+    * @return
+    */
+   public ContentAssistant getCodeassistant()
+   {
+      return contentAssistant;
    }
 }

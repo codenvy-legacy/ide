@@ -25,13 +25,13 @@ import com.google.gwt.core.client.JavaScriptObject;
  * @version $Id:
  *
  */
-class Position extends JavaScriptObject
+final class Position extends JavaScriptObject
 {
 
    /**
     * 
     */
-   private Position()
+   protected Position()
    {
    }
    

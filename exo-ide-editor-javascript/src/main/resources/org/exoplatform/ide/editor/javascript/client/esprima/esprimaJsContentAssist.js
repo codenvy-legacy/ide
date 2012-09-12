@@ -1446,5 +1446,5 @@ var esprimaJsContentAssist = function() {
 		EsprimaJavaScriptContentAssistProvider : EsprimaJavaScriptContentAssistProvider
 	};
 };
-
-var jsEsprimaContentAssistProvider = new jsCa().EsprimaJavaScriptContentAssistProvider();
+ prov = esprimaJsContentAssist();
+var jsEsprimaContentAssistProvider = new prov.EsprimaJavaScriptContentAssistProvider();

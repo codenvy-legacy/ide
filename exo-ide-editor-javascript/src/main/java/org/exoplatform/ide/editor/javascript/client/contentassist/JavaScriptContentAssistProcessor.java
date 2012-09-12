@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
+import com.google.collide.json.client.JsoArray;
+
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
@@ -53,14 +55,14 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    @Override
    public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset)
    {
-      JsProposal[] jsProposals = provider.computeProposals(viewer.getDocument().get(), offset);
-      if (jsProposals == null || jsProposals.length == 0)
+        JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset);
+      if (jsProposals == null || jsProposals.size()== 0)
          return null;
 
-      JavaScriptProposal[] prop = new JavaScriptProposal[jsProposals.length];
-      for (int i = 0; i < jsProposals.length; i++)
+      JavaScriptProposal[] prop = new JavaScriptProposal[jsProposals.size()];
+      for (int i = 0; i < jsProposals.size(); i++)
       {
-         prop[i] = new JavaScriptProposal(jsProposals[i], offset);
+         prop[i] = new JavaScriptProposal(jsProposals.get(i), offset);
       }
       return prop;
    }

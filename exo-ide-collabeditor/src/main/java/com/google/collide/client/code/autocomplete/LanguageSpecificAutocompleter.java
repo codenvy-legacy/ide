@@ -99,7 +99,6 @@ public abstract class LanguageSpecificAutocompleter {
     }
   }
 
-  private AutocompleteController controller;
   private boolean isPaused;
   private final SyntaxType mode;
   private DocumentParser documentParser;
@@ -136,19 +135,19 @@ public abstract class LanguageSpecificAutocompleter {
    */
   public abstract void cleanup();
 
-  /**
-   * Prepare instance for the new autocompletion life cycle.
-   *
-   * <p>No completions are requested yet, but the completer can prepare
-   * itself (e.g. pre-fetch data).
-   */
-  protected void attach(
-      DocumentParser parser, AutocompleteController controller) {
-    Preconditions.checkNotNull(parser);
-    documentParser = parser;
-    this.controller = controller;
-    isPaused = true;
-  }
+//  /**
+//   * Prepare instance for the new autocompletion life cycle.
+//   *
+//   * <p>No completions are requested yet, but the completer can prepare
+//   * itself (e.g. pre-fetch data).
+//   */
+//  protected void attach(
+//      DocumentParser parser, AutocompleteController controller) {
+//    Preconditions.checkNotNull(parser);
+//    documentParser = parser;
+//    this.controller = controller;
+//    isPaused = true;
+//  }
 
   /**
    * Specifies the behavior of this controller on signal events (not text
@@ -181,7 +180,6 @@ public abstract class LanguageSpecificAutocompleter {
    */
   protected void detach() {
     pause();
-    this.controller = null;
   }
 
   /**
@@ -189,7 +187,7 @@ public abstract class LanguageSpecificAutocompleter {
    */
   protected final void scheduleRequestForUpdatedProposals() {
     if (!isPaused) {
-      controller.scheduleRequestForUpdatedProposals();
+     // controller.scheduleRequestForUpdatedProposals();
     }
   }
 

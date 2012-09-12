@@ -14,6 +14,8 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
+import com.google.collide.client.CollabEditor;
+
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 
 import com.google.collide.codemirror2.SyntaxType;
@@ -92,10 +94,10 @@ public class AutocompleterFacade {
 //  private final DocumentParser.Listener parseListener;
 
   public static AutocompleterFacade create(
-      Editor editor, Resources resources) {
+      Editor editor, CollabEditor collEditor, Resources resources) {
 //    AutocompleteUiController popup = new AutocompleteUiController(editor, resources);
      AutocompleteBox  popup = new AutocompleteUiController(editor, resources);
-    Autocompleter autocompleter = Autocompleter.create(editor, popup);
+    Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor.getCodeassistant(), collEditor);
     return new AutocompleterFacade(editor, autocompleter);
   }
 
