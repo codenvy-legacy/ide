@@ -14,9 +14,10 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
+import elemental.dom.Node;
+
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
-import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.FocusManager;
@@ -26,20 +27,21 @@ import com.google.collide.client.ui.menu.AutoHideController;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
+import com.google.collide.json.client.JsoArray;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
-
-import org.waveprotocol.wave.client.common.util.SignalEvent;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.ClientRect;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
+
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
  * A controller for managing the UI for showing autocomplete proposals.
@@ -71,21 +73,23 @@ public class AutocompleteUiController implements AutocompleteBox {
   private static final int MAX_COMPLETIONS_TO_SHOW = 100;
   private static final AutocompleteProposal CAPPED_INDICATOR = new AutocompleteProposal("");
 
-  private final SimpleList.ListItemRenderer<AutocompleteProposal> listItemRenderer =
-      new SimpleList.ListItemRenderer<AutocompleteProposal>() {
+  private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
+      new SimpleList.ListItemRenderer<CompletionProposal>() {
         @Override
-        public void render(Element itemElement, AutocompleteProposal itemData) {
+        public void render(Element itemElement, CompletionProposal itemData) {
           TableCellElement label = Elements.createTDElement(css.proposalLabel());
           TableCellElement group = Elements.createTDElement(css.proposalGroup());
+          TableCellElement icon = Elements.createTDElement(css.proposalGroup());
           
           if (itemData != CAPPED_INDICATOR) {
-            label.setTextContent(itemData.getLabel());
-            group.setTextContent(itemData.getPath().getPathString());
+            icon.appendChild((Node)itemData.getImage().getElement());
+            label.setTextContent(itemData.getDisplayString());
+            //group.setTextContent(itemData.getPath().getPathString());
           } else {
             label.setTextContent("Type for more results");
             label.addClassName(css.cappedProposalLabel());
           }
-
+          itemElement.appendChild(icon);
           itemElement.appendChild(label);
           itemElement.appendChild(group);
         }
@@ -96,22 +100,23 @@ public class AutocompleteUiController implements AutocompleteBox {
         }
       };
 
-  private final SimpleList.ListEventDelegate<AutocompleteProposal> listDelegate =
-      new SimpleList.ListEventDelegate<AutocompleteProposal>() {
+  private final SimpleList.ListEventDelegate<CompletionProposal> listDelegate =
+      new SimpleList.ListEventDelegate<CompletionProposal>() {
         @Override
-        public void onListItemClicked(Element itemElement, AutocompleteProposal itemData) {
+        public void onListItemClicked(Element itemElement, CompletionProposal itemData) {
           Preconditions.checkNotNull(delegate);
           if (itemData == CAPPED_INDICATOR) {
             return;
           }
-          
-          delegate.onSelect(autocompleteProposals.select(itemData));
+
+          // TODO
+          //delegate.onSelect(autocompleteProposals.select(itemData));
         }
       };
 
   private final AutoHideController autoHideController;
   private final Css css;
-  private final SimpleList<AutocompleteProposal> list;
+  private final SimpleList<CompletionProposal> list;
   private Events delegate;
   private final Editor editor;
   private final Element box;
@@ -132,7 +137,7 @@ public class AutocompleteUiController implements AutocompleteBox {
    * The currently displayed proposals. This may contain more proposals than actually shown since we
    * cap the maximum number of visible proposals. This will be null if the UI is not showing.
    */
-  private AutocompleteProposals autocompleteProposals;
+  private CompletionProposal[] autocompleteProposals;
 
   public AutocompleteUiController(Editor editor, Resources res) {
     this.editor = editor;
@@ -174,7 +179,8 @@ public class AutocompleteUiController implements AutocompleteBox {
     Preconditions.checkNotNull(delegate);
 
     if ((signal.keyCode == KeyCodes.KEY_TAB) || (signal.keyCode == KeyCodes.KEY_ENTER)) {
-      delegate.onSelect(autocompleteProposals.select(list.getSelectionModel().getSelectedItem()));
+       // TODO
+      delegate.onSelect(list.getSelectionModel().getSelectedItem());
       return true;
     }
 
@@ -239,7 +245,7 @@ public class AutocompleteUiController implements AutocompleteBox {
   }
 
   @Override
-  public void positionAndShow(AutocompleteProposals items) {
+  public void positionAndShow(CompletionProposal[] items) {
     this.autocompleteProposals = items;
     this.anchor = editor.getSelection().getCursorAnchor();
 
@@ -248,19 +254,28 @@ public class AutocompleteUiController implements AutocompleteBox {
       list.getSelectionModel().clearSelection();
     }
     
-    final JsonArray<AutocompleteProposal> itemsToDisplay;
-    if (items.size() <= MAX_COMPLETIONS_TO_SHOW) {
-      itemsToDisplay = items.getItems();
+    final JsonArray<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal>create();
+    if (items.length <= MAX_COMPLETIONS_TO_SHOW) {
+      //itemsToDisplay = items;
+       for (int i = 0; i < items.length; i++)
+       {
+          itemsToDisplay.add(items[i]);
+       }
     } else {
-      itemsToDisplay = items.getItems().slice(0, MAX_COMPLETIONS_TO_SHOW);
-      itemsToDisplay.add(CAPPED_INDICATOR);
+       for (int i = 0; i < MAX_COMPLETIONS_TO_SHOW; i++)
+       {
+          itemsToDisplay.add(items[i]);
+       }
+      //itemsToDisplay = items.getItems().slice(0, MAX_COMPLETIONS_TO_SHOW);
+      //itemsToDisplay.add(CAPPED_INDICATOR);
     }
     list.render(itemsToDisplay);
+
     if (list.getSelectionModel().getSelectedItem() == null) {
       list.getSelectionModel().setSelectedItem(0);
     }
 
-    String hintText = items.getHint();
+    String hintText = "hint";//items.getHint();
     if (hintText == null) {
       hint.setTextContent("");
       CssUtils.setDisplayVisibility2(hint, false);
@@ -312,7 +327,7 @@ public class AutocompleteUiController implements AutocompleteBox {
   }
 
   @VisibleForTesting
-  SimpleList<AutocompleteProposal> getList() {
+  SimpleList<CompletionProposal> getList() {
     return list;
   }
 }

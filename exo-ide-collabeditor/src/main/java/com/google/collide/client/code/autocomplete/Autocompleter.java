@@ -14,16 +14,16 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.client.util.logging.Log;
-
-import com.google.collide.client.CollabEditor;
-
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
+import com.google.collide.client.util.ScheduledCommandExecutor;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.json.client.JsoStringMap;
+import com.google.collide.json.shared.JsonStringMap;
+import com.google.collide.shared.util.JsonCollections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
@@ -41,7 +41,7 @@ import org.waveprotocol.wave.client.common.util.UserAgent;
  * Class to implement all the autocompletion support that is not specific to a
  * given language (e.g., css).
  */
-public class Autocompleter {
+public class Autocompleter implements ContentAssistant {
 
 //  /**
 //   * Flag that specifies if proposals are filtered case-insensitively.
@@ -74,6 +74,8 @@ public class Autocompleter {
   private SignalEventEssence boxTrigger;
   
   private JsoStringMap<LanguageSpecificAutocompleter> autocompleters = JsoStringMap.create();
+
+  public JsonStringMap<ContentAssistProcessor> processors = JsonCollections.createMap();
 
 //  /**
 //   * Proxy that distributes notifications to all code analyzers.
@@ -121,44 +123,66 @@ public class Autocompleter {
 //      jsIndexUpdater.onLinesDeleted(deletedLines);
 //    }
 //  };
-//
-//  private class OnSelectCommand extends ScheduledCommandExecutor {
-//
-//    private ProposalWithContext selectedProposal;
-//
-//    @Override
-//    protected void execute() {
-//      Preconditions.checkNotNull(selectedProposal);
-//      reallyFinishAutocompletion(selectedProposal);
-//      selectedProposal = null;
-//    }
-//
-//    public void scheduleAutocompletion(ProposalWithContext selectedProposal) {
-//      Preconditions.checkNotNull(selectedProposal);
-//      this.selectedProposal = selectedProposal;
-//      scheduleDeferred();
-//    }
-//  }
+
+  private class OnSelectCommand extends ScheduledCommandExecutor {
+
+    private CompletionProposal selectedProposal;
+
+    @Override
+    protected void execute() {
+      Preconditions.checkNotNull(selectedProposal);
+      applyChanges(selectedProposal);
+      selectedProposal = null;
+    }
+
+    public void scheduleAutocompletion(CompletionProposal selectedProposal) {
+      Preconditions.checkNotNull(selectedProposal);
+      this.selectedProposal = selectedProposal;
+      scheduleDeferred();
+    }
+  }
 
   private final Editor editor;
   private boolean isAutocompleteInsertion = false;
   private final AutocompleteBox popup;
   private ContentAssistProcessor contentAssistProcessor;
-  private final ContentAssistant contentAssistant;
-
-private final org.exoplatform.ide.editor.api.Editor exoEditor;
+  private final OnSelectCommand onSelectCommand = new OnSelectCommand();
+  private final org.exoplatform.ide.editor.api.Editor exoEditor;
 
   /**
    * @param editor
- * @param contentAssistant 
- * @param exoEditor 
+   * @param contentAssistant 
+   * @param exoEditor 
    */
-   Autocompleter(Editor editor, AutocompleteBox popup, ContentAssistant contentAssistant, org.exoplatform.ide.editor.api.Editor exoEditor){
-     this.editor = editor;
-     this.popup = popup;
-   this.contentAssistant = contentAssistant;
-   this.exoEditor = exoEditor;
-  }
+   Autocompleter(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.api.Editor exoEditor)
+   {
+      this.editor = editor;
+      this.popup = popup;
+      this.exoEditor = exoEditor;
+
+      popup.setDelegate(new AutocompleteBox.Events()
+      {
+         @Override
+         public void onSelect(CompletionProposal proposal)
+         {
+//            if (AutocompleteProposals.NO_OP == proposal)
+//            {
+//               return;
+//            }
+//            // This is called on UI click - so surely we want popup to disappear.
+//            // TODO: It's a quick-fix; uncomment when autocompletions
+//            //               become completer state free.
+//            //dismissAutocompleteBox();
+            onSelectCommand.scheduleAutocompletion(proposal);
+         }
+
+         @Override
+         public void onCancel()
+         {
+            dismissAutocompleteBox();
+         }
+      });
+   }
 
   /**
    * Refreshes autocomplete popup contents (if it is displayed).
@@ -192,9 +216,9 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
 
 //  private final OnSelectCommand onSelectCommand = new OnSelectCommand();
 
-  public static Autocompleter create(Editor editor, AutocompleteBox popup, ContentAssistant contentAssistant, org.exoplatform.ide.editor.api.Editor exoEditor)
+  public static Autocompleter create(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.api.Editor exoEditor)
   {
-     return new Autocompleter(editor, popup, contentAssistant, exoEditor);     
+     return new Autocompleter(editor, popup, exoEditor);     
   }
   
 //  public static Autocompleter create(
@@ -268,7 +292,7 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
     try
     {
        String contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
-       contentAssistProcessor = contentAssistant.getContentAssistProcessor(contentType);
+       contentAssistProcessor = getContentAssistProcessor(contentType);
     }
     catch (BadLocationException e)
     {
@@ -288,7 +312,7 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
     switch (action.getType()) {
       case EXPLICIT_COMPLETE:
         boxTrigger = null;
-        performExplicitCompletion(action.getExplicitAutocompletion());
+//        performExplicitCompletion(action.getExplicitAutocompletion());
         return true;
 
       case DEFERRED_COMPLETE:
@@ -358,20 +382,12 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
   /**
    * Applies textual and UI changes specified with {@link AutocompleteResult}.
    */
-  private void applyChanges(AutocompleteResult result) {
-    switch (result.getPopupAction()) {
-      case CLOSE:
-        dismissAutocompleteBox();
-        break;
-
-      case OPEN:
-        scheduleRequestAutocomplete();
-        break;
-    }
+  private void applyChanges(CompletionProposal result) {
+     dismissAutocompleteBox();
 
     isAutocompleteInsertion = true;
     try {
-      result.apply(editor);
+      result.apply(exoEditor.getDocument());
     } finally {
       isAutocompleteInsertion = false;
     }
@@ -383,8 +399,7 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
 //   *
 //   * @param proposal proposal item selected by user
 //   */
-//  @VisibleForTesting
-//  void reallyFinishAutocompletion(ProposalWithContext proposal) {
+//  void reallyFinishAutocompletion(CompletionProposal proposal) {
 //    applyChanges(contentAssistProcessor.finish(proposal));
 //  }
 
@@ -418,10 +433,10 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
     });
   }
 
-  private void performExplicitCompletion(AutocompleteResult completion) {
-    Preconditions.checkState(!isAutocompleteInsertion);
-    applyChanges(completion);
-  }
+//  private void performExplicitCompletion(AutocompleteResult completion) {
+//    Preconditions.checkState(!isAutocompleteInsertion);
+//    applyChanges(completion);
+//  }
 
   @VisibleForTesting
   void requestAutocomplete(ContentAssistProcessor contentAssistProcessor, SignalEventEssence trigger) {
@@ -441,6 +456,7 @@ private final org.exoplatform.ide.editor.api.Editor exoEditor;
          {
             System.out.println(p.getDisplayString());
          }
+         popup.positionAndShow(proposals);
       }
 //    if (AutocompleteProposals.PARSING == proposals && popup.isShowing()) {
 //      // Do nothing to avoid flickering.
@@ -518,4 +534,59 @@ private int getOffset(IDocument document)
   public void addAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter){
      autocompleters.put(mode.name(), autocompleter);
   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#install(org.exoplatform.ide.editor.api.Editor)
+    */
+   @Override
+   public void install(org.exoplatform.ide.editor.api.Editor textViewer)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#uninstall()
+    */
+   @Override
+   public void uninstall()
+   {
+      // TODO Auto-generated method stub
+
+   }
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#showPossibleCompletions()
+    */
+   @Override
+   public String showPossibleCompletions()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#showContextInformation()
+    */
+   @Override
+   public String showContextInformation()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#getContentAssistProcessor(java.lang.String)
+    */
+   @Override
+   public ContentAssistProcessor getContentAssistProcessor(String contentType)
+   {
+      return processors.get(contentType);
+   }
+
+   public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor)
+   {
+      processors.put(contentType, processor);
+   }
+
 }

@@ -15,14 +15,8 @@
 package com.google.collide.client.code.autocomplete.integration;
 
 import com.google.collide.client.CollabEditor;
-
-import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
-
-import com.google.collide.codemirror2.SyntaxType;
-
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
-import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.Autocompleter;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
@@ -33,6 +27,8 @@ import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
@@ -95,9 +91,8 @@ public class AutocompleterFacade {
 
   public static AutocompleterFacade create(
       Editor editor, CollabEditor collEditor, Resources resources) {
-//    AutocompleteUiController popup = new AutocompleteUiController(editor, resources);
      AutocompleteBox  popup = new AutocompleteUiController(editor, resources);
-    Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor.getCodeassistant(), collEditor);
+    Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor);
     return new AutocompleterFacade(editor, autocompleter);
   }
 
@@ -134,5 +129,15 @@ public class AutocompleterFacade {
   public void addLanguageSpecificAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter)
   {
      this.autocompleter.addAutocompleter(mode, autocompleter);
+  }
+
+  public ContentAssistant getContentAssistant()
+  {
+     return autocompleter;
+  }
+
+  public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor)
+  {
+     this.autocompleter.addContentAssitProcessor(contentType, processor);
   }
 }

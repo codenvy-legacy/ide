@@ -18,10 +18,9 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.code.autocomplete.ContentAssistantImpl;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
+import com.google.collide.client.code.autocomplete.Autocompleter;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.FocusManager.FocusListener;
@@ -88,7 +87,7 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    protected DocumentAdaptor documentAdaptor;
    
-   protected ContentAssistantImpl contentAssistant;
+   protected ContentAssistant contentAssistant;
    
    private HoverPresenter hoverPresenter;
 
@@ -113,10 +112,10 @@ public class CollabEditor extends Widget implements Editor, Markable
       this.mimeType = mimeType;
 
       id = "CollabEditor - " + hashCode();
-      contentAssistant = new ContentAssistantImpl();
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
             EditorErrorListener.NOOP_ERROR_RECEIVER, this);
+      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
       //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =

@@ -69,7 +69,7 @@ public class CollabEditorExtension extends Extension
       styleBuilder.append(resources.baseCss().getText());
 //    styleBuilder.append(resources.workspaceHeaderCss().getText());
 //    styleBuilder.append(resources.editorToolBarCss().getText());
-//    styleBuilder.append(resources.defaultSimpleListCss().getText());
+      styleBuilder.append(resources.defaultSimpleListCss().getText());
 //    styleBuilder.append(resources.workspaceShellCss().getText());
       styleBuilder.append(resources.workspaceEditorCss().getText());
       styleBuilder.append(resources.workspaceEditorBufferCss().getText());

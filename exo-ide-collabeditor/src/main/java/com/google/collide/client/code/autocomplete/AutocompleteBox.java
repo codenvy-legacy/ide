@@ -14,7 +14,7 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 
 /**
  * Interface used to isolate {@link Autocompleter} from UI implementation.
@@ -30,7 +30,7 @@ public interface AutocompleteBox {
     /**
      * Performs autocompletion selected by user.
      */
-    void onSelect(ProposalWithContext proposal);
+    void onSelect(CompletionProposal proposal);
 
     /**
      * Closes autocompletion box.
@@ -63,5 +63,5 @@ public interface AutocompleteBox {
   /**
    * Shows component (if hidden) and updates proposals list.
    */
-  void positionAndShow(AutocompleteProposals items);
+  void positionAndShow(CompletionProposal[] items);
 }
