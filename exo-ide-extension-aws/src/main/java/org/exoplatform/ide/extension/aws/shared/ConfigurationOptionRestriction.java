@@ -16,15 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.server;
+package org.exoplatform.ide.extension.aws.shared;
 
 /**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: BeanstalkClient.java Aug 23, 2012
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class BeanstalkClient
+public interface ConfigurationOptionRestriction
 {
+   String getLabel();
 
+   void setLabel(String label);
+
+   String getPattern();
+
+   void setPattern(String pattern);
 }

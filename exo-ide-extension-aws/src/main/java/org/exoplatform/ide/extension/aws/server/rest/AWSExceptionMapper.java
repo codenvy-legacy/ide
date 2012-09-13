@@ -18,47 +18,28 @@
  */
 package org.exoplatform.ide.extension.aws.server.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.exoplatform.ide.extension.aws.server.AWSException;
 
-import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
 
 /**
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: AmazonWebServiceApplication.java Aug 23, 2012
- * 
+ * @version $Id: AmazonWebServiceExceptionMapper.java Aug 23, 2012
  */
-public class AmazonWebServiceApplication extends Application
+@Provider
+public class AWSExceptionMapper implements ExceptionMapper<AWSException>
 {
-   private Set<Class<?>> classes;
-
-   private Set<Object> singletons;
-
-   public AmazonWebServiceApplication()
-   {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(BeanstalkService.class);
-      singletons = new HashSet<Object>(1);
-      singletons.add(new AmazonWebServiceExceptionMapper());
-   }
-
    /**
-    * @see javax.ws.rs.core.Application#getClasses()
+    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
     */
    @Override
-   public Set<Class<?>> getClasses()
+   public Response toResponse(AWSException e)
    {
-      return classes;
-   }
-
-   /**
-    * @see javax.ws.rs.core.Application#getSingletons()
-    */
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return singletons;
+      return null;
    }
 }

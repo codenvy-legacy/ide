@@ -18,15 +18,17 @@
  */
 package org.exoplatform.ide.extension.aws.server;
 
+import com.amazonaws.auth.AWSCredentials;
+
 /**
- * Created by The eXo Platform SAS.
- * 
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: AmazonWebServiceException.java Aug 23, 2012
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-@SuppressWarnings("serial")
-public class AmazonWebServiceException extends Exception
+public interface AWSAuthenticator
 {
+   void login(String accessKey, String secret) throws AWSException;
 
+   void logout() throws AWSException;
 
+   AWSCredentials getCredentials();
 }

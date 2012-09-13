@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,37 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.server.rest;
-
-import org.exoplatform.ide.extension.aws.server.AmazonWebServiceException;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
-
+package org.exoplatform.ide.extension.aws.server;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: AmazonWebServiceExceptionMapper.java Aug 23, 2012
- * 
+ * @version $Id: AWSException.java Aug 23, 2012
  */
-@Provider
-public class AmazonWebServiceExceptionMapper implements ExceptionMapper<AmazonWebServiceException>
+@SuppressWarnings("serial")
+public class AWSException extends Exception
 {
-   
-   private static final Log log = ExoLogger.getExoLogger(AmazonWebServiceExceptionMapper.class);
-   
-   /**
-    * @see javax.ws.rs.ext.ExceptionMapper#toResponse(java.lang.Throwable)
-    */
-   @Override
-   public Response toResponse(AmazonWebServiceException e)
+   public AWSException(String message, Throwable cause)
    {
-      return null;
-      
+      super(message, cause);
+   }
+
+   public AWSException(Throwable cause)
+   {
+      super(cause);
+   }
+
+   public AWSException(String message)
+   {
+      super(message);
    }
 }
