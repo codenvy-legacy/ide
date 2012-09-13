@@ -48,8 +48,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorDeleteTextHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorGoToLineHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorOpenFileEvent;
@@ -58,17 +56,12 @@ import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorPasteTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorRedoTypingHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorSelectAllHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorSetFocusHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingHandler;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -112,8 +105,7 @@ import com.google.gwt.user.client.ui.Image;
 public class EditorController implements EditorContentChangedHandler, EditorActiveFileChangedHandler,
    EditorCloseFileHandler, EditorUndoTypingHandler, EditorRedoTypingHandler, ShowLineNumbersHandler,
    EditorChangeActiveFileHandler, EditorOpenFileHandler, FileSavedHandler, EditorReplaceFileHandler,
-   EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorFindTextHandler, EditorContextMenuHandler,
-   EditorReplaceTextHandler, EditorReplaceAndFindTextHandler, EditorSetFocusHandler,
+   EditorDeleteCurrentLineHandler, EditorGoToLineHandler, EditorContextMenuHandler, EditorSetFocusHandler,
    ApplicationSettingsReceivedHandler, SaveFileAsHandler, ViewVisibilityChangedHandler, ViewClosedHandler,
    ClosingViewHandler, EditorFocusReceivedHandler, EditorSelectAllHandler, EditorCutTextHandler, EditorCopyTextHandler,
    EditorPasteTextHandler, EditorDeleteTextHandler
@@ -150,9 +142,6 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(EditorOpenFileEvent.TYPE, this);
       IDE.addHandler(EditorReplaceFileEvent.TYPE, this);
-      IDE.addHandler(EditorFindTextEvent.TYPE, this);
-      IDE.addHandler(EditorReplaceTextEvent.TYPE, this);
-      IDE.addHandler(EditorReplaceAndFindTextEvent.TYPE, this);
       IDE.addHandler(EditorContentChangedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorCloseFileEvent.TYPE, this);
@@ -572,49 +561,48 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
       activeEditorView.getEditor().setCursorPosition(event.getLineNumber(), event.getColumnNumber());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
-    */
-   public void onEditorFindText(EditorFindTextEvent event)
-   {
-      boolean isFound =
-         getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
-      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.editor.event.EditorFindTextHandler#onEditorFindText(org.exoplatform.ide.client.editor.event.EditorFindTextEvent)
+//    */
+//   public void onEditorFindText(EditorFindTextEvent event)
+//   {
+//      boolean isFound =
+//         getEditorFromView(event.getFileId()).findAndSelect(event.getFindText(), event.isCaseSensitive());
+//      IDE.fireEvent(new EditorTextFoundEvent(isFound));
+//   }
 
-   /**
-    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent)
-    */
-   public void onEditorReplaceText(EditorReplaceTextEvent event)
-   {
-      Editor editor = getEditorFromView(event.getFileId());
-      if (event.isReplaceAll())
-      {
-         while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
-         {
+//   /**
+//    * @see org.exoplatform.ide.client.editor.event.EditorReplaceTextHandler#onEditorReplaceText(org.exoplatform.ide.client.editor.event.EditorReplaceTextEvent)
+//    */
+//   public void onEditorReplaceText(EditorReplaceTextEvent event)
+//   {
+//      Editor editor = getEditorFromView(event.getFileId());
+//      if (event.isReplaceAll())
+//      {
+//         while (editor.findAndSelect(event.getFindText(), event.isCaseSensitive()))
+//         {
+//            editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+//         }
+//         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
+//         // event.getPath());
+//      }
+//      else
+//      {
+//         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+//         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
+//      }
+//   }
 
-            editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-         }
-         // display.replaceAllText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(),
-         // event.getPath());
-      }
-      else
-      {
-         editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-         // display.replaceText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive(), event.getPath());
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
-    */
-   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
-   {
-      Editor editor = getEditorFromView(event.getFileId());
-      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
-      boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
-      IDE.fireEvent(new EditorTextFoundEvent(isFound));
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextHandler#onEditorReplaceAndFindText(org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent)
+//    */
+//   public void onEditorReplaceAndFindText(EditorReplaceAndFindTextEvent event)
+//   {
+//      Editor editor = getEditorFromView(event.getFileId());
+//      editor.replaceFoundedText(event.getFindText(), event.getReplaceText(), event.isCaseSensitive());
+//      boolean isFound = editor.findAndSelect(event.getFindText(), event.isCaseSensitive());
+//      IDE.fireEvent(new EditorTextFoundEvent(isFound));
+//   }
 
    /**
     * @see org.exoplatform.ide.client.editor.event.EditorSetFocusHandler#onEditorSetFocus(org.exoplatform.ide.client.editor.event.EditorSetFocusEvent)

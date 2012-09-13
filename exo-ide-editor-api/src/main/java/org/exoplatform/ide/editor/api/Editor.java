@@ -19,12 +19,12 @@
 package org.exoplatform.ide.editor.api;
 
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
 import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -125,22 +125,20 @@ public interface Editor extends IsWidget
    void deleteCurrentLine();
 
    /**
-    * Find and select text
+    * Asynchronous search query in editor.
     * 
-    * @param find pattern
-    * @param caseSensitive is pattern case sensitive
-    * @return <code>true</code> if editor text contains par matched to pattern
+    * @param query query to search
+    * @param caseSensitive is case sensitive
+    * @param searchCompleteCallback search complete callback
     */
-   boolean findAndSelect(String find, boolean caseSensitive);
-
+   void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback);
+   
    /**
-    * Replace founded text block
+    * Replace match with a new value
     * 
-    * @param find pattern
-    * @param replace text to replace
-    * @param caseSensitive is pattern case sensetive
+    * @param replacement new value
     */
-   void replaceFoundedText(String find, String replace, boolean caseSensitive);
+   void replaceMatch(String replacement);
 
    /**
     * @return <b>true</b> if there are any changes which can be undo in editor
@@ -261,19 +259,19 @@ public interface Editor extends IsWidget
     * Delete selected text in editor.
     */
    void delete();
-   
+
    /**
     * Get absolute position of 
     * 
     * @return
     */
    int getCursorOffsetLeft();
-   
+
    /**
     * @return
     */
    int getCursorOffsetTop();
-   
+
    /**
     * @param handler
     * @return
