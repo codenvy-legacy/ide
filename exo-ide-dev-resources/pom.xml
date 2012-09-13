@@ -25,9 +25,9 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-							    <copy file="${basedir}/src/main/resources/eclipse/exo-ide-client.launch" tofile="${project.build.directory}/exo-ide-client.launch"/>
-					            <replace file="${project.build.directory}/exo-ide-client.launch" token="M2_REPO" value="${settings.localRepository}"/>
-					            <replace file="${project.build.directory}/exo-ide-client.launch" token="PARENT_PROJECT" value="${project.parent.basedir}"/>
+							    <copy file="${basedir}/src/main/resources/eclipse/exo-ide-dev-mode.launch" tofile="${project.build.directory}/exo-ide-dev-mode.launch"/>
+					            <replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="M2_REPO" value="${settings.localRepository}"/>
+					            <replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="PARENT_PROJECT" value="${project.parent.basedir}"/>
 							</tasks>
 						</configuration>
 					</execution>
