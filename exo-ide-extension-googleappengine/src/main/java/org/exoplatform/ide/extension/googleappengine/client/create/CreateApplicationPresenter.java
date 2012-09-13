@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -39,7 +38,6 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClien
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
-import org.exoplatform.ide.extension.googleappengine.client.login.LoginEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 
@@ -143,6 +141,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
+      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
       String projectId = currentProject.getId();
       String vfsId = currentVfs.getId();
       UrlBuilder builder = new UrlBuilder();
@@ -175,7 +174,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    {
       if (isAppEngineProject())
       {
-         IDE.fireEvent(new DeployApplicationEvent());
+         IDE.fireEvent(new DeployApplicationEvent(currentProject));
       }
       else
       {
@@ -212,7 +211,7 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                {
                   if (!result.isAuthenticated())
                   {
-//                     IDE.fireEvent(new LoginEvent());
+                     // IDE.fireEvent(new LoginEvent());
                      new OAuthLoginView();
                   }
                }

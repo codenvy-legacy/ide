@@ -139,6 +139,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onDeployApplication(DeployApplicationEvent event)
    {
+      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
       isUserLogged(false);
    }
 
@@ -370,7 +371,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                         }
                         else
                         {
-                           IDE.fireEvent(new CreateApplicationEvent());
+                           IDE.fireEvent(new CreateApplicationEvent(result));
                         }
                      }
                   });
@@ -405,7 +406,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
       else
       {
-         IDE.fireEvent(new CreateApplicationEvent());
+         IDE.fireEvent(new CreateApplicationEvent(project));
       }
    }
 
