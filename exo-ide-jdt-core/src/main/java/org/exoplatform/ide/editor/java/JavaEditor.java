@@ -18,17 +18,15 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
-import org.exoplatform.ide.editor.text.Document;
-
-import com.google.collide.codemirror2.SyntaxType;
-
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.Position;
+
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
+import org.exoplatform.ide.editor.text.Document;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -50,7 +48,7 @@ public class JavaEditor extends CollabEditor
          editor.createGutter(false, Position.LEFT, CollabEditorExtension.get().getContext().getResources()
             .workspaceEditorCss().leftGutterBase());
       breakPointManager = new BreakpointGutterManager(gutter, editor.getBuffer(), JavaClientBundle.INSTANCE);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(SyntaxType.JAVA, new JavaAutocompleter());
+      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaAutocompleter());
    }
 
    /**

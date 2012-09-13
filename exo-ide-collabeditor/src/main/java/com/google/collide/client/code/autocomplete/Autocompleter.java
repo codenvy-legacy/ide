@@ -74,7 +74,7 @@ public class Autocompleter implements ContentAssistant
     */
    private SignalEventEssence boxTrigger;
 
-   private JsoStringMap<LanguageSpecificAutocompleter> autocompleters = JsoStringMap.create();
+   private LanguageSpecificAutocompleter autocompleters;
 
    public JsonStringMap<ContentAssistProcessor> processors = JsonCollections.createMap();
 
@@ -306,10 +306,10 @@ public class Autocompleter implements ContentAssistant
       {
          return true;
       }
-
+      String contentType = IDocument.DEFAULT_CONTENT_TYPE;
       try
       {
-         String contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
+         contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
          contentAssistProcessor = getContentAssistProcessor(contentType);
       }
       catch (BadLocationException e)
@@ -324,14 +324,14 @@ public class Autocompleter implements ContentAssistant
          return true;
       }
 
-      LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter();
-      ExplicitAction action = autocompleter.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
+//      LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter(contentType);
+      ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
 
       switch (action.getType())
       {
          case EXPLICIT_COMPLETE :
             boxTrigger = null;
-            //        performExplicitCompletion(action.getExplicitAutocompletion());
+            performExplicitCompletion(action.getExplicitAutocompletion());
             return true;
 
          case DEFERRED_COMPLETE :
@@ -382,17 +382,17 @@ public class Autocompleter implements ContentAssistant
 
       stop();
 
-      //    LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
-      //    this.autocompleteController = new AutocompleteController(autocompleter, callback);
-      //    autocompleter.attach(parser, autocompleteController);
+//      LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
+      autocompleters.attach(parser);
    }
 
-   protected LanguageSpecificAutocompleter getLanguageSpecificAutocompleter()
-   {
-      Preconditions.checkNotNull(contentAssistProcessor);
-      //TODO
-      return NoneAutocompleter.getInstance(); //contentAssistProcessor.getLanguageSpecificAutocompleter();
-   }
+//   protected LanguageSpecificAutocompleter getLanguageSpecificAutocompleter(String contentType)
+//   {
+//      Preconditions.checkNotNull(contentAssistProcessor);
+//      if (autocompleters.containsKey(contentType))
+//         return autocompleters.get(contentType);
+//      return NoneAutocompleter.getInstance(); //contentAssistProcessor.getLanguageSpecificAutocompleter();
+//   }
 
    //  AutocompleteController getController() {
    //    return autocompleteController;
@@ -422,7 +422,7 @@ public class Autocompleter implements ContentAssistant
             int row = document.getLineOfOffset(selection.x);
             int lineOffset = document.getLineOffset(row);
             //TODO add text selection
-            exoEditor.setCursorPosition(row +1, selection.x - lineOffset +1);
+            exoEditor.setCursorPosition(row + 1, selection.x - lineOffset + 1);
          }
       }
       catch (BadLocationException e)
@@ -479,10 +479,19 @@ public class Autocompleter implements ContentAssistant
       });
    }
 
-   //  private void performExplicitCompletion(AutocompleteResult completion) {
-   //    Preconditions.checkState(!isAutocompleteInsertion);
-   //    applyChanges(completion);
-   //  }
+   private void performExplicitCompletion(AutocompleteResult completion)
+   {
+      Preconditions.checkState(!isAutocompleteInsertion);
+      isAutocompleteInsertion = true;
+      try
+      {
+         completion.apply(editor);
+      }
+      finally
+      {
+         isAutocompleteInsertion = false;
+      }
+   }
 
    @VisibleForTesting
    void requestAutocomplete(ContentAssistProcessor contentAssistProcessor, SignalEventEssence trigger)
@@ -531,25 +540,25 @@ public class Autocompleter implements ContentAssistant
       return 0;
    }
 
-   @VisibleForTesting
-   protected LanguageSpecificAutocompleter getAutocompleter(SyntaxType mode)
-   {
-      //    switch (mode) {
-      //      case HTML:
-      //        return htmlAutocompleter;
-      //      case JS:
-      //        return jsAutocompleter;
-      //      case CSS:
-      //        return cssAutocompleter;
-      //      case PY:
-      //        return pyAutocompleter;
-      //      default:
-      //        return NoneAutocompleter.getInstance();
-      //    }
-      if (autocompleters.containsKey(mode.name()))
-         return autocompleters.get(mode.name());
-      return NoneAutocompleter.getInstance();
-   }
+   //   @VisibleForTesting
+   //   protected LanguageSpecificAutocompleter getAutocompleter(SyntaxType mode)
+   //   {
+   //      //    switch (mode) {
+   //      //      case HTML:
+   //      //        return htmlAutocompleter;
+   //      //      case JS:
+   //      //        return jsAutocompleter;
+   //      //      case CSS:
+   //      //        return cssAutocompleter;
+   //      //      case PY:
+   //      //        return pyAutocompleter;
+   //      //      default:
+   //      //        return NoneAutocompleter.getInstance();
+   //      //    }
+   //      if (autocompleters.containsKey(mode.name()))
+   //         return autocompleters.get(mode.name());
+   //      return NoneAutocompleter.getInstance();
+   //   }
 
    public void cleanup()
    {
@@ -577,9 +586,10 @@ public class Autocompleter implements ContentAssistant
     * @param mode
     * @param autocompleter
     */
-   public void addAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter)
+   public void addAutocompleter(LanguageSpecificAutocompleter autocompleter)
    {
-      autocompleters.put(mode.name(), autocompleter);
+      this.autocompleters = autocompleter;
+//      autocompleters.put(contentType, autocompleter);
    }
 
    /**

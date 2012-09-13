@@ -126,9 +126,9 @@ public class AutocompleterFacade {
     autocompleter.reset(parser);
   }
   
-  public void addLanguageSpecificAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter)
+  public void addLanguageSpecificAutocompleter(LanguageSpecificAutocompleter autocompleter)
   {
-     this.autocompleter.addAutocompleter(mode, autocompleter);
+     this.autocompleter.addAutocompleter(autocompleter);
   }
 
   public ContentAssistant getContentAssistant()

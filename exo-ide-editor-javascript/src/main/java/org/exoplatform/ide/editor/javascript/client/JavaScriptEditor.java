@@ -42,7 +42,7 @@ public class JavaScriptEditor extends CollabEditor
    public JavaScriptEditor(String mimeType)
    {
       super(mimeType);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(SyntaxType.JS, new JavaScriptAutocompleter());
+      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaScriptAutocompleter());
       editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new JavaScriptContentAssistProcessor());
    }
 }
