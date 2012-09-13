@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
+import org.exoplatform.ide.preferences.AbstractHotkeysTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

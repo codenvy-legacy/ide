@@ -41,10 +41,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.AssistDisplay;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
 
    private boolean editorHasFocus = true;
 
-   public CodeAssitantForm(int left, int top, ICompletionProposal[] items, ProposalSelectedHandler handler)   {
+   public CodeAssitantForm(int left, int top, CompletionProposal[] items, ProposalSelectedHandler handler)   {
       this.handler = handler;
 
       resizeHandler = Window.addResizeHandler(this);
@@ -150,7 +150,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
 
    }
 
-   private void addProposalsToPanel(ICompletionProposal[] proposals)
+   private void addProposalsToPanel(CompletionProposal[] proposals)
    {
       flowPanel.clear();
       widgets.clear();
@@ -159,7 +159,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
          flowPanel.add(new Label("No Proposals"));
          return;
       }
-      for (ICompletionProposal t : proposals)
+      for (CompletionProposal t : proposals)
       {
          ProposalWidget w = new ProposalWidget(t);
          w.addClickHandler(mousHandler);
@@ -447,7 +447,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
     * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#setNewProposals(org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal[])
     */
    @Override
-   public void setNewProposals(ICompletionProposal[] proposals)
+   public void setNewProposals(CompletionProposal[] proposals)
    {
       addProposalsToPanel(proposals);
    }

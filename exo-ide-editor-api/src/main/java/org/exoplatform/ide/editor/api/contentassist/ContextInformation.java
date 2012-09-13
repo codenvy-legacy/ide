@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jdt.client.codeassistant.api;
+package org.exoplatform.ide.editor.api.contentassist;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -18,18 +18,16 @@ import com.google.gwt.user.client.ui.Image;
  * In order to provide backward compatibility for clients of <code>IContextInformation</code>, extension interfaces are used to
  * provide a means of evolution. The following extension interfaces exist:
  * <ul>
- * <li>{@link org.eclipse.jface.text.contentassist.IContextInformationExtension} since version 2.0 introducing the ability to
+ * <li>{@link org.exoplatform.ide.editor.api.contentassist.jface.text.contentassist.IContextInformationExtension} since version 2.0 introducing the ability to
  * freely position the context information.</li>
  * </ul>
  * </p>
  * <p>
- * The interface can be implemented by clients. By default, clients use
- * {@link org.eclipse.jface.text.contentassist.ContextInformation} as the standard implementer of this interface.
  * </p>
  * 
- * @see IContentAssistProcessor
+ * @see ContentAssistProcessor
  */
-public interface IContextInformation
+public interface ContextInformation
 {
 
    /**

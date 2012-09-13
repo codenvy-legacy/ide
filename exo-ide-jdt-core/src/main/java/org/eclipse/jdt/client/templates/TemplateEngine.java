@@ -13,11 +13,11 @@ package org.eclipse.jdt.client.templates;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JdtExtension;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
 import org.eclipse.jdt.client.templates.api.Template;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;

@@ -30,7 +30,6 @@ import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalC
 import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -346,7 +345,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
-   public void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(org.exoplatform.ide.editor.api.contentassist.CompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {
