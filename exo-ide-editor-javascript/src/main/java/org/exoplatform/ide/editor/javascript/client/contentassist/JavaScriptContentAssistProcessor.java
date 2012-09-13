@@ -48,6 +48,8 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
 
    private JavaScriptContenassistProvider provider;
 
+   private boolean isTextToCompleteBeforeDot;
+
    /**
     * 
     */
@@ -75,15 +77,16 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
             prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
          }
       }
-
-      JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
-      for (TemplateProposal p : search.asIterable())
+      if (!isTextToCompleteBeforeDot)
       {
-         p.setOffset(offset);
-         p.setPrefix(prefix);
-         prop.add(p);
+         JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
+         for (TemplateProposal p : search.asIterable())
+         {
+            p.setOffset(offset);
+            p.setPrefix(prefix);
+            prop.add(p);
+         }
       }
-
       CompletionProposal[] proposals = new CompletionProposal[prop.size()];
       for (int i = 0; i < prop.size(); i++)
       {
@@ -99,6 +102,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
     */
    private String computatePrefix(IDocument document, int offset)
    {
+      isTextToCompleteBeforeDot = false;
       try
       {
          IRegion lineInfo = document.getLineInformationOfOffset(offset);
@@ -108,8 +112,9 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
          {
             switch (partLine.charAt(i))
             {
-               case ' ' :
                case '.' :
+                  isTextToCompleteBeforeDot = true;
+               case ' ' :
                case '(' :
                case ')' :
                case '{' :
