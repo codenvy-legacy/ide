@@ -16,21 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.model.settings;
-
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Cookies;
-
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.marshal.ApplicationSettingsMarshaller;
+package org.exoplatform.ide.client.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +25,19 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Cookies;
 
 /**
  * Extends {@link SettingsService}

@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.exoplatform.ide.client.model.settings;
+package org.exoplatform.ide.client.model;
 
 /**
  * 
@@ -45,4 +45,5 @@ public interface Settings
    public static final String TOOLBAR_DEFAULT_ITEMS = "toolbar-default-items";
 
    public static final String SHOW_HIDDEN_FILES = "project-explorer-show-hidden-files";
+   
 }

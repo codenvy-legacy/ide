@@ -18,15 +18,9 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -44,7 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
@@ -52,9 +46,15 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.client.marshal.VFSListUnmarshaller;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
