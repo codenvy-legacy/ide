@@ -43,8 +43,8 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    private static char[] activationCharacters = new char[]{'.'};
 
    private native JavaScriptContenassistProvider getProvider()/*-{
-		return $wnd.jsEsprimaContentAssistProvider;
-   }-*/;
+                                                              return $wnd.jsEsprimaContentAssistProvider;
+                                                              }-*/;
 
    private JavaScriptContenassistProvider provider;
 
@@ -69,13 +69,19 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
       c.setPrefix(prefix);
       JsonArray<CompletionProposal> prop = JsonCollections.createArray();
 
-      JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset, c);
-      if (jsProposals != null && jsProposals.size() != 0)
+      try
       {
-         for (int i = 0; i < jsProposals.size(); i++)
+         JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset, c);
+         if (jsProposals != null && jsProposals.size() != 0)
          {
-            prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
+            for (int i = 0; i < jsProposals.size(); i++)
+            {
+               prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
+            }
          }
+      }
+      catch (Exception ignore)
+      {
       }
       if (!isTextToCompleteBeforeDot)
       {
