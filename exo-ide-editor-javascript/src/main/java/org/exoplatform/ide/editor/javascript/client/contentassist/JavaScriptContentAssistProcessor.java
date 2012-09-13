@@ -65,16 +65,24 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
       Context c = Context.create();
       String prefix = computatePrefix(viewer.getDocument(), offset);
       c.setPrefix(prefix);
-      JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
       JsonArray<CompletionProposal> prop = JsonCollections.createArray();
-      prop.addAll(search);
-      
+
       JsoArray<JsProposal> jsProposals = provider.computeProposals(viewer.getDocument().get(), offset, c);
       if (jsProposals != null && jsProposals.size() != 0)
       {
-         for (int i= 0; i < jsProposals.size(); i++)
+         for (int i = 0; i < jsProposals.size(); i++)
          {
             prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
+         }
+      }
+      else
+      {
+         JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
+         for (TemplateProposal p : search.asIterable())
+         {
+            p.setOffset(offset);
+            p.setPrefix(prefix);
+            prop.add(p);
          }
       }
       CompletionProposal[] proposals = new CompletionProposal[prop.size()];
@@ -112,11 +120,12 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
                case ']' :
                case '"' :
                case '\'' :
-                  return   partLine.substring(i + 1);
+                  return partLine.substring(i + 1);
                default :
                   break;
             }
          }
+         return partLine;
 
       }
       catch (BadLocationException e)

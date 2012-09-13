@@ -14,8 +14,9 @@
 
 package org.exoplatform.ide.editor.javascript.client.contentassist;
 
-import static com.google.collide.client.code.autocomplete.AutocompleteResult.PopupAction.CLOSE;
+import com.google.collide.client.util.logging.Log;
 
+import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,12 +24,10 @@ import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
+import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
-
-import com.google.collide.client.code.autocomplete.AutocompleteProposal;
-import com.google.collide.client.code.autocomplete.AutocompleteResult;
-import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.editor.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
 
 /**
  * Proposal that contains template and knows how to process it.
@@ -43,23 +42,26 @@ import com.google.collide.shared.util.StringUtils;
 public class TemplateProposal implements CompletionProposal
 {
 
-   private final String template;
-   
    private final String name;
+
+   private int pos;
+
+   private String completion;
+   
+   private int offset;
+
+   private String prefix;
 
    public TemplateProposal(String name, String template)
    {
       this.name = name;
-      this.template = template;
+      String lineStart = "\n" + StringUtils.getSpaces(0);
+      String replaced =
+         template.replace("%n", lineStart).replace("%i", indent(lineStart)).replace("%d", dedent(lineStart));
+      pos = replaced.indexOf("%c");
+      pos = (pos == -1) ? replaced.length() : pos;
+      completion = replaced.replace("%c", "");
    }
-
-//   /**
-//    * Translates template to {@link AutocompleteResult}.
-//    */
-//   private AutocompleteResult buildResult(String triggeringString, int indent)
-//   {
-//
-//   }
 
    /**
     * Adds an indentation to a given string.
@@ -91,14 +93,19 @@ public class TemplateProposal implements CompletionProposal
    @Override
    public void apply(IDocument document)
    {
-      String lineStart = "\n" + StringUtils.getSpaces(0);
-      String replaced =
-         template.replace("%n", lineStart).replace("%i", indent(lineStart)).replace("%d", dedent(lineStart));
-      int pos = replaced.indexOf("%c");
-      pos = (pos == -1) ? replaced.length() : pos;
-      String completion = replaced.replace("%c", "");
-      
-//      new DefaultAutocompleteResult(completion, pos, 0, 0, 0, CLOSE, triggeringString);
+      InsertEdit edit = new InsertEdit(offset, completion.substring(prefix.length()));
+      try
+      {
+         edit.apply(document);
+      }
+      catch (MalformedTreeException e)
+      {
+         Log.error(getClass(), e);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
    }
 
    /**
@@ -107,7 +114,7 @@ public class TemplateProposal implements CompletionProposal
    @Override
    public Point getSelection(IDocument document)
    {
-      return null;
+      return new Point(offset + pos, 0);
    }
 
    /**
@@ -185,5 +192,19 @@ public class TemplateProposal implements CompletionProposal
    {
       // TODO Auto-generated method stub
       return false;
+   }
+   
+   /**
+    * @param offset the offset to set
+    */
+   public void setOffset(int offset)
+   {
+      this.offset = offset;
+   }
+   
+   public void setPrefix(String prefix)
+   {
+      this.prefix = prefix;
+      
    }
 }
