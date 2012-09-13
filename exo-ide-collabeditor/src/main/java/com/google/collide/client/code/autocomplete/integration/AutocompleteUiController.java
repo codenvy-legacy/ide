@@ -14,8 +14,6 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
-import elemental.dom.Node;
-
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
@@ -35,6 +33,7 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
 import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Node;
 import elemental.html.ClientRect;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
@@ -77,10 +76,10 @@ public class AutocompleteUiController implements AutocompleteBox {
       new SimpleList.ListItemRenderer<CompletionProposal>() {
         @Override
         public void render(Element itemElement, CompletionProposal itemData) {
+          TableCellElement icon = Elements.createTDElement(css.proposalGroup());
           TableCellElement label = Elements.createTDElement(css.proposalLabel());
           TableCellElement group = Elements.createTDElement(css.proposalGroup());
-          TableCellElement icon = Elements.createTDElement(css.proposalGroup());
-          
+
           if (itemData != CAPPED_INDICATOR) {
             icon.appendChild((Node)itemData.getImage().getElement());
             label.setTextContent(itemData.getDisplayString());
@@ -108,10 +107,17 @@ public class AutocompleteUiController implements AutocompleteBox {
           if (itemData == CAPPED_INDICATOR) {
             return;
           }
-
-          // TODO
-          //delegate.onSelect(autocompleteProposals.select(itemData));
+          list.getSelectionModel().setSelectedItem(itemData);
         }
+
+        @Override
+         public void onListItemDoubleClicked(Element listItemBase, CompletionProposal itemData) {
+            Preconditions.checkNotNull(delegate);
+            if (itemData == CAPPED_INDICATOR) {
+               return;
+            }
+            delegate.onSelect(itemData);
+         }
       };
 
   private final AutoHideController autoHideController;
@@ -179,7 +185,6 @@ public class AutocompleteUiController implements AutocompleteBox {
     Preconditions.checkNotNull(delegate);
 
     if ((signal.keyCode == KeyCodes.KEY_TAB) || (signal.keyCode == KeyCodes.KEY_ENTER)) {
-       // TODO
       delegate.onSelect(list.getSelectionModel().getSelectedItem());
       return true;
     }
@@ -275,7 +280,7 @@ public class AutocompleteUiController implements AutocompleteBox {
       list.getSelectionModel().setSelectedItem(0);
     }
 
-    String hintText = "hint";//items.getHint();
+    String hintText = null;//items.getHint();
     if (hintText == null) {
       hint.setTextContent("");
       CssUtils.setDisplayVisibility2(hint, false);
