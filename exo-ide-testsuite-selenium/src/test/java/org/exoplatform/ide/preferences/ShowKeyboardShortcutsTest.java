@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.miscellaneous;
+package org.exoplatform.ide.preferences;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -71,7 +71,7 @@ public class ShowKeyboardShortcutsTest extends BaseTest
       IDE.SHOW_KEYBOARD_SHORTCUTS.waitClosed();
 
       // change shortcut for Save command
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+//      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);

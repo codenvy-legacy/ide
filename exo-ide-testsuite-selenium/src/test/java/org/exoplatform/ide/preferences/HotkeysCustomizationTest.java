@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.miscellaneous;
+package org.exoplatform.ide.preferences;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -120,7 +120,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
 
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
@@ -190,8 +190,8 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.TEMPLATES.waitClosed();
 
       //last step restore default values for HTML file and Create File From Template... commands 
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+    //  IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+//      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
       IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
@@ -212,7 +212,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 1: create new hotkey for upload file (Alt+U)
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
@@ -233,7 +233,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.OPEN_FILE_BY_PATH.clickCancelButton();
       IDE.OPEN_FILE_BY_PATH.waitClosed();
       //step 3: resetting the hotkeys to the default values and checking
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();

@@ -167,7 +167,7 @@ public class SearchModel {
    * Matches a wildcard type search query in the editor
    */
   public void setQuery(String query) {
-    setQuery(query, null);
+    setQuery(query, false, null);
   }
 
   /**
@@ -175,7 +175,7 @@ public class SearchModel {
    *
    * @param progressListener optional search progress listener.
    */
-  public void setQuery(final String query, SearchProgressListener progressListener) {
+  public void setQuery(final String query, boolean caseSensitive, SearchProgressListener progressListener) {
     if (query == null) {
       throw new IllegalArgumentException("Query cannot be null");
     }
@@ -198,7 +198,8 @@ public class SearchModel {
      * Heuristic for case sensitivity: If the string is all lower-case we match
      * case-insensitively; otherwise the pattern is case sensitive.
      */
-    String regExpOptions = ClientStringUtils.containsUppercase(query) ? "g" : "gi";
+    //String regExpOptions = ClientStringUtils.containsUppercase(query) ? "g" : "gi";
+    String regExpOptions = "g" + ( caseSensitive ? "" : "i" );
 
     // Create the new search pattern
     searchTaskHandler.setOldSearchPattern(searchPattern);
@@ -214,7 +215,7 @@ public class SearchModel {
   public SearchMatchManager getMatchManager() {
     return matchManager;
   }
-  
+
   public ListenerRegistrar<MatchCountListener> getMatchCountChangedListenerRegistrar() {
     return matchManager.getMatchCountChangedListenerRegistrar();
   }
