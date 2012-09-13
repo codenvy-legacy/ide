@@ -55,7 +55,9 @@ public class AutocompleteUiController implements AutocompleteBox {
 
   public interface Css extends CssResource {
     String cappedProposalLabel();
-    
+
+    String proposalIcon();
+
     String proposalLabel();
 
     String proposalGroup();
@@ -76,7 +78,7 @@ public class AutocompleteUiController implements AutocompleteBox {
       new SimpleList.ListItemRenderer<CompletionProposal>() {
         @Override
         public void render(Element itemElement, CompletionProposal itemData) {
-          TableCellElement icon = Elements.createTDElement(css.proposalGroup());
+          TableCellElement icon = Elements.createTDElement(css.proposalIcon());
           TableCellElement label = Elements.createTDElement(css.proposalLabel());
           TableCellElement group = Elements.createTDElement(css.proposalGroup());
 
@@ -199,12 +201,26 @@ public class AutocompleteUiController implements AutocompleteBox {
     }
 
     if ((signal.keyCode == KeyCodes.KEY_DOWN)) {
-      list.getSelectionModel().selectNext();
+       if (list.getSelectionModel().getSelectedIndex() == list.getSelectionModel().size()-1) 
+       {
+          list.getSelectionModel().setSelectedItem(0);
+       }
+       else
+       {
+          list.getSelectionModel().selectNext();
+       }
       return true;
     }
 
     if (signal.keyCode == KeyCodes.KEY_UP) {
-      list.getSelectionModel().selectPrevious();
+       if (list.getSelectionModel().getSelectedIndex() == 0)
+       {
+          list.getSelectionModel().setSelectedItem(list.getSelectionModel().size()-1);
+       }
+       else
+       {
+          list.getSelectionModel().selectPrevious();
+       }
       return true;
     }
 

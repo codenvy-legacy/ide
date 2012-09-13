@@ -14,6 +14,8 @@
 
 package com.google.collide.client.code.autocomplete;
 
+import com.google.collide.shared.util.MathUtils;
+
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
@@ -506,17 +508,26 @@ public class Autocompleter implements ContentAssistant
 
       int offset = getOffset(document);
       CompletionProposal[] proposals = contentAssistProcessor.computeCompletionProposals(exoEditor, offset);
-      if (proposals != null)
+      if (proposals != null && proposals.length > 0)
       {
+         if (proposals.length == 1 && !popup.isShowing())
+         {
+            onSelectCommand.scheduleAutocompletion(proposals[0]);
+            return;
+         }
          popup.positionAndShow(proposals);
       }
+      else
+      {
+         dismissAutocompleteBox();
+      }
+
       //    if (AutocompleteProposals.PARSING == proposals && popup.isShowing()) {
       //      // Do nothing to avoid flickering.
       //    } else if (!proposals.isEmpty()) {
       //      popup.positionAndShow(proposals);
       //    } else {
-      ////      dismissAutocompleteBox();
-      //       popup.positionAndShow(proposals);
+      //      dismissAutocompleteBox();
       //    }
    }
 

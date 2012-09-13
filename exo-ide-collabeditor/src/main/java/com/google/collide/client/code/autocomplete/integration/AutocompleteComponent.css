@@ -24,6 +24,10 @@
   padding: 0 3px;
 }
 
+.proposalIcon {
+  max-width: 16px;
+}
+
 .proposalLabel {
   max-width: 400px;
 }
