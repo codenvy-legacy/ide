@@ -75,16 +75,15 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
             prop.add(new JavaScriptProposal(jsProposals.get(i), offset));
          }
       }
-      else
+
+      JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
+      for (TemplateProposal p : search.asIterable())
       {
-         JsonArray<? extends TemplateProposal> search = JsConstants.getInstance().getTemplatesTrie().search(prefix);
-         for (TemplateProposal p : search.asIterable())
-         {
-            p.setOffset(offset);
-            p.setPrefix(prefix);
-            prop.add(p);
-         }
+         p.setOffset(offset);
+         p.setPrefix(prefix);
+         prop.add(p);
       }
+
       CompletionProposal[] proposals = new CompletionProposal[prop.size()];
       for (int i = 0; i < prop.size(); i++)
       {

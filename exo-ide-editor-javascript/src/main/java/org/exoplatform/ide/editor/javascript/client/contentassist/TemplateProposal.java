@@ -114,7 +114,7 @@ public class TemplateProposal implements CompletionProposal
    @Override
    public Point getSelection(IDocument document)
    {
-      return new Point(offset + pos, 0);
+      return new Point(offset + pos - prefix.length(), 0);
    }
 
    /**
