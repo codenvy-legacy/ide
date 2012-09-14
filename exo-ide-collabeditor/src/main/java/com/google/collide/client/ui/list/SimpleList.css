@@ -1,6 +1,6 @@
 @def menuListBorderPx 1px;
-@def listItemTopPadding 6px;
-@def listItemBottomPadding 6px;
+@def listItemTopPadding 2px;
+@def listItemBottomPadding 2px;
 @def listItemLeftPadding 16px;
 @def listItemRightPadding 44px;
 
@@ -39,7 +39,7 @@
 }
 
 .listItem>td:first-child {
-  padding-left: listItemLeftPadding;
+  padding-left: 0px;
 }
 
 .listItem>td:last-child {

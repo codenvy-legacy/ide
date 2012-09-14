@@ -51,6 +51,8 @@ public class EditorDocumentMutator implements DocumentMutator {
 
   @Override
   public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount) {
+     if(deleteCount == 0)
+        return null;
     String deletedText = editor.getDocument().getText(line, column, deleteCount);
     return deleteText(line, lineNumber, column, deletedText);
   }

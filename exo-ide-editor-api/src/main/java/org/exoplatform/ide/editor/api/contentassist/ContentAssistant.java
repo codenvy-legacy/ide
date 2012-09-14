@@ -85,4 +85,12 @@ public interface ContentAssistant
     *         <code>null</code> if none exists for the specified content type
     */
    ContentAssistProcessor getContentAssistProcessor(String contentType);
+
+   /**
+    * Add the content assist processor for the given content type.
+    * 
+    * @param contentType the type of the content
+    * @param processor the content assist processor
+    */
+   void addContentAssitProcessor(String contentType, ContentAssistProcessor processor);
 }

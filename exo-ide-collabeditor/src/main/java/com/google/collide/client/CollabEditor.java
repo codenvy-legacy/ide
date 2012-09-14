@@ -18,9 +18,33 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.code.EditableContentArea;
+import com.google.collide.client.code.EditorBundle;
+import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.editor.Buffer.ContextMenuListener;
+import com.google.collide.client.editor.FocusManager.FocusListener;
+import com.google.collide.client.editor.gutter.NotificationManager;
+import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
+import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
+import com.google.collide.client.hover.HoverPresenter;
+import com.google.collide.json.shared.JsonArray;
+import com.google.collide.shared.document.Document;
+import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineInfo;
+import com.google.collide.shared.document.Position;
+import com.google.collide.shared.document.TextChange;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
@@ -41,30 +65,6 @@ import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.text.IDocument;
-
-import com.google.collide.client.code.EditableContentArea;
-import com.google.collide.client.code.EditorBundle;
-import com.google.collide.client.code.errorrenderer.EditorErrorListener;
-import com.google.collide.client.editor.Buffer.ContextMenuListener;
-import com.google.collide.client.editor.FocusManager.FocusListener;
-import com.google.collide.client.editor.gutter.NotificationManager;
-import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
-import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
-import com.google.collide.client.hover.HoverPresenter;
-import com.google.collide.client.util.PathUtil;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.document.Document;
-import com.google.collide.shared.document.Document.TextListener;
-import com.google.collide.shared.document.Line;
-import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.document.Position;
-import com.google.collide.shared.document.TextChange;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -87,6 +87,8 @@ public class CollabEditor extends Widget implements Editor, Markable
    protected NotificationManager notificationManager;
 
    protected DocumentAdaptor documentAdaptor;
+   
+   protected ContentAssistant contentAssistant;
    
    private HoverPresenter hoverPresenter;
 
@@ -112,7 +114,8 @@ public class CollabEditor extends Widget implements Editor, Markable
       id = "CollabEditor - " + hashCode();
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
-            EditorErrorListener.NOOP_ERROR_RECEIVER);
+            EditorErrorListener.NOOP_ERROR_RECEIVER, this);
+      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
       //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
@@ -204,7 +207,7 @@ public class CollabEditor extends Widget implements Editor, Markable
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
-            editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
+            editorBundle.setDocument(editorDocument, mimeType, "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
@@ -670,6 +673,14 @@ public class CollabEditor extends Widget implements Editor, Markable
    public EditorBundle getEditorBundle()
    {
       return editorBundle;
+   }
+
+   /**
+    * @return
+    */
+   public ContentAssistant getCodeassistant()
+   {
+      return contentAssistant;
    }
 
    private String searchQuery;
