@@ -245,38 +245,45 @@ public class NameEnvironment implements INameEnvironment
    @Override
    public boolean isPackage(char[][] parentPackageName, char[] packageName)
    {
-      try
-      {
-         StringBuilder p = new StringBuilder();
-         if (parentPackageName != null)
-         {
-            for (char[] seg : parentPackageName)
-            {
-               p.append(seg).append('.');
-            }
-         }
-         p.append(packageName);
-         if (packages.contains(p.toString()))
-         {
-            return true;
-         }
-         String url =
-            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + p.toString()
-               + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-         String findPackage = runSyncReques(url);
-         JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-         for (int i = 0; i < jsonArray.size(); i++)
-         {
-            packages.add(jsonArray.get(i).isString().stringValue());
-         }
-         return jsonArray.size() > 0;
+//      try
+//      {
+//         StringBuilder p = new StringBuilder();
+//         if (parentPackageName != null)
+//         {
+//            for (char[] seg : parentPackageName)
+//            {
+//               p.append(seg).append('.');
+//            }
+//         }
+//         p.append(packageName);
+//         if (packages.contains(p.toString()))
+//         {
+//            return true;
+//         }
+//         String url =
+//            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + p.toString()
+//               + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
+//         String findPackage = runSyncReques(url);
+//         JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
+//         for (int i = 0; i < jsonArray.size(); i++)
+//         {
+//            packages.add(jsonArray.get(i).isString().stringValue());
+//         }
+//         return jsonArray.size() > 0;
+//
+//      }
+//      catch (Exception e)
+//      {
+//         e.printStackTrace();
+//         return false;
+//      }
+      if (parentPackageName == null)
+         return true;
 
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
+      if (Character.isUpperCase(packageName[0]))
          return false;
-      }
+      else
+         return true;
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
