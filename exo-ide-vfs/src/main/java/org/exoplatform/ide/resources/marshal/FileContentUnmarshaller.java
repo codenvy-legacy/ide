@@ -22,25 +22,25 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.resources.model.File;
 
 /**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
+ * Unmarshaller for {@link File} content.
  * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class FileContentUnmarshaller implements Unmarshallable<FileModel>
+public class FileContentUnmarshaller implements Unmarshallable<File>
 {
 
-   private final FileModel file;
+   private final File file;
 
-   public FileContentUnmarshaller(FileModel file)
+   public FileContentUnmarshaller(File file)
    {
       this.file = file;
    }
 
    @Override
-   public FileModel getPayload()
+   public File getPayload()
    {
       return file;
    }

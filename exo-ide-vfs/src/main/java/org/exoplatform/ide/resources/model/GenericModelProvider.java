@@ -19,17 +19,16 @@ package org.exoplatform.ide.resources.model;
 import org.exoplatform.ide.resources.ModelProvider;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 10, 2012  
+ * Model provider for generic Project 
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class GenericModelProvider implements ModelProvider
 {
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public Project createProjectInstance()
    {

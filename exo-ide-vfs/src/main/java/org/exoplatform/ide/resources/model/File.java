@@ -24,10 +24,10 @@ import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 15, 2012  
+ * This is a derivative of {@link Resource}, that adds File-specific properties and methods to provide
+ * an access to files stored on VFS.
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class File extends Resource
 {
@@ -45,8 +45,7 @@ public class File extends Resource
    /** Locking flag. */
    protected boolean locked;
 
-   // ======================
-
+   /** content if retrieved */
    private String content = null;
 
    private boolean contentChanged = false;
@@ -58,30 +57,46 @@ public class File extends Resource
    /**
     * Instance of file with specified attributes.
     * 
-    * @param id
-    * @param name
-    * @param mimeType
-    * @param path
-    * @param parentId
-    * @param creationDate
-    * @param links
-    * @param versionId
-    * @param length
-    * @param locked
-    * @param lastModificationDate
+    * @param id internal VFS id of the file.
+    * @param name display name
+    * @param mimeType mimetype of the resource
+    * @param parent parent folder
+    * @param creationDate creation date
+    * @param links REST-aware links
+    * @param versionId id of the version
+    * @param length content length if known
+    * @param locked locking flag
+    * @param lastModificationDate last modification date
     */
-   public File(String id, String name, String mimeType, String path, Folder parent, long creationDate,
-      JsonStringMap<Link> links, String versionId, long length, boolean locked, long lastModificationDate)
-   {
-      this(id, name, TYPE, mimeType, path, parent, creationDate, links, versionId, length, locked,
-         lastModificationDate);
-   }
-
-   protected File(String id, String name, String type, String mimeType, String path, Folder parent,
-      long creationDate, JsonStringMap<Link> links, String versionId, long length, boolean locked,
+   public File(String id, String name,
+      String mimeType, //String path, 
+      Folder parent, long creationDate, JsonStringMap<Link> links, String versionId, long length, boolean locked,
       long lastModificationDate)
    {
-      super(id, name, type, mimeType, path, parent, creationDate, links);
+      this(id, name, TYPE, mimeType, parent, creationDate, links, versionId, length, locked, lastModificationDate);
+   }
+
+   /**
+    * Full protected constructor for sub-classing
+    * 
+    * @param id internal VFS id of the file.
+    * @param name display name
+    * @param type type, {@link File#TYPE} by default
+    * @param mimeType mimetype of the resource
+    * @param parent parent folder
+    * @param creationDate creation date
+    * @param links REST-aware links
+    * @param versionId id of the version
+    * @param length content length if known
+    * @param locked locking flag
+    * @param lastModificationDate last modification date
+    */
+   protected File(String id, String name, String type,
+      String mimeType, //String path, 
+      Folder parent, long creationDate, JsonStringMap<Link> links, String versionId, long length, boolean locked,
+      long lastModificationDate)
+   {
+      super(id, name, type, mimeType, parent, creationDate, links);
       this.lastModificationDate = lastModificationDate;
       this.locked = locked;
       this.versionId = versionId;
@@ -169,12 +184,16 @@ public class File extends Resource
       }
    }
 
+   /**
+    * Init from JSONObject
+    * @param itemObject
+    */
    public void init(JSONObject itemObject)
    {
       id = itemObject.get("id").isString().stringValue();
       name = itemObject.get("name").isString().stringValue();
       mimeType = itemObject.get("mimeType").isString().stringValue();
-      path = itemObject.get("path").isString().stringValue();
+      //path = itemObject.get("path").isString().stringValue();
       //parentId = itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
@@ -203,26 +222,41 @@ public class File extends Resource
       this.content = content;
    }
 
+   /**
+    * @return the history
+    */
    public JsonArray<File> getVersionHistory()
    {
       return versionHistory;
    }
 
+   /**
+    * @param versionHistory set history
+    */
    public void setVersionHistory(JsonArray<File> versionHistory)
    {
       this.versionHistory = versionHistory;
    }
 
+   /**
+    * Clear history
+    */
    public void clearVersionHistory()
    {
       this.versionHistory = JsonCollections.createArray();
    }
 
+   /**
+    * @return lock object
+    */
    public Lock getLock()
    {
       return lock;
    }
 
+   /**
+    * @param set lock object
+    */
    public void setLock(Lock lock)
    {
       this.lock = lock;
@@ -244,8 +278,29 @@ public class File extends Resource
       this.contentChanged = contentChanged;
    }
 
+   /**
+    * @return true if phantom file representing the version
+    */
    public boolean isVersion()
    {
       return versionId == null ? false : !versionId.equals("0");
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public boolean isFile()
+   {
+      return true;
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public boolean isFolder()
+   {
+      return false;
    }
 }

@@ -17,6 +17,8 @@
 
   <!-- Other module inherits                                      -->
   <inherits name='org.exoplatform.ide.Editor' />
+  
+  
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.exoplatform.ide.client.IDE' />
 

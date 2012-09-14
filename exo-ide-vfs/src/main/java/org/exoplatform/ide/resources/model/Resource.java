@@ -20,15 +20,12 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 
 /**
- * 
+ * Resource's superclass.
  * Not intended to be extended by client code. Use File, Folder and Project as superclass.
  * 
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 15, 2012  
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class Resource implements ItemContext
+public abstract class Resource implements ItemContext
 {
    /** Id of object. */
    protected String id;
@@ -42,26 +39,24 @@ public class Resource implements ItemContext
    /** Media type. */
    protected String mimeType;
 
-   /** Path. */
-   protected String path;
-
-//   /** Parent ID. Must be <code>null</code> if item is root folder. */
-//   protected String parentId;
+   protected Object tags;
 
    /** Creation date in long format. */
    protected long creationDate;
 
    /** Links. */
    protected JsonStringMap<Link> links;
-   
+
    // item context
    protected Project project;
 
    protected Folder parent;
 
    protected boolean persisted;
-   
+
    /**
+    * Adds resource as child to the parent resource
+    * 
     * @param id id of item
     * @param name name of item
     * @param resourceType type of item
@@ -71,15 +66,19 @@ public class Resource implements ItemContext
     * @param creationDate creation date in long format
     * @param links hyper-links for retrieved or(and) manage item
     */
-   public Resource(String id, String name, String resourceType, String mimeType, String path, Folder parent,
-      long creationDate, JsonStringMap<Link> links)
+   public Resource(String id, String name, String resourceType, String mimeType, //String path, 
+      Folder parent, long creationDate, JsonStringMap<Link> links)
    {
       this.id = id;
       this.name = name;
       this.resourceType = resourceType;
       this.mimeType = mimeType;
-      this.path = path;
+      //      this.path = path;
       this.parent = parent;
+      if (parent != null)
+      {
+         parent.addChild(this);
+      }
       this.creationDate = creationDate;
       this.links = links;
    }
@@ -91,7 +90,7 @@ public class Resource implements ItemContext
    {
       this.resourceType = itemType;
    }
-   
+
    /** @return id of object */
    public String getId()
    {
@@ -125,26 +124,15 @@ public class Resource implements ItemContext
    /** @return path */
    public String getPath()
    {
-      return path;
+      if (parent != null)
+      {
+         return parent.getPath() + "/" + name;
+      }
+      else
+      {
+         return "/" + name;
+      }
    }
-
-   /** @param path the path */
-   public void setPath(String path)
-   {
-      this.path = path;
-   }
-
-//   /** @return id of parent folder and <code>null</code> if current item is root folder */
-//   public String getParentId()
-//   {
-//      return parentId;
-//   }
-//
-//   /** @param parentId id of parent folder and <code>null</code> if current item is root folder */
-//   public void setParentId(String parentId)
-//   {
-//      this.parentId = parentId;
-//   }
 
    /** @return creation date */
    public long getCreationDate()
@@ -192,15 +180,14 @@ public class Resource implements ItemContext
    {
       return getLinks().get(rel);
    }
-   
+
    /** @see java.lang.Object#toString() */
    @Override
    public String toString()
    {
       return "Resourece [id=" + id + ", name=" + name + ", type=" + resourceType + ']';
    }
-   
-   
+
    // item context
 
    @Override
@@ -225,7 +212,12 @@ public class Resource implements ItemContext
    @Override
    public void setParent(Folder parent)
    {
+      if (this.parent != null)
+      {
+         this.parent.removeChild(this);
+      }
       this.parent = parent;
+      parent.addChild(this);
    }
 
    @Override
@@ -233,6 +225,25 @@ public class Resource implements ItemContext
    {
       return persisted;
    }
-   
+
+   public void setTag(Object tag)
+   {
+      this.tags = tag;
+   }
+
+   public Object getTag()
+   {
+      return tags;
+   }
+
+   /**
+    * @return
+    */
+   public abstract boolean isFile();
+
+   /**
+    * @return
+    */
+   public abstract boolean isFolder();
 
 }

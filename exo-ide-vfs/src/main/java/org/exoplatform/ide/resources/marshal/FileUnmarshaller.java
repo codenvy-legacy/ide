@@ -26,8 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.resources.model.File;
 
 /**
- * @version $Id:$
+ * Unmarsheller for {@link File}
  * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class FileUnmarshaller implements Unmarshallable<File>
 {

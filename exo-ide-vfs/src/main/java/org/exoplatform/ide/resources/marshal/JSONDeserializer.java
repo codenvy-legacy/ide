@@ -322,15 +322,16 @@ public abstract class JSONDeserializer<O>
             {
                rootMimeType = root.get("mimeType").isString().stringValue();
             }
-            String rootPath = root.get("path").isString().stringValue();
+            //            String rootPath = root.get("path").isString().stringValue();
             long rootCreationDate = (long)root.get("creationDate").isNumber().doubleValue();
-            JsonArray<StringProperty> properties =
-               JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));
+            //JsonArray<StringProperty> properties =
+            JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));
             JsonStringMap<Link> links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
 
             // TODO : root folder for VirtualFileSystemInfo
             Folder rootFolder = null;
-            new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate,links);
+            new Folder(rootId, rootName, rootMimeType, //rootPath, thought to be "/" 
+               null, rootCreationDate, links);
 
             return new VirtualFileSystemInfo(
                STRING_DESERIALIZER.toObject(jsonObject.get("id")),
@@ -359,6 +360,7 @@ public abstract class JSONDeserializer<O>
    /**
     * @deprecated
     */
+   @Deprecated
    public O[] toArray(JSONValue json)
    {
       if (json == null)

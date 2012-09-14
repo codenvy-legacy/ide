@@ -17,10 +17,10 @@
 package org.exoplatform.ide.resources.model;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 17, 2012  
+ * Project Nature concept is a composition of controller and a tag. When Nature tag is 
+ * added to the Project, then {@link ProjectNature#configure()} is triggered.
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface ProjectNature
 {

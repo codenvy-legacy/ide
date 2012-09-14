@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.workspace;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -29,6 +31,9 @@ import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
+import org.exoplatform.ide.resources.ResourceException;
+import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.resources.model.Project;
 
 /**
  * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
@@ -78,6 +83,7 @@ public class WorkspacePeresenter implements Presenter
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(HasWidgets container)
    {
       container.clear();
@@ -91,25 +97,38 @@ public class WorkspacePeresenter implements Presenter
       eventBus.addHandler(FileEvent.TYPE, new FileEventHandler()
       {
 
+         @Override
          public void onFileOperation(final FileEvent event)
          {
             if (event.getOperationType() == FileOperation.OPEN)
             {
                // Set up the callback object.
-               AsyncCallback<String> callback = new AsyncCallback<String>()
+               AsyncCallback<File> callback = new AsyncCallback<File>()
                {
+                  @Override
                   public void onFailure(Throwable caught)
                   {
                      // TODO : Handle failure
                   }
 
-                  public void onSuccess(String result)
+                  @Override
+                  public void onSuccess(File file)
                   {
-                     openFile(event.getFileName(), result);
+                     openFile(file);
                   }
                };
 
-               fileSystemService.getFileContent(event.getFileName(), callback);
+               Project project = event.getFile().getProject();
+               try
+               {
+                  project.getContent(event.getFile(), callback);
+               }
+               catch (ResourceException e)
+               {
+                  GWT.log("error"+e);
+               }
+               
+               //fileSystemService.getFileContent(event.getFileName(), callback);
             }
             else 
             if (event.getOperationType() == FileOperation.CLOSE)
@@ -120,11 +139,11 @@ public class WorkspacePeresenter implements Presenter
       });
    }
 
-   protected void openFile(String fileName, String content)
+   protected void openFile(File file)
    {
       // Calling display.getCenterPanel.cler() violates the Law of Demeter
       display.clearCenterPanel();
-      editorPresenter.setText(content);
+      editorPresenter.setText(file.getContent());
       editorPresenter.go(display.getCenterPanel());
    }
 

@@ -16,14 +16,10 @@
  */
 package org.exoplatform.ide.resources;
 
-
 /**
- * Exception is throws when Resource API error occurs
+ * Exception is thrown when Resource API related error occurs
  * 
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 4, 2012  
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ResourceException extends Exception
 {
@@ -37,6 +33,7 @@ public class ResourceException extends Exception
    {
       super(message, cause);
    }
+
    /**
     * @param message
     */

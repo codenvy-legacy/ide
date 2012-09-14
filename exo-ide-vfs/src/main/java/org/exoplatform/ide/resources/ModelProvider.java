@@ -19,12 +19,17 @@ package org.exoplatform.ide.resources;
 import org.exoplatform.ide.resources.model.Project;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 5, 2012  
+ * Model provider, is an entity responsible for creating a nature-specific project model.
+ * Class itself creates an empty project of desired type.
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface ModelProvider
 {
+   /**
+    * Creates empty project instance of corresponding class
+    * 
+    * @return Project instance
+    */
    public Project createProjectInstance(); 
 }

@@ -36,6 +36,8 @@ import com.google.gwt.view.client.TreeViewModel;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Display;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
+import org.exoplatform.ide.resources.model.Resource;
 
 import java.util.List;
 
@@ -55,6 +57,7 @@ public class ProjectExpolorerView extends Composite implements Display
          super(viewModel, rootValue);
       }
 
+      @Override
       public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
       {
          return this.addDomHandler(handler, DoubleClickEvent.getType());
@@ -75,12 +78,14 @@ public class ProjectExpolorerView extends Composite implements Display
 
       final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>();
 
+      @Override
       public <T> NodeInfo<?> getNodeInfo(T value)
       {
          // Return a node info that pairs the data with a cell.
          return new DefaultNodeInfo<String>(asyncDataProvider, new TextCell(), selectionModel, null);
       }
 
+      @Override
       public boolean isLeaf(Object value)
       {
          // The maximum length of a value is ten characters.
@@ -120,6 +125,7 @@ public class ProjectExpolorerView extends Composite implements Display
       // hack: disable text selection on doubleClick
       cellTree.addDomHandler(new MouseDownHandler()
       {
+         @Override
          public void onMouseDown(MouseDownEvent event)
          {
             event.preventDefault();
@@ -132,6 +138,7 @@ public class ProjectExpolorerView extends Composite implements Display
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getSelectedFileName()
    {
       return treeModel.selectionModel.getSelectedObject();
@@ -140,6 +147,7 @@ public class ProjectExpolorerView extends Composite implements Display
    /**
    * {@inheritDoc}
    */
+   @Override
    public HasDoubleClickHandlers getTree()
    {
       return (DoubleClickableCellTree)cellTree;
@@ -157,5 +165,25 @@ public class ProjectExpolorerView extends Composite implements Display
          display.setRowData(0, fileNames);
       }
       //treeModel.asyncDataProvider.updateRowData(0, fileNames);
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setItems(Resource resource)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void registerListener(Listener listener)
+   {
+      // TODO Auto-generated method stub
+      
    }
 }

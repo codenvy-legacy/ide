@@ -25,10 +25,13 @@ import com.google.gwt.json.client.JSONParser;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.properties.Property;
 
 /**
+ * Unmarshaller for {@link Project}
  * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProviderAdapter>
 {

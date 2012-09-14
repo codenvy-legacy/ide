@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.inject;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 
-import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
+import org.exoplatform.ide.client.BootstrapController;
 
 /**
  * Interface for GIN Injector, that provides access to the top level
@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 @GinModules(IDEClientModule.class)
 public interface IDEInjector extends Ginjector
 {
-   WorkspacePeresenter getWorkspacePeresenter();
+   BootstrapController getBootstrapController();
 
    //   EventBus getEventBus();
    //

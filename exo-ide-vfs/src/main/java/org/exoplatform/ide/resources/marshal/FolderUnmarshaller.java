@@ -26,8 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.resources.model.Folder;
 
 /**
- * @version $Id:$
+ * Unmarshaller for {@link Folder}
  * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class FolderUnmarshaller implements Unmarshallable<Folder>
 {

@@ -76,7 +76,7 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
-      </dependency>      
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
@@ -106,6 +106,9 @@
             <version>2.4.0</version>
             <executions>
                <execution>
+                       <configuration>
+          <extraJvmArgs>-Xss512m -Xmx4024m -XX:MaxPermSize=1024m</extraJvmArgs>
+        </configuration>
                   <goals>
                      <goal>compile</goal>
                      <goal>test</goal>
@@ -115,6 +118,7 @@
             </executions>
             <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
             <configuration>
+            <extraJvmArgs>-Xss512m -Xmx4024m -XX:MaxPermSize=1024m</extraJvmArgs>
                <runTarget>IDE.html</runTarget>
                <hostedWebapp>${webappDirectory}</hostedWebapp>
                <i18nMessagesBundle>org.exoplatform.ide.client.Messages</i18nMessagesBundle>
@@ -137,35 +141,6 @@
             </configuration>
          </plugin>
       </plugins>
-      <pluginManagement>
-         <plugins>
-            <!-- TODO : This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-            <plugin>
-               <groupId>org.eclipse.m2e</groupId>
-               <artifactId>lifecycle-mapping</artifactId>
-               <version>1.0.0</version>
-               <configuration>
-                  <lifecycleMappingMetadata>
-                     <pluginExecutions>
-                        <pluginExecution>
-                           <pluginExecutionFilter>
-                              <groupId>org.codehaus.mojo</groupId>
-                              <artifactId>gwt-maven-plugin</artifactId>
-                              <versionRange>[2.4.0,)</versionRange>
-                              <goals>
-                                 <goal>i18n</goal>
-                              </goals>
-                           </pluginExecutionFilter>
-                           <action>
-                              <ignore></ignore>
-                           </action>
-                        </pluginExecution>
-                     </pluginExecutions>
-                  </lifecycleMappingMetadata>
-               </configuration>
-            </plugin>
-         </plugins>
-      </pluginManagement>
    </build>
 
 </project>

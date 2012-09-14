@@ -4,6 +4,7 @@
    <inherits name="com.google.gwt.user.User" />
    <inherits name="elemental.Elemental" />
    <inherits name="org.exoplatform.ide.Commons" />
+   <inherits name="org.exoplatform.ide.resources.Resources" />
    <source path="" />
 
    <replace-with class="org.exoplatform.ide.util.loging.LogConfig.Enabled">

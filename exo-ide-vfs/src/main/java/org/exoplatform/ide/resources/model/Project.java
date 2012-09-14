@@ -27,23 +27,26 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.ResourceException;
 import org.exoplatform.ide.resources.ResourceProvider;
+import org.exoplatform.ide.resources.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FileUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
+import org.exoplatform.ide.resources.marshal.JSONSerializer;
+import org.exoplatform.ide.resources.marshal.StringUnmarshaller;
 import org.exoplatform.ide.resources.properties.Property;
 
 import java.util.Date;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 15, 2012  
+ * Represents Project  model. Responsinble for deserialization of JSon String to generate it' own project model
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class Project extends Folder
 {
@@ -68,8 +71,7 @@ public class Project extends Folder
     */
    public Project()
    {
-      this(null, null, PROJECT_MIME_TYPE, null, null, new Date().getTime(), null, JsonCollections
-         .<Link> createStringMap());
+      this(null, null, PROJECT_MIME_TYPE, null, new Date().getTime(), null, JsonCollections.<Link> createStringMap());
    }
 
    /**
@@ -82,7 +84,7 @@ public class Project extends Folder
    @SuppressWarnings("rawtypes")
    public Project(String name, Folder parent, JsonArray<Property> properties)
    {
-      this(null, name, PROJECT_MIME_TYPE, null, parent, 0, properties, JsonCollections.<Link> createStringMap());
+      this(null, name, PROJECT_MIME_TYPE, parent, 0, properties, JsonCollections.<Link> createStringMap());
    }
 
    /**
@@ -90,10 +92,10 @@ public class Project extends Folder
     * 
     */
    @SuppressWarnings("rawtypes")
-   protected Project(String id, String name, String mimeType, String path, Folder parent, long creationDate,
-      JsonArray<Property> properties, JsonStringMap<Link> links)
+   protected Project(String id, String name, String mimeType, //String path, 
+      Folder parent, long creationDate, JsonArray<Property> properties, JsonStringMap<Link> links)
    {
-      super(id, name, TYPE, mimeType, path, parent, creationDate, links);
+      super(id, name, TYPE, mimeType, parent, creationDate, links);
       this.properties = properties;
       // TODO : receive it in some way
       this.loader = new EmptyLoader();
@@ -106,7 +108,7 @@ public class Project extends Folder
       id = itemObject.get("id").isString().stringValue();
       name = itemObject.get("name").isString().stringValue();
       mimeType = itemObject.get("mimeType").isString().stringValue();
-      path = itemObject.get("path").isString().stringValue();
+      //path = itemObject.get("path").isString().stringValue();
       //parentId = itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       properties = (JsonArray)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
@@ -220,11 +222,17 @@ public class Project extends Folder
    /**
     * Create new file.
     * 
+    * @param parent
+    * @param name
+    * @param content
+    * @param mimeType
+    * @param callback
+    * @throws ResourceException
     */
    public void createFile(final Folder parent, String name, String content, String mimeType,
       final AsyncCallback<File> callback) throws ResourceException
    {
-      checkValidParent(parent);
+      checkItemValid(parent);
 
       // create internal wrapping Request Callback with proper Unmarshaller
       AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller(new File()))
@@ -234,7 +242,10 @@ public class Project extends Folder
          {
             // initialize file after unmarshaling
             File file = result;
+            // add to the list of items
             file.setParent(parent);
+            //parent.addChild(file);
+            // set proper parent project
             file.setProject(Project.this);
             callback.onSuccess(result);
          }
@@ -262,44 +273,42 @@ public class Project extends Folder
    }
 
    /**
+    * Create new Folder.
+    * 
     * @param parent
+    * @param name
+    * @param callback
     * @throws ResourceException
     */
-   private void checkValidParent(final Folder parent) throws ResourceException
+   public void createFolder(final Folder parent, String name, final AsyncCallback<Folder> callback)
+      throws ResourceException
    {
-      if (parent.getProject() != this)
-      {
-         throw new ResourceException("Parent folder is out of the project's scope.");
-      }
-   }
 
-   /**
-    * Create new Folder.
-    */
-   public void createFolder(final Folder parent, String name, final AsyncCallback<Folder> callback) throws ResourceException
-   {
-      
-      checkValidParent(parent);
+      checkItemValid(parent);
 
       // create internal wrapping Request Callback with proper Unmarshaller
-      AsyncRequestCallback<Folder> internalCallback = new AsyncRequestCallback<Folder>(new FolderUnmarshaller(new Folder()))
-      {
-         @Override
-         protected void onSuccess(Folder result)
+      AsyncRequestCallback<Folder> internalCallback =
+         new AsyncRequestCallback<Folder>(new FolderUnmarshaller(new Folder()))
          {
-            // initialize file after unmarshaling
-            Folder folder = result;
-            folder.setParent(parent);
-            folder.setProject(Project.this);
-            callback.onSuccess(result);
-         }
+            @Override
+            protected void onSuccess(Folder result)
+            {
+               // initialize file after unmarshaling
+               Folder folder = result;
+               // add to the list of items
+               folder.setParent(parent);
+               //parent.addChild(folder);
+               // set proper parent project
+               folder.setProject(Project.this);
+               callback.onSuccess(result);
+            }
 
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            callback.onFailure(exception);
-         }
-      };
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               callback.onFailure(exception);
+            }
+         };
 
       String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
       String urlString = URL.decode(url).replace("[name]", name);
@@ -312,6 +321,398 @@ public class Project extends Folder
       catch (RequestException e)
       {
          throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * Delete child resource
+    * 
+    * @param resource
+    * @param callback
+    * @throws ResourceException
+    */
+   public void deleteChild(final Resource resource, final AsyncCallback<Void> callback) throws ResourceException
+   {
+      checkItemValid(resource);
+      final Folder parent = resource.getParent();
+      // create internal wrapping Request Callback with proper Unmarshaller
+      AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>()
+      {
+         @Override
+         protected void onSuccess(Void result)
+         {
+            // remove from the list of child
+            parent.removeChild(resource);
+            callback.onSuccess(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      // TODO check with lock
+      String url = resource.getLinkByRelation(Link.REL_DELETE).getHref();
+
+      if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked())
+      {
+         url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
+      }
+      loader.setMessage("Deleting item...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param file
+    * @param callback
+    * @throws ResourceException
+    */
+   public void getContent(File file, final AsyncCallback<File> callback) throws ResourceException
+   {
+      checkItemValid(file);
+
+      // content already present
+      if (file.getContent() != null)
+      {
+         callback.onSuccess(file);
+      }
+
+      // create internal wrapping Request Callback with proper Unmarshaller
+      AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file))
+      {
+         @Override
+         protected void onSuccess(File result)
+         {
+            callback.onSuccess(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
+      loader.setMessage("Loading content...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param file
+    * @param callback
+    * @throws ResourceException
+    */
+   public void updateContent(File file, final AsyncCallback<File> callback) throws ResourceException
+   {
+      checkItemValid(file);
+
+      // create internal wrapping Request Callback with proper Unmarshaller
+      AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileContentUnmarshaller(file))
+      {
+         @Override
+         protected void onSuccess(File result)
+         {
+            callback.onSuccess(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      // TODO check with lock
+      String url = file.getLinkByRelation(Link.REL_CONTENT).getHref();
+      url += (file.isLocked()) ? "?lockToken=" + file.getLock().getLockToken() : "";
+      loader.setMessage("Updating content...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).header(HTTPHeader.CONTENT_TYPE, file.getMimeType())
+            .data(file.getContent()).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param file
+    * @param callback
+    * @throws ResourceException
+    */
+   public void lock(File file, final AsyncCallback<String> callback) throws ResourceException
+   {
+      checkItemValid(file);
+      // create internal wrapping Request Callback with proper Unmarshaller
+      AsyncRequestCallback<StringBuilder> internalCallback =
+         new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller())
+         {
+            @Override
+            protected void onSuccess(StringBuilder result)
+            {
+               callback.onSuccess(result.toString());
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               callback.onFailure(exception);
+            }
+         };
+
+      String url = file.getLinkByRelation(Link.REL_LOCK).getHref();
+      loader.setMessage("Locking file...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param file
+    * @param lockToken
+    * @param callback
+    * @throws ResourceException
+    */
+   public void unlock(File file, String lockToken, final AsyncCallback<Void> callback) throws ResourceException
+   {
+      checkItemValid(file);
+      // create internal wrapping Request Callback with proper Unmarshaller
+      AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>()
+      {
+         @Override
+         protected void onSuccess(Void result)
+         {
+            callback.onSuccess(result);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      String url = file.getLinkByRelation(Link.REL_UNLOCK).getHref();
+      url = URL.decode(url).replace("[lockToken]", lockToken);
+      loader.setMessage("Unlocking file...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param source
+    * @param destination
+    * @param lockToken
+    * @param callback
+    * @throws ResourceException
+    */
+   public void move(final Resource source, final Folder destination, String lockToken,
+      final AsyncCallback<Resource> callback) throws ResourceException
+   {
+      checkItemValid(source);
+      checkItemValid(destination);
+
+      AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>()
+      {
+         @Override
+         protected void onSuccess(Void result)
+         {
+            // TODO : check consistency
+            source.setParent(destination);
+            callback.onSuccess(source);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      // TODO check with locks
+      String url = source.getLinkByRelation(Link.REL_MOVE).getHref();
+      url = URL.decode(url).replace("[parentId]", destination.getId());
+      if (File.TYPE.equals(source.getResourceType()) && ((File)source).isLocked())
+      {
+         url = URL.decode(url).replace("[lockToken]", ((File)source).getLock().getLockToken());
+      }
+      url = URL.encode(url);
+      loader.setMessage("Moving item...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param source
+    * @param destination
+    * @param callback
+    * @throws ResourceException
+    */
+   public void copy(final Resource source, final Folder destination, final AsyncCallback<Resource> callback)
+      throws ResourceException
+   {
+      throw new ResourceException("Operation not currently supported");
+   }
+
+   /**
+   * @param item
+   * @param mediaType
+   * @param newname
+   * @param lockToken
+   * @param callback
+   * @throws RequestException
+   */
+   public void rename(final Resource resource, final String newname, String lockToken,
+      final AsyncCallback<Resource> callback) throws ResourceException
+   {
+      checkItemValid(resource);
+
+      // internal call back
+      AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>()
+      {
+         @Override
+         protected void onSuccess(Void result)
+         {
+            // TODO : check consistency
+            resource.setName(newname);
+            callback.onSuccess(resource);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      String url = resource.getLinkByRelation(Link.REL_RENAME).getHref();
+      url = URL.decode(url);
+      url = url.replace("mediaType=[mediaType]", "");
+      url =
+         (newname != null && !newname.isEmpty()) ? url.replace("[newname]", newname) : url.replace("newname=[newname]",
+            "");
+
+      if (File.TYPE.equals(resource.getResourceType()) && ((File)resource).isLocked())
+      {
+         url = URL.decode(url).replace("[lockToken]", ((File)resource).getLock().getLockToken());
+      }
+
+      url = url.replace("?&", "?");
+      url = url.replaceAll("&&", "&");
+      url = URL.encode(url);
+      loader.setMessage("Renaming item...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * @param callback
+    * @throws ResourceException
+    */
+   public void flushProjectProperties(final AsyncCallback<Project> callback) throws ResourceException
+   {
+      AsyncRequestCallback<Void> internalCallback = new AsyncRequestCallback<Void>()
+      {
+         @Override
+         protected void onSuccess(Void result)
+         {
+            callback.onSuccess(Project.this);
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      };
+
+      String url = this.getLinkByRelation(Link.REL_SELF).getHref();
+      loader.setMessage("Updating item...");
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url)
+            .data(JSONSerializer.PROPERTY_SERIALIZER.fromCollection(getProperties()).toString())
+            .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         throw new ResourceException(e);
+      }
+   }
+
+   /**
+    * 
+    * @param source
+    * @param destination
+    * @param callback
+    * @throws ResourceException
+    */
+   public void search(final AsyncCallback<JsonArray<Resource>> callback) throws ResourceException
+   {
+      throw new ResourceException("Operation not currently supported");
+   }
+
+   // ====================================================================================================
+
+   /**
+    * Check if resource belongs to this project
+    * 
+    * @param resource
+    * @throws ResourceException
+    */
+   private void checkItemValid(final Resource resource) throws ResourceException
+   {
+      if (resource == null)
+      {
+         throw new ResourceException("Resource is null.");
+      }
+      if (resource.getProject() != this)
+      {
+         throw new ResourceException("Resource is out of the project's scope. Project : " + getName()
+            + ", resource path is : " + resource.getPath());
       }
    }
 }

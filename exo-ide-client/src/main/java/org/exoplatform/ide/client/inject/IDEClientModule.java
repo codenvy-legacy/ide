@@ -22,13 +22,15 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.client.editor.EditorPresenter;
 import org.exoplatform.ide.client.editor.EditorView;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
-import org.exoplatform.ide.client.projectExplorer.ProjectExpolorerView;
+import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.resources.ResourceProvider;
+import org.exoplatform.ide.resources.ResourceProviderService;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 /**
@@ -50,15 +52,18 @@ public class IDEClientModule extends AbstractGinModule
    @Override
    protected void configure()
    {
+      bind(BootstrapController.class).in(Singleton.class);
       bind(WorkspacePeresenter.Display.class).to(WorkspaceView.class).in(Singleton.class);
       bind(WorkspacePeresenter.class).in(Singleton.class);
-      bind(ProjectExplorerPresenter.Display.class).to(ProjectExpolorerView.class).in(Singleton.class);
+      bind(ProjectExplorerPresenter.Display.class).to(ProjectTreeView.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.class).in(Singleton.class);
       bind(EditorPresenter.Display.class).to(EditorView.class).in(Singleton.class); // TODO : not singleton 
       bind(EditorView.class).in(Singleton.class); // TODO : not singleton
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
       bind(AppContext.class).in(Singleton.class);
       bind(BaseTextEditor.class).in(Singleton.class);
+      bind(ResourceProvider.class).to(ResourceProviderService.class).in(Singleton.class);
+      
       //      bind(IDEAppController.class).in(Singleton.class);
       //      bind(Presenter.class).to(IDEAppPresenter.class);
       //      bind(IDEAppPresenter.Display.class).to(IDEAppView.class);

@@ -24,40 +24,30 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: Aug 26, 2011 evgen $
+ * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
+ * @version $Id: FileContentUnmarshaller Feb 3, 2011 9:42:13 AM evgen $
  * 
  */
-public class LocationUnmarshaller implements Unmarshallable<StringBuilder>
+public class StringUnmarshaller implements Unmarshallable<StringBuilder>
 {
 
-   private StringBuilder location;
+   private final StringBuilder string;
 
-   /**
-    * @param location
-    */
-   public LocationUnmarshaller(StringBuilder location)
+   public StringUnmarshaller()
    {
-      super();
-      this.location = location;
+      this.string = new StringBuilder();
    }
 
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      location.append(response.getHeader("Location"));
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
    @Override
    public StringBuilder getPayload()
    {
-      return location;
+      return string;
+   }
+
+   @Override
+   public void unmarshal(Response response) throws UnmarshallerException
+   {
+      string.append(response.getText());
    }
 
 }

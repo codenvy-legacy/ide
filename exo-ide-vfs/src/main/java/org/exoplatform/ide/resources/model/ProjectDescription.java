@@ -20,12 +20,10 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.resources.properties.Property;
 
-
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 16, 2012  
+ * Desription of the project containing nature set and it's specific properties
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ProjectDescription
 {

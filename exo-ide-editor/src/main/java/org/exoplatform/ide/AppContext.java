@@ -46,6 +46,8 @@ public class AppContext
       resources.workspaceEditorBufferCss().ensureInjected();
       resources.workspaceEditorCss().ensureInjected();
       resources.workspaceEditorCursorCss().ensureInjected();
+      resources.treeCss().ensureInjected();
+      resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
 
       this.userActivityManager = new UserActivityManager();
    }

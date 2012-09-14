@@ -36,3 +36,6 @@ target/
 
 # Misc
 *.swp
+
+# GWT
+/**/.gwt

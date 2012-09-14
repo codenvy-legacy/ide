@@ -21,7 +21,6 @@ package org.exoplatform.ide.resources;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Link;
 
@@ -239,7 +238,7 @@ public class VirtualFileSystemInfo
 
    public VirtualFileSystemInfo()
    {
-      this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, JsonCollections.<String>createArray(),
+      this("default", false, false, ANONYMOUS_PRINCIPAL, ANY_PRINCIPAL, JsonCollections.<String> createArray(),
          ACLCapability.NONE, QueryCapability.NONE, null, null);
    }
 

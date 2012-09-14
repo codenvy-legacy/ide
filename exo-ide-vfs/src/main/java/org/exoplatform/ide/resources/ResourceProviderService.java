@@ -16,6 +16,12 @@
  */
 package org.exoplatform.ide.resources;
 
+import com.google.gwt.core.client.GWT;
+
+import com.google.web.bindery.event.shared.EventBus;
+
+import com.google.inject.Inject;
+
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
@@ -29,6 +35,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
+import org.exoplatform.ide.resources.event.ExtensionInitializedEvent;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.ProjectModelProviderAdapter;
 import org.exoplatform.ide.resources.marshal.ProjectModelUnmarshaller;
@@ -40,10 +47,9 @@ import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.properties.Property;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 4, 2012  
+ * Implementation of Resource Provider
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class ResourceProviderService implements ResourceProvider
 {
@@ -66,24 +72,33 @@ public class ResourceProviderService implements ResourceProvider
 
    protected VirtualFileSystemInfo vfsInfo;
 
+   @SuppressWarnings("unused")
+   private boolean initialized = false;
+
+   private EventBus eventBus;
+
+   private Project activeProject;
+
    /**
     * Resources API for client application.
     * It deals with VFS to retrieve the content of  the files 
     * @throws ResourceException 
     */
-   public ResourceProviderService(String workspaceURL) throws ResourceException
+   @Inject
+   public ResourceProviderService(EventBus eventBus) throws ResourceException
    {
-      this.workspaceURL = workspaceURL;
+      this.workspaceURL = "http://127.0.0.1:8888/rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
       this.modelProviders.put(GENERIC_PROJECT, new GenericModelProvider());
       // TODO 
       this.loader = new EmptyLoader();
-      init();
+      this.eventBus = eventBus;
+      //init();
    }
 
-   private void init() throws ResourceException
+   @Override
+   public void start() throws ResourceException
    {
-      // TODO implement init
       AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
          new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
          {
@@ -91,6 +106,8 @@ public class ResourceProviderService implements ResourceProvider
             protected void onSuccess(VirtualFileSystemInfo result)
             {
                vfsInfo = result;
+               initialized = true;
+               eventBus.fireEvent(new ExtensionInitializedEvent(ResourceProviderService.this));
                //IDE.fireEvent(new VfsChangedEvent(result));
             }
 
@@ -98,6 +115,9 @@ public class ResourceProviderService implements ResourceProvider
             protected void onFailure(Throwable exception)
             {
                //    Dialogs.getInstance().showError("Workspace " + vfsId + " not found.");
+               exception.printStackTrace();
+               GWT.log("ResourceProviderService:ailed to start resource provider" + exception.getMessage() + ">"
+                  + exception);
             }
          };
 
@@ -111,7 +131,6 @@ public class ResourceProviderService implements ResourceProvider
          throw new ResourceException(e);
       }
    }
-
 
    /**
     * {@inheritDoc}
@@ -133,6 +152,7 @@ public class ResourceProviderService implements ResourceProvider
             {
                Project project = result.getProject();
                project.setParent(vfsInfo.getRoot());
+               activeProject = project;
                callback.onSuccess(project);
             }
 
@@ -178,6 +198,7 @@ public class ResourceProviderService implements ResourceProvider
                Project project = result.getProject();
                project.setParent(rootFolder);
                project.setProject(project);
+               activeProject = project;
                callback.onSuccess(project);
             }
 
@@ -206,7 +227,7 @@ public class ResourceProviderService implements ResourceProvider
          throw new ResourceException(e);
       }
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -232,6 +253,15 @@ public class ResourceProviderService implements ResourceProvider
          }
       }
       return modelProviders.get(GENERIC_PROJECT);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Project getActiveProject()
+   {
+      return activeProject;
    }
 
 }

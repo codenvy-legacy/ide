@@ -2,6 +2,8 @@ package org.exoplatform.ide.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.resources.model.File;
+
 /**
  * Event that describes the fact that file is going to be opened
  * 
@@ -11,7 +13,6 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class FileEvent extends GwtEvent<FileEventHandler>
 {
-   // TODO : should accept model object, not abstract strings 
 
    public static Type<FileEventHandler> TYPE = new Type<FileEventHandler>();
 
@@ -19,18 +20,17 @@ public class FileEvent extends GwtEvent<FileEventHandler>
       OPEN, SAVE, CLOSE;
    }
 
-   // Replace with resource model
-   private String fileName;
+   private File file;
 
    private FileOperation fileOperation;
 
    /**
     * @param fileName name of the file
     */
-   public FileEvent(String fileName, FileOperation fileOperation)
+   public FileEvent(File file, FileOperation fileOperation)
    {
       this.fileOperation = fileOperation;
-      this.fileName = fileName;
+      this.file = file;
    }
 
    /**
@@ -45,9 +45,9 @@ public class FileEvent extends GwtEvent<FileEventHandler>
    /**
     * @return the name of the file // should return the model object
     */
-   public String getFileName()
+   public File getFile()
    {
-      return fileName;
+      return file;
    }
 
    /**

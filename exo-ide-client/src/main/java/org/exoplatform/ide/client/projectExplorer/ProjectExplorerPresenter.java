@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -29,10 +27,8 @@ import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
-import org.exoplatform.ide.shared.model.File;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.resources.model.Resource;
 
 /**
  * Tree-like project explorer.
@@ -50,10 +46,17 @@ public class ProjectExplorerPresenter implements Presenter
    {
       String getSelectedFileName();
 
+      @Deprecated
       HasDoubleClickHandlers getTree();
 
-      // TODO : should get the list of object model
-      void setItems(List<String> fileNames);
+      void registerListener(Listener listener);
+
+      void setItems(Resource resource);
+   }
+
+   public interface Listener
+   {
+      void onNodeAction(Resource resource);
    }
 
    Display display;
@@ -74,52 +77,71 @@ public class ProjectExplorerPresenter implements Presenter
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(HasWidgets container)
    {
       container.clear();
       container.add(display.asWidget());
 
-      // Set up the callback object.
-      AsyncCallback<File[]> callback = new AsyncCallback<File[]>()
-      {
-         public void onFailure(Throwable caught)
-         {
-         }
+//      // Set up the callback object.
+//      AsyncCallback<File[]> callback = new AsyncCallback<File[]>()
+//      {
+//         @Override
+//         public void onFailure(Throwable caught)
+//         {
+//         }
+//
+//         @Override
+//         public void onSuccess(File[] result)
+//         {
+//            updateFileList(result);
+//         }
+//      };
 
-         public void onSuccess(File[] result)
-         {
-            updateFileList(result);
-         }
-      };
+      //fileSystemService.getFileList(callback);
+   }
 
-      fileSystemService.getFileList(callback);
+   public void setContent(Resource resource)
+   {
+      display.setItems(resource);
    }
 
    protected void bind()
    {
-      display.getTree().addDoubleClickHandler(new DoubleClickHandler()
+      display.registerListener(new Listener()
       {
-         public void onDoubleClick(DoubleClickEvent event)
+         @Override
+         public void onNodeAction(Resource resource)
          {
-            String string = display.getSelectedFileName();
-            openFile(string);
+            openFile(resource);
          }
       });
+      //      display.getTree().addDoubleClickHandler(new DoubleClickHandler()
+      //      {
+      //         public void onDoubleClick(DoubleClickEvent event)
+      //         {
+      //            String string = display.getSelectedFileName();
+      //            openFile(string);
+      //         }
+      //      });
    }
 
-   protected void openFile(String fileName)
+   protected void openFile(Resource resource)
    {
-      eventBus.fireEvent(new FileEvent(fileName, FileOperation.OPEN));
+      if (resource.isFile())
+      {
+         eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+      }
    }
 
    protected void updateFileList(File[] result)
    {
-      List<String> names = new ArrayList<String>();
-      for (File file : result)
-      {
-         names.add(file.getName());
-      }
-      display.setItems(names);
+      //      List<String> names = new ArrayList<String>();
+      //      for (File file : result)
+      //      {
+      //         names.add(file.getName());
+      //      }
+      //      display.setItems(names);
    }
 
 }
