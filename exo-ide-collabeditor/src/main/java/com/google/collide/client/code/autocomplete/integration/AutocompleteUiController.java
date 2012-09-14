@@ -345,9 +345,25 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     int marginTop = positionAbove ? -maxHeight : lineHeight;
     box.getStyle().setMarginTop(marginTop, CSSStyleDeclaration.Unit.PX);
+
+    if (showingFromHidden) {
+       // Adjust the box horizontal position if it's out of the editor's right bound.
+       // If box was already showing, we don't adjust the horizontal positioning to avoid flickering.
+       int editorScrollLeft = editor.getBuffer().getScrollLeft();
+       int boxLeftPosition = CssUtils.parsePixels(box.getStyle().getLeft()) - editorScrollLeft;
+       int boxWidth = (int) bounds.getWidth();
+       int editorWidth = editor.getBuffer().getWidth();
+       int boxRightOffset = 8; // need for better visibility
+       if ((boxLeftPosition + boxWidth) > editorWidth - boxRightOffset)
+       {
+          if (editorWidth > boxWidth)
+          {
+             box.getStyle().setLeft(editorWidth + editorScrollLeft - boxWidth - boxRightOffset, CSSStyleDeclaration.Unit.PX);
+          }
+       }
+    }
   }
 
-  @VisibleForTesting
   SimpleList<CompletionProposal> getList() {
     return list;
   }
