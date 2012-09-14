@@ -43,8 +43,8 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    private static char[] activationCharacters = new char[]{'.'};
 
    private native JavaScriptContenassistProvider getProvider()/*-{
-                                                              return $wnd.jsEsprimaContentAssistProvider;
-                                                              }-*/;
+      return $wnd.jsEsprimaContentAssistProvider;
+   }-*/;
 
    private JavaScriptContenassistProvider provider;
 
