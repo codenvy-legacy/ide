@@ -19,34 +19,57 @@
 package org.exoplatform.ide.extension.aws.shared;
 
 /**
- * Info about version of AWS Beanstalk application.
+ * Request ro delete version of application.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationVersionInfo
+public interface DeleteApplicationVersionRequest
 {
+   /**
+    * Get name of application.
+    *
+    * @return application name
+    */
    String getApplicationName();
 
+   /**
+    * Set name of application.
+    *
+    * @param name
+    *    application name
+    * @see #getApplicationName()
+    */
    void setApplicationName(String name);
 
-   String getDescription();
-
-   void setDescription(String description);
-
+   /**
+    * Get label of the version to delete.
+    *
+    * @return label of the version to delete
+    */
    String getVersionLabel();
 
+   /**
+    * Set label of the version to delete.
+    *
+    * @param versionLabel
+    *    label of the version to delete
+    */
    void setVersionLabel(String versionLabel);
 
-   S3Item getS3Location();
+   /**
+    * Delete or not S3 bundle associated with this version.
+    *
+    * @return <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code>
+    *         otherwise
+    */
+   boolean isDeleteS3Bundle();
 
-   void setS3Location(S3Item s3Location);
-
-   long getCreated();
-
-   void setCreated(long created);
-
-   long getUpdated();
-
-   void setUpdated(long updated);
+   /**
+    * Delete or not S3 bundle associated with this version.
+    *
+    * @param deleteS3Bundle
+    *    <code>true</code> if need to delete S3 bundle associated with this version and <code>false</code> otherwise
+    */
+   void setDeleteS3Bundle(boolean deleteS3Bundle);
 }

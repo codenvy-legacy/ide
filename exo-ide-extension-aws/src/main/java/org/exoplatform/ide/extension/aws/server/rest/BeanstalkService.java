@@ -21,8 +21,18 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.Beanstalk;
 import org.exoplatform.ide.extension.aws.shared.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.ConfigurationOptionInfo;
+import org.exoplatform.ide.extension.aws.shared.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.CreateApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.DeleteApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.SolutionStackConfigurationOptionsRequest;
+import org.exoplatform.ide.extension.aws.shared.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.UpdateApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.UpdateEnvironmentRequest;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -36,6 +46,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -85,23 +96,25 @@ public class BeanstalkService
    @GET
    @Produces(MediaType.APPLICATION_JSON)
    public List<ConfigurationOptionInfo> listSolutionStackConfigurationOptions(
-      @QueryParam("solution_stack") String solutionStackName) throws AWSException
+      SolutionStackConfigurationOptionsRequest params) throws AWSException
    {
-      return beanstalk.listSolutionStackConfigurationOptions(solutionStackName);
+      return beanstalk.listSolutionStackConfigurationOptions(params.getSolutionStackName());
    }
 
    @Path("apps/create")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInfo createApplication(Map<String, String> params)
+   public ApplicationInfo createApplication(@QueryParam("vfsid") String vfsId,
+                                            @QueryParam("projectid") String projectId,
+                                            CreateApplicationRequest params)
       throws AWSException, VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(params.get("vfsid")).newInstance(null, null);
-      String warURLStr = params.get("war");
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      String warURLStr = params.getWar();
       URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
-      return beanstalk.createApplication(params.get("name"), params.get("description"), params.get("s3bucket"),
-         params.get("s3key"), vfs, params.get("projectid"), warURL);
+      return beanstalk.createApplication(params.getApplicationName(), params.getDescription(), params.getS3Bucket(),
+         params.getS3Key(), vfs, projectId, warURL);
    }
 
    @Path("apps/info")
@@ -109,17 +122,29 @@ public class BeanstalkService
    @Produces(MediaType.APPLICATION_JSON)
    public ApplicationInfo getApplicationInfo(@QueryParam("vfsid") String vfsId,
                                              @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException, IOException
+      throws AWSException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.getApplicationInfo(vfs, projectId);
    }
 
+   @Path("apps/update")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public ApplicationInfo updateApplication(@QueryParam("vfsid") String vfsId,
+                                            @QueryParam("projectid") String projectId,
+                                            UpdateApplicationRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.updateApplication(vfs, projectId, params.getDescription());
+   }
+
    @Path("apps/delete")
    @POST
-   public void deleteApplication(@QueryParam("vfsid") String vfsId,
-                                 @QueryParam("projectid") String projectId)
-      throws AWSException, VirtualFileSystemException, IOException
+   public void deleteApplication(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+      throws AWSException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       beanstalk.deleteApplication(vfs, projectId);
@@ -131,5 +156,110 @@ public class BeanstalkService
    public List<ApplicationInfo> listApplications() throws AWSException
    {
       return beanstalk.listApplications();
+   }
+
+   @Path("apps/versions/create")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public ApplicationVersionInfo createApplicationVersion(@QueryParam("vfsid") String vfsId,
+                                                          @QueryParam("projectid") String projectId,
+                                                          CreateApplicationVersionRequest params)
+      throws AWSException, VirtualFileSystemException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      String warURLStr = params.getWar();
+      URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
+      return beanstalk.createApplicationVersion(params.getS3Bucket(), params.getS3Key(),
+         params.getVersionLabel(), params.getDescription(), vfs, projectId, warURL);
+   }
+
+   @Path("apps/versions/update")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public ApplicationVersionInfo updateApplicationVersion(@QueryParam("vfsid") String vfsId,
+                                                          @QueryParam("projectid") String projectId,
+                                                          UpdateApplicationVersionRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.updateApplicationVersion(params.getVersionLabel(), params.getDescription(), vfs, projectId);
+   }
+
+   @Path("apps/versions/delete")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void deleteApplicationVersion(@QueryParam("vfsid") String vfsId,
+                                        @QueryParam("projectid") String projectId,
+                                        DeleteApplicationVersionRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      beanstalk.deleteApplicationVersion(params.getVersionLabel(), params.isDeleteS3Bundle(), vfs, projectId);
+   }
+
+   @Path("apps/versions")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<ApplicationVersionInfo> listApplicationVersions(@QueryParam("vfsid") String vfsId,
+                                                               @QueryParam("projectid") String projectId)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.listApplicationVersions(vfs, projectId);
+   }
+
+   @Path("environments/create")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public EnvironmentInfo createApplicationEnvironment(@QueryParam("vfsid") String vfsId,
+                                                       @QueryParam("projectid") String projectId,
+                                                       CreateEnvironmentRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.createApplicationEnvironment(params.getEnvironmentName(), params.getSolutionStackName(),
+         params.getTemplateName(), params.getVersionLabel(), params.getDescription(), vfs, projectId, params.getOptions());
+   }
+
+   @Path("environments/info/{id}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public EnvironmentInfo getEnvironmentInfo(@PathParam("id") String id) throws AWSException
+   {
+      return beanstalk.getEnvironmentInfo(id);
+   }
+
+   @Path("environments/update/{id}")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public EnvironmentInfo updateEnvironment(@PathParam("id") String id, UpdateEnvironmentRequest params)
+      throws AWSException
+   {
+      return beanstalk.updateEnvironment(id, params.getDescription(), params.getVersionLabel(),
+         params.getTemplateName(), params.getOptions());
+   }
+
+   @Path("environments/stop/{id}")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public EnvironmentInfo stopEnvironment(@PathParam("id") String id) throws AWSException
+   {
+      return beanstalk.stopEnvironment(id);
+   }
+
+   @Path("environments")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<EnvironmentInfo> listApplicationEnvironments(@QueryParam("vfsid") String vfsId,
+                                                            @QueryParam("projectid") String projectId)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.listApplicationEnvironments(vfs, projectId);
    }
 }

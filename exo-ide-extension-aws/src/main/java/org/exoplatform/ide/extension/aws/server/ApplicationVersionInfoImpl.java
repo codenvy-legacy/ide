@@ -174,7 +174,7 @@ public class ApplicationVersionInfoImpl implements ApplicationVersionInfo
    }
 
    @Override
-   public void setUpdated(long modificationDate)
+   public void setUpdated(long updated)
    {
       this.updated = updated;
    }

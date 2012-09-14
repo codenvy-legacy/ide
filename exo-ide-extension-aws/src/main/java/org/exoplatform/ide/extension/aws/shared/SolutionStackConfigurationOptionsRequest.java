@@ -18,37 +18,26 @@
  */
 package org.exoplatform.ide.extension.aws.shared;
 
-import java.util.List;
-
 /**
- * Info about AWS Beanstalk application.
+ * Get options possible for configuration for specified amazon solution stack.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationInfo
+public interface SolutionStackConfigurationOptionsRequest
 {
-   String getName();
+   /**
+    * Get name of amazon solution stack, e.g. '64bit Amazon Linux running Tomcat 6'.
+    *
+    * @return name of amazon solution stack
+    */
+   String getSolutionStackName();
 
-   void setName(String name);
-
-   String getDescription();
-
-   void setDescription(String description);
-
-   long getCreated();
-
-   void setCreated(long creationDate);
-
-   long getUpdated();
-
-   void setUpdated(long modificationDate);
-
-   List<String> getVersions();
-
-   void setVersions(List<String> versions);
-
-   List<String> getConfigurationTemplates();
-
-   void setConfigurationTemplates(List<String> configurationTemplates);
+   /**
+    * Set name of amazon solution stack.
+    *
+    * @param solutionStackName
+    *    name of amazon solution stack
+    */
+   void setSolutionStackName(String solutionStackName);
 }

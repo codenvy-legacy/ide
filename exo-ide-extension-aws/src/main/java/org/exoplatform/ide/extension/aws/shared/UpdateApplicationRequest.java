@@ -18,37 +18,43 @@
  */
 package org.exoplatform.ide.extension.aws.shared;
 
-import java.util.List;
-
 /**
- * Info about AWS Beanstalk application.
+ * Request to update application.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationInfo
+public interface UpdateApplicationRequest
 {
-   String getName();
+   /**
+    * Get name of application.
+    *
+    * @return application name
+    */
+   String getApplicationName();
 
-   void setName(String name);
+   /**
+    * Set name of application.
+    *
+    * @param name
+    *    application name
+    * @see #getApplicationName()
+    */
+   void setApplicationName(String name);
 
+   /**
+    * Get new description of application. Length: 0 - 200 characters.
+    *
+    * @return application description
+    */
    String getDescription();
 
+   /**
+    * Set new application description. Length: 0 - 200 characters.
+    *
+    * @param description
+    *    application description
+    * @see #getDescription()
+    */
    void setDescription(String description);
-
-   long getCreated();
-
-   void setCreated(long creationDate);
-
-   long getUpdated();
-
-   void setUpdated(long modificationDate);
-
-   List<String> getVersions();
-
-   void setVersions(List<String> versions);
-
-   List<String> getConfigurationTemplates();
-
-   void setConfigurationTemplates(List<String> configurationTemplates);
 }

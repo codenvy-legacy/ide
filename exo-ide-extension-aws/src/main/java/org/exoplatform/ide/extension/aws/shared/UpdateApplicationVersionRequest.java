@@ -19,34 +19,56 @@
 package org.exoplatform.ide.extension.aws.shared;
 
 /**
- * Info about version of AWS Beanstalk application.
+ * Request to update version of application.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ApplicationVersionInfo
+public interface UpdateApplicationVersionRequest
 {
+   /**
+    * Get name of application.
+    *
+    * @return application name
+    */
    String getApplicationName();
 
+   /**
+    * Set name of application.
+    *
+    * @param name
+    *    application name
+    * @see #getApplicationName()
+    */
    void setApplicationName(String name);
 
-   String getDescription();
-
-   void setDescription(String description);
-
+   /**
+    * Get label of the version to update.
+    *
+    * @return label of the version to update
+    */
    String getVersionLabel();
 
+   /**
+    * Set label of the version to update.
+    *
+    * @param versionLabel
+    *    label of the version to update
+    */
    void setVersionLabel(String versionLabel);
 
-   S3Item getS3Location();
+   /**
+    * Get new description of application version. Length: 0 - 200 characters.
+    *
+    * @return application version description
+    */
+   String getDescription();
 
-   void setS3Location(S3Item s3Location);
-
-   long getCreated();
-
-   void setCreated(long created);
-
-   long getUpdated();
-
-   void setUpdated(long updated);
+   /**
+    * Set new application description version. Length: 0 - 200 characters.
+    *
+    * @param description
+    *    application version description
+    * @see #getDescription()
+    */
 }

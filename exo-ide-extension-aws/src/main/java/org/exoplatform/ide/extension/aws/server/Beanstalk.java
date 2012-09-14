@@ -31,6 +31,7 @@ import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationVersionReq
 import com.amazonaws.services.elasticbeanstalk.model.CreateEnvironmentRequest;
 import com.amazonaws.services.elasticbeanstalk.model.CreateEnvironmentResult;
 import com.amazonaws.services.elasticbeanstalk.model.DeleteApplicationRequest;
+import com.amazonaws.services.elasticbeanstalk.model.DeleteApplicationVersionRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeApplicationVersionsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeApplicationsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeConfigurationOptionsRequest;
@@ -40,7 +41,11 @@ import com.amazonaws.services.elasticbeanstalk.model.OptionRestrictionRegex;
 import com.amazonaws.services.elasticbeanstalk.model.S3Location;
 import com.amazonaws.services.elasticbeanstalk.model.SolutionStackDescription;
 import com.amazonaws.services.elasticbeanstalk.model.TerminateEnvironmentRequest;
+import com.amazonaws.services.elasticbeanstalk.model.TerminateEnvironmentResult;
+import com.amazonaws.services.elasticbeanstalk.model.UpdateApplicationRequest;
+import com.amazonaws.services.elasticbeanstalk.model.UpdateApplicationVersionRequest;
 import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentRequest;
+import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -178,7 +183,7 @@ public class Beanstalk
    }
 
    private List<ConfigurationOptionInfo> listSolutionStackConfigurationOptions(
-      AWSElasticBeanstalk beanstalkClient, DescribeConfigurationOptionsRequest request) throws AWSException
+      AWSElasticBeanstalk beanstalkClient, DescribeConfigurationOptionsRequest request)
    {
       List<ConfigurationOptionDescription> awsOptions = beanstalkClient.describeConfigurationOptions(request)
          .getOptions();
@@ -209,33 +214,34 @@ public class Beanstalk
    //
 
    /**
-    * Create new AWS Beanstalk application.
+    * Create new AWS Beanstalk application. New version of application created. This version got name
+    * 'initial version'.
     *
     * @param name
-    *    application name. This name must be unique within AWS Beanstalk account. Length: 1-100 characters.
+    *    application name. This name must be unique within AWS Beanstalk account. Length: 1-100 characters
     * @param description
-    *    optional description of application. Length: 0 - 200 characters.
+    *    optional description of application. Length: 0 - 200 characters
     * @param s3Bucket
-    *    optional name of S3 bucket where application uploaded before deploy to AWS Beanstalk. If this parameter not
-    *    specified random name generated and new S3 bucket created.
+    *    optional name of S3 bucket where initial version of application uploaded before deploy to AWS Beanstalk. If
+    *    this parameter not specified random name generated and new S3 bucket created
     * @param s3Key
-    *    optional name of S3 key where application uploaded before deploy to AWS Beanstalk. If this parameter not
-    *    specified random name generated and new S3 file created. If file with specified key already exists it content
-    *    may be overridden
+    *    optional name of S3 key where initial version of  application uploaded before deploy to AWS Beanstalk. If this
+    *    parameter not specified random name generated and new S3 file created. If file with specified key already
+    *    exists it content will be overridden
     * @param vfs
-    *    virtual file system instance for access to source code of project. Some info may be stored in properties of
-    *    project after creation an application
+    *    virtual file system instance for access to source code and properties of project. Some info may be stored in
+    *    properties of project after creation an application
     * @param projectId
     *    project id
     * @param war
-    *    URL to pre-builded war file. May be present for java applications ONLY
+    *    URL to pre-build war file. May be present for java applications ONLY
     * @return info about newly created application
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     * @throws VirtualFileSystemException
     *    if any VFS error occurs
     * @throws IOException
-    *    i/o error, e.g. when try to download pre-builded binary file
+    *    i/o error, e.g. when try to download pre-build binary file
     */
    public ApplicationInfo createApplication(String name,
                                             String description,
@@ -254,7 +260,8 @@ public class Beanstalk
          throw new IllegalArgumentException("Project directory required. ");
       }
 
-      // Be sure project is accessible. VirtualFileSystemException thrown if something wrong.
+      // Be sure project is accessible before start creation an application.
+      // VirtualFileSystemException thrown if something wrong.
       vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
 
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
@@ -281,17 +288,24 @@ public class Beanstalk
                                              String s3Key,
                                              VirtualFileSystem vfs,
                                              String projectId,
-                                             URL url) throws VirtualFileSystemException, IOException
+                                             URL war) throws VirtualFileSystemException, IOException
    {
       beanstalkClient.createApplication(new CreateApplicationRequest().withApplicationName(name)
          .withDescription(description));
-      createApplicationVersion(beanstalkClient, s3Client, name, s3Bucket, s3Key, "initial version", url);
+      S3Location s3Location = war == null
+         ? createS3Location(s3Client, name, s3Bucket, s3Key, vfs.exportZip(projectId))
+         : createS3Location(s3Client, name, s3Bucket, s3Key, war);
+      beanstalkClient.createApplicationVersion(new CreateApplicationVersionRequest()
+         .withApplicationName(name)
+         .withVersionLabel("initial version")
+         .withSourceBundle(s3Location)
+         .withDescription("Initial version of application " + name));
       writeApplicationName(vfs, projectId, name);
       return getApplicationInfo(beanstalkClient, name);
    }
 
    /**
-    * Get info about AWS Beanstalk application. Name of project retrieved from project properties.
+    * Get info about AWS Beanstalk application. Name of application retrieved from project properties.
     *
     * @param vfs
     *    virtual file system instance for reading project name from properties of project
@@ -306,7 +320,20 @@ public class Beanstalk
    public ApplicationInfo getApplicationInfo(VirtualFileSystem vfs, String projectId) throws AWSException,
       VirtualFileSystemException
    {
-      String name = detectApplicationName(vfs, projectId, true);
+      return getApplicationInfo(detectApplicationName(vfs, projectId));
+   }
+
+   /**
+    * Get info about AWS Beanstalk application.
+    *
+    * @param name
+    *    name of application
+    * @return info about application
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public ApplicationInfo getApplicationInfo(String name) throws AWSException
+   {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
@@ -346,7 +373,67 @@ public class Beanstalk
    }
 
    /**
-    * Delete specified  application. Name of project retrieved from project properties.
+    * Update AWS Beanstalk application. Name of application retrieved from project properties.
+    *
+    * @param vfs
+    *    virtual file system instance for reading project name from properties of project
+    * @param projectId
+    *    project id
+    * @return info about application
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VFS error occurs
+    */
+   public ApplicationInfo updateApplication(VirtualFileSystem vfs, String projectId, String description)
+      throws AWSException, VirtualFileSystemException
+   {
+      return updateApplication(detectApplicationName(vfs, projectId), description);
+   }
+
+   /**
+    * Update AWS Beanstalk application.
+    *
+    * @param name
+    *    name of application
+    * @param description
+    *    new application description
+    * @return info about application
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public ApplicationInfo updateApplication(String name, String description) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return updateApplication(beanstalkClient, name, description);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private ApplicationInfo updateApplication(AWSElasticBeanstalk beanstalkClient, String name, String description)
+   {
+      ApplicationDescription awsApplication = beanstalkClient.updateApplication(new UpdateApplicationRequest()
+         .withApplicationName(name).withDescription(description)).getApplication();
+      return new ApplicationInfoImpl(
+         awsApplication.getApplicationName(),
+         awsApplication.getDescription(),
+         awsApplication.getDateCreated(),
+         awsApplication.getDateUpdated(),
+         awsApplication.getVersions(),
+         awsApplication.getConfigurationTemplates());
+   }
+
+   /**
+    * Delete specified  application. Name of application retrieved from project properties.
     * <p/>
     * After successful delete:
     * <ul>
@@ -368,7 +455,28 @@ public class Beanstalk
    public void deleteApplication(VirtualFileSystem vfs, String projectId) throws AWSException,
       VirtualFileSystemException
    {
-      String name = detectApplicationName(vfs, projectId, true);
+      deleteApplication(detectApplicationName(vfs, projectId));
+      writeApplicationName(vfs, projectId, null);
+   }
+
+   /**
+    * Delete specified  application.
+    * <p/>
+    * After successful delete:
+    * <ul>
+    * <li>All running environments are terminated</li>
+    * <li>All versions associated with this application are deleted</li>
+    * <li>Any attached Amazon RDS DB Instance are deleted</li>
+    * <li>Versions bundles are NOT deleted from Amazon S3</li>
+    * </ul>
+    *
+    * @param name
+    *    of application to delete
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteApplication(String name) throws AWSException
+   {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
@@ -390,7 +498,7 @@ public class Beanstalk
    }
 
    /**
-    * Get all existing applications.
+    * Get existing applications.
     *
     * @return list of applications
     * @throws AWSException
@@ -434,14 +542,44 @@ public class Beanstalk
 
    //
 
-   public ApplicationInfo createApplicationVersion(String s3Bucket,
-                                                   String s3Key,
-                                                   String versionLabel,
-                                                   VirtualFileSystem vfs,
-                                                   String projectId,
-                                                   URL war) throws AWSException, VirtualFileSystemException, IOException
+   /**
+    * Create new version of application. Name of application retrieved from project properties
+    *
+    * @param s3Bucket
+    *    optional name of S3 bucket where application version uploaded before deploy to AWS Beanstalk. If this
+    *    parameter not specified random name generated and new S3 bucket created.
+    * @param s3Key
+    *    optional name of S3 key where application version uploaded before deploy to AWS Beanstalk. If this parameter
+    *    not specified random name generated and new S3 file created. If file with specified key already exists it
+    *    content will be overridden.
+    * @param versionLabel
+    *    label for identification this version. Length: 1 - 100 characters.
+    * @param description
+    *    optional description of application version. Length: 0 - 200 characters.
+    * @param vfs
+    *    virtual file system instance for access to source code and properties of project.
+    * @param projectId
+    *    project id
+    * @param war
+    *    URL to pre-build war file. May be present for java applications ONLY
+    * @return info about an application version
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VFS error occurs
+    * @throws IOException
+    *    i/o error, e.g. when try to download pre-build binary file
+    */
+   public ApplicationVersionInfo createApplicationVersion(String s3Bucket,
+                                                          String s3Key,
+                                                          String versionLabel,
+                                                          String description,
+                                                          VirtualFileSystem vfs,
+                                                          String projectId,
+                                                          URL war)
+      throws AWSException, VirtualFileSystemException, IOException
    {
-      String name = detectApplicationName(vfs, projectId, true);
+      String name = detectApplicationName(vfs, projectId);
       // Two possible location for project file(s).
       // 1. Location to binary file. Typically actual for Java applications.
       // 2. Get project from VFS. Typically actual for application that do not need compilation, e.g. PHP applications
@@ -449,16 +587,11 @@ public class Beanstalk
       AmazonS3 s3Client = getS3Client();
       try
       {
-         if (war != null)
-         {
-            createApplicationVersion(beanstalkClient, s3Client, name, s3Bucket, s3Key, versionLabel, war);
-         }
-         else
-         {
-            createApplicationVersion(beanstalkClient, s3Client, name, s3Bucket, s3Key, versionLabel,
-               vfs.exportZip(projectId));
-         }
-         return getApplicationInfo(beanstalkClient, name);
+         S3Location s3Location = war == null
+            ? createS3Location(s3Client, name, s3Bucket, s3Key, vfs.exportZip(projectId))
+            : createS3Location(s3Client, name, s3Bucket, s3Key, war);
+         return createApplicationVersion(beanstalkClient, new CreateApplicationVersionRequest().withApplicationName(name).
+            withVersionLabel(versionLabel).withSourceBundle(s3Location).withDescription(description));
       }
       catch (AmazonClientException e)
       {
@@ -470,42 +603,66 @@ public class Beanstalk
       }
    }
 
-   private void createApplicationVersion(AWSElasticBeanstalk beanstalkClient,
-                                         AmazonS3 s3Client,
-                                         String name,
-                                         String s3Bucket,
-                                         String s3Key,
-                                         String versionLabel,
-                                         URL url) throws IOException
+   private ApplicationVersionInfo createApplicationVersion(AWSElasticBeanstalk beanstalkClient,
+                                                           CreateApplicationVersionRequest request)
    {
-      S3Location s3Location = createS3Location(s3Client, name, s3Bucket, s3Key, url);
-      beanstalkClient.createApplicationVersion(new CreateApplicationVersionRequest().withApplicationName(name).
-         withVersionLabel(versionLabel).withSourceBundle(s3Location));
+      ApplicationVersionDescription awsVersion =
+         beanstalkClient.createApplicationVersion(request).getApplicationVersion();
+      return new ApplicationVersionInfoImpl.Builder()
+         .name(awsVersion.getApplicationName())
+         .description(awsVersion.getDescription())
+         .versionLabel(awsVersion.getVersionLabel())
+         .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
+         .created(awsVersion.getDateCreated())
+         .updated(awsVersion.getDateUpdated()).build();
    }
 
-   private void createApplicationVersion(AWSElasticBeanstalk beanstalkClient,
-                                         AmazonS3 s3Client,
-                                         String name,
-                                         String s3Bucket,
-                                         String s3Key,
-                                         String versionLabel,
-                                         ContentStream file) throws IOException
+   /**
+    * Update application version. Name of application retrieved from project properties.
+    *
+    * @param versionLabel
+    *    label of the version to update
+    * @param description
+    *    new description of application version. Length: 0 - 200 characters.
+    * @param vfs
+    *    virtual file system instance for access to properties of project.
+    * @param projectId
+    *    project id
+    * @return application version info
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VFS error occurs
+    */
+   public ApplicationVersionInfo updateApplicationVersion(String versionLabel,
+                                                          String description,
+                                                          VirtualFileSystem vfs,
+                                                          String projectId)
+      throws AWSException, VirtualFileSystemException
    {
-      S3Location s3Location = createS3Location(s3Client, name, s3Bucket, s3Key, file);
-      beanstalkClient.createApplicationVersion(new CreateApplicationVersionRequest().withApplicationName(name).
-         withVersionLabel(versionLabel).withSourceBundle(s3Location));
+      return updateApplicationVersion(detectApplicationName(vfs, projectId), versionLabel, description);
    }
 
-   public List<ApplicationVersionInfo> listApplicationVersions(VirtualFileSystem vfs,
-                                                               String projectId,
-                                                               List<String> versionNameFilter)
-      throws AWSException, VirtualFileSystemException, IOException
+   /**
+    * Update application version.
+    *
+    * @param name
+    *    name of application
+    * @param versionLabel
+    *    label of the version to update
+    * @param description
+    *    new description of application version. Length: 0 - 200 characters.
+    * @return application version info
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public ApplicationVersionInfo updateApplicationVersion(String name, String versionLabel, String description)
+      throws AWSException
    {
-      String name = detectApplicationName(vfs, projectId, true);
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return listApplicationVersions(beanstalkClient, name, versionNameFilter);
+         return updateApplicationVersion(beanstalkClient, name, versionLabel, description);
       }
       catch (AmazonClientException e)
       {
@@ -517,25 +674,150 @@ public class Beanstalk
       }
    }
 
-   private List<ApplicationVersionInfo> listApplicationVersions(AWSElasticBeanstalk beanstalkClient,
-                                                                String name,
-                                                                List<String> versionNameFilter)
+   private ApplicationVersionInfo updateApplicationVersion(AWSElasticBeanstalk beanstalkClient,
+                                                           String name,
+                                                           String versionLabel,
+                                                           String description)
    {
-      List<ApplicationVersionDescription> awsApplicationVersions = beanstalkClient.describeApplicationVersions(
-         new DescribeApplicationVersionsRequest()
+      ApplicationVersionDescription awsVersion = beanstalkClient.updateApplicationVersion(
+         new UpdateApplicationVersionRequest()
             .withApplicationName(name)
-            .withVersionLabels(versionNameFilter)).getApplicationVersions();
-      List<ApplicationVersionInfo> versions = new ArrayList<ApplicationVersionInfo>(awsApplicationVersions.size());
-      for (ApplicationVersionDescription awsApplicationVersion : awsApplicationVersions)
+            .withVersionLabel(versionLabel)
+            .withDescription(description)).getApplicationVersion();
+      return new ApplicationVersionInfoImpl.Builder()
+         .name(awsVersion.getApplicationName())
+         .description(awsVersion.getDescription())
+         .versionLabel(awsVersion.getVersionLabel())
+         .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
+         .created(awsVersion.getDateCreated())
+         .updated(awsVersion.getDateUpdated()).build();
+   }
+
+   /**
+    * Delete application version. Name of application retrieved from project properties.
+    * <p/>
+    * Version cannot be deleted if it is associated with running environment. See {@link #stopEnvironment(String)}.
+    *
+    * @param versionLabel
+    *    label of the version to delete
+    * @param deleteS3Bundle
+    *    if <code>true</code> also delete version application bundle uploaded to S3 when create version.
+    * @param vfs
+    *    virtual file system instance for access properties of project.
+    * @param projectId
+    *    project id
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VFS error occurs
+    */
+   public void deleteApplicationVersion(String versionLabel,
+                                        boolean deleteS3Bundle,
+                                        VirtualFileSystem vfs,
+                                        String projectId) throws AWSException, VirtualFileSystemException
+   {
+      deleteApplicationVersion(detectApplicationName(vfs, projectId), versionLabel, deleteS3Bundle);
+   }
+
+   /**
+    * Delete application version.
+    * <p/>
+    * Version cannot be deleted if it is associated with running environment. See {@link #stopEnvironment(String)}.
+    *
+    * @param name
+    *    name of application
+    * @param versionLabel
+    *    label of the version to delete
+    * @param deleteS3Bundle
+    *    if <code>true</code> also delete version application bundle uploaded to S3 when create version.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteApplicationVersion(String name, String versionLabel, boolean deleteS3Bundle) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         deleteApplicationVersion(beanstalkClient, name, versionLabel, deleteS3Bundle);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private void deleteApplicationVersion(AWSElasticBeanstalk beanstalkClient,
+                                         String name,
+                                         String versionLabel,
+                                         boolean deleteS3Bundle)
+   {
+      beanstalkClient.deleteApplicationVersion(new DeleteApplicationVersionRequest()
+         .withApplicationName(name).withVersionLabel(versionLabel).withDeleteSourceBundle(deleteS3Bundle));
+   }
+
+   /**
+    * Get application versions. Name of application retrieved from project properties.
+    *
+    * @param vfs
+    *    virtual file system instance for access properties of project.
+    * @param projectId
+    *    project id
+    * @return application version
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VFS error occurs
+    */
+   public List<ApplicationVersionInfo> listApplicationVersions(VirtualFileSystem vfs, String projectId)
+      throws AWSException, VirtualFileSystemException
+   {
+      return listApplicationVersions(detectApplicationName(vfs, projectId));
+   }
+
+   /**
+    * Get application versions.
+    *
+    * @param name
+    *    name of application
+    * @return application version
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public List<ApplicationVersionInfo> listApplicationVersions(String name) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return listApplicationVersions(beanstalkClient, name);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private List<ApplicationVersionInfo> listApplicationVersions(AWSElasticBeanstalk beanstalkClient, String name)
+   {
+      List<ApplicationVersionDescription> awsVersions = beanstalkClient.describeApplicationVersions(
+         new DescribeApplicationVersionsRequest().withApplicationName(name)).getApplicationVersions();
+      List<ApplicationVersionInfo> versions = new ArrayList<ApplicationVersionInfo>(awsVersions.size());
+      for (ApplicationVersionDescription awsVersion : awsVersions)
       {
          versions.add(new ApplicationVersionInfoImpl.Builder()
-            .name(awsApplicationVersion.getApplicationName())
-            .description(awsApplicationVersion.getDescription())
-            .versionLabel(awsApplicationVersion.getVersionLabel())
-            .s3Location(awsApplicationVersion.getSourceBundle().getS3Bucket(),
-               awsApplicationVersion.getSourceBundle().getS3Key())
-            .created(awsApplicationVersion.getDateCreated())
-            .updated(awsApplicationVersion.getDateUpdated()).build()
+            .name(awsVersion.getApplicationName())
+            .description(awsVersion.getDescription())
+            .versionLabel(awsVersion.getVersionLabel())
+            .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
+            .created(awsVersion.getDateCreated())
+            .updated(awsVersion.getDateUpdated()).build()
          );
       }
       return versions;
@@ -544,8 +826,10 @@ public class Beanstalk
    //
 
    /**
+    * Create environment for running version of application. Name of application retrieved from project properties.
+    *
     * @param environmentName
-    *    name for new environment
+    *    name for new environment. This name must be unique within AWS Beanstalk account. Length: 4 -23 characters.
     * @param solutionStackName
     *    name of Amazon solution stack. NOTE: if this parameter is specified <code>templateName</code> must be
     *    <code>null</code>
@@ -555,9 +839,9 @@ public class Beanstalk
     * @param versionLabel
     *    version of application to deploy
     * @param description
-    *    optional description for created application environment
+    *    optional description for created application environment. Length: 0 - 200 characters.
     * @param vfs
-    *    VirtualFileSystem
+    *    virtual file system instance for access properties of project
     * @param projectId
     *    project id
     * @param options
@@ -574,20 +858,49 @@ public class Beanstalk
                                                        String description,
                                                        VirtualFileSystem vfs,
                                                        String projectId,
-                                                       List<ConfigurationOption> options) throws AWSException, VirtualFileSystemException
+                                                       List<ConfigurationOption> options)
+      throws AWSException, VirtualFileSystemException
    {
-      String name = detectApplicationName(vfs, projectId, true);
+      return createApplicationEnvironment(detectApplicationName(vfs, projectId), environmentName, solutionStackName,
+         templateName, versionLabel, description, options);
+   }
+
+   /**
+    * Create environment for running version of application.
+    *
+    * @param name
+    *    name of application
+    *    name for new environment. This name must be unique within AWS Beanstalk account. Length: 4 -23 characters.
+    * @param environmentName
+    *    name for new environment. This name must be unique within AWS Beanstalk account. Length: 4 -23 characters.
+    * @param solutionStackName
+    *    name of Amazon solution stack. NOTE: if this parameter is specified <code>templateName</code> must be
+    *    <code>null</code>
+    * @param templateName
+    *    name of template for new environment. NOTE: if this parameter is specified <code>solutionStackName</code> must
+    *    be <code>null</code>
+    * @param versionLabel
+    *    version of application to deploy
+    * @param description
+    *    optional description for created application environment. Length: 0 - 200 characters.
+    * @param options
+    *    configuration options. See {@link #listSolutionStackConfigurationOptions(String)}
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public EnvironmentInfo createApplicationEnvironment(String name,
+                                                       String environmentName,
+                                                       String solutionStackName,
+                                                       String templateName,
+                                                       String versionLabel,
+                                                       String description,
+                                                       List<ConfigurationOption> options) throws AWSException
+   {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return createApplicationEnvironment(beanstalkClient,
-            name,
-            environmentName,
-            solutionStackName,
-            templateName,
-            versionLabel,
-            description,
-            options);
+         return createApplicationEnvironment(beanstalkClient, name, environmentName, solutionStackName, templateName,
+            versionLabel, description, options);
       }
       catch (AmazonClientException e)
       {
@@ -641,6 +954,15 @@ public class Beanstalk
          .build();
    }
 
+   /**
+    * Get info about specified environment.
+    *
+    * @param id
+    *    id of environment
+    * @return info about environment
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public EnvironmentInfo getEnvironmentInfo(String id) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
@@ -671,7 +993,7 @@ public class Beanstalk
       {
          return null;
       }
-      EnvironmentDescription awsEnvironment = awsEnvironments.get(0); // request by id - only one expected in result
+      EnvironmentDescription awsEnvironment = awsEnvironments.get(0);
       return new EnvironmentInfoImpl.Builder()
          .name(awsEnvironment.getEnvironmentName())
          .id(awsEnvironment.getEnvironmentId())
@@ -689,13 +1011,33 @@ public class Beanstalk
          .build();
    }
 
-   public void updateEnvironment(String name,
-                                 List<ConfigurationOption> options) throws AWSException
+   /**
+    * Update specified environment.
+    *
+    * @param id
+    *    id of environment
+    * @param description
+    *    if specified update description of environment. Length: 0 - 200 characters
+    * @param versionLabel
+    *    if specified deploy this application version to the environment
+    * @param templateName
+    *    if specified deploy this configuration template to the environment
+    * @param options
+    *    environment configuration
+    * @return info about environment
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public EnvironmentInfo updateEnvironment(String id,
+                                            String description,
+                                            String versionLabel,
+                                            String templateName,
+                                            List<ConfigurationOption> options) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         updateEnvironment(beanstalkClient, name, options);
+         return updateEnvironment(beanstalkClient, id, description, versionLabel, templateName, options);
       }
       catch (AmazonClientException e)
       {
@@ -707,11 +1049,18 @@ public class Beanstalk
       }
    }
 
-   private void updateEnvironment(AWSElasticBeanstalk beanstalkClient,
-                                  String name,
-                                  List<ConfigurationOption> options)
+   private EnvironmentInfo updateEnvironment(AWSElasticBeanstalk beanstalkClient,
+                                             String id,
+                                             String description,
+                                             String versionLabel,
+                                             String templateName,
+                                             List<ConfigurationOption> options)
    {
-      UpdateEnvironmentRequest request = new UpdateEnvironmentRequest().withEnvironmentName(name);
+      UpdateEnvironmentRequest request = new UpdateEnvironmentRequest()
+         .withEnvironmentId(id)
+         .withDescription(description)
+         .withVersionLabel(versionLabel)
+         .withTemplateName(templateName);
       if (!(options == null || options.isEmpty()))
       {
          for (ConfigurationOption option : options)
@@ -720,23 +1069,39 @@ public class Beanstalk
                new ConfigurationOptionSetting(option.getNamespace(), option.getName(), option.getValue()));
          }
       }
-      beanstalkClient.updateEnvironment(request);
+      UpdateEnvironmentResult result = beanstalkClient.updateEnvironment(request);
+      return new EnvironmentInfoImpl.Builder()
+         .name(result.getEnvironmentName())
+         .id(result.getEnvironmentId())
+         .applicationName(result.getApplicationName())
+         .versionLabel(result.getVersionLabel())
+         .solutionStackName(result.getSolutionStackName())
+         .templateName(result.getTemplateName())
+         .description(result.getDescription())
+         .endpointUrl(result.getEndpointURL())
+         .cNAME(result.getCNAME())
+         .created(result.getDateCreated())
+         .updated(result.getDateUpdated())
+         .status(result.getStatus())
+         .health(result.getHealth())
+         .build();
    }
 
    /**
     * Stop specified environment.
     *
-    * @param name
+    * @param id
     *    name of environment
+    * @return info about environment
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void stopEnvironment(String name) throws AWSException
+   public EnvironmentInfo stopEnvironment(String id) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         stopEnvironment(beanstalkClient, name);
+         return stopEnvironment(beanstalkClient, id);
       }
       catch (AmazonClientException e)
       {
@@ -748,15 +1113,57 @@ public class Beanstalk
       }
    }
 
-   private void stopEnvironment(AWSElasticBeanstalk beanstalkClient, String name) throws AWSException
+   private EnvironmentInfo stopEnvironment(AWSElasticBeanstalk beanstalkClient, String id)
    {
-      beanstalkClient.terminateEnvironment(new TerminateEnvironmentRequest().withEnvironmentName(name));
+      TerminateEnvironmentResult result = beanstalkClient.terminateEnvironment(
+         new TerminateEnvironmentRequest().withEnvironmentId(id));
+      return new EnvironmentInfoImpl.Builder()
+         .name(result.getEnvironmentName())
+         .id(result.getEnvironmentId())
+         .applicationName(result.getApplicationName())
+         .versionLabel(result.getVersionLabel())
+         .solutionStackName(result.getSolutionStackName())
+         .templateName(result.getTemplateName())
+         .description(result.getDescription())
+         .endpointUrl(result.getEndpointURL())
+         .cNAME(result.getCNAME())
+         .created(result.getDateCreated())
+         .updated(result.getDateUpdated())
+         .status(result.getStatus())
+         .health(result.getHealth())
+         .build();
    }
 
-   public List<EnvironmentInfo> listApplicationEnvironments(VirtualFileSystem vfs,
-                                                            String projectId) throws AWSException, VirtualFileSystemException
+   /**
+    * Get list of environment associated with application. Name of application retrieved from project properties.
+    *
+    * @param vfs
+    *    virtual file system instance for access properties of project
+    * @param projectId
+    *    project id
+    * @return list of environments
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VirtualFileSystem error occurs
+    */
+   public List<EnvironmentInfo> listApplicationEnvironments(VirtualFileSystem vfs, String projectId)
+      throws AWSException, VirtualFileSystemException
    {
-      String name = detectApplicationName(vfs, projectId, true);
+      return listApplicationEnvironments(detectApplicationName(vfs, projectId));
+   }
+
+   /**
+    * Get list of environment associated with application.
+    *
+    * @param name
+    *    of application
+    * @return list of environments
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public List<EnvironmentInfo> listApplicationEnvironments(String name) throws AWSException
+   {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
@@ -772,8 +1179,7 @@ public class Beanstalk
       }
    }
 
-   private List<EnvironmentInfo> listApplicationEnvironments(AWSElasticBeanstalk beanstalkClient,
-                                                             String name)
+   private List<EnvironmentInfo> listApplicationEnvironments(AWSElasticBeanstalk beanstalkClient, String name)
    {
       List<EnvironmentDescription> awsEnvironments = beanstalkClient.describeEnvironments(
          new DescribeEnvironmentsRequest().withApplicationName(name)).getEnvironments();
@@ -801,11 +1207,30 @@ public class Beanstalk
 
    //
 
-   private S3Location createS3Location(AmazonS3 s3Client,
-                                       String name,
-                                       String s3Bucket,
-                                       String s3Key,
-                                       URL url) throws IOException
+   protected AWSElasticBeanstalk getBeanstalkClient() throws AWSException
+   {
+      final AWSCredentials credentials = authenticator.getCredentials();
+      if (credentials == null)
+      {
+         throw new AWSException("Authentication required.");
+      }
+      return new AWSElasticBeanstalkClient(credentials);
+   }
+
+   protected AmazonS3 getS3Client() throws AWSException
+   {
+      final AWSCredentials credentials = authenticator.getCredentials();
+      if (credentials == null)
+      {
+         throw new AWSException("Authentication required.");
+      }
+      return new AmazonS3Client(credentials);
+   }
+
+   //
+
+   private S3Location createS3Location(AmazonS3 s3Client, String name, String s3Bucket, String s3Key, URL url)
+      throws IOException
    {
       URLConnection conn = null;
       try
@@ -825,11 +1250,8 @@ public class Beanstalk
       }
    }
 
-   private S3Location createS3Location(AmazonS3 s3Client,
-                                       String name,
-                                       String s3Bucket,
-                                       String s3Key,
-                                       ContentStream file) throws IOException
+   private S3Location createS3Location(AmazonS3 s3Client, String name, String s3Bucket, String s3Key, ContentStream file)
+      throws IOException
    {
       return createS3Location(s3Client, name, s3Bucket, s3Key, file.getStream(), file.getLength());
    }
@@ -883,7 +1305,7 @@ public class Beanstalk
       vfs.updateItem(projectId, properties, null);
    }
 
-   private String detectApplicationName(VirtualFileSystem vfs, String projectId, boolean failIfCannotDetect)
+   private String detectApplicationName(VirtualFileSystem vfs, String projectId)
       throws VirtualFileSystemException
    {
       String name = null;
@@ -892,31 +1314,11 @@ public class Beanstalk
          Item item = vfs.getItem(projectId, PropertyFilter.valueOf("aws-application"));
          name = (String)item.getPropertyValue("aws-application");
       }
-      if (failIfCannotDetect && (name == null || name.isEmpty()))
+      if (name == null || name.isEmpty())
       {
          throw new RuntimeException(
             "Not an Amazon Beanstalk application. Please select root folder of Amazon Beanstalk project. ");
       }
       return name;
-   }
-
-   protected AWSElasticBeanstalk getBeanstalkClient() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AWSElasticBeanstalkClient(credentials);
-   }
-
-   protected AmazonS3 getS3Client() throws AWSException
-   {
-      final AWSCredentials credentials = authenticator.getCredentials();
-      if (credentials == null)
-      {
-         throw new AWSException("Authentication required.");
-      }
-      return new AmazonS3Client(credentials);
    }
 }

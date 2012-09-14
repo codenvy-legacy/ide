@@ -39,6 +39,17 @@ public class ApplicationInfoImpl implements ApplicationInfo
 
    public ApplicationInfoImpl(String name,
                               String description,
+                              Date created,
+                              Date updated,
+                              List<String> versions,
+                              List<String> configurationTemplates)
+   {
+      this(name, description, created == null ? -1 : created.getTime(), updated == null ? -1 : updated.getTime(),
+         versions, configurationTemplates);
+   }
+
+   public ApplicationInfoImpl(String name,
+                              String description,
                               long created,
                               long updated,
                               List<String> versions,
@@ -48,21 +59,6 @@ public class ApplicationInfoImpl implements ApplicationInfo
       this.description = description;
       this.created = created;
       this.updated = updated;
-      this.versions = versions;
-      this.configurationTemplates = configurationTemplates;
-   }
-
-   public ApplicationInfoImpl(String name,
-                              String description,
-                              Date created,
-                              Date updated,
-                              List<String> versions,
-                              List<String> configurationTemplates)
-   {
-      this.name = name;
-      this.description = description;
-      this.created = created == null ? -1 : created.getTime();
-      this.updated = updated == null ? -1 : updated.getTime();
       this.versions = versions;
       this.configurationTemplates = configurationTemplates;
    }

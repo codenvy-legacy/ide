@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.aws.shared;
 
 /**
+ * Status of application environment.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
