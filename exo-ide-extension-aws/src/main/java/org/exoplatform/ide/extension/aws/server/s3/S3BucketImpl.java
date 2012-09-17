@@ -31,6 +31,10 @@ public class S3BucketImpl implements S3Bucket
    private long creationDate;
    private S3Owner owner;
 
+   public S3BucketImpl()
+   {
+   }
+
    public S3BucketImpl(String name, long creationDate, S3Owner owner)
    {
       this.name = name;

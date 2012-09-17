@@ -29,6 +29,10 @@ public class S3OwnerImpl implements S3Owner
    private String id;
    private String name;
 
+   public S3OwnerImpl()
+   {
+   }
+
    public S3OwnerImpl(String id, String name)
    {
       this.id = id;
