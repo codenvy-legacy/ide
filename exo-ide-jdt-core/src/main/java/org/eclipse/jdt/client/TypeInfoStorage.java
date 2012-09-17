@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.json.shared.JsonStringSet;
+
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -48,6 +50,8 @@ public class TypeInfoStorage
    private static TypeInfoStorage instance;
 
    private Storage storage;
+   
+   private JsonStringSet packages;
 
    protected TypeInfoStorage()
    {
@@ -157,5 +161,20 @@ public class TypeInfoStorage
    public void clear()
    {
       storage.clear();
+      packages = null;
+   }
+
+   /**
+    * @param projectId
+    * @param packages
+    */
+   public void setPackages(String projectId, JsonStringSet packages)
+   {
+      this.packages = packages;
+   }
+   
+   public JsonStringSet getPackages(String projectId)
+   {
+      return packages;
    }
 }

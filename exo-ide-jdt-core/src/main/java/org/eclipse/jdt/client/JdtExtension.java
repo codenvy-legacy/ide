@@ -184,6 +184,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       injector.getNewConstructorUsingFields();
       injector.getSetterGetterPresenter();
       TypeInfoStorage.get().clear();
+      new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
    }
 
    /**

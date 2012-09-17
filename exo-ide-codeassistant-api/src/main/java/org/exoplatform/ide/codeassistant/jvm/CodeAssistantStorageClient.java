@@ -390,6 +390,43 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
       }
       return null;
    }
+   
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAllPackages(java.util.Set)
+    */
+   @Override
+   public List<String> getAllPackages(Set<String> dependencys) throws CodeAssistantException
+   {
+      HttpURLConnection in = null;
+      try
+      {
+         URL url = new URL(baseURL + STOGAGE_BASE + "/get-packages");
+         in = run(url, dependencys);
+         if (in == null)
+            return null;
+         JsonParser p = new JsonParser();
+         p.parse(in.getInputStream());
+         String[] pack = (String[])ObjectBuilder.createArray(String[].class, p.getJsonObject());
+         return Arrays.asList(pack);
+      }
+      catch (IOException e)
+      {
+         if (LOG.isDebugEnabled())
+            LOG.error("Invalid url", e);
+      }
+      catch (JsonException e)
+      {
+         if (LOG.isDebugEnabled())
+            LOG.error("Can't parse JSON", e);
+         return null;
+      }
+      finally
+      {
+         if (in != null)
+            in.disconnect();
+      }
+      return null;
+   }
 
    private HttpURLConnection run(URL url, Set<String> dependencys) throws IOException, CodeAssistantException
    {

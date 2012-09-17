@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.json.shared.JsonStringSet.IterationCallback;
+
+import com.google.collide.json.shared.JsonStringSet;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -226,6 +230,8 @@ public class NameEnvironment implements INameEnvironment
       }
       b.append(typeName);
       final String key = validateFqn(b);
+      if(TypeInfoStorage.get().getPackages(projectId).contains(key))
+         return null;
       if (TypeInfoStorage.get().containsKey(key))
       {
          return new NameEnvironmentAnswer(new BinaryTypeImpl(JSONParser
@@ -245,45 +251,21 @@ public class NameEnvironment implements INameEnvironment
    @Override
    public boolean isPackage(char[][] parentPackageName, char[] packageName)
    {
-//      try
-//      {
-//         StringBuilder p = new StringBuilder();
-//         if (parentPackageName != null)
-//         {
-//            for (char[] seg : parentPackageName)
-//            {
-//               p.append(seg).append('.');
-//            }
-//         }
-//         p.append(packageName);
-//         if (packages.contains(p.toString()))
-//         {
-//            return true;
-//         }
-//         String url =
-//            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + p.toString()
-//               + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-//         String findPackage = runSyncReques(url);
-//         JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-//         for (int i = 0; i < jsonArray.size(); i++)
-//         {
-//            packages.add(jsonArray.get(i).isString().stringValue());
-//         }
-//         return jsonArray.size() > 0;
-//
-//      }
-//      catch (Exception e)
-//      {
-//         e.printStackTrace();
-//         return false;
-//      }
-      if (parentPackageName == null)
-         return true;
-
-      if (Character.isUpperCase(packageName[0]))
+      StringBuilder p = new StringBuilder();
+      if (parentPackageName != null)
+      {
+         for (char[] seg : parentPackageName)
+         {
+            p.append(seg).append('.');
+         }
+      }
+      p.append(packageName);
+      JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+      //TODO maybe need more actions on this
+      if (packages == null)
          return false;
-      else
-         return true;
+
+      return packages.contains(p.toString());
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
@@ -400,18 +382,20 @@ public class NameEnvironment implements INameEnvironment
     * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
     */
    @Override
-   public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
+   public void findPackages(char[] qualifiedName, final ISearchRequestor requestor)
    {
-      String url =
-         JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + new String(qualifiedName)
-            + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-      String findPackage = runSyncReques(url);
-      JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-      for (int i = 0; i < jsonArray.size(); i++)
+      JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+      final String pack = new String(qualifiedName);
+      packages.iterate(new IterationCallback()
       {
-         requestor.acceptPackage(jsonArray.get(i).isString().stringValue().toCharArray());
-      }
 
+         @Override
+         public void onIteration(String key)
+         {
+            if (key.startsWith(pack))
+               requestor.acceptPackage(key.toCharArray());
+         }
+      });
    }
 
    private String runSyncReques(String url)
@@ -422,13 +406,13 @@ public class NameEnvironment implements INameEnvironment
          return xmlhttp.getResponseText();
       else
       {
-          String message = null;
-          if(status == 204)
-          {
-             message = "no content";
-          }
-          else
-          message = xmlhttp.getResponseText();
+         String message = null;
+         if (status == 204)
+         {
+            message = "no content";
+         }
+         else
+            message = xmlhttp.getResponseText();
          throw new RuntimeException("Server return " + message);
       }
    }
@@ -623,6 +607,7 @@ public class NameEnvironment implements INameEnvironment
       protected XmlHttpWraper()
       {
       }
+
       public native int getStatusCode()/*-{
                                        return this.status;
                                        }-*/;
