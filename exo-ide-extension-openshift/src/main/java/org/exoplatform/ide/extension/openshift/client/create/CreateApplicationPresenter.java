@@ -263,7 +263,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                @Override
                protected void onSuccess(AppInfo result)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                }
@@ -274,6 +273,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
             .createApplicationFail(applicationName)));
       }
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**

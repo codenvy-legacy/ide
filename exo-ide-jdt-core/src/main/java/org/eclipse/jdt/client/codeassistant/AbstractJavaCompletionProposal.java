@@ -13,16 +13,15 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.eclipse.jdt.client.codeassistant.api.Point;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.IJavaElement;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.api.contentassist.Point;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.BadPositionCategoryException;
@@ -35,7 +34,7 @@ import org.exoplatform.ide.editor.text.Position;
  * 
  * @since 3.2
  */
-public abstract class AbstractJavaCompletionProposal implements IJavaCompletionProposal, ICompletionProposalExtension
+public abstract class AbstractJavaCompletionProposal implements IJavaCompletionProposal
 {
 
    /**
@@ -161,7 +160,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 
    private Image fImage;
 
-   private IContextInformation fContextInformation;
+   private ContextInformation fContextInformation;
 
    private ProposalInfo fProposalInfo;
 
@@ -531,7 +530,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
    /*
     * @see ICompletionProposal#getContextInformation()
     */
-   public IContextInformation getContextInformation()
+   public ContextInformation getContextInformation()
    {
       return fContextInformation;
    }
@@ -541,7 +540,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
     * 
     * @param contextInformation The context information associated with this proposal
     */
-   public void setContextInformation(IContextInformation contextInformation)
+   public void setContextInformation(ContextInformation contextInformation)
    {
       fContextInformation = contextInformation;
    }

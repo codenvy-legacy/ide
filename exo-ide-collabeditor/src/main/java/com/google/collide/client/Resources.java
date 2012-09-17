@@ -35,6 +35,7 @@ public interface Resources extends
     com.google.collide.client.code.EditableContentArea.Resources,
     com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
     GutterNotificationResources,
+    com.google.collide.client.code.autocomplete.integration.AutocompleteUiController.Resources,
     // TODO: Once we have actual consumers of the Tooltip class, we
     // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,

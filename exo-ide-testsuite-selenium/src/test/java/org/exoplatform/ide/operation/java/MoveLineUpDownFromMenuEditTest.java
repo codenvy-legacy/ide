@@ -12,7 +12,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuctionTest
+public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = MoveLineUpDownFromMenuEditTest.class.getSimpleName();
 
@@ -35,7 +35,7 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuctionTest
    {
       try
       {
-              VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -49,14 +49,14 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+
       IDE.GOTOLINE.goToLine(19);
-      IDE.STATUSBAR.waitCursorPositionAt("19:1");
-      
+      IDE.STATUSBAR.waitCursorPositionAt("19 : 1");
+
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_UP);
-      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());  
+      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_DOWN);
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());  
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
    }
 }

@@ -664,7 +664,7 @@ public abstract class BaseTest
 
       //runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
 
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
 
       Thread.sleep(TestConstants.SLEEP);
       selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
@@ -723,7 +723,7 @@ public abstract class BaseTest
       //      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
       //      Thread.sleep(TestConstants.SLEEP);
 
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
 
       // selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
 

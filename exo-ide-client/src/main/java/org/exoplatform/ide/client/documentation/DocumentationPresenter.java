@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.documentation;
 
-import com.google.gwt.core.client.GWT;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.documentation.RegisterDocumentationEvent;
@@ -35,11 +36,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

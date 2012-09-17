@@ -14,83 +14,27 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
-import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
-
-import com.google.collide.codemirror2.SyntaxType;
-
+import com.google.collide.client.CollabEditor;
 import com.google.collide.client.Resources;
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
-import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.Autocompleter;
+import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.PathUtil;
+import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
  * This class isolates {@link Autocompleter} from the UI.
  */
 public class AutocompleterFacade {
-   
-   static class AutocompleteBoxMock implements AutocompleteBox
-   {
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#isShowing()
-       */
-      @Override
-      public boolean isShowing()
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#consumeKeySignal(com.google.collide.client.code.autocomplete.SignalEventEssence)
-       */
-      @Override
-      public boolean consumeKeySignal(SignalEventEssence signal)
-      {
-         // TODO Auto-generated method stub
-         return false;
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#setDelegate(com.google.collide.client.code.autocomplete.AutocompleteBox.Events)
-       */
-      @Override
-      public void setDelegate(Events delegate)
-      {
-         // TODO Auto-generated method stub
-         
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#dismiss()
-       */
-      @Override
-      public void dismiss()
-      {
-         // TODO Auto-generated method stub
-         
-      }
-
-      /**
-       * @see com.google.collide.client.code.autocomplete.AutocompleteBox#positionAndShow(com.google.collide.client.code.autocomplete.AutocompleteProposals)
-       */
-      @Override
-      public void positionAndShow(AutocompleteProposals items)
-      {
-         // TODO Auto-generated method stub
-         
-      }
-      
-   }
 
   private final Autocompleter autocompleter;
   private final Editor editor;
@@ -146,10 +90,9 @@ public class AutocompleterFacade {
 //  private final DocumentParser.Listener parseListener;
 
   public static AutocompleterFacade create(
-      Editor editor, Resources resources) {
-//    AutocompleteUiController popup = new AutocompleteUiController(editor, resources);
-     AutocompleteBox  popup = new AutocompleteBoxMock();
-    Autocompleter autocompleter = Autocompleter.create(editor, popup);
+      Editor editor, CollabEditor collEditor, Resources resources) {
+     AutocompleteBox  popup = new AutocompleteUiController(editor, resources);
+    Autocompleter autocompleter = Autocompleter.create(editor, popup, collEditor);
     return new AutocompleterFacade(editor, autocompleter);
   }
 
@@ -175,16 +118,26 @@ public class AutocompleterFacade {
     documentListeners.remove();
   }
 
-  public void editorContentsReplaced(PathUtil path, DocumentParser parser) {
+  public void editorContentsReplaced(DocumentParser parser) {
     pause();
 //    documentListeners.track(editor.getDocument().getLineListenerRegistrar().add(lineListener));
 //    documentListeners.track(parser.getListenerRegistrar().add(parseListener));
 
-    autocompleter.reset(path, parser);
+    autocompleter.reset(parser);
   }
   
-  public void addLanguageSpecificAutocompleter(SyntaxType mode, LanguageSpecificAutocompleter autocompleter)
+  public void addLanguageSpecificAutocompleter(LanguageSpecificAutocompleter autocompleter)
   {
-     this.autocompleter.addAutocompleter(mode, autocompleter);
+     this.autocompleter.addAutocompleter(autocompleter);
+  }
+
+  public ContentAssistant getContentAssistant()
+  {
+     return autocompleter;
+  }
+
+  public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor)
+  {
+     this.autocompleter.addContentAssitProcessor(contentType, processor);
   }
 }

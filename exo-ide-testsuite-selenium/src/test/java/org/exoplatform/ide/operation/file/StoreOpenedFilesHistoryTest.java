@@ -104,7 +104,7 @@ public class StoreOpenedFilesHistoryTest extends BaseTest
       IDE.WORKSPACE.waitForRootItem();
 
       //select another workspace
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
       IDE.SELECT_WORKSPACE.waitOpened();
       IDE.SELECT_WORKSPACE.doubleClickWorkspace(WS_NAME_2);
       IDE.SELECT_WORKSPACE.waitClosed();

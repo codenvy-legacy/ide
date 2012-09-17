@@ -62,7 +62,8 @@ public class CodeMirrorConfiguration
 
    private boolean canHaveSeveralMimeTypes = false;
 
-   private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
+   //private String codeErrorMarkStyle = CodeMirrorClientBundle.INSTANCE.css().codeErrorMarkStyle();
+   private String codeErrorMarkStyle = CodeMirrorStyles.CODE_ERROR_MARK_STYLE;
    
    private TabMode tabMode = TabMode.SPACES;
    

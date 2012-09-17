@@ -43,6 +43,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
@@ -56,7 +58,8 @@ import java.util.List;
  * @version $Id: Aug 18, 2011 evgen $
  * 
  */
-public class ApplicationsPresenter implements ViewClosedHandler, ShowApplicationsHandler, ApplicationDeletedHandler
+public class ApplicationsPresenter implements ViewClosedHandler, ShowApplicationsHandler, ApplicationDeletedHandler,
+   ApplicationInfoChangedHandler
 {
    public interface Display extends IsView
    {
@@ -172,6 +175,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
    @Override
    public void onShowApplications(ShowApplicationsEvent event)
    {
+
       checkLogginedToServer();
    }
 
@@ -184,6 +188,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       if (event.getView() instanceof Display)
       {
          display = null;
+         IDE.removeHandler(ApplicationDeletedEvent.TYPE, this);
       }
    }
 
@@ -207,16 +212,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                      servers = result;
                   }
                   // open view
-                  if (display == null)
-                  {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                  }
-                  display.setServerValues(servers.toArray(new String[servers.size()]));
-                  // fill the list of applications
-                  currentServer = servers.get(0);
-                  getApplicationList();
+                  openView();
                }
 
                @Override
@@ -230,6 +226,21 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         bindDisplay();
+         IDE.getInstance().openView(display.asView());
+         IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+      }
+      display.setServerValues(servers.toArray(new String[servers.size()]));
+      // fill the list of applications
+      currentServer = servers.get(0);
+      getApplicationList();
    }
 
    private void getApplicationList()
@@ -301,6 +312,18 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
     */
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
+   {
+      if (display != null)
+      {
+         getApplicationList();
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler#onApplicationInfoChanged(org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent)
+    */
+   @Override
+   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
    {
       if (display != null)
       {

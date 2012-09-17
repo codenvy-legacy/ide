@@ -14,14 +14,14 @@
 
 package com.google.collide.client.code;
 
-import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
-
 import com.google.collide.client.AppContext;
+import com.google.collide.client.CollabEditor;
 import com.google.collide.client.autoindenter.Autoindenter;
 import com.google.collide.client.code.EditableContentArea.Content;
 import com.google.collide.client.code.autocomplete.integration.AutocompleterFacade;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.code.errorrenderer.ErrorReceiver;
+import com.google.collide.client.code.errorrenderer.ErrorReceiver.ErrorListener;
 import com.google.collide.client.code.errorrenderer.ErrorRenderer;
 import com.google.collide.client.code.lang.LanguageHelper;
 import com.google.collide.client.code.lang.LanguageHelperResolver;
@@ -35,7 +35,6 @@ import com.google.collide.client.editor.TextActions;
 import com.google.collide.client.editor.input.RootActionExecutor;
 import com.google.collide.client.syntaxhighlighter.SyntaxHighlighter;
 import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.PathUtil;
 import com.google.collide.client.util.UserActivityManager;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.codemirror2.CodeMirror2;
@@ -58,7 +57,7 @@ public class EditorBundle implements Content {
 //      ParticipantModel participantModel,
 //      OutlineModel outlineModel,
 //      FileTreeModel fileTreeModel,
-      ErrorReceiver errorReceiver) {
+      ErrorReceiver errorReceiver, CollabEditor collEditor) {
 
     final Editor editor = Editor.create(appContext);
 
@@ -73,7 +72,7 @@ public class EditorBundle implements Content {
 //        appContext.getFrontendApi().GET_CODE_GRAPH);
 //    CubeClient cubeClient = cubeClientWrapper.getCubeClient();
     AutocompleterFacade autocompleter = AutocompleterFacade.create(
-        editor, appContext.getResources());
+        editor, collEditor, appContext.getResources());
 
 //    GoToDefinitionHandler goToDefinition = new GoToDefinitionHandler(currentPlace,
 //        editor,
@@ -82,7 +81,7 @@ public class EditorBundle implements Content {
 //        cubeClient,
 //        editorPopupController);
 
-    SelectionRestorer selectionRestorer = new SelectionRestorer(editor);
+//    SelectionRestorer selectionRestorer = new SelectionRestorer(editor);
 
 //    DebuggingModel debuggingModel = new DebuggingModel();
 //    DebuggingModelController debuggingModelController =
@@ -102,7 +101,7 @@ public class EditorBundle implements Content {
         editorErrorListener,
         autocompleter,
 //        null, //goToDefinition,
-        selectionRestorer,
+//        selectionRestorer,
 //        debuggingModelController,
 //        breadcrumbs,
 //        null,//cubeClientWrapper,
@@ -120,7 +119,7 @@ public class EditorBundle implements Content {
   private final Editor editor;
 //  private final GoToDefinitionHandler goToDefinition;
   private DocumentParser parser;
-  private final SelectionRestorer selectionRestorer;
+//  private final SelectionRestorer selectionRestorer;
 //  private final DebuggingModelController debuggingModelController;
 //  private final WorkspaceLocationBreadcrumbs breadcrumbs;
 //  private final CubeClientWrapper cubeClientWrapper;
@@ -129,7 +128,7 @@ public class EditorBundle implements Content {
   /*
    * TODO: EditorBundle shouldn't have path. It's here to satisfy legacy dependency
    */
-  private PathUtil path;
+//  private PathUtil path;
   private SyntaxHighlighter syntaxHighlighter;
   private final EditorErrorListener editorErrorListener;
   private final UserActivityManager userActivityManager;
@@ -145,7 +144,7 @@ public class EditorBundle implements Content {
       EditorErrorListener editorErrorListener,
       AutocompleterFacade autoCompleter,
 //      GoToDefinitionHandler goToDefinition,
-      SelectionRestorer selectionRestorer,
+//      SelectionRestorer selectionRestorer,
 //      DebuggingModelController debuggingModelController,
 //      WorkspaceLocationBreadcrumbs breadcrumbs,
 //      CubeClientWrapper cubeClientWrapper,
@@ -158,7 +157,7 @@ public class EditorBundle implements Content {
     this.editorErrorListener = editorErrorListener;
     this.autocompleter = autoCompleter;
 //    this.goToDefinition = goToDefinition;
-    this.selectionRestorer = selectionRestorer;
+//    this.selectionRestorer = selectionRestorer;
 //    this.debuggingModelController = debuggingModelController;
 //    this.breadcrumbs = breadcrumbs;
 //    this.cubeClientWrapper = cubeClientWrapper;
@@ -185,10 +184,10 @@ public class EditorBundle implements Content {
 //  public WorkspaceLocationBreadcrumbs getBreadcrumbs() {
 //    return breadcrumbs;
 //  }
-
-  public PathUtil getPath() {
-    return path;
-  }
+//
+//  public PathUtil getPath() {
+//    return path;
+//  }
 
 //  public DebuggingModelController getDebuggingModelController() {
 //    return debuggingModelController;
@@ -254,16 +253,16 @@ public class EditorBundle implements Content {
   /**
    * Replaces the document for the editor and related components.
    */
-  public void setDocument(Document document, PathUtil path, String fileEditSessionKey) {
-    selectionRestorer.onBeforeDocumentChanged();
+  public void setDocument(Document document,String mimeType, String fileEditSessionKey) {
+//    selectionRestorer.onBeforeDocumentChanged();
 
     reset();
 
-    this.path = path;
+//    this.path = path;
 
     documentManager.attachToEditor(document, editor);
 
-    Parser codeMirrorParser = CodeMirror2.getParser(path);
+    Parser codeMirrorParser = CodeMirror2.getParser(mimeType);
     parser = codeMirrorParser == null ? null
         : DocumentParser.create(document, codeMirrorParser, userActivityManager);
 
@@ -275,14 +274,14 @@ public class EditorBundle implements Content {
 //    cubeClientWrapper.setDocument(document, path.getPathString());
 
 //    goToDefinition.editorContentsReplaced(path, parser);
-    selectionRestorer.onDocumentChanged(fileEditSessionKey);
+//    selectionRestorer.onDocumentChanged(fileEditSessionKey);
     editorErrorListener.onDocumentChanged(document, fileEditSessionKey);
 
 //    debuggingModelController.setDocument(document, path, parser);
 //    outlineController.onDocumentChanged(parser);
 
     try {
-      autocompleter.editorContentsReplaced(path, parser);
+      autocompleter.editorContentsReplaced(parser);
     } catch (Throwable t) {
       Log.error(getClass(), "Autocompletion subsystem failed to accept the changed document", t);
     }

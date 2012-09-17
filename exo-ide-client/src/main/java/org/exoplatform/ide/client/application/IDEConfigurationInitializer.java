@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.json.client.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,17 +41,18 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationUnmarshaller;
-import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
-import org.exoplatform.ide.client.model.settings.Settings;
-import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
+import org.exoplatform.ide.client.model.IDEConfigurationLoader;
+import org.exoplatform.ide.client.model.IDEConfigurationUnmarshaller;
+import org.exoplatform.ide.client.model.IDEInitializationConfiguration;
+import org.exoplatform.ide.client.model.Settings;
+import org.exoplatform.ide.client.model.SettingsService;
+import org.exoplatform.ide.client.model.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

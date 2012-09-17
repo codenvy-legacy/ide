@@ -71,14 +71,6 @@ public class GadgetEditorExtension extends Extension
             @Override
             public Editor createEditor()
             {
-               return new CKEditor(MimeType.GOOGLE_GADGET, new CKEditorConfiguration());
-            }
-         },
-         new EditorCreator()
-         {
-            @Override
-            public Editor createEditor()
-            {
                return new CKEditor(MimeType.GOOGLE_GADGET);
             }
          });

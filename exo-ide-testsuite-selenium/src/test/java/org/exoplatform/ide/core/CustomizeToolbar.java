@@ -60,7 +60,7 @@ public class CustomizeToolbar extends AbstractTestModule
 
       String TOOLBAR_COMMANDLIST_ID = "ide.core.customize-toolbar.commands-list";
 
-      String CUSTOMIZE_TOOLBAR_FORM_ID = "ide.core.customize-toolbar-window";
+      String CUSTOMIZE_TOOLBAR_FORM_CSS = "div[view-id='ide.core.customize-toolbar']";
 
       String GET_COMMANDS_BY_CSS = "table[id='ide.core.customize-toolbar.commands-list']>tbody tr";
 
@@ -91,7 +91,7 @@ public class CustomizeToolbar extends AbstractTestModule
    @FindBy(id = Locators.DEFAULTS_BUTTON_ID)
    private WebElement defaultButton;
 
-   @FindBy(id = Locators.CUSTOMIZE_TOOLBAR_FORM_ID)
+   @FindBy(css = Locators.CUSTOMIZE_TOOLBAR_FORM_CSS)
    private WebElement customizeToolbarForm;
 
    @FindBy(id = Locators.MOVE_DOWN_BUTTON_ID)
@@ -135,7 +135,7 @@ public class CustomizeToolbar extends AbstractTestModule
          {
             try
             {
-               input.findElement(By.id(Locators.CUSTOMIZE_TOOLBAR_FORM_ID));
+               input.findElement(By.id(Locators.CUSTOMIZE_TOOLBAR_FORM_CSS));
                return false;
             }
             catch (Exception e)

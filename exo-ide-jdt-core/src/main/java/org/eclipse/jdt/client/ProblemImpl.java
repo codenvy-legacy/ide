@@ -102,6 +102,8 @@ public class ProblemImpl implements Marker
    @Override
    public boolean isWarning()
    {
+      if(getID() == IProblem.Task)
+         return false;
       return problem.isWarning();
    }
 

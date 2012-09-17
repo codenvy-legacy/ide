@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
+import org.exoplatform.ide.extension.cloudbees.client.account.SwitchAccountControl;
 
 /**
  * Presenter for login view. The view must be pointed in Views.gwt.xml.
@@ -76,7 +77,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * @return {@link HasValue}
        */
       HasValue<String> getPasswordField();
-      
+
       /**
        * Login result label.
        * 
@@ -95,7 +96,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        * Give focus to login field.
        */
       void focusInEmailField();
-      
+
    }
 
    private Display display;
@@ -106,6 +107,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    public LoginPresenter()
    {
+      IDE.getInstance().addControl(new SwitchAccountControl());
+
       IDE.addHandler(LoginEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }

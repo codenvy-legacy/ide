@@ -13,7 +13,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class UndoRedoFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class UndoRedoFromEditMenuTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = UndoRedoFromEditMenuTest.class.getSimpleName();
 
@@ -51,7 +51,7 @@ public class UndoRedoFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
+      
       
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.END.toString());
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");

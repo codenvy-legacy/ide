@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.model.settings.Settings;
+import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.navigation.control.ShowHideHiddenFilesControl;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 
