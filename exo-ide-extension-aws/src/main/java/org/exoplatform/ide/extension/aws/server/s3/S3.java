@@ -28,7 +28,13 @@ import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectInfo;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +134,60 @@ public class S3
    {
       s3.deleteBucket(new DeleteBucketRequest(name));
    }
+
+   //
+
+   /**
+    * Upload content from specified URL to Amazon S3 storage.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    key
+    * @param data
+    *    data location
+    * @return S3 object description
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws java.io.IOException
+    *    if any i/o error occurs
+    */
+   public S3ObjectInfo putObject(String s3Bucket, String s3Key, URL data) throws AWSException, IOException
+   {
+      return null;
+   }
+
+   /**
+    * Upload specified eXo IDE project to Amazon S3 storage. Project is zipped before uploading to S3.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    key
+    * @param vfs
+    *    instance of Virtual File system
+    * @param projectId
+    *    id of project
+    * @return S3 object description
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException
+    *    if any VirtualFileSystem error occurs
+    * @throws IOException
+    *    if any i/o error occurs
+    */
+   public S3ObjectInfo uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
+      throws AWSException, VirtualFileSystemException, IOException
+   {
+      return null;
+   }
+
+   public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys)
+   {
+      return null;
+   }
+
+   //
 
    protected AmazonS3 getS3Client() throws AWSException
    {
