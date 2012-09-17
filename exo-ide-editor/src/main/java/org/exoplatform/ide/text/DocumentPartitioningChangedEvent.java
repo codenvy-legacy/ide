@@ -27,8 +27,6 @@ import java.util.Map;
 /**
  * Event describing the change of document partitionings.
  * 
- * @see org.eclipse.jface.text.IDocumentExtension3
- * @since 3.0
  */
 public class DocumentPartitioningChangedEvent
 {
@@ -37,7 +35,7 @@ public class DocumentPartitioningChangedEvent
    private final IDocument fDocument;
 
    /** The map of partitionings to changed regions. */
-   private final Map fMap = new HashMap();
+   private final Map<String, IRegion> fMap = new HashMap<String, IRegion>();
 
    /**
     * Creates a new document partitioning changed event for the given document. Initially this event is empty, i.e. does not
@@ -119,10 +117,10 @@ public class DocumentPartitioningChangedEvent
 
       int offset = -1;
       int endOffset = -1;
-      Iterator e = fMap.values().iterator();
+      Iterator<IRegion> e = fMap.values().iterator();
       while (e.hasNext())
       {
-         IRegion r = (IRegion)e.next();
+         IRegion r = e.next();
 
          if (offset < 0 || r.getOffset() < offset)
             offset = r.getOffset();

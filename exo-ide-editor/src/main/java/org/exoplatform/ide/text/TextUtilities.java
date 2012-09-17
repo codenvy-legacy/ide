@@ -193,15 +193,15 @@ public class TextUtilities
     * @return returns the merged document event
     * @throws BadLocationException might be thrown if document is not in the correct state with respect to document events
     */
-   public static DocumentEvent mergeUnprocessedDocumentEvents(IDocument unprocessedDocument, List documentEvents)
+   public static DocumentEvent mergeUnprocessedDocumentEvents(IDocument unprocessedDocument, List<DocumentEvent> documentEvents)
       throws BadLocationException
    {
 
       if (documentEvents.size() == 0)
          return null;
 
-      final Iterator iterator = documentEvents.iterator();
-      final DocumentEvent firstEvent = (DocumentEvent)iterator.next();
+      final Iterator<DocumentEvent> iterator = documentEvents.iterator();
+      final DocumentEvent firstEvent = iterator.next();
 
       // current merged event
       final IDocument document = unprocessedDocument;
@@ -265,14 +265,14 @@ public class TextUtilities
     * @return returns the merged document event
     * @throws BadLocationException might be thrown if document is not in the correct state with respect to document events
     */
-   public static DocumentEvent mergeProcessedDocumentEvents(List documentEvents) throws BadLocationException
+   public static DocumentEvent mergeProcessedDocumentEvents(List<DocumentEvent> documentEvents) throws BadLocationException
    {
 
       if (documentEvents.size() == 0)
          return null;
 
-      final ListIterator iterator = documentEvents.listIterator(documentEvents.size());
-      final DocumentEvent firstEvent = (DocumentEvent)iterator.previous();
+      final ListIterator<DocumentEvent> iterator = documentEvents.listIterator(documentEvents.size());
+      final DocumentEvent firstEvent = iterator.previous();
 
       // current merged event
       final IDocument document = firstEvent.getDocument();
@@ -330,34 +330,32 @@ public class TextUtilities
     * @param document the document
     * @return the map containing the removed partitioners (key type: {@link String}, value type: {@link IDocumentPartitioner})
     */
-   public static Map removeDocumentPartitioners(IDocument document)
+   public static Map<String, IDocumentPartitioner> removeDocumentPartitioners(IDocument document)
    {
-      Map partitioners = new HashMap();
-      if (document instanceof IDocumentExtension3)
+      Map<String, IDocumentPartitioner> partitioners = new HashMap<String, IDocumentPartitioner>();
+
+      String[] partitionings = document.getPartitionings();
+      for (int i = 0; i < partitionings.length; i++)
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         String[] partitionings = extension3.getPartitionings();
-         for (int i = 0; i < partitionings.length; i++)
-         {
-            IDocumentPartitioner partitioner = extension3.getDocumentPartitioner(partitionings[i]);
-            if (partitioner != null)
-            {
-               extension3.setDocumentPartitioner(partitionings[i], null);
-               partitioner.disconnect();
-               partitioners.put(partitionings[i], partitioner);
-            }
-         }
-      }
-      else
-      {
-         IDocumentPartitioner partitioner = document.getDocumentPartitioner();
+         IDocumentPartitioner partitioner = document.getDocumentPartitioner(partitionings[i]);
          if (partitioner != null)
          {
-            document.setDocumentPartitioner(null);
+            document.setDocumentPartitioner(partitionings[i], null);
             partitioner.disconnect();
-            partitioners.put(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
+            partitioners.put(partitionings[i], partitioner);
          }
       }
+      //      }
+      //      else
+      //      {
+      //         IDocumentPartitioner partitioner = document.getDocumentPartitioner();
+      //         if (partitioner != null)
+      //         {
+      //            document.setDocumentPartitioner(null);
+      //            partitioner.disconnect();
+      //            partitioners.put(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
+      //         }
+      //      }
       return partitioners;
    }
 
@@ -370,28 +368,25 @@ public class TextUtilities
     *           {@link IDocumentPartitioner})
     * @since 3.0
     */
-   public static void addDocumentPartitioners(IDocument document, Map partitioners)
+   public static void addDocumentPartitioners(IDocument document, Map<String, IDocumentPartitioner> partitioners)
    {
-      if (document instanceof IDocumentExtension3)
+      Iterator<String> e = partitioners.keySet().iterator();
+      while (e.hasNext())
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         Iterator e = partitioners.keySet().iterator();
-         while (e.hasNext())
-         {
-            String partitioning = (String)e.next();
-            IDocumentPartitioner partitioner = (IDocumentPartitioner)partitioners.get(partitioning);
-            partitioner.connect(document);
-            extension3.setDocumentPartitioner(partitioning, partitioner);
-         }
-         partitioners.clear();
-      }
-      else
-      {
-         IDocumentPartitioner partitioner =
-            (IDocumentPartitioner)partitioners.get(IDocumentExtension3.DEFAULT_PARTITIONING);
+         String partitioning = e.next();
+         IDocumentPartitioner partitioner = partitioners.get(partitioning);
          partitioner.connect(document);
-         document.setDocumentPartitioner(partitioner);
+         document.setDocumentPartitioner(partitioning, partitioner);
       }
+      partitioners.clear();
+      //      }
+      //      else
+      //      {
+      //         IDocumentPartitioner partitioner =
+      //            (IDocumentPartitioner)partitioners.get(IDocumentExtension3.DEFAULT_PARTITIONING);
+      //         partitioner.connect(document);
+      //         document.setDocumentPartitioner(partitioner);
+      //      }
    }
 
    /**
@@ -409,20 +404,16 @@ public class TextUtilities
    public static String getContentType(IDocument document, String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.getContentType(partitioning, offset, preferOpenPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return IDocument.DEFAULT_CONTENT_TYPE;
-         }
+         return document.getContentType(partitioning, offset, preferOpenPartitions);
+      }
+      catch (BadPartitioningException x)
+      {
+         return IDocument.DEFAULT_CONTENT_TYPE;
       }
 
-      return document.getContentType(offset);
+      //      return document.getContentType(offset);
    }
 
    /**
@@ -440,20 +431,15 @@ public class TextUtilities
    public static ITypedRegion getPartition(IDocument document, String partitioning, int offset,
       boolean preferOpenPartitions) throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.getPartition(partitioning, offset, preferOpenPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return new TypedRegion(0, document.getLength(), IDocument.DEFAULT_CONTENT_TYPE);
-         }
+         return document.getPartition(partitioning, offset, preferOpenPartitions);
       }
-
-      return document.getPartition(offset);
+      catch (BadPartitioningException x)
+      {
+         return new TypedRegion(0, document.getLength(), IDocument.DEFAULT_CONTENT_TYPE);
+      }
+      //      return document.getPartition(offset);
    }
 
    /**
@@ -471,20 +457,16 @@ public class TextUtilities
    public static ITypedRegion[] computePartitioning(IDocument document, String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException
    {
-      if (document instanceof IDocumentExtension3)
+      try
       {
-         IDocumentExtension3 extension3 = (IDocumentExtension3)document;
-         try
-         {
-            return extension3.computePartitioning(partitioning, offset, length, includeZeroLengthPartitions);
-         }
-         catch (BadPartitioningException x)
-         {
-            return new ITypedRegion[0];
-         }
+         return document.computePartitioning(partitioning, offset, length, includeZeroLengthPartitions);
+      }
+      catch (BadPartitioningException x)
+      {
+         return new ITypedRegion[0];
       }
 
-      return document.computePartitioning(offset, length);
+      //      return document.computePartitioning(offset, length);
    }
 
    // /**

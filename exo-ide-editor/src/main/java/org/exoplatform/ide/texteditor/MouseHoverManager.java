@@ -296,7 +296,7 @@ public class MouseHoverManager
 
    private void handleOnMouseMove(final int x, final int y)
    {
-      if (lastKeyModifier == null || editor.getDocument() == null)
+      if (lastKeyModifier == null || editor.getTextStore() == null)
       {
          return;
       }
@@ -309,7 +309,7 @@ public class MouseHoverManager
       }
 
       int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
-      final LineInfo lineInfo = editor.getDocument().getLineFinder().findLine(lineNumber);
+      final LineInfo lineInfo = editor.getTextStore().getLineFinder().findLine(lineNumber);
       final int column = editor.getBuffer().convertXToRoundedVisibleColumn(x, lineInfo.line());
 
       manager.dispatch(new ListenerManager.Dispatcher<MouseHoverListener>()

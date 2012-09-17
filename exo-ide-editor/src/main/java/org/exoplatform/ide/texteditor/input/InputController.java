@@ -23,8 +23,8 @@ import elemental.events.TextEvent;
 import elemental.html.Element;
 import elemental.html.TextAreaElement;
 
-import org.exoplatform.ide.text.store.Document;
-import org.exoplatform.ide.text.store.DocumentMutator;
+import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.util.LineUtils;
@@ -62,11 +62,11 @@ public class InputController
 
    //  final InputScheme vimScheme;
 
-   private Document document;
+   private TextStore document;
 
    private Editor editor;
 
-   private DocumentMutator editorDocumentMutator;
+   private TextStoreMutator editorDocumentMutator;
 
    private final TextAreaElement inputElement;
 
@@ -90,7 +90,7 @@ public class InputController
       //    vimScheme = new VimScheme(this);
    }
 
-   public Document getDocument()
+   public TextStore getDocument()
    {
       return document;
    }
@@ -100,7 +100,7 @@ public class InputController
       return editor;
    }
 
-   public DocumentMutator getEditorDocumentMutator()
+   public TextStoreMutator getEditorDocumentMutator()
    {
       return editorDocumentMutator;
    }
@@ -130,14 +130,14 @@ public class InputController
       return selection;
    }
 
-   public void handleDocumentChanged(Document document, SelectionModel selection, ViewportModel viewport)
+   public void handleDocumentChanged(TextStore document, SelectionModel selection, ViewportModel viewport)
    {
       this.document = document;
       this.selection = selection;
       this.viewport = viewport;
    }
 
-   public void initializeFromEditor(Editor editor, DocumentMutator editorDocumentMutator)
+   public void initializeFromEditor(Editor editor, TextStoreMutator editorDocumentMutator)
    {
       this.editor = editor;
       this.editorDocumentMutator = editorDocumentMutator;

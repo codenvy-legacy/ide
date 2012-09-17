@@ -15,7 +15,7 @@
 package org.exoplatform.ide.texteditor.selection;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.text.store.Document;
+import org.exoplatform.ide.text.store.TextStore;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
@@ -31,7 +31,7 @@ import org.exoplatform.ide.texteditor.renderer.Renderer;
  */
 public class SelectionManager {
 
-  public static SelectionManager create(Document document, Buffer buffer,
+  public static SelectionManager create(TextStore document, Buffer buffer,
       FocusManager focusManager, Resources resources) {
     SelectionModel selectionModel = SelectionModel.create(document, buffer);
     SelectionLineRenderer selectionLineRenderer =

@@ -17,7 +17,7 @@ package org.exoplatform.ide.texteditor.selection;
 import com.google.gwt.regexp.shared.RegExp;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.store.DocumentMutator;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.Position;
@@ -39,7 +39,7 @@ public class ToggleCommentsController
       this.commentHead = commentHead;
    }
 
-   void processLines(DocumentMutator documentMutator, SelectionModel selection)
+   void processLines(TextStoreMutator documentMutator, SelectionModel selection)
    {
       boolean moveDown = !selection.hasSelection();
       Position[] selectionRange = selection.getSelectionRange(false);

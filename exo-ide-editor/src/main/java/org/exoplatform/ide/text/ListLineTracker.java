@@ -36,13 +36,12 @@ import java.util.List;
  * </ul>
  * This class must be subclassed.
  * 
- * @since 3.2
  */
 abstract class ListLineTracker implements ILineTracker
 {
 
    /** The line information */
-   private final List fLines = new ArrayList();
+   private final List<Line> fLines = new ArrayList<Line>();
 
    /** The length of the tracked text */
    private int fTextLength;
@@ -374,7 +373,7 @@ abstract class ListLineTracker implements ILineTracker
     * 
     * @return the internal list of lines.
     */
-   final List getLines()
+   final List<Line> getLines()
    {
       return fLines;
    }

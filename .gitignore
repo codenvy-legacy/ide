@@ -17,6 +17,9 @@
 *.sar
 *.class
 
+#GWT
+exo-ide-client/tomcat/
+
 # Maven 
 target/
 

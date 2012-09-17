@@ -41,15 +41,15 @@ import org.exoplatform.ide.util.StringUtils;
  * <li>{@link TextListener}</li>
  * </ul>
  */
-public class Document implements DocumentMutator {
+public class TextStore implements TextStoreMutator {
 
   /**
    * A listener that is called when the number of lines in the document changes.
    * 
-   * See the callback ordering documented in {@link Document}. 
+   * See the callback ordering documented in {@link TextStore}. 
    */
   public interface LineCountListener {
-    void onLineCountChanged(Document document, int lineCount);
+    void onLineCountChanged(TextStore document, int lineCount);
   }
 
   /**
@@ -59,14 +59,14 @@ public class Document implements DocumentMutator {
    * Note: In the case of a multiline insertion/deletion, this will be called
    * once.
    * 
-   * See the callback ordering documented in {@link Document}. 
+   * See the callback ordering documented in {@link TextStore}. 
    */
   public interface LineListener {
     /**
      * @param lineNumber the line number of the first item in {@code addedLines}
      * @param addedLines a contiguous list of lines that were added
      */
-    void onLineAdded(Document document, int lineNumber, JsonArray<Line> addedLines);
+    void onLineAdded(TextStore document, int lineNumber, JsonArray<Line> addedLines);
 
     /**
      * @param lineNumber the previous line number of the first item in
@@ -74,13 +74,13 @@ public class Document implements DocumentMutator {
      * @param removedLines a contiguous list of (now detached) lines that were
      *        removed
      */
-    void onLineRemoved(Document document, int lineNumber, JsonArray<Line> removedLines);
+    void onLineRemoved(TextStore document, int lineNumber, JsonArray<Line> removedLines);
   }
 
   /**
    * A listener that is called when a text change occurs within a document.
    * 
-   * See the callback ordering documented in {@link Document}. 
+   * See the callback ordering documented in {@link TextStore}. 
    */
   public interface TextListener {
     /**
@@ -94,7 +94,7 @@ public class Document implements DocumentMutator {
      * {@link Line} could change, invalidating some of the state in the
      * {@link TextChange}.
      */
-    void onTextChange(Document document, JsonArray<TextChange> textChanges);
+    void onTextChange(TextStore document, JsonArray<TextChange> textChanges);
   }
 
   /**
@@ -117,7 +117,7 @@ public class Document implements DocumentMutator {
      * @param text The text which is either being inserted or deleted.
      * @param type The type of {@link TextChange} that will be occurring.
      */
-    void onPreTextChange(Document document,
+    void onPreTextChange(TextStore document,
         TextChange.Type type,
         Line line,
         int lineNumber,
@@ -125,13 +125,13 @@ public class Document implements DocumentMutator {
         String text);
   }
 
-  public static Document createEmpty() {
-    return new Document();
+  public static TextStore createEmpty() {
+    return new TextStore();
   }
 
-  public static Document createFromString(
+  public static TextStore createFromString(
       String contents) {
-    Document doc = createEmpty();
+    TextStore doc = createEmpty();
     doc.insertText(doc.getFirstLine(), 0, 0, contents);
 
     return doc;
@@ -163,7 +163,7 @@ public class Document implements DocumentMutator {
   
   private final JsonStringMap<Object> tags = JsonCollections.createStringMap();
 
-  protected Document() {
+  protected TextStore() {
     firstLine = lastLine = Line.create(this, "");
     firstLine.setAttached(true);
 
@@ -321,48 +321,48 @@ public class Document implements DocumentMutator {
   void commitLineCountChange(int lineCountDelta) {
     if (lineCountDelta != 0) {
       lineCount += lineCountDelta;
-      lineCountListenerManager.dispatch(new Dispatcher<Document.LineCountListener>() {
+      lineCountListenerManager.dispatch(new Dispatcher<TextStore.LineCountListener>() {
         @Override
         public void dispatch(LineCountListener listener) {
-          listener.onLineCountChanged(Document.this, lineCount);
+          listener.onLineCountChanged(TextStore.this, lineCount);
         }
       });
     }
   }
 
   void dispatchLineAdded(final int lineNumber, final JsonArray<Line> addedLines) {
-    lineListenerManager.dispatch(new Dispatcher<Document.LineListener>() {
+    lineListenerManager.dispatch(new Dispatcher<TextStore.LineListener>() {
       @Override
       public void dispatch(LineListener listener) {
-        listener.onLineAdded(Document.this, lineNumber, addedLines);
+        listener.onLineAdded(TextStore.this, lineNumber, addedLines);
       }
     });
   }
 
   void dispatchLineRemoved(final int lineNumber, final JsonArray<Line> removedLines) {
-    lineListenerManager.dispatch(new Dispatcher<Document.LineListener>() {
+    lineListenerManager.dispatch(new Dispatcher<TextStore.LineListener>() {
       @Override
       public void dispatch(LineListener listener) {
-        listener.onLineRemoved(Document.this, lineNumber, removedLines);
+        listener.onLineRemoved(TextStore.this, lineNumber, removedLines);
       }
     });
   }
 
   void dispatchTextChange(final JsonArray<TextChange> textChanges) {
-    textListenerManager.dispatch(new Dispatcher<Document.TextListener>() {
+    textListenerManager.dispatch(new Dispatcher<TextStore.TextListener>() {
       @Override
       public void dispatch(TextListener listener) {
-        listener.onTextChange(Document.this, textChanges);
+        listener.onTextChange(TextStore.this, textChanges);
       }
     });
   }
   
   void dispatchPreTextChange(final TextChange.Type type, final Line line, final int lineNumber,
       final int column, final String text) {
-    preTextListenerManager.dispatch(new Dispatcher<Document.PreTextListener>() {
+    preTextListenerManager.dispatch(new Dispatcher<TextStore.PreTextListener>() {
       @Override
       public void dispatch(PreTextListener listener) {
-        listener.onPreTextChange(Document.this, type, line, lineNumber, column, text);
+        listener.onPreTextChange(TextStore.this, type, line, lineNumber, column, text);
       }
     });
   }

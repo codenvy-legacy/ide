@@ -24,10 +24,13 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
-import org.exoplatform.ide.text.store.Document;
+import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.store.TextStore;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.TextChange;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
@@ -52,7 +55,7 @@ import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
 
 /**
- * The presenter for the Collide editor.
+ * The presenter for the editor.
  *
  *  This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a
@@ -200,7 +203,7 @@ public class Editor extends UiComponent<Editor.View>
    /**
     * A listener that is called when the user enters or deletes text.
     *
-    * Similar to {@link Document.TextListener} except is only called when the
+    * Similar to {@link TextStore.TextListener} except is only called when the
     * text is entered/deleted by the local user.
     */
    public interface TextListener
@@ -223,11 +226,11 @@ public class Editor extends UiComponent<Editor.View>
     * A listener that is called when the document changes.
     *
     *  This can be used by external clients of the editor; if the client is a
-    * component of the editor, use {@link Editor#setDocument(Document)} instead.
+    * component of the editor, use {@link Editor#setDocument(TextStore)} instead.
     */
    public interface DocumentListener
    {
-      void onDocumentChanged(Document oldDocument, Document newDocument);
+      void onDocumentChanged(TextStore oldDocument, TextStore newDocument);
    }
 
    /**
@@ -301,15 +304,16 @@ public class Editor extends UiComponent<Editor.View>
 
    private final Buffer buffer;
 
-   private Document document;
+   private TextStore textStore;
 
    private final ListenerManager<DocumentListener> documentListenerManager = ListenerManager.create();
 
-   private final EditorDocumentMutator editorDocumentMutator;
+   private final EditorTextStoreMutator editorDocumentMutator;
 
    private final FontDimensionsCalculator editorFontDimensionsCalculator;
 
-   //  private EditorUndoManager editorUndoManager;
+   private TextEditorUndoManager editorUndoManager;
+   
    private final FocusManager focusManager;
 
    private final MouseHoverManager mouseHoverManager;
@@ -351,6 +355,8 @@ public class Editor extends UiComponent<Editor.View>
 
    private CurrentLineHighlighter currentLineHighlighter;
 
+   private IDocument document;
+
    private Editor(AppContext appContext, View view, Buffer buffer, InputController input, FocusManager focusManager,
       FontDimensionsCalculator editorFontDimensionsCalculator, RenderTimeExecutor renderTimeExecutor)
    {
@@ -361,12 +367,13 @@ public class Editor extends UiComponent<Editor.View>
       this.focusManager = focusManager;
       this.editorFontDimensionsCalculator = editorFontDimensionsCalculator;
       this.renderTimeExecutor = renderTimeExecutor;
-
+      //TODO configure this
+      editorUndoManager = new TextEditorUndoManager(20);
       Gutter leftGutter =
          createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
 
-      editorDocumentMutator = new EditorDocumentMutator(this);
+      editorDocumentMutator = new EditorTextStoreMutator(this);
       mouseHoverManager = new MouseHoverManager(this);
 
       editorActivityManager =
@@ -482,15 +489,15 @@ public class Editor extends UiComponent<Editor.View>
       return leftGutterManager.getGutter();
    }
 
-   public Document getDocument()
+   public TextStore getTextStore()
    {
-      return document;
+      return textStore;
    }
 
    /**
     * Returns a document mutator that will also notify editor text listeners.
     */
-   public EditorDocumentMutator getEditorDocumentMutator()
+   public TextStoreMutator getEditorDocumentMutator()
    {
       return editorDocumentMutator;
    }
@@ -566,10 +573,11 @@ public class Editor extends UiComponent<Editor.View>
 
    public void setDocument(final Document document)
    {
-      final Document oldDocument = this.document;
-
-      if (oldDocument != null)
+      this.document = document;
+      final TextStore oldTextstore = textStore;
+      if (oldTextstore != null)
       {
+         editorUndoManager.disconnect();
          // Teardown the objects depending on the old document
          renderer.teardown();
          viewport.teardown();
@@ -580,7 +588,7 @@ public class Editor extends UiComponent<Editor.View>
          currentLineHighlighter.teardown();
       }
 
-      this.document = document;
+      textStore = document.getTextStore();
 
       /*
        * TODO: dig into each component, figure out dependencies,
@@ -588,22 +596,23 @@ public class Editor extends UiComponent<Editor.View>
        * require the multiple stages of initialization
        */
       // Core editor components
-      buffer.handleDocumentChanged(document);
-      leftGutterManager.handleDocumentChanged(document);
+      buffer.handleDocumentChanged(textStore);
+      leftGutterManager.handleDocumentChanged(textStore);
 
-      selectionManager = SelectionManager.create(document, buffer, focusManager, appContext.getResources());
+      selectionManager = SelectionManager.create(textStore, buffer, focusManager, appContext.getResources());
 
       SelectionModel selection = selectionManager.getSelectionModel();
-      viewport = ViewportModel.create(document, selection, buffer);
-      input.handleDocumentChanged(document, selection, viewport);
+      viewport = ViewportModel.create(textStore, selection, buffer);
+      input.handleDocumentChanged(textStore, selection, viewport);
       renderer =
-         Renderer.create(document, viewport, buffer, getLeftGutter(), selection, focusManager, this,
+         Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this,
             appContext.getResources(), renderTimeExecutor);
 
       // Delayed core editor component initialization
       viewport.initialize();
       selection.initialize(viewport);
       selectionManager.initialize(renderer);
+      editorUndoManager.connect(this);
       buffer.handleComponentsInitialized(viewport, renderer);
       for (int i = 0, n = gutters.size(); i < n; i++)
       {
@@ -627,24 +636,34 @@ public class Editor extends UiComponent<Editor.View>
          @Override
          public void dispatch(DocumentListener listener)
          {
-            listener.onDocumentChanged(oldDocument, document);
+            listener.onDocumentChanged(oldTextstore, textStore);
          }
       });
    }
 
-   //  public void undo() {
-   //    editorUndoManager.undo();
-   //  }
-   //
-   //  public void redo() {
-   //    editorUndoManager.redo();
-   //  }
+   /**
+    * @return the document
+    */
+   public IDocument getDocument()
+   {
+      return document;
+   }
+
+   public void undo()
+   {
+      editorUndoManager.undo();
+   }
+
+   public void redo()
+   {
+      editorUndoManager.redo();
+   }
 
    public void scrollTo(int lineNumber, int column)
    {
-      if (document != null)
+      if (textStore != null)
       {
-         LineInfo lineInfo = document.getLineFinder().findLine(lineNumber);
+         LineInfo lineInfo = textStore.getLineFinder().findLine(lineNumber);
          /*
           * TODO: the cursor will be the last line in the viewport,
           * fix this

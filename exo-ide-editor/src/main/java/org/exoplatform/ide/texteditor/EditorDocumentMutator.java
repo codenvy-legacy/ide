@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor;
 
-import org.exoplatform.ide.text.store.DocumentMutator;
+import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.TextChange;
@@ -31,7 +31,7 @@ import org.exoplatform.ide.util.ListenerRegistrar;
  * whenever a editor-initiated document mutation occurs.
  *
  */
-public class EditorDocumentMutator implements DocumentMutator
+public class EditorDocumentMutator implements TextStoreMutator
 {
 
    private final ListenerManager<BeforeTextListener> beforeTextListenerManager = ListenerManager.create();
@@ -56,7 +56,7 @@ public class EditorDocumentMutator implements DocumentMutator
    @Override
    public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount)
    {
-      String deletedText = editor.getDocument().getText(line, column, deleteCount);
+      String deletedText = editor.getTextStore().getText(line, column, deleteCount);
       return deleteText(line, lineNumber, column, deletedText);
    }
 
@@ -70,7 +70,7 @@ public class EditorDocumentMutator implements DocumentMutator
       TextChange textChange = TextChange.createDeletion(line, lineNumber, column, deletedText);
       dispatchBeforeTextChange(textChange);
       isMutatingDocument = true;
-      editor.getDocument().deleteText(line, lineNumber, column, deletedText.length());
+      editor.getTextStore().deleteText(line, lineNumber, column, deletedText.length());
       isMutatingDocument = false;
       dispatchTextChange(textChange);
 
@@ -80,7 +80,7 @@ public class EditorDocumentMutator implements DocumentMutator
    /**
     * If there is a selection, the inserted text will replace the selected text.
     *
-    * @see DocumentMutator#insertText(Line, int, String)
+    * @see TextStoreMutator#insertText(Line, int, String)
     */
    @Override
    public TextChange insertText(Line line, int column, String text)
@@ -137,7 +137,7 @@ public class EditorDocumentMutator implements DocumentMutator
       textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
       dispatchBeforeTextChange(textChange);
       isMutatingDocument = true;
-      editor.getDocument().insertText(line, lineNumber, column, text);
+      editor.getTextStore().insertText(line, lineNumber, column, text);
       isMutatingDocument = false;
       dispatchTextChange(textChange);
 

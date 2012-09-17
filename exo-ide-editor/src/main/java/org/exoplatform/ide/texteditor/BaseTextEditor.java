@@ -83,7 +83,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    public void init(EditorSite site, EditorInput input) throws EditorInitException
    {
       Document d = new Document(input.getName());
-      editor.setDocument(d.getTextStore());
+      editor.setDocument(d);
    }
 
    /**

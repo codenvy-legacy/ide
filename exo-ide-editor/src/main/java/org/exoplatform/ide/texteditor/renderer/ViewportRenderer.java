@@ -19,7 +19,7 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.text.store.Document;
+import org.exoplatform.ide.text.store.TextStore;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.anchor.Anchor;
@@ -144,7 +144,7 @@ public class ViewportRenderer
 
    private final Buffer buffer;
 
-   private final Document document;
+   private final TextStore document;
 
    private final ListenerManager<LineLifecycleListener> lineLifecycleListenerManager;
 
@@ -164,7 +164,7 @@ public class ViewportRenderer
     */
    private Anchor viewportOldTopAnchor;
 
-   ViewportRenderer(Document document, Buffer buffer, ViewportModel viewport, Editor.View editorView,
+   ViewportRenderer(TextStore document, Buffer buffer, ViewportModel viewport, Editor.View editorView,
       ListenerManager<LineLifecycleListener> lineLifecycleListenerManager)
    {
       this.document = document;

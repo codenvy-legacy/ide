@@ -40,13 +40,6 @@ public abstract class AbstractLineTracker implements ILineTracker
 {
 
    /**
-    * Tells whether this class is in debug mode.
-    * 
-    * @since 3.1
-    */
-   private static final boolean DEBUG = false;
-
-   /**
     * Combines the information of the occurrence of a line delimiter. <code>delimiterIndex</code> is the index where a line
     * delimiter starts, whereas <code>delimiterLength</code>, indicates the length of the delimiter.
     */
@@ -93,22 +86,14 @@ public abstract class AbstractLineTracker implements ILineTracker
    }
 
    /**
-    * The active rewrite session.
-    * 
-    * @since 3.1
-    */
-   // private DocumentRewriteSession fActiveRewriteSession;
-   /**
     * The list of pending requests.
     * 
-    * @since 3.1
     */
-   private List fPendingRequests;
+   private List<Request> fPendingRequests;
 
    /**
     * The implementation that this tracker delegates to.
     * 
-    * @since 3.2
     */
    private ILineTracker fDelegate = new ListLineTracker()
    {
@@ -310,7 +295,7 @@ public abstract class AbstractLineTracker implements ILineTracker
     */
    protected final void flushRewriteSession() throws BadLocationException
    {
-      Iterator e = fPendingRequests.iterator();
+      Iterator<Request> e = fPendingRequests.iterator();
 
       fPendingRequests = null;
 

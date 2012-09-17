@@ -27,7 +27,7 @@ import org.exoplatform.ide.text.ITextStore;
  * @version $Id:
  *
  */
-public class DocumentTextStore extends Document implements ITextStore
+public class DocumentTextStore extends TextStore implements ITextStore
 {
 
    private ILineTracker lineTracker;
