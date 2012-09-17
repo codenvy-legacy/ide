@@ -35,7 +35,8 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.resources.event.ExtensionInitializedEvent;
+import org.exoplatform.ide.resources.event.ComponentLifecycleEvent;
+import org.exoplatform.ide.resources.event.ComponentLifecycleEvent.LifecycleState;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.ProjectModelProviderAdapter;
 import org.exoplatform.ide.resources.marshal.ProjectModelUnmarshaller;
@@ -85,7 +86,7 @@ public class ResourceProviderService implements ResourceProvider
     * @throws ResourceException 
     */
    @Inject
-   public ResourceProviderService(EventBus eventBus) throws ResourceException
+   public ResourceProviderService(EventBus eventBus)
    {
       this.workspaceURL = "http://127.0.0.1:8888/rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
@@ -93,11 +94,10 @@ public class ResourceProviderService implements ResourceProvider
       // TODO 
       this.loader = new EmptyLoader();
       this.eventBus = eventBus;
-      //init();
    }
 
    @Override
-   public void start() throws ResourceException
+   public void start()
    {
       AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
          new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
@@ -107,7 +107,7 @@ public class ResourceProviderService implements ResourceProvider
             {
                vfsInfo = result;
                initialized = true;
-               eventBus.fireEvent(new ExtensionInitializedEvent(ResourceProviderService.this));
+               eventBus.fireEvent(new ComponentLifecycleEvent(ResourceProviderService.this, LifecycleState.STARTED));
                //IDE.fireEvent(new VfsChangedEvent(result));
             }
 
@@ -115,9 +115,7 @@ public class ResourceProviderService implements ResourceProvider
             protected void onFailure(Throwable exception)
             {
                //    Dialogs.getInstance().showError("Workspace " + vfsId + " not found.");
-               exception.printStackTrace();
-               GWT.log("ResourceProviderService:ailed to start resource provider" + exception.getMessage() + ">"
-                  + exception);
+               initializationFailed(exception);
             }
          };
 
@@ -128,15 +126,21 @@ public class ResourceProviderService implements ResourceProvider
       }
       catch (RequestException e)
       {
-         throw new ResourceException(e);
+         initializationFailed(e);
       }
+   }
+
+   private void initializationFailed(Throwable exception)
+   {
+      eventBus.fireEvent(new ComponentLifecycleEvent(ResourceProviderService.this, LifecycleState.FAILED));
+      GWT.log("ResourceProviderService:ailed to start resource provider" + exception.getMessage() + ">" + exception);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void getProject(final String name, final AsyncCallback<Project> callback) throws ResourceException
+   public void getProject(final String name, final AsyncCallback<Project> callback)
    {
 
       // initialize empty project object
@@ -172,7 +176,7 @@ public class ResourceProviderService implements ResourceProvider
       }
       catch (RequestException e)
       {
-         throw new ResourceException(e);
+         callback.onFailure(e);
       }
    }
 
@@ -182,7 +186,6 @@ public class ResourceProviderService implements ResourceProvider
    @SuppressWarnings("rawtypes")
    @Override
    public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback)
-      throws ResourceException
    {
       final Folder rootFolder = vfsInfo.getRoot();
       // initialize empty project object
@@ -224,7 +227,7 @@ public class ResourceProviderService implements ResourceProvider
       }
       catch (RequestException e)
       {
-         throw new ResourceException(e);
+         callback.onFailure(e);
       }
    }
 
@@ -232,7 +235,7 @@ public class ResourceProviderService implements ResourceProvider
     * {@inheritDoc}
     */
    @Override
-   public void registerModelProvider(String primaryNature, ModelProvider modelProvider) throws ResourceException
+   public void registerModelProvider(String primaryNature, ModelProvider modelProvider)
    {
       modelProviders.put(primaryNature, modelProvider);
    }

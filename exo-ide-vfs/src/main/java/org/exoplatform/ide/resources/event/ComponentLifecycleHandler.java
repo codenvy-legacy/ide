@@ -25,10 +25,16 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ExtensionInitializedHandler extends EventHandler
+public interface ComponentLifecycleHandler extends EventHandler
 {
    /**
     * @param event
     */
-   void onExtensionInitialized(ExtensionInitializedEvent event);
+   void onComponentStarted(ComponentLifecycleEvent event);
+   
+   /**
+    * @param event
+    */
+   void onComponentFailed(ComponentLifecycleEvent event);
+
 }

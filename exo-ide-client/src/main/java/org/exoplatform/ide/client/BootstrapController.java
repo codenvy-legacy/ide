@@ -27,11 +27,10 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.resources.ResourceException;
 import org.exoplatform.ide.resources.ResourceProvider;
-import org.exoplatform.ide.resources.event.StartableExtension;
-import org.exoplatform.ide.resources.event.ExtensionInitializedEvent;
-import org.exoplatform.ide.resources.event.ExtensionInitializedHandler;
+import org.exoplatform.ide.resources.event.Component;
+import org.exoplatform.ide.resources.event.ComponentLifecycleEvent;
+import org.exoplatform.ide.resources.event.ComponentLifecycleHandler;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
@@ -65,7 +64,7 @@ public class BootstrapController
       this.resourceProvider = resourceProvider;
       this.projectExpolrerPresenter = projectExpolorerPresenter;
 
-      JsonArray<StartableExtension> pendingServices = JsonCollections.<StartableExtension> createArray();
+      JsonArray<Component> pendingServices = JsonCollections.<Component> createArray();
 
       pendingServices.add(resourceProvider);
 
@@ -93,21 +92,27 @@ public class BootstrapController
    /**
     * @param pendingServices
     */
-   private void initializeHandlers(final JsonArray<StartableExtension> pendingServices)
+   private void initializeHandlers(final JsonArray<Component> pendingServices)
    {
-      eventBus.addHandler(ExtensionInitializedEvent.TYPE, new ExtensionInitializedHandler()
+      eventBus.addHandler(ComponentLifecycleEvent.TYPE, new ComponentLifecycleHandler()
       {
 
          @Override
-         public void onExtensionInitialized(ExtensionInitializedEvent event)
+         public void onComponentStarted(ComponentLifecycleEvent event)
          {
-            pendingServices.remove(event.getExtension());
+            pendingServices.remove(event.getComponent());
             // services started
             if (pendingServices.size() == 0)
             {
                GWT.log("All services initialized. Starting.");
                onInitialized();
             }
+         }
+
+         @Override
+         public void onComponentFailed(ComponentLifecycleEvent event)
+         {
+            GWT.log("FAILED to start service:" + event.getComponent());
          }
       });
    }
@@ -119,71 +124,53 @@ public class BootstrapController
    {
       workspacePeresenter.go(RootLayoutPanel.get());
 
-      try
-      {
-         resourceProvider.createProject("Test Project " + (new Date().getTime()),
-            JsonCollections.<Property> createArray(), new AsyncCallback<Project>()
+      resourceProvider.createProject("Test Project " + (new Date().getTime()),
+         JsonCollections.<Property> createArray(), new AsyncCallback<Project>()
+         {
+
+            @Override
+            public void onSuccess(final Project project)
             {
-
-               @Override
-               public void onSuccess(final Project project)
+               project.createFolder(project, "Test Folder", new AsyncCallback<Folder>()
                {
-                  try
+
+                  @Override
+                  public void onSuccess(Folder result)
                   {
-                     project.createFolder(project, "Test Folder", new AsyncCallback<Folder>()
-                     {
-
-                        @Override
-                        public void onSuccess(Folder result)
+                     project.createFile(result, "Test file on FS", "This is file content of the file from VFS",
+                        "text/text-pain", new AsyncCallback<File>()
                         {
-                           try
+
+                           @Override
+                           public void onSuccess(File result)
                            {
-                              project.createFile(result, "Test file on FS", "This is file content of the file from VFS", "text/text-pain",
-                                 new AsyncCallback<File>()
-                                 {
-
-                                    @Override
-                                    public void onSuccess(File result)
-                                    {
-                                       projectExpolrerPresenter.setContent(project.getParent());
-                                    }
-
-                                    @Override
-                                    public void onFailure(Throwable caught)
-                                    {
-                                       GWT.log("Error creating demo folder" + caught);
-                                    }
-                                 });
+                              projectExpolrerPresenter.setContent(project.getParent());
                            }
-                           catch (ResourceException e)
+
+                           @Override
+                           public void onFailure(Throwable caught)
                            {
-                              GWT.log("Error creating demo file" + e);
+                              GWT.log("Error creating demo folder" + caught);
                            }
-                        }
+                        });
 
-                        @Override
-                        public void onFailure(Throwable caught)
-                        {
-                           GWT.log("Error creating demo folder" + caught);
-                        }
-                     });
                   }
-                  catch (ResourceException e)
+
+                  @Override
+                  public void onFailure(Throwable caught)
                   {
-                     GWT.log("Error creating demo project" + e);
+                     GWT.log("Error creating demo folder" + caught);
                   }
-               }
+               });
 
-               @Override
-               public void onFailure(Throwable caught)
-               {
-                  GWT.log("Error creating demo content" + caught);
-               }
-            });
-      }
-      catch (ResourceException e)
-      {
-         GWT.log("Error creating demo content" + e);
-      }
+            }
+
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               GWT.log("Error creating demo content" + caught);
+            }
+         });
+
    }
 }

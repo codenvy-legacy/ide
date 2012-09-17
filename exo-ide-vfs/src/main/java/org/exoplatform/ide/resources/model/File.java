@@ -207,7 +207,7 @@ public class File extends Resource
    }
 
    /**
-    * @return the content
+    * @return the content if already retrieved
     */
    public String getContent()
    {

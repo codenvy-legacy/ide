@@ -17,7 +17,6 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -31,7 +30,6 @@ import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
-import org.exoplatform.ide.resources.ResourceException;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Project;
 
@@ -108,7 +106,7 @@ public class WorkspacePeresenter implements Presenter
                   @Override
                   public void onFailure(Throwable caught)
                   {
-                     // TODO : Handle failure
+                     GWT.log("error" + caught);
                   }
 
                   @Override
@@ -119,19 +117,11 @@ public class WorkspacePeresenter implements Presenter
                };
 
                Project project = event.getFile().getProject();
-               try
-               {
-                  project.getContent(event.getFile(), callback);
-               }
-               catch (ResourceException e)
-               {
-                  GWT.log("error"+e);
-               }
-               
+               project.getContent(event.getFile(), callback);
+
                //fileSystemService.getFileContent(event.getFileName(), callback);
             }
-            else 
-            if (event.getOperationType() == FileOperation.CLOSE)
+            else if (event.getOperationType() == FileOperation.CLOSE)
             {
                // close associated editor. OR it can be closed itself TODO
             }

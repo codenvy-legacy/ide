@@ -14,40 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.resources;
+package org.exoplatform.ide.resources.event;
 
 /**
- * Exception is thrown when Resource API related error occurs
+ * Components that have to be started on application's startup
+ * must implement this interface.
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceException extends Exception
+public interface Component
 {
-   private static final long serialVersionUID = 1L;
+   // TODO: MOVE CLASS
 
-   /**
-    * @param message
-    * @param cause
-    */
-   public ResourceException(String message, Throwable cause)
-   {
-      super(message, cause);
-   }
-
-   /**
-    * @param message
-    */
-   public ResourceException(String message)
-   {
-      super(message);
-   }
-
-   /**
-    * @param e
-    */
-   public ResourceException(Throwable e)
-   {
-      super(e);
-   }
-
+   public void start() throws Exception;
 }

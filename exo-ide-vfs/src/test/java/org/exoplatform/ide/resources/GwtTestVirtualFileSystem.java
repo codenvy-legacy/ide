@@ -21,6 +21,7 @@ package org.exoplatform.ide.resources;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -57,12 +58,12 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
          new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", JsonCollections.<String> createArray(),
             ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, links, new Folder());
 
-      resourceProvider = new ResourceProviderService("/");
+      resourceProvider = new ResourceProviderService(new SimpleEventBus());
       resourceProvider.vfsInfo = info;
    }
 
    @SuppressWarnings("unchecked")
-   public void testCreateProject() throws ResourceException
+   public void testCreateProject()
    {
       final String parentId = String.valueOf(Random.nextDouble());
       //      JsonStringMap<Link> links = JsonCollections.<Link>createStringMap();

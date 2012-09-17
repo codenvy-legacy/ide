@@ -19,7 +19,7 @@ package org.exoplatform.ide.resources;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.resources.event.StartableExtension;
+import org.exoplatform.ide.resources.event.Component;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.properties.Property;
 
@@ -39,7 +39,7 @@ import org.exoplatform.ide.resources.properties.Property;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public interface ResourceProvider extends StartableExtension
+public interface ResourceProvider extends Component
 {
    /**
     * Returns active project or null if none opened
@@ -54,9 +54,8 @@ public interface ResourceProvider extends StartableExtension
     * 
     * @param name 
     * @param callback
-    * @throws ResourceException
     */
-   public void getProject(String name, AsyncCallback<Project> callback) throws ResourceException;
+   public void getProject(String name, AsyncCallback<Project> callback);
 
    /**
     * Creates new empty project based on provided properties (Project Description).
@@ -64,20 +63,17 @@ public interface ResourceProvider extends StartableExtension
     * @param name
     * @param properties
     * @param callback
-    * @throws ResourceException
     */
    @SuppressWarnings("rawtypes")
-   public void createProject(String name, JsonArray<Property> properties, AsyncCallback<Project> callback)
-      throws ResourceException;
+   public void createProject(String name, JsonArray<Property> properties, AsyncCallback<Project> callback);
 
    /**
     * Registers ModelProvider instance for given Primary Project Nature
     * 
     * @param primaryNature
     * @param modelProvider
-    * @throws ResourceException
     */
-   public void registerModelProvider(String primaryNature, ModelProvider modelProvider) throws ResourceException;
+   public void registerModelProvider(String primaryNature, ModelProvider modelProvider);
 
    /**
     * Retrieves Model Provider instance for given Primary Nature, of Generic Model Provider is none found. 

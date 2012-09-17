@@ -26,25 +26,32 @@ import com.google.gwt.event.shared.GwtEvent;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ExtensionInitializedEvent extends GwtEvent<ExtensionInitializedHandler>
+public class ComponentLifecycleEvent extends GwtEvent<ComponentLifecycleHandler>
 {
-   public static Type<ExtensionInitializedHandler> TYPE = new Type<ExtensionInitializedHandler>();
+   public enum LifecycleState {
+      STARTED, FAILED
+   }
 
-   private StartableExtension extemsion;
+   public static Type<ComponentLifecycleHandler> TYPE = new Type<ComponentLifecycleHandler>();
+
+   private Component extension;
+
+   private LifecycleState state;
 
    /**
-    * @param extension
+    * @param component
     */
-   public ExtensionInitializedEvent(StartableExtension extension)
+   public ComponentLifecycleEvent(Component component, LifecycleState state)
    {
-      this.extemsion = extension;
+      this.state = state;
+      this.extension = component;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public Type<ExtensionInitializedHandler> getAssociatedType()
+   public Type<ComponentLifecycleHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -52,14 +59,21 @@ public class ExtensionInitializedEvent extends GwtEvent<ExtensionInitializedHand
    /**
     * @return Extension firing the event 
     */
-   public StartableExtension getExtension()
+   public Component getComponent()
    {
-      return extemsion;
+      return extension;
    }
 
    @Override
-   protected void dispatch(ExtensionInitializedHandler handler)
+   protected void dispatch(ComponentLifecycleHandler handler)
    {
-      handler.onExtensionInitialized(this);
+      if (state == LifecycleState.STARTED)
+      {
+         handler.onComponentStarted(this);
+      }
+      if (state == LifecycleState.FAILED)
+      {
+         handler.onComponentFailed(this);
+      }
    }
 }
