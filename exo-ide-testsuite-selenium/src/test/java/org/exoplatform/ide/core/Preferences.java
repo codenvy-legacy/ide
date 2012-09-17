@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -27,6 +28,8 @@ public class Preferences extends AbstractTestModule
 
       String PREFERNCES_TREE_SELECTOR = "//div[@id='eXoPreferencesViewPreferencesTree']//div/span[text()='%s']";
 
+      String PREFERNCES_CLOSE_BUTTON_ID = "eXoPreferencesViewCloseButton";
+
    }
 
    @FindBy(id = Locators.PREFERNCESS_FORM_ID)
@@ -38,7 +41,13 @@ public class Preferences extends AbstractTestModule
    @FindBy(id = Locators.PREFERNCES_VIEW_PANEL_FORM_ID)
    private WebElement viewForm;
 
-   public void waitPreferencesView()
+   @FindBy(id = Locators.PREFERNCES_CLOSE_BUTTON_ID)
+   private WebElement closeBtn;
+
+   /**
+    * wait opening preferences form
+    */
+   public void waitPreferencesOpen()
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
@@ -58,6 +67,19 @@ public class Preferences extends AbstractTestModule
       });
    }
 
+   /**
+    * wait while for closed
+    */
+   public void waitPreferencesClose()
+   {
+      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .id(Locators.PREFERNCESS_FORM_ID)));
+   }
+
+   /**
+    * wait tree menu for calling customize form 
+    * @param nameMenu
+    */
    public void waitCustomizeMenuRedraw(final String nameMenu)
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -79,10 +101,23 @@ public class Preferences extends AbstractTestModule
       });
    }
 
+   /**
+    * select menu for customization
+    * @param nameMenu
+    */
    public void selectCustomizeMenu(String nameMenu)
    {
-      
+
       driver().findElement(By.xpath(String.format(Locators.PREFERNCES_TREE_SELECTOR, nameMenu))).click();
+   }
+
+   /**
+    * click on close btn of the preferences form
+    */
+   public void clickOnCloseFormBtn()
+   {
+      closeBtn.click();
+
    }
 
 }

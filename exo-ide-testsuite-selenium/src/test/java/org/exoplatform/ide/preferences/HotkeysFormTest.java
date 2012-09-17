@@ -87,7 +87,7 @@ public class HotkeysFormTest extends BaseTest
       }
    }
 
-   @Test
+   //@Test
    public void testFormAndButtons() throws Exception
    {
       //step 1 create new project, open Customize Hotkey form
@@ -96,32 +96,28 @@ public class HotkeysFormTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.EDITOR.waitTabPresent(0);
-   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
-      //IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isKeyFieldActive(true);
 
       //step2 deselect row and check elements state
-      //function (Ctrl+click) At the moment, does not work. See issue IDE-1412
-      // Workaround: Restart HotkeyCustomization form, after restart all elements not selected
-      IDE.CUSTOMIZE_HOTKEYS.closeClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+
+      //reset all selection in hotkey form
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_TOOLBAR);
+      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+
       IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
-      //IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
 
       //step3 select 'Save' raw and check state buttons and hotkey field  
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
       IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
-      //  IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isKeyFieldActive(true);
       assertEquals("Ctrl+S", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
 
@@ -130,39 +126,37 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
-      // IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
+
       assertEquals("Ctrl+K", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
 
       //step5 click on bind button and checked changes elements state 
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isBindDisabled();
       IDE.CUSTOMIZE_HOTKEYS.isUnBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
-      //   IDE.CUSTOMIZE_HOTKEYS.isCancelEnabled();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
       assertEquals("Ctrl+K", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
-      IDE.CUSTOMIZE_HOTKEYS.closeClick();
-      //   IDE.CUSTOMIZE_HOTKEYS.cancelButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
+
    }
 
-    @Test
+   //  @Test
    public void testBindingAndUnbindingNewHotkey() throws Exception
    {
       //step 1 bind for CSS command new value, check state elements, save changes
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
+
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
       IDE.CUSTOMIZE_HOTKEYS.isAlredyNotView();
       IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
 
       //step 2 check 
       driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
@@ -170,30 +164,26 @@ public class HotkeysFormTest extends BaseTest
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.css *");
       IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+
+      openCustomizeHotkeyForm();
+
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       assertEquals("Ctrl+M", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
       IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
       driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
       IDE.EDITOR.waitTabNotPresent("Untitled file.css *");
    }
 
-    @Test
+   @Test
    public void testTryToBindForbiddenHotkeys() throws Exception
    {
-      //Select "New Text file" command and try to bind Shift+N. 
-      //Then try to bind ordinal keys Y, 8, PrintScreen and simmilar ordinal keys
-      driver.navigate().refresh();
 
-      //step 1trying bind incorrect values for text files
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
- //     IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_TEXT_FILE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys("y");
       IDE.CUSTOMIZE_HOTKEYS.isFirstKeyMessageView();
@@ -221,7 +211,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.isAlredyNotView();
       IDE.CUSTOMIZE_HOTKEYS.isBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isOkDisabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
 
@@ -230,11 +220,11 @@ public class HotkeysFormTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "p");
       IDE.CUSTOMIZE_HOTKEYS.isAlreadyToThisCommandMessView();
-      IDE.CUSTOMIZE_HOTKEYS.cancelButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
    }
 
-     @Test
+   // @Test
    //TODO If will be fix problem with impossible selecting elements after 
    //scroll of form "Customize Hotkeys..." in FF 4.0 and higher, test should be reworked.
    public void testUnbindingDefaultHotkey() throws Exception
@@ -250,13 +240,13 @@ public class HotkeysFormTest extends BaseTest
 
       //step 2: preconditioning: Select XML file, set new key bind and
       // check this work hotkey in IDE
-   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
@@ -268,7 +258,7 @@ public class HotkeysFormTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 3: unbind new hotkey and check this in IDE
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
       IDE.CUSTOMIZE_HOTKEYS.waitOpened();
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
@@ -282,4 +272,13 @@ public class HotkeysFormTest extends BaseTest
       IDE.EDITOR.waitTabNotPresent("Untitled file.css *");
 
    }
+
+   private void openCustomizeHotkeyForm() throws Exception, InterruptedException
+   {
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
+      IDE.PREFERENCES.waitPreferencesOpen();
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+   }
+
 }

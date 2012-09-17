@@ -129,11 +129,11 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "n");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
@@ -219,7 +219,7 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Open File By Path...");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "q");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();

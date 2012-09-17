@@ -76,7 +76,7 @@ public class ShowKeyboardShortcutsTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
-      IDE.CUSTOMIZE_HOTKEYS.bindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();

@@ -303,6 +303,20 @@ public interface MenuCommands
       String STATUS = "Status";
    }
 
+   public interface Preferences
+   {
+      String CUSTOMIZE_TOOLBAR = "Customize Toolbar";
+
+      String CUSTOMIZE_HOTKEYS = "Customize hotkeys";
+
+      String WORKSPACE = "Workspace";
+
+      String FORMATTER = "Formatter";
+
+      String SSH_KEY = "Ssh Keys";
+
+   }
+
    public interface Project
    {
       String PROJECT = "Project";
