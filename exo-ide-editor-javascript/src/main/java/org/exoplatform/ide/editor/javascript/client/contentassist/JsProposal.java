@@ -44,11 +44,11 @@ final class JsProposal extends JavaScriptObject
    }-*/;
 
    public native int getEscapePosition()/*-{
-		return this.escapePosition;
+		return this.escapePosition ? this.escapePosition : -1;
    }-*/;
 
    public native Position[] getPositions()/*-{
-		return this.positions;
+		return this.positions ? this.positions : [];
    }-*/;
 
 }

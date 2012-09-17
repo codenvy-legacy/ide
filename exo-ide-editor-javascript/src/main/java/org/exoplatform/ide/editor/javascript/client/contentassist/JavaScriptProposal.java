@@ -80,7 +80,12 @@ public class JavaScriptProposal implements CompletionProposal
    @Override
    public Point getSelection(IDocument document)
    {
-      return new Point(prop.getEscapePosition(), 0);
+      int escapePosition = prop.getEscapePosition();
+      if(escapePosition == -1)
+      {
+         escapePosition = offset + prop.getProposal().length();
+      }
+      return new Point(escapePosition, 0);
    }
 
    /**

@@ -83,6 +83,10 @@ class JavaScriptExplicitAutocompleter extends ExplicitAutocompleter
    private boolean checkCursorInComment(SelectionModel selectionModel, DocumentParser parser)
    {
       JsonArray<Token> tokens = parser.parseLineSync(selectionModel.getCursorLine());
+      if (tokens.isEmpty())
+      {
+         return false;
+      }
       for(Token t = tokens.pop(); !tokens.isEmpty(); t=tokens.pop())
       {
          if (t.getType() == TokenType.COMMENT && commentEndMach.test(t.getValue()))
