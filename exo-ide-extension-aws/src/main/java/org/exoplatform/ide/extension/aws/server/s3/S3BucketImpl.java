@@ -73,4 +73,14 @@ public class S3BucketImpl implements S3Bucket
    {
       this.owner = owner;
    }
+
+   @Override
+   public String toString()
+   {
+      return "S3BucketImpl{" +
+         "name='" + name + '\'' +
+         ", creationDate=" + creationDate +
+         ", owner=" + owner +
+         '}';
+   }
 }

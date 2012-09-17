@@ -58,4 +58,13 @@ public class S3OwnerImpl implements S3Owner
    {
       this.name = name;
    }
+
+   @Override
+   public String toString()
+   {
+      return "S3OwnerImpl{" +
+         "id='" + id + '\'' +
+         ", name='" + name + '\'' +
+         '}';
+   }
 }
