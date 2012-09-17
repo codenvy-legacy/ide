@@ -91,7 +91,7 @@ public class S3
    private List<S3Bucket> listBuckets(AmazonS3 s3)
    {
       List<Bucket> buckets = s3.listBuckets();
-      List<S3Bucket> s3Buckets = new ArrayList<S3Bucket>();
+      List<S3Bucket> s3Buckets = new ArrayList<S3Bucket>(buckets.size());
 
       for (Bucket bucket : buckets)
       {
