@@ -21,10 +21,14 @@ package org.exoplatform.ide.extension.aws.server.s3;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.CreateBucketRequest;
+import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,18 +44,67 @@ public class S3
       this.authenticator = authenticator;
    }
 
-   public S3Bucket createBucket(String name, String region)
+   public S3Bucket createBucket(String name, String region) throws AWSException
    {
-      return null;
+      AmazonS3 s3 = getS3Client();
+
+      return createBucket(s3, name, region);
    }
 
-   public List<S3Bucket> listBuckets()
+   private S3Bucket createBucket(AmazonS3 s3, String name, String region)
    {
-      return null;
+      Bucket bucket = s3.createBucket(new CreateBucketRequest(name, region));
+      S3Bucket s3Bucket = new S3BucketImpl(
+         bucket.getName(),
+         bucket.getCreationDate().getTime(),
+         new S3OwnerImpl(
+            bucket.getOwner().getId(),
+            bucket.getOwner().getDisplayName()
+         )
+      );
+
+      return s3Bucket;
    }
 
-   public void deleteBucket(String name)
+   public List<S3Bucket> listBuckets() throws AWSException
    {
+      AmazonS3 s3 = getS3Client();
+
+      return listBuckets(s3);
+   }
+
+   private List<S3Bucket> listBuckets(AmazonS3 s3)
+   {
+      List<Bucket> buckets = s3.listBuckets();
+      List<S3Bucket> s3Buckets = new ArrayList<S3Bucket>();
+
+      for (Bucket bucket : buckets)
+      {
+         s3Buckets.add(
+            new S3BucketImpl(
+               bucket.getName(),
+               bucket.getCreationDate().getTime(),
+               new S3OwnerImpl(
+                  bucket.getOwner().getId(),
+                  bucket.getOwner().getDisplayName()
+               )
+            )
+         );
+      }
+
+      return s3Buckets;
+   }
+
+   public void deleteBucket(String name) throws AWSException
+   {
+      AmazonS3 s3 = getS3Client();
+
+      deleteBucket(s3, name);
+   }
+
+   private void deleteBucket(AmazonS3 s3, String name)
+   {
+      s3.deleteBucket(new DeleteBucketRequest(name));
    }
 
    protected AmazonS3 getS3Client() throws AWSException

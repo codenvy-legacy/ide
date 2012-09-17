@@ -16,23 +16,46 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.s3;
+package org.exoplatform.ide.extension.aws.server.s3;
+
+import org.exoplatform.ide.extension.aws.shared.s3.S3Owner;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface S3Bucket
+public class S3OwnerImpl implements S3Owner
 {
-   String getName();
+   private String id;
+   private String name;
 
-   void setName(String name);
+   public S3OwnerImpl(String id, String name)
+   {
+      this.id = id;
+      this.name = name;
+   }
 
-   long getCreated();
+   @Override
+   public String getId()
+   {
+      return id;
+   }
 
-   void setCreated(long creationDate);
+   @Override
+   public void setId(String id)
+   {
+      this.id = id;
+   }
 
-   S3Owner getOwner();
+   @Override
+   public String getName()
+   {
+      return name;
+   }
 
-   void setOwner(S3Owner owner);
+   @Override
+   public void setName(String name)
+   {
+      this.name = name;
+   }
 }
