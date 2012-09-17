@@ -19,20 +19,26 @@
 package org.exoplatform.ide.extension.aws.server.rest;
 
 import org.exoplatform.ide.extension.aws.server.AWSException;
-import org.exoplatform.ide.extension.aws.server.Beanstalk;
-import org.exoplatform.ide.extension.aws.shared.ApplicationInfo;
-import org.exoplatform.ide.extension.aws.shared.ApplicationVersionInfo;
-import org.exoplatform.ide.extension.aws.shared.ConfigurationOptionInfo;
-import org.exoplatform.ide.extension.aws.shared.CreateApplicationRequest;
-import org.exoplatform.ide.extension.aws.shared.CreateApplicationVersionRequest;
-import org.exoplatform.ide.extension.aws.shared.CreateEnvironmentRequest;
-import org.exoplatform.ide.extension.aws.shared.DeleteApplicationVersionRequest;
-import org.exoplatform.ide.extension.aws.shared.EnvironmentInfo;
-import org.exoplatform.ide.extension.aws.shared.SolutionStack;
-import org.exoplatform.ide.extension.aws.shared.SolutionStackConfigurationOptionsRequest;
-import org.exoplatform.ide.extension.aws.shared.UpdateApplicationRequest;
-import org.exoplatform.ide.extension.aws.shared.UpdateApplicationVersionRequest;
-import org.exoplatform.ide.extension.aws.shared.UpdateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateConfigurationTemplateRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteConfigurationTemplateRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationVersionRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateConfigurationTemplateRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -84,6 +90,8 @@ public class BeanstalkService
       beanstalk.logout();
    }
 
+   //
+
    @Path("system/solution-stacks")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
@@ -100,6 +108,8 @@ public class BeanstalkService
    {
       return beanstalk.listSolutionStackConfigurationOptions(params.getSolutionStackName());
    }
+
+   //
 
    @Path("apps/create")
    @POST
@@ -150,6 +160,20 @@ public class BeanstalkService
       beanstalk.deleteApplication(vfs, projectId);
    }
 
+   @Path("apps/events")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public EventsList listApplicationEvents(@QueryParam("vfsid") String vfsId,
+                                           @QueryParam("projectid") String projectId,
+                                           ListEventsRequest params) throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.listApplicationEvents(params.getVersionLabel(), params.getTemplateName(),
+         params.getEnvironmentId(), params.getSeverity(), params.getStartTime(), params.getEndTime(),
+         params.getMaxRecords(), params.getNextToken(), vfs, projectId);
+   }
+
    @Path("apps")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
@@ -157,6 +181,50 @@ public class BeanstalkService
    {
       return beanstalk.listApplications();
    }
+
+   //
+
+   @Path("apps/template/create")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public ConfigurationTemplateInfo createConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                                                @QueryParam("projectid") String projectId,
+                                                                CreateConfigurationTemplateRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.createConfigurationTemplate(params.getTemplateName(), params.getSolutionStackName(),
+         params.getSourceApplicationName(), params.getSourceTemplateName(), params.getEnvironmentId(),
+         params.getDescription(), params.getOptions(), vfs, projectId);
+   }
+
+   @Path("apps/template/update")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public ConfigurationTemplateInfo updateConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                                                @QueryParam("projectid") String projectId,
+                                                                UpdateConfigurationTemplateRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.updateConfigurationTemplate(params.getTemplateName(), params.getDescription(), vfs, projectId);
+   }
+
+   @Path("apps/template/delete")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void deleteConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                           @QueryParam("projectid") String projectId,
+                                           DeleteConfigurationTemplateRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      beanstalk.deleteConfigurationTemplate(params.getTemplateName(), vfs, projectId);
+   }
+
+   //
 
    @Path("apps/versions/create")
    @POST
@@ -210,6 +278,8 @@ public class BeanstalkService
       return beanstalk.listApplicationVersions(vfs, projectId);
    }
 
+   //
+
    @Path("environments/create")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -243,6 +313,13 @@ public class BeanstalkService
          params.getTemplateName(), params.getOptions());
    }
 
+   @Path("environments/rebuild/{id}")
+   @GET
+   public void rebuildEnvironment(@PathParam("id") String id) throws AWSException
+   {
+      beanstalk.rebuildEnvironment(id);
+   }
+
    @Path("environments/stop/{id}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
@@ -261,5 +338,14 @@ public class BeanstalkService
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return beanstalk.listApplicationEnvironments(vfs, projectId);
+   }
+
+   //
+
+   @Path("server/restart/{id}")
+   @GET
+   public void restartApplicationServer(@PathParam("id") String id) throws AWSException
+   {
+      beanstalk.restartApplicationServer(id);
    }
 }
