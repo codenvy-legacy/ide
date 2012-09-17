@@ -78,8 +78,6 @@ import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,8 +96,6 @@ import java.util.List;
  */
 public class Beanstalk
 {
-   private static final Log LOG = ExoLogger.getLogger(Beanstalk.class);
-
    private final AWSAuthenticator authenticator;
 
    public Beanstalk(AWSAuthenticator authenticator)
@@ -1813,7 +1809,6 @@ public class Beanstalk
       if (!s3Client.doesBucketExist(s3Bucket))
       {
          s3Client.createBucket(s3Bucket);
-         LOG.debug("New S3 bucket '{}' created. ", s3Bucket);
       }
       try
       {
