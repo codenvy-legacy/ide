@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.aws.server.s3;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -48,7 +49,14 @@ public class S3
    {
       AmazonS3 s3 = getS3Client();
 
-      return createBucket(s3, name, region);
+      try
+      {
+         return createBucket(s3, name, region);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
    }
 
    private S3Bucket createBucket(AmazonS3 s3, String name, String region)
@@ -70,7 +78,14 @@ public class S3
    {
       AmazonS3 s3 = getS3Client();
 
-      return listBuckets(s3);
+      try
+      {
+         return listBuckets(s3);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
    }
 
    private List<S3Bucket> listBuckets(AmazonS3 s3)
@@ -99,7 +114,14 @@ public class S3
    {
       AmazonS3 s3 = getS3Client();
 
-      deleteBucket(s3, name);
+      try
+      {
+         deleteBucket(s3, name);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
    }
 
    private void deleteBucket(AmazonS3 s3, String name)
