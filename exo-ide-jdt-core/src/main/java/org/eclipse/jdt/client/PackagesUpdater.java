@@ -18,8 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.user.client.Timer;
-
 import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.event.shared.HandlerManager;
@@ -28,7 +26,10 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Timer;
 
+import org.eclipse.jdt.client.event.PackageCreatedEvent;
+import org.eclipse.jdt.client.event.PackageCreatedHandler;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -40,20 +41,24 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, ProjectClosedHandler
+public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, ProjectClosedHandler,
+   PackageCreatedHandler
 {
-   
+
    private static final int DALAY = 1000 * 60 * 3;
-   
+
    private static final int MAX_REQUEST = 5;
-   
+
    private final HandlerManager eventBus;
 
    private final SupportedProjectResolver projectResolver;
@@ -61,9 +66,9 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    private HandlerRegistration saveFileHandler;
 
    private final TypeInfoStorage storage;
-   
+
    private int requestCount = 0;
-   
+
    private String projectId;
 
    public PackagesUpdater(HandlerManager eventBus, SupportedProjectResolver projectResolver, TypeInfoStorage storage)
@@ -73,6 +78,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       this.storage = storage;
       eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
       eventBus.addHandler(ProjectClosedEvent.TYPE, this);
+      eventBus.addHandler(PackageCreatedEvent.TYPE, this);
    }
 
    /**
@@ -81,14 +87,14 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
-      if("pom.xml".equals(event.getFile().getName()))
+      if ("pom.xml".equals(event.getFile().getName()))
       {
          requestCount = 0;
          timer.cancel();
          timer.schedule(DALAY);
       }
    }
-   
+
    private Timer timer = new Timer()
    {
       @Override
@@ -96,8 +102,8 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       {
          updatePackages(projectId);
          requestCount++;
-         if(requestCount < MAX_REQUEST)
-           schedule(DALAY);
+         if (requestCount < MAX_REQUEST)
+            schedule(DALAY);
       }
    };
 
@@ -110,7 +116,8 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       if (projectResolver.isProjectSupported(event.getProject().getProjectType()))
       {
          saveFileHandler = eventBus.addHandler(FileSavedEvent.TYPE, this);
-         projectId  = event.getProject().getId();
+         projectId = event.getProject().getId();
+         requestCount = 0;
          updatePackages(projectId);
       }
    }
@@ -125,27 +132,28 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
             + VirtualFileSystem.getInstance().getInfo().getId();
       try
       {
-         AsyncRequest.build(RequestBuilder.GET,url).send(new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-         {
-
-            @Override
-            protected void onSuccess(StringBuilder result)
+         AsyncRequest.build(RequestBuilder.GET, url).send(
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
-               JSONArray  arr = JSONParser.parseLenient(result.toString()).isArray();
-               JsonStringSet stringSet = JsonCollections.createStringSet();
-               for (int i = 0; i < arr.size(); i++)
+
+               @Override
+               protected void onSuccess(StringBuilder result)
                {
-                 stringSet.add(arr.get(i).isString().stringValue());
+                  JSONArray arr = JSONParser.parseLenient(result.toString()).isArray();
+                  JsonStringSet stringSet = JsonCollections.createStringSet();
+                  for (int i = 0; i < arr.size(); i++)
+                  {
+                     stringSet.add(arr.get(i).isString().stringValue());
+                  }
+                  storage.setPackages(projectId, stringSet);
                }
-               storage.setPackages(projectId, stringSet);
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -164,6 +172,40 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
          saveFileHandler.removeHandler();
          saveFileHandler = null;
       }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.event.PackageCreatedHandler#onPackageCreated(org.eclipse.jdt.client.event.PackageCreatedEvent)
+    */
+   @Override
+   public void onPackageCreated(PackageCreatedEvent event)
+   {
+      FolderModel parentFolder = event.getParentFolder();
+      ProjectModel project = parentFolder.getProject();
+      String sourcePath =
+         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+            : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+      String path = project.getPath() + "/" + sourcePath;
+      String pack = "";
+      if (!path.equals(parentFolder.getPath()))
+         pack = parentFolder.getPath().substring(path.length() + 1);
+      pack = pack.replaceAll("\\\\", ".");
+      String newPackage = event.getPack();
+      if (newPackage.contains("."))
+      {
+         String[] packageFragments = newPackage.split("\\.");
+         StringBuilder builder = new StringBuilder(pack);
+         for (String fragment : packageFragments)
+         {
+            if (builder.length() != 0)
+               builder.append('.');
+            builder.append(fragment);
+            storage.getPackages(projectId).add(builder.toString());
+         }
+      }
+      else
+         storage.getPackages(projectId).add(pack + '.' + newPackage);
+
    }
 
 }
