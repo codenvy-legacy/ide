@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -274,6 +275,23 @@ public class S3
       s3ObjectsList.setNextMarker(objectListing.getNextMarker());
 
       return s3ObjectsList;
+   }
+
+   public void deleteObject(String s3Bucket, String s3key)  throws AWSException
+   {
+      try
+      {
+         deleteObject(getS3Client(), s3Bucket, s3key);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void deleteObject(AmazonS3 s3, String s3Bucket, String s3Key)
+   {
+      s3.deleteObject(new DeleteObjectRequest(s3Bucket, s3Key));
    }
 
    protected AmazonS3 getS3Client() throws AWSException
