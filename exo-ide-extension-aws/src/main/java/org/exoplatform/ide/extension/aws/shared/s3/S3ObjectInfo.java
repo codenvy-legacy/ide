@@ -22,17 +22,17 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface S3Bucket
+public interface S3ObjectInfo
 {
-   String getName();
+   String getS3Bucket();
 
-   void setName(String name);
+   void setS3Bucket(String s3Bucket);
 
-   long getCreated();
+   String getS3Key();
 
-   void setCreated(long creationDate);
+   void setS3Key(String s3Key);
 
-   S3Owner getOwner();
+   String getVersionId();
 
-   void setOwner(S3Owner owner);
+   void setVersionId(String versionId);
 }

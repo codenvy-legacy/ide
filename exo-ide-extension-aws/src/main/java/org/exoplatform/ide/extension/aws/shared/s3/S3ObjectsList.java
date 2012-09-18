@@ -18,21 +18,31 @@
  */
 package org.exoplatform.ide.extension.aws.shared.s3;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface S3Bucket
+public interface S3ObjectsList
 {
-   String getName();
+   List<S3Object> getObjects();
 
-   void setName(String name);
+   void setObjects(List<S3Object> objects);
 
-   long getCreated();
+   String getS3Bucket();
 
-   void setCreated(long creationDate);
+   void setS3Bucket(String s3Bucket);
 
-   S3Owner getOwner();
+   String getPrefix();
 
-   void setOwner(S3Owner owner);
+   void setPrefix(String prefix);
+
+   String getNextMarker();
+
+   void setNextMarker(String nextMarker);
+
+   int getMaxKeys();
+
+   void setMaxKeys(int maxKeys);
 }
