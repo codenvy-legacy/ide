@@ -18,8 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.json.client.JSONObject;
+
 import com.google.gwt.core.client.GWT;
 
+import org.eclipse.jdt.client.NameEnvironment.JSONTypesInfoUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
 import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
@@ -51,11 +54,15 @@ import org.eclipse.jdt.client.templates.TemplateStore;
 import org.eclipse.jdt.client.templates.TypeResolver;
 import org.eclipse.jdt.client.templates.TypeVariableResolver;
 import org.eclipse.jdt.client.templates.VarResolver;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.AddCodeFormatterEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -69,7 +76,9 @@ import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.codeassistant.jvm.shared.TypesInfoList;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
 import org.exoplatform.ide.editor.java.hover.HoverResources;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
@@ -82,13 +91,14 @@ import java.util.Set;
  * @version ${Id}: Jan 20, 2012 1:08:51 PM evgen $
  */
 public class JdtExtension extends Extension implements InitializeServicesHandler, UserInfoReceivedHandler,
-   ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler, SupportedProjectResolver
+   ProjectClosedHandler, ApplicationSettingsReceivedHandler, ApplicationClosedHandler, SupportedProjectResolver,
+   VfsChangedHandler
 {
 
    public static String DOC_CONTEXT;
 
    static String REST_CONTEXT;
-   
+
    private static final HoverResources resources = GWT.create(HoverResources.class);
 
    public static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
@@ -98,6 +108,27 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    private static final Set<String> projectTypes = new HashSet<String>();
 
    private ContentAssistHistory contentAssistHistory;
+
+   private static final String[] fqns = new String[]{//
+      "java.lang.Object",//
+         "java.lang.String",//
+         "java.lang.System",//
+         "java.lang.Boolean",//
+         "java.lang.Byte",//
+         "java.lang.Character",//
+         "java.lang.Class", "java.lang.Cloneable",//
+         "java.lang.Double",//
+         "java.lang.Error",//
+         "java.lang.Exception",//
+         "java.lang.Float",//
+         "java.lang.Integer",//
+         "java.lang.Long",//
+         "java.lang.RuntimeException",//
+         "java.io.Serializable",//
+         "java.lang.Short",//
+         "java.lang.StringBuffer",//
+         "java.lang.Throwable",//
+         "java.lang.Void"};
 
    static
    {
@@ -163,6 +194,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ApplicationClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
       new CodeAssistantPresenter(this);
       new JavaCodeController(this);
       new OutlinePresenter();
@@ -181,7 +213,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
-      org.exoplatform.ide.client.framework.preference.Preferences.get().addPreferenceItem(new FormatterPreferenceItem(formatterProfileManager));
+      org.exoplatform.ide.client.framework.preference.Preferences.get().addPreferenceItem(
+         new FormatterPreferenceItem(formatterProfileManager));
       new QuickFixPresenter(IDE.eventBus(), this);
       new QuickOutlinePresenter(IDE.eventBus());
       injector = GWT.create(JdtGinjector.class);
@@ -202,6 +235,33 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       REST_CONTEXT = event.getApplicationConfiguration().getContext();
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance(), IDE.getInstance());
+   }
+
+   private void loadWellKnownClasses(String[] fqns)
+   {
+      final JSONTypesInfoUnmarshaller unmarshaller = new JSONTypesInfoUnmarshaller();
+      JavaCodeAssistantService.get().getTypesByFqns(fqns, null, new AsyncRequestCallback<TypesInfoList>(unmarshaller)
+      {
+
+         @Override
+         protected void onSuccess(TypesInfoList result)
+         {
+            if (unmarshaller.typesInfo != null)
+            {
+               for (int i = 0; i < unmarshaller.typesInfo.size(); i++)
+               {
+                  JSONObject o = unmarshaller.typesInfo.get(i).isObject();
+                  TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
+               }
+            }
+         }
+
+         @Override
+         protected void onFailure(Throwable exception)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(exception));
+         }
+      });
    }
 
    public static JdtExtension get()
@@ -365,6 +425,16 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    public boolean isProjectSupported(String projectType)
    {
       return projectTypes.contains(projectType);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
+    */
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      IDE.removeHandler(VfsChangedEvent.TYPE, this);
+      loadWellKnownClasses(fqns);
    }
 
 }

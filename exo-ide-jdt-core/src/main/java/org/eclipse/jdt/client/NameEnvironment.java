@@ -79,58 +79,7 @@ public class NameEnvironment implements INameEnvironment
 
    private static Set<String> packages = new HashSet<String>();
 
-   static
-   {
-      String[] fqns = new String[]{//
-         "java.lang.Object",//
-            "java.lang.String",//
-            "java.lang.System",//
-            "java.lang.Boolean",//
-            "java.lang.Byte",//
-            "java.lang.Character",//
-            "java.lang.Class", "java.lang.Cloneable",//
-            "java.lang.Double",//
-            "java.lang.Error",//
-            "java.lang.Exception",//
-            "java.lang.Float",//
-            "java.lang.Integer",//
-            "java.lang.Long",//
-            "java.lang.RuntimeException",//
-            "java.io.Serializable",//
-            "java.lang.Short",//
-            "java.lang.StringBuffer",//
-            "java.lang.Throwable",//
-            "java.lang.Void"};
-      loadWellKnownClasses(fqns);
-   }
-
-   private static void loadWellKnownClasses(String[] fqns)
-   {
-      final JSONTypesInfoUnmarshaller unmarshaller = new JSONTypesInfoUnmarshaller();
-      JavaCodeAssistantService.get().getTypesByFqns(fqns, null, new AsyncRequestCallback<TypesInfoList>(unmarshaller)
-      {
-
-         @Override
-         protected void onSuccess(TypesInfoList result)
-         {
-            if (unmarshaller.typesInfo != null)
-            {
-               for (int i = 0; i < unmarshaller.typesInfo.size(); i++)
-               {
-                  JSONObject o = unmarshaller.typesInfo.get(i).isObject();
-                  TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
-               }
-            }
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
-
+  
    public static void clearFQNBlackList()
    {
       blackSet.clear();
@@ -555,7 +504,7 @@ public class NameEnvironment implements INameEnvironment
    public static class JSONTypesInfoUnmarshaller implements Unmarshallable<TypesInfoList>
    {
 
-      private JSONArray typesInfo;
+      public JSONArray typesInfo;
 
       /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
       @Override
