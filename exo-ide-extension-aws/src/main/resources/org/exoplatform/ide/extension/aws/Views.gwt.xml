@@ -20,7 +20,12 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.aws.client.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display" />
    </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display" />
+   </replace-with>
+
 </module>

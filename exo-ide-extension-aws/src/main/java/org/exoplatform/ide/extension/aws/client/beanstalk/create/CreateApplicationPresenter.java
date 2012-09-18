@@ -16,15 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.create;
+package org.exoplatform.ide.extension.aws.client.beanstalk.create;
+
+import com.google.gwt.user.client.ui.HasValue;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -36,7 +44,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.BeanstalkClientService;
+import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -52,7 +60,42 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
 {
    interface Display extends IsView
    {
+      // Create Application step
 
+      TextFieldItem getNameField();
+
+      TextFieldItem getDescriptionField();
+
+      TextFieldItem getS3BucketField();
+
+      TextFieldItem getS3KeyField();
+
+      // Create Environment step
+      TextFieldItem getEnvNameField();
+
+      TextFieldItem getEnvDescriptionField();
+
+      HasValue<String> getSolutionStackField();
+
+      HasValue<Boolean> getLaunchEnvField();
+
+      HasClickHandlers getNextButton();
+
+      HasClickHandlers getBackButton();
+
+      HasClickHandlers getFinishButton();
+
+      HasClickHandlers getCancelButton();
+
+      void enableNextButton(boolean enabled);
+
+      void enableCreateEnvironmentStep(boolean enabled);
+
+      void focusInApplicationNameField();
+
+      void showCreateApplicationStep();
+
+      void showCreateEnvironmentStep();
    }
 
    private Display display;
@@ -70,15 +113,76 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(CreateApplicationEvent.TYPE, this);
    }
 
    public void bindDisplay()
    {
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
+      });
+
+      display.getNextButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            display.showCreateEnvironmentStep();
+         }
+      });
+
+      display.getBackButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            display.showCreateApplicationStep();
+         }
+      });
+
+      display.getFinishButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            // TODO
+         }
+      });
+
+      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            display.enableNextButton(event.getValue() != null);
+         }
+      });
+
+      display.getLaunchEnvField().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<Boolean> event)
+         {
+            display.enableCreateEnvironmentStep(event.getValue());
+         }
+      });
+
       // TODO
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.aws.client.create.CreateApplicationEvent)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationEvent)
     */
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
@@ -89,6 +193,9 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
          IDE.getInstance().openView(display.asView());
          bindDisplay();
       }
+      display.showCreateApplicationStep();
+      display.focusInApplicationNameField();
+      display.enableNextButton(false);
    }
 
    /**
@@ -134,6 +241,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
    {
       CreateApplicationRequest createApplicationRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+
       // TODO set create application request
       AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
@@ -147,7 +255,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                @Override
                protected void onSuccess(ApplicationInfo result)
                {
-                  // Display result of the created application
+                  // TODO Display result of the created application
                   // TODO Auto-generated method stub
 
                }

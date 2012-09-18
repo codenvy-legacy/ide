@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.create;
+package org.exoplatform.ide.extension.aws.client.beanstalk.login;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link CreateApplicationEvent} event.
+ * Handler for {@link LoginEvent}.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 17, 2012 11:32:40 AM anya $
+ * @version $Id: Sep 14, 2012 3:04:53 PM anya $
  * 
  */
-public interface CreateApplicationHandler extends EventHandler
+public interface LoginHandler extends EventHandler
 {
    /**
-    * Perform actions, when user tries to create application on Elastic Beanstalk.
+    * Perform login operations.
     * 
     * @param event
     */
-   void onCreateApplication(CreateApplicationEvent event);
+   void onLogin(LoginEvent event);
 }
