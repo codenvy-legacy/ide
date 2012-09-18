@@ -25,9 +25,13 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectInfo;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -179,12 +183,65 @@ public class S3
    public S3ObjectInfo uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
       throws AWSException, VirtualFileSystemException, IOException
    {
+//      AmazonS3 s3 = getS3Client();
+//      try
+//      {
+//         return uploadProject(s3, s3Bucket, s3Key, vfs, projectId);
+//      }
+//      catch (AmazonClientException e)
+//      {
+//         throw new AWSException(e);
+//      }
       return null;
    }
 
-   public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys)
+//   private S3ObjectInfo uploadProject(AmazonS3 s3, String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
+//   {
+//      s3.uploadPart(new UploadPartRequest().withBucketName(s3Bucket).withKey(s3Key).withUploadId(projectId));
+//   }
+
+   public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
-      return null;
+      AmazonS3 s3 = getS3Client();
+      try
+      {
+         return listObjects(s3, s3Bucket, prefix, nextMarker, maxKeys);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private S3ObjectsList listObjects(AmazonS3 s3, String s3Bucket, String prefix, String nextMarker, int maxKeys)
+   {
+      ObjectListing objectListing = s3.listObjects(new ListObjectsRequest(s3Bucket, prefix, nextMarker, "", maxKeys));
+      S3ObjectsList s3ObjectsList = new S3ObjectsListImpl();
+
+      List<S3Object> s3Objects = new ArrayList<S3Object>(objectListing.getObjectSummaries().size());
+
+      for (S3ObjectSummary object: objectListing.getObjectSummaries())
+      {
+         s3Objects.add(
+            new S3ObjectImpl.Builder()
+               .eTag(object.getETag())
+               .owner(object.getOwner().getId(), object.getOwner().getDisplayName())
+               .s3Bucket(object.getBucketName())
+               .s3Key(object.getKey())
+               .size(object.getSize())
+               .storageClass(object.getStorageClass())
+               .updated(object.getLastModified())
+               .build()
+         );
+      }
+
+      s3ObjectsList.setMaxKeys(objectListing.getMaxKeys());
+      s3ObjectsList.setObjects(s3Objects);
+      s3ObjectsList.setPrefix(objectListing.getPrefix());
+      s3ObjectsList.setS3Bucket(objectListing.getBucketName());
+      s3ObjectsList.setNextMarker(objectListing.getNextMarker());
+
+      return s3ObjectsList;
    }
 
    //
