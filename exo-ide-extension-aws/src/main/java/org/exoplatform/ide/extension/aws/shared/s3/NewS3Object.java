@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface S3ObjectInfo
+public interface NewS3Object
 {
    String getS3Bucket();
 
