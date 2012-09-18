@@ -246,7 +246,6 @@ public class S3
       {
          inputStream.close();
       }
-
       return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
    }
 
