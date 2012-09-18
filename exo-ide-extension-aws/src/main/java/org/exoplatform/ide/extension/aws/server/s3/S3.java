@@ -240,7 +240,7 @@ public class S3
          {
             metadata.setContentLength(zippedProjectDir.getLength());
          }
-         result = s3.putObject(s3Bucket, s3Key, zippedProjectDir.getStream(), metadata);
+         result = s3.putObject(s3Bucket, s3Key, inputStream, metadata);
       }
       finally
       {
@@ -248,8 +248,6 @@ public class S3
       }
       return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
    }
-
-
 
    public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
