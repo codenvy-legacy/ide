@@ -161,7 +161,6 @@ public class TypeInfoStorage
    public void clear()
    {
       storage.clear();
-      packages = null;
    }
 
    /**
