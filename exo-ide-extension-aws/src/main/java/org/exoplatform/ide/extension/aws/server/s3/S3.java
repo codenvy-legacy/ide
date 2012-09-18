@@ -34,8 +34,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
-import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -43,7 +43,9 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,37 +157,21 @@ public class S3
     */
    public NewS3Object putObject(String s3Bucket, String s3Key, URL data) throws AWSException, IOException
    {
+      URLConnection conn = null;
       try
       {
-         return putObject(getS3Client(), s3Bucket, s3Key, data);
-      }
-      catch (AmazonClientException e)
-      {
-         throw new AWSException(e);
-      }
-   }
-
-   private NewS3Object putObject(AmazonS3 s3, String s3Bucket, String s3Key, URL data) throws IOException
-   {
-      InputStream inputStream = null;
-
-      try
-      {
-         inputStream = data.openStream();
-         ObjectMetadata metadata = new ObjectMetadata();
-
-         if (inputStream.available() != 0)
-         {
-            metadata.setContentLength(inputStream.available());
-         }
-
-         PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, inputStream, metadata));
-
-         return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
+         conn = data.openConnection();
+         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentLength());
       }
       finally
       {
-          inputStream.close();
+         if (conn != null)
+         {
+            if ("http".equals(data.getProtocol()) || "https".equals(data.getProtocol()))
+            {
+               ((HttpURLConnection)conn).disconnect();
+            }
+         }
       }
    }
 
@@ -211,9 +197,10 @@ public class S3
    public NewS3Object uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
       throws AWSException, VirtualFileSystemException, IOException
    {
+      ContentStream zippedProject = vfs.exportZip(projectId);
       try
       {
-         return uploadProject(getS3Client(), s3Bucket, s3Key, vfs, projectId);
+         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getLength());
       }
       catch (AmazonClientException e)
       {
@@ -221,35 +208,24 @@ public class S3
       }
    }
 
-   private NewS3Object uploadProject(AmazonS3 s3,
-                                      String s3Bucket,
-                                      String s3Key,
-                                      VirtualFileSystem vfs,
-                                      String projectId)
-      throws VirtualFileSystemException, IOException
+   private NewS3Object putObject(AmazonS3 s3, String s3Bucket, String s3Key, InputStream stream, long length)
+      throws IOException
    {
-      ContentStream zippedProjectDir = vfs.exportZip(projectId);
-      InputStream inputStream = null;
-      PutObjectResult result = null;
-
       try
       {
-         inputStream = zippedProjectDir.getStream();
          ObjectMetadata metadata = new ObjectMetadata();
-         if (zippedProjectDir.getLength() != -1)
+         if (length != 1)
          {
-            metadata.setContentLength(zippedProjectDir.getLength());
+            metadata.setContentLength(length);
          }
-         result = s3.putObject(s3Bucket, s3Key, zippedProjectDir.getStream(), metadata);
+         PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, stream, metadata));
+         return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
       }
       finally
       {
-         inputStream.close();
+         stream.close();
       }
-      return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
    }
-
-
 
    public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
@@ -270,13 +246,13 @@ public class S3
             .withBucketName(s3Bucket)
             .withPrefix(prefix)
             .withMarker(nextMarker)
-            .withMaxKeys((maxKeys == -1)?null:maxKeys)
+            .withMaxKeys((maxKeys == -1) ? null : maxKeys)
       );
       S3ObjectsList s3ObjectsList = new S3ObjectsListImpl();
 
       List<S3Object> s3Objects = new ArrayList<S3Object>(objectListing.getObjectSummaries().size());
 
-      for (S3ObjectSummary object: objectListing.getObjectSummaries())
+      for (S3ObjectSummary object : objectListing.getObjectSummaries())
       {
          s3Objects.add(
             new S3ObjectImpl.Builder()
