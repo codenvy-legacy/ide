@@ -1,0 +1,131 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.extension.aws.server.rest;
+
+import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.server.s3.S3;
+import org.exoplatform.ide.extension.aws.server.s3.S3Content;
+import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+
+/**
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
+ */
+@Path("ide/aws/s3")
+public class S3Service
+{
+   @Inject
+   private S3 s3;
+
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
+
+   public S3Service()
+   {
+   }
+
+   @Path("buckets/create")
+   @POST
+   public S3Bucket createBucket(@QueryParam("name") String name,
+                                @QueryParam("region") String region)
+      throws AWSException
+   {
+      return s3.createBucket(name, region);
+   }
+
+   @Path("buckets")
+   @GET
+   public List<S3Bucket> listBuckets() throws AWSException
+   {
+      return s3.listBuckets();
+   }
+
+   @Path("buckets/delete/{name}")
+   @POST
+   public void deleteBucket(@PathParam("name") String name) throws AWSException
+   {
+      s3.deleteBucket(name);
+   }
+
+   @Path("objects/put/{s3bucket}")
+   @POST
+   public NewS3Object putObject(@PathParam("s3bucket") String s3Bucket,
+                                @QueryParam("s3key") String s3Key,
+                                @QueryParam("data") URL data)
+      throws AWSException, IOException
+   {
+      return s3.putObject(s3Bucket, s3Key, data);
+   }
+
+   @Path("objects/upload/{s3bucket}")
+   @POST
+   public NewS3Object uploadProject(@PathParam("s3bucket") String s3Bucket,
+                                    @QueryParam("s3key") String s3Key,
+                                    @QueryParam("vfsid") String vfsid,
+                                    @QueryParam("projectid") String projectId)
+      throws VirtualFileSystemException, AWSException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, null);
+      return s3.uploadProject(s3Bucket, s3Key, vfs, projectId);
+   }
+
+   @Path("objects/{s3bucket}")
+   @POST
+   public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
+                                    @QueryParam("prefix") String prefix,
+                                    @QueryParam("nextmarker") String nextMarker,
+                                    @QueryParam("maxkeys") int maxKeys)
+      throws AWSException
+   {
+      return s3.listObjects(s3Bucket, prefix, nextMarker, maxKeys);
+   }
+
+   @Path("objects/delete/{s3bucket}")
+   @POST
+   public void deleteObject(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3key)
+      throws AWSException
+   {
+      s3.deleteObject(s3Bucket, s3key);
+   }
+
+   @Path("objects/{s3bucket}")
+   @GET
+   public S3Content getObjectContent(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3Key)
+      throws AWSException
+   {
+      //TODO set content type
+      //TODO set header param to download file
+//      return s3.getObjectContent(s3Bucket, s3Key);
+      return null;
+   }
+}
