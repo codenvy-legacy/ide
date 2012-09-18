@@ -78,7 +78,8 @@ public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
       final String email = user.getEmail();
       if (email == null || email.isEmpty())
       {
-         throw new OAuthAuthenticationException("Could not login. Please setup email in your GitHub public profile. ");
+         throw new OAuthAuthenticationException("Cloud-IDE tries to use your GitHub public e-mail as a user identifier but it is not set. "  +
+            "Please fill the e-mail in your public GitHub profile and return back here.");
       }
       try
       {
