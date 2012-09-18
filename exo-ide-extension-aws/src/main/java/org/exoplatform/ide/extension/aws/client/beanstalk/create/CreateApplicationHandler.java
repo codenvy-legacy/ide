@@ -16,40 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client;
+package org.exoplatform.ide.extension.aws.client.beanstalk.create;
 
-import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.framework.control.IDEControl;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link CreateApplicationEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 17, 2012 10:15:42 AM anya $
+ * @version $Id: Sep 17, 2012 11:32:40 AM anya $
  * 
  */
-public class BeanstalkControl extends SimpleControl implements IDEControl
+public interface CreateApplicationHandler extends EventHandler
 {
-   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlId();
-
-   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlTitle();
-
-   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlPrompt();
-
-   public BeanstalkControl()
-   {
-      super(ID);
-      setTitle(TITLE);
-      setPrompt(PROMPT);
-
-      // TODO setImage
-   }
-
    /**
-    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
+    * Perform actions, when user tries to create application on Elastic Beanstalk.
+    * 
+    * @param event
     */
-   @Override
-   public void initialize()
-   {
-      setVisible(true);
-      setEnabled(true);
-   }
+   void onCreateApplication(CreateApplicationEvent event);
 }

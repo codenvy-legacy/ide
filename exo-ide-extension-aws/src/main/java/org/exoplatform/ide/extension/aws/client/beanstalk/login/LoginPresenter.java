@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.login;
+package org.exoplatform.ide.extension.aws.client.beanstalk.login;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.BeanstalkClientService;
+import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -198,7 +198,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login.LoginEvent)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginEvent)
     */
    @Override
    public void onLogin(LoginEvent event)
