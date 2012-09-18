@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.server.s3;
 
-import com.amazonaws.services.s3.model.S3Object;
 import java.io.InputStream;
 
 /**
@@ -27,22 +26,22 @@ import java.io.InputStream;
  */
 public final class S3Content
 {
-   private InputStream stream;
-   private S3Object s3Object;
+   private final InputStream stream;
+   private final String contentType;
 
-   public S3Content(S3Object s3Object)
+   public S3Content(InputStream stream, String contentType)
    {
-      this.s3Object = s3Object;
+      this.stream = stream;
+      this.contentType = contentType;
    }
 
-   public InputStream getS3ContentInputStream()
+   public InputStream getStream()
    {
-      stream = s3Object.getObjectContent();
       return stream;
    }
 
-   public String getS3ContentType()
+   public String getContentType()
    {
-      return s3Object.getObjectMetadata().getContentType();
+      return contentType;
    }
 }

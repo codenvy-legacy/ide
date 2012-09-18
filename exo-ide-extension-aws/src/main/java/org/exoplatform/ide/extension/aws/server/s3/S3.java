@@ -295,7 +295,7 @@ public class S3
       s3.deleteObject(new DeleteObjectRequest(s3Bucket, s3Key));
    }
 
-   public InputStream getObjectContent(String s3Bucket, String s3Key) throws AWSException
+   public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException
    {
       try
       {
@@ -307,11 +307,11 @@ public class S3
       }
    }
 
-   private InputStream getObjectContent(AmazonS3 s3, String s3Bucket, String s3Key)
+   private S3Content getObjectContent(AmazonS3 s3, String s3Bucket, String s3Key)
    {
       com.amazonaws.services.s3.model.S3Object s3Object = s3.getObject(new GetObjectRequest(s3Bucket, s3Key));
 
-      return new S3Content(s3Object).getS3ContentInputStream();
+      return new S3Content(s3Object.getObjectContent(), s3Object.getObjectMetadata().getContentType());
    }
 
    protected AmazonS3 getS3Client() throws AWSException
