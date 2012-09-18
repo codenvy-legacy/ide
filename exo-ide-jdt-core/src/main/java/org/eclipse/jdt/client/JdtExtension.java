@@ -70,6 +70,7 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
+import org.exoplatform.ide.editor.java.hover.HoverResources;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import java.util.HashMap;
@@ -87,6 +88,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    public static String DOC_CONTEXT;
 
    static String REST_CONTEXT;
+   
+   private static final HoverResources resources = GWT.create(HoverResources.class);
 
    public static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
 
@@ -174,6 +177,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowQuickOutlineControl());
       IDE.getInstance().addControl(new AddGetterSetterControl());
       IDE.getInstance().addControl(new GenerateNewConstructorUsingFieldsControl());
+      IDE.getInstance().addControl(new ViewJavadocControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
@@ -184,7 +188,9 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       injector.getNewConstructorUsingFields();
       injector.getSetterGetterPresenter();
       TypeInfoStorage.get().clear();
+      resources.hover().ensureInjected();
       new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
+      new JavadocPresenter(IDE.eventBus(), resources);
    }
 
    /**

@@ -50,9 +50,9 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, ProjectClosedHandler
 {
    
-   private static final int DALAY = 1000 * 60 * 5;
+   private static final int DALAY = 1000 * 60 * 3;
    
-   private static final int MAX_REQUEST = 3;
+   private static final int MAX_REQUEST = 5;
    
    private final HandlerManager eventBus;
 

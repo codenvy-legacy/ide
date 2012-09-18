@@ -253,11 +253,11 @@ public class Autocompleter {
       return true;
     }
 
-    if (isCtrlSpace(trigger)) {
-      boxTrigger = trigger;
-      scheduleRequestAutocomplete();
-      return true;
-    }
+//    if (isCtrlSpace(trigger)) {
+//      boxTrigger = trigger;
+//      scheduleRequestAutocomplete();
+//      return true;
+//    }
 
     LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter();
     ExplicitAction action =
