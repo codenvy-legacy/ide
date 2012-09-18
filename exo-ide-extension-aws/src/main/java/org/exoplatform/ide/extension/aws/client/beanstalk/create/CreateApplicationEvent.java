@@ -16,32 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.login;
+package org.exoplatform.ide.extension.aws.client.beanstalk.create;
+
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to create application on Beanstalk.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 11:52:17 AM anya $
+ * @version $Id: Sep 17, 2012 11:32:25 AM anya $
  * 
  */
-public interface Credentials
+public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
 {
    /**
-    * @return the access_key
+    * Type, used to register the event.
     */
-   public String getAccess_key();
+   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
 
    /**
-    * @param access_key the access_key to set
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
-   public void setAccess_key(String access_key);
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
 
    /**
-    * @return the secret_key
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
-   public String getSecret_key();
-
-   /**
-    * @param secret_key the secret_key to set
-    */
-   public void setSecret_key(String secret_key);
+   @Override
+   protected void dispatch(CreateApplicationHandler handler)
+   {
+      handler.onCreateApplication(this);
+   }
 }

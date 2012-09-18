@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client;
+package org.exoplatform.ide.extension.aws.client.beanstalk;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -28,7 +28,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.aws.client.login.Credentials;
+import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.beanstalk.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
@@ -79,7 +80,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#login(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#login(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -97,7 +98,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#logout(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void logout(AsyncRequestCallback<Object> callback) throws RequestException
@@ -108,7 +109,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getAvailableSolutionStacks(AsyncRequestCallback<List<SolutionStack>> callback) throws RequestException
@@ -120,7 +121,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#getSolutionStackConfigurationOptions(java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getSolutionStackConfigurationOptions(java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -135,22 +136,24 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#createApplication(java.util.Map,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createApplication(java.util.Map,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createApplication(String vfsId, String projectId, CreateApplicationRequest createApplicationRequest,
       AsyncRequestCallback<ApplicationInfo> callback) throws RequestException
    {
-      String url = restServiceContext + APPLICATION_CREATE;
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(APPLICATION_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#getApplicationInfo(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getApplicationInfo(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -165,7 +168,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#deleteApplication(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#deleteApplication(java.lang.String, java.lang.String,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
@@ -180,7 +183,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.BeanstalkClientService#getApplications(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getApplications(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException

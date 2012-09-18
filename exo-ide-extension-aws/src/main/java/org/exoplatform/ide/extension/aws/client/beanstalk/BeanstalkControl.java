@@ -16,39 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.create;
+package org.exoplatform.ide.extension.aws.client.beanstalk;
 
-import com.google.gwt.event.shared.GwtEvent;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * Event occurs, when user tries to create application on Beanstalk.
- * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 17, 2012 11:32:25 AM anya $
+ * @version $Id: Sep 17, 2012 10:15:42 AM anya $
  * 
  */
-public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
+public class BeanstalkControl extends SimpleControl implements IDEControl
 {
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
+   private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlId();
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
+   private static final String TITLE = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlTitle();
+
+   private static final String PROMPT = AWSExtension.LOCALIZATION_CONSTANT.beanstalkControlPrompt();
+
+   public BeanstalkControl()
    {
-      return TYPE;
+      super(ID);
+      setTitle(TITLE);
+      setPrompt(PROMPT);
+
+      // TODO setImage
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
     */
    @Override
-   protected void dispatch(CreateApplicationHandler handler)
+   public void initialize()
    {
-      handler.onCreateApplication(this);
+      setVisible(true);
+      setEnabled(true);
    }
 }

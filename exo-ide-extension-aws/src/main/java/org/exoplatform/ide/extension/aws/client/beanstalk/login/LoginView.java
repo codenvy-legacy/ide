@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.login;
+package org.exoplatform.ide.extension.aws.client.beanstalk.login;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -40,7 +40,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
 
    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 210;
+   private static final int HEIGHT = 213;
 
    private static final String LOGIN_BUTTON_ID = "ideLoginViewLoginButton";
 
@@ -104,7 +104,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getAccessKey()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#getAccessKey()
     */
    @Override
    public TextFieldItem getAccessKey()
@@ -113,7 +113,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getSecretKey()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#getSecretKey()
     */
    @Override
    public TextFieldItem getSecretKey()
@@ -122,7 +122,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#getLoginButton()
     */
    @Override
    public HasClickHandlers getLoginButton()
@@ -131,7 +131,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -140,7 +140,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#getLoginResult()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#getLoginResult()
     */
    @Override
    public HasValue<String> getLoginResult()
@@ -149,7 +149,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLoginButton(boolean)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#enableLoginButton(boolean)
     */
    @Override
    public void enableLoginButton(boolean enable)
@@ -158,7 +158,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#focusInAccessKey()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter.Display#focusInAccessKey()
     */
    @Override
    public void focusInAccessKey()
