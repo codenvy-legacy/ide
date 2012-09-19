@@ -56,6 +56,7 @@ public class HotkeysFormTest extends BaseTest
       deleteCookies();
       try
       {
+         VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
@@ -87,7 +88,7 @@ public class HotkeysFormTest extends BaseTest
       }
    }
 
-   //@Test
+   @Test
    public void testFormAndButtons() throws Exception
    {
       //step 1 create new project, open Customize Hotkey form
@@ -141,7 +142,7 @@ public class HotkeysFormTest extends BaseTest
 
    }
 
-   //  @Test
+   @Test
    public void testBindingAndUnbindingNewHotkey() throws Exception
    {
       //step 1 bind for CSS command new value, check state elements, save changes
@@ -169,7 +170,7 @@ public class HotkeysFormTest extends BaseTest
 
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       assertEquals("Ctrl+M", IDE.CUSTOMIZE_HOTKEYS.getTextTypeKeys());
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.LOADER.waitClosed();
@@ -224,49 +225,42 @@ public class HotkeysFormTest extends BaseTest
       IDE.PREFERENCES.waitPreferencesClose();
    }
 
-   // @Test
-   //TODO If will be fix problem with impossible selecting elements after 
-   //scroll of form "Customize Hotkeys..." in FF 4.0 and higher, test should be reworked.
+   @Test
    public void testUnbindingDefaultHotkey() throws Exception
    {
-      driver.navigate().refresh();
-      //step 1: checking default hotkey
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "n");
-      IDE.TEMPLATES.waitOpened();
-      IDE.TEMPLATES.clickCancelButton();
-      IDE.TEMPLATES.waitClosed();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      openCustomizeHotkeyForm();
 
       //step 2: preconditioning: Select XML file, set new key bind and
       // check this work hotkey in IDE
-      //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
+
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+
       driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
+
       IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.isEditorTabSelected("Untitled file.css *");
       IDE.EDITOR.closeTabIgnoringChanges(1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 3: unbind new hotkey and check this in IDE
-      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(Commands.NEW_CSS_FILE);
       IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       driver.switchTo().activeElement().sendKeys(Keys.CONTROL.toString() + "m");
       IDE.EDITOR.waitTabNotPresent("Untitled file.css *");

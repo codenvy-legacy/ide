@@ -341,7 +341,7 @@ public class CustomizeHotkeys extends AbstractTestModule
    /**
     * click unbind button
     */
-   public void unbindlButtonClick()
+   public void unbindButtonClick()
    {
       unbindButton.click();
    }

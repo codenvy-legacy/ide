@@ -195,10 +195,10 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
       IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
       IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindlButtonClick();
+      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitClosed();
       closeAllTabs();
