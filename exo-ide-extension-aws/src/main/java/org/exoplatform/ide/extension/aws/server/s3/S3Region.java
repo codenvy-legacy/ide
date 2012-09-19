@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.aws.server.s3;
 
-public enum S3Region {
-
+public enum S3Region
+{
    US_Standard(null),
    US_West("us-west-1"),
    US_West_2("us-west-2"),
