@@ -95,7 +95,7 @@ public class S3Service
       return s3.putObject(s3Bucket, s3Key, data);
    }
 
-   @Path("objects/upload/{s3bucket}")
+   @Path("objects/project/upload/{s3bucket}")
    @POST
    public NewS3Object uploadProject(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("s3key") String s3Key,
