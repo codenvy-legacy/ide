@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.aws.server.ec2;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
@@ -340,28 +339,5 @@ public class EC2
          throw new AWSException("Authentication required.");
       }
       return new AmazonEC2Client(credentials);
-   }
-
-   static class Auth implements AWSAuthenticator
-   {
-      AWSCredentials credentials;
-
-      @Override
-      public void login(String accessKey, String secret) throws AWSException
-      {
-         credentials = new BasicAWSCredentials(accessKey, secret);
-      }
-
-      @Override
-      public void logout() throws AWSException
-      {
-         credentials = null;
-      }
-
-      @Override
-      public AWSCredentials getCredentials()
-      {
-         return credentials;
-      }
    }
 }
