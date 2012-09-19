@@ -37,8 +37,9 @@ public class AWSApplication extends Application
 
    public AWSApplication()
    {
-      classes = new HashSet<Class<?>>(1);
+      classes = new HashSet<Class<?>>(2);
       classes.add(BeanstalkService.class);
+      classes.add(S3Service.class);
 //      singletons = new HashSet<Object>(1); TODO
 //      singletons.add(new AWSExceptionMapper());
    }
