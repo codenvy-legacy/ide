@@ -28,25 +28,32 @@ public enum S3Region
    AP_Tokyo("ap-northeast-1"),
    SA_SaoPaulo("sa-east-1");
 
-   private final String regionId;
+   private final String value;
 
-   private S3Region(String regionId) {
-      this.regionId = regionId;
+   private S3Region(String value)
+   {
+      this.value = value;
    }
 
    @Override
-   public String toString() {
-      return regionId;
+   public String toString()
+   {
+      return value;
    }
 
-   public static S3Region fromValue(String s3RegionString) throws IllegalArgumentException {
-      for (S3Region region : S3Region.values()) {
-         String regionString = region.toString();
-         if (regionString == null && s3RegionString == null) return region;
-         if (regionString != null && regionString.equals(s3RegionString)) return region;
+   public static S3Region fromValue(String value)
+   {
+      for (S3Region v : S3Region.values())
+      {
+         if (v == null && value == null)
+         {
+            return v;
+         }
+         if (v.value.equals(value))
+         {
+            return v;
+         }
       }
-
-      throw new IllegalArgumentException(
-         "Cannot create enum from " + s3RegionString + " value!");
+      throw new IllegalArgumentException("Invalid value '" + value + "' ");
    }
 }
