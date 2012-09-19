@@ -64,11 +64,11 @@ public class S3
       this.authenticator = authenticator;
    }
 
-   public S3Bucket createBucket(String name, String region) throws AWSException
+   public S3Bucket createBucket(String name, S3Region region) throws AWSException
    {
       try
       {
-         return createBucket(getS3Client(), name, region);
+         return createBucket(getS3Client(), name, region.toString());
       }
       catch (AmazonClientException e)
       {

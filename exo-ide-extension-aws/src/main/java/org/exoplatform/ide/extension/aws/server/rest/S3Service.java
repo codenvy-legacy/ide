@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
+import org.exoplatform.ide.extension.aws.server.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
@@ -62,7 +63,8 @@ public class S3Service
                                 @QueryParam("region") String region)
       throws AWSException
    {
-      return s3.createBucket(name, region);
+      S3Region s3Region = S3Region.fromValue(region);
+      return s3.createBucket(name, s3Region);
    }
 
    @Path("buckets")
