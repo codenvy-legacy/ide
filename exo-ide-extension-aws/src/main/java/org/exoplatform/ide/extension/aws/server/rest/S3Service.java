@@ -141,7 +141,7 @@ public class S3Service
          .build();
    }
 
-   @Path("object/upload/{s3bucket}")
+   @Path("objects/upload/{s3bucket}")
    @POST
    public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
                               java.util.Iterator<FileItem> formData) throws InvalidArgumentException, Exception

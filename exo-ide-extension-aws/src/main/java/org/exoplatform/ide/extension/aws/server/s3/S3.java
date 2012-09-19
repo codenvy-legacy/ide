@@ -182,7 +182,14 @@ public class S3
    public NewS3Object putObject(String s3Bucket, String s3Key, InputStream stream, String mediaType, long length)
       throws AWSException, IOException
    {
-      return putObject(getS3Client(), s3Bucket, s3Key, stream, mediaType, length);
+      try
+      {
+         return putObject(getS3Client(), s3Bucket, s3Key, stream, mediaType, length);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
    }
 
    /**
@@ -229,7 +236,7 @@ public class S3
       try
       {
          ObjectMetadata metadata = new ObjectMetadata();
-         if (length != 1)
+         if (length != -1)
          {
             metadata.setContentLength(length);
          }
