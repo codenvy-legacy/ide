@@ -18,7 +18,20 @@
  */
 package org.exoplatform.ide.extension.aws.server.rest;
 
+import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.server.ec2.EC2;
+import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
+import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import java.util.List;
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -27,4 +40,65 @@ import javax.ws.rs.Path;
 @Path("ide/aws/ec2")
 public class EC2Service
 {
+   @Inject
+   private EC2 ec2;
+
+   public EC2Service()
+   {
+   }
+
+   @Path("images")
+   @GET
+   public ImagesList listImages(@QueryParam("owner") String owner,
+                                @QueryParam("ispublic") boolean isPublic,
+                                @QueryParam("architecture") String architecture,
+                                @QueryParam("skipcount") int skipCount,
+                                @QueryParam("maxitems") int maxItems) throws AWSException
+   {
+      Architecture arch = Architecture.fromValue(architecture);
+
+      return ec2.listImages(owner, isPublic, arch, skipCount, maxItems);
+   }
+
+   @Path("key_pairs")
+   @GET
+   public List<KeyPairInfo> listKeyPairs() throws AWSException
+   {
+      return ec2.listKeyPairs();
+   }
+
+   @Path("security_groups")
+   @GET
+   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
+   {
+      return ec2.listSecurityGroups();
+   }
+
+   @Path("regions")
+   @GET
+   public List<RegionInfo> listRegions() throws AWSException
+   {
+      return ec2.listRegions();
+   }
+
+   @Path("availability_zones")
+   @GET
+   public List<String> listAvailabilityZones() throws AWSException
+   {
+      return ec2.listAvailabilityZones();
+   }
+
+   @Path("run")
+   @POST
+   public void runInstance(RunInstanceRequest request) throws AWSException
+   {
+       ec2.runInstance(
+          request.getImageId(),
+          request.getInstanceType(),
+          request.getNumberOfInstances(),
+          request.getKeyName(),
+          request.getSecurityGroupsIds(),
+          request.getAvailabilityZone()
+       );
+   }
 }
