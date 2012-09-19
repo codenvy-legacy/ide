@@ -115,10 +115,11 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    {
       if (projectResolver.isProjectSupported(event.getProject().getProjectType()))
       {
+         timer.cancel();
          saveFileHandler = eventBus.addHandler(FileSavedEvent.TYPE, this);
          projectId = event.getProject().getId();
          requestCount = 0;
-         timer.cancel();
+         updatePackages(projectId);
          timer.schedule(DALAY);
       }
    }
