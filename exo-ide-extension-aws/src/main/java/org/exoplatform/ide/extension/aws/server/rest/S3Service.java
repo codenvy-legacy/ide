@@ -144,7 +144,8 @@ public class S3Service
    @Path("objects/upload/{s3bucket}")
    @POST
    public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
-                              java.util.Iterator<FileItem> formData) throws Exception
+                              java.util.Iterator<FileItem> formData)
+      throws IOException, InvalidArgumentException, AWSException
    {
       FileItem contentItem = null;
       MediaType mediaType = null;
