@@ -80,7 +80,11 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
 
       HasValue<String> getErrorLabel();
 
-      void focusEmailField();
+      HasValue<Boolean> getCreateNewUserField();
+
+      void showAdvancedData(boolean show);
+
+      void focusDomainField();
    }
 
    private Display display;
@@ -184,18 +188,37 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
             checkBeforeCreate();
          }
       });
+
+      display.getCreateNewUserField().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<Boolean> event)
+         {
+            display.enableCreateButton(isRequiredFieldsFullFilled());
+            display.showAdvancedData(event.getValue());
+         }
+      });
    }
 
    private boolean isRequiredFieldsFullFilled()
    {
-      return (display.getEmailField().getValue() != null && !display.getEmailField().getValue().isEmpty()
-         && display.getPasswordField().getValue() != null && !display.getPasswordField().getValue().isEmpty()
-         && display.getConfirmPasswordField().getValue() != null
-         && !display.getConfirmPasswordField().getValue().isEmpty() && display.getFirstNameField().getValue() != null
-         && !display.getFirstNameField().getValue().isEmpty() && display.getLastNameField().getValue() != null
-         && !display.getLastNameField().getValue().isEmpty() && display.getAccountNameField().getValue() != null
-         && !display.getAccountNameField().getValue().isEmpty() && display.getUserNameField().getValue() != null && !display
-         .getUserNameField().getValue().isEmpty());
+      if (display.getCreateNewUserField().getValue())
+      {
+         return (display.getEmailField().getValue() != null && !display.getEmailField().getValue().isEmpty()
+            && display.getAccountNameField().getValue() != null && !display.getAccountNameField().getValue().isEmpty()
+            && display.getPasswordField().getValue() != null && !display.getPasswordField().getValue().isEmpty()
+            && display.getConfirmPasswordField().getValue() != null
+            && !display.getConfirmPasswordField().getValue().isEmpty()
+            && display.getFirstNameField().getValue() != null && !display.getFirstNameField().getValue().isEmpty()
+            && display.getLastNameField().getValue() != null && !display.getLastNameField().getValue().isEmpty()
+            && display.getUserNameField().getValue() != null && !display.getUserNameField().getValue().isEmpty());
+      }
+      else
+      {
+         return (display.getEmailField().getValue() != null && !display.getEmailField().getValue().isEmpty()
+            && display.getAccountNameField().getValue() != null && !display.getAccountNameField().getValue().isEmpty());
+      }
    }
 
    /**
@@ -203,6 +226,8 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
     */
    private void checkBeforeCreate()
    {
+      boolean isCreateNew = display.getCreateNewUserField().getValue();
+
       boolean accountNameIsCorrect =
          (display.getAccountNameField().getValue() != null && display.getAccountNameField().getValue().length() >= 3);
       boolean passwordIsCorrect =
@@ -213,17 +238,18 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
 
       display.getDomainErrorLabel().setValue(
          accountNameIsCorrect ? "" : CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountShortDomain());
-      if (passwordIsCorrect)
+      if (passwordIsCorrect && isCreateNew)
       {
          display.getErrorLabel().setValue(
             passwordMatch ? "" : CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountPasswordsDoNotMatch());
       }
-      else
+      else if (!passwordIsCorrect && isCreateNew)
       {
          display.getErrorLabel().setValue(CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountShortPassword());
       }
 
-      if (passwordIsCorrect && accountNameIsCorrect && passwordMatch)
+      if ((isCreateNew && passwordIsCorrect && accountNameIsCorrect && passwordMatch)
+         || (!isCreateNew && accountNameIsCorrect))
       {
          createAccount();
       }
@@ -250,6 +276,8 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
                @Override
                protected void onSuccess(CloudBeesAccount result)
                {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountSuccess(result
+                     .getName()), Type.INFO));
                   addUserToAccount(result);
                }
 
@@ -274,28 +302,29 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
    private void addUserToAccount(CloudBeesAccount account)
    {
       CloudBeesUser user = CloudBeesExtension.AUTO_BEAN_FACTORY.user().as();
-      user.setName(display.getUserNameField().getValue());
-      user.setFirst_name(display.getFirstNameField().getValue());
-      user.setLast_name(display.getLastNameField().getValue());
       user.setEmail(display.getEmailField().getValue());
-      user.setPassword(display.getPasswordField().getValue());
-      // user.setAccounts(new ArrayList<CloudBeesAccount>(Arrays.asList(account)));
+      if (display.getCreateNewUserField().getValue())
+      {
+         user.setName(display.getUserNameField().getValue());
+         user.setFirst_name(display.getFirstNameField().getValue());
+         user.setLast_name(display.getLastNameField().getValue());
+         user.setPassword(display.getPasswordField().getValue());
+      }
 
       AutoBean<CloudBeesUser> userBean = CloudBeesExtension.AUTO_BEAN_FACTORY.user();
       AutoBeanUnmarshaller<CloudBeesUser> unmarshaller = new AutoBeanUnmarshaller<CloudBeesUser>(userBean);
-
+      boolean isExisting = !display.getCreateNewUserField().getValue();
       try
       {
-         CloudBeesClientService.getInstance().addUserToAccount(account.getName(), user,
+         CloudBeesClientService.getInstance().addUserToAccount(account.getName(), user, isExisting,
             new AsyncRequestCallback<CloudBeesUser>(unmarshaller)
             {
 
                @Override
                protected void onSuccess(CloudBeesUser result)
                {
-                  String account = (result.getAccounts().size() > 0) ? result.getAccounts().get(0).getName() : "";
-                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountSuccess(account),
-                     Type.INFO));
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.addUserSuccess(result
+                     .getEmail()), Type.INFO));
                   IDE.getInstance().closeView(display.asView().getId());
                }
 
@@ -339,6 +368,6 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
       display.enableCreateButton(false);
       display.getDomainErrorLabel().setValue("");
       display.getErrorLabel().setValue("");
-      display.focusEmailField();
+      display.focusDomainField();
    }
 }

@@ -99,7 +99,6 @@ public abstract class LanguageSpecificAutocompleter {
     }
   }
 
-  private AutocompleteController controller;
   private boolean isPaused;
   private final SyntaxType mode;
   private DocumentParser documentParser;
@@ -143,10 +142,9 @@ public abstract class LanguageSpecificAutocompleter {
    * itself (e.g. pre-fetch data).
    */
   protected void attach(
-      DocumentParser parser, AutocompleteController controller, PathUtil filePath) {
+      DocumentParser parser) {
     Preconditions.checkNotNull(parser);
     documentParser = parser;
-    this.controller = controller;
     isPaused = true;
   }
 
@@ -181,7 +179,6 @@ public abstract class LanguageSpecificAutocompleter {
    */
   protected void detach() {
     pause();
-    this.controller = null;
   }
 
   /**
@@ -189,7 +186,7 @@ public abstract class LanguageSpecificAutocompleter {
    */
   protected final void scheduleRequestForUpdatedProposals() {
     if (!isPaused) {
-      controller.scheduleRequestForUpdatedProposals();
+     // controller.scheduleRequestForUpdatedProposals();
     }
   }
 

@@ -17,7 +17,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.Map;
 
-public class SelectAllFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class SelectAllFromEditMenuTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = SelectAllFromEditMenuTest.class.getSimpleName();
@@ -55,13 +55,12 @@ public class SelectAllFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
       IDE.JAVAEDITOR.setCursorToJavaEditor(0);
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SELECT_ALL);
       //need for setting selection area
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.BACK_SPACE.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.BACK_SPACE.toString());
       //need for reparce in java editor
       Thread.sleep(500);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);

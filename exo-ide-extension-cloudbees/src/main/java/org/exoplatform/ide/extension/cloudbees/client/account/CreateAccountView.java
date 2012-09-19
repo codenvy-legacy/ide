@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.extension.cloudbees.client.account;
 
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
@@ -48,9 +49,11 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
 {
    private static final String ID = "ideCreateAccountView";
 
-   private static final int WIDTH = 610;
+   private static final int WIDTH = 600;
 
-   private static final int HEIGHT = 340;
+   private static final int HEIGHT = 255;
+
+   private static final int HEIGHT_ADVANCED = 400;
 
    private static final String CREATE_BUTTON_ID = "ideCreateAccountViewCreateButton";
 
@@ -59,6 +62,8 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
    private static final String EMAIL_FIELD_ID = "ideCreateAccountViewEmailField";
 
    private static final String COMPANY_FIELD_ID = "ideCreateAccountViewCompanyField";
+
+   private static final String CREATE_NEW_USER_FIELD_ID = "ideCreateAccountViewCreateNewUserField";
 
    private static final String USER_NAME_FIELD_ID = "ideCreateAccountViewUserNameField";
 
@@ -114,6 +119,12 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
    @UiField
    Label errorLabel;
 
+   @UiField
+   DisclosurePanel advancedPanel;
+
+   @UiField
+   CheckBox createNewUserField;
+
    public CreateAccountView()
    {
       super(ID, ViewType.MODAL, CloudBeesExtension.LOCALIZATION_CONSTANT.createAccountViewTitle(), new Image(
@@ -128,6 +139,7 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
       confirmPasswordField.setName(CONFIRM_PASSWORD_FIELD_ID);
       domainField.setName(DOMAIN_FIELD_ID);
       userNameField.setName(USER_NAME_FIELD_ID);
+      createNewUserField.setName(CREATE_NEW_USER_FIELD_ID);
 
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
@@ -227,9 +239,9 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
     * @see org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter.Display#focusEmailField()
     */
    @Override
-   public void focusEmailField()
+   public void focusDomainField()
    {
-      emailField.setFocus(true);
+      domainField.setFocus(true);
    }
 
    /**
@@ -257,5 +269,31 @@ public class CreateAccountView extends ViewImpl implements CreateAccountPresente
    public TextFieldItem getUserNameField()
    {
       return userNameField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter.Display#getCreateNewUserField()
+    */
+   @Override
+   public HasValue<Boolean> getCreateNewUserField()
+   {
+      return createNewUserField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter.Display#showAdvancedData(boolean)
+    */
+   @Override
+   public void showAdvancedData(boolean show)
+   {
+      advancedPanel.setOpen(show);
+      if (show)
+      {
+         setHeight(HEIGHT_ADVANCED + "px");
+      }
+      else
+      {
+         setHeight(HEIGHT + "px");
+      }
    }
 }

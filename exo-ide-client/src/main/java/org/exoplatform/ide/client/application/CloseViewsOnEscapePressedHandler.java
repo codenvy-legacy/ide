@@ -55,6 +55,11 @@ public class CloseViewsOnEscapePressedHandler implements ViewActivatedHandler
       @Override
       public void onPreviewNativeEvent(NativePreviewEvent event)
       {
+         if (event.getNativeEvent().getType() == null)
+         {
+            return;
+         }
+         
          if (Event.ONKEYDOWN == event.getTypeInt() && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE
             && activeView != null && activeView.closeOnEscape())
          {

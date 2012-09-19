@@ -13,7 +13,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuctionTest
+public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = DeleteLineFromEditMenuTest.class.getSimpleName();
 
@@ -50,7 +50,7 @@ public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile (PROJECT);
-      waitEditorIsReady(PROJECT);
+     
       
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();

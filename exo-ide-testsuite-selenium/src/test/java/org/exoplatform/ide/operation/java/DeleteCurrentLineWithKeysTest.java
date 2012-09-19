@@ -11,7 +11,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuctionTest
+public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = DeleteCurrentLineWithKeysTest.class.getSimpleName();
 

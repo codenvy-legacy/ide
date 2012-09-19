@@ -222,4 +222,13 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal
       // processJavadoc= JavaCore.ENABLED.equals(project.getOption(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, true));
       return processJavadoc;
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    */
+   @Override
+   public boolean isAutoInsertable()
+   {
+      return false;
+   }
 }

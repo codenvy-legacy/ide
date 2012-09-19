@@ -63,7 +63,7 @@ public class BuildFailedTest extends BaseTest
    {
       try
       {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+       //  VirtualFileSystemUtils.delete(WS_URL + PROJECT);
          //delay for DavFs
          Thread.sleep(2000);
       }

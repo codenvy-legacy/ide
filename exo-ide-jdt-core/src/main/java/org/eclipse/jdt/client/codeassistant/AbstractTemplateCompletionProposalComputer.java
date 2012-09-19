@@ -11,12 +11,12 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.codeassistant.api.ContentAssistInvocationContext;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateEngine;
 import org.eclipse.jdt.client.templates.TemplateProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +106,7 @@ public abstract class AbstractTemplateCompletionProposalComputer
     * org.eclipse.jface.text.contentassist.ICompletionProposalComputer#computeContextInformation(org.eclipse.jface.text.contentassist
     * .TextContentAssistInvocationContext, org.eclipse.core.runtime.IProgressMonitor)
     */
-   public List<IContextInformation> computeContextInformation(ContentAssistInvocationContext context,
+   public List<ContextInformation> computeContextInformation(ContentAssistInvocationContext context,
       IProgressMonitor monitor)
    {
       return Collections.emptyList();

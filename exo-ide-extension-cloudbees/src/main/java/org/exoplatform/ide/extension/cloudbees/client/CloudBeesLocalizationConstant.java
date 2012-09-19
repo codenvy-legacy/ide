@@ -107,7 +107,15 @@ public interface CloudBeesLocalizationConstant extends Messages
 
    @Key("control.createAccount.prompt")
    String controlCreateAccountPrompt();
-
+   
+   @Key("control.switchAccount.id")
+   String controlSwitchAccountId();
+   
+   @Key("control.switchAccount.title")
+   String controlSwitchAccountTitle();
+   
+   @Key("control.switchAccount.prompt")
+   String controlSwitchAccountPrompt();
    /*
     * LoginView.
     */
@@ -338,4 +346,10 @@ public interface CloudBeesLocalizationConstant extends Messages
 
    @Key("create.account.success")
    String createAccountSuccess(String account);
+   
+   @Key("add.user.success")
+   String addUserSuccess(String user);
+   
+   @Key("create.account.create.new.user")
+   String createAccountCreateNewUser();
 }

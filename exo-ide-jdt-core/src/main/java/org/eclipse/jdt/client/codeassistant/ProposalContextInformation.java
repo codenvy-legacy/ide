@@ -13,14 +13,13 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
-import org.eclipse.jdt.client.codeassistant.api.IContextInformationExtension;
 import org.eclipse.jdt.client.core.CompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 
 /**
  * Implementation of the <code>IContextInformation</code> interface.
  */
-public final class ProposalContextInformation implements IContextInformation, IContextInformationExtension
+public final class ProposalContextInformation implements ContextInformation
 {
 
    private final String fContextDisplayString;
@@ -60,9 +59,9 @@ public final class ProposalContextInformation implements IContextInformation, IC
    @Override
    public boolean equals(Object object)
    {
-      if (object instanceof IContextInformation)
+      if (object instanceof ContextInformation)
       {
-         IContextInformation contextInformation = (IContextInformation)object;
+         ContextInformation contextInformation = (ContextInformation)object;
          boolean equals =
             getInformationDisplayString().equalsIgnoreCase(contextInformation.getInformationDisplayString());
          if (getContextDisplayString() != null)

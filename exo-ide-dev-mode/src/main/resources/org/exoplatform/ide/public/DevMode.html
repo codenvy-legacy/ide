@@ -1,0 +1,48 @@
+<!--
+
+    Copyright (C) 2012 eXo Platform SAS.
+
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>IDE</title>
+
+	<script type="text/javascript" language="javascript">
+		var registryURL = "/rest/private/registry/repository";
+		var configurationURL ="/rest/private/ide/configuration/init";
+		var proxyServiceContext = "/rest/private/proxy";
+		var appConfig = {
+				  "context" : "/rest/private",
+				  "publicContext" : "/rest",
+				  "httpsPort": 8443,
+				  "gadgetServer" : "/gadgets/" /*under GWT Shell*/
+				}
+		var authorizationPageURL = "/site/index.html";
+		var securityCheckURL = "/site/j_security_check";
+		var hiddenFiles = ".*";		
+		var authorizationContext = "/rest"
+	</script>
+
+	<script type="text/javascript" language="javascript" src="IDE.nocache.js"></script>
+</head>
+
+<body>
+</body>
+</html>

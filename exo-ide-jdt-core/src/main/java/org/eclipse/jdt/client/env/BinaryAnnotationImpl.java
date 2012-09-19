@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.env;
 
+import com.google.gwt.json.client.JSONValue;
+
 import com.google.gwt.json.client.JSONArray;
 
 import com.google.gwt.json.client.JSONObject;
@@ -59,7 +61,10 @@ public class BinaryAnnotationImpl implements IBinaryAnnotation
    @Override
    public IBinaryElementValuePair[] getElementValuePairs()
    {
-      JSONArray array = annotation.get("annotationParameters").isArray();
+      JSONValue value = annotation.get("annotationParameters");
+      if(value.isNull() != null)
+         return null;
+      JSONArray array = value.isArray();
       IBinaryElementValuePair[] val = new IBinaryElementValuePair[array.size()];
       for (int i = 0; i < array.size(); i++)
       {

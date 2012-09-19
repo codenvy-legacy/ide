@@ -94,11 +94,12 @@ public class NotificationManager implements DocumentListener
          handler.onProblemClick(new ProblemClickEvent(arr));
       }
    }
-   
+
    private class HtmlTooltipRenderer implements TooltipRenderer
    {
-      
-      private String  message;
+
+      private String message;
+
       /**
        * @see com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer#renderDom()
        */
@@ -109,7 +110,7 @@ public class NotificationManager implements DocumentListener
          content.setInnerHTML(message);
          return content;
       }
-      
+
       /**
        * @param message the message to set
        */
@@ -117,7 +118,7 @@ public class NotificationManager implements DocumentListener
       {
          this.message = message;
       }
-      
+
    }
 
    private Buffer buffer;
@@ -161,10 +162,12 @@ public class NotificationManager implements DocumentListener
       this.buffer = editor.getBuffer();
       this.leftGutter = gutter;
       this.res = res;
-      rightPositioner = new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(
-         HorizontalAlign.RIGHT).setPosition(Position.OVERLAP).setVerticalAlign(VerticalAlign.TOP);
-      leftPositioner = new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(
-         HorizontalAlign.LEFT).setPosition(Position.OVERLAP).setVerticalAlign(VerticalAlign.TOP);
+      rightPositioner =
+         new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(HorizontalAlign.RIGHT).setPosition(Position.OVERLAP)
+            .setVerticalAlign(VerticalAlign.TOP);
+      leftPositioner =
+         new Tooltip.TooltipPositionerBuilder().setHorizontalAlign(HorizontalAlign.LEFT).setPosition(Position.OVERLAP)
+            .setVerticalAlign(VerticalAlign.TOP);
    }
 
    /**
@@ -179,7 +182,7 @@ public class NotificationManager implements DocumentListener
       StringBuilder message = new StringBuilder();
       JsoArray<Marker> problemList = markers.get(lineNumber);
       boolean hasError = fillMessages(problemList, message);
-      
+
       NotificationMark m = new NotificationMark(message.toString(), res, leftPositioner, new HtmlTooltipRenderer());
       m.setTopPosition(buffer.calculateLineTop(lineNumber), "px");
       m.setStyleName(getStyleForLine(problemList, hasError));
@@ -196,7 +199,8 @@ public class NotificationManager implements DocumentListener
     */
    private void addOverviewMark(Marker problem, String string)
    {
-      NotificationMark mark = new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
+      NotificationMark mark =
+         new NotificationMark(problem, string, res, editor, rightPositioner, new HtmlTooltipRenderer());
       mark.setTopPosition((100 * problem.getLineNumber()) / document.getNumberOfLines(), "%");
       overviewGutter.addUnmanagedElement(mark.getElement());
       overviewMarks.add(mark);
@@ -242,8 +246,9 @@ public class NotificationManager implements DocumentListener
             if (p.isWarning())
             {
                markStyle = res.notificationCss().markWarning();
-
             }
+            else
+               markStyle = res.notificationCss().markTask();
          }
       }
       return markStyle;
@@ -304,7 +309,7 @@ public class NotificationManager implements DocumentListener
          double line = keys.get(i);
          markers.erase((int)line);
       }
-
+      errorListener.onErrorsChanged(JsoArray.<CodeError>create());
       markers = JsIntegerMap.<JsoArray<Marker>> create();
       elements.clear();
       errors = 0;
@@ -377,13 +382,13 @@ public class NotificationManager implements DocumentListener
 
       private final HtmlTooltipRenderer renderer;
 
-
       /**
        * @param message 
        * @param tooltipRenderer 
        * 
        */
-      public NotificationMark(String message, GutterNotificationResources res, PositionerBuilder positionerBuilder, HtmlTooltipRenderer tooltipRenderer)
+      public NotificationMark(String message, GutterNotificationResources res, PositionerBuilder positionerBuilder,
+         HtmlTooltipRenderer tooltipRenderer)
       {
          this.res = res;
          this.positionerBuilder = positionerBuilder;
@@ -399,14 +404,14 @@ public class NotificationManager implements DocumentListener
       /**
        * 
        */
-      public NotificationMark(Marker marker, String message, GutterNotificationResources res, Editor editor, PositionerBuilder positionerBuilder, HtmlTooltipRenderer tooltipRenderer)
+      public NotificationMark(Marker marker, String message, GutterNotificationResources res, Editor editor,
+         PositionerBuilder positionerBuilder, HtmlTooltipRenderer tooltipRenderer)
       {
          this(message, res, positionerBuilder, tooltipRenderer);
          this.editor = editor;
          setStyleName(getStyleName(marker));
          setDelegate(marker);
       }
-      
 
       public void setStyleName(String style)
       {
@@ -458,7 +463,7 @@ public class NotificationManager implements DocumentListener
          }
 
          // default
-         return res.notificationCss().overviewMarkError();
+         return res.notificationCss().overviewMarkTask();
       }
 
       public void setTopPosition(int top, String unit)
@@ -473,18 +478,21 @@ public class NotificationManager implements DocumentListener
    public void addProblems(Marker[] problems)
    {
       JsoArray<CodeError> errors = JsoArray.create();
-      for(Marker m : problems)
+      for (Marker m : problems)
       {
-         CodeErrorImpl error = CodeErrorImpl.make();
-         error.setMessage(m.getMessage());
-         error.setErrorEnd(getFilePosition(m.getEnd()));
-         error.setErrorStart(getFilePosition(m.getStart()));
-         error.setError(m.isError());
-         errors.add(error);
+         if (m.isError() || m.isWarning())
+         {
+            CodeErrorImpl error = CodeErrorImpl.make();
+            error.setMessage(m.getMessage());
+            error.setErrorEnd(getFilePosition(m.getEnd()));
+            error.setErrorStart(getFilePosition(m.getStart()));
+            error.setError(m.isError());
+            errors.add(error);
+         }
          addProblem(m);
       }
       errorListener.onErrorsChanged(errors);
-      
+
    }
 
    /**
@@ -513,6 +521,6 @@ public class NotificationManager implements DocumentListener
     */
    public void setErrorListener(ErrorListener errorListener)
    {
-      this.errorListener = errorListener; 
+      this.errorListener = errorListener;
    }
 }

@@ -9,7 +9,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class GoToLineFromHotkeyTest extends ServicesJavaTextFuctionTest
+public class GoToLineFromHotkeyTest extends ServicesJavaTextFuction
 {
 
    private static final String PROJECT = GoToLineFromHotkeyTest.class.getSimpleName();
@@ -47,7 +47,6 @@ public class GoToLineFromHotkeyTest extends ServicesJavaTextFuctionTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      waitEditorIsReady(PROJECT);
 
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "l");
       IDE.GOTOLINE.waitOpened();

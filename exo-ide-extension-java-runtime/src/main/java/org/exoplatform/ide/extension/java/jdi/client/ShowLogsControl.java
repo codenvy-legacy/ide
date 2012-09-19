@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
@@ -71,7 +72,8 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
       String projectType = event.getProject().getProjectType();
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType);
+            || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+            || ProjectType.JSP.value().equals(projectType);
       setVisible(isJavaProject);
       setEnabled(false);
       setShowInContextMenu(isJavaProject);

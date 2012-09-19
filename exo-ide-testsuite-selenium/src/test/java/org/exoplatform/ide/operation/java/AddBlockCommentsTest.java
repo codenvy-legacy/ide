@@ -39,7 +39,7 @@ import java.util.Map;
  * @version $Id: Apr 17, 2012 1:16:23 PM anya $
  * 
  */
-public class AddBlockCommentsTest extends ServicesJavaTextFuctionTest
+public class AddBlockCommentsTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = AddBlockCommentsTest.class.getSimpleName();
 

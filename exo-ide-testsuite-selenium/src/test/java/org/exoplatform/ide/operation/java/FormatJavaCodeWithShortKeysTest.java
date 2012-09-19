@@ -1,5 +1,6 @@
 package org.exoplatform.ide.operation.java;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.exoplatform.ide.MenuCommands;
@@ -12,7 +13,7 @@ import org.openqa.selenium.Keys;
 
 import java.util.Map;
 
-public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuctionTest
+public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = FormatJavaCodeWithShortKeysTest.class.getSimpleName();
 
@@ -46,18 +47,25 @@ public class FormatJavaCodeWithShortKeysTest extends ServicesJavaTextFuctionTest
    @Test
    public void formatJavaCodeWithKeys() throws Exception
    {
+      
+      final String codeAfterEdit =
+         "package sumcontroller;" + "\n" + "   int c = 225;" + "\n" + "      return a + b;" + "\n"
+            + "   //For Find/replase test" + "\n" + "}" + "\n" + "public class SimpleSum" + "\n" + "{"
+            + "\n" + "   int d = 1;" + "\n" + "   public int sumForEdit(int a, int b)" + "\n" + "   {" + "\n" + "   }"
+            + "\n" + "   int ss = sumForEdit(c, d);" + "\n" + "   String ONE = \"\";" + "\n"+"   String one = \"\";";
+      
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
-      String initialText = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+     
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString()+Keys.SHIFT.toString()+"f");
       //need for format text
       Thread.sleep(500);
 
       //After applying format function to java editor this method should be rewrite.
       //We should compare all text after formatting
-      assertFalse(initialText.equals(IDE.JAVAEDITOR.getTextFromJavaEditor(0)));
+      assertEquals(IDE.JAVAEDITOR.getTextFromJavaEditor(0), codeAfterEdit);
 
    }
    

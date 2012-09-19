@@ -31,7 +31,7 @@
       }
    </ui:style>
    <g:LayoutPanel>
-      <g:layer top="0px" bottom="30px">
+      <g:layer top="0px" bottom="35px">
          <f:Border margin="5">
             <f:layer>
                <g:ScrollPanel>
