@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ide.resources.model;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import org.exoplatform.ide.json.JsonStringSet;
+
 /**
  * Project Nature concept is a composition of controller and a tag. When Nature tag is 
  * added to the Project, then {@link ProjectNature#configure()} is triggered.
@@ -24,43 +28,43 @@ package org.exoplatform.ide.resources.model;
  */
 public interface ProjectNature
 {
+   public static final String PRIMARY_NATURE_CATEGORY = "natures.primary";
+   public static final String LANG_NATURE_CATEGORY = "natures.lang";
+   public static final String PAAS_NATURE_CATEGORY = "natures.paas";
 
-   public interface ProjectNatureDescriptor
-   {
-      /**
-       * Returns the unique identifier of this nature.
+   /**
+    * Returns the unique identifier of this nature.
 
-       * @return the unique nature identifier
-       */
-      String getNatureId();
+    * @return the unique nature identifier
+    */
+   String getNatureId();
 
-      /**
-       * Returns a displayable label for this nature.
-       * Returns the empty string if no label for this nature
-       * is specified in the plug-in manifest file.
-       *
-       * @return a displayable string label for this nature,
-       *    possibly the empty string
-       */
-      String getLabel();
+   /**
+    * Returns a displayable label for this nature.
+    * Returns the empty string if no label for this nature
+    * is specified in the plug-in manifest file.
+    *
+    * @return a displayable string label for this nature,
+    *    possibly the empty string
+    */
+   String getLabel();
 
-      /**
-       * Returns the unique identifiers of the natures required by this nature.
-       * 
-       * @return an array of nature ids that this nature requires,
-       *    possibly an empty array.
-       */
-      String[] getRequiredNatureIds();
+   /**
+    * Returns the unique identifiers of the natures required by this nature.
+    * 
+    * @return an array of nature ids that this nature requires,
+    *    possibly an empty array.
+    */
+   JsonStringSet getRequiredNatureIds();
 
-      /**
-       * Returns the identifiers of the nature sets that this nature belongs to.
-       * 
-       * @return an array of nature set ids that this nature belongs to,
-       *    possibly an empty array.
-       */
-      String[] getNatureSetIds();
-
-   }
+   /**
+    * Returns the identifiers of the Nature Categories that this nature exclusively belongs to.
+    * No any other Nature of this category can exist on the project
+    * 
+    * @return a set of nature categories that this nature belongs to,
+    *    possibly an empty array.
+    */
+   JsonStringSet getNatureCategories();
 
    /** 
     * Configures this nature for its project. This is called by the workspace 
@@ -75,7 +79,7 @@ public interface ProjectNature
     *
     * @exception Exception if this method fails.
     */
-   void configure() throws Exception;
+   void configure(Project project, AsyncCallback<Project> callback);
 
    /** 
     * De-configures this nature for its project.  This is called by the workspace 
@@ -86,24 +90,6 @@ public interface ProjectNature
     * 
     * @exception Exception if this method fails. 
     */
-   void deconfigure() throws Exception;
-
-   /** 
-    * Returns the project to which this project nature applies.
-    *
-    * @return the project handle
-    */
-   Project getProject();
-
-   /**
-    * Sets the project to which this nature applies.
-    * Used when instantiating this project nature runtime.
-    * This is called by <code>IProject.create()</code> or
-    * <code>IProject.setDescription()</code>
-    * and should not be called directly by clients.
-    *
-    * @param project the project to which this nature applies
-    */
-   void setProject(Project project);
+   void deconfigure(Project project, AsyncCallback<Project> callback);
 
 }

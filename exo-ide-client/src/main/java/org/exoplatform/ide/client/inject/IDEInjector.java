@@ -20,6 +20,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 
 import org.exoplatform.ide.client.BootstrapController;
+import org.exoplatform.ide.resources.inject.ResourceGinModule;
 
 /**
  * Interface for GIN Injector, that provides access to the top level
@@ -31,7 +32,7 @@ import org.exoplatform.ide.client.BootstrapController;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-@GinModules(IDEClientModule.class)
+@GinModules({IDEClientModule.class,ResourceGinModule.class})
 public interface IDEInjector extends Ginjector
 {
    BootstrapController getBootstrapController();

@@ -31,7 +31,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.resources.ResourceProvider;
+import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FileUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;
@@ -59,7 +59,7 @@ public class Project extends Folder
    @SuppressWarnings("rawtypes")
    protected JsonArray<Property> properties;
 
-   protected ResourceProvider provider;
+   protected ResourceManager provider;
 
    private Loader loader;
 
@@ -695,6 +695,7 @@ public class Project extends Folder
       callback.onFailure(new Exception("Operation not currently supported"));
    }
 
+   
    // ====================================================================================================
 
    /**

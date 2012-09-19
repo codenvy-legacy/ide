@@ -226,11 +226,19 @@ public abstract class Resource implements ItemContext
       return persisted;
    }
 
+   /**
+    * Generic object tag. Can be used by UI components
+    * @param tag
+    */
    public void setTag(Object tag)
    {
       this.tags = tag;
    }
 
+   /**
+    * Generic object tag. Can be used by UI components
+    * @return
+    */
    public Object getTag()
    {
       return tags;

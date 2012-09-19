@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.resources.ResourceProvider;
+import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.event.Component;
 import org.exoplatform.ide.resources.event.ComponentLifecycleEvent;
 import org.exoplatform.ide.resources.event.ComponentLifecycleHandler;
@@ -51,12 +51,12 @@ public class BootstrapController
 
    EventBus eventBus;
 
-   ResourceProvider resourceProvider;
+   ResourceManager resourceProvider;
 
    ProjectExplorerPresenter projectExpolrerPresenter;
 
    @Inject
-   public BootstrapController(WorkspacePeresenter workspacePeresenter, ResourceProvider resourceProvider,
+   public BootstrapController(WorkspacePeresenter workspacePeresenter, ResourceManager resourceProvider,
       ProjectExplorerPresenter projectExpolorerPresenter, EventBus eventBus)
    {
       this.workspacePeresenter = workspacePeresenter;
@@ -75,7 +75,7 @@ public class BootstrapController
    /**
     * @param resourceProvider
     */
-   public void initializeServices(ResourceProvider resourceProvider)
+   public void initializeServices(ResourceManager resourceProvider)
    {
       try
       {

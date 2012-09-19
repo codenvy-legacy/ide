@@ -30,8 +30,8 @@ public class ProjectDescription
    
    public static final String PROPERTY_PRIMARY_NATURE = "nature.primary";
    
-   public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
    
+   public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
    public static final String PROPERTY_SOURCE_FOLDERS = "folders.source";
    
    /** Properties. */
@@ -53,7 +53,7 @@ public class ProjectDescription
    /**
     * @return The set of Mixin natures or empty set 
     */
-   public JsonStringSet getMixinNatures()
+   public JsonStringSet getNatures()
    {
       return asStringSet(PROPERTY_MIXIN_NATURES);
    }

@@ -43,7 +43,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
 
    private VirtualFileSystemInfo info;
 
-   ResourceProviderService resourceProvider;
+   ResourceManagerImpl resourceProvider;
 
    @SuppressWarnings("unchecked")
    @Override
@@ -58,7 +58,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
          new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", JsonCollections.<String> createArray(),
             ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, links, new Folder());
 
-      resourceProvider = new ResourceProviderService(new SimpleEventBus());
+      resourceProvider = new ResourceManagerImpl(new SimpleEventBus());
       resourceProvider.vfsInfo = info;
    }
 
