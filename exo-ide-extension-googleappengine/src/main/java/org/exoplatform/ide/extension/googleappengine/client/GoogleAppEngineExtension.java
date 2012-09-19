@@ -74,7 +74,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
    {
       IDE.getInstance().registerPaaS(
          new PaaS(ID, "Google App Engine", new Image(GAEClientBundle.INSTANCE.googleAppEngine()), Arrays.asList(
-            ProjectType.JAVA, ProjectType.PYTHON, ProjectType.DJANGO), new DeployApplicationPresenter()));
+            ProjectType.JAVA, ProjectType.PYTHON, ProjectType.DJANGO, ProjectType.JSP), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

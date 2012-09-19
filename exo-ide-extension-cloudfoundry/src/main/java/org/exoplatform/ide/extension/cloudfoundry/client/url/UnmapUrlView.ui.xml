@@ -59,7 +59,7 @@
                      disabledImageResource="{resource.addButtonDisabled}" buttonId="applicationURLsMapButton" addStyleNames="{style.spacingLeft}"></f:ImageButton>
                </g:east>
                <g:center>
-                  <g:TextBox ui:field="mapUrlField" height="20px" width="100%"></g:TextBox>
+                  <f:TextInput ui:field="mapUrlField" height="22px" width="100%"></f:TextInput>
                </g:center>
             </g:DockLayoutPanel>
          </g:FlowPanel>

@@ -35,11 +35,13 @@ public class CustomizeHotkeys extends AbstractTestModule
    private interface Locators
    {
 
+      String FIRST_CELL_FOR_DELECT_ELEMENT="//table[@id='ideCustomizeHotKeysListGrid']/tbody/tr//b/font[text()='File']";
+      
       String ENABLED_BUTTON_PREFICS = "[button-enabled=true]";
 
       String DISABLED_BUTTON_PREFICS = "[button-enabled=false]";
 
-      String CUSTOMIZE_HOTKEYS_FORM = "ideCustomizeHotKeysView-window";
+      String CUSTOMIZE_HOTKEYS_FORM = "ideCustomizeHotKeysListGrid";
 
       String BIND_BUTTON_ID = "ideCustomizeHotKeysViewBindButton";
 
@@ -158,6 +160,9 @@ public class CustomizeHotkeys extends AbstractTestModule
 
    @FindBy(css = Locators.CLOSE_TITLE)
    private WebElement closeTitle;
+   
+   @FindBy(xpath = Locators.FIRST_CELL_FOR_DELECT_ELEMENT)
+   private WebElement firstCell;
 
    /**
     * Wait appearance Customize Hotkeys Form
@@ -328,7 +333,7 @@ public class CustomizeHotkeys extends AbstractTestModule
    /**
     * click bind button
     */
-   public void bindlButtonClick()
+   public void bindButtonClick()
    {
       bindButton.click();
    }
@@ -336,7 +341,7 @@ public class CustomizeHotkeys extends AbstractTestModule
    /**
     * click unbind button
     */
-   public void unbindlButtonClick()
+   public void unbindButtonClick()
    {
       unbindButton.click();
    }
@@ -478,6 +483,17 @@ public class CustomizeHotkeys extends AbstractTestModule
       assertEquals(Locators.HOKEY_USED_MESSAGE, getMessage());
    }
 
+   
+   /**
+    * click on first cell in Customize hotkey form and deselect
+    * elements from list
+    */
+
+   public void deselctElemenftWithFirstCellClick()
+   {
+      firstCell.click();
+   }
+   
    // /**
    // * @return false if REST service form is closed
    // * return true if REST service form is open

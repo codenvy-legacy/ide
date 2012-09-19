@@ -47,6 +47,17 @@ public class AskForValueDialog extends AbstractTestModule
       String CANCEL_BUTTON_ID = "ideAskForValueViewCancelButton";
 
       String VALUE_FIELD_ID = "ideAskForValueViewValueField";
+      
+      String ASK_SSH_FORM_FIELD ="";
+      
+      String ASK_SSH_FORM_VIEW ="exoAskForValueModalView-window";
+      
+      String ASK_SSH_FORM_OK_BUTTON ="";
+      
+      String ASK_SSH_FORM_CANCEL_BUTTON ="";
+      
+      
+      
    }
 
    @FindBy(xpath = Locator.VIEW_LOCATOR)
@@ -63,6 +74,9 @@ public class AskForValueDialog extends AbstractTestModule
 
    @FindBy(name = Locator.VALUE_FIELD_ID)
    private WebElement valueField;
+   
+   @FindBy(id = Locator.ASK_SSH_FORM_VIEW)
+   private WebElement askFormView;
 
    /**
     * @return {@link Boolean}

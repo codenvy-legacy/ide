@@ -47,4 +47,10 @@ public interface NotificationCss extends CssResource
    
    @ClassName("popup-notification")
    String popupNotification();
+
+   @ClassName("mark-task")
+   String markTask();
+   
+   @ClassName("overview-mark-task")
+   String overviewMarkTask();
 }

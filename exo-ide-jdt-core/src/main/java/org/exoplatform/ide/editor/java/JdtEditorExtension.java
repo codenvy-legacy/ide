@@ -61,8 +61,6 @@ public class JdtEditorExtension extends Extension implements InitializeServicesH
                 return new JavaEditor(MimeType.APPLICATION_JAVA);
             }
          });
-      
    }
-
 
 }

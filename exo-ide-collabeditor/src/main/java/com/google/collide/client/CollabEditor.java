@@ -18,19 +18,16 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.editor.Buffer.ContextMenuListener;
-
-import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
-
-import com.google.collide.client.editor.FocusManager.FocusListener;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.editor.Buffer.ContextMenuListener;
+import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
+import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
-import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
@@ -47,6 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
@@ -59,6 +57,7 @@ import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
@@ -89,6 +88,8 @@ public class CollabEditor extends Widget implements Editor, Markable
 
    protected DocumentAdaptor documentAdaptor;
    
+   protected ContentAssistant contentAssistant;
+   
    private HoverPresenter hoverPresenter;
 
    private boolean initialized;
@@ -104,7 +105,6 @@ public class CollabEditor extends Widget implements Editor, Markable
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          udateDocument();
       }
-
    }
 
    public CollabEditor(String mimeType)
@@ -114,7 +114,8 @@ public class CollabEditor extends Widget implements Editor, Markable
       id = "CollabEditor - " + hashCode();
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
-            EditorErrorListener.NOOP_ERROR_RECEIVER);
+            EditorErrorListener.NOOP_ERROR_RECEIVER, this);
+      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
       //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
@@ -206,7 +207,7 @@ public class CollabEditor extends Widget implements Editor, Markable
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
-            editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
+            editorBundle.setDocument(editorDocument, mimeType, "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
@@ -328,26 +329,6 @@ public class CollabEditor extends Widget implements Editor, Markable
          editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
          rowsCountToDelete--;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#findAndSelect(java.lang.String, boolean)
-    */
-   @Override
-   public boolean findAndSelect(String find, boolean caseSensitive)
-   {
-      editor.getSearchModel().setQuery(find);
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceFoundedText(java.lang.String, java.lang.String, boolean)
-    */
-   @Override
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
-   {
-      editor.getSearchModel().setQuery(find);
-      editor.getSearchModel().getMatchManager().replaceMatch(replace);
    }
 
    /**
@@ -693,4 +674,108 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       return editorBundle;
    }
+
+   /**
+    * @return
+    */
+   public ContentAssistant getCodeassistant()
+   {
+      return contentAssistant;
+   }
+
+   private String searchQuery;
+   
+   private boolean caseSensitive;
+   
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    */
+   public void search(String query, boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback)
+   {
+      if (searchCompleteCallback == null)
+      {
+         return;
+      }
+      
+      if (query == null || query.isEmpty())
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               searchCompleteCallback.onSearchComplete(false);
+            }
+         });
+
+         return;
+      }
+      
+      if (searchQuery == null || !searchQuery.equals(query) || this.caseSensitive != caseSensitive)
+      {
+         searchQuery = query;
+         this.caseSensitive = caseSensitive;
+
+         editor.getSearchModel().setQuery(query, caseSensitive, new SearchProgressListener()
+         {
+            @Override
+            public void onSearchProgress()
+            {
+            }
+
+            @Override
+            public void onSearchDone()
+            {
+               Scheduler.get().scheduleDeferred(new ScheduledCommand()
+               {
+                  @Override
+                  public void execute()
+                  {
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
+                     searchCompleteCallback.onSearchComplete(matches > 0);
+                  }
+               });
+            }
+
+            @Override
+            public void onSearchBegin()
+            {
+            }
+         });         
+      }
+      else
+      {
+         editor.getSearchModel().getMatchManager().selectNextMatch();
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               if (editor.getSelection().hasSelection())
+               {
+                  searchCompleteCallback.onSearchComplete(true);
+               } else
+               {
+                  searchCompleteCallback.onSearchComplete(false);
+               }
+            }
+         });
+         
+      }      
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    */
+   @Override
+   public void replaceMatch(String replacement)
+   {
+      if (editor.getSelection().hasSelection())
+      {
+         //editor.getSearchModel().getMatchManager().replaceMatch(replacement)
+         editor.getSearchModel().getMatchManager().replaceMatch(replacement);         
+      }
+   }
+   
 }

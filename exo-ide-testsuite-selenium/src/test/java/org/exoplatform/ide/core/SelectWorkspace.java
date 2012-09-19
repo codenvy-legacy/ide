@@ -140,7 +140,7 @@ public class SelectWorkspace extends AbstractTestModule
     */
    public void changeWorkspace(String workspaceId) throws Exception, InterruptedException
    {
-      IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
+      IDE().MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
       waitOpened();
       selectWorkspace(workspaceId);
       clickOkButton();
