@@ -40,9 +40,7 @@ import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -365,49 +363,5 @@ public class EC2
       {
          return credentials;
       }
-   }
-
-   public static void main(String[] args) throws Exception
-   {
-//      Access Key ID : AKIAIQWXTJXPV4SLKFAA
-//      Secret Access Key : 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
-      AWSAuthenticator auth = new Auth();
-      auth.login("AKIAIQWXTJXPV4SLKFAA", "OdkegZeJmuJExGWGanpojpRubvisgjOUqfpb5+OD");
-      EC2 client = new EC2(auth);
-
-      System.out.println(client.listKeyPairs());
-      System.out.println(client.listSecurityGroups());
-      System.out.println(client.listRegions());
-      System.out.println(client.listAvailabilityZones());
-
-      client.runInstance("ami-005daf69",
-         "t1.micro",1, "key.cldide.stg", Arrays.asList("sg-ce1d7aa7"), "us-east-1a");
-
-      /*
-      ImagesList images;
-      int skip = 0;
-      int max = 10;
-      FileWriter f = new FileWriter("/home/andrew/images");
-      f.write("{\n");
-      do
-      {
-         images = client.listImages(null, true, null, skip, max);
-         System.out.println(images.getTotal());
-         System.out.println(images.isHasMore());
-         System.out.println(skip = images.getNextSkip());
-         System.out.println(max = images.getMaxItems());
-         for (ImageInfo image : images.getImages())
-         {
-            System.out.println(image.toString());
-            f.write(image.toString());
-            f.write(",\n");
-         }
-         System.out.print("\n\n\n");
-         f.write("\n\n\n");
-      }
-      while ((images.isHasMore()));
-      f.write("}");
-      f.close();
-      */
    }
 }
