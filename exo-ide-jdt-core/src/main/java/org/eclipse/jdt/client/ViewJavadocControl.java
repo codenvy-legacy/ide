@@ -18,9 +18,9 @@
  */
 package org.eclipse.jdt.client;
 
-import org.eclipse.jdt.client.event.ShowQuickFixEvent;
 import org.eclipse.jdt.client.event.ViewJavadocEvent;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -43,10 +43,18 @@ public class ViewJavadocControl extends SimpleControl implements IDEControl, Edi
       super("View/Quick Documentation");
       setTitle("Quick Documentation");
       setPrompt("Quick Documentation");
-      setHotKey("Ctrl+Q");
+      if (BrowserResolver.isMacOs())
+      {
+         setHotKey("Ctrl+Shift+Q");
+      }
+      else
+      {
+         setHotKey("Ctrl+Q");
+      }
       setEvent(new ViewJavadocEvent());
       setImages(JdtClientBundle.INSTANCE.javadoc(), JdtClientBundle.INSTANCE.javadoc());
    }
+
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
@@ -61,7 +69,7 @@ public class ViewJavadocControl extends SimpleControl implements IDEControl, Edi
             return;
          }
       }
-      setEnabled(false);      
+      setEnabled(false);
    }
 
    /**
