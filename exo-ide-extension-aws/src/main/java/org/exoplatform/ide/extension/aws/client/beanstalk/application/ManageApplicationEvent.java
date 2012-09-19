@@ -16,42 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.login;
+package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in AWS.
+ * Event occurs, when user tries to manage application on AWS.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 3:04:41 PM anya $
+ * @version $Id: Sep 19, 2012 11:23:47 AM anya $
  * 
  */
-public class LoginEvent extends GwtEvent<LoginHandler>
+public class ManageApplicationEvent extends GwtEvent<ManageApplicationHandler>
 {
-
-   /**
-    * Type used to register the event.
-    */
-   public static final GwtEvent.Type<LoginHandler> TYPE = new GwtEvent.Type<LoginHandler>();
-
-   private LoggedInHandler loggedInHandler;
-
-   public LoginEvent()
-   {
-      loggedInHandler = null;
-   }
-
-   public LoginEvent(LoggedInHandler loggedInHandler)
-   {
-      this.loggedInHandler = loggedInHandler;
-   }
+   public static final GwtEvent.Type<ManageApplicationHandler> TYPE = new GwtEvent.Type<ManageApplicationHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<LoginHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ManageApplicationHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -60,16 +44,8 @@ public class LoginEvent extends GwtEvent<LoginHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(LoginHandler handler)
+   protected void dispatch(ManageApplicationHandler handler)
    {
-      handler.onLogin(this);
-   }
-
-   /**
-    * @return the loggedInHandler
-    */
-   public LoggedInHandler getLoggedInHandler()
-   {
-      return loggedInHandler;
+      handler.onManageApplication(this);
    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component" xmlns:t="urn:import:org.exoplatform.gwtframework.ui.client.tablayout">
    <ui:with field='resource' type='org.exoplatform.ide.extension.aws.client.AWSClientBundle' />
    <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant' />
    <ui:style>
@@ -39,6 +39,16 @@
       .left {
       	float: left;
       }
+      
+      .right {
+      	float: right;
+      }
+      
+      .launch {
+      	border-bottom: 1px solid #DBDFE5;
+      	margin-bottom: 20px;
+      	font-weight: bold;
+      }
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
@@ -49,24 +59,39 @@
                </g:Label>
                <g:FlowPanel width="100%" height="30px">
                   <g:Label text="{locale.createApplicationNameField}" addStyleNames="{style.labelH} {style.middle}" width="22%"></g:Label>
-                  <f:TextInput ui:field="nameField" width="76%" height="22px" addStyleNames="{style.left}"></f:TextInput>
+                  <f:TextInput ui:field="nameField" width="76%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
                <g:FlowPanel width="100%" height="30px">
                   <g:Label text="{locale.createApplicationDescriptionField}" addStyleNames="{style.labelH} {style.middle}" width="22%"></g:Label>
-                  <f:TextInput ui:field="descriptionField" width="76%" height="22px" addStyleNames="{style.left}"></f:TextInput>
+                  <f:TextInput ui:field="descriptionField" width="76%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
                <g:Label width="100%" height="20px" addStyleNames="{style.labelTitle}" text="{locale.createApplicationS3Title}">
                </g:Label>
                <g:FlowPanel width="100%" height="30px">
                   <g:Label text="{locale.createApplicationS3BucketField}" addStyleNames="{style.labelH} {style.middle}" width="22%"></g:Label>
-                  <f:TextInput ui:field="s3BucketField" width="76%" height="22px" addStyleNames="{style.left}"></f:TextInput>
+                  <f:TextInput ui:field="s3BucketField" width="76%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
                <g:FlowPanel width="100%" height="30px">
                   <g:Label text="{locale.createApplicationS3KeyField}" addStyleNames="{style.labelH} {style.middle}" width="22%"></g:Label>
-                  <f:TextInput ui:field="s3KeyField" width="76%" height="22px" addStyleNames="{style.left}"></f:TextInput>
+                  <f:TextInput ui:field="s3KeyField" width="76%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
             </g:FlowPanel>
             <g:FlowPanel ui:field="createEnvironmentStep" width="100%" height="100%" visible="false">
+               <g:FlowPanel width="100%" height="35px" styleName="{style.launch}">
+                  <g:CheckBox ui:field="launchEnvironment" width="100%" height="40px" HTML="{locale.createEnvironmentLaunch}"></g:CheckBox>
+               </g:FlowPanel>
+               <g:FlowPanel width="100%" height="30px">
+                  <g:Label text="{locale.createEnvironmentName}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <f:TextInput ui:field="envNameField" width="69%" height="22px" addStyleNames="{style.right}"></f:TextInput>
+               </g:FlowPanel>
+               <g:FlowPanel width="100%" height="30px">
+                  <g:Label text="{locale.createEnvironmentDescription}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <f:TextInput ui:field="envDescriptionField" width="69%" height="22px" addStyleNames="{style.right}"></f:TextInput>
+               </g:FlowPanel>
+               <g:FlowPanel width="100%" height="30px">
+                  <g:Label text="{locale.createEnvironmentSolutionStack}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <f:SelectItem ui:field="solutionStackField" width="69%" height="22px" addStyleNames="{style.right}"></f:SelectItem>
+               </g:FlowPanel>
             </g:FlowPanel>
          </g:FlowPanel>
       </f:layer>

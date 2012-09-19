@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -63,6 +64,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new BeanstalkControl());
 
       new CreateApplicationPresenter();
+      new ManageApplicationPresenter();
       new LoginPresenter();
    }
 
@@ -88,5 +90,10 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       {
          return false;
       }
+   }
+
+   public static boolean isAWSApplication(ProjectModel project)
+   {
+      return (project.getProperty("aws-applictaion") != null && project.getProperty("aws-application").getValue() != null);
    }
 }
