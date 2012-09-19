@@ -36,6 +36,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -120,12 +122,16 @@ public class S3Service
 
    @Path("objects/{s3bucket}")
    @GET
-   public S3Content getObjectContent(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3Key)
+   public Response getObjectContent(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3Key)
       throws AWSException
    {
-      //TODO set content type
-      //TODO set header param to download file
-//      return s3.getObjectContent(s3Bucket, s3Key);
-      return null;
+      S3Content content = s3.getObjectContent(s3Bucket, s3Key);
+
+      return Response
+         .ok(content.getStream(), content.getContentType())
+         .lastModified(content.getLastModificationDate())
+         .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength()))
+         .header("Content-Disposition", "attachment; filename=\"" + s3Key + "\"")
+         .build();
    }
 }

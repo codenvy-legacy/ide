@@ -311,7 +311,12 @@ public class S3
    {
       com.amazonaws.services.s3.model.S3Object s3Object = s3.getObject(new GetObjectRequest(s3Bucket, s3Key));
 
-      return new S3Content(s3Object.getObjectContent(), s3Object.getObjectMetadata().getContentType());
+      return new S3Content(
+         s3Object.getObjectContent(),
+         s3Object.getObjectMetadata().getContentType(),
+         s3Object.getObjectMetadata().getLastModified(),
+         s3Object.getObjectMetadata().getContentLength()
+      );
    }
 
    protected AmazonS3 getS3Client() throws AWSException
