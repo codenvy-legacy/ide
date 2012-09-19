@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.server.s3;
+package org.exoplatform.ide.extension.aws.shared.s3;
 
 public enum S3Region
 {

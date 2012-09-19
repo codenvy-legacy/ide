@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
-import org.exoplatform.ide.extension.aws.server.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
