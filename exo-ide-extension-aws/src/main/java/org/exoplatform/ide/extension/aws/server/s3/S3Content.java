@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.aws.server.s3;
 
 import java.io.InputStream;
+import java.util.Date;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -28,11 +29,15 @@ public final class S3Content
 {
    private final InputStream stream;
    private final String contentType;
+   private final Date lastModificationDate;
+   private final long length;
 
-   public S3Content(InputStream stream, String contentType)
+   public S3Content(InputStream stream, String contentType, Date lastModificationDate, long length)
    {
       this.stream = stream;
       this.contentType = contentType;
+      this.lastModificationDate = lastModificationDate;
+      this.length = length;
    }
 
    public InputStream getStream()
@@ -43,5 +48,15 @@ public final class S3Content
    public String getContentType()
    {
       return contentType;
+   }
+
+   public Date getLastModificationDate()
+   {
+      return lastModificationDate;
+   }
+
+   public long getLength()
+   {
+      return length;
    }
 }

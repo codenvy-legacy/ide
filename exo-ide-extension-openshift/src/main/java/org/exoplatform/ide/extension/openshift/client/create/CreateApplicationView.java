@@ -45,7 +45,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 520;
 
-   private static final int HEIGHT = 290;
+   private static final int HEIGHT = 225;
 
    private static final String CREATE_BUTTON_ID = "ideCreateApplicationViewCreateButton";
 
@@ -96,7 +96,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public CreateApplicationView()
    {
       super(ID, ViewType.MODAL, OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH,
-         HEIGHT);
+         HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);

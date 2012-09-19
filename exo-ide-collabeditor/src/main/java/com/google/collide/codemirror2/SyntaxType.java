@@ -14,11 +14,11 @@
 
 package com.google.collide.codemirror2;
 
-import com.google.collide.client.util.PathUtil;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Syntax types (languages / file formats) enumeration.
@@ -40,23 +40,34 @@ public enum SyntaxType {
   YAML("yaml", "text/x-yaml", State.class, new BasicTokenFactory(), true);
 
   /**
-   * Guesses syntax type by file path.
-   */
-  @VisibleForTesting
-  public static SyntaxType syntaxTypeByFilePath(PathUtil filePath) {
-    Preconditions.checkNotNull(filePath);
-    return syntaxTypeByFileName(filePath.getBaseName());
+   * Guesses syntax type by mimetype
+   * @param mimeType
+   * @return
+  */
+  public static SyntaxType syntaxTypeByMimeType(String mimeType){
+     Preconditions.checkNotNull(mimeType);
+     SyntaxType syntaxType = extensionToSyntaxType.get(mimeType);
+     return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
   }
+  
+//  /**
+//   * Guesses syntax type by file path.
+//   */
+//  @VisibleForTesting
+//  public static SyntaxType syntaxTypeByFilePath(PathUtil filePath) {
+//    Preconditions.checkNotNull(filePath);
+//    return syntaxTypeByFileName(filePath.getBaseName());
+//  }
 
-  /**
-   * Guesses syntax type by file name.
-   */
-  public static SyntaxType syntaxTypeByFileName(String fileName) {
-    Preconditions.checkNotNull(fileName);
-    SyntaxType syntaxType = extensionToSyntaxType.get(PathUtil.getFileExtension(
-        fileName.toLowerCase()));
-    return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
-  }
+//  /**
+//   * Guesses syntax type by file name.
+//   */
+//  public static SyntaxType syntaxTypeByFileName(String fileName) {
+//    Preconditions.checkNotNull(fileName);
+//    SyntaxType syntaxType = extensionToSyntaxType.get(PathUtil.getFileExtension(
+//        fileName.toLowerCase()));
+//    return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
+//  }
 
   private final String mimeType;
 
@@ -69,7 +80,7 @@ public enum SyntaxType {
   private final boolean hasGlobalNamespace;
 
   private static final JsonStringMap<SyntaxType> extensionToSyntaxType =
-      createExtensionToSyntaxTypeMap();
+      createMimeTypeToSyntaxTypeMap();
 
   public String getMimeType() {
     return mimeType;
@@ -112,29 +123,46 @@ public enum SyntaxType {
     return hasGlobalNamespace;
   }
 
+//  /**
+//   * Initializes extension -> syntax type map. <b>All extension keys must be lowercase</b>.
+//   * @return a new map instance with all supported languages.
+//   */
+//  private static JsonStringMap<SyntaxType> createExtensionToSyntaxTypeMap() {
+//    JsonStringMap<SyntaxType> tmp = JsonCollections.createMap();
+//    tmp.put("cc", SyntaxType.CPP);
+//    tmp.put("cpp", SyntaxType.CPP);
+//    tmp.put("css", SyntaxType.CSS);
+//    tmp.put("cxx", SyntaxType.CPP);
+//    tmp.put("dart", SyntaxType.DART);
+//    tmp.put("go", SyntaxType.GO);
+//    tmp.put("hpp", SyntaxType.CPP);
+//    tmp.put("h", SyntaxType.CPP);
+//    tmp.put("html", SyntaxType.HTML);
+//    tmp.put("hxx", SyntaxType.CPP);
+//    tmp.put("java", SyntaxType.JAVA);
+//    tmp.put("js", SyntaxType.JS);
+//    tmp.put("php", SyntaxType.PHP);
+//    tmp.put("py", SyntaxType.PY);
+//    tmp.put("svg", SyntaxType.SVG);
+//    tmp.put("xml", SyntaxType.XML);
+//    tmp.put("yaml", SyntaxType.YAML);
+//    return tmp;
+//  }
   /**
-   * Initializes extension -> syntax type map. <b>All extension keys must be lowercase</b>.
+   * Initializes mimeType -> syntax type map.
    * @return a new map instance with all supported languages.
    */
-  private static JsonStringMap<SyntaxType> createExtensionToSyntaxTypeMap() {
+  private static JsonStringMap<SyntaxType> createMimeTypeToSyntaxTypeMap() {
     JsonStringMap<SyntaxType> tmp = JsonCollections.createMap();
-    tmp.put("cc", SyntaxType.CPP);
-    tmp.put("cpp", SyntaxType.CPP);
-    tmp.put("css", SyntaxType.CSS);
-    tmp.put("cxx", SyntaxType.CPP);
-    tmp.put("dart", SyntaxType.DART);
-    tmp.put("go", SyntaxType.GO);
-    tmp.put("hpp", SyntaxType.CPP);
-    tmp.put("h", SyntaxType.CPP);
-    tmp.put("html", SyntaxType.HTML);
-    tmp.put("hxx", SyntaxType.CPP);
-    tmp.put("java", SyntaxType.JAVA);
-    tmp.put("js", SyntaxType.JS);
-    tmp.put("php", SyntaxType.PHP);
-    tmp.put("py", SyntaxType.PY);
-    tmp.put("svg", SyntaxType.SVG);
-    tmp.put("xml", SyntaxType.XML);
-    tmp.put("yaml", SyntaxType.YAML);
+    tmp.put(MimeType.TEXT_HTML, SyntaxType.HTML);
+    tmp.put(MimeType.APPLICATION_JAVA, SyntaxType.JAVA);
+    tmp.put(MimeType.APPLICATION_JAVASCRIPT, SyntaxType.JS);
+    tmp.put(MimeType.APPLICATION_X_JAVASCRIPT, SyntaxType.JS);
+    tmp.put(MimeType.TEXT_JAVASCRIPT, SyntaxType.JS);
+    tmp.put(MimeType.APPLICATION_PHP, SyntaxType.PHP);
+    tmp.put(MimeType.TEXT_X_PYTHON, SyntaxType.PY);
+    tmp.put(MimeType.TEXT_XML, SyntaxType.XML);
+    tmp.put(MimeType.TEXT_YAML, SyntaxType.YAML);
     return tmp;
   }
 }

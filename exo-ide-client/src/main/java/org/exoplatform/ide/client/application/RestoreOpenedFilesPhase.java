@@ -39,7 +39,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.model.settings.Settings;
+import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;

@@ -85,8 +85,8 @@ public class OpenLocalFileTest extends BaseTest
       String fileName = FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length());
       assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
 
-      assertEquals("", IDE.UPLOAD.getMimeTypeValue());
-      assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
+      assertEquals("text/plain", IDE.UPLOAD.getMimeTypeValue());
+      assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
 
       IDE.UPLOAD.setMimeType(MimeType.TEXT_HTML);
 

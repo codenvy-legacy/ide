@@ -54,7 +54,7 @@ public class SshKeyExtension extends Extension implements InitializeServicesHand
    @Override
    public void initialize()
    {
-      IDE.getInstance().addControl(new SshKeyManagerControl());
+      //TODO IDE.getInstance().addControl(new SshKeyManagerControl());
       Preferences.get().addPreferenceItem(new SshPreferenceItem(new SshKeyManagerPresenter()));
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(ShowPublicSshKeyEvent.TYPE, this);

@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JavaPreferencesSettings;
 import org.eclipse.jdt.client.JdtClientBundle;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposalExtension4;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.JavaConventions;
@@ -44,8 +43,7 @@ import java.util.Set;
 /**
  * Method declaration proposal.
  */
-public class MethodDeclarationCompletionProposal extends JavaTypeCompletionProposal implements
-   ICompletionProposalExtension4
+public class MethodDeclarationCompletionProposal extends JavaTypeCompletionProposal
 {
 
    public static void evaluateProposals(AbstractTypeDeclaration type, String prefix, int offset, int length,

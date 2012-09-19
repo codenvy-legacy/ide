@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk;
 
-import com.amazonaws.services.elasticbeanstalk.model.UpdateApplicationRequest;
-
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -38,6 +36,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
 import java.util.List;
 

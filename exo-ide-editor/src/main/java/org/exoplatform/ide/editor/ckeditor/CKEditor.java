@@ -35,6 +35,7 @@ import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.text.Document;
 import org.exoplatform.ide.editor.text.IDocument;
 
@@ -841,17 +842,6 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    @Override
-   public boolean findAndSelect(String find, boolean caseSensitive)
-   {
-      return false;
-   }
-
-   @Override
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
-   {
-   }
-
-   @Override
    public boolean hasUndoChanges()
    {
       return false;
@@ -913,5 +903,21 @@ public class CKEditor extends AbsolutePanel implements Editor
    {
       return 0;
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    */
+   @Override
+   public void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback)
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    */
+   @Override
+   public void replaceMatch(String replacement)
+   {
+   }   
 
 }

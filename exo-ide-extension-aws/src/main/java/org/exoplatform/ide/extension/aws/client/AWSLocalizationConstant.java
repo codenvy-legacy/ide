@@ -56,6 +56,10 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String finishButton();
 
    // Controls
+   @Key("button.properties")
+   String propertiesButton();
+          
+   //Controls
    @Key("control.beanstalk.id")
    String beanstalkControlId();
 
@@ -214,4 +218,14 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("update.application.failed")
    String updateApplicationFailed(String application);
 
+   
+   //S3 Management 
+   @Key("control.s3.managemnt.id")
+   String s3ManagementControlId();
+
+   @Key("control.s3.managemnt.title")
+   String s3ManagementControlTitle();
+
+   @Key("control.s3.managemnt.promt")
+   String s3ManagementControlPrompt();
 }

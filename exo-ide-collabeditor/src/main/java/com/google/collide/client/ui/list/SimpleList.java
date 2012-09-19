@@ -94,6 +94,7 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
    */
   public interface ListEventDelegate<M> {
     void onListItemClicked(Element listItemBase, M itemData);
+    void onListItemDoubleClicked(Element listItemBase, M itemData);
   }
 
   /**
@@ -102,6 +103,10 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
   public static class NoOpListEventDelegate<M> implements ListEventDelegate<M> {
     @Override
     public void onListItemClicked(Element listItemBase, M itemData) {
+    }
+
+    @Override
+    public void onListItemDoubleClicked(Element listItemBase, M itemData) {
     }
   }
 
@@ -422,6 +427,23 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
         eventDelegate.onListItemClicked(listItem, listItem.getData());
       }
     }, false);
+
+    getView().addEventListener(Event.DBLCLICK, new EventListener() {
+       @Override
+       public void handleEvent(Event evt) {
+         Element listItemElem = CssUtils.getAncestorOrSelfWithClassName(
+             (Element) evt.getTarget(), css.listItem());
+
+         if (listItemElem == null) {
+           Log.warn(SimpleList.class,
+               "Unable to find an ancestor that was a list item for a click on: ", evt.getTarget());
+           return;
+         }
+
+         ListItem<M> listItem = ListItem.cast(listItemElem);
+         eventDelegate.onListItemDoubleClicked(listItem, listItem.getData());
+       }
+     }, false);
   }
 
   public M get(int i) {

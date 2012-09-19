@@ -115,8 +115,9 @@ public class UsingKeyboardTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
       IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
-
+      
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      Thread.sleep(2000);
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
       IDE.SEARCH_RESULT.waitOpened();
       assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE));

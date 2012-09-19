@@ -18,33 +18,26 @@
  */
 package org.exoplatform.ide.client.operation.findtext;
 
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
-
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFindTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceAndFindTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorReplaceTextEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundEvent;
-import org.exoplatform.ide.client.framework.editor.event.EditorTextFoundHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-
-import java.util.HashMap;
 
 /**
  * Created by The eXo Platform SAS.
@@ -53,8 +46,7 @@ import java.util.HashMap;
  * @version $Id: ${date} ${time}
  * 
  */
-public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFileChangedHandler,
-   EditorFileClosedHandler, ViewClosedHandler, FindTextHandler
+public class FindTextPresenter implements EditorActiveFileChangedHandler, ViewClosedHandler, FindTextHandler
 {
 
    public interface Display extends IsView
@@ -92,9 +84,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
    private final String STRING_NOT_FOUND = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.findTextStringNotFound();
 
-   private HashMap<String, FindTextState> filesFindState = new HashMap<String, FindTextState>();
-
-   private FileModel activeFile;
+   private Editor editor;
 
    public FindTextPresenter()
    {
@@ -102,9 +92,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
 
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(FindTextEvent.TYPE, this);
-      IDE.addHandler(EditorTextFoundEvent.TYPE, this);
    }
 
    /**
@@ -112,28 +100,33 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      activeFile = event.getFile();
+      editor = event.getEditor();
 
       if (display == null)
       {
          return;
       }
 
-      if (activeFile == null)
+      if (event.getFile() == null)
       {
          IDE.getInstance().closeView(display.asView().getId());
          return;
       }
-
-      String path = event.getFile().getId();
-      FindTextState findTextState = filesFindState.get(path);
-      if (filesFindState.get(path) == null)
+      
+      display.enableReplaceButton(false);
+      display.enableReplaceFindButton(false);
+      
+      String query = display.getFindField().getValue();
+      if (query == null || query.isEmpty())
       {
-         String findText = display.getFindField().getValue();
-         findTextState = new FindTextState(false, "", findText);
-         filesFindState.put(path, findTextState);
+         display.enableFindButton(false);
+         display.enableReplaceAllButton(false);
       }
-      changeState(findTextState);
+      else
+      {
+         display.enableFindButton(true);
+         display.enableReplaceAllButton(true);
+      }      
    }
 
    @Override
@@ -146,12 +139,6 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
    }
 
    @Override
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      filesFindState.remove(event.getFile().getId());
-   }
-
-   @Override
    public void onFindText(FindTextEvent event)
    {
       if (display == null)
@@ -161,7 +148,6 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
          bindDisplay(d);
          display.focusInFindField();
       }
-
    }
 
    public void bindDisplay(Display d)
@@ -188,7 +174,7 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       {
          public void onClick(ClickEvent event)
          {
-            doFindReplace();
+            doReplaceFind();
          }
       });
 
@@ -196,185 +182,215 @@ public class FindTextPresenter implements EditorTextFoundHandler, EditorActiveFi
       {
          public void onClick(ClickEvent event)
          {
+            firstReplaceIteration = true;
             doReplaceAll();
          }
       });
 
-      display.getFindField().addKeyPressHandler(new KeyPressHandler()
-      {
-         public void onKeyPress(KeyPressEvent event)
-         {
-            findTextFieldKeyPressed();
-         }
-      });
-
-      disableAllButtons();
-   }
-
-   private void disableAllButtons()
-   {
+      display.getFindField().addKeyPressHandler(queryFieldKeyPressHandler);
+      
       display.enableFindButton(false);
       display.enableReplaceFindButton(false);
       display.enableReplaceAllButton(false);
       display.enableReplaceButton(false);
    }
+   
+   private KeyPressHandler queryFieldKeyPressHandler = new KeyPressHandler()
+   {
+      @Override
+      public void onKeyPress(KeyPressEvent event)
+      {
+         display.enableReplaceButton(false);
+         display.enableReplaceFindButton(false);
+         replaceEnabled = false;
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               display.enableReplaceButton(false);
+               display.enableReplaceFindButton(false);
+               
+               String query = display.getFindField().getValue();
+               if (query == null || query.isEmpty())
+               {
+                  display.enableFindButton(false);
+                  display.enableReplaceAllButton(false);
+               }
+               else
+               {
+                  display.enableFindButton(true);
+                  display.enableReplaceAllButton(true);
+               }
+               
+               display.getResultLabel().setValue("");
+            }
+         });         
+      }
+   };
+
+   /**
+    * Enables or disables Replace, Replace All, Replace / Find buttons. 
+    * 
+    * @return
+    */
+   private boolean checkReplaceEnabled()
+   {
+      if (replaceEnabled)
+      {
+         display.enableReplaceButton(true);
+         display.enableReplaceFindButton(true);
+         return true;
+      }
+      
+      display.enableReplaceButton(false);
+      display.enableReplaceFindButton(false);
+      return false;
+   }
 
    private void doFind()
    {
-      String findText = display.getFindField().getValue();
-      if (findText == null || findText.isEmpty())
+      if (editor == null)
       {
          return;
       }
-
+      
+      String query = display.getFindField().getValue();
+      if (query == null || query.isEmpty())
+      {
+         return;
+      }
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getId();
-      IDE.fireEvent(new EditorFindTextEvent(findText, caseSensitive, path));
+
+      editor.search(query, caseSensitive, new SearchCompleteCallback()
+      {
+         @Override
+         public void onSearchComplete(boolean success)
+         {
+            replaceEnabled = success;
+            checkReplaceEnabled();
+            
+            display.getResultLabel().setValue(success ? "" : STRING_NOT_FOUND);
+         }
+      });      
    }
+   
+   private boolean replaceEnabled = false;
 
    private void doReplace()
    {
-      String findText = display.getFindField().getValue();
-      if (findText == null || findText.isEmpty())
+      if (!replaceEnabled || editor == null)
       {
          return;
       }
-
-      String replaceText = display.getReplaceField().getValue();
-      if (replaceText == null)
+      
+      String replacement = display.getReplaceField().getValue();
+      if (replacement == null)
       {
-         replaceText = "";
+         replacement = "";
       }
 
-      boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String path = activeFile.getId();
-      IDE.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, path));
-      FindTextState findTextState = new FindTextState(false, "", findText);
-      changeState(findTextState);
-      filesFindState.put(path, findTextState);
-   }
-
-   private void doFindReplace()
-   {
-      String findText = display.getFindField().getValue();
-      if (findText == null || findText.isEmpty())
-      {
-         return;
-      }
-
-      String replaceText = display.getReplaceField().getValue();
-      if (replaceText == null)
-      {
-         replaceText = "";
-      }
-
-      boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String fileId = activeFile.getId();
-      IDE.fireEvent(new EditorReplaceAndFindTextEvent(findText, replaceText, caseSensitive, fileId));
-   }
-
-   private void doReplaceAll()
-   {
-      String findText = display.getFindField().getValue();
-      if (findText == null || findText.isEmpty())
-      {
-         return;
-      }
-
-      String replaceText = display.getReplaceField().getValue();
-      if (replaceText == null)
-      {
-         replaceText = "";
-      }
-
-      boolean caseSensitive = display.getCaseSensitiveField().getValue();
-      String fileId = activeFile.getId();
-      IDE.fireEvent(new EditorReplaceTextEvent(findText, replaceText, caseSensitive, fileId, true));
-   }
-
-   private void findTextFieldKeyPressed()
-   {
+      editor.replaceMatch(replacement);
       display.enableReplaceButton(false);
       display.enableReplaceFindButton(false);
-      Timer timer = new Timer()
+   }
+
+   private void doReplaceFind()
+   {
+      if (!replaceEnabled || editor == null)
+      {
+         return;
+      }
+      
+      /*
+       * Replace
+       */
+      String replacement = display.getReplaceField().getValue();
+      if (replacement == null)
+      {
+         replacement = "";
+      }
+
+      editor.replaceMatch(replacement);
+      //display.enableReplaceButton(false);
+      
+      /*
+       * Find
+       */
+      String query = display.getFindField().getValue();
+      if (query == null || query.isEmpty())
+      {
+         return;
+      }
+      boolean caseSensitive = display.getCaseSensitiveField().getValue();
+
+      editor.search(query, caseSensitive, new SearchCompleteCallback()
       {
          @Override
-         public void run()
+         public void onSearchComplete(boolean success)
          {
-            String findText = display.getFindField().getValue();
-            if (findText != null && findText.length() > 0)
+            replaceEnabled = success;
+            checkReplaceEnabled();
+            
+            display.getResultLabel().setValue(success ? "" : STRING_NOT_FOUND);
+         }
+      });      
+   }
+
+   private boolean firstReplaceIteration = false;
+   
+   private void doReplaceAll()
+   {
+      if (editor == null)
+      {
+         return;
+      }
+      
+      /*
+       * Replace
+       */
+      String replacement = display.getReplaceField().getValue();
+      if (replacement == null)
+      {
+         replacement = "";
+      }
+
+      editor.replaceMatch(replacement);
+      
+      /*
+       * Find
+       */
+      String query = display.getFindField().getValue();
+      if (query == null || query.isEmpty())
+      {
+         return;
+      }
+      boolean caseSensitive = display.getCaseSensitiveField().getValue();
+
+      editor.search(query, caseSensitive, new SearchCompleteCallback()
+      {
+         @Override
+         public void onSearchComplete(boolean success)
+         {
+            if (firstReplaceIteration && !success)
             {
-               display.enableFindButton(true);
-               display.enableReplaceAllButton(true);
+               display.getResultLabel().setValue(STRING_NOT_FOUND);
             }
             else
             {
-               disableAllButtons();
+               display.getResultLabel().setValue("");
+            }
+            
+            firstReplaceIteration = false;
+            
+            replaceEnabled = success;
+            if (checkReplaceEnabled())
+            {
+               doReplaceAll();
             }
          }
-      };
-      timer.schedule(10);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.search.text.event.EditorTextFoundHandler#onEditorTextFound(org.exoplatform.ide.client.search.text.event.EditorTextFoundEvent)
-    */
-   public void onEditorTextFound(EditorTextFoundEvent event)
-   {
-      String resultString = (event.isTextFound()) ? "" : STRING_NOT_FOUND;
-      String findText = display.getFindField().getValue();
-      FindTextState findTextState = new FindTextState(event.isTextFound(), resultString, findText);
-      changeState(findTextState);
-      filesFindState.put(activeFile.getId(), findTextState);
-   }
-
-   private void changeState(FindTextState state)
-   {
-      display.enableReplaceButton(state.isReplaceEnabled());
-      display.enableReplaceFindButton(state.isReplaceEnabled());
-      display.getResultLabel().setValue(state.getResultText());
-      display.getFindField().setValue(state.getFindText());
-   }
-
-   private class FindTextState
-   {
-      private boolean replaceEnabled;
-
-      private String resultText;
-
-      private String findText;
-
-      public FindTextState(boolean replaceEnabled, String resutlText, String findText)
-      {
-         this.replaceEnabled = replaceEnabled;
-         this.resultText = resutlText;
-         this.findText = findText;
-      }
-
-      /**
-       * @return the replaceEnabled
-       */
-      public boolean isReplaceEnabled()
-      {
-         return replaceEnabled;
-      }
-
-      /**
-       * @return the resultText
-       */
-      public String getResultText()
-      {
-         return resultText;
-      }
-
-      /**
-       * @return the findText
-       */
-      public String getFindText()
-      {
-         return findText;
-      }
-
+      });      
    }
 
 }

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -103,13 +102,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
        * TODO if (openedProject == null || !AWSExtension.isAWSApplication(openedProject)) {
        * Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.notAWSApplictaionMessage()); return; }
        */
-
+/*TODO
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
          bindDisplay();
-      }
+      }*/
    }
 
    public void bindDisplay()
@@ -140,7 +139,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
-           upda 
+            //TODO
          }
       });
    }

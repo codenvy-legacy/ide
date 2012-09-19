@@ -33,24 +33,14 @@ import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.FrameElement;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
@@ -282,17 +272,13 @@ public class CodeMirror2 extends AbsolutePanel implements Editor
    }
 
    @Override
-   public boolean findAndSelect(String find, boolean caseSensitive)
+   public void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback)
    {
-      // TODO Auto-generated method stub
-      return false;
    }
 
    @Override
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
+   public void replaceMatch(String replacement)
    {
-      // TODO Auto-generated method stub
-      
    }
 
    @Override

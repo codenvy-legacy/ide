@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -28,7 +26,7 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
+import org.exoplatform.ide.client.model.IDEConfigurationLoader;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
@@ -41,6 +39,8 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
