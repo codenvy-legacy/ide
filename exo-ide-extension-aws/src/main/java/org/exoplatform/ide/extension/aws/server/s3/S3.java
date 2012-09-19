@@ -51,6 +51,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.StreamHandler;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -164,7 +165,7 @@ public class S3
       try
       {
          conn = data.openConnection();
-         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), null, conn.getContentLength());
       }
       finally
       {
@@ -176,6 +177,12 @@ public class S3
             }
          }
       }
+   }
+
+   public NewS3Object putObject(String s3Bucket, String s3Key, InputStream stream, String mediaType, long length)
+      throws AWSException, IOException
+   {
+      return putObject(getS3Client(), s3Bucket, s3Key, stream, mediaType, length);
    }
 
    /**
@@ -203,7 +210,7 @@ public class S3
       ContentStream zippedProject = vfs.exportZip(projectId);
       try
       {
-         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), null, zippedProject.getLength());
       }
       catch (AmazonClientException e)
       {
@@ -211,7 +218,12 @@ public class S3
       }
    }
 
-   private NewS3Object putObject(AmazonS3 s3, String s3Bucket, String s3Key, InputStream stream, long length)
+   private NewS3Object putObject(AmazonS3 s3,
+                                 String s3Bucket,
+                                 String s3Key,
+                                 InputStream stream,
+                                 String mediaType,
+                                 long length)
       throws IOException
    {
       try
@@ -220,6 +232,10 @@ public class S3
          if (length != 1)
          {
             metadata.setContentLength(length);
+         }
+         if (mediaType != null)
+         {
+            metadata.setContentType(mediaType);
          }
          PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, stream, metadata));
          return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
