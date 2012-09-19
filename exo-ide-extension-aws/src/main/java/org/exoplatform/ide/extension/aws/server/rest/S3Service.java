@@ -95,7 +95,7 @@ public class S3Service
       return s3.putObject(s3Bucket, s3Key, data);
    }
 
-   @Path("objects/project/upload/{s3bucket}")
+   @Path("objects/upload_project/{s3bucket}")
    @POST
    public NewS3Object uploadProject(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("s3key") String s3Key,
@@ -144,7 +144,8 @@ public class S3Service
    @Path("objects/upload/{s3bucket}")
    @POST
    public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
-                              java.util.Iterator<FileItem> formData) throws InvalidArgumentException, Exception
+                              java.util.Iterator<FileItem> formData)
+      throws IOException, InvalidArgumentException, AWSException
    {
       FileItem contentItem = null;
       MediaType mediaType = null;
