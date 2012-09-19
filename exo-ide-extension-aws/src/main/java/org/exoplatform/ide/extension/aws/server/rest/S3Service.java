@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.aws.server.rest;
 
+import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
@@ -27,6 +28,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +40,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -135,5 +138,60 @@ public class S3Service
          .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength()))
          .header("Content-Disposition", "attachment; filename=\"" + s3Key + "\"")
          .build();
+   }
+
+   @Path("object/upload")
+   @POST
+   public Response uploadFile(java.util.Iterator<FileItem> formData) throws InvalidArgumentException
+   {
+      FileItem contentItem = null;
+      MediaType mediaType = null;
+      String name = null;
+
+      while (formData.hasNext())
+      {
+         FileItem item = formData.next();
+
+         if (!item.isFormField())
+         {
+            if (contentItem == null)
+            {
+               contentItem = item;
+            }
+            else
+            {
+               throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
+            }
+         }
+         else if ("mimeType".equals(item.getFieldName()))
+         {
+            String m = item.getString().trim();
+            if (m.length() > 0)
+            {
+               mediaType = MediaType.valueOf(m);
+            }
+         }
+         else if ("name".equals(item.getFieldName()))
+         {
+            name = item.getString().trim();
+         }
+      }
+
+      if (contentItem == null)
+      {
+         throw new InvalidArgumentException("Cannot find file for upload. ");
+      }
+
+      if (name == null || name.isEmpty())
+      {
+         throw new InvalidArgumentException("File name is required. ");
+      }
+
+      if (mediaType == null)
+      {
+         mediaType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
+      }
+
+      return Response.ok("", MediaType.TEXT_HTML).build();
    }
 }

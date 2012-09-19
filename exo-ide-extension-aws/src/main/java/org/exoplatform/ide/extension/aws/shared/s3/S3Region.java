@@ -45,7 +45,7 @@ public enum S3Region
    {
       for (S3Region v : S3Region.values())
       {
-         if (v == null && value == null)
+         if (v.value == null && value == null)
          {
             return v;
          }
