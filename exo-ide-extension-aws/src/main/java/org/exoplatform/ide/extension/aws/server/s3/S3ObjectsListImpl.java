@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.server.s3;
 
-import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import java.util.List;

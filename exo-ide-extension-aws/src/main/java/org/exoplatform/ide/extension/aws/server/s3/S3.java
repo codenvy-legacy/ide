@@ -25,20 +25,29 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
-import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectInfo;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
+import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,13 +64,11 @@ public class S3
       this.authenticator = authenticator;
    }
 
-   public S3Bucket createBucket(String name, String region) throws AWSException
+   public S3Bucket createBucket(String name, S3Region region) throws AWSException
    {
-      AmazonS3 s3 = getS3Client();
-
       try
       {
-         return createBucket(s3, name, region);
+         return createBucket(getS3Client(), name, region.toString());
       }
       catch (AmazonClientException e)
       {
@@ -72,7 +79,8 @@ public class S3
    private S3Bucket createBucket(AmazonS3 s3, String name, String region)
    {
       Bucket bucket = s3.createBucket(new CreateBucketRequest(name, region));
-      S3Bucket s3Bucket = new S3BucketImpl(
+
+      return new S3BucketImpl(
          bucket.getName(),
          bucket.getCreationDate().getTime(),
          new S3OwnerImpl(
@@ -80,17 +88,13 @@ public class S3
             bucket.getOwner().getDisplayName()
          )
       );
-
-      return s3Bucket;
    }
 
    public List<S3Bucket> listBuckets() throws AWSException
    {
-      AmazonS3 s3 = getS3Client();
-
       try
       {
-         return listBuckets(s3);
+         return listBuckets(getS3Client());
       }
       catch (AmazonClientException e)
       {
@@ -122,11 +126,9 @@ public class S3
 
    public void deleteBucket(String name) throws AWSException
    {
-      AmazonS3 s3 = getS3Client();
-
       try
       {
-         deleteBucket(s3, name);
+         deleteBucket(getS3Client(), name);
       }
       catch (AmazonClientException e)
       {
@@ -139,14 +141,13 @@ public class S3
       s3.deleteBucket(new DeleteBucketRequest(name));
    }
 
-   //
-
    /**
     * Upload content from specified URL to Amazon S3 storage.
     *
     * @param s3Bucket
     *    bucket name
     * @param s3Key
+    *    key
     *    key
     * @param data
     *    data location
@@ -156,9 +157,24 @@ public class S3
     * @throws java.io.IOException
     *    if any i/o error occurs
     */
-   public S3ObjectInfo putObject(String s3Bucket, String s3Key, URL data) throws AWSException, IOException
+   public NewS3Object putObject(String s3Bucket, String s3Key, URL data) throws AWSException, IOException
    {
-      return null;
+      URLConnection conn = null;
+      try
+      {
+         conn = data.openConnection();
+         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentLength());
+      }
+      finally
+      {
+         if (conn != null)
+         {
+            if ("http".equals(data.getProtocol()) || "https".equals(data.getProtocol()))
+            {
+               ((HttpURLConnection)conn).disconnect();
+            }
+         }
+      }
    }
 
    /**
@@ -180,32 +196,44 @@ public class S3
     * @throws IOException
     *    if any i/o error occurs
     */
-   public S3ObjectInfo uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
+   public NewS3Object uploadProject(String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
       throws AWSException, VirtualFileSystemException, IOException
    {
-//      AmazonS3 s3 = getS3Client();
-//      try
-//      {
-//         return uploadProject(s3, s3Bucket, s3Key, vfs, projectId);
-//      }
-//      catch (AmazonClientException e)
-//      {
-//         throw new AWSException(e);
-//      }
-      return null;
+      ContentStream zippedProject = vfs.exportZip(projectId);
+      try
+      {
+         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getLength());
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
    }
 
-//   private S3ObjectInfo uploadProject(AmazonS3 s3, String s3Bucket, String s3Key, VirtualFileSystem vfs, String projectId)
-//   {
-//      s3.uploadPart(new UploadPartRequest().withBucketName(s3Bucket).withKey(s3Key).withUploadId(projectId));
-//   }
+   private NewS3Object putObject(AmazonS3 s3, String s3Bucket, String s3Key, InputStream stream, long length)
+      throws IOException
+   {
+      try
+      {
+         ObjectMetadata metadata = new ObjectMetadata();
+         if (length != 1)
+         {
+            metadata.setContentLength(length);
+         }
+         PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, stream, metadata));
+         return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
+      }
+      finally
+      {
+         stream.close();
+      }
+   }
 
    public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
-      AmazonS3 s3 = getS3Client();
       try
       {
-         return listObjects(s3, s3Bucket, prefix, nextMarker, maxKeys);
+         return listObjects(getS3Client(), s3Bucket, prefix, nextMarker, maxKeys);
       }
       catch (AmazonClientException e)
       {
@@ -215,12 +243,18 @@ public class S3
 
    private S3ObjectsList listObjects(AmazonS3 s3, String s3Bucket, String prefix, String nextMarker, int maxKeys)
    {
-      ObjectListing objectListing = s3.listObjects(new ListObjectsRequest(s3Bucket, prefix, nextMarker, "", maxKeys));
+      ObjectListing objectListing = s3.listObjects(
+         new ListObjectsRequest()
+            .withBucketName(s3Bucket)
+            .withPrefix(prefix)
+            .withMarker(nextMarker)
+            .withMaxKeys((maxKeys == -1) ? null : maxKeys)
+      );
       S3ObjectsList s3ObjectsList = new S3ObjectsListImpl();
 
       List<S3Object> s3Objects = new ArrayList<S3Object>(objectListing.getObjectSummaries().size());
 
-      for (S3ObjectSummary object: objectListing.getObjectSummaries())
+      for (S3ObjectSummary object : objectListing.getObjectSummaries())
       {
          s3Objects.add(
             new S3ObjectImpl.Builder()
@@ -244,7 +278,46 @@ public class S3
       return s3ObjectsList;
    }
 
-   //
+   public void deleteObject(String s3Bucket, String s3key)  throws AWSException
+   {
+      try
+      {
+         deleteObject(getS3Client(), s3Bucket, s3key);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void deleteObject(AmazonS3 s3, String s3Bucket, String s3Key)
+   {
+      s3.deleteObject(new DeleteObjectRequest(s3Bucket, s3Key));
+   }
+
+   public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException
+   {
+      try
+      {
+         return getObjectContent(getS3Client(), s3Bucket, s3Key);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private S3Content getObjectContent(AmazonS3 s3, String s3Bucket, String s3Key)
+   {
+      com.amazonaws.services.s3.model.S3Object s3Object = s3.getObject(new GetObjectRequest(s3Bucket, s3Key));
+
+      return new S3Content(
+         s3Object.getObjectContent(),
+         s3Object.getObjectMetadata().getContentType(),
+         s3Object.getObjectMetadata().getLastModified(),
+         s3Object.getObjectMetadata().getContentLength()
+      );
+   }
 
    protected AmazonS3 getS3Client() throws AWSException
    {

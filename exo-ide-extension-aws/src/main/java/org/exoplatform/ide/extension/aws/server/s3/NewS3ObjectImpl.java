@@ -18,23 +18,23 @@
  */
 package org.exoplatform.ide.extension.aws.server.s3;
 
-import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectInfo;
+import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class S3ObjectInfoImpl implements S3ObjectInfo
+public class NewS3ObjectImpl implements NewS3Object
 {
    private String s3Bucket;
    private String s3Key;
    private String versionId;
 
-   public S3ObjectInfoImpl()
+   public NewS3ObjectImpl()
    {
    }
 
-   public S3ObjectInfoImpl(String s3Bucket, String s3Key, String versionId)
+   public NewS3ObjectImpl(String s3Bucket, String s3Key, String versionId)
    {
       this.s3Bucket = s3Bucket;
       this.s3Key = s3Key;
@@ -80,7 +80,7 @@ public class S3ObjectInfoImpl implements S3ObjectInfo
    @Override
    public String toString()
    {
-      return "S3ObjectInfoImpl{" +
+      return "NewS3ObjectImpl{" +
          "s3Bucket='" + s3Bucket + '\'' +
          ", s3Key='" + s3Key + '\'' +
          ", versionId='" + versionId + '\'' +
