@@ -30,6 +30,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -306,6 +307,31 @@ public interface VirtualFileSystem
    @Path("children")
    @Produces({MediaType.APPLICATION_JSON})
    ItemList<Item> getChildren(String folderId, int maxItems, int skipCount, String itemType, PropertyFilter propertyFilter)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
+
+   /**
+    * Get tree of items starts from specified folder.
+    *
+    * @param folderId
+    *    folder's id
+    * @param depth
+    *    depth for discover children if -1 then children at all levels
+    * @param propertyFilter
+    *    only properties which are accepted by filter should be included in response. See
+    *    {@link PropertyFilter#accept(String)}
+    * @return items tree started from specified folder
+    * @throws ItemNotFoundException
+    *    if <code>folderId</code> does not exist
+    * @throws InvalidArgumentException if <code>folderId</code> is not a folder or project
+    * @throws PermissionDeniedException
+    *    if user which perform operation has no permissions to do it
+    * @throws VirtualFileSystemException
+    *    if any other errors occur
+    */
+   @GET
+   @Path("tree")
+   @Produces({MediaType.APPLICATION_JSON})
+   ItemNode getTree(String folderId, int depth, PropertyFilter propertyFilter)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException;
 
    /**
