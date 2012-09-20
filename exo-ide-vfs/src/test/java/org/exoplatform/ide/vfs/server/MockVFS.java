@@ -30,6 +30,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -185,6 +186,12 @@ public class MockVFS implements VirtualFileSystem
       ItemList<Item> itemList = new ItemList<Item>(items);
       itemList.setNumItems(items.size());
       return itemList;
+   }
+
+   @Override
+   public ItemNode getTree(String folderId, int depth, PropertyFilter propertyFilter) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    @Override

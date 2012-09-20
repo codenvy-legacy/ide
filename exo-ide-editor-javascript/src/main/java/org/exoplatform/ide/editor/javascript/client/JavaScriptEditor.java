@@ -19,7 +19,6 @@
 package org.exoplatform.ide.editor.javascript.client;
 
 import com.google.collide.client.CollabEditor;
-import com.google.collide.codemirror2.SyntaxType;
 
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
@@ -43,6 +42,7 @@ public class JavaScriptEditor extends CollabEditor
    {
       super(mimeType);
       editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaScriptAutocompleter());
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new JavaScriptContentAssistProcessor());
+      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
+         new JavaScriptContentAssistProcessor());
    }
 }
