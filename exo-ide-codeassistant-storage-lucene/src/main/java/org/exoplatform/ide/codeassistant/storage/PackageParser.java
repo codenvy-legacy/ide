@@ -51,7 +51,7 @@ public class PackageParser
             String name = entry.getName();
             if (name.endsWith(".class"))
             {
-               
+
                packages.addAll(parsePath(name));
             }
             entry = zip.getNextEntry();
@@ -71,12 +71,12 @@ public class PackageParser
     */
    private static Set<String> parsePath(String name)
    {
-      
+
       String[] segments = name.split("/");
       Set<String> packageSegment = new HashSet<String>();
       StringBuilder first = new StringBuilder(segments[0]);
       packageSegment.add(first.toString());
-      for(int i = 1; i < segments.length - 1; i++)
+      for (int i = 1; i < segments.length - 1; i++)
       {
          first.append('.').append(segments[i]);
          packageSegment.add(first.toString());
@@ -95,6 +95,57 @@ public class PackageParser
       try
       {
          return parse(jarStream);
+      }
+      finally
+      {
+         jarStream.close();
+      }
+   }
+
+   /**
+    * @param jarFile
+    * @param ignoredPackages
+    * @return
+    */
+   public static Set<String> parse(File jarFile, Set<String> ignoredPackages) throws IOException
+   {
+      FileInputStream jarStream = new FileInputStream(jarFile);
+      try
+      {
+         Set<String> packages = new HashSet<String>();
+         ZipInputStream zip = new ZipInputStream(jarStream);
+         try
+         {
+            ZipEntry entry = zip.getNextEntry();
+            boolean ignore = false;
+            while (entry != null)
+            {
+
+               String name = entry.getName();
+               if (name.endsWith(".class"))
+               {
+                  ignore = false;
+                  for (String s : ignoredPackages)
+                  {
+                     if (entry.getName().startsWith(s))
+                     {
+                        ignore = true;
+                        break;
+                     }
+                  }
+                  if (!ignore)
+                  {
+                     packages.addAll(parsePath(name));
+                  }
+               }
+               entry = zip.getNextEntry();
+            }
+         }
+         finally
+         {
+            zip.close();
+         }
+         return packages;
       }
       finally
       {

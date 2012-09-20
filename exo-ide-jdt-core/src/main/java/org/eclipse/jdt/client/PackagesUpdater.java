@@ -55,9 +55,11 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    PackageCreatedHandler
 {
 
-   private static final int DALAY = 1000 * 60 * 3;
+   private static final int DALAY = 5000;
+   
+   private static final int DALAY_LONG = 1000 * 60;
 
-   private static final int MAX_REQUEST = 5;
+   private static final int MAX_REQUEST = 10;
 
    private final HandlerManager eventBus;
 
@@ -70,6 +72,10 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    private int requestCount = 0;
 
    private String projectId;
+   
+   private boolean canSchedule = false;
+   
+   private int delay = DALAY_LONG;
 
    public PackagesUpdater(HandlerManager eventBus, SupportedProjectResolver projectResolver, TypeInfoStorage storage)
    {
@@ -89,9 +95,10 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    {
       if ("pom.xml".equals(event.getFile().getName()))
       {
+         delay = DALAY_LONG;
          requestCount = 0;
          timer.cancel();
-         timer.schedule(DALAY);
+         timer.schedule(delay);
       }
    }
 
@@ -101,9 +108,6 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       public void run()
       {
          updatePackages(projectId);
-         requestCount++;
-         if (requestCount < MAX_REQUEST)
-            schedule(DALAY);
       }
    };
 
@@ -119,11 +123,20 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
          saveFileHandler = eventBus.addHandler(FileSavedEvent.TYPE, this);
          projectId = event.getProject().getId();
          requestCount = 0;
+         delay = DALAY;
          updatePackages(projectId);
-         timer.schedule(DALAY);
+         timer.schedule(delay);
       }
    }
 
+   private void schedule()
+   {
+      requestCount++;
+      if (requestCount < MAX_REQUEST)
+      {
+         timer.schedule(delay);
+      }
+   }
    /**
     * @param projectId
     */
@@ -148,12 +161,16 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
                      stringSet.add(arr.get(i).isString().stringValue());
                   }
                   storage.setPackages(projectId, stringSet);
+                  schedule();
                }
+
+               
 
                @Override
                protected void onFailure(Throwable exception)
                {
                   IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+                  schedule();
                }
             });
       }
@@ -169,6 +186,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
+      timer.cancel();
       if (saveFileHandler != null)
       {
          saveFileHandler.removeHandler();

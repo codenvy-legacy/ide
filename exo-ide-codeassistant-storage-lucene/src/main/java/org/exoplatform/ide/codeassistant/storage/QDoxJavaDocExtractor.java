@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -274,6 +275,40 @@ public class QDoxJavaDocExtractor
          }
       }
       return commentBuilder.toString().trim();
+   }
+
+   /**
+    * @param zipStream
+    * @param ignoredPackages
+    * @return
+    */
+   public Map<String, String> extractZip(InputStream sourceZipStream, Set<String> ignoredPackages) throws IOException
+   {
+      HashMap<String, String> result = new HashMap<String, String>();
+      ZipInputStream zip = new ZipInputStream(sourceZipStream);
+      ZipEntry entry = zip.getNextEntry();
+      boolean ignore = false;
+      while (entry != null)
+      {
+         if (entry.getName().endsWith(".java"))
+         {
+            ignore = false;
+            for (String s : ignoredPackages)
+            {
+               if (entry.getName().startsWith(s))
+               {
+                  ignore = true;
+                  break;
+               }
+            }
+            if (!ignore)
+            {
+               result.putAll(extractSource(zip));
+            }
+         }
+         entry = zip.getNextEntry();
+      }
+      return result;
    }
 
 }
