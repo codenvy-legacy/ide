@@ -14,8 +14,8 @@
 
 package org.exoplatform.ide.tree;
 
-import org.exoplatform.ide.json.JsoArray;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.tree.Tree.Css;
 import org.exoplatform.ide.util.SignalEvent;
 

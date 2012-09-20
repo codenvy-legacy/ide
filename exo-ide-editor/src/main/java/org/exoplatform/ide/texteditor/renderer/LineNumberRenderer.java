@@ -18,9 +18,9 @@ import com.google.gwt.resources.client.ClientBundle;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import org.exoplatform.ide.json.JsoIntegerMap;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.json.js.JsoIntegerMap;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.Editor;

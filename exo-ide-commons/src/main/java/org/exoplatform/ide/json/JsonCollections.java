@@ -20,6 +20,11 @@ import org.exoplatform.ide.json.java.JsonArrayListAdapter;
 import org.exoplatform.ide.json.java.JsonIntegerMapAdapter;
 import org.exoplatform.ide.json.java.JsonStringMapAdapter;
 import org.exoplatform.ide.json.java.JsonStringSetAdapter;
+import org.exoplatform.ide.json.js.Jso;
+import org.exoplatform.ide.json.js.JsoArray;
+import org.exoplatform.ide.json.js.JsoIntegerMap;
+import org.exoplatform.ide.json.js.JsoStringMap;
+import org.exoplatform.ide.json.js.JsoStringSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;

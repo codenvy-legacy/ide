@@ -18,7 +18,7 @@ package org.exoplatform.ide.json;
  * String Map interface for use in DTOs.
  *
  * On the client it is safe to cast this to a
- * {@link com.google.collide.json.client.Jso}.
+ * {@link org.exoplatform.ide.json.js.collide.json.client.Jso}.
  *
  * On the server this is an instance of a wrapper object
  * {@link com.google.collide.json.server.JsonStringMapAdapter}.

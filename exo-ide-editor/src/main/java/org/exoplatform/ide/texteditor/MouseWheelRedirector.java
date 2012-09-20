@@ -19,7 +19,7 @@ import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;
 import elemental.html.Element;
 
-import org.exoplatform.ide.json.Jso;
+import org.exoplatform.ide.json.js.Jso;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
 import org.exoplatform.ide.util.UserAgent;
 

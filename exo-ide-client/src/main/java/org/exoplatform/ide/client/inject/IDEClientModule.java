@@ -29,6 +29,8 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
+import org.exoplatform.ide.loader.EmptyLoader;
+import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.ResourceManagerImpl;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
@@ -63,6 +65,7 @@ public class IDEClientModule extends AbstractGinModule
       bind(AppContext.class).in(Singleton.class);
       bind(BaseTextEditor.class).in(Singleton.class);
       bind(ResourceManager.class).to(ResourceManagerImpl.class).in(Singleton.class);
+      bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
       
       //      bind(IDEAppController.class).in(Singleton.class);
       //      bind(Presenter.class).to(IDEAppPresenter.class);

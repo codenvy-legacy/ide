@@ -17,9 +17,9 @@
 
 package org.exoplatform.ide.util;
 
-import org.exoplatform.ide.json.Jso;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringSet;
+import org.exoplatform.ide.json.js.Jso;
 import org.exoplatform.ide.util.SignalKeyLogic.OperatingSystem;
 import org.exoplatform.ide.util.SignalKeyLogic.UserAgentType;
 

@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.util;
 
-import org.exoplatform.ide.json.JsoArray;
+import org.exoplatform.ide.json.js.JsoArray;
 
 import com.google.gwt.regexp.shared.RegExp;
 

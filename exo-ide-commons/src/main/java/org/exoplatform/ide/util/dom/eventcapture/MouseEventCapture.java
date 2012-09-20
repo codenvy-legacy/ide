@@ -19,7 +19,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventTarget;
 
-import org.exoplatform.ide.json.JsoArray;
+import org.exoplatform.ide.json.js.JsoArray;
 
 /**
  * Utility class which allows simulation of Event Capture.

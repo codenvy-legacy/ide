@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.8-CR01</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.8-CR01</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M10-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.vfs.version>1.2.0-M11-SNAPSHOT</org.exoplatform.vfs.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -143,17 +143,6 @@
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
 
-         <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-commons</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-ui</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
-         </dependency>
-
 	<!-- IDE -->
 
          <dependency>
@@ -161,19 +150,21 @@
             <artifactId>exo-ide-client</artifactId>
             <version>${project.version}</version>
          </dependency>
-
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-core</artifactId>
+            <version>${project.version}</version>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs</artifactId>
-            <version>${project.version}</version>
+            <version>${org.exoplatform.vfs.version}</version>
          </dependency>
-
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-jcr</artifactId>
-            <version>${project.version}</version>
+            <version>${org.exoplatform.vfs.version}</version>
          </dependency>
-         
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-editor</artifactId>
@@ -184,6 +175,7 @@
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
                                                                
 
 	<!-- OTHER -->
@@ -451,10 +443,9 @@
       </pluginManagement>
    </build>
    <modules>
-      <module>exo-ide-vfs</module>
-      <module>exo-ide-vfs-jcr</module>
-      <module>exo-ide-editor</module>
       <module>exo-ide-commons</module>
+      <module>exo-ide-core</module>
+      <module>exo-ide-editor</module>
       <module>exo-ide-client</module>
    </modules>
 </project>
