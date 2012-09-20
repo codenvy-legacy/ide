@@ -1,0 +1,6 @@
+To build run 
+mvn clean install
+
+Go to target/
+then run 
+java -cp exo-ide-codeassistant-storage-lucene-1.2.0-M10.jar org.exoplatform.ide.codeassistant.storage.lucene.delete.CleanUpIndex [path to lucene index]
