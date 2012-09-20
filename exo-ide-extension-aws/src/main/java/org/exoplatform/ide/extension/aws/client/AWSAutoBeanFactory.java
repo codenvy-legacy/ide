@@ -31,6 +31,8 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
 /**
  * The interface for the AutoBean generator.
@@ -111,4 +113,13 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return {@link CreateApplicationRequest} create application request
     */
    AutoBean<CreateApplicationRequest> createApplicationRequest();
+   
+   
+   /**
+    * @return
+    */
+   AutoBean<S3Bucket> s3Bucket();
+   
+   AutoBean<S3ObjectsList> s3ObjectsList(); 
+   
 }

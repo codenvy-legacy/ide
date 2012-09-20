@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.cell.client.ClickableTextCell;
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
@@ -31,8 +30,10 @@ import com.google.gwt.user.cellview.client.Column;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -41,12 +42,7 @@ import java.util.List;
  */
 public class ObjectGrid extends ListGrid<S3Object>
 {
-   private static final String ID = "ideObjectGrid";
-
-   /**
-    * Column for deleting user's applications.
-    */
-   private Column<S3Object, String> deleteAppColumn;
+   private static final String ID = "ideS3ObjectGrid";
 
    public ObjectGrid()
    {
@@ -59,7 +55,7 @@ public class ObjectGrid extends ListGrid<S3Object>
     */
    private void initColumns()
    {
-      Column<S3Object, String> appColumn = new Column<S3Object, String>(new TextCell())
+      Column<S3Object, String> keyCol = new Column<S3Object, String>(new TextCell())
       {
 
          @Override
@@ -69,40 +65,84 @@ public class ObjectGrid extends ListGrid<S3Object>
          }
       };
 
-      deleteAppColumn = new Column<S3Object, String>(new Link())
+      Column<S3Object, String> eTagCol = new Column<S3Object, String>(new TextCell())
       {
          @Override
          public String getValue(S3Object object)
          {
-            return "Delete";
+            return object.geteTag();
          }
       };
 
-      getCellTable().addColumn(appColumn, "Hello");
-      getCellTable().setColumnWidth(appColumn, "100%");
-      getCellTable().addColumn(deleteAppColumn, "Delete");
-      getCellTable().setColumnWidth(deleteAppColumn, "30");
-   }
-
-   /**
-    * Handler for deleting applications.
-    * 
-    * @param handler
-    * @return
-    */
-   public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<S3Object> handler)
-   {
-      deleteAppColumn.setFieldUpdater(new FieldUpdater<S3Object, String>()
+      Column<S3Object, String> ownerCol = new Column<S3Object, String>(new TextCell())
       {
-
          @Override
-         public void update(int index, S3Object object, String value)
+         public String getValue(S3Object object)
          {
-            handler.onSelection(new SelectionEventImpl(object));
+            return object.getOwner().getName();
          }
-      });
-      return null;
+      };
+
+      Column<S3Object, String> sizeCol = new Column<S3Object, String>(new TextCell())
+      {
+         @Override
+         public String getValue(S3Object object)
+         {
+            return String.valueOf(object.getSize());
+         }
+      };
+
+      Column<S3Object, String> storageCol = new Column<S3Object, String>(new TextCell())
+      {
+         @Override
+         public String getValue(S3Object object)
+         {
+            return object.getStorageClass();
+         }
+      };
+
+      Column<S3Object, String> lastModifiedCol = new Column<S3Object, String>(new TextCell())
+      {
+         @Override
+         public String getValue(S3Object object)
+         {
+            return new Date(object.getUpdated()).toString();
+         }
+      };
+      
+      getCellTable().addColumn(keyCol, "Key");
+      getCellTable().setColumnWidth(keyCol, 20, Unit.PCT );
+      getCellTable().addColumn(eTagCol, "ETag");
+      getCellTable().setColumnWidth(eTagCol, 20, Unit.PCT );
+      getCellTable().addColumn(ownerCol, "Owner");
+      getCellTable().setColumnWidth(ownerCol, 10, Unit.PCT );
+      getCellTable().addColumn(sizeCol, "Size");
+      getCellTable().setColumnWidth(sizeCol, 10, Unit.PCT );
+      getCellTable().addColumn(storageCol, "Storage Class");
+      getCellTable().setColumnWidth(storageCol, 15, Unit.PCT );
+      getCellTable().addColumn(lastModifiedCol, "Last Modified");
+      getCellTable().setColumnWidth(lastModifiedCol, 25, Unit.PCT );
    }
+
+//   /**
+//    * Handler for deleting applications.
+//    * 
+//    * @param handler
+//    * @return
+//    */
+//   public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<S3Object> handler)
+//   {
+//      deleteAppColumn.setFieldUpdater(new FieldUpdater<S3Object, String>()
+//      {
+//
+//         @Override
+//         public void update(int index, S3Object object, String value)
+//         {
+//            handler.onSelection(new SelectionEventImpl(object));
+//         }
+//      });
+//      return null;
+//   }
 
    /**
     * Implementation of {@link SelectionEvent} event.
@@ -125,6 +165,7 @@ public class ObjectGrid extends ListGrid<S3Object>
    @Override
    public void setValue(List<S3Object> value)
    {
+      super.setValue(Collections.emptyList());
       super.setValue(value);
       if (value != null && value.size() > 0)
       {

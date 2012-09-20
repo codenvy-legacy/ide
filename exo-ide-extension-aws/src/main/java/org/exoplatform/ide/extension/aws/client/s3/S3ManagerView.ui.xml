@@ -14,13 +14,12 @@
 			<g:SplitLayoutPanel>
 				<g:west size="200">
 					<g:VerticalPanel>
-						<g:ListBox visibleItemCount="10"></g:ListBox>
+						<g:ListBox ui:field="buckets" visibleItemCount="10"></g:ListBox>
 					</g:VerticalPanel>
 				</g:west>
 				<g:center>
 					<g:VerticalPanel>
-						<!-- <c:CellTable width='100%' ui:field='objectTable' /> -->
-						<u:ObjectGrid  width="100%" height="100%"></u:ObjectGrid>
+						<u:ObjectGrid  ui:field="s3ObjectsGrid" width="100%" height="100%"></u:ObjectGrid>
 					</g:VerticalPanel>
 				</g:center>
 				<g:south size="200">
