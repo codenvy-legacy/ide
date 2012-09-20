@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptOutlineItemCreator;
+import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JavaScriptCodeController;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -149,6 +150,8 @@ public class JavaScriptEditorExtension extends Extension
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.TEXT_JAVASCRIPT, commentsModifier));
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_X_JAVASCRIPT, commentsModifier));
+
       Elements.injectJs(RESOURCES.esprima().getText() + RESOURCES.esprimaJsContentAssist().getText());
+      new JavaScriptCodeController();
    }
 }
