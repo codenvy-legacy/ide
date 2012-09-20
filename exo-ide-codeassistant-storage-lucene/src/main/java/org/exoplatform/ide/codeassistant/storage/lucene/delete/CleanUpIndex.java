@@ -57,6 +57,15 @@ public class CleanUpIndex
 
    public static void main(String[] args) throws IOException
    {
+      String directory = DEFAULT_INDEX_DIRECTORY;
+      if (args.length == 0)
+      {
+         LOG.info("Arguments list wasn't specified, will be used default values");
+      }
+      else if (args.length >= 1)
+      {
+         directory = args[0];
+      }
       ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
       InputStream io = contextClassLoader.getResourceAsStream(DEFAULT_PACKAGE_IGNORED_LIST);
       JsonParser p = new JsonParser();
@@ -77,7 +86,7 @@ public class CleanUpIndex
       {
          io.close();
       }
-      Directory indexDirectory = NIOFSDirectory.open(new File(DEFAULT_INDEX_DIRECTORY));
+      Directory indexDirectory = NIOFSDirectory.open(new File(directory));
       removeDocuments(indexDirectory, ignored, IndexType.JAVA, DataIndexFields.FQN);
       removeDocuments(indexDirectory, ignored, IndexType.DOC, DataIndexFields.FQN);
       removeDocuments(indexDirectory, ignored, IndexType.PACKAGE, DataIndexFields.PACKAGE);
