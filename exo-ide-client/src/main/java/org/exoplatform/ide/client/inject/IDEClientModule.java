@@ -22,6 +22,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.api.resources.ResourceManager;
 import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.client.editor.EditorPresenter;
 import org.exoplatform.ide.client.editor.EditorView;
@@ -31,7 +32,6 @@ import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
-import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.ResourceManagerImpl;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
 

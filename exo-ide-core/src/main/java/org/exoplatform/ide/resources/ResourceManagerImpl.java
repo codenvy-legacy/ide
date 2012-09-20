@@ -25,13 +25,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.resources.ResourceManager;
+import org.exoplatform.ide.core.event.ComponentLifecycleEvent;
+import org.exoplatform.ide.core.event.ComponentLifecycleEvent.LifecycleState;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.loader.Loader;
-import org.exoplatform.ide.resources.event.ComponentLifecycleEvent;
-import org.exoplatform.ide.resources.event.ComponentLifecycleEvent.LifecycleState;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.ProjectModelProviderAdapter;
 import org.exoplatform.ide.resources.marshal.ProjectModelUnmarshaller;
@@ -188,7 +189,7 @@ public class ResourceManagerImpl implements ResourceManager
    @Override
    public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback)
    {
-       // TODO Create with correct primary nature?
+      // TODO Create with correct primary nature?
       final Folder rootFolder = vfsInfo.getRoot();
       // initialize empty project object
       ProjectModelProviderAdapter adapter = new ProjectModelProviderAdapter(this);
@@ -273,9 +274,13 @@ public class ResourceManagerImpl implements ResourceManager
    * {@inheritDoc}
    */
    @Override
-   public void registerNature(String natureId, ProjectNature nature)
+   public void registerNature(ProjectNature nature)
    {
-      natures.put(natureId, nature);
+      if (nature != null)
+      {
+         natures.put(nature.getNatureId(), nature);
+      }
+
    }
 
    /**
@@ -349,6 +354,11 @@ public class ResourceManagerImpl implements ResourceManager
       JsonStringSet requiredNatureIds = nature.getRequiredNatureIds();
 
       JsonStringSet appliedNatureIds = project.getDescription().getNatures();
+      // checj already applied
+      if (appliedNatureIds.contains(nature.getNatureId()))
+      {
+         throw new IllegalStateException("Nature aready applied");
+      }
 
       // check dependencies
       for (String requiredNatureId : requiredNatureIds.getKeys().asIterable())

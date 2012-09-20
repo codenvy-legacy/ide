@@ -16,9 +16,9 @@
  */
 package org.exoplatform.ide.resources.marshal;
 
+import org.exoplatform.ide.api.resources.ResourceManager;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.ModelProvider;
-import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.ProjectDescription;
 import org.exoplatform.ide.resources.properties.Property;

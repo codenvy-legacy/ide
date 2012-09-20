@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.resources;
+package org.exoplatform.ide.api.resources;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.resources.event.Component;
+import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.ProjectNature;
 import org.exoplatform.ide.resources.properties.Property;
@@ -87,10 +88,9 @@ public interface ResourceManager extends Component
    /**
     * Register Nature
     * 
-    * @param natureId
     * @param nature
     */
-   public void registerNature(String natureId, ProjectNature nature);
+   public void registerNature(ProjectNature nature);
    
    /**
     * Get nature by ID
@@ -101,7 +101,7 @@ public interface ResourceManager extends Component
    public ProjectNature getNature(String natureId);
    
    /**
-    * Apply nature to the given Project
+    * Apply nature to the given Project. Project Description will flushed to VFS immediately.
     * 
     * @param project
     * @param natureId

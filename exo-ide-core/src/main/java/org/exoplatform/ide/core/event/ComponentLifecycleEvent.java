@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.resources.event;
+package org.exoplatform.ide.core.event;
+
+import org.exoplatform.ide.core.Component;
 
 import com.google.gwt.event.shared.GwtEvent;
 

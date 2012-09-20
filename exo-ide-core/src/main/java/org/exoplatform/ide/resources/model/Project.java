@@ -23,12 +23,12 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import org.exoplatform.ide.api.resources.ResourceManager;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
-import org.exoplatform.ide.resources.ResourceManager;
 import org.exoplatform.ide.resources.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FileUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;

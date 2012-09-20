@@ -23,14 +23,14 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.resources.ResourceManager;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
+import org.exoplatform.ide.core.Component;
+import org.exoplatform.ide.core.event.ComponentLifecycleEvent;
+import org.exoplatform.ide.core.event.ComponentLifecycleHandler;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.resources.ResourceManager;
-import org.exoplatform.ide.resources.event.Component;
-import org.exoplatform.ide.resources.event.ComponentLifecycleEvent;
-import org.exoplatform.ide.resources.event.ComponentLifecycleHandler;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
