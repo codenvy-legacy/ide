@@ -17,7 +17,7 @@ public class SshKeysTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
       IDE.PREFERENCES.waitPreferencesOpen();
-      IDE.PREFERENCES.selectCustomizeMenu("Ssh Keys");
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.SSH_KEY);
       IDE.SSH.waitSshView();
       IDE.SSH.clickGenerateBtn();
       IDE.SSH.waitSshAskForm();
@@ -33,6 +33,8 @@ public class SshKeysTest extends BaseTest
    {
       IDE.SSH.clickViewKeyInGridPosition(1);
       IDE.SSH.waitAppearSshKeyManadger();
+      //need for redraw in google chrom
+      Thread.sleep(500);
       assertTrue(IDE.SSH.getSshKeyHash().startsWith("ssh-rsa"));
       assertTrue(IDE.SSH.getSshKeyHash().length() > 378);
       IDE.SSH.clickOnCloseSsshKeyManager();
@@ -44,7 +46,7 @@ public class SshKeysTest extends BaseTest
    {
       IDE.PREFERENCES.selectCustomizeMenu("Customize Toolbar");
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
-      IDE.PREFERENCES.selectCustomizeMenu("Ssh Keys");
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.SSH_KEY);
       IDE.SSH.waitSshView();
       IDE.SSH.waitAppearContentInSshListGrig();
       assertThat(IDE.SSH.getAllKeysList().split("\n")).contains("github.com", "View", "Delete");
