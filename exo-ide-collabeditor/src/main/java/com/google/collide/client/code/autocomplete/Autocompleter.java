@@ -406,6 +406,8 @@ public class Autocompleter {
     // TODO: If there is only one proposal that gives us nothing
     //               then there are no proposals!
     AutocompleteProposals proposals = controller.start(editor.getSelection(), trigger);
+    if(proposals == null)
+       return;
     if (AutocompleteProposals.PARSING == proposals && popup.isShowing()) {
       // Do nothing to avoid flickering.
     } else if (!proposals.isEmpty()) {
