@@ -24,17 +24,30 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
+import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Image;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.Placement;
+import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.Region;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.SecurityGroup;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import com.amazonaws.services.ec2.model.StartInstancesResult;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
+import com.amazonaws.services.ec2.model.StopInstancesResult;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
@@ -289,7 +302,7 @@ public class EC2
 
    //
 
-   public void runInstance(String imageId,
+   public List<String> runInstance(String imageId,
                            String instanceType,
                            int numberOfInstances,
                            String keyName,
@@ -299,7 +312,7 @@ public class EC2
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         runInstance(ec2Client, imageId, instanceType, numberOfInstances, keyName, securityGroupsIds, availabilityZone);
+         return runInstance(ec2Client, imageId, instanceType, numberOfInstances, keyName, securityGroupsIds, availabilityZone);
       }
       catch (AmazonClientException e)
       {
@@ -311,7 +324,7 @@ public class EC2
       }
    }
 
-   private void runInstance(AmazonEC2 ec2Client,
+   private List<String> runInstance(AmazonEC2 ec2Client,
                             String imageId,
                             String instanceType,
                             int numberOfInstances,
@@ -319,14 +332,171 @@ public class EC2
                             List<String> securityGroupsIds,
                             String availabilityZone)
    {
-      ec2Client.runInstances(new RunInstancesRequest()
-         .withImageId(imageId)
-         .withInstanceType(instanceType)
-         .withMinCount(numberOfInstances)
-         .withMaxCount(numberOfInstances)
-         .withKeyName(keyName)
-         .withSecurityGroupIds(securityGroupsIds)
-         .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
+      RunInstancesResult result = ec2Client.runInstances(new RunInstancesRequest()
+      .withImageId(imageId)
+      .withInstanceType(instanceType)
+      .withMinCount(numberOfInstances)
+      .withMaxCount(numberOfInstances)
+      .withKeyName(keyName)
+      .withSecurityGroupIds(securityGroupsIds)
+      .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
+
+      List<Instance> runningInstances = result.getReservation().getInstances();
+      List<String> instanceInfos = new ArrayList<String>(runningInstances.size());
+
+      for (Instance instance : runningInstances)
+      {
+         instanceInfos.add(
+            instance.getInstanceId()
+         );
+      }
+
+      return instanceInfos;
+   }
+
+   public void stopInstance(boolean force, List<String> instanceIds) throws AWSException
+   {
+      AmazonEC2 ec2Client = getEC2Client();
+      try
+      {
+         stopInstance(ec2Client, force, instanceIds);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         ec2Client.shutdown();
+      }
+   }
+
+   private void stopInstance(AmazonEC2 ec2Client, boolean force, List<String> instanceIds)
+   {
+      ec2Client.stopInstances(new StopInstancesRequest()
+      .withForce(force)
+      .withInstanceIds(instanceIds));
+   }
+
+   public void startInstance(List<String> instanceIds) throws AWSException
+   {
+      AmazonEC2 ec2Client = getEC2Client();
+      try
+      {
+         startInstance(ec2Client, instanceIds);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         ec2Client.shutdown();
+      }
+   }
+
+   private void startInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   {
+      ec2Client.startInstances(new StartInstancesRequest()
+         .withInstanceIds(instanceIds));
+   }
+
+   public void rebootInstance(List<String> instanceIds) throws AWSException
+   {
+      AmazonEC2 ec2Client = getEC2Client();
+      try
+      {
+         rebootInstance(ec2Client, instanceIds);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         ec2Client.shutdown();
+      }
+   }
+
+   private void rebootInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   {
+      ec2Client.rebootInstances(new RebootInstancesRequest()
+         .withInstanceIds(instanceIds));
+   }
+
+   public void terminateInstance(List<String> instanceIds) throws AWSException
+   {
+      AmazonEC2 ec2Client = getEC2Client();
+      try
+      {
+         terminateInstance(ec2Client, instanceIds);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         ec2Client.shutdown();
+      }
+   }
+
+   private void terminateInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   {
+      ec2Client.terminateInstances(new TerminateInstancesRequest()
+         .withInstanceIds(instanceIds));
+   }
+
+   public List<InstanceStatusInfo> getStatus(List<String> instanceIds,
+                         int maxResult,
+                         boolean includeAllInstances,
+                         String nextToken) throws AWSException
+   {
+      AmazonEC2 ec2Client = getEC2Client();
+      try
+      {
+          return getStatus(ec2Client, instanceIds, maxResult, includeAllInstances, nextToken);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         ec2Client.shutdown();
+      }
+   }
+
+   private List<InstanceStatusInfo> getStatus(AmazonEC2 ec2Client,
+                          List<String> instanceIds,
+                          int maxResult,
+                          boolean includeAllInstances,
+                          String nextToken)
+   {
+      DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(new DescribeInstanceStatusRequest()
+         .withInstanceIds(instanceIds)
+         .withMaxResults(maxResult)
+         .withIncludeAllInstances(includeAllInstances)
+         .withNextToken(nextToken));
+
+      List<InstanceStatus> instanceStatuses = result.getInstanceStatuses();
+      List<InstanceStatusInfo> statusInfos = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
+
+      for (InstanceStatus status : instanceStatuses)
+      {
+         statusInfos.add(
+            new InstanceStatusInfoImpl(
+               status.getInstanceId(),
+               status.getAvailabilityZone(),
+               status.getEvents(),
+               status.getInstanceState(),
+               status.getInstanceStatus(),
+               status.getSystemStatus()
+            )
+         );
+      }
+
+      return statusInfos;
    }
 
    //

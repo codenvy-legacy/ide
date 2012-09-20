@@ -22,10 +22,16 @@ import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.ec2.EC2;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.RebootInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.StartInstanceRequest;
+import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
+import org.exoplatform.ide.extension.aws.shared.ec2.StopInstanceRequest;
+import org.exoplatform.ide.extension.aws.shared.ec2.TerminateInstanceRequest;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -88,11 +94,11 @@ public class EC2Service
       return ec2.listAvailabilityZones();
    }
 
-   @Path("run")
+   @Path("instance/run")
    @POST
-   public void runInstance(RunInstanceRequest request) throws AWSException
+   public List<String> runInstance(RunInstanceRequest request) throws AWSException
    {
-       ec2.runInstance(
+       return ec2.runInstance(
           request.getImageId(),
           request.getInstanceType(),
           request.getNumberOfInstances(),
@@ -100,5 +106,44 @@ public class EC2Service
           request.getSecurityGroupsIds(),
           request.getAvailabilityZone()
        );
+   }
+
+   @Path("instance/start")
+   @POST
+   public void startInstance(StartInstanceRequest request) throws AWSException
+   {
+      ec2.startInstance(request.getInstanceIds());
+   }
+
+   @Path("instance/stop")
+   @POST
+   public void stopInstance(StopInstanceRequest request) throws AWSException
+   {
+      ec2.stopInstance(request.getForce(), request.getInstanceIds());
+   }
+
+   @Path("instance/reboot")
+   @POST
+   public void rebootInstance(RebootInstanceRequest request) throws AWSException
+   {
+      ec2.rebootInstance(request.getInstanceIds());
+   }
+
+   @Path("instance/terminate")
+   @POST
+   public void terminateInstance(TerminateInstanceRequest request) throws AWSException
+   {
+      ec2.terminateInstance(request.getInstanceIds());
+   }
+
+   @Path("instance/status")
+   @GET
+   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
+   {
+      return ec2.getStatus(
+         request.getInstanceIds(),
+         request.getMaxResult(),
+         request.getIncludeAllInstances(),
+         request.getNextToken());
    }
 }
