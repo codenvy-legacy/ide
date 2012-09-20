@@ -81,9 +81,6 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
       IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
 
-//      final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
-//      Window.addWindowClosingHandler(closeListener);
-
       Event.addNativePreviewHandler(new NativePreviewHandler()
       {
          @Override
@@ -187,12 +184,14 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       {
          hotKeyPressedListener.onHotKeyPressed(ctrl, alt, shift, keyCode);
          event.preventDefault();
+         event.stopPropagation();
       }
       else
       {
          if (handleKeyPressing(ctrl, alt, shift, keyCode))
          {
             event.preventDefault();
+            event.stopPropagation();
          }
       }
    }
