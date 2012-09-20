@@ -60,23 +60,6 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
       return instance;
    }
 
-//   private static final class WindowCloseHandlerImpl implements ClosingHandler
-//   {
-//      public native void onWindowClosing(ClosingEvent event)
-//      /*-{
-//         $doc.onkeydown = null; 
-//      }-*/;
-//   }
-   
-   private native void setKeyDownHandler()
-   /*-{
-      $doc.onkeydown = function(ev)
-      { 
-         var hotKeyNamager = @org.exoplatform.ide.client.hotkeys.HotKeyManager::getInstance()();
-         hotKeyNamager.@org.exoplatform.ide.client.hotkeys.HotKeyManager::onKeyDown(Lcom/google/gwt/user/client/Event;)(ev || $wnd.event);                  
-      }                              
-   }-*/;
-
    private HotKeyPressedListener hotKeyPressedListener;
 
    private Map<String, String> hotKeyMap;
@@ -100,7 +83,7 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
 
 //      final WindowCloseHandlerImpl closeListener = new WindowCloseHandlerImpl();
 //      Window.addWindowClosingHandler(closeListener);
-//      setKeyDownHandler();
+
       Event.addNativePreviewHandler(new NativePreviewHandler()
       {
          @Override
@@ -192,6 +175,11 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
    {
       int keyCode = DOM.eventGetKeyCode(event);
       boolean ctrl = event.getCtrlKey();
+      if (event.getMetaKey())
+      {
+         ctrl = true;
+      }
+      
       boolean alt = event.getAltKey();
       boolean shift = event.getShiftKey();
       

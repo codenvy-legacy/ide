@@ -799,6 +799,7 @@
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
                      <logLevel>INFO</logLevel>
+                     <bindAddress>0.0.0.0</bindAddress>
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <!-- <port>${gwt.port}</port> -->

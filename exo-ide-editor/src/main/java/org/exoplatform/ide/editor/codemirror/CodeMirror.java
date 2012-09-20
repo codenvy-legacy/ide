@@ -329,7 +329,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          }         
       } catch (Exception e) {
          Window.alert("Exception > " + e.getMessage());
-         System.out.println("error >>>>>>>>>>>>>>>>>>>>>>>>>>>");
          e.printStackTrace();
       }      
    }
