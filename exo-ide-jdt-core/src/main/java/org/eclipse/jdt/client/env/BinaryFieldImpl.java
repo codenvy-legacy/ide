@@ -95,7 +95,15 @@ public class BinaryFieldImpl implements IBinaryField
             case 'F' :
                return FloatConstant.fromValue(Float.parseFloat(defaultValue));
             case 'J' :
-               return LongConstant.fromValue(Long.parseLong(defaultValue));
+               try
+               {
+                  return LongConstant.fromValue(Long.parseLong(defaultValue));
+               }
+               catch (NumberFormatException e)
+               {
+                  // ignore
+                  // http://code.google.com/p/google-web-toolkit/issues/detail?id=7308
+               }
          }
       }
       return null;
