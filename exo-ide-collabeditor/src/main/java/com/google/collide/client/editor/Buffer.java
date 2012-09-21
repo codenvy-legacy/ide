@@ -254,7 +254,7 @@ public class Buffer extends UiComponent<Buffer.View>
          */
         // Note: columnMarkerElement is lying under the textLayerElement,
         //       so spacers are not shadowed.
-        scrollableElement.appendChild(columnMarkerElement);
+         scrollableElement.appendChild(columnMarkerElement);
       }
       scrollableElement.appendChild(textLayerElement);
 
@@ -366,24 +366,28 @@ public class Buffer extends UiComponent<Buffer.View>
        * instead
        */
       scrollableElement.setTabIndex(-1);
-
-      Browser.getWindow().addEventListener(Event.RESIZE, new EventListener() {
+      EventListener eventListener = new EventListener() {
         @Override
         public void handleEvent(Event evt) {
-          // TODO: also listen for the navigation slider
-          // this event is being caught multiple times, and sometimes the
-          // calculated values are all zero. So only respond if we have positive
-          // values.
-          int height = (int) textLayerElement.getBoundingClientRect().getHeight();
-          int viewportHeight = getHeight();
-          if (height > 0 && viewportHeight > 0) {
-            getDelegate().onScrollableResize(
-                height, viewportHeight, scrollableElement.getScrollTop());
-          }
+           onResize();
         }
-      }, false);
-
+      };
+      Browser.getWindow().addEventListener(Event.RESIZE, eventListener, false);
       return scrollableElement;
+    }
+    
+    public void onResize()
+    {
+       // TODO: also listen for the navigation slider
+       // this event is being caught multiple times, and sometimes the
+       // calculated values are all zero. So only respond if we have positive
+       // values.
+       int height = (int) textLayerElement.getBoundingClientRect().getHeight();
+       int viewportHeight = getHeight();
+       if (height > 0 && viewportHeight > 0) {
+         getDelegate().onScrollableResize(
+             height, viewportHeight, scrollableElement.getScrollTop());
+       }
     }
 
     public int getScrollLeft() {
@@ -1120,6 +1124,10 @@ public class Buffer extends UiComponent<Buffer.View>
       getView().rootElement.removeChild(getView().scrollbarElement);
       getView().scrollableElement.getStyle().setOverflowY("hidden");
     }
+  }
+  
+  public void onResize(){
+     getView().onResize();
   }
 
   /**
