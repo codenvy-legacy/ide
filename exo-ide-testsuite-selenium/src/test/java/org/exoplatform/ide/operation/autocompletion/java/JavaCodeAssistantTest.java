@@ -112,7 +112,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       Thread.sleep(3000);
 
       IDE.CODE_ASSISTANT_JAVA.openForm();
-      IDE.CODE_ASSISTANT_JAVA.moveCursorDown(2);
+    //  IDE.CODE_ASSISTANT_JAVA.moveCursorDown(2);
       //delay for user keypress emulation
       Thread.sleep(500);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
