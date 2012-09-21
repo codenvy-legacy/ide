@@ -31,6 +31,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -168,6 +169,7 @@ public class CreateVersionPresenter implements CreateVersionHandler, ViewClosedH
       if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
       {
          IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+         JobManager.get().showJobSeparated();
          IDE.fireEvent(new BuildProjectEvent(project));
       }
       else

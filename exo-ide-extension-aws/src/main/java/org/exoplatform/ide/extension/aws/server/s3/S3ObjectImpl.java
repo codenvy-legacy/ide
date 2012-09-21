@@ -138,13 +138,13 @@ public class S3ObjectImpl implements S3Object
    }
 
    @Override
-   public String getETag()
+   public String geteTag()
    {
       return eTag;
    }
 
    @Override
-   public void setETag(String eTag)
+   public void seteTag(String eTag)
    {
       this.eTag = eTag;
    }

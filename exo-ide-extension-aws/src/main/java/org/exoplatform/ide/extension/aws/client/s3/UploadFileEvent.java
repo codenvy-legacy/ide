@@ -16,44 +16,54 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.server.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+package org.exoplatform.ide.extension.aws.client.s3;
 
-import javax.ws.rs.core.Application;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Created by The eXo Platform SAS.
  * 
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: AWSApplication.java Aug 23, 2012
+ * Created by The eXo Platform SAS .
+ * 
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
+ * @version $
  */
-public class AWSApplication extends Application
+
+public class UploadFileEvent extends GwtEvent<UploadFileHandler>
 {
-   private final Set<Class<?>> classes;
-
-//   private final Set<Object> singletons;
-
-   public AWSApplication()
+   
+   private String id;
+   
+   public UploadFileEvent()
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(BeanstalkService.class);
-      classes.add(S3Service.class);
-      classes.add(EC2Service.class);
-//      singletons = new HashSet<Object>(1); TODO
-//      singletons.add(new AWSExceptionMapper());
+      // TODO Auto-generated constructor stub
+   }
+   
+   
+
+   public UploadFileEvent(String id)
+   {
+      this.id = id;
+   }
+
+
+   public String getId()
+   {
+      return id;
+   }
+   
+   public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType()
+   {
+      return TYPE;
    }
 
    @Override
-   public Set<Class<?>> getClasses()
+   protected void dispatch(UploadFileHandler handler)
    {
-      return classes;
+      handler.onUploadFile(this);
    }
 
-//   @Override
-//   public Set<Object> getSingletons()
-//   {
-//      return singletons;
-//   }
 }

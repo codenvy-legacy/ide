@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -245,7 +246,7 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
                @Override
                protected void onSuccess(EnvironmentInfo result)
                {
-                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentSuccess(environmentName), Type.INFO));
+                  Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentSuccess(environmentName));
                   
                   if (display != null)
                   {

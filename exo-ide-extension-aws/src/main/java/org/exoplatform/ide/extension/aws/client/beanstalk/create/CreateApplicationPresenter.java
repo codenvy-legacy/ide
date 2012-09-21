@@ -34,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -283,6 +284,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
       {
          IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+         JobManager.get().showJobSeparated();
          IDE.fireEvent(new BuildProjectEvent(openedProject));
       }
       else

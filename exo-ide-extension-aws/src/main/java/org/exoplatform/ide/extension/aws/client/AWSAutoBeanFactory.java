@@ -36,9 +36,9 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
 /**
  * The interface for the AutoBean generator.
@@ -120,8 +120,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<S3Bucket> s3Bucket();
    
    AutoBean<S3ObjectsList> s3ObjectsList(); 
-
-
 
    /**
     * A factory method for create application request bean.

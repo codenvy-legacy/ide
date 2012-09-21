@@ -45,7 +45,7 @@ public class CreateEnvironmentView extends ViewImpl implements CreateEnvironment
 
    private static final int WIDTH = 555;
 
-   private static final int HEIGHT = 205;
+   private static final int HEIGHT = 195;
 
    private static final String ENV_NAME_FIELD_ID = "ideCreateEnvironmentViewEnvNameField";
 
