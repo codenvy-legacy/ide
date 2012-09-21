@@ -27,9 +27,13 @@
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display" />
    </replace-with>
-   
-    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.ec2.EC2ManagerView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationView">

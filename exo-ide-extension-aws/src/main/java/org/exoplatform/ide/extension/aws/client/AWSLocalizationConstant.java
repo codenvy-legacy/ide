@@ -105,6 +105,15 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.manage.application.prompt")
    String manageApplicationControlPrompt();
 
+   @Key("control.ec2.management.id")
+   String ec2ManagementControlId();
+
+   @Key("control.ec2.management.title")
+   String ec2ManagementControlTitle();
+
+   @Key("control.ec2.management.promt")
+   String ec2ManagementControlPrompt();
+
    // Login View
    @Key("login.title")
    String loginTitle();
@@ -228,4 +237,8 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.s3.managemnt.promt")
    String s3ManagementControlPrompt();
+
+   // EC2 Management View
+   @Key("management.ec2.id")
+   String managementEC2ViewTitle();
 }

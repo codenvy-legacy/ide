@@ -33,6 +33,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -68,6 +69,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new ManageApplicationPresenter();
       new LoginPresenter();
       new S3Manager();
+      new EC2Manager();
    }
 
    /**
