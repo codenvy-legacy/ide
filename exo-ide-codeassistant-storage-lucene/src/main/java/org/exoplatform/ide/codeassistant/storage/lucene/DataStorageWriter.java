@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +56,28 @@ public class DataStorageWriter
     */
    public void writeBinaryJarsToIndex(Artifact[] artifacts) throws IOException, SaveDataIndexException
    {
+     writeBinaryJarsToIndex(artifacts, Collections.<String>emptySet());
+   }
+
+   /**
+    * Method adds all java doc comments from source archives to lucene index
+    * 
+    * @param sourceJars
+    * @throws IOException
+    * @throws SaveDataIndexException
+    */
+   public void writeSourceJarsToIndex(Artifact[] artifacts) throws IOException, SaveDataIndexException
+   {
+     writeSourceJarsToIndex(artifacts, Collections.<String>emptySet());
+   }
+
+   /**
+    * Method add all classes from jars to lucene index
+    * @param jarFilesList
+    * @param ignoredPackages
+    */
+   public void writeBinaryJarsToIndex(Artifact[] artifacts, Set<String> ignoredPackages)throws IOException, SaveDataIndexException
+   {
       LuceneInfoStorage luceneInfoStorage = null;
       if (artifacts == null)
          return;
@@ -67,8 +90,8 @@ public class DataStorageWriter
          {
             Set<String> packages = new TreeSet<String>();
             File jarFile = new File(artifact.getPath());
-            List<TypeInfo> typeInfos = JarParser.parse(jarFile);
-            packages.addAll(PackageParser.parse(jarFile));
+            List<TypeInfo> typeInfos = JarParser.parse(jarFile, ignoredPackages);
+            packages.addAll(PackageParser.parse(jarFile, ignoredPackages));
             writer.addTypeInfo(typeInfos, artifact.getArtifactString());
             writer.addPackages(packages, artifact.getArtifactString());
          }
@@ -84,12 +107,10 @@ public class DataStorageWriter
 
    /**
     * Method adds all java doc comments from source archives to lucene index
-    * 
-    * @param sourceJars
-    * @throws IOException
-    * @throws SaveDataIndexException
+    * @param jarFilesList
+    * @param ignoredPackages
     */
-   public void writeSourceJarsToIndex(Artifact[] artifacts) throws IOException, SaveDataIndexException
+   public void writeSourceJarsToIndex(Artifact[] artifacts, Set<String> ignoredPackages)throws IOException, SaveDataIndexException
    {
       LuceneInfoStorage luceneInfoStorage = null;
       if (artifacts == null)
@@ -106,7 +127,7 @@ public class DataStorageWriter
             InputStream zipStream = new FileInputStream(jarFile);
             try
             {
-               Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
+               Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream, ignoredPackages);
                writer.addJavaDocs(javaDocs, artifact.getArtifactString());
             }
             finally

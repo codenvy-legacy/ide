@@ -37,7 +37,6 @@ import org.exoplatform.ide.vfs.shared.Project;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -404,7 +403,7 @@ public abstract class CodeAssistant
       {
          result.addAll(list);
       }
-         if(searchResult != null)
+      if (searchResult != null)
       {
          result.addAll(searchResult);
       }
@@ -438,6 +437,43 @@ public abstract class CodeAssistant
       }
       return result;
    }
+
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param projectId Id of current project
+    * @param vfsId Id of current project
+    * @return {@link List} of package names
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   public List<String> getAllPackages(String projectId, String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      List<String> packages = storage.getAllPackages(getProjectDependencys(projectId, vfsId));
+      List<String> packagesFromProject = getAllPackagesFromProject(projectId, vfsId);
+      List<String> result = new ArrayList<String>();
+      if (packagesFromProject != null)
+      {
+         result.addAll(packagesFromProject);
+      }
+
+      if (packages != null)
+      {
+         result.addAll(packages);
+
+      }
+      return result;
+   }
+
+   /**
+    *  Return sets of Strings, associated with the package names
+    * @param projectId Id of current project
+    * @param vfsId Id of current project
+    * @return {@link List} of package names
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    */
+   protected abstract List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Return sets of Strings, associated with the package names

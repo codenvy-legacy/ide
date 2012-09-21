@@ -42,14 +42,13 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineAsyncRequestCallback;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineClientService;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePresenter;
 import org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationEvent;
+import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
@@ -140,6 +139,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onDeployApplication(DeployApplicationEvent event)
    {
+      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
       isUserLogged(false);
    }
 
@@ -265,14 +265,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                {
                   if (!result.isAuthenticated())
                   {
-                     String authUrl = Utils.getAuthorizationContext()//
-                        + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
-                        + "&scope=https://www.googleapis.com/auth/appengine.admin"//
-                        + "&redirect_after_login="//
-                        + Utils.getAuthorizationPageURL();
-                     JsPopUpOAuthWindow authWindow =
-                        new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
-                     authWindow.loginWithOAuth();
+                     new OAuthLoginView();
                      return;
                   }
                   if (wizardStep)
@@ -413,7 +406,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
       }
       else
       {
-         IDE.fireEvent(new CreateApplicationEvent());
+         IDE.fireEvent(new CreateApplicationEvent(project));
       }
    }
 

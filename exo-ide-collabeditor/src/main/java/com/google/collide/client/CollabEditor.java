@@ -21,6 +21,8 @@ package com.google.collide.client;
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
+import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
@@ -28,6 +30,8 @@ import com.google.collide.client.editor.search.SearchModel.SearchProgressListene
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
+import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
@@ -64,7 +68,9 @@ import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -87,12 +93,12 @@ public class CollabEditor extends Widget implements Editor, Markable
    protected NotificationManager notificationManager;
 
    protected DocumentAdaptor documentAdaptor;
-   
-   protected ContentAssistant contentAssistant;
-   
+
    private HoverPresenter hoverPresenter;
 
    private boolean initialized;
+
+   private ContentAssistant contentAssistant;
 
    private final class TextListenerImpl implements TextListener
    {
@@ -105,6 +111,7 @@ public class CollabEditor extends Widget implements Editor, Markable
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          udateDocument();
       }
+
    }
 
    public CollabEditor(String mimeType)
@@ -129,15 +136,15 @@ public class CollabEditor extends Widget implements Editor, Markable
       documentAdaptor = new DocumentAdaptor();
       editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
       {
-         
+
          @Override
          public void onFocusChange(boolean hasFocus)
          {
             if (hasFocus)
-            fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
+               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
          }
       });
-      
+
    }
 
    /**
@@ -196,7 +203,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
       document.addDocumentListener(documentAdaptor);
-      hoverPresenter = new HoverPresenter(this,editor, document);
+      hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
@@ -211,16 +218,16 @@ public class CollabEditor extends Widget implements Editor, Markable
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-               
+
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
-                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() +1 , column +1));
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() + 1, column + 1));
                }
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-               
+
                @Override
                public void onContextMenu(int x, int y)
                {
@@ -248,13 +255,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       switch (capability)
       {
-         case AUTOCOMPLETION:
-         case OUTLINE:
-         case VALIDATION:
-         case FIND_AND_REPLACE:
-         case DELETE_LINES:
-         case FORMAT_SOURCE:
-         case SET_CURSOR_POSITION:
+         case AUTOCOMPLETION :
+         case OUTLINE :
+         case VALIDATION :
+         case FIND_AND_REPLACE :
+         case DELETE_LINES :
+         case FORMAT_SOURCE :
+         case SET_CURSOR_POSITION :
             return true;
 
          default :
@@ -666,7 +673,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       return hoverPresenter;
    }
-   
+
    /**
     * @return the editorBundle
     */
@@ -684,9 +691,9 @@ public class CollabEditor extends Widget implements Editor, Markable
    }
 
    private String searchQuery;
-   
+
    private boolean caseSensitive;
-   
+
    /**
     * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
     */
@@ -696,7 +703,7 @@ public class CollabEditor extends Widget implements Editor, Markable
       {
          return;
       }
-      
+
       if (query == null || query.isEmpty())
       {
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -710,7 +717,7 @@ public class CollabEditor extends Widget implements Editor, Markable
 
          return;
       }
-      
+
       if (searchQuery == null || !searchQuery.equals(query) || this.caseSensitive != caseSensitive)
       {
          searchQuery = query;
@@ -741,12 +748,12 @@ public class CollabEditor extends Widget implements Editor, Markable
             public void onSearchBegin()
             {
             }
-         });         
+         });
       }
       else
       {
          editor.getSearchModel().getMatchManager().selectNextMatch();
-         
+
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
             @Override
@@ -755,14 +762,15 @@ public class CollabEditor extends Widget implements Editor, Markable
                if (editor.getSelection().hasSelection())
                {
                   searchCompleteCallback.onSearchComplete(true);
-               } else
+               }
+               else
                {
                   searchCompleteCallback.onSearchComplete(false);
                }
             }
          });
-         
-      }      
+
+      }
    }
 
    /**
@@ -774,8 +782,50 @@ public class CollabEditor extends Widget implements Editor, Markable
       if (editor.getSelection().hasSelection())
       {
          //editor.getSearchModel().getMatchManager().replaceMatch(replacement)
-         editor.getSearchModel().getMatchManager().replaceMatch(replacement);         
+         editor.getSearchModel().getMatchManager().replaceMatch(replacement);
       }
    }
-   
+
+   public Remover showPopup(IRegion region, Element content)
+   {
+      try
+      {
+         int line = document.getLineOfOffset(region.getOffset());
+         LineInfo findLine = editor.getDocument().getLineFinder().findLine(line);
+         int lineOffset = document.getLineOffset(line);
+         int startColumn = region.getOffset() - lineOffset;
+         return editorBundle.getEditorPopupController().showPopup(findLine, startColumn,
+            startColumn + region.getLength(), null, new RendererImpl(content), null, VerticalAlign.BOTTOM, true, 200);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
+      return null;
+   }
+
+   private final class RendererImpl implements PopupRenderer
+   {
+
+      private final Element element;
+
+      /**
+       * 
+       */
+      public RendererImpl(Element element)
+      {
+         this.element = element;
+
+      }
+
+      /**
+       * @see com.google.collide.client.code.popup.EditorPopupController.PopupRenderer#renderDom()
+       */
+      @Override
+      public elemental.html.Element renderDom()
+      {
+         return (elemental.html.Element)element;
+      }
+
+   }
 }

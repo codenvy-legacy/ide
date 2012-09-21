@@ -74,36 +74,35 @@ public class BinaryFieldImpl implements IBinaryField
    {
       if (field.containsKey("value") && field.get("value").isString() != null)
       {
-         String defaultValue = field.get("value").isString().stringValue();
-         if (defaultValue.isEmpty())
-            return null;
-         char[] elementType = Signature.getElementType(getTypeName());
-         if (elementType.length > 1)
-            return null;
-         switch (elementType[0])
+         try
          {
-            case 'I' :
-               return IntConstant.fromValue(Integer.parseInt(defaultValue));
-            case 'Z' :
-               return BooleanConstant.fromValue(Boolean.parseBoolean(defaultValue));
-            case 'C' :
-               return CharConstant.fromValue(defaultValue.charAt(0));
-            case 'D' :
-               return DoubleConstant.fromValue(Double.parseDouble(defaultValue));
-            case 'B' :
-               return ByteConstant.fromValue(Byte.parseByte(defaultValue));
-            case 'F' :
-               return FloatConstant.fromValue(Float.parseFloat(defaultValue));
-            case 'J' :
-               try
-               {
+            String defaultValue = field.get("value").isString().stringValue();
+            if (defaultValue.isEmpty())
+               return null;
+            char[] elementType = Signature.getElementType(getTypeName());
+            if (elementType.length > 1)
+               return null;
+            switch (elementType[0])
+            {
+               case 'I' :
+                  return IntConstant.fromValue(Integer.parseInt(defaultValue));
+               case 'Z' :
+                  return BooleanConstant.fromValue(Boolean.parseBoolean(defaultValue));
+               case 'C' :
+                  return CharConstant.fromValue(defaultValue.charAt(0));
+               case 'D' :
+                  return DoubleConstant.fromValue(Double.parseDouble(defaultValue));
+               case 'B' :
+                  return ByteConstant.fromValue(Byte.parseByte(defaultValue));
+               case 'F' :
+                  return FloatConstant.fromValue(Float.parseFloat(defaultValue));
+               case 'J' :
                   return LongConstant.fromValue(Long.parseLong(defaultValue));
-               }
-               catch (NumberFormatException e)
-               {
-                  // ignore
-                  // http://code.google.com/p/google-web-toolkit/issues/detail?id=7308
-               }
+            }
+         }
+         catch (Throwable e)
+         {
+            //ignore
          }
       }
       return null;
