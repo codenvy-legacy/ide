@@ -36,4 +36,8 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.UploadFilePresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display" />
+   </replace-with>
+
 </module>

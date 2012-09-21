@@ -18,13 +18,17 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk;
 
+
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
 import java.util.List;
 
@@ -67,7 +71,7 @@ public abstract class BeanstalkClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void getAvailableSolutionStacks(AsyncRequestCallback<List<SolutionStack>> callback)
+   public abstract void getAvailableSolutionStacks(BeanstalkAsyncRequestCallback<List<SolutionStack>> callback)
       throws RequestException;
 
    /**
@@ -87,7 +91,12 @@ public abstract class BeanstalkClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void createApplication(String vfsId, String projectId, CreateApplicationRequest createApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
+   public abstract void createApplication(String vfsId, String projectId,
+      CreateApplicationRequest createApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
+      throws RequestException;
+
+   public abstract void updateApplication(String vfsId, String projectId,
+      UpdateApplicationRequest updateApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
       throws RequestException;
 
    /**
@@ -119,4 +128,8 @@ public abstract class BeanstalkClientService
     * @throws RequestException
     */
    public abstract void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
+
+   public abstract void createEnvironment(String vfsId, String projectId,
+      CreateEnvironmentRequest createEnvironmentRequest, BeanstalkAsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException;
 }

@@ -33,7 +33,10 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
 import java.util.List;
 
@@ -61,7 +64,11 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String APPLICATION_DELETE = BASE_URL + "/apps/delete";
 
+   private static final String APPLICATION_UPDATE = BASE_URL + "/apps/update";
+
    private static final String APPLICATIONS = BASE_URL + "/apps";
+
+   private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
 
    /**
     * REST service context.
@@ -112,7 +119,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getAvailableSolutionStacks(AsyncRequestCallback<List<SolutionStack>> callback) throws RequestException
+   public void getAvailableSolutionStacks(BeanstalkAsyncRequestCallback<List<SolutionStack>> callback)
+      throws RequestException
    {
       String url = restServiceContext + SOLUTION_STACKS;
 
@@ -153,8 +161,26 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getApplicationInfo(java.lang.String, java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#updateApplication(java.lang.String,
+    *      java.lang.String, com.amazonaws.services.elasticbeanstalk.model.UpdateApplicationRequest,
     *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void updateApplication(String vfsId, String projectId, UpdateApplicationRequest updateApplicationRequest,
+      AsyncRequestCallback<ApplicationInfo> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(APPLICATION_UPDATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updateApplicationRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getApplicationInfo(java.lang.String,
+    *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void getApplicationInfo(String vfsId, String projectId, AsyncRequestCallback<ApplicationInfo> callback)
@@ -168,8 +194,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#deleteApplication(java.lang.String, java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#deleteApplication(java.lang.String,
+    *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void deleteApplication(String vfsId, String projectId, AsyncRequestCallback<Object> callback)
@@ -192,5 +218,23 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createEnvironment(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest,
+    *      org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback)
+    */
+   @Override
+   public void createEnvironment(String vfsId, String projectId, CreateEnvironmentRequest createEnvironmentRequest,
+      BeanstalkAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENT_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createEnvironmentRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 }

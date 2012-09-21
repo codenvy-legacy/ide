@@ -28,11 +28,13 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionRestriction;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
 /**
  * The interface for the AutoBean generator.
@@ -107,13 +109,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     */
    AutoBean<Credentials> credentials();
    
-   /**
-    * A factory method for create application request bean.
-    * 
-    * @return {@link CreateApplicationRequest} create application request
-    */
-   AutoBean<CreateApplicationRequest> createApplicationRequest();
-   
    
    /**
     * @return
@@ -121,5 +116,27 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<S3Bucket> s3Bucket();
    
    AutoBean<S3ObjectsList> s3ObjectsList(); 
+
+
+   /**
+    * A factory method for create application request bean.
+    * 
+    * @return {@link CreateApplicationRequest} create application request
+    */
+   AutoBean<CreateApplicationRequest> createApplicationRequest();
+
+   /**
+    * A factory method for update application request bean.
+    * 
+    * @return {@link UpdateApplicationRequest} update application request
+    */
+   AutoBean<UpdateApplicationRequest> updateApplicationRequest();
+
+   /**
+    * A factory method for create environment request bean.
+    * 
+    * @return {@link CreateEnvironmentRequest} create environment request
+    */
+   AutoBean<CreateEnvironmentRequest> createEnvironmentRequest();
    
 }

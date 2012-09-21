@@ -68,6 +68,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
 
    private Display display;
 
+   private LoggedInHandler loggedInHandler;
+
    public LoginPresenter()
    {
       IDE.getInstance().addControl(new SwitchAccountControl());
@@ -170,6 +172,10 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                {
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.loginSuccess(), Type.INFO));
+                  if (loggedInHandler != null)
+                  {
+                     loggedInHandler.onLoggedIn();
+                  }
                }
 
                @Override
@@ -203,6 +209,8 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    @Override
    public void onLogin(LoginEvent event)
    {
+      this.loggedInHandler = event.getLoggedInHandler();
+
       if (display == null)
       {
          display = GWT.create(Display.class);

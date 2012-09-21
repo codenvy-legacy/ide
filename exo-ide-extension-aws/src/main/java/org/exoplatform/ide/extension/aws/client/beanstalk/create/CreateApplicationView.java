@@ -45,9 +45,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final String ID = "ideCreateApplicationView";
 
-   private static final int WIDTH = 560;
+   private static final int WIDTH = 555;
 
-   private static final int HEIGHT = 360;
+   private static final int HEIGHT = 315;
 
    private static final String NAME_FIELD_ID = "ideCreateApplicationViewNameField";
 
@@ -56,6 +56,14 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    private static final String S3_BUCKET_FIELD_ID = "ideCreateApplicationViewS3BucketField";
 
    private static final String S3_KEY_FIELD_ID = "ideCreateApplicationViewS3KeyField";
+
+   private static final String ENV_NAME_FIELD_ID = "ideCreateApplicationViewEnvNameField";
+
+   private static final String ENV_DESCRIPTION_FIELD_ID = "ideCreateApplicationViewEnvDescriptionField";
+
+   private static final String SOLUTION_STACK_FIELD_ID = "ideCreateApplicationViewSolutionStackField";
+
+   private static final String LAUNCH_ENV_FIELD_ID = "ideCreateApplicationViewLaunchEnvField";
 
    private static final String NEXT_BUTTON_ID = "ideCreateApplicationViewNextButton";
 
@@ -122,6 +130,11 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       descriptionField.setName(DESCRIPTION_FIELD_ID);
       s3BucketField.setName(S3_BUCKET_FIELD_ID);
       s3KeyField.setName(S3_KEY_FIELD_ID);
+
+      envNameField.setName(ENV_NAME_FIELD_ID);
+      envDescriptionField.setName(ENV_DESCRIPTION_FIELD_ID);
+      solutionStackField.setName(SOLUTION_STACK_FIELD_ID);
+      launchEnvironment.setName(LAUNCH_ENV_FIELD_ID);
 
       nextButton.setButtonId(NEXT_BUTTON_ID);
       backButton.setButtonId(BACK_BUTTON_ID);
@@ -288,8 +301,26 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void enableCreateEnvironmentStep(boolean enabled)
    {
       envNameField.setEnabled(enabled);
-      descriptionField.setEnabled(enabled);
+      envDescriptionField.setEnabled(enabled);
       solutionStackField.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display#setSolutionStackValues(java.lang.String[])
+    */
+   @Override
+   public void setSolutionStackValues(String[] values)
+   {
+      solutionStackField.setValueMap(values);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display#enableFinishButton(boolean)
+    */
+   @Override
+   public void enableFinishButton(boolean enabled)
+   {
+      finishButton.setEnabled(enabled);
    }
 
 }

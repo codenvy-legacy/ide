@@ -37,4 +37,15 @@ public interface AWSClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/aws/client/images/switchAccount_Disabled.png")
    ImageResource switchAccountDisabled();
 
+   @Source("org/exoplatform/ide/extension/aws/client/images/delete.png")
+   ImageResource delete();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/delete_Disabled.png")
+   ImageResource deleteDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/edit.png")
+   ImageResource edit();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/edit_Disabled.png")
+   ImageResource editDisabled();
 }

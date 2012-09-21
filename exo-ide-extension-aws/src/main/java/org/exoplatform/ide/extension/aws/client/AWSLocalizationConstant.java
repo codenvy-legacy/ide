@@ -45,16 +45,17 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("button.add")
    String addButton();
-   
+
    @Key("button.next")
    String nextButton();
-   
+
    @Key("button.back")
    String backButton();
-   
+
    @Key("button.finish")
    String finishButton();
 
+   // Controls
    @Key("button.properties")
    String propertiesButton();
    
@@ -98,6 +99,15 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.login.prompt")
    String loginControlPrompt();
 
+   @Key("control.manage.application.id")
+   String manageApplicationControlId();
+
+   @Key("control.manage.application.title")
+   String manageApplicationControlTitle();
+
+   @Key("control.manage.application.prompt")
+   String manageApplicationControlPrompt();
+
    // Login View
    @Key("login.title")
    String loginTitle();
@@ -132,6 +142,84 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("create.application.s3.title")
    String createApplicationS3Title();
+
+   @Key("create.environment.name")
+   String createEnvironmentName();
+
+   @Key("create.environment.description")
+   String createEnvironmentDescription();
+
+   @Key("create.environment.solution.stack")
+   String createEnvironmentSolutionStack();
+
+   @Key("create.environment.launch")
+   String createEnvironmentLaunch();
+
+   @Key("create.application.success")
+   String createApplicationSuccess(String application);
+
+   @Key("create.application.fail")
+   String createApplicationFailed(String application);
+
+   @Key("create.environment.success")
+   String createEnvironmentSuccess(String environment);
+
+   @Key("create.environment.fail")
+   String createEnvironmentFailed(String environment);
+
+   // Manage Application
+   @Key("not.aws.application.message")
+   String notAWSApplictaionMessage();
+
+   @Key("manage.application.view.title")
+   String manageApplicationViewTitle();
+
+   @Key("application.name")
+   String applicationName();
+
+   @Key("application.description")
+   String applicationDescription();
+
+   @Key("application.creation.date")
+   String applicationCreationDate();
+
+   @Key("application.updated.date")
+   String applicationUpdatedDate();
+
+   @Key("edit.description.prompt")
+   String editDescriptionPrompt();
+
+   @Key("delete.application.prompt")
+   String deleteApplicationPrompt();
+
+   @Key("general.tab")
+   String generalTab();
+
+   @Key("versions.tab")
+   String versionsTab();
+
+   @Key("events.tab")
+   String eventsTab();
+
+   @Key("environments.tab")
+   String environmentsTab();
+
+   // Delete Application
+   @Key("delete.application.title")
+   String deleteApplicationTitle();
+
+   @Key("delete.application.question")
+   String deleteApplicationQuestion(String application);
+
+   @Key("delete.application.success")
+   String deleteApplicationSuccess(String application);
+
+   @Key("delete.application.failed")
+   String deleteApplicationFailed(String application);
+
+   // Update Application
+   @Key("update.application.failed")
+   String updateApplicationFailed(String application);
 
    
    //S3 Management 

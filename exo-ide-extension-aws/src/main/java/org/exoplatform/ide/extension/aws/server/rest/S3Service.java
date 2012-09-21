@@ -30,6 +30,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -94,7 +95,7 @@ public class S3Service
       return s3.putObject(s3Bucket, s3Key, data);
    }
 
-   @Path("objects/upload/{s3bucket}")
+   @Path("objects/upload_project/{s3bucket}")
    @POST
    public NewS3Object uploadProject(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("s3key") String s3Key,
@@ -140,9 +141,11 @@ public class S3Service
          .build();
    }
 
-   @Path("object/upload")
+   @Path("objects/upload/{s3bucket}")
    @POST
-   public Response uploadFile(java.util.Iterator<FileItem> formData) throws InvalidArgumentException
+   public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
+                              java.util.Iterator<FileItem> formData)
+      throws IOException, InvalidArgumentException, AWSException
    {
       FileItem contentItem = null;
       MediaType mediaType = null;
@@ -192,6 +195,8 @@ public class S3Service
       {
          mediaType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
       }
+
+      s3.putObject(s3Bucket, name, contentItem.getInputStream(), mediaType.getType(), contentItem.getSize());
 
       return Response.ok("", MediaType.TEXT_HTML).build();
    }
