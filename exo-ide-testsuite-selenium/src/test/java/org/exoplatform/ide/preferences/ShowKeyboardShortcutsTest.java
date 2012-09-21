@@ -71,15 +71,14 @@ public class ShowKeyboardShortcutsTest extends BaseTest
       IDE.SHOW_KEYBOARD_SHORTCUTS.waitClosed();
 
       // change shortcut for Save command
-//      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      //      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(ToolbarCommands.File.SAVE);
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      closeCustomizeHotkeyForm();
 
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -92,6 +91,22 @@ public class ShowKeyboardShortcutsTest extends BaseTest
 
       IDE.SHOW_KEYBOARD_SHORTCUTS.closeButtonClick();
       IDE.SHOW_KEYBOARD_SHORTCUTS.waitClosed();
+   }
+
+   private void openCustomizeHotkeyForm() throws Exception, InterruptedException
+   {
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
+      IDE.PREFERENCES.waitPreferencesOpen();
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+   }
+
+   private void closeCustomizeHotkeyForm() throws Exception, InterruptedException
+   {
+
+      IDE.PREFERENCES.waitPreferencesOpen();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
    }
 
 }
