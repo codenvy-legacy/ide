@@ -8,23 +8,31 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionsTabPain;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 
 public class ManageApplicationView extends ViewImpl implements ManageApplicationPresenter.Display
 {
    private static final String ID = "ideManageApplicationView";
 
-   private static final int WIDTH = 645;
+   private static final int WIDTH = 745;
 
-   private static final int HEIGHT = 340;
+   private static final int HEIGHT = 360;
 
    private static final String CLOSE_BUTTON_ID = "ideManageApplicationViewCloseButton";
 
    private static final String GENERAL_TAB_ID = "ideManageApplicationViewGeneralTab";
+
+   private static final String VERSIONS_TAB_ID = "ideManageApplicationViewVersionsTab";
+
+   private static final String ENVIRONMENTS_TAB_ID = "ideManageApplicationViewEnvironmentsTab";
 
    private static ManageApplicationViewUiBinder uiBinder = GWT.create(ManageApplicationViewUiBinder.class);
 
@@ -40,6 +48,8 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
 
    private MainTabPain mainTabPain;
 
+   private VersionsTabPain versionsTabPain;
+
    public ManageApplicationView()
    {
       super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.manageApplicationViewTitle(), null, WIDTH, HEIGHT);
@@ -50,6 +60,10 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
       mainTabPain = new MainTabPain();
       applicationTabPanel.addTab(GENERAL_TAB_ID, null, AWSExtension.LOCALIZATION_CONSTANT.generalTab(), mainTabPain,
          false);
+
+      versionsTabPain = new VersionsTabPain();
+      applicationTabPanel.addTab(VERSIONS_TAB_ID, null, AWSExtension.LOCALIZATION_CONSTANT.versionsTab(),
+         versionsTabPain, false);
    }
 
    /**
@@ -58,8 +72,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasValue<String> getApplicationNameField()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getNameField();
    }
 
    /**
@@ -68,8 +81,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasValue<String> getDescriptionField()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getDescriptionField();
    }
 
    /**
@@ -78,8 +90,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasValue<String> getCreateDateField()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getCreationDateField();
    }
 
    /**
@@ -88,8 +99,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasValue<String> getUpdatedDateField()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getUpdatedDateField();
    }
 
    /**
@@ -98,8 +108,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasClickHandlers getDeleteButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getDeleteApplicationButton();
    }
 
    /**
@@ -108,8 +117,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    @Override
    public HasClickHandlers getUpdateDescriptionButton()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return mainTabPain.getEditDescriptionButton();
    }
 
    /**
@@ -121,4 +129,48 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
       return closeButton;
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getVersionsGrid()
+    */
+   @Override
+   public ListGridItem<ApplicationVersionInfo> getVersionsGrid()
+   {
+      return versionsTabPain.getVersionsGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getVersionActions()
+    */
+   @Override
+   public HasVersionActions getVersionActions()
+   {
+      return versionsTabPain.getVersionsGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getCreateVersionButton()
+    */
+   @Override
+   public HasClickHandlers getCreateVersionButton()
+   {
+      return mainTabPain.getCreateVersionButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getLaunchEnvironmentButton()
+    */
+   @Override
+   public HasClickHandlers getLaunchEnvironmentButton()
+   {
+      return mainTabPain.getLaunchEnvironmentButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#selectVersionsTab()
+    */
+   @Override
+   public void selectVersionsTab()
+   {
+      applicationTabPanel.selectTab(VERSIONS_TAB_ID);
+   }
 }

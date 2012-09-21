@@ -62,8 +62,6 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
       setVisible(true);
-      //TODO remove :
-      setEnabled(true);
    }
 
    /**
@@ -81,6 +79,6 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      // TODO setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
+      setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
    }
 }

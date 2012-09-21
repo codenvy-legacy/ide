@@ -55,6 +55,12 @@
       	background-color: #FFFFFF !important;
       	color: #000000 !important;
       }
+      
+      .actions {
+      	border-top: 1px solid #DBDFE5;
+      	padding-top: 10px;
+      	margin-top: 10px;
+      }
    </ui:style>
 
 
@@ -81,7 +87,12 @@
                <g:Label text="{locale.applicationUpdatedDate}" addStyleNames="{style.labelH}" width="24%"></g:Label>
                <f:Label ui:field="updatedDateField" addStyleNames="{style.left}"></f:Label>
             </g:FlowPanel>
-
+            <g:FlowPanel width="100%" height="28px" styleName="{style.actions}">
+               <g:Label text="{locale.applicationActions}" addStyleNames="{style.labelH}" width="24%"></g:Label>
+               <f:ImageButton ui:field="createVersionButton" height="22px" width="180px" text="{locale.createVersionButton}" styleName="{style.left} {style.space}"></f:ImageButton>
+               <f:ImageButton ui:field="launchEnvironmentButton" height="22px" width="160px" text="{locale.launchEnvironmentButton}"
+                  styleName="{style.left}"></f:ImageButton>
+            </g:FlowPanel>
          </g:FlowPanel>
       </f:layer>
    </f:Border>
