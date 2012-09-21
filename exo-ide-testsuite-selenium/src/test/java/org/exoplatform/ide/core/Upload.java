@@ -26,6 +26,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
@@ -133,22 +134,8 @@ public class Upload extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 10).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .id(Locators.VIEW_LOCATOR)));
    }
 
    public boolean isOpened()
@@ -297,7 +284,7 @@ public class Upload extends AbstractTestModule
    {
       IDE().INPUT.setComboboxValue(mimeTypeField, mimeType);
    }
-   
+
    public void typeToMimeTypeField(String mimeType) throws InterruptedException
    {
       IDE().INPUT.typeToElement(mimeTypeField, mimeType, true);
@@ -358,4 +345,18 @@ public class Upload extends AbstractTestModule
    {
       return IDE().BUTTON.isButtonEnabled(uploadButton);
    }
+
+   public boolean ddd()
+   {
+      try
+      {
+         return driver().findElement(By.id(Locators.VIEW_ID)).isDisplayed();
+
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+
 }

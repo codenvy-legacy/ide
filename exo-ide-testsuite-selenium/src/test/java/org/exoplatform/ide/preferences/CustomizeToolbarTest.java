@@ -61,25 +61,27 @@ public class CustomizeToolbarTest extends BaseTest
 
       //step 1 (run CUSTOMIZE TOOLBAR form, delete New * [Popup], press CANCEL button. Run form again and  check "New * [Popup]" element presents)
       IDE.PROJECT.EXPLORER.waitOpened();
-   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_TOOLBAR.selectNumElementOnCommandListbar(7);
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnCommandlistbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
-      IDE.CUSTOMIZE_TOOLBAR.cancelClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      openCustomizeHotkeyForm();
       assertTrue(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
 
       //step 2  (delete "New * [Popup]" element on Toolbar? press OK BUTTON and check deleting element)
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
+      openCustomizeHotkeyForm();
       assertFalse(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
 
       //step 3  (restore default settings and check them)
@@ -88,19 +90,16 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.isDefaultCommandlbarList();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultToolbarList();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
+      
 
       //step 4  (move first element down, check element in new position. Reopen Customize Toolbar form, and check element in new position )
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.moveDownClick();
       IDE.LOADER.waitClosed();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
       IDE.CUSTOMIZE_TOOLBAR.okClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
 
       //step 4  (Remove element which was moved Check next placement element after reopen form. (should be "Save" instead of "New * [Popup]"))
@@ -110,7 +109,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.okClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
+      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "Save");
 
@@ -119,38 +118,24 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.delimiterClick();
       IDE.LOADER.waitClosed();
       assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(4), "Delimiter");
-      IDE.CUSTOMIZE_TOOLBAR.cancelClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-      //step 5 (Select second delimiter, move down, reopen form, check position)
-      //TODO uncomment after fix issue IDE-1378
-      //      IDE.CUSTOMIZE_TOOLBAR.selectNumElementOnToolbar(2);
-      //      IDE.CUSTOMIZE_TOOLBAR.moveDownClick();
-      //      IDE.LOADER.waitClosed();
-      //      IDE.CUSTOMIZE_TOOLBAR.okClick();
-      //      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-      //      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      //      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
-      //      // assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "Delimiter");
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
 
-      //step 6 (Select second "Save" element, add "New * [Popup]" on)
-      //      IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("Save");
-      //      IDE.CUSTOMIZE_TOOLBAR.selectElementOnCommandlistbarByName("New *");
-      //      IDE.CUSTOMIZE_TOOLBAR.addClick();
-      //      IDE.LOADER.wait();
-      //      IDE.CUSTOMIZE_TOOLBAR.moveDownClick();
-      //      assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(5), "New * [Popup]");
-      //      IDE.CUSTOMIZE_TOOLBAR.okClick();
-      //      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
-
-      //step 7 (reopen customize toolbar and set default values. Check default elements on commandlist and toolbar)
-     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
-      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      //step 6 (reopen customize toolbar and set default values. Check default elements on commandlist and toolbar)
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_TOOLBAR.defaultClick();
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultCommandlbarList();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultToolbarList();
-      IDE.CUSTOMIZE_TOOLBAR.okClick();
-      IDE.CUSTOMIZE_TOOLBAR.waitClosed();
+      
+   }
+
+   private void openCustomizeHotkeyForm() throws Exception, InterruptedException
+   {
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
+      IDE.PREFERENCES.waitPreferencesOpen();
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_TOOLBAR);
+      IDE.CUSTOMIZE_TOOLBAR.waitOpened();
    }
 
 }
