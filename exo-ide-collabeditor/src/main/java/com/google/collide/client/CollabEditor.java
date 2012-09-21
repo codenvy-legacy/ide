@@ -43,6 +43,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.api.Editor;
@@ -77,7 +78,7 @@ import org.exoplatform.ide.editor.text.IRegion;
  * @version $Id:
  *
  */
-public class CollabEditor extends Widget implements Editor, Markable
+public class CollabEditor extends Widget implements Editor, Markable, RequiresResize
 {
 
    protected final EditorBundle editorBundle;
@@ -827,5 +828,14 @@ public class CollabEditor extends Widget implements Editor, Markable
          return (elemental.html.Element)element;
       }
 
+   }
+
+   /**
+    * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+    */
+   @Override
+   public void onResize()
+   {
+      editor.getBuffer().onResize();
    }
 }
