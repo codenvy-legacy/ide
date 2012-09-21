@@ -398,4 +398,30 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       }
       return pakages;
    }
+
+   /**
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+
+      Project project = getProject(projectId, vfs);
+      Folder sourceFolder = getSourceFolder(vfs, project);
+
+      FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
+      scanner.addFilter(new FolderFilter());
+      List<Item> list = scanner.scan();
+      List<String> pakages = new ArrayList<String>();
+      String sourcePath = sourceFolder.getPath();
+      for (Item i : list)
+      {
+         String substring = i.getPath().substring(sourcePath.length() + 1);
+         pakages.add(substring.replaceAll("/", "."));
+      }
+      return pakages;
+   }
 }

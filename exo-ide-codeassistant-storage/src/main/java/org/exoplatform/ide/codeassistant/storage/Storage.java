@@ -218,5 +218,25 @@ public class Storage
          return null;
       }
    }
+   
+   /**
+    * Get list of all package names in dependencys 
+    */
+   @POST
+   @Path("/get-packages")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> getAllPackages(Set<String> dependencys)
+   {
+      if (dependencys == null)
+         return null;
+      try
+      {
+         return storage.getAllPackages(dependencys);
+      }
+      catch (CodeAssistantException e)
+      {
+         return null;
+      }
+   }
 
 }

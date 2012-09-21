@@ -254,4 +254,25 @@ public class RestCodeAssistantJava
       return codeAssistant.getPackagesByPrefix(packagePrefix, projectId, vfsId);
    }
 
+   /**
+    * Get list of all package names in project
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param packagePrefix
+    * @return
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   @GET
+   @Path("/get-packages")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> getAllPackages(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      if (projectId == null)
+         throw new InvalidArgumentException("'projectid' parameter is null.");
+      return codeAssistant.getAllPackages(projectId, vfsId);
+   }
+
 }

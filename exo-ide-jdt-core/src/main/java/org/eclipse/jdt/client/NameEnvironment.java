@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.json.shared.JsonStringSet.IterationCallback;
+
+import com.google.collide.json.shared.JsonStringSet;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -75,58 +79,7 @@ public class NameEnvironment implements INameEnvironment
 
    private static Set<String> packages = new HashSet<String>();
 
-   static
-   {
-      String[] fqns = new String[]{//
-         "java.lang.Object",//
-            "java.lang.String",//
-            "java.lang.System",//
-            "java.lang.Boolean",//
-            "java.lang.Byte",//
-            "java.lang.Character",//
-            "java.lang.Class", "java.lang.Cloneable",//
-            "java.lang.Double",//
-            "java.lang.Error",//
-            "java.lang.Exception",//
-            "java.lang.Float",//
-            "java.lang.Integer",//
-            "java.lang.Long",//
-            "java.lang.RuntimeException",//
-            "java.io.Serializable",//
-            "java.lang.Short",//
-            "java.lang.StringBuffer",//
-            "java.lang.Throwable",//
-            "java.lang.Void"};
-      loadWellKnownClasses(fqns);
-   }
-
-   private static void loadWellKnownClasses(String[] fqns)
-   {
-      final JSONTypesInfoUnmarshaller unmarshaller = new JSONTypesInfoUnmarshaller();
-      JavaCodeAssistantService.get().getTypesByFqns(fqns, null, new AsyncRequestCallback<TypesInfoList>(unmarshaller)
-      {
-
-         @Override
-         protected void onSuccess(TypesInfoList result)
-         {
-            if (unmarshaller.typesInfo != null)
-            {
-               for (int i = 0; i < unmarshaller.typesInfo.size(); i++)
-               {
-                  JSONObject o = unmarshaller.typesInfo.get(i).isObject();
-                  TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
-               }
-            }
-         }
-
-         @Override
-         protected void onFailure(Throwable exception)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      });
-   }
-
+  
    public static void clearFQNBlackList()
    {
       blackSet.clear();
@@ -226,6 +179,8 @@ public class NameEnvironment implements INameEnvironment
       }
       b.append(typeName);
       final String key = validateFqn(b);
+      if(TypeInfoStorage.get().getPackages(projectId).contains(key))
+         return null;
       if (TypeInfoStorage.get().containsKey(key))
       {
          return new NameEnvironmentAnswer(new BinaryTypeImpl(JSONParser
@@ -245,38 +200,21 @@ public class NameEnvironment implements INameEnvironment
    @Override
    public boolean isPackage(char[][] parentPackageName, char[] packageName)
    {
-      try
+      StringBuilder p = new StringBuilder();
+      if (parentPackageName != null)
       {
-         StringBuilder p = new StringBuilder();
-         if (parentPackageName != null)
+         for (char[] seg : parentPackageName)
          {
-            for (char[] seg : parentPackageName)
-            {
-               p.append(seg).append('.');
-            }
+            p.append(seg).append('.');
          }
-         p.append(packageName);
-         if (packages.contains(p.toString()))
-         {
-            return true;
-         }
-         String url =
-            JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + p.toString()
-               + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-         String findPackage = runSyncReques(url);
-         JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-         for (int i = 0; i < jsonArray.size(); i++)
-         {
-            packages.add(jsonArray.get(i).isString().stringValue());
-         }
-         return jsonArray.size() > 0;
-
       }
-      catch (Exception e)
-      {
-         e.printStackTrace();
+      p.append(packageName);
+      JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+      //TODO maybe need more actions on this
+      if (packages == null)
          return false;
-      }
+
+      return packages.contains(p.toString());
    }
 
    /** @see org.eclipse.jdt.client.internal.compiler.env.INameEnvironment#cleanup() */
@@ -393,18 +331,20 @@ public class NameEnvironment implements INameEnvironment
     * The packages found are passed to: ISearchRequestor.acceptPackage(char[][] packageName)
     */
    @Override
-   public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
+   public void findPackages(char[] qualifiedName, final ISearchRequestor requestor)
    {
-      String url =
-         JdtExtension.REST_CONTEXT + "/ide/code-assistant/java/fing-packages" + "?package=" + new String(qualifiedName)
-            + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId();
-      String findPackage = runSyncReques(url);
-      JSONArray jsonArray = JSONParser.parseLenient(findPackage).isArray();
-      for (int i = 0; i < jsonArray.size(); i++)
+      JsonStringSet packages = TypeInfoStorage.get().getPackages(projectId);
+      final String pack = new String(qualifiedName);
+      packages.iterate(new IterationCallback()
       {
-         requestor.acceptPackage(jsonArray.get(i).isString().stringValue().toCharArray());
-      }
 
+         @Override
+         public void onIteration(String key)
+         {
+            if (key.startsWith(pack))
+               requestor.acceptPackage(key.toCharArray());
+         }
+      });
    }
 
    private String runSyncReques(String url)
@@ -415,13 +355,13 @@ public class NameEnvironment implements INameEnvironment
          return xmlhttp.getResponseText();
       else
       {
-          String message = null;
-          if(status == 204)
-          {
-             message = "no content";
-          }
-          else
-          message = xmlhttp.getResponseText();
+         String message = null;
+         if (status == 204)
+         {
+            message = "no content";
+         }
+         else
+            message = xmlhttp.getResponseText();
          throw new RuntimeException("Server return " + message);
       }
    }
@@ -564,7 +504,7 @@ public class NameEnvironment implements INameEnvironment
    public static class JSONTypesInfoUnmarshaller implements Unmarshallable<TypesInfoList>
    {
 
-      private JSONArray typesInfo;
+      public JSONArray typesInfo;
 
       /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
       @Override
@@ -616,6 +556,7 @@ public class NameEnvironment implements INameEnvironment
       protected XmlHttpWraper()
       {
       }
+
       public native int getStatusCode()/*-{
                                        return this.status;
                                        }-*/;

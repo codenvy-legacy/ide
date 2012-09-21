@@ -33,6 +33,7 @@ import org.eclipse.jdt.client.core.JavaConventions;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.event.CreatePackageEvent;
 import org.eclipse.jdt.client.event.CreatePackageHandler;
+import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -224,7 +225,8 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
     */
    protected void doCreate()
    {
-      String pack = display.getPackageNameField().getValue().replaceAll("\\.", "/");
+      final String pac = display.getPackageNameField().getValue();
+      String pack = pac.replaceAll("\\.", "/");
       FolderModel newFolder = new FolderModel(pack, parentFolder);
       try
       {
@@ -237,6 +239,7 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
 
                ide.closeView(Display.ID);
                eventBus.fireEvent(new RefreshBrowserEvent(parentFolder));
+               eventBus.fireEvent(new PackageCreatedEvent(pac, parentFolder));
             }
 
             @Override

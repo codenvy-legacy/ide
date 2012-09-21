@@ -147,4 +147,12 @@ public interface CodeAssistantStorage
     * @throws CodeAssistantException
     */
    List<String> getPackages(String packagePrefix, Set<String> dependencys) throws CodeAssistantException;
+   
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param dependencys of the project
+    * @return List of strings
+    * @throws CodeAssistantException
+    */
+   List<String> getAllPackages(Set<String> dependencys) throws CodeAssistantException;
 }

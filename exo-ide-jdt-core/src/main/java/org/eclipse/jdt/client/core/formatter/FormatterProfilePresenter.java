@@ -51,8 +51,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
@@ -86,8 +84,6 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
       SelectItem getProfilesSelect();
 
       IDocument getDocument();
-
-      HandlerManager getEditorEventBus();
 
    }
 
@@ -140,33 +136,6 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
 
       });
 
-      display.getEditorEventBus().addHandler(EditorInitializedEvent.TYPE, new EditorInitializedHandler()
-      {
-
-         @Override
-         public void onEditorInitialized(EditorInitializedEvent event)
-         {
-            String profileNames[] = new String[profiles.size()];
-            Collection<Profile> values = profiles.values();
-            int i = 0;
-            for (Iterator<Profile> iterator = values.iterator(); iterator.hasNext();)
-            {
-               Profile profile = iterator.next();
-               profileNames[i] = profile.getName();
-               i++;
-            }
-            Profile profile = null;
-            if (settings.containsKey(JdtExtension.JAVA_CODE_FORMATTER))
-            {
-               profile = getProfile(settings.getValueAsString(JdtExtension.JAVA_CODE_FORMATTER));
-            }
-            else
-               profile = getDefault();
-            display.getProfilesSelect().setValueMap(profileNames, profile.getName());
-            format(profile);
-
-         }
-      });
    }
 
    private Profile getProfileByName(String name)
@@ -268,6 +237,30 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
          bind();
       }
       IDE.getInstance().openView(display.asView());
+
+      displayProfiles();
+   }
+
+   private void displayProfiles()
+   {
+      String profileNames[] = new String[profiles.size()];
+      Collection<Profile> values = profiles.values();
+      int i = 0;
+      for (Iterator<Profile> iterator = values.iterator(); iterator.hasNext();)
+      {
+         Profile profile = iterator.next();
+         profileNames[i] = profile.getName();
+         i++;
+      }
+      Profile profile = null;
+      if (settings.containsKey(JdtExtension.JAVA_CODE_FORMATTER))
+      {
+         profile = getProfile(settings.getValueAsString(JdtExtension.JAVA_CODE_FORMATTER));
+      }
+      else
+         profile = getDefault();
+      display.getProfilesSelect().setValueMap(profileNames, profile.getName());
+      format(profile);
    }
 
    /**
@@ -300,6 +293,7 @@ public class FormatterProfilePresenter implements ShowFormatterProfilesHandler, 
          display = GWT.create(Display.class);
          bind();
       }
+      displayProfiles();
       return display.asView();
    }
 }

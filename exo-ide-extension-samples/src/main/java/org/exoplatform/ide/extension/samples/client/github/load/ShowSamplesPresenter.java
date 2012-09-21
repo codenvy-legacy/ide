@@ -188,8 +188,9 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   for (GitHubRepository repo : result)
                   {
-                     String[] arr = parseDescription(repo.getDescription());
-                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getCloneUrl()));
+                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl());
+                     processDescription(projectData, repo.getDescription());
+                     projectDataList.add(projectData);
                   }
                   display.getSamplesListGrid().setValue(projectDataList);
                   display.enableNextButton(false);
@@ -249,24 +250,64 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
     * @param text
     * @return
     */
-   private static String[] parseDescription(String text)
+   private void processDescription(ProjectData projectData, String text)
    {
-      String[] projectData = new String[2];
-      String[] res = text.split("^Type: | Desc:");
-      if (res.length < 3)
+      if (text.contains("Targets: "))
       {
-         projectData[0] = ProjectResolver.getProjectsTypes().toArray(new String[1])[0];
-         projectData[1] = text;
-         Dialogs.getInstance().showError(
-            "Can't parse project description: " + text
-               + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt;");
+         String[] res = text.split("^Type: | Desc: | Targets: ");
+         if (res.length < 4)
+         {
+            projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
+            projectData.setDescription(text);
+            Dialogs
+               .getInstance()
+               .showError(
+                  "Can't parse project description: "
+                     + text
+                     + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt; Targets: &lt;space separated targets&gt;");
+         }
+         else
+         {
+            projectData.setType(res[1]);
+            projectData.setDescription(res[2]);
+            projectData.setTargets(parseTargets(res[3]));
+         }
       }
       else
       {
-         projectData[0] = res[1];
-         projectData[1] = res[2];
+         String[] res = text.split("^Type: | Desc:");
+         if (res.length < 3)
+         {
+            projectData.setType(ProjectResolver.getProjectsTypes().toArray(new String[1])[0]);
+            projectData.setDescription(text);
+            Dialogs.getInstance().showError(
+               "Can't parse project description: " + text
+                  + ". <br/> It must be in format: Type: &lt;project type&gt; Desc: &lt;project description&gt;");
+         }
+         else
+         {
+            projectData.setType(res[1]);
+            projectData.setDescription(res[2]);
+         }
       }
-      return projectData;
+   }
+
+   private List<String> parseTargets(String targetsStr)
+   {
+      ArrayList<String> targets = new ArrayList<String>();
+      if (targetsStr != null && !targetsStr.isEmpty())
+      {
+         String[] parts = targetsStr.split(" ");
+         for (String part : parts)
+         {
+            String target = part.trim();
+            if (!target.isEmpty())
+            {
+               targets.add(target);
+            }
+         }
+      }
+      return targets;
    }
 
    /**
@@ -299,8 +340,9 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   for (GitHubRepository repo : result)
                   {
-                     String[] arr = parseDescription(repo.getDescription());
-                     projectDataList.add(new ProjectData(repo.getName(), arr[1], arr[0], repo.getCloneUrl()));
+                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl());
+                     processDescription(projectData, repo.getDescription());
+                     projectDataList.add(projectData);
                   }
                   display.getSamplesListGrid().setValue(projectDataList);
                   display.enableNextButton(false);

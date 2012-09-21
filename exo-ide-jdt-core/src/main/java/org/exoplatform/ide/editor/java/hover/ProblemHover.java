@@ -50,6 +50,8 @@ public class ProblemHover extends AbstractJavaHover
    public Element getHoverInfo(Editor editor, IRegion hoverRegion)
    {
       IProblem currentProblem = null;
+      if(cUnit == null)
+         return null;
       for (IProblem p : cUnit.getProblems())
       {
          if (p.getSourceStart() <= hoverRegion.getOffset()

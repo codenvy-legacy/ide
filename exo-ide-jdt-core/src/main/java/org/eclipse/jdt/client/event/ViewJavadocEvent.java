@@ -16,43 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.create;
-
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+package org.eclipse.jdt.client.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create application on Google App Engine.
- * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 21, 2012 2:22:09 PM anya $
- * 
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
+public class ViewJavadocEvent extends GwtEvent<ViewJavadocHandler>
 {
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
 
-   private ProjectModel project;
-
-   public CreateApplicationEvent()
-   {
-      this.project = null;
-   }
-
-   public CreateApplicationEvent(ProjectModel project)
-   {
-      this.project = project;
-   }
+   public static final Type<ViewJavadocHandler> TYPE = new Type<ViewJavadocHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ViewJavadocHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -61,16 +43,9 @@ public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(CreateApplicationHandler handler)
+   protected void dispatch(ViewJavadocHandler handler)
    {
-      handler.onCreateApplication(this);
+      handler.onViewJavadoc(this);
    }
 
-   /**
-    * @return the project
-    */
-   public ProjectModel getProject()
-   {
-      return project;
-   }
 }
