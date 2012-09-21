@@ -31,5 +31,9 @@
     <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
    </replace-with>
+   
+    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.UploadFileView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.UploadFilePresenter.Display" />
+   </replace-with>
 
 </module>

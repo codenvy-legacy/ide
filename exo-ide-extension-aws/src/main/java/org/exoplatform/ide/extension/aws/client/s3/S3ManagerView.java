@@ -52,13 +52,22 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    private static final int HEIGHT = 720;
 
    @UiField
-   ImageButton propertiesButton;
+   ImageButton deleteButton;
+   
+   @UiField
+   ImageButton uploadButton;
 
    @UiField
    ListBox buckets;
    
    @UiField
    ObjectGrid s3ObjectsGrid;
+   
+   @UiField
+   ImageButton nextButton;
+   
+   @UiField
+   ImageButton backButton;
 
    //   private static final String NAME_FIELD_ID = "ideCreateApplicationViewNameField";
    //
@@ -96,9 +105,9 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    }
 
    @Override
-   public HasClickHandlers getPropertiesButton()
+   public HasClickHandlers getDeleteButton()
    {
-      return propertiesButton;
+      return deleteButton;
    }
 
    @Override
@@ -127,8 +136,37 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    @Override
    public void setS3ObjectsList(S3ObjectsList s3ObjectsList)
    {
-//      s3ObjectsGrid.clear();
       s3ObjectsGrid.setValue(s3ObjectsList.getObjects());
+   }
+   
+   @Override
+   public HasClickHandlers getNextButton()
+   {
+      return nextButton;
+   }
+   
+   @Override
+   public void setEnableNextButton(boolean enable)
+   {
+      nextButton.setEnabled(enable);      
+   }
+   
+   @Override
+   public S3Object getSelectedObject()
+   {
+      return s3ObjectsGrid.getSelectedItems().get(0);
+   }
+   
+   @Override
+   public HasClickHandlers getBackButton()
+   {
+      return backButton;
+   }
+   
+   @Override
+   public HasClickHandlers getUploadButton()
+   {
+      return uploadButton;
    }
 
 }

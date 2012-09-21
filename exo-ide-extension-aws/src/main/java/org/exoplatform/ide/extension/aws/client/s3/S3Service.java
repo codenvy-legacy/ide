@@ -60,58 +60,23 @@ public abstract class S3Service
     * Returns object list in the bucket.
     * 
     * @param callback
+    * @param nextMarker 
     * @throws RequestException
     */
-   public abstract void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket)
+   public abstract void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker)
+      throws RequestException;
+   
+   
+   /**
+    * Delete object.
+    * 
+    * @param callback
+    * @param nextMarker 
+    * @throws RequestException
+    */
+   public abstract void deleteObject(AsyncRequestCallback<String> callback, String s3Bucket, String s3Key)
       throws RequestException;
 
-//   /**
-//    * Returns configuration options of the solution stack.
-//    * 
-//    * @param solutionStack
-//    * @param callback
-//    * @throws RequestException
-//    */
-//   public abstract void getSolutionStackConfigurationOptions(String solutionStack,
-//      AsyncRequestCallback<List<ConfigurationOptionInfo>> callback) throws RequestException;
-//
-//   /**
-//    * Create application.
-//    * 
-//    * @param params
-//    * @param callback
-//    * @throws RequestException
-//    */
-//   public abstract void createApplication(String vfsId, String projectId, CreateApplicationRequest createApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
-//      throws RequestException;
-//
-//   /**
-//    * Returns application's information.
-//    * 
-//    * @param vfsId
-//    * @param projectId
-//    * @param callback
-//    * @throws RequestException
-//    */
-//   public abstract void getApplicationInfo(String vfsId, String projectId,
-//      AsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
-//
-//   /**
-//    * Deletes application.
-//    * 
-//    * @param vfsId
-//    * @param projectId
-//    * @param callback
-//    * @throws RequestException
-//    */
-//   public abstract void deleteApplication(String vfsId, String projectId, AsyncRequestCallback<Object> callback)
-//      throws RequestException;
-//
-//   /**
-//    * Returns the list of applications.
-//    * 
-//    * @param callback
-//    * @throws RequestException
-//    */
-//   public abstract void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
+
+
 }

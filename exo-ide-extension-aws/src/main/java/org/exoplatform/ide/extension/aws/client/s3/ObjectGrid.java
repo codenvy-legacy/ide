@@ -122,6 +122,8 @@ public class ObjectGrid extends ListGrid<S3Object>
       getCellTable().setColumnWidth(storageCol, 15, Unit.PCT );
       getCellTable().addColumn(lastModifiedCol, "Last Modified");
       getCellTable().setColumnWidth(lastModifiedCol, 25, Unit.PCT );
+      
+      
    }
 
 //   /**
@@ -165,12 +167,12 @@ public class ObjectGrid extends ListGrid<S3Object>
    @Override
    public void setValue(List<S3Object> value)
    {
-      super.setValue(Collections.emptyList());
       super.setValue(value);
       if (value != null && value.size() > 0)
       {
          selectItem(value.get(0));
       }
+      getCellTable().redraw();
    }
 
    /**

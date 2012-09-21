@@ -57,7 +57,10 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("button.properties")
    String propertiesButton();
-          
+   
+   @Key("button.upload")
+   String uploadButton();
+   
    //Controls
    @Key("control.beanstalk.id")
    String beanstalkControlId();

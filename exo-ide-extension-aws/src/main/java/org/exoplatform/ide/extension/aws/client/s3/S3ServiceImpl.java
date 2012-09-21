@@ -45,6 +45,8 @@ public class S3ServiceImpl extends S3Service
    
    private static final String OBJECTS = BASE_URL + "/objects/";
 
+   private static final String OBJECT_DELETE = BASE_URL + "/objects/delete/";
+
 //   private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
 //
 //   private static final String BUCKETS_DELETE = BASE_URL + "/buckets/delete";
@@ -55,7 +57,6 @@ public class S3ServiceImpl extends S3Service
 //
    
 //
-//   private static final String OBJECT_DELETE = BASE_URL + "/objects/delete";
 
    
    /**
@@ -86,11 +87,23 @@ public class S3ServiceImpl extends S3Service
    }
    
    @Override
-   public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket) throws RequestException
+   public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker) throws RequestException
    {
-      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=20";
+      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=2";
+      if (nextMarker != null)
+         url += "&nextmarker=" + nextMarker;
+      
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+   
+   @Override
+   public void deleteObject(AsyncRequestCallback<String> callback, String s3Bucket, String s3key)
+      throws RequestException
+   {
+      String url = restServiceContext + OBJECT_DELETE + s3Bucket + "?s3key=" + s3key;
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+      
    }
 
   
