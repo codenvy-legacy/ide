@@ -34,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -336,6 +337,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                   {
                      IDE.getInstance().closeView(display.asView().getId());
                   }
+                  IDE.fireEvent(new RefreshBrowserEvent(openedProject));
                }
 
                @Override
@@ -400,7 +402,8 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
    public void createEnvironment(final String applicationName)
    {
       final String environmentName = display.getEnvNameField().getValue();
-      CreateEnvironmentRequest createEnvironmentRequest = AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
+      CreateEnvironmentRequest createEnvironmentRequest =
+         AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
       createEnvironmentRequest.setApplicationName(applicationName);
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
@@ -409,38 +412,44 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
       try
       {
-         BeanstalkClientService.getInstance().createEnvironment(vfsInfo.getId(), openedProject.getId(), createEnvironmentRequest, new BeanstalkAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean), new LoggedInHandler()
-         {
-            
-            @Override
-            public void onLoggedIn()
-            {
-               createEnvironment(applicationName);
-            }
-         })
-         {
-
-            @Override
-            protected void processFail(Throwable exception)
-            {
-               String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environmentName);
-               if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+         BeanstalkClientService.getInstance().createEnvironment(
+            vfsInfo.getId(),
+            openedProject.getId(),
+            createEnvironmentRequest,
+            new BeanstalkAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+               new LoggedInHandler()
                {
-                  message += "<br>" + ((ServerException)exception).getMessage();
-               }
-               IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-            }
 
-            @Override
-            protected void onSuccess(EnvironmentInfo result)
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     createEnvironment(applicationName);
+                  }
+               })
             {
-               IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentSuccess(environmentName), Type.INFO));
-               if (display != null)
+
+               @Override
+               protected void processFail(Throwable exception)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environmentName);
+                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                  {
+                     message += "<br>" + ((ServerException)exception).getMessage();
+                  }
+                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
                }
-            }
-         });
+
+               @Override
+               protected void onSuccess(EnvironmentInfo result)
+               {
+                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
+                     .createEnvironmentSuccess(environmentName), Type.INFO));
+                  if (display != null)
+                  {
+                     IDE.getInstance().closeView(display.asView().getId());
+                  }
+               }
+            });
       }
       catch (RequestException e)
       {

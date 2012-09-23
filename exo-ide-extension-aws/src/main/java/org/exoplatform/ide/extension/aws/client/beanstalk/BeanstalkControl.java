@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.aws.client.beanstalk;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
@@ -40,8 +41,7 @@ public class BeanstalkControl extends SimpleControl implements IDEControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-
-      // TODO setImage
+      setImages(AWSClientBundle.INSTANCE.elasticBeanstalk(), AWSClientBundle.INSTANCE.elasticBeanstalkDisabled());
    }
 
    /**

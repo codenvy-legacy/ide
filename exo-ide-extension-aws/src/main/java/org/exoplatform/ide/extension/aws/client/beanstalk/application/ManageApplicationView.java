@@ -2,6 +2,7 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -13,6 +14,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionsTabPain;
@@ -58,12 +60,12 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
       closeButton.setButtonId(CLOSE_BUTTON_ID);
 
       mainTabPain = new MainTabPain();
-      applicationTabPanel.addTab(GENERAL_TAB_ID, null, AWSExtension.LOCALIZATION_CONSTANT.generalTab(), mainTabPain,
-         false);
+      applicationTabPanel.addTab(GENERAL_TAB_ID, new Image(AWSClientBundle.INSTANCE.general()),
+         AWSExtension.LOCALIZATION_CONSTANT.generalTab(), mainTabPain, false);
 
       versionsTabPain = new VersionsTabPain();
-      applicationTabPanel.addTab(VERSIONS_TAB_ID, null, AWSExtension.LOCALIZATION_CONSTANT.versionsTab(),
-         versionsTabPain, false);
+      applicationTabPanel.addTab(VERSIONS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()),
+         AWSExtension.LOCALIZATION_CONSTANT.versionsTab(), versionsTabPain, false);
    }
 
    /**
