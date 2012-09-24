@@ -143,5 +143,5 @@ public abstract class BeanstalkClientService
 
    public abstract void createVersion(String vfsId, String projectId,
       CreateApplicationVersionRequest createApplicationVersionRequest,
-      BeanstalkAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;
+      AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;
 }

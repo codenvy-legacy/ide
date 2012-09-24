@@ -294,7 +294,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    @Override
    public void createVersion(String vfsId, String projectId,
       CreateApplicationVersionRequest createApplicationVersionRequest,
-      BeanstalkAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException
+      AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
       url.append(VERSION_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
