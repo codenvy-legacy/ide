@@ -31,7 +31,11 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
@@ -69,6 +73,10 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new CreateApplicationPresenter();
       new ManageApplicationPresenter();
       new LoginPresenter();
+      new UpdateApplicationPresenter();
+      new DeleteVersionPresenter();
+      new CreateVersionPresenter();
+      new CreateEnvironmentPresenter();
       new EC2Manager();
       new S3Manager();
    }
@@ -100,6 +108,6 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
 
    public static boolean isAWSApplication(ProjectModel project)
    {
-      return (project.getProperty("aws-applictaion") != null && project.getProperty("aws-application").getValue() != null);
+      return (project.getProperty("aws-application") != null && project.getProperty("aws-application").getValue() != null);
    }
 }

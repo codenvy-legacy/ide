@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
@@ -46,7 +47,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-
+      setImages(AWSClientBundle.INSTANCE.createApplication(), AWSClientBundle.INSTANCE.createApplicationDisabled());
       setEvent(new CreateApplicationEvent());
    }
 

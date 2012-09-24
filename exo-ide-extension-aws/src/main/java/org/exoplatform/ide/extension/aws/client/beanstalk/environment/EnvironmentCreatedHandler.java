@@ -16,25 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
 
-import java.util.List;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id:  Sep 21, 2012 2:58:09 PM anya $
+ *
  */
-public interface StatusRequest
+public interface EnvironmentCreatedHandler
 {
-   Boolean getIncludeAllInstances();
-
-   void setIncludeAllInstances(Boolean includeAllInstances);
-
-   String getNextToken();
-
-   void setNextToken(String nextToken);
-
-   int getMaxResult();
-
-   void setMaxResult(int maxResult);
+   /**
+    * Perform actions, when environment was created.
+    * 
+    * @param environmentInfo
+    */
+   void onEnvironmentCreated(EnvironmentInfo environmentInfo);
 }

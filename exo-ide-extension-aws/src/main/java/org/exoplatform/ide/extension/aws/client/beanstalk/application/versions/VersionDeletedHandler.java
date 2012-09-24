@@ -16,25 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.beanstalk.application.versions;
 
-import java.util.List;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 20, 2012 4:52:49 PM anya $
+ * 
  */
-public interface StatusRequest
+public interface VersionDeletedHandler
 {
-   Boolean getIncludeAllInstances();
-
-   void setIncludeAllInstances(Boolean includeAllInstances);
-
-   String getNextToken();
-
-   void setNextToken(String nextToken);
-
-   int getMaxResult();
-
-   void setMaxResult(int maxResult);
+   /**
+    * Perform actions, when application version is deleted.
+    * 
+    * @param version
+    */
+   void onVersionDeleted(ApplicationVersionInfo version);
 }

@@ -21,11 +21,15 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Control for managing application on AWS.
@@ -35,7 +39,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  * 
  */
 public class ManageApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, FolderRefreshedHandler
 {
    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.manageApplicationControlId();
 
@@ -48,7 +52,7 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-
+      setImages(AWSClientBundle.INSTANCE.manageApplication(), AWSClientBundle.INSTANCE.manageApplicationDisabled());
       setEvent(new ManageApplicationEvent());
    }
 
@@ -60,10 +64,9 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(FolderRefreshedEvent.TYPE, this);
 
       setVisible(true);
-      //TODO remove :
-      setEnabled(true);
    }
 
    /**
@@ -81,6 +84,15 @@ public class ManageApplicationControl extends SimpleControl implements IDEContro
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      // TODO setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
+      setEnabled(event.getProject() != null && AWSExtension.isAWSApplication(event.getProject()));
+   }
+
+   @Override
+   public void onFolderRefreshed(FolderRefreshedEvent event)
+   {
+      if (event.getFolder() != null && event.getFolder() instanceof ProjectModel)
+      {
+         setEnabled(AWSExtension.isAWSApplication((ProjectModel)event.getFolder()));
+      }
    }
 }

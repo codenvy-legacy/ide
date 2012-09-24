@@ -26,6 +26,8 @@ import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
@@ -33,15 +35,13 @@ import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.Region;
+import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
-import com.amazonaws.services.ec2.model.StartInstancesResult;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
-import com.amazonaws.services.ec2.model.StopInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
@@ -312,7 +312,15 @@ public class EC2
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return runInstance(ec2Client, imageId, instanceType, numberOfInstances, keyName, securityGroupsIds, availabilityZone);
+         return runInstance(
+            ec2Client,
+            imageId,
+            instanceType,
+            numberOfInstances,
+            keyName,
+            securityGroupsIds,
+            availabilityZone
+         );
       }
       catch (AmazonClientException e)
       {
@@ -333,13 +341,13 @@ public class EC2
                             String availabilityZone)
    {
       RunInstancesResult result = ec2Client.runInstances(new RunInstancesRequest()
-      .withImageId(imageId)
-      .withInstanceType(instanceType)
-      .withMinCount(numberOfInstances)
-      .withMaxCount(numberOfInstances)
-      .withKeyName(keyName)
-      .withSecurityGroupIds(securityGroupsIds)
-      .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
+         .withImageId(imageId)
+         .withInstanceType(instanceType)
+         .withMinCount(numberOfInstances)
+         .withMaxCount(numberOfInstances)
+         .withKeyName(keyName)
+         .withSecurityGroupIds(securityGroupsIds)
+         .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
 
       List<Instance> runningInstances = result.getReservation().getInstances();
       List<String> instanceInfos = new ArrayList<String>(runningInstances.size());
@@ -447,15 +455,14 @@ public class EC2
          .withInstanceIds(instanceIds));
    }
 
-   public List<InstanceStatusInfo> getStatus(List<String> instanceIds,
-                         int maxResult,
-                         boolean includeAllInstances,
+   public List<InstanceStatusInfo> getStatus(int maxResult,
+                         Boolean includeAllInstances,
                          String nextToken) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-          return getStatus(ec2Client, instanceIds, maxResult, includeAllInstances, nextToken);
+          return getStatus(ec2Client, maxResult, includeAllInstances, nextToken);
       }
       catch (AmazonClientException e)
       {
@@ -468,18 +475,20 @@ public class EC2
    }
 
    private List<InstanceStatusInfo> getStatus(AmazonEC2 ec2Client,
-                          List<String> instanceIds,
                           int maxResult,
-                          boolean includeAllInstances,
+                          Boolean includeAllInstances,
                           String nextToken)
    {
-      DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(new DescribeInstanceStatusRequest()
-         .withInstanceIds(instanceIds)
-         .withMaxResults(maxResult)
-         .withIncludeAllInstances(includeAllInstances)
-         .withNextToken(nextToken));
+      DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(
+         new DescribeInstanceStatusRequest()
+            .withMaxResults(maxResult)
+            // includeAllInstances is not required parameter for this request
+            .withIncludeAllInstances((includeAllInstances == null) ? null : includeAllInstances)
+            .withNextToken(nextToken)
+      );
 
       List<InstanceStatus> instanceStatuses = result.getInstanceStatuses();
+      //TODO not sure if this right way to create InstanceStatusInfo interface for storing info about instance status
       List<InstanceStatusInfo> statusInfos = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
 
       for (InstanceStatus status : instanceStatuses)
@@ -498,6 +507,32 @@ public class EC2
 
       return statusInfos;
    }
+
+//   public List<Reservation> getInstances() throws AWSException
+//   {
+//      AmazonEC2 ec2Client = getEC2Client();
+//      try
+//      {
+//         return getInstances(ec2Client);
+//      }
+//      catch (AmazonClientException e)
+//      {
+//         throw new AWSException(e);
+//      }
+//      finally
+//      {
+//         ec2Client.shutdown();
+//      }
+//   }
+//
+//   private List<Reservation> getInstances(AmazonEC2 ec2Client)
+//   {
+//      DescribeInstancesResult result = ec2Client.describeInstances(
+//         new DescribeInstancesRequest()
+//      );
+//
+//      return result.getReservations();
+//   }
 
    //
 

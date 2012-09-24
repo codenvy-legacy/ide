@@ -28,8 +28,12 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionRestriction;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
@@ -162,4 +166,12 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return {@link StatusRequest} status request
     */
    AutoBean<StatusRequest> statusRequest();
+
+   AutoBean<EventsList> eventList();
+
+   AutoBean<Event> event();
+
+   AutoBean<DeleteApplicationVersionRequest> deleteVersionRequest();
+   
+   AutoBean<CreateApplicationVersionRequest> createVersionRequest();
 }

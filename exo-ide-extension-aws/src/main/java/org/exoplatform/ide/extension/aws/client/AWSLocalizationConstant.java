@@ -55,6 +55,15 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.finish")
    String finishButton();
 
+   @Key("button.update")
+   String updateButton();
+
+   @Key("button.create.version")
+   String createVersionButton();
+
+   @Key("button.launch.environment")
+   String launchEnvironmentButton();
+
    // Controls
    @Key("button.properties")
    String propertiesButton();
@@ -161,8 +170,8 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.environment.solution.stack")
    String createEnvironmentSolutionStack();
 
-   @Key("create.environment.launch")
-   String createEnvironmentLaunch();
+   @Key("create.environment.launching")
+   String createEnvironmentLaunching(String environment);
 
    @Key("create.application.success")
    String createApplicationSuccess(String application);
@@ -194,6 +203,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("application.updated.date")
    String applicationUpdatedDate();
+
+   @Key("application.actions")
+   String applicationActions();
 
    @Key("edit.description.prompt")
    String editDescriptionPrompt();
@@ -230,8 +242,56 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("update.application.failed")
    String updateApplicationFailed(String application);
 
-   
-   //S3 Management 
+   @Key("update.description.field")
+   String updateDescriptionField();
+
+   @Key("update.description.view.title")
+   String updateDescriptionViewTitle();
+
+   // Versions
+   @Key("versions.grid.label")
+   String versionsGridLabel();
+
+   @Key("versions.grid.description")
+   String versionsGridDescription();
+
+   @Key("versions.grid.location")
+   String versionsGridLocation();
+
+   @Key("versions.grid.created")
+   String versionsGridCreated();
+
+   @Key("versions.grid.updated")
+   String versionsGridUpdated();
+
+   @Key("delete.version.view.title")
+   String deleteVersionViewTitle();
+
+   @Key("delete.version.question")
+   String deleteVersionQuestion(String version);
+
+   @Key("delete.s3.bundle")
+   String deleteS3Bundle();
+
+   @Key("delete.version.failed")
+   String deleteVersionFailed(String version);
+
+   @Key("create.version.failed")
+   String createVersionFailed(String version);
+
+   @Key("create.version.view.title")
+   String createVersionViewTitle();
+
+   @Key("create.version.name.field")
+   String createVersionNameField();
+
+   @Key("create.version.description.field")
+   String createVersionDescriptionField();
+
+   @Key("create.environment.view.title")
+   String createEnvironmentViewTitle();
+
+   // S3 Management
    @Key("control.s3.managemnt.id")
    String s3ManagementControlId();
 

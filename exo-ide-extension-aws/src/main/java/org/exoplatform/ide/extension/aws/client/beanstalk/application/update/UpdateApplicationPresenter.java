@@ -18,18 +18,22 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.application.update;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -53,7 +57,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
 
       HasClickHandlers getCancelButton();
 
-      TextFieldItem getDescriptionField();
+      HasValue<String> getDescriptionField();
 
       void enableUpdateButton(boolean enabled);
 
@@ -99,7 +103,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
       this.applicationInfo = event.getApplicationInfo();
       this.applicationUpdatedHandler = event.getApplicationUpdatedHandler();
 
-   /*TODO   if (display == null)
+      if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
@@ -109,7 +113,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
       display.getDescriptionField().setValue(
          applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
       display.focusInDescriptionField();
-      display.enableUpdateButton(false);*/
+      display.enableUpdateButton(false);
    }
 
    public void bindDisplay()
@@ -176,17 +180,19 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
                @Override
                protected void processFail(Throwable exception)
                {
-               /* TODO  String message = AWSExtension.LOCALIZATION_CONSTANT.updateApplicationFailed(applicationInfo.getName());
+                  String message =
+                     AWSExtension.LOCALIZATION_CONSTANT.updateApplicationFailed(applicationInfo.getName());
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();
                   }
-                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));*/
+                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
                }
 
                @Override
                protected void onSuccess(ApplicationInfo result)
                {
+                  IDE.getInstance().closeView(display.asView().getId());
                   if (applicationUpdatedHandler != null)
                   {
                      applicationUpdatedHandler.onApplicationUpdated(result);
