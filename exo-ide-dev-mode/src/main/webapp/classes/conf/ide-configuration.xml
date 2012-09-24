@@ -487,6 +487,13 @@
    
 <!--  S3 End -->
 
+<!-- EC2 -->
+   <component>
+      <type>org.exoplatform.ide.extension.aws.server.ec2.EC2</type>
+   </component>
+   
+<!-- End EC2 -->
+
 <!-- End Amazon Web Services -->
 
 <!-- Google AppEngine  -->

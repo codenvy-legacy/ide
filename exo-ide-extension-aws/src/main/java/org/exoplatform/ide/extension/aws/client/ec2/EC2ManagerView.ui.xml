@@ -11,12 +11,33 @@
 	<f:Border margin="15" borderColor="transparent">
 		<f:layer top="0" bottom="35">
 			<g:SplitLayoutPanel>
-				<g:north size="200">
+				<!-- 
+				<g:west size="200">
 					<g:VerticalPanel>
-						<f:ImageButton ui:field="closeButton" width="90" height="22" text="{locale.closeButton}"
-							imageName="cancel"></f:ImageButton>
+						<g:ListBox ui:field="buckets" visibleItemCount="10"></g:ListBox>
 					</g:VerticalPanel>
+				</g:west>
+				 -->
+				<g:center>
+					<g:VerticalPanel>
+						<u:EC2ImagesGrid  ui:field="ec2ImagesGrid" width="100%" height="100%"></u:EC2ImagesGrid>
+					</g:VerticalPanel>
+				</g:center>
+				<!-- 
+				<g:north size="40">
+					<g:HorizontalPanel spacing="10">
+						<f:ImageButton ui:field="deleteButton" width="110px" height="22" text="{locale.deleteButton}"
+							imageName="delete"></f:ImageButton>
+						<f:ImageButton ui:field="uploadButton" width="100" height="22" text="{locale.uploadButton}"
+                     imageName="upload"></f:ImageButton>   	
+						   <f:ImageButton ui:field="backButton" width="100" height="22" text="{locale.backButton}"
+                     imageName="back"></f:ImageButton>   	
+						<f:ImageButton ui:field="nextButton" width="100" height="22" text="{locale.nextButton}"
+                     imageName="next"></f:ImageButton>	
+                     
+					</g:HorizontalPanel>
 				</g:north>
+				 -->
 			</g:SplitLayoutPanel>
 		</f:layer>
 	</f:Border>

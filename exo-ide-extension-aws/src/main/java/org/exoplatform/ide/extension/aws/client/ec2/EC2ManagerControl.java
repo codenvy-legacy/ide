@@ -20,11 +20,6 @@ package org.exoplatform.ide.extension.aws.client.ec2;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
@@ -34,7 +29,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  * @version $Id: EC2ManagerControl.java Sep 21, 2012 9:55:35 AM azatsarynnyy $
  *
  */
-public class EC2ManagerControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class EC2ManagerControl extends SimpleControl implements IDEControl
 {
    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.ec2ManagementControlId();
 
@@ -57,28 +52,8 @@ public class EC2ManagerControl extends SimpleControl implements IDEControl, Proj
    @Override
    public void initialize()
    {
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-
       setVisible(true);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setEnabled(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      setEnabled(event.getProject() != null && AWSExtension.canBeDeployedToBeanstalk(event.getProject()));
+      setEnabled(true);
    }
 
 }

@@ -33,6 +33,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -68,8 +69,8 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new CreateApplicationPresenter();
       new ManageApplicationPresenter();
       new LoginPresenter();
-      new S3Manager();
       new EC2Manager();
+      new S3Manager();
    }
 
    /**
@@ -79,6 +80,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    public static boolean canBeDeployedToBeanstalk(ProjectModel project)

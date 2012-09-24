@@ -22,6 +22,11 @@ import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
+
+import java.util.List;
 
 /**
  * 
@@ -54,7 +59,12 @@ public abstract class EC2ClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void images(String owner, String isPublic, String architecture, int skipCount, int maxItems,
+   public abstract void images(String owner, boolean isPublic, String architecture, int skipCount, int maxItems,
       AsyncRequestCallback<ImagesList> callback) throws RequestException;
 
+   public abstract void securityGroupInfo(AsyncRequestCallback<List<SecurityGroupInfo>> callback)
+      throws RequestException;
+
+   public abstract void status(StatusRequest request, AsyncRequestCallback<List<InstanceStatusInfo>> callback)
+      throws RequestException;
 }

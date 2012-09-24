@@ -19,13 +19,16 @@
 package org.exoplatform.ide.extension.aws.client.ec2;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
+
+import java.util.List;
 
 /**
  * View for manage Amazon EC2 virtual sever instances.
@@ -43,6 +46,9 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
 
    private static final int HEIGHT = 360;
 
+   @UiField
+   EC2ImagesGrid ec2ImagesGrid;
+
    private static EC2ManagerViewUiBinder uiBinder = GWT.create(EC2ManagerViewUiBinder.class);
 
    interface EC2ManagerViewUiBinder extends UiBinder<Widget, EC2ManagerView>
@@ -56,13 +62,12 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getCloseButton()
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#setImages(java.util.List)
     */
    @Override
-   public HasClickHandlers getCloseButton()
+   public void setImages(List<ImageInfo> imagesList)
    {
-      // TODO Auto-generated method stub
-      return null;
+      ec2ImagesGrid.setValue(imagesList);
    }
 
 }
