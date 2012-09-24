@@ -19,11 +19,8 @@ package org.exoplatform.ide.core;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.core.event.ComponentLifecycleEvent;
-import org.exoplatform.ide.core.event.ComponentLifecycleHandler;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 
@@ -33,36 +30,32 @@ import org.exoplatform.ide.json.JsonCollections;
  */
 public class ComponentRegistry
 {
-   private final EventBus eventBus;
    private JsonArray<Component> pendingComponents;
 
    /**
     * Instantiates Component Registry. All components should be listed in this constructor
     */
    @Inject
-   public ComponentRegistry(ResourceProvider resourceManager, EventBus eventBus)
+   public ComponentRegistry(ResourceProvider resourceManager)
    {
-      this.eventBus = eventBus;
       pendingComponents = JsonCollections.<Component> createArray();
       pendingComponents.add(resourceManager);
-      
    }
 
    /**
-    * Starts all the components listed in registry
+    * Starts all the components listed in reg
     * 
     * @param callback
     */
    public void start(final Callback<Void, ComponentException> callback)
    {
-      eventBus.addHandler(ComponentLifecycleEvent.TYPE, new ComponentLifecycleHandler()
+      Callback<Component, ComponentException> internalCallback = new Callback<Component, ComponentException>()
       {
-
          @Override
-         public void onComponentStarted(ComponentLifecycleEvent event)
+         public void onSuccess(Component result)
          {
-            pendingComponents.remove(event.getComponent());
-            // services started
+            pendingComponents.remove(result);
+            // all components started
             if (pendingComponents.size() == 0)
             {
                GWT.log("All services initialized. Starting.");
@@ -71,18 +64,18 @@ public class ComponentRegistry
          }
 
          @Override
-         public void onComponentFailed(ComponentLifecycleEvent event)
+         public void onFailure(ComponentException reason)
          {
-            callback.onFailure(new ComponentException("Failed to start component", event.getComponent()));
-            GWT.log("FAILED to start service:" + event.getComponent());
+            callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
+            GWT.log("FAILED to start service:" + reason.getComponent());
          }
-      });
-      
+      };
+
       pendingComponents.asIterable();
       for (Component component : pendingComponents.asIterable())
       {
-         component.start();
+         component.start(internalCallback);
       }
    }
-   
+
 }

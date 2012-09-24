@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.core;
 
+import com.google.gwt.core.client.Callback;
+
 /**
  * Components that have to be started on application's startup
  * must implement this interface. Please don't directly implement this interface
@@ -31,5 +33,5 @@ public interface Component
     * 
     * @throws Exception
     */
-   public void start();
+   public void start(Callback<Component, ComponentException> callback);
 }

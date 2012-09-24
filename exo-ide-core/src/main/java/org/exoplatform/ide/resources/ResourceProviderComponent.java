@@ -16,16 +16,17 @@
  */
 package org.exoplatform.ide.resources;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.core.ComponentImpl;
+import org.exoplatform.ide.core.Component;
+import org.exoplatform.ide.core.ComponentException;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -50,7 +51,7 @@ import org.exoplatform.ide.rest.HTTPHeader;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ResourceProviderComponent extends ComponentImpl implements ResourceProvider
+public class ResourceProviderComponent implements ResourceProvider
 {
 
    /**
@@ -84,9 +85,9 @@ public class ResourceProviderComponent extends ComponentImpl implements Resource
     * @throws ResourceException 
     */
    @Inject
-   public ResourceProviderComponent(EventBus eventBus, ModelProvider genericModelProvider, Loader loader)
+   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader)
    {
-      super(eventBus);
+      super();
       this.genericModelProvider = genericModelProvider;
       this.workspaceURL = "http://127.0.0.1:8888/rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
@@ -95,7 +96,7 @@ public class ResourceProviderComponent extends ComponentImpl implements Resource
    }
 
    @Override
-   public void start()
+   public void start(final Callback<Component, ComponentException> callback)
    {
       AsyncRequestCallback<VirtualFileSystemInfo> internalCallback =
          new AsyncRequestCallback<VirtualFileSystemInfo>(new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
@@ -106,14 +107,15 @@ public class ResourceProviderComponent extends ComponentImpl implements Resource
                vfsInfo = result;
                initialized = true;
                // notify Component started
-               onStarted();
+               callback.onSuccess(ResourceProviderComponent.this);
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
                // notify Component failed
-               onFailed(exception);
+               callback.onFailure(new ComponentException("Failed to start Resource Manager. Cause:"
+                  + exception.getMessage(), ResourceProviderComponent.this));
             }
          };
 
@@ -125,7 +127,8 @@ public class ResourceProviderComponent extends ComponentImpl implements Resource
       catch (RequestException exception)
       {
          // notify Component failed
-         onFailed(exception);
+         callback.onFailure(new ComponentException("Failed to start Resource Manager. Cause:" + exception.getMessage(),
+            ResourceProviderComponent.this));
       }
    }
 
