@@ -43,11 +43,11 @@ public class Outline extends AbstractTestModule
    private interface Locators
    {
       String VIEW_ID = "ideOutlineView";
-      
+
       String JAVA_VIEW_ID = "exoJavaOutlineView";
-      
+
       String JAVA_VIEW_LOCATOR = "//div[@view-id='" + JAVA_VIEW_ID + "']";
-      
+
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String TREE_ID = "ideOutlineTreeGrid";
@@ -72,6 +72,11 @@ public class Outline extends AbstractTestModule
       String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
 
       String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
+
+      String HIGHLITER_JAVAOUTLINE_BORDER = JAVA_VIEW_LOCATOR + BORDER_PREFIX;
+
+      String SELECTED_ELEMENT_CSS = "div.cellTreeSelectedItem>div>div>span";
+
    }
 
    public static final String NOT_AVAILABLE_TITLE = "An outline is not available.";
@@ -126,8 +131,7 @@ public class Outline extends AbstractTestModule
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
-   
-   
+
    @FindBy(xpath = Locators.JAVA_VIEW_LOCATOR)
    private WebElement javaView;
 
@@ -140,6 +144,9 @@ public class Outline extends AbstractTestModule
    @FindBy(css = Locators.EXPAND_SELECTOR)
    private WebElement expand;
 
+   @FindBy(css = Locators.SELECTED_ELEMENT_CSS)
+   private WebElement selectElementSelector;
+
    /**
     * Wait Outline view opened.
     * 
@@ -147,7 +154,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -156,7 +163,7 @@ public class Outline extends AbstractTestModule
          }
       });
    }
-   
+
    /**
     * Wait Outline view opened.
     * 
@@ -173,8 +180,50 @@ public class Outline extends AbstractTestModule
          }
       });
    }
-   
 
+   /**
+    * Wait while node appearance in outline tree
+    * @param nameNode
+    * @throws Exception
+    */
+   public void waitNodePresent(final String nameNode) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            WebElement nod = driver().findElement(By.xpath(String.format(Locators.ROW_BY_TITLE_LOCATOR, nameNode)));
+            return nod != null && nod.isDisplayed();
+         }
+      });
+   }
+
+   /**
+    * Wait while node on  outline tree  is selected
+    * 
+    * @throws Exception
+    */
+   public void waitElementIsSelect(final String node) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return selectElementSelector.getText().equals(node);
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+   
+   
    /**
     * Wait Outline view closed.
     * 
@@ -182,7 +231,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -198,6 +247,8 @@ public class Outline extends AbstractTestModule
          }
       });
    }
+   
+   
 
    /**
     * Returns the label of the visible item in Outline tree. Index starts from <code>1</code>.
@@ -313,25 +364,13 @@ public class Outline extends AbstractTestModule
          return false;
       }
    }
-  
-   /**
-    * Returns the visibility state of the Outline view.
-    * Only for Java files 
-    * 
-    * @return {@link Boolean} if <code>true</code> then view is visible
-    */
-   public boolean isJavaOutlineViewVisible()
+
+   public String getSelectedText() throws Exception
    {
-      try
-      {
-         return javaView != null && javaView.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      //need for redra
+      Thread.sleep(200);
+      return  selectElementSelector.getText();
    }
-   
 
    /**
     * Returns the outline's item selection state. Row number starts from <code>1</code>.
@@ -344,7 +383,7 @@ public class Outline extends AbstractTestModule
    {
       int linePosition = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
       waitHighliterRedraw();
-      return highlighter.getLocation().y==linePosition;
+      return highlighter.getLocation().y == linePosition;
    }
 
    /**
@@ -520,6 +559,43 @@ public class Outline extends AbstractTestModule
    public boolean isHiglightBorderPresent()
    {
       WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_BORDER));
+      try
+      {
+         return border != null && border.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+
+   }
+
+   /**
+    * Returns the visibility state of the Outline view.
+    * Only for Java files 
+    * 
+    * @return {@link Boolean} if <code>true</code> then view is visible
+    */
+   public boolean isJavaOutlineViewVisible()
+   {
+      try
+      {
+         return javaView != null && javaView.isDisplayed();
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+
+   /**
+    * Returns true if highlight border present
+    * 
+    * @return
+    */
+   public boolean isHiglightBorderJavaOutlinePresent()
+   {
+      WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_JAVAOUTLINE_BORDER));
       try
       {
          return border != null && border.isDisplayed();
