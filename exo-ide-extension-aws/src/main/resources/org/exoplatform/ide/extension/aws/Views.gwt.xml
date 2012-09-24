@@ -55,4 +55,8 @@
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketPresenter.Display" />
+   </replace-with>
 </module>

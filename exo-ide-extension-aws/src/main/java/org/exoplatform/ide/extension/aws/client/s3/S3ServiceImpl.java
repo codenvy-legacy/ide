@@ -119,10 +119,10 @@ public class S3ServiceImpl extends S3Service
    
    
    @Override
-   public void createBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback, String name, String region)
+   public void createBucket(AsyncRequestCallback<String> callback, String name, String region)
       throws RequestException
    {
-      String url = restServiceContext + BUCKETS_DELETE + "?name=" + name + "&region=" + region;
+      String url = restServiceContext + BUCKETS_CREATE + "?name=" + name + "&region=" + region;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
       
    }

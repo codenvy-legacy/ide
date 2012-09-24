@@ -34,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -98,6 +99,8 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       HasClickHandlers getRefreshButton();
 
       HasClickHandlers getDeleteBucketButton();
+      
+      HasClickHandlers getCreateBucketButton();
 
    }
 
@@ -117,11 +120,14 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
    private Stack<String> visit = new Stack<String>();
 
+   private CreateBucketPresenter createBucketPresenter;
+
    public S3Manager()
    {
       IDE.getInstance().addControl(new S3ManagerControl());
       new UploadFilePresenter();
       new S3ServiceImpl(Utils.getRestContext(), new EmptyLoader());
+      createBucketPresenter = new CreateBucketPresenter(); 
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
@@ -258,6 +264,17 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
             }
          }
 
+      });
+      
+      display.getCreateBucketButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            createBucketPresenter.onOpenView();
+           
+         }
       });
    }
 

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -47,7 +45,7 @@ import java.util.List;
 public class S3ManagerView extends ViewImpl implements S3Manager.Display
 {
 
-   private static final String ID = "ideCreateApplicationView";
+   private static final String ID = "ideS3ManagerView";
 
    private static final int WIDTH = 1200;
 
@@ -76,6 +74,9 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    
    @UiField
    ImageButton refreshButton;
+
+   @UiField
+   ImageButton createBucketButton;
 
 
    private static S3ManagerViewUiBinder uiBinder = GWT.create(S3ManagerViewUiBinder.class);
@@ -178,6 +179,12 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    public HasClickHandlers getDeleteBucketButton()
    {
       return deleteBucketButton;
+   }
+   
+   @Override
+   public HasClickHandlers getCreateBucketButton()
+   {
+      return createBucketButton;
    }
 
 }
