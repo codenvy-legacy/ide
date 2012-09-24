@@ -18,40 +18,36 @@
  */
 package org.exoplatform.ide.extension.aws.server.ec2;
 
-import com.amazonaws.services.ec2.model.InstanceState;
-import com.amazonaws.services.ec2.model.InstanceStatusEvent;
-import com.amazonaws.services.ec2.model.InstanceStatusSummary;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
-import java.util.List;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatus;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InstanceStatusInfoImpl implements InstanceStatusInfo
+public class InstanceStatusImpl implements InstanceStatus
 {
    private String instanceId;
    private String availabilityZone;
-   private List<InstanceStatusEvent> events;
-   private InstanceState instanceState;
-   private InstanceStatusSummary instanceStatus;
-   private InstanceStatusSummary systemStatus;
+   private Integer instanceStateCode;
+   private String instanceStateName;
+   private String instanceStatus;
+   private String systemStatus;
 
-   public InstanceStatusInfoImpl()
+   public InstanceStatusImpl()
    {
    }
 
-   public InstanceStatusInfoImpl(String instanceId,
-                                 String availabilityZone,
-                                 List<InstanceStatusEvent> events,
-                                 InstanceState instanceState,
-                                 InstanceStatusSummary instanceStatus,
-                                 InstanceStatusSummary systemStatus)
+   public InstanceStatusImpl(String instanceId,
+                             String availabilityZone,
+                             Integer instanceStateCode,
+                             String instanceStateName,
+                             String instanceStatus,
+                             String systemStatus)
    {
       this.instanceId = instanceId;
       this.availabilityZone = availabilityZone;
-      this.events = events;
-      this.instanceState = instanceState;
+      this.instanceStateCode = instanceStateCode;
+      this.instanceStateName = instanceStateName;
       this.instanceStatus = instanceStatus;
       this.systemStatus = systemStatus;
    }
@@ -81,63 +77,63 @@ public class InstanceStatusInfoImpl implements InstanceStatusInfo
    }
 
    @Override
-   public List<InstanceStatusEvent> getEvents()
+   public Integer getInstanceStateCode()
    {
-      return events;
+      return instanceStateCode;
    }
 
    @Override
-   public void setEvents(List<InstanceStatusEvent> events)
+   public void setInstanceStateCode(Integer instanceStateCode)
    {
-      this.events = events;
+      this.instanceStateCode = instanceStateCode;
    }
 
    @Override
-   public InstanceState getInstanceState()
+   public String getInstanceStateName()
    {
-      return instanceState;
+      return instanceStateName;
    }
 
    @Override
-   public void setInstanceState(InstanceState instanceState)
+   public void setInstanceStateName(String instanceStateName)
    {
-      this.instanceState = instanceState;
+      this.instanceStateName = instanceStateName;
    }
 
    @Override
-   public InstanceStatusSummary getInstanceStatus()
+   public String getInstanceStatus()
    {
       return instanceStatus;
    }
 
    @Override
-   public void setInstanceStatus(InstanceStatusSummary instanceStatus)
+   public void setInstanceStatus(String status)
    {
-      this.instanceStatus = instanceStatus;
+      this.instanceStatus = status;
    }
 
    @Override
-   public InstanceStatusSummary getSystemStatus()
+   public String getSystemStatus()
    {
       return systemStatus;
    }
 
    @Override
-   public void setSystemStatus(InstanceStatusSummary systemStatus)
+   public void setSystemStatus(String status)
    {
-      this.systemStatus = systemStatus;
+      this.systemStatus = status;
    }
 
    @Override
    public String toString()
    {
-      return "InstanceStatusInfoImpl{" +
+      return "InstanceStatusImpl{" +
          "instanceId='" + instanceId + '\'' +
          ", availabilityZone='" + availabilityZone + '\'' +
-         ", events=" + events +
-         ", instanceState=" + instanceState +
-         ", instanceStatus=" + instanceStatus +
-         ", systemStatus=" + systemStatus +
+         ", instanceStateCode=" + instanceStateCode +
+         ", instanceStateName='" + instanceStateName + '\'' +
+         ", instanceStatus='" + instanceStatus + '\'' +
+         ", systemStatus='" + systemStatus + '\'' +
          '}';
    }
 }

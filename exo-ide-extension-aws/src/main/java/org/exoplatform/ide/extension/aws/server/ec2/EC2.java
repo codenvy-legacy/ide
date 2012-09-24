@@ -26,16 +26,12 @@ import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.Region;
-import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.SecurityGroup;
@@ -45,9 +41,9 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatus;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
@@ -455,7 +451,7 @@ public class EC2
          .withInstanceIds(instanceIds));
    }
 
-   public List<InstanceStatusInfo> getStatus(int maxResult,
+   public List<InstanceStatus> getStatus(int maxResult,
                          Boolean includeAllInstances,
                          String nextToken) throws AWSException
    {
@@ -474,7 +470,7 @@ public class EC2
       }
    }
 
-   private List<InstanceStatusInfo> getStatus(AmazonEC2 ec2Client,
+   private List<InstanceStatus> getStatus(AmazonEC2 ec2Client,
                           int maxResult,
                           Boolean includeAllInstances,
                           String nextToken)
@@ -482,30 +478,28 @@ public class EC2
       DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(
          new DescribeInstanceStatusRequest()
             .withMaxResults(maxResult)
-            // includeAllInstances is not required parameter for this request
-            .withIncludeAllInstances((includeAllInstances == null) ? null : includeAllInstances)
+            .withIncludeAllInstances(includeAllInstances)
             .withNextToken(nextToken)
       );
 
-      List<InstanceStatus> instanceStatuses = result.getInstanceStatuses();
-      //TODO not sure if this right way to create InstanceStatusInfo interface for storing info about instance status
-      List<InstanceStatusInfo> statusInfos = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
+      List<com.amazonaws.services.ec2.model.InstanceStatus> instanceStatuses = result.getInstanceStatuses();
+      List<InstanceStatus> ec2Statuses = new ArrayList<InstanceStatus>(instanceStatuses.size());
 
-      for (InstanceStatus status : instanceStatuses)
+      for (com.amazonaws.services.ec2.model.InstanceStatus status : instanceStatuses)
       {
-         statusInfos.add(
-            new InstanceStatusInfoImpl(
+         ec2Statuses.add(
+            new InstanceStatusImpl(
                status.getInstanceId(),
                status.getAvailabilityZone(),
-               status.getEvents(),
-               status.getInstanceState(),
-               status.getInstanceStatus(),
-               status.getSystemStatus()
+               status.getInstanceState().getCode(),
+               status.getInstanceState().getName(),
+               status.getInstanceStatus().getStatus(),
+               status.getSystemStatus().getStatus()
             )
          );
       }
 
-      return statusInfos;
+      return ec2Statuses;
    }
 
 //   public List<Reservation> getInstances() throws AWSException
