@@ -16,43 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.googleappengine.client.create;
+package org.eclipse.jdt.client.event;
 
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to create application on Google App Engine.
- * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 21, 2012 2:22:09 PM anya $
- * 
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
+public class PackageCreatedEvent extends GwtEvent<PackageCreatedHandler>
 {
+
+   public static final Type<PackageCreatedHandler> TYPE = new Type<PackageCreatedHandler>();
+
+   private final FolderModel parentFolder;
+
+   private final String pack;
+
    /**
-    * Type, used to register the event.
+    * @param pack
+    * @param parentFolder
     */
-   public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
-
-   private ProjectModel project;
-
-   public CreateApplicationEvent()
+   public PackageCreatedEvent(String pack, FolderModel parentFolder)
    {
-      this.project = null;
-   }
-
-   public CreateApplicationEvent(ProjectModel project)
-   {
-      this.project = project;
+      this.pack = pack;
+      this.parentFolder = parentFolder;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateApplicationHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<PackageCreatedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -61,16 +59,25 @@ public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(CreateApplicationHandler handler)
+   protected void dispatch(PackageCreatedHandler handler)
    {
-      handler.onCreateApplication(this);
+      handler.onPackageCreated(this);
    }
 
    /**
-    * @return the project
+    * @return the parentFolder
     */
-   public ProjectModel getProject()
+   public FolderModel getParentFolder()
    {
-      return project;
+      return parentFolder;
    }
+
+   /**
+    * @return the pack
+    */
+   public String getPack()
+   {
+      return pack;
+   }
+
 }

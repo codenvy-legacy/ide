@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -236,7 +237,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
          bindDisplay();
-         display.setPaaSValues(getPaasValues());
+         display.setPaaSValues(getPaasValues(value));
          selectedPaaS = null;
          display.getSelectPaasField().setValue("none");
          return;
@@ -247,23 +248,24 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
-   private LinkedHashMap<String, String> getPaasValues()
+   private LinkedHashMap<String, String> getPaasValues(ProjectData project)
    {
       LinkedHashMap<String, String> paases = new LinkedHashMap<String, String>();
       paases.put("none", "None");
-      for (PaaS paas : IDE.getInstance().getPaaSes())
+      if (project.getTargets().isEmpty())
       {
-         try
+         return paases;
+      }
+
+      for (String target : project.getTargets())
+      {
+         for (PaaS paas : IDE.getInstance().getPaaSes())
          {
-            if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(data.getType())))
+            if (paas.getId().equals(target))
             {
                paases.put(paas.getId(), paas.getTitle());
+               break;
             }
-         }
-         catch (IllegalArgumentException e)
-         {
-            // TODO
-            return paases;
          }
       }
       return paases;
@@ -374,6 +376,11 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       String projectType = data.getType();
       folderModel.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
       folderModel.getProperties().add(new StringProperty("vfs:projectType", projectType));
+
+      if (!data.getTargets().isEmpty())
+      {
+         folderModel.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), data.getTargets()));
+      }
 
       ItemWrapper item = new ItemWrapper(new ProjectModel());
       ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);

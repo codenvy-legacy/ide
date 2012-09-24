@@ -18,6 +18,13 @@
  */
 package org.eclipse.jdt.client.core.formatter;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -30,14 +37,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.text.IDocument;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -60,8 +59,6 @@ public class FormatterProfileView extends ViewImpl implements Display
 
    private Editor editor;
 
-   private HandlerManager eventBus;
-
    interface FormatterProfileViewUiBinder extends UiBinder<Widget, FormatterProfileView>
    {
    }
@@ -73,7 +70,7 @@ public class FormatterProfileView extends ViewImpl implements Display
 
       try
       {
-         Editor editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_JAVA);
+         editor = IDE.getInstance().getFileTypeRegistry().getEditor(MimeType.APPLICATION_JAVA);
          editor.asWidget().setSize("100%", "100%");
          editorPanel.add(editor);
          editor.setText(JdtClientBundle.INSTANCE.formatterSample().getText());
@@ -110,14 +107,4 @@ public class FormatterProfileView extends ViewImpl implements Display
    {
       return editor.getDocument();
    }
-
-   /**
-    * @see org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter.Display#getEditorEventBus()
-    */
-   @Override
-   public HandlerManager getEditorEventBus()
-   {
-      return eventBus;
-   }
-
 }

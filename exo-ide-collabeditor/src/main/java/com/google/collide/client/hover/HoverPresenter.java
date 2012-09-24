@@ -18,10 +18,9 @@
  */
 package com.google.collide.client.hover;
 
-import com.google.collide.client.code.popup.EditorPopupController.Remover;
-
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
+import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.MouseHoverManager.MouseHoverListener;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
@@ -34,9 +33,6 @@ import org.exoplatform.ide.editor.hover.TextHover;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
-import org.omg.CORBA.IntHolder;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

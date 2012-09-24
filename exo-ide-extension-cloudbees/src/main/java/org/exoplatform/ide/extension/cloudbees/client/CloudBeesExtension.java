@@ -97,7 +97,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
-      new CreateAccountPresenter();
+     //TODO new CreateAccountPresenter();
    }
 
    public static boolean canBeDeployedToCB(ProjectModel project)

@@ -258,4 +258,14 @@ public class GroovyCodeAssistant extends CodeAssistant
       // TODO Auto-generated method stub
       return null;
    }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getAllPackagesFromProject(String projectId, String vfsId)
+   {
+      // not used in Groovy code assistant, so always return null
+      return null;
+   }
 }

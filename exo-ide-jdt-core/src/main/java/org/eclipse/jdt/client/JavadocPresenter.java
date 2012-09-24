@@ -16,10 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.java.hover;
+package org.eclipse.jdt.client;
+
+import com.google.collide.client.code.popup.EditorPopupController.Remover;
+
+import com.google.collide.client.CollabEditor;
+
+import com.google.collide.client.util.logging.Log;
 
 import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.resources.client.ImageResource;
@@ -28,12 +33,12 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.AbstractImagePrototype.ImagePrototypeElement;
 
-import org.eclipse.jdt.client.JavaCodeController;
-import org.eclipse.jdt.client.JdtExtension;
-import org.eclipse.jdt.client.StringUnmarshaller;
+import com.google.gwt.event.shared.HandlerManager;
+
 import org.eclipse.jdt.client.codeassistant.CompletionProposalLabelProvider;
 import org.eclipse.jdt.client.core.BindingKey;
 import org.eclipse.jdt.client.core.dom.ASTNode;
+import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.IBinding;
 import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
@@ -42,11 +47,19 @@ import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.SimpleType;
+import org.eclipse.jdt.client.event.ViewJavadocEvent;
+import org.eclipse.jdt.client.event.ViewJavadocHandler;
+import org.eclipse.jdt.client.internal.text.JavaWordFinder;
 import org.eclipse.jdt.client.ui.BindingLabelProvider;
 import org.eclipse.jdt.client.ui.JavaElementLabels;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.java.hover.HoverResources;
+import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.IRegion;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
@@ -55,33 +68,66 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
  * @version $Id:
  *
  */
-public class JavaDocHover extends AbstractJavaHover
+public class JavadocPresenter implements ViewJavadocHandler, EditorActiveFileChangedHandler, UpdateOutlineHandler
 {
+
+   private Editor editor;
+
+   private CompilationUnit unit;
 
    private CompletionProposalLabelProvider labelProvider;
 
-   private final HoverResources resources;
-
    private BindingLabelProvider prov;
 
+   private final HoverResources resources;
+
+   private Remover remover;
+
    /**
-    * @param eventBus
+    * 
     */
-   public JavaDocHover(HandlerManager eventBus, HoverResources resources)
+   public JavadocPresenter(HandlerManager eventBus, HoverResources resources)
    {
-      super(eventBus);
       this.resources = resources;
+      eventBus.addHandler(ViewJavadocEvent.TYPE, this);
+      eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      eventBus.addHandler(UpdateOutlineEvent.TYPE, this);
       labelProvider = new CompletionProposalLabelProvider();
       prov = new BindingLabelProvider(JavaElementLabels.ALL_DEFAULT, 0);
    }
 
    /**
-    * @see org.exoplatform.ide.editor.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.api.Editor, org.exoplatform.ide.editor.text.IRegion)
+    * @see org.eclipse.jdt.client.event.ViewJavadocHandler#onViewJavadoc(org.eclipse.jdt.client.event.ViewJavadocEvent)
     */
    @Override
-   public Element getHoverInfo(Editor editor, IRegion hoverRegion)
+   public void onViewJavadoc(ViewJavadocEvent event)
    {
-      NodeFinder nf = new NodeFinder(cUnit, hoverRegion.getOffset(), hoverRegion.getLength());
+      if (remover != null)
+      {
+         remover.remove();
+         remover = null;
+      }
+      if (editor == null || unit == null || !(editor instanceof CollabEditor))
+         return;
+      IDocument document = editor.getDocument();
+      int offset;
+      try
+      {
+         offset = document.getLineOffset(editor.getCursorRow() - 1) + editor.getCursorColumn() - 1;
+         IRegion region = JavaWordFinder.findWord(document, offset);
+         Element info = getHoverInfo(editor, region);
+         if (info != null)
+            remover = ((CollabEditor)editor).showPopup(region, info);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
+   }
+
+   private Element getHoverInfo(Editor editor, IRegion hoverRegion)
+   {
+      NodeFinder nf = new NodeFinder(unit, hoverRegion.getOffset(), hoverRegion.getLength());
       ASTNode coveringNode = nf.getCoveredNode();
       if (coveringNode == null)
          return null;
@@ -104,38 +150,33 @@ public class JavaDocHover extends AbstractJavaHover
          BindingKey key = new BindingKey(methodDeclaration.getKey());
          String methodSignature = key.toSignature();
          String url =
-            className
-               + "%23"
-               + methodDeclaration.getName()
-               + "%40"
-               + (methodSignature).replaceAll("\\.", "/");
+            className + "%23" + methodDeclaration.getName() + "%40" + (methodSignature).replaceAll("\\.", "/");
          Element div = DOM.createDiv();
          addImage(div, labelProvider.createMethodImage(methodDeclaration.getModifiers()));
-         addFqn(div, methodDeclaration.getReturnType().getName() + " "+ className + "." + prov.getText(methodDeclaration));
+         addFqn(div,
+            methodDeclaration.getReturnType().getName() + " " + className + "." + prov.getText(methodDeclaration));
          loadJavaDoc(url, false, div);
          return div;
       }
-      if(coveringNode instanceof SimpleName)
+      if (coveringNode instanceof SimpleName)
       {
          SimpleName nn = (SimpleName)coveringNode;
          IBinding binding = nn.resolveBinding();
-         if(binding.getKind() == IBinding.VARIABLE)
+         if (binding.getKind() == IBinding.VARIABLE)
          {
             IVariableBinding var = (IVariableBinding)binding;
-            if(var.isField())
+            if (var.isField())
             {
                String className = var.getDeclaringClass().getBinaryName();
-               String url =
-                        className
-                           + "%23" + nn.getFullyQualifiedName();
+               String url = className + "%23" + nn.getFullyQualifiedName();
                Element div = DOM.createDiv();
                addImage(div, labelProvider.createMethodImage(var.getModifiers()));
-               addFqn(div, var.getType().getName() + " "+ className + "." + prov.getText(var));
+               addFqn(div, var.getType().getName() + " " + className + "." + prov.getText(var));
                loadJavaDoc(url, false, div);
                return div;
             }
          }
-         if(binding.getKind() == IBinding.TYPE)
+         if (binding.getKind() == IBinding.TYPE)
          {
             return getDocForType((ITypeBinding)binding);
          }
@@ -151,12 +192,12 @@ public class JavaDocHover extends AbstractJavaHover
    {
       Element docElement = DOM.createDiv();
       ImageResource image = labelProvider.getTypeImage(type.getModifiers());
-      addImage(docElement, image);         
+      addImage(docElement, image);
       addFqn(docElement, type.getQualifiedName());
       loadJavaDoc(type.getBinaryName(), true, docElement);
       return docElement;
    }
-   
+
    private void addFqn(Element docElement, String fqn)
    {
       Element fqnDiv = DOM.createDiv();
@@ -177,14 +218,13 @@ public class JavaDocHover extends AbstractJavaHover
       docElement.appendChild(imageElement);
    }
 
-
    private void addTextToElement(String text, Element element)
    {
       Element div = DOM.createDiv();
       div.setInnerHTML(text);
       element.appendChild(div);
    }
-   
+
    private void loadJavaDoc(String requestPart, boolean isClass, final Element docElement)
    {
 
@@ -201,7 +241,7 @@ public class JavaDocHover extends AbstractJavaHover
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                 addTextToElement(result.toString(), docElement);
+                  addTextToElement(result.toString(), docElement);
                }
 
                @Override
@@ -215,6 +255,24 @@ public class JavaDocHover extends AbstractJavaHover
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      editor = event.getEditor();
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.UpdateOutlineHandler#onUpdateOutline(org.eclipse.jdt.client.UpdateOutlineEvent)
+    */
+   @Override
+   public void onUpdateOutline(UpdateOutlineEvent event)
+   {
+      unit = event.getCompilationUnit();
    }
 
 }

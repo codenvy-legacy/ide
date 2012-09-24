@@ -37,24 +37,22 @@ public class JavaTypeHover implements TextHover
 {
 
    private static final HoverResources resources = GWT.create(HoverResources.class);
-   
-   static{
+
+   static
+   {
       resources.hover().ensureInjected();
    }
-   
+
    private ProblemHover problemHover;
-   
-   private JavaDocHover javaDocHover;
-   
-   
+
    /**
     * 
     */
    public JavaTypeHover(HandlerManager eventBus)
    {
       problemHover = new ProblemHover(eventBus);
-      javaDocHover = new JavaDocHover(eventBus, resources);
    }
+
    /**
     * @see org.exoplatform.ide.editor.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.api.Editor, org.exoplatform.ide.editor.text.IRegion)
     */
@@ -62,10 +60,10 @@ public class JavaTypeHover implements TextHover
    public Element getHoverInfo(Editor editor, IRegion hoverRegion)
    {
       Element problemElement = problemHover.getHoverInfo(editor, hoverRegion);
-      if(problemElement != null)
+      if (problemElement != null)
          return problemElement;
-      
-      return javaDocHover.getHoverInfo(editor, hoverRegion);
+
+      return null;
    }
 
    /**
@@ -74,7 +72,7 @@ public class JavaTypeHover implements TextHover
    @Override
    public IRegion getHoverRegion(Editor editor, int offset)
    {
-      return javaDocHover.getHoverRegion(editor, offset);
+      return problemHover.getHoverRegion(editor, offset);
    }
 
 }

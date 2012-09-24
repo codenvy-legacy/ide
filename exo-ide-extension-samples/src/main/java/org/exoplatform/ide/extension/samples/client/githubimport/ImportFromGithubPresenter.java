@@ -33,13 +33,14 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -52,7 +53,6 @@ import org.exoplatform.ide.git.shared.GitHubRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Presenter for importing user's GitHub project to IDE.
@@ -197,8 +197,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          }
       });
 
-      final Set<String> types = ProjectResolver.getProjectsTypes();
-      display.setProjectTypeValues(types.toArray(new String[types.size()]));
+      String[] types = new String[ProjectType.values().length];
+      for (int i = 0; i < ProjectType.values().length; i++)
+      {
+         types[i] = ProjectType.values()[i].value();
+      }
+      display.setProjectTypeValues(types);
    }
 
    /**
@@ -219,7 +223,8 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                   readonlyUrls.clear();
                   for (GitHubRepository repo : result)
                   {
-                     projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, repo.getSshUrl()));
+                     projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, null, repo
+                        .getSshUrl()));
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
                   display.getRepositoriesGrid().setValue(projectDataList);
@@ -303,6 +308,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          IDE.getInstance().openView(d.asView());
          display = d;
          bindDisplay();
+         display.getReadOnlyModeField().setValue(true);
          return;
       }
    }
@@ -345,6 +351,22 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          selectedProjectData.setName(name);
       }
       selectedProjectData.setType(display.getProjectTypeField().getValue());
+      // Set targets
+      for (PaaS paas : IDE.getInstance().getPaaSes())
+      {
+         try
+         {
+            if (paas.getSupportedProjectTypes().contains(
+               ProjectType.fromValue(display.getProjectTypeField().getValue())))
+            {
+               selectedProjectData.getTargets().add(paas.getId());
+            }
+         }
+         catch (IllegalArgumentException e)
+         {
+         }
+      }
+
       if (display.getReadOnlyModeField().getValue())
       {
          String readonlyUrl = readonlyUrls.get(selectedProjectData.getRepositoryUrl());

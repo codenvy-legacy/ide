@@ -37,7 +37,9 @@ import com.google.gwt.user.client.Timer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
+import java.util.Comparator;
 import java.util.EnumSet;
+import java.util.TreeSet;
 
 /*
  * TODO: I need to do another pass at the rendering paths after
@@ -211,16 +213,29 @@ public class ViewportRenderer {
         lineRendererController.renderLine(line, LineUtils.getCachedLineNumber(line), lineElement,
             false);
       }
-
       int lineLength = line.getText().length();
       if (lineLength > newMaxLineLength) {
         newMaxLineLength = lineLength;
       }
     }
-
+    
     if (newMaxLineLength != maxLineLength) {
       // TODO: need to shrink back down if the max line shrinks
       buffer.setMaxLineLength(newMaxLineLength);
+    }
+    else
+    {
+       //FIXME this code added to quick fix https://jira.exoplatform.org/browse/IDE-1916, need to replace with something more smarter
+       Line top = viewport.getTopLine();
+       int max = 0;
+       while(top.getNextLine() != viewport.getBottomLine())
+       {
+          if(top.getText().length() > max)
+             max = top.getText().length();
+          top = top.getNextLine();
+       }
+       
+       buffer.setMaxLineLength(max);
     }
   }
 

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.preferences;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -32,6 +35,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.interactions.Actions;
 
 import java.io.IOException;
+
+import javax.validation.constraints.AssertFalse;
 
 /**
  * IDE-156:HotKeys customization.
@@ -67,7 +72,6 @@ public class HotkeysCustomizationTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
@@ -114,29 +118,28 @@ public class HotkeysCustomizationTest extends BaseTest
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
+      //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
       driver.navigate().refresh();
 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //step 1 create new hotkey for create html file (Ctrl+H) and file from template (Alt+N)
-     // IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-
-      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
 
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("New HTML");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "h");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
       IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.ALT.toString() + "n");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
 
       // step 2 tabs and check in first tab new hotkeys. Selecting second tab, and checking new hotkey here
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
@@ -156,8 +159,10 @@ public class HotkeysCustomizationTest extends BaseTest
       //refresh browser and fix issue IDE-1392
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
       IDE.selectMainFrame();
-      IDE.EDITOR.closeTabIgnoringChanges(3);
-      IDE.EDITOR.waitTabNotPresent(3);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+
    }
 
    @Test
@@ -170,37 +175,18 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      IDE.EDITOR.waitTabPresent(2);
 
-      //  driver.navigate().refresh();
-      IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
-
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
 
-      // driver.navigate().refresh();
-      IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.selectTab(2);
       IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
-
-      //last step restore default values for HTML file and Create File From Template... commands 
-    //  IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-//      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName(MenuCommands.New.HTML_FILE);
-      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Save As Template...");
-      IDE.CUSTOMIZE_HOTKEYS.waitUnBindEnabled();
-      IDE.CUSTOMIZE_HOTKEYS.unbindButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
       closeAllTabs();
    }
 
@@ -212,56 +198,57 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       //step 1: create new hotkey for upload file (Alt+U)
-  //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
-      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
+      openCustomizeHotkeyForm();
+
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Open File By Path...");
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "q");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "g");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
+      IDE.LOADER.waitClosed();
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
 
       // step 2: check new hotkey
       IDE.selectMainFrame();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      new Actions(driver).sendKeys(Keys.CONTROL.toString() + "q").build().perform();
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.CONTROL.toString() + "q");
+      
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL + "g");
       IDE.OPEN_FILE_BY_PATH.waitOpened();
       IDE.OPEN_FILE_BY_PATH.clickCancelButton();
       IDE.OPEN_FILE_BY_PATH.waitClosed();
       //step 3: resetting the hotkeys to the default values and checking
-   //   IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_HOTKEYS);
-      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
-      //This action (maximize)need for select rows of customize hotkey form in FF v.4.0 and higher.
-      IDE.CUSTOMIZE_HOTKEYS.maximizeClick();
+      openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.defaultsButtonClick();
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
-      IDE.CUSTOMIZE_HOTKEYS.waitClosed();
-
-      //step4: check that hotkey hasn't binded
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.CONTROL.toString() + "q");
-      boolean isUploadViewClosed = false;
-      try
-      {
-         IDE.UPLOAD.waitOpened();
-      }
-      catch (TimeoutException e)
-      {
-         isUploadViewClosed = true;
-      }
-      Assert.assertTrue(isUploadViewClosed);
+      IDE.PREFERENCES.clickOnCloseFormBtn();
+      IDE.PREFERENCES.waitPreferencesClose();
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL + "g");
+      assertFalse(IDE.UPLOAD.ddd());
    }
 
    //--------------
    private void closeAllTabs() throws Exception
    {
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < 2; i++)
       {
          IDE.EDITOR.closeTabIgnoringChanges(1);
       }
    }
+
+   private void openCustomizeHotkeyForm() throws Exception, InterruptedException
+   {
+      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
+      IDE.PREFERENCES.waitPreferencesOpen();
+      IDE.PREFERENCES.selectCustomizeMenu(MenuCommands.Preferences.CUSTOMIZE_HOTKEYS);
+      IDE.CUSTOMIZE_HOTKEYS.waitOpened();
+   }
+
 }

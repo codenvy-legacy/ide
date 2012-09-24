@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.client.util.logging.Log;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -231,10 +233,11 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       }
       catch (Exception ex)
       {
-         String st = ex.getClass().getName() + ": " + ex.getMessage();
-         for (StackTraceElement ste : ex.getStackTrace())
-            st += "\n" + ste.toString();
-         IDE.fireEvent(new OutputEvent(st, Type.ERROR));
+//         String st = ex.getClass().getName() + ": " + ex.getMessage();
+//         for (StackTraceElement ste : ex.getStackTrace())
+//            st += "\n" + ste.toString();
+//         IDE.fireEvent(new OutputEvent(st, Type.ERROR));
+         Log.error(getClass(), ex);
       }
       return new IJavaCompletionProposal[0];
    }

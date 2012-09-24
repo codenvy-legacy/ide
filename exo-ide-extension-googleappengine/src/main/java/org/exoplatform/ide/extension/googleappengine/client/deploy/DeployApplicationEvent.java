@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.googleappengine.client.deploy;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 /**
  * Event occurs, when user tries to deploy application to Google App engine.
  * 
@@ -33,6 +35,18 @@ public class DeployApplicationEvent extends GwtEvent<DeployApplicationHandler>
     * Type, used to register the event.
     */
    public static final GwtEvent.Type<DeployApplicationHandler> TYPE = new GwtEvent.Type<DeployApplicationHandler>();
+
+   private ProjectModel project;
+
+   public DeployApplicationEvent()
+   {
+      this.project = null;
+   }
+
+   public DeployApplicationEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -52,4 +66,11 @@ public class DeployApplicationEvent extends GwtEvent<DeployApplicationHandler>
       handler.onDeployApplication(this);
    }
 
+   /**
+    * @return the project
+    */
+   public ProjectModel getProject()
+   {
+      return project;
+   }
 }
