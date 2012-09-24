@@ -16,17 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.beanstalk.application.versions;
 
-import java.util.List;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Handler for {@link DeleteVersionEvent} event.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 20, 2012 4:52:35 PM anya $
+ * 
  */
-public interface TerminateInstanceRequest
+public interface DeleteVersionHandler extends EventHandler
 {
-   List<String> getInstanceIds();
-
-   void setInstanceIds(List<String> instanceIds);
+   /**
+    * Perform actions, when user tries to delete application version.
+    * 
+    * @param event
+    */
+   void onDeleteVersion(DeleteVersionEvent event);
 }

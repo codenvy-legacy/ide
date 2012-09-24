@@ -37,17 +37,14 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
-import com.amazonaws.services.ec2.model.StartInstancesResult;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
-import com.amazonaws.services.ec2.model.StopInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
@@ -312,7 +309,15 @@ public class EC2
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         return runInstance(ec2Client, imageId, instanceType, numberOfInstances, keyName, securityGroupsIds, availabilityZone);
+         return runInstance(
+            ec2Client,
+            imageId,
+            instanceType,
+            numberOfInstances,
+            keyName,
+            securityGroupsIds,
+            availabilityZone
+         );
       }
       catch (AmazonClientException e)
       {
@@ -333,13 +338,13 @@ public class EC2
                             String availabilityZone)
    {
       RunInstancesResult result = ec2Client.runInstances(new RunInstancesRequest()
-      .withImageId(imageId)
-      .withInstanceType(instanceType)
-      .withMinCount(numberOfInstances)
-      .withMaxCount(numberOfInstances)
-      .withKeyName(keyName)
-      .withSecurityGroupIds(securityGroupsIds)
-      .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
+         .withImageId(imageId)
+         .withInstanceType(instanceType)
+         .withMinCount(numberOfInstances)
+         .withMaxCount(numberOfInstances)
+         .withKeyName(keyName)
+         .withSecurityGroupIds(securityGroupsIds)
+         .withPlacement(new Placement().withAvailabilityZone(availabilityZone)));
 
       List<Instance> runningInstances = result.getReservation().getInstances();
       List<String> instanceInfos = new ArrayList<String>(runningInstances.size());
@@ -354,12 +359,12 @@ public class EC2
       return instanceInfos;
    }
 
-   public void stopInstance(boolean force, List<String> instanceIds) throws AWSException
+   public void stopInstance(String instanceId, boolean force) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         stopInstance(ec2Client, force, instanceIds);
+         stopInstance(ec2Client, instanceId, force);
       }
       catch (AmazonClientException e)
       {
@@ -371,19 +376,19 @@ public class EC2
       }
    }
 
-   private void stopInstance(AmazonEC2 ec2Client, boolean force, List<String> instanceIds)
+   private void stopInstance(AmazonEC2 ec2Client, String instanceId, boolean force)
    {
       ec2Client.stopInstances(new StopInstancesRequest()
       .withForce(force)
-      .withInstanceIds(instanceIds));
+      .withInstanceIds(instanceId));
    }
 
-   public void startInstance(List<String> instanceIds) throws AWSException
+   public void startInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         startInstance(ec2Client, instanceIds);
+         startInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -395,18 +400,18 @@ public class EC2
       }
    }
 
-   private void startInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void startInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.startInstances(new StartInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
-   public void rebootInstance(List<String> instanceIds) throws AWSException
+   public void rebootInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         rebootInstance(ec2Client, instanceIds);
+         rebootInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -418,18 +423,18 @@ public class EC2
       }
    }
 
-   private void rebootInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void rebootInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.rebootInstances(new RebootInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
-   public void terminateInstance(List<String> instanceIds) throws AWSException
+   public void terminateInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         terminateInstance(ec2Client, instanceIds);
+         terminateInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -441,21 +446,20 @@ public class EC2
       }
    }
 
-   private void terminateInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void terminateInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.terminateInstances(new TerminateInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
-   public List<InstanceStatusInfo> getStatus(List<String> instanceIds,
-                         int maxResult,
-                         boolean includeAllInstances,
+   public List<InstanceStatusInfo> getStatus(int maxResult,
+                         Boolean includeAllInstances,
                          String nextToken) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-          return getStatus(ec2Client, instanceIds, maxResult, includeAllInstances, nextToken);
+          return getStatus(ec2Client, maxResult, includeAllInstances, nextToken);
       }
       catch (AmazonClientException e)
       {
@@ -468,36 +472,61 @@ public class EC2
    }
 
    private List<InstanceStatusInfo> getStatus(AmazonEC2 ec2Client,
-                          List<String> instanceIds,
                           int maxResult,
-                          boolean includeAllInstances,
+                          Boolean includeAllInstances,
                           String nextToken)
    {
-      DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(new DescribeInstanceStatusRequest()
-         .withInstanceIds(instanceIds)
-         .withMaxResults(maxResult)
-         .withIncludeAllInstances(includeAllInstances)
-         .withNextToken(nextToken));
+      DescribeInstanceStatusResult result = ec2Client.describeInstanceStatus(
+         new DescribeInstanceStatusRequest()
+            .withMaxResults(maxResult)
+            .withIncludeAllInstances(includeAllInstances)
+            .withNextToken(nextToken)
+      );
 
       List<InstanceStatus> instanceStatuses = result.getInstanceStatuses();
-      List<InstanceStatusInfo> statusInfos = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
+      List<InstanceStatusInfo> ec2Statuses = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
 
-      for (InstanceStatus status : instanceStatuses)
+      for (com.amazonaws.services.ec2.model.InstanceStatus status : instanceStatuses)
       {
-         statusInfos.add(
+         ec2Statuses.add(
             new InstanceStatusInfoImpl(
                status.getInstanceId(),
                status.getAvailabilityZone(),
-               status.getEvents(),
-               status.getInstanceState(),
-               status.getInstanceStatus(),
-               status.getSystemStatus()
+               status.getInstanceState().getCode(),
+               status.getInstanceState().getName(),
+               status.getInstanceStatus().getStatus(),
+               status.getSystemStatus().getStatus()
             )
          );
       }
 
-      return statusInfos;
+      return ec2Statuses;
    }
+
+//   public void getInstances() throws AWSException
+//   {
+//      AmazonEC2 ec2Client = getEC2Client();
+//      try
+//      {
+//         //TODO return getInstances(ec2Client) result
+//      }
+//      catch (AmazonClientException e)
+//      {
+//         throw new AWSException(e);
+//      }
+//      finally
+//      {
+//         ec2Client.shutdown();
+//      }
+//   }
+//
+//   private void getInstances(AmazonEC2 ec2Client)
+//   {
+//      DescribeInstancesResult result = ec2Client.describeInstances(
+//         new DescribeInstancesRequest()
+//      );
+//
+//   }
 
    //
 

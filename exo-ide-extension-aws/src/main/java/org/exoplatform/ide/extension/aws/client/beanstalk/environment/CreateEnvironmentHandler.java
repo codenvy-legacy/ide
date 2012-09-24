@@ -16,17 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
 
-import java.util.List;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Handler for {@link CreateEnvironmentEvent} event.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 21, 2012 2:57:49 PM anya $
+ * 
  */
-public interface StartInstanceRequest
+public interface CreateEnvironmentHandler extends EventHandler
 {
-   List<String> getInstanceIds();
-
-   void setInstanceIds(List<String> instanceIds);
+   /**
+    * @param event
+    */
+   void onCreateEnvironment(CreateEnvironmentEvent event);
 }

@@ -32,9 +32,12 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
@@ -70,6 +73,12 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    private static final String APPLICATIONS = BASE_URL + "/apps";
 
    private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
+
+   private static final String VERSIONS = BASE_URL + "/apps/versions";
+
+   private static final String VERSION_DELETE = BASE_URL + "/apps/versions/delete";
+
+   private static final String VERSION_CREATE = BASE_URL + "/apps/versions/create";
 
    /**
     * REST service context.
@@ -188,7 +197,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(APPLICATION_INFO).append("?vfsid=").append(vfsId).append("&").append("projectid").append(projectId);
+      url.append(APPLICATION_INFO).append("?vfsid=").append(vfsId).append("&").append("projectid=").append(projectId);
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
@@ -203,7 +212,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(APPLICATION_DELETE).append("?vfsid=").append(vfsId).append("&").append("projectid").append(projectId);
+      url.append(APPLICATION_DELETE).append("?vfsid=").append(vfsId).append("&").append("projectid=").append(projectId);
 
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader).send(callback);
 
@@ -233,6 +242,64 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       StringBuilder url = new StringBuilder(restServiceContext);
       url.append(ENVIRONMENT_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createEnvironmentRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getVersions(java.lang.String,
+    *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getVersions(String vfsId, String projectId, AsyncRequestCallback<List<ApplicationVersionInfo>> callback)
+      throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(VERSIONS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#deleteVersion(java.lang.String,
+    *      java.lang.String, java.lang.String, java.lang.String, boolean,
+    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void deleteVersion(String vfsId, String projectId, String applicationName, String versionLabel,
+      boolean isDeleteS3Bundle, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(VERSION_DELETE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+
+      DeleteApplicationVersionRequest deleteApplicationVersionRequest =
+         AWSExtension.AUTO_BEAN_FACTORY.deleteVersionRequest().as();
+      deleteApplicationVersionRequest.setApplicationName(applicationName);
+      deleteApplicationVersionRequest.setVersionLabel(versionLabel);
+      deleteApplicationVersionRequest.setDeleteS3Bundle(isDeleteS3Bundle);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(deleteApplicationVersionRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createVersion(java.lang.String,
+    *      java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest,
+    *      org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback)
+    */
+   @Override
+   public void createVersion(String vfsId, String projectId,
+      CreateApplicationVersionRequest createApplicationVersionRequest,
+      BeanstalkAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(VERSION_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationVersionRequest)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)

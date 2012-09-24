@@ -31,11 +31,23 @@ public interface AWSClientBundle extends ClientBundle
 {
    AWSClientBundle INSTANCE = GWT.<AWSClientBundle> create(AWSClientBundle.class);
 
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk.png")
+   ImageResource elasticBeanstalk();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_Disabled.png")
+   ImageResource elasticBeanstalkDisabled();
+
    @Source("org/exoplatform/ide/extension/aws/client/images/switchAccount.png")
    ImageResource switchAccount();
 
    @Source("org/exoplatform/ide/extension/aws/client/images/switchAccount_Disabled.png")
    ImageResource switchAccountDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/edit.png")
+   ImageResource edit();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/edit_Disabled.png")
+   ImageResource editDisabled();
 
    @Source("org/exoplatform/ide/extension/aws/client/images/delete.png")
    ImageResource delete();
@@ -43,9 +55,33 @@ public interface AWSClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/aws/client/images/delete_Disabled.png")
    ImageResource deleteDisabled();
 
-   @Source("org/exoplatform/ide/extension/aws/client/images/edit.png")
-   ImageResource edit();
+   @Source("org/exoplatform/ide/extension/aws/client/images/general.png")
+   ImageResource general();
 
-   @Source("org/exoplatform/ide/extension/aws/client/images/edit_Disabled.png")
-   ImageResource editDisabled();
+   @Source("org/exoplatform/ide/extension/aws/client/images/versions.png")
+   ImageResource versions();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/create_app.png")
+   ImageResource createApplication();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/create_app_Disabled.png")
+   ImageResource createApplicationDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/manage_app.png")
+   ImageResource manageApplication();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/manage_app_Disabled.png")
+   ImageResource manageApplicationDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/new_version.png")
+   ImageResource newVersion();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/new_version_Disabled.png")
+   ImageResource newVersionDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/new_env.png")
+   ImageResource newEnvironment();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/new_env_Disabled.png")
+   ImageResource newEnvironmentDisabled();
 }

@@ -21,22 +21,18 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.ec2.EC2;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.RebootInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.StartInstanceRequest;
-import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
-import org.exoplatform.ide.extension.aws.shared.ec2.StopInstanceRequest;
-import org.exoplatform.ide.extension.aws.shared.ec2.TerminateInstanceRequest;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 /**
@@ -108,42 +104,38 @@ public class EC2Service
        );
    }
 
-   @Path("instance/start")
+   @Path("instance/start/{id}")
    @POST
-   public void startInstance(StartInstanceRequest request) throws AWSException
+   public void startInstance(@PathParam("id") String id) throws AWSException
    {
-      ec2.startInstance(request.getInstanceIds());
+      ec2.startInstance(id);
    }
 
-   @Path("instance/stop")
+   @Path("instance/stop/{id}")
    @POST
-   public void stopInstance(StopInstanceRequest request) throws AWSException
+   public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force) throws AWSException
    {
-      ec2.stopInstance(request.getForce(), request.getInstanceIds());
+      ec2.stopInstance(id, force);
    }
 
-   @Path("instance/reboot")
+   @Path("instance/reboot/{id}")
    @POST
-   public void rebootInstance(RebootInstanceRequest request) throws AWSException
+   public void rebootInstance(@PathParam("id") String id) throws AWSException
    {
-      ec2.rebootInstance(request.getInstanceIds());
+      ec2.rebootInstance(id);
    }
 
-   @Path("instance/terminate")
+   @Path("instance/terminate/{id}")
    @POST
-   public void terminateInstance(TerminateInstanceRequest request) throws AWSException
+   public void terminateInstance(@PathParam("id") String id) throws AWSException
    {
-      ec2.terminateInstance(request.getInstanceIds());
+      ec2.terminateInstance(id);
    }
 
    @Path("instance/status")
    @GET
-   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
+   public List<InstanceStatusInfo> getStatus() throws AWSException
    {
-      return ec2.getStatus(
-         request.getInstanceIds(),
-         request.getMaxResult(),
-         request.getIncludeAllInstances(),
-         request.getNextToken());
+      return null;
    }
 }

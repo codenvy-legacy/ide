@@ -27,8 +27,8 @@
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display" />
    </replace-with>
-   
-    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
    </replace-with>
    
@@ -40,4 +40,19 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter.Display" />
+   </replace-with>
 </module>

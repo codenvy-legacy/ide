@@ -18,14 +18,20 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -41,11 +47,27 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.ApplicationUpdatedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionCreatedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionDeletedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentCreatedHandler;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -74,6 +96,17 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
 
       HasClickHandlers getCloseButton();
 
+      HasClickHandlers getCreateVersionButton();
+
+      HasClickHandlers getLaunchEnvironmentButton();
+
+      // Versions
+
+      ListGridItem<ApplicationVersionInfo> getVersionsGrid();
+
+      HasVersionActions getVersionActions();
+
+      void selectVersionsTab();
    }
 
    private Display display;
@@ -81,6 +114,53 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
    private ProjectModel openedProject;
 
    private VirtualFileSystemInfo currentVfs;
+
+   private ApplicationInfo applicationInfo;
+
+   private VersionDeletedHandler versionDeletedHandler = new VersionDeletedHandler()
+   {
+
+      @Override
+      public void onVersionDeleted(ApplicationVersionInfo version)
+      {
+         getVersions();
+      }
+   };
+
+   private ApplicationUpdatedHandler applicationUpdatedHandler = new ApplicationUpdatedHandler()
+   {
+
+      @Override
+      public void onApplicationUpdated(ApplicationInfo application)
+      {
+         applicationInfo = application;
+         if (display != null)
+         {
+            display.getDescriptionField().setValue(application.getDescription());
+         }
+      }
+   };
+
+   private VersionCreatedHandler versionCreatedHandler = new VersionCreatedHandler()
+   {
+
+      @Override
+      public void onVersionCreate(ApplicationVersionInfo version)
+      {
+         getVersions();
+         display.selectVersionsTab();
+      }
+   };
+
+   private EnvironmentCreatedHandler environmentCreatedHandler = new EnvironmentCreatedHandler()
+   {
+
+      @Override
+      public void onEnvironmentCreated(EnvironmentInfo environmentInfo)
+      {
+         // TODO do actions when environment is created
+      }
+   };
 
    public ManageApplicationPresenter()
    {
@@ -90,6 +170,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ManageApplicationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -98,17 +179,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
    @Override
    public void onManageApplication(ManageApplicationEvent event)
    {
-      /*
-       * TODO if (openedProject == null || !AWSExtension.isAWSApplication(openedProject)) {
-       * Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.notAWSApplictaionMessage()); return; }
-       */
-/*TODO
-      if (display == null)
+      if (openedProject == null || !AWSExtension.isAWSApplication(openedProject))
       {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }*/
+         Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.notAWSApplictaionMessage());
+         return;
+      }
+
+      getApplicationInfo();
    }
 
    public void bindDisplay()
@@ -132,14 +209,48 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
             askForDelete();
          }
       });
-      
+
       display.getUpdateDescriptionButton().addClickHandler(new ClickHandler()
       {
-         
+
          @Override
          public void onClick(ClickEvent event)
          {
-            //TODO
+            IDE.fireEvent(new UpdateApplicationEvent(currentVfs.getId(), openedProject.getId(), applicationInfo,
+               applicationUpdatedHandler));
+         }
+      });
+
+      display.getVersionActions().addDeleteHandler(new SelectionHandler<ApplicationVersionInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<ApplicationVersionInfo> event)
+         {
+            IDE.fireEvent(new DeleteVersionEvent(currentVfs.getId(), openedProject.getId(), event.getSelectedItem(),
+               versionDeletedHandler));
+         }
+      });
+
+      display.getCreateVersionButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new CreateVersionEvent(currentVfs.getId(), openedProject, applicationInfo.getName(),
+               versionCreatedHandler));
+         }
+      });
+
+      display.getLaunchEnvironmentButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new CreateEnvironmentEvent(currentVfs.getId(), openedProject.getId(), applicationInfo
+               .getName(), environmentCreatedHandler));
          }
       });
    }
@@ -185,8 +296,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
 
    private void askForDelete()
    {
-      // TODO insert application name:
-      final String applicationName = "test";
+      final String applicationName = applicationInfo.getName();
       Dialogs.getInstance().ask(AWSExtension.LOCALIZATION_CONSTANT.deleteApplicationTitle(),
          AWSExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(applicationName),
          new BooleanValueReceivedHandler()
@@ -203,7 +313,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          });
    }
 
-   public void deleteApplication(final String applicationName)
+   private void deleteApplication(final String applicationName)
    {
       try
       {
@@ -245,6 +355,99 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
 
+   private void getApplicationInfo()
+   {
+      AutoBean<ApplicationInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.applicationInfo();
+      try
+      {
+         BeanstalkClientService.getInstance().getApplicationInfo(
+            currentVfs.getId(),
+            openedProject.getId(),
+            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getApplicationInfo();
+                  }
+               })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+               @Override
+               protected void onSuccess(ApplicationInfo result)
+               {
+                  applicationInfo = result;
+                  openView();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
+      }
+      display.getApplicationNameField().setValue(applicationInfo.getName());
+      display.getDescriptionField().setValue(
+         applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
+      display.getCreateDateField().setValue(new Date(applicationInfo.getCreated()).toString());
+      display.getUpdatedDateField().setValue(new Date(applicationInfo.getUpdated()).toString());
+
+      getVersions();
+   }
+
+   private void getVersions()
+   {
+      try
+      {
+         BeanstalkClientService.getInstance().getVersions(
+            currentVfs.getId(),
+            openedProject.getId(),
+            new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getVersions();
+                  }
+               })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+               }
+
+               @Override
+               protected void onSuccess(List<ApplicationVersionInfo> result)
+               {
+                  display.getVersionsGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

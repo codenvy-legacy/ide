@@ -55,6 +55,10 @@ public class MainTabPain extends Composite
 
    private static final String DELETE_APPLICATION_BUTTON_ID = "ideMainTabPainDeleteApplicationButton";
 
+   private static final String CREATE_VERSION_BUTTON_ID = "ideMainTabPainCreateVersionButton";
+
+   private static final String LAUNCH_ENVIRONMENT_BUTTON_ID = "ideMainTabPainLaunchEnvButton";
+
    @UiField
    TextInput nameField;
 
@@ -66,6 +70,12 @@ public class MainTabPain extends Composite
 
    @UiField
    ImageButton deleteApplicationButton;
+
+   @UiField
+   ImageButton createVersionButton;
+
+   @UiField
+   ImageButton launchEnvironmentButton;
 
    @UiField
    Label creationDateField;
@@ -84,6 +94,71 @@ public class MainTabPain extends Composite
 
       editDescriptionButton.setButtonId(EDIT_DESCRIPTION_BUTTON_ID);
       deleteApplicationButton.setButtonId(DELETE_APPLICATION_BUTTON_ID);
+      createVersionButton.setButtonId(CREATE_VERSION_BUTTON_ID);
+      launchEnvironmentButton.setButtonId(LAUNCH_ENVIRONMENT_BUTTON_ID);
    }
 
+   /**
+    * @return the nameField
+    */
+   public TextInput getNameField()
+   {
+      return nameField;
+   }
+
+   /**
+    * @return the descriptionField
+    */
+   public TextInput getDescriptionField()
+   {
+      return descriptionField;
+   }
+
+   /**
+    * @return the editDescriptionButton
+    */
+   public ImageButton getEditDescriptionButton()
+   {
+      return editDescriptionButton;
+   }
+
+   /**
+    * @return the deleteApplicationButton
+    */
+   public ImageButton getDeleteApplicationButton()
+   {
+      return deleteApplicationButton;
+   }
+
+   /**
+    * @return the creationDateField
+    */
+   public Label getCreationDateField()
+   {
+      return creationDateField;
+   }
+
+   /**
+    * @return the updatedDateField
+    */
+   public Label getUpdatedDateField()
+   {
+      return updatedDateField;
+   }
+
+   /**
+    * @return the createVersionButton
+    */
+   public ImageButton getCreateVersionButton()
+   {
+      return createVersionButton;
+   }
+
+   /**
+    * @return the launchEnvironmentButton
+    */
+   public ImageButton getLaunchEnvironmentButton()
+   {
+      return launchEnvironmentButton;
+   }
 }

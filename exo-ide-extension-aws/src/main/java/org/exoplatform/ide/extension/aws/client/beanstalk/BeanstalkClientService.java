@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk;
 
-
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
@@ -133,4 +134,14 @@ public abstract class BeanstalkClientService
    public abstract void createEnvironment(String vfsId, String projectId,
       CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
+
+   public abstract void getVersions(String vfsId, String projectId,
+      AsyncRequestCallback<List<ApplicationVersionInfo>> callback) throws RequestException;
+
+   public abstract void deleteVersion(String vfsId, String projectId, String applicationName, String versionLabel,
+      boolean isDeleteS3Bundle, AsyncRequestCallback<Object> callback) throws RequestException;
+
+   public abstract void createVersion(String vfsId, String projectId,
+      CreateApplicationVersionRequest createApplicationVersionRequest,
+      BeanstalkAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;
 }
