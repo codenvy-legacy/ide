@@ -28,18 +28,16 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Owner;
 public class S3BucketImpl implements S3Bucket
 {
    private String name;
-   private long creationDate;
+   private long creationDate = -1;
    private S3Owner owner;
 
    public S3BucketImpl()
    {
    }
 
-   public S3BucketImpl(String name, long creationDate, S3Owner owner)
+   public S3BucketImpl(String name)
    {
       this.name = name;
-      this.creationDate = creationDate;
-      this.owner = owner;
    }
 
    @Override

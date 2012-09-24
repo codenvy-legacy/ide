@@ -78,16 +78,18 @@ public class S3 extends AWSClient
 
    private S3Bucket createBucket(AmazonS3 s3, String name, String region)
    {
-      Bucket bucket = s3.createBucket(new CreateBucketRequest(name, region));
-
-      return new S3BucketImpl(
-         bucket.getName(),
-         bucket.getCreationDate().getTime(),
-         new S3OwnerImpl(
-            bucket.getOwner().getId(),
-            bucket.getOwner().getDisplayName()
-         )
-      );
+      Bucket amazonS3Bucket = s3.createBucket(new CreateBucketRequest(name, region));
+      S3Bucket bucket = new S3BucketImpl(amazonS3Bucket.getName());
+      if (amazonS3Bucket.getCreationDate() != null)
+      {
+         bucket.setCreated(amazonS3Bucket.getCreationDate().getTime());
+      }
+      if (amazonS3Bucket.getOwner() != null)
+      {
+         bucket.setOwner(
+            new S3OwnerImpl(amazonS3Bucket.getOwner().getId(), amazonS3Bucket.getOwner().getDisplayName()));
+      }
+      return bucket;
    }
 
    public List<S3Bucket> listBuckets() throws AWSException
@@ -104,24 +106,24 @@ public class S3 extends AWSClient
 
    private List<S3Bucket> listBuckets(AmazonS3 s3)
    {
-      List<Bucket> buckets = s3.listBuckets();
-      List<S3Bucket> s3Buckets = new ArrayList<S3Bucket>(buckets.size());
+      List<Bucket> amazonS3Buckets = s3.listBuckets();
+      List<S3Bucket> buckets = new ArrayList<S3Bucket>(amazonS3Buckets.size());
 
-      for (Bucket bucket : buckets)
+      for (Bucket amazonS3Bucket : amazonS3Buckets)
       {
-         s3Buckets.add(
-            new S3BucketImpl(
-               bucket.getName(),
-               bucket.getCreationDate().getTime(),
-               new S3OwnerImpl(
-                  bucket.getOwner().getId(),
-                  bucket.getOwner().getDisplayName()
-               )
-            )
-         );
+         S3Bucket bucket = new S3BucketImpl(amazonS3Bucket.getName());
+         if (amazonS3Bucket.getCreationDate() != null)
+         {
+            bucket.setCreated(amazonS3Bucket.getCreationDate().getTime());
+         }
+         if (amazonS3Bucket.getOwner() != null)
+         {
+            bucket.setOwner(
+               new S3OwnerImpl(amazonS3Bucket.getOwner().getId(), amazonS3Bucket.getOwner().getDisplayName()));
+         }
+         buckets.add(bucket);
       }
-
-      return s3Buckets;
+      return buckets;
    }
 
    public void deleteBucket(String name) throws AWSException
@@ -340,6 +342,8 @@ public class S3 extends AWSClient
          s3Object.getObjectMetadata().getContentLength()
       );
    }
+
+   //
 
    protected AmazonS3 getS3Client() throws AWSException
    {
