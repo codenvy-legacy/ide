@@ -32,9 +32,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -163,34 +161,34 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
          e.printStackTrace();
       }
 
-      try
-      {
-         List<InstanceStatusInfo> instanceStatusesList = new ArrayList<InstanceStatusInfo>();
-         StatusRequest statusRequestBean = AWSExtension.AUTO_BEAN_FACTORY.statusRequest().as();
-         statusRequestBean.setIncludeAllInstances(true);
-         EC2ClientService.getInstance().status(statusRequestBean,
-            new AsyncRequestCallback<List<InstanceStatusInfo>>(new InstanceStatusesUnmarshaller(instanceStatusesList))
-            {
-
-               @Override
-               protected void onSuccess(List<InstanceStatusInfo> result)
-               {
-                  System.out.println(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  // TODO Auto-generated method stub
-                  exception.printStackTrace();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
+//      try
+//      {
+//         List<InstanceStatusInfo> instanceStatusesList = new ArrayList<InstanceStatusInfo>();
+//         StatusRequest statusRequestBean = AWSExtension.AUTO_BEAN_FACTORY.statusRequest().as();
+//         statusRequestBean.setIncludeAllInstances(true);
+//         EC2ClientService.getInstance().status(statusRequestBean,
+//            new AsyncRequestCallback<List<InstanceStatusInfo>>(new InstanceStatusesUnmarshaller(instanceStatusesList))
+//            {
+//
+//               @Override
+//               protected void onSuccess(List<InstanceStatusInfo> result)
+//               {
+//                  System.out.println(result);
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  // TODO Auto-generated method stub
+//                  exception.printStackTrace();
+//               }
+//            });
+//      }
+//      catch (RequestException e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      }
    }
 
 }

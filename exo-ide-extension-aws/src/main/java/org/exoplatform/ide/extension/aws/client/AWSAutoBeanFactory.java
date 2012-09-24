@@ -39,7 +39,6 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
@@ -159,13 +158,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return {@link SecurityGroupInfo} info about security group
     */
    AutoBean<SecurityGroupInfo> securityGroupInfo();
-
-   /**
-    * A factory method for create status request bean.
-    * 
-    * @return {@link StatusRequest} status request
-    */
-   AutoBean<StatusRequest> statusRequest();
 
    AutoBean<EventsList> eventList();
 

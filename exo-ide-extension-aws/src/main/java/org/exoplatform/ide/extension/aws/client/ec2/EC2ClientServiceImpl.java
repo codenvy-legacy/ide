@@ -20,19 +20,14 @@ package org.exoplatform.ide.extension.aws.client.ec2;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
 
 import java.util.List;
 
@@ -107,17 +102,17 @@ public class EC2ClientServiceImpl extends EC2ClientService
     * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#status(org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest,
     *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   @Override
-   public void status(StatusRequest request, AsyncRequestCallback<List<InstanceStatusInfo>> callback)
-      throws RequestException
-   {
-      final String url = restServiceContext + INSTANCE_SATUS;
-
-      String statusRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
-
-      AsyncRequest.build(RequestBuilder.GET, url).data(statusRequest).loader(loader)
-         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
+//   @Override
+//   public void status(StatusRequest request, AsyncRequestCallback<List<InstanceStatusInfo>> callback)
+//      throws RequestException
+//   {
+//      final String url = restServiceContext + INSTANCE_SATUS;
+//
+//      String statusRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
+//
+//      AsyncRequest.build(RequestBuilder.GET, url).data(statusRequest).loader(loader)
+//         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+//         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+//   }
 
 }

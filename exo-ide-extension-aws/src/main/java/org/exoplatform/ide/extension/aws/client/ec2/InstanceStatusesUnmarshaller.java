@@ -18,19 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.client.ec2;
 
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
-
-import java.util.List;
 
 /**
  * 
@@ -38,55 +25,55 @@ import java.util.List;
  * @version $Id: InstanceStatusesUnmarshaller.java Sep 21, 2012 6:05:42 PM azatsarynnyy $
  *
  */
-public class InstanceStatusesUnmarshaller implements Unmarshallable<List<InstanceStatusInfo>>
+public class InstanceStatusesUnmarshaller //implements Unmarshallable<List<InstanceStatusInfo>>
 {
 
-   private List<InstanceStatusInfo> instanceStatusesList;
-
-   public InstanceStatusesUnmarshaller(List<InstanceStatusInfo> instanceStatusesList)
-   {
-      this.instanceStatusesList = instanceStatusesList;
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
-    */
-   @Override
-   public void unmarshal(Response response) throws UnmarshallerException
-   {
-      try
-      {
-         if (response.getText() == null || response.getText().isEmpty())
-         {
-            return;
-         }
-         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
-         if (array == null)
-         {
-            return;
-         }
-         for (int i = 0; i < array.size(); i++)
-         {
-            JSONObject jsonObject = array.get(i).isObject();
-            String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
-            AutoBean<InstanceStatusInfo> autoBean =
-               AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, InstanceStatusInfo.class, value);
-            instanceStatusesList.add(autoBean.as());
-         }
-      }
-      catch (Exception e)
-      {
-         throw new UnmarshallerException("Can't parse security group list." + e.getMessage());
-      }
-   }
-
-   /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
-    */
-   @Override
-   public List<InstanceStatusInfo> getPayload()
-   {
-      return instanceStatusesList;
-   }
+//   private List<InstanceStatusInfo> instanceStatusesList;
+//
+//   public InstanceStatusesUnmarshaller(List<InstanceStatusInfo> instanceStatusesList)
+//   {
+//      this.instanceStatusesList = instanceStatusesList;
+//   }
+//
+//   /**
+//    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+//    */
+//   @Override
+//   public void unmarshal(Response response) throws UnmarshallerException
+//   {
+//      try
+//      {
+//         if (response.getText() == null || response.getText().isEmpty())
+//         {
+//            return;
+//         }
+//         JSONArray array = JSONParser.parseLenient(response.getText()).isArray();
+//         if (array == null)
+//         {
+//            return;
+//         }
+//         for (int i = 0; i < array.size(); i++)
+//         {
+//            JSONObject jsonObject = array.get(i).isObject();
+//            String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
+//            AutoBean<InstanceStatusInfo> autoBean =
+//               AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, InstanceStatusInfo.class, value);
+//            instanceStatusesList.add(autoBean.as());
+//         }
+//      }
+//      catch (Exception e)
+//      {
+//         throw new UnmarshallerException("Can't parse security group list." + e.getMessage());
+//      }
+//   }
+//
+//   /**
+//    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+//    */
+//   @Override
+//   public List<InstanceStatusInfo> getPayload()
+//   {
+//      return instanceStatusesList;
+//   }
 
 }
