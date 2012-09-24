@@ -359,12 +359,12 @@ public class EC2
       return instanceInfos;
    }
 
-   public void stopInstance(boolean force, List<String> instanceIds) throws AWSException
+   public void stopInstance(Boolean force, String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         stopInstance(ec2Client, force, instanceIds);
+         stopInstance(ec2Client, force, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -376,19 +376,19 @@ public class EC2
       }
    }
 
-   private void stopInstance(AmazonEC2 ec2Client, boolean force, List<String> instanceIds)
+   private void stopInstance(AmazonEC2 ec2Client, Boolean force, String instanceId)
    {
       ec2Client.stopInstances(new StopInstancesRequest()
       .withForce(force)
-      .withInstanceIds(instanceIds));
+      .withInstanceIds(instanceId));
    }
 
-   public void startInstance(List<String> instanceIds) throws AWSException
+   public void startInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         startInstance(ec2Client, instanceIds);
+         startInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -400,18 +400,18 @@ public class EC2
       }
    }
 
-   private void startInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void startInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.startInstances(new StartInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
-   public void rebootInstance(List<String> instanceIds) throws AWSException
+   public void rebootInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         rebootInstance(ec2Client, instanceIds);
+         rebootInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -423,18 +423,18 @@ public class EC2
       }
    }
 
-   private void rebootInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void rebootInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.rebootInstances(new RebootInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
-   public void terminateInstance(List<String> instanceIds) throws AWSException
+   public void terminateInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         terminateInstance(ec2Client, instanceIds);
+         terminateInstance(ec2Client, instanceId);
       }
       catch (AmazonClientException e)
       {
@@ -446,10 +446,10 @@ public class EC2
       }
    }
 
-   private void terminateInstance(AmazonEC2 ec2Client, List<String> instanceIds)
+   private void terminateInstance(AmazonEC2 ec2Client, String instanceId)
    {
       ec2Client.terminateInstances(new TerminateInstancesRequest()
-         .withInstanceIds(instanceIds));
+         .withInstanceIds(instanceId));
    }
 
    public List<InstanceStatusInfo> getStatus(int maxResult,
