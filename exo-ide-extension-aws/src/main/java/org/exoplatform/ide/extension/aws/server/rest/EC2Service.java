@@ -29,13 +29,16 @@ import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -50,6 +53,25 @@ public class EC2Service
    public EC2Service()
    {
    }
+
+   //
+
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws AWSException
+   {
+      ec2.login(credentials.get("access_key"), credentials.get("secret_key"));
+   }
+
+   @Path("logout")
+   @POST
+   public void logout() throws AWSException
+   {
+      ec2.logout();
+   }
+
+   //
 
    @Path("images")
    @GET
