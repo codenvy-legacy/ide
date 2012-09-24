@@ -116,19 +116,23 @@ public class EnvironmentInfoImpl implements EnvironmentInfo
 
       public Builder created(Date created)
       {
-         if (created != null)
+         if (created == null)
          {
-            this.created = created.getTime();
+            this.created = -1;
+            return this;
          }
+         this.created = created.getTime();
          return this;
       }
 
       public Builder updated(Date updated)
       {
-         if (updated != null)
+         if (updated == null)
          {
-            this.updated = updated.getTime();
+            this.updated = -1;
+            return this;
          }
+         this.updated = updated.getTime();
          return this;
       }
 
