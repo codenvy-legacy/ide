@@ -35,8 +35,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -62,6 +64,25 @@ public class S3Service
    public S3Service()
    {
    }
+
+   //
+
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws AWSException
+   {
+      s3.login(credentials.get("access_key"), credentials.get("secret_key"));
+   }
+
+   @Path("logout")
+   @POST
+   public void logout() throws AWSException
+   {
+      s3.logout();
+   }
+
+   //
 
    @Path("buckets/create")
    @POST
