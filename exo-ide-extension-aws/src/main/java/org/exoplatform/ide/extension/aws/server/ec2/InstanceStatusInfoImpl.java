@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.aws.server.ec2;
 
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatus;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class InstanceStatusImpl implements InstanceStatus
+public class InstanceStatusInfoImpl implements InstanceStatusInfo
 {
    private String instanceId;
    private String availabilityZone;
@@ -33,16 +33,16 @@ public class InstanceStatusImpl implements InstanceStatus
    private String instanceStatus;
    private String systemStatus;
 
-   public InstanceStatusImpl()
+   public InstanceStatusInfoImpl()
    {
    }
 
-   public InstanceStatusImpl(String instanceId,
-                             String availabilityZone,
-                             Integer instanceStateCode,
-                             String instanceStateName,
-                             String instanceStatus,
-                             String systemStatus)
+   public InstanceStatusInfoImpl(String instanceId,
+                                 String availabilityZone,
+                                 Integer instanceStateCode,
+                                 String instanceStateName,
+                                 String instanceStatus,
+                                 String systemStatus)
    {
       this.instanceId = instanceId;
       this.availabilityZone = availabilityZone;
@@ -127,7 +127,7 @@ public class InstanceStatusImpl implements InstanceStatus
    @Override
    public String toString()
    {
-      return "InstanceStatusImpl{" +
+      return "InstanceStatusInfoImpl{" +
          "instanceId='" + instanceId + '\'' +
          ", availabilityZone='" + availabilityZone + '\'' +
          ", instanceStateCode=" + instanceStateCode +

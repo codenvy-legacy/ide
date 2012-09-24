@@ -29,6 +29,7 @@ import com.amazonaws.services.ec2.model.DescribeInstanceStatusResult;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.Placement;
 import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.Region;
@@ -41,7 +42,7 @@ import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatus;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
@@ -451,7 +452,7 @@ public class EC2
          .withInstanceIds(instanceIds));
    }
 
-   public List<InstanceStatus> getStatus(int maxResult,
+   public List<InstanceStatusInfo> getStatus(int maxResult,
                          Boolean includeAllInstances,
                          String nextToken) throws AWSException
    {
@@ -470,7 +471,7 @@ public class EC2
       }
    }
 
-   private List<InstanceStatus> getStatus(AmazonEC2 ec2Client,
+   private List<InstanceStatusInfo> getStatus(AmazonEC2 ec2Client,
                           int maxResult,
                           Boolean includeAllInstances,
                           String nextToken)
@@ -482,13 +483,13 @@ public class EC2
             .withNextToken(nextToken)
       );
 
-      List<com.amazonaws.services.ec2.model.InstanceStatus> instanceStatuses = result.getInstanceStatuses();
-      List<InstanceStatus> ec2Statuses = new ArrayList<InstanceStatus>(instanceStatuses.size());
+      List<InstanceStatus> instanceStatuses = result.getInstanceStatuses();
+      List<InstanceStatusInfo> ec2Statuses = new ArrayList<InstanceStatusInfo>(instanceStatuses.size());
 
       for (com.amazonaws.services.ec2.model.InstanceStatus status : instanceStatuses)
       {
          ec2Statuses.add(
-            new InstanceStatusImpl(
+            new InstanceStatusInfoImpl(
                status.getInstanceId(),
                status.getAvailabilityZone(),
                status.getInstanceState().getCode(),
@@ -502,12 +503,12 @@ public class EC2
       return ec2Statuses;
    }
 
-//   public List<Reservation> getInstances() throws AWSException
+//   public void getInstances() throws AWSException
 //   {
 //      AmazonEC2 ec2Client = getEC2Client();
 //      try
 //      {
-//         return getInstances(ec2Client);
+//         //TODO return getInstances(ec2Client) result
 //      }
 //      catch (AmazonClientException e)
 //      {
@@ -519,13 +520,12 @@ public class EC2
 //      }
 //   }
 //
-//   private List<Reservation> getInstances(AmazonEC2 ec2Client)
+//   private void getInstances(AmazonEC2 ec2Client)
 //   {
 //      DescribeInstancesResult result = ec2Client.describeInstances(
 //         new DescribeInstancesRequest()
 //      );
 //
-//      return result.getReservations();
 //   }
 
    //

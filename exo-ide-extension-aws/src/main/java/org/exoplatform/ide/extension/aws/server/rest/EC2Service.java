@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.ec2.EC2;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatus;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RebootInstanceRequest;
@@ -138,7 +138,7 @@ public class EC2Service
 
    @Path("instance/status")
    @GET
-   public List<InstanceStatus> getStatus(StatusRequest request) throws AWSException
+   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
    {
       return ec2.getStatus(
          request.getMaxResult(),
@@ -148,9 +148,8 @@ public class EC2Service
 //
 //   @Path("instance/list")
 //   @GET
-//   public List<Reservation> getInstances() throws AWSException
+//   public void getInstances() throws AWSException
 //   {
-//      return ec2.getInstances();
 //      //TODO get list of instances for this owner and return to client
 //   }
 }

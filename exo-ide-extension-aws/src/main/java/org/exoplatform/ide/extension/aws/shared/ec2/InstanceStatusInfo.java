@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.aws.shared.ec2;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface InstanceStatus
+public interface InstanceStatusInfo
 {
    String getInstanceId();
 
