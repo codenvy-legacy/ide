@@ -26,13 +26,9 @@ import java.util.List;
  */
 public interface StatusRequest
 {
-   List<String> getInstanceIds();
+   Boolean getIncludeAllInstances();
 
-   void setInstanceIds(List<String> instanceIds);
-
-   boolean getIncludeAllInstances();
-
-   void setIncludeAllInstances(boolean includeAllInstances);
+   void setIncludeAllInstances(Boolean includeAllInstances);
 
    String getNextToken();
 
