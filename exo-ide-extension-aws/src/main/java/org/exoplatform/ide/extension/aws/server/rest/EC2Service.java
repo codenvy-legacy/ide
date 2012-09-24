@@ -27,7 +27,6 @@ import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -135,11 +134,8 @@ public class EC2Service
 
    @Path("instance/status")
    @GET
-   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
+   public List<InstanceStatusInfo> getStatus() throws AWSException
    {
-      return ec2.getStatus(
-         request.getMaxResult(),
-         request.getIncludeAllInstances(),
-         request.getNextToken());
+      return null;
    }
 }
