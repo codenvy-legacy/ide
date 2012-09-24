@@ -359,12 +359,12 @@ public class EC2
       return instanceInfos;
    }
 
-   public void stopInstance(Boolean force, String instanceId) throws AWSException
+   public void stopInstance(String instanceId, boolean force) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
       try
       {
-         stopInstance(ec2Client, force, instanceId);
+         stopInstance(ec2Client, instanceId, force);
       }
       catch (AmazonClientException e)
       {
@@ -376,7 +376,7 @@ public class EC2
       }
    }
 
-   private void stopInstance(AmazonEC2 ec2Client, Boolean force, String instanceId)
+   private void stopInstance(AmazonEC2 ec2Client, String instanceId, boolean force)
    {
       ec2Client.stopInstances(new StopInstancesRequest()
       .withForce(force)

@@ -116,7 +116,7 @@ public class EC2Service
    @POST
    public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force) throws AWSException
    {
-      ec2.stopInstance(force, id);
+      ec2.stopInstance(id, force);
    }
 
    @Path("instance/reboot/{id}")
