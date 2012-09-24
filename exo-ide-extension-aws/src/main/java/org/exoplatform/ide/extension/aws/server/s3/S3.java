@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
+import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
@@ -51,19 +52,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.StreamHandler;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class S3
+public class S3 extends AWSClient
 {
-   private final AWSAuthenticator authenticator;
-
    public S3(AWSAuthenticator authenticator)
    {
-      this.authenticator = authenticator;
+      super(authenticator);
    }
 
    public S3Bucket createBucket(String name, S3Region region) throws AWSException
@@ -302,7 +300,7 @@ public class S3
       return s3ObjectsList;
    }
 
-   public void deleteObject(String s3Bucket, String s3key)  throws AWSException
+   public void deleteObject(String s3Bucket, String s3key) throws AWSException
    {
       try
       {

@@ -30,8 +30,6 @@ import com.google.gwt.user.cellview.client.Column;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +68,7 @@ public class ObjectGrid extends ListGrid<S3Object>
          @Override
          public String getValue(S3Object object)
          {
-            return object.geteTag();
+            return object.getETag();
          }
       };
 

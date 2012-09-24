@@ -73,10 +73,12 @@ public class S3ObjectImpl implements S3Object
 
       public Builder updated(Date updated)
       {
-         if (updated != null)
+         if (updated == null)
          {
-            this.updated = updated.getTime();
+            this.updated = -1;
+            return this;
          }
+         this.updated = updated.getTime();
          return this;
       }
 
@@ -138,13 +140,13 @@ public class S3ObjectImpl implements S3Object
    }
 
    @Override
-   public String geteTag()
+   public String getETag()
    {
       return eTag;
    }
 
    @Override
-   public void seteTag(String eTag)
+   public void setETag(String eTag)
    {
       this.eTag = eTag;
    }
