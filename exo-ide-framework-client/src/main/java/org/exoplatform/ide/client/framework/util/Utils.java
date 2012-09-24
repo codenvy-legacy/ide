@@ -384,5 +384,9 @@ public class Utils
    public static native String getAuthorizationContext() /*-{
 		return $wnd.authorizationContext;
    }-*/;
+   
+   public static native String getRestContext() /*-{
+     return $wnd.appConfig.context;
+   }-*/;
 
 }
