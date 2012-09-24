@@ -257,11 +257,11 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    public void getEnvironmentInfo(String environmentId, AsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException
    {
-      StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(ENVIRONMENT_INFO).append("?id=").append(environmentId);
+      StringBuilder url =
+         new StringBuilder(restServiceContext).append(ENVIRONMENT_INFO).append("/").append(environmentId);
 
-      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**

@@ -33,6 +33,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -138,6 +139,8 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
     * Delay in millisecond between environment status checking.
     */
    private static final int delay = 2000;
+
+   protected RequestStatusHandler statusHandler;
 
    public CreateApplicationPresenter()
    {
@@ -248,6 +251,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       display.enableFinishButton(false);
       display.getLaunchEnvField().setValue(true);
       getSolutionStacks();
+      statusHandler = new EnvironmentRequestStatusHandler(display.getEnvNameField().getValue());
    }
 
    /**
@@ -411,6 +415,8 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
 
    public void createEnvironment(final String applicationName)
    {
+      statusHandler.requestInProgress(openedProject.getId());
+
       final String environmentName = display.getEnvNameField().getValue();
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
@@ -440,6 +446,8 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                @Override
                protected void processFail(Throwable exception)
                {
+                  statusHandler.requestError(openedProject.getId(), exception);
+
                   String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environmentName);
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
@@ -486,9 +494,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                   @Override
                   protected void onSuccess(EnvironmentInfo result)
                   {
-                     // TODO:
-                     //start animation
-
                      updateEnvironmentStatus(result);
                      if (result.getStatus() == EnvironmentStatus.Launching)
                      {
@@ -499,22 +504,18 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     // TODO:
-                     //stop checking status
-                     //stop animation
-
                      String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environment.getName());
                      if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                      {
                         message += "<br>" + ((ServerException)exception).getMessage();
                      }
                      IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                     statusHandler.requestError(openedProject.getId(), exception);
                   }
                });
          }
          catch (RequestException e)
          {
-            // TODO Auto-generated catch block
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
@@ -524,10 +525,22 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
    {
       if (environment.getStatus() == EnvironmentStatus.Ready)
       {
-         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentSuccess(environment
-            .getName()), Type.INFO));
-         IDE.fireEvent(new OutputEvent(environment.getEndpointUrl(), Type.INFO));
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationStartedOnUrl(
+            environment.getApplicationName(), getAppUrl(environment)), Type.INFO));
+
+         statusHandler.requestFinished(openedProject.getId());
       }
+   }
+
+   private String getAppUrl(EnvironmentInfo environment)
+   {
+      String appUrl = environment.getEndpointUrl();
+      if (!appUrl.startsWith("http"))
+      {
+         appUrl = "http://" + appUrl;
+      }
+      appUrl = "<a href=\"" + appUrl + "\" target=\"_blank\">" + appUrl + "</a>";
+      return appUrl;
    }
 
    /**

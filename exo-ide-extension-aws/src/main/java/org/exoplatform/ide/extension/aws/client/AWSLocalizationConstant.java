@@ -170,6 +170,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.environment.solution.stack")
    String createEnvironmentSolutionStack();
 
+   @Key("create.environment.launch")
+   String createEnvironmentLaunch();
+
    @Key("create.environment.launching")
    String createEnvironmentLaunching(String environment);
 
@@ -178,6 +181,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("create.application.fail")
    String createApplicationFailed(String application);
+
+   @Key("create.application.started")
+   String createApplicationStartedOnUrl(String name, String url);
 
    @Key("create.environment.success")
    String createEnvironmentSuccess(String environment);
