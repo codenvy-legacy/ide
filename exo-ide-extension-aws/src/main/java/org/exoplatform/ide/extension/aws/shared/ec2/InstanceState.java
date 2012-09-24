@@ -19,32 +19,39 @@
 package org.exoplatform.ide.extension.aws.shared.ec2;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface InstanceStatusInfo
+public enum InstanceState
 {
-   String getInstanceId();
+   pending("pending"),
+   running("running"),
+   shutting_down("shutting-down"),
+   terminated("terminated"),
+   stopping("stopping"),
+   stopped("stopped");
 
-   void setInstanceId(String instanceId);
+   private final String value;
 
-   String getAvailabilityZone();
+   private InstanceState(String value)
+   {
+      this.value = value;
+   }
 
-   void setAvailabilityZone(String availabilityZone);
+   public String toString()
+   {
+      return value;
+   }
 
-   Integer getInstanceStateCode();
-
-   void setInstanceStateCode(Integer instanceStateCode);
-
-   String getInstanceStateName();
-
-   void setInstanceStateName(String instanceStateName);
-
-   String getInstanceStatus();
-
-   void setInstanceStatus(String status);
-
-   String getSystemStatus();
-
-   void setSystemStatus(String status);
+   public static InstanceState fromValue(String value)
+   {
+      for (InstanceState v : InstanceState.values())
+      {
+         if (v.value.equals(value))
+         {
+            return v;
+         }
+      }
+      throw new IllegalArgumentException("Invalid value '" + value + "' ");
+   }
 }
