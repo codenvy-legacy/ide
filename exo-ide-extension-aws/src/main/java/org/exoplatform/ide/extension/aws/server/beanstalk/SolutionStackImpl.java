@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.aws.server.beanstalk;
 
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,6 +57,10 @@ public class SolutionStackImpl implements SolutionStack
    @Override
    public List<String> getPermittedFileTypes()
    {
+      if (permittedFileTypes == null)
+      {
+         permittedFileTypes = new ArrayList<String>();
+      }
       return permittedFileTypes;
    }
 

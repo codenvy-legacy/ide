@@ -43,7 +43,6 @@ import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsResult;
 import com.amazonaws.services.elasticbeanstalk.model.EnvironmentDescription;
 import com.amazonaws.services.elasticbeanstalk.model.EventDescription;
-import com.amazonaws.services.elasticbeanstalk.model.OptionRestrictionRegex;
 import com.amazonaws.services.elasticbeanstalk.model.RebuildEnvironmentRequest;
 import com.amazonaws.services.elasticbeanstalk.model.RestartAppServerRequest;
 import com.amazonaws.services.elasticbeanstalk.model.S3Location;
@@ -62,6 +61,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
+import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
@@ -94,41 +94,11 @@ import java.util.List;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: Beanstalk.java Aug 23, 2012
  */
-public class Beanstalk
+public class Beanstalk extends AWSClient
 {
-   private final AWSAuthenticator authenticator;
-
    public Beanstalk(AWSAuthenticator authenticator)
    {
-      this.authenticator = authenticator;
-   }
-
-   //
-
-   /**
-    * Login AWS Beanstalk API. Specified access and secret keys stored for next usage by current user.
-    *
-    * @param accessKey
-    *    AWS access key
-    * @param secret
-    *    AWS secret key
-    * @throws org.exoplatform.ide.extension.aws.server.AWSException
-    *    if any error occurs when attempt to login to Amazon server
-    */
-   public void login(String accessKey, String secret) throws AWSException
-   {
-      authenticator.login(accessKey, secret);
-   }
-
-   /**
-    * Remove access and secret keys previously saved for current user. User will be not able to use this class any more
-    * before next login.
-    *
-    * @throws AWSException
-    */
-   public void logout() throws AWSException
-   {
-      authenticator.logout();
+      super(authenticator);
    }
 
    //
@@ -162,7 +132,8 @@ public class Beanstalk
       List<SolutionStack> stacks = new ArrayList<SolutionStack>(awsStacks.size());
       for (SolutionStackDescription awsStack : awsStacks)
       {
-         stacks.add(new SolutionStackImpl(awsStack.getSolutionStackName(), awsStack.getPermittedFileTypes()));
+         stacks.add(new SolutionStackImpl(awsStack.getSolutionStackName(),
+            new ArrayList<String>(awsStack.getPermittedFileTypes())));
       }
       return stacks;
    }
@@ -203,7 +174,7 @@ public class Beanstalk
       List<ConfigurationOptionInfo> options = new ArrayList<ConfigurationOptionInfo>(awsOptions.size());
       for (ConfigurationOptionDescription awsOption : awsOptions)
       {
-         ConfigurationOptionInfoImpl.Builder builder = new ConfigurationOptionInfoImpl.Builder()
+         options.add(new ConfigurationOptionInfoImpl.Builder()
             .name(awsOption.getName())
             .namespace(awsOption.getNamespace())
             .defaultValue(awsOption.getDefaultValue())
@@ -213,13 +184,9 @@ public class Beanstalk
             .valueOptions(awsOption.getValueOptions())
             .minValue(awsOption.getMinValue())
             .maxValue(awsOption.getMaxValue())
-            .maxLength(awsOption.getMaxLength());
-         OptionRestrictionRegex regex = awsOption.getRegex();
-         if (regex != null)
-         {
-            builder.optionRestriction(regex.getLabel(), regex.getPattern());
-         }
-         options.add(builder.build());
+            .maxLength(awsOption.getMaxLength())
+            .optionRestriction(awsOption.getRegex())
+            .build());
       }
       return options;
    }
@@ -694,8 +661,8 @@ public class Beanstalk
                awsApplication.getDescription(),
                awsApplication.getDateCreated(),
                awsApplication.getDateUpdated(),
-               awsApplication.getVersions(),
-               awsApplication.getConfigurationTemplates())
+               new ArrayList<String>(awsApplication.getVersions()),
+               new ArrayList<String>(awsApplication.getConfigurationTemplates()))
          );
       }
       return applications;
@@ -828,7 +795,7 @@ public class Beanstalk
             .withTemplateName(sourceTemplateName));
       }
       CreateConfigurationTemplateResult result = beanstalkClient.createConfigurationTemplate(request);
-      ConfigurationTemplateImpl.Builder builder = new ConfigurationTemplateImpl.Builder()
+      return new ConfigurationTemplateImpl.Builder()
          .solutionStackName(result.getSolutionStackName())
          .applicationName(result.getApplicationName())
          .templateName(result.getTemplateName())
@@ -836,16 +803,9 @@ public class Beanstalk
          .environmentName(result.getEnvironmentName())
          .deploymentStatus(result.getDeploymentStatus())
          .created(result.getDateCreated())
-         .updated(result.getDateUpdated());
-      List<ConfigurationOptionSetting> awsOptions = result.getOptionSettings();
-      List<ConfigurationOption> newOptions = new ArrayList<ConfigurationOption>(awsOptions.size());
-      for (ConfigurationOptionSetting awsOption : awsOptions)
-      {
-         newOptions.add(new ConfigurationOptionImpl(awsOption.getNamespace(), awsOption.getOptionName(),
-            awsOption.getValue()));
-      }
-      builder.options(newOptions);
-      return builder.build();
+         .updated(result.getDateUpdated())
+         .options(result.getOptionSettings())
+         .build();
    }
 
    /**
@@ -916,7 +876,7 @@ public class Beanstalk
             .withApplicationName(applicationName)
             .withTemplateName(templateName)
             .withDescription(description));
-      ConfigurationTemplateImpl.Builder builder = new ConfigurationTemplateImpl.Builder()
+      return new ConfigurationTemplateImpl.Builder()
          .solutionStackName(result.getSolutionStackName())
          .applicationName(result.getApplicationName())
          .templateName(result.getTemplateName())
@@ -924,16 +884,9 @@ public class Beanstalk
          .environmentName(result.getEnvironmentName())
          .deploymentStatus(result.getDeploymentStatus())
          .created(result.getDateCreated())
-         .updated(result.getDateUpdated());
-      List<ConfigurationOptionSetting> awsOptions = result.getOptionSettings();
-      List<ConfigurationOption> newOptions = new ArrayList<ConfigurationOption>(awsOptions.size());
-      for (ConfigurationOptionSetting awsOption : awsOptions)
-      {
-         newOptions.add(new ConfigurationOptionImpl(awsOption.getNamespace(), awsOption.getOptionName(),
-            awsOption.getValue()));
-      }
-      builder.options(newOptions);
-      return builder.build();
+         .updated(result.getDateUpdated())
+         .options(result.getOptionSettings())
+         .build();
    }
 
    /**
@@ -1071,7 +1024,8 @@ public class Beanstalk
          .versionLabel(awsVersion.getVersionLabel())
          .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
          .created(awsVersion.getDateCreated())
-         .updated(awsVersion.getDateUpdated()).build();
+         .updated(awsVersion.getDateUpdated())
+         .build();
    }
 
    /**
@@ -1148,7 +1102,8 @@ public class Beanstalk
          .versionLabel(awsVersion.getVersionLabel())
          .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
          .created(awsVersion.getDateCreated())
-         .updated(awsVersion.getDateUpdated()).build();
+         .updated(awsVersion.getDateUpdated())
+         .build();
    }
 
    /**
@@ -1278,7 +1233,8 @@ public class Beanstalk
             .versionLabel(awsVersion.getVersionLabel())
             .s3Location(awsVersion.getSourceBundle().getS3Bucket(), awsVersion.getSourceBundle().getS3Key())
             .created(awsVersion.getDateCreated())
-            .updated(awsVersion.getDateUpdated()).build()
+            .updated(awsVersion.getDateUpdated())
+            .build()
          );
       }
       return versions;

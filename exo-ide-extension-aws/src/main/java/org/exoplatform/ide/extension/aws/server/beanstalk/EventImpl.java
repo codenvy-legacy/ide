@@ -49,10 +49,12 @@ public class EventImpl implements Event
 
       public Builder eventDate(Date eventDate)
       {
-         if (eventDate != null)
+         if (eventDate == null)
          {
-            this.eventDate = eventDate.getTime();
+            this.eventDate = -1;
+            return this;
          }
+         this.eventDate = eventDate.getTime();
          return this;
       }
 

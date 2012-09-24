@@ -21,19 +21,24 @@ package org.exoplatform.ide.extension.aws.server.rest;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.ec2.EC2;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+
 import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -48,6 +53,25 @@ public class EC2Service
    public EC2Service()
    {
    }
+
+   //
+
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws AWSException
+   {
+      ec2.login(credentials.get("access_key"), credentials.get("secret_key"));
+   }
+
+   @Path("logout")
+   @POST
+   public void logout() throws AWSException
+   {
+      ec2.logout();
+   }
+
+   //
 
    @Path("images")
    @GET
@@ -90,7 +114,7 @@ public class EC2Service
       return ec2.listAvailabilityZones();
    }
 
-   @Path("instance/run")
+   @Path("instances/run")
    @POST
    public List<String> runInstance(RunInstanceRequest request) throws AWSException
    {
@@ -104,38 +128,38 @@ public class EC2Service
        );
    }
 
-   @Path("instance/start/{id}")
+   @Path("instances/start/{id}")
    @POST
    public void startInstance(@PathParam("id") String id) throws AWSException
    {
       ec2.startInstance(id);
    }
 
-   @Path("instance/stop/{id}")
+   @Path("instances/stop/{id}")
    @POST
    public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force) throws AWSException
    {
       ec2.stopInstance(id, force);
    }
 
-   @Path("instance/reboot/{id}")
+   @Path("instances/reboot/{id}")
    @POST
    public void rebootInstance(@PathParam("id") String id) throws AWSException
    {
       ec2.rebootInstance(id);
    }
 
-   @Path("instance/terminate/{id}")
+   @Path("instances/terminate/{id}")
    @POST
    public void terminateInstance(@PathParam("id") String id) throws AWSException
    {
       ec2.terminateInstance(id);
    }
 
-   @Path("instance/status")
+   @Path("instances")
    @GET
-   public List<InstanceStatusInfo> getStatus() throws AWSException
+   public List<InstanceInfo> getInstances() throws AWSException
    {
-      return null;
+      return ec2.getInstances();
    }
 }

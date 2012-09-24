@@ -64,6 +64,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.launch.environment")
    String launchEnvironmentButton();
 
+   // Controls
    @Key("button.properties")
    String propertiesButton();
    
@@ -120,6 +121,15 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.manage.application.prompt")
    String manageApplicationControlPrompt();
 
+   @Key("control.ec2.management.id")
+   String ec2ManagementControlId();
+
+   @Key("control.ec2.management.title")
+   String ec2ManagementControlTitle();
+
+   @Key("control.ec2.management.promt")
+   String ec2ManagementControlPrompt();
+
    // Login View
    @Key("login.title")
    String loginTitle();
@@ -167,11 +177,17 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.environment.launch")
    String createEnvironmentLaunch();
 
+   @Key("create.environment.launching")
+   String createEnvironmentLaunching(String environment);
+
    @Key("create.application.success")
    String createApplicationSuccess(String application);
 
    @Key("create.application.fail")
    String createApplicationFailed(String application);
+
+   @Key("create.application.started")
+   String createApplicationStartedOnUrl(String name, String url);
 
    @Key("create.environment.success")
    String createEnvironmentSuccess(String environment);
@@ -295,4 +311,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.s3.managemnt.promt")
    String s3ManagementControlPrompt();
 
+   // EC2 Management View
+   @Key("management.ec2.id")
+   String managementEC2ViewTitle();
 }

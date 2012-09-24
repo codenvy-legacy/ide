@@ -16,35 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.ec2;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Handler for {@link ShowEC2ManagerEvent}
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: ShowEC2ManagerHandler.java Sep 21, 2012 10:04:28 AM azatsarynnyy $
+ *
  */
-public interface InstanceStatusInfo
+public interface ShowEC2ManagerHandler extends EventHandler
 {
-   String getInstanceId();
-
-   void setInstanceId(String instanceId);
-
-   String getAvailabilityZone();
-
-   void setAvailabilityZone(String availabilityZone);
-
-   Integer getInstanceStateCode();
-
-   void setInstanceStateCode(Integer instanceStateCode);
-
-   String getInstanceStateName();
-
-   void setInstanceStateName(String instanceStateName);
-
-   String getInstanceStatus();
-
-   void setInstanceStatus(String status);
-
-   String getSystemStatus();
-
-   void setSystemStatus(String status);
+   /**
+    * Perform actions, when user tries to manage Amazon EC2 virtual sever instances.
+    * 
+    * @param event {@link ShowEC2ManagerEvent}
+    */
+   void onShowEC2Manager(ShowEC2ManagerEvent event);
 }

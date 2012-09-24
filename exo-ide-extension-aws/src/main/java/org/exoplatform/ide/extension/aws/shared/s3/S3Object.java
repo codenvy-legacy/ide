@@ -59,7 +59,7 @@ public interface S3Object
     *
     * @return hex encoded MD5 hash of this object's contents
     */
-   String geteTag();
+   String getETag();
 
    /**
     * Set hex encoded MD5 hash of this object's contents, as computed by Amazon S3.
@@ -67,7 +67,7 @@ public interface S3Object
     * @param eTag
     *    hex encoded MD5 hash of this object's contents
     */
-   void seteTag(String eTag);
+   void setETag(String eTag);
 
    /**
     * Get size of object in bytes.

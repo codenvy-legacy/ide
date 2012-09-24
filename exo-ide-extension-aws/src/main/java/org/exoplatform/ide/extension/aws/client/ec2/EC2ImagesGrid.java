@@ -16,33 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
-
-import com.google.gwt.dom.client.Style.Unit;
+package org.exoplatform.ide.extension.aws.client.ec2;
 
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: ObjectGrid.java Sep 18, 2012 vetal $
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: EC2ImagesGrid.java Sep 21, 2012 3:07:04 PM azatsarynnyy $
  *
  */
-public class ObjectGrid extends ListGrid<S3Object>
+public class EC2ImagesGrid extends ListGrid<ImageInfo>
 {
-   private static final String ID = "ideS3ObjectGrid";
+   private static final String ID = "ideEC2ImagesGrid";
 
-   public ObjectGrid()
+   public EC2ImagesGrid()
    {
       setID(ID);
       initColumns();
@@ -53,75 +54,40 @@ public class ObjectGrid extends ListGrid<S3Object>
     */
    private void initColumns()
    {
-      Column<S3Object, String> keyCol = new Column<S3Object, String>(new TextCell())
+      Column<ImageInfo, String> amiIdCol = new Column<ImageInfo, String>(new TextCell())
       {
 
          @Override
-         public String getValue(S3Object s3object)
+         public String getValue(ImageInfo ec2Image)
          {
-            return s3object.getS3Key();
+            return ec2Image.getAmiId();
          }
       };
 
-      Column<S3Object, String> eTagCol = new Column<S3Object, String>(new TextCell())
+      Column<ImageInfo, String> statusCol = new Column<ImageInfo, String>(new TextCell())
       {
          @Override
-         public String getValue(S3Object object)
+         public String getValue(ImageInfo ec2Image)
          {
-            return object.getETag();
+            return ec2Image.getState().toString();
          }
       };
 
-      Column<S3Object, String> ownerCol = new Column<S3Object, String>(new TextCell())
+      Column<ImageInfo, String> sourceCol = new Column<ImageInfo, String>(new TextCell())
       {
          @Override
-         public String getValue(S3Object object)
+         public String getValue(ImageInfo ec2Image)
          {
-            return object.getOwner().getName();
+            return ec2Image.getManifest();
          }
       };
 
-      Column<S3Object, String> sizeCol = new Column<S3Object, String>(new TextCell())
-      {
-         @Override
-         public String getValue(S3Object object)
-         {
-            return String.valueOf(object.getSize());
-         }
-      };
-
-      Column<S3Object, String> storageCol = new Column<S3Object, String>(new TextCell())
-      {
-         @Override
-         public String getValue(S3Object object)
-         {
-            return object.getStorageClass();
-         }
-      };
-
-      Column<S3Object, String> lastModifiedCol = new Column<S3Object, String>(new TextCell())
-      {
-         @Override
-         public String getValue(S3Object object)
-         {
-            return new Date(object.getUpdated()).toString();
-         }
-      };
-      
-      getCellTable().addColumn(keyCol, "Key");
-      getCellTable().setColumnWidth(keyCol, 20, Unit.PCT );
-      getCellTable().addColumn(eTagCol, "ETag");
-      getCellTable().setColumnWidth(eTagCol, 20, Unit.PCT );
-      getCellTable().addColumn(ownerCol, "Owner");
-      getCellTable().setColumnWidth(ownerCol, 10, Unit.PCT );
-      getCellTable().addColumn(sizeCol, "Size");
-      getCellTable().setColumnWidth(sizeCol, 10, Unit.PCT );
-      getCellTable().addColumn(storageCol, "Storage Class");
-      getCellTable().setColumnWidth(storageCol, 15, Unit.PCT );
-      getCellTable().addColumn(lastModifiedCol, "Last Modified");
-      getCellTable().setColumnWidth(lastModifiedCol, 25, Unit.PCT );
-      
-      
+      getCellTable().addColumn(amiIdCol, "AMI ID");
+      getCellTable().setColumnWidth(amiIdCol, 20, Unit.PCT );
+      getCellTable().addColumn(statusCol, "Status");
+      getCellTable().setColumnWidth(statusCol, 20, Unit.PCT );
+      getCellTable().addColumn(sourceCol, "Source");
+      getCellTable().setColumnWidth(sourceCol, 40, Unit.PCT );
    }
 
 //   /**
@@ -163,7 +129,7 @@ public class ObjectGrid extends ListGrid<S3Object>
     * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
     */
    @Override
-   public void setValue(List<S3Object> value)
+   public void setValue(List<ImageInfo> value)
    {
       super.setValue(value);
       if (value != null && value.size() > 0)

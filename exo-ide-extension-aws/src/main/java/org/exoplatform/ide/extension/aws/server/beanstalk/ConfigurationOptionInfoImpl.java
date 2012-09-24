@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.extension.aws.server.beanstalk;
 
+import com.amazonaws.services.elasticbeanstalk.model.OptionRestrictionRegex;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionChangeSeverity;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionRestriction;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,7 +97,12 @@ public class ConfigurationOptionInfoImpl implements ConfigurationOptionInfo
 
       public Builder valueOptions(List<String> valueOptions)
       {
-         this.valueOptions = valueOptions;
+         if (valueOptions == null)
+         {
+            this.valueOptions = null;
+            return this;
+         }
+         this.valueOptions = new ArrayList<String>(valueOptions);
          return this;
       }
 
@@ -117,9 +124,14 @@ public class ConfigurationOptionInfoImpl implements ConfigurationOptionInfo
          return this;
       }
 
-      public Builder optionRestriction(String label, String pattern)
+      public Builder optionRestriction(OptionRestrictionRegex awsRegex)
       {
-         this.optionRestriction = new ConfigurationOptionRestrictionImpl(label, pattern);
+         if (awsRegex == null)
+         {
+            this.optionRestriction = null;
+            return this;
+         }
+         this.optionRestriction = new ConfigurationOptionRestrictionImpl(awsRegex.getLabel(), awsRegex.getPattern());
          return this;
       }
 
@@ -223,6 +235,10 @@ public class ConfigurationOptionInfoImpl implements ConfigurationOptionInfo
    @Override
    public List<String> getValueOptions()
    {
+      if (valueOptions == null)
+      {
+         valueOptions = new ArrayList<String>();
+      }
       return valueOptions;
    }
 

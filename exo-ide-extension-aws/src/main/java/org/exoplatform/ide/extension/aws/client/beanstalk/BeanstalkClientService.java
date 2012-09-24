@@ -135,6 +135,16 @@ public abstract class BeanstalkClientService
       CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
 
+   /**
+    * Get info about specified environment.
+    * 
+    * @param environmentId environment identifier
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getEnvironmentInfo(String environmentId, AsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException;
+
    public abstract void getVersions(String vfsId, String projectId,
       AsyncRequestCallback<List<ApplicationVersionInfo>> callback) throws RequestException;
 

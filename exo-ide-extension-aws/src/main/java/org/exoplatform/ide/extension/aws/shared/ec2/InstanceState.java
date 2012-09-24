@@ -16,43 +16,38 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.s3;
+package org.exoplatform.ide.extension.aws.shared.ec2;
 
-public enum S3Region
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public enum InstanceState
 {
-   US_Standard(null),
-   US_West("us-west-1"),
-   US_West_2("us-west-2"),
-   EU_Ireland("EU"),
-   AP_Singapore("ap-southeast-1"),
-   AP_Tokyo("ap-northeast-1"),
-   SA_SaoPaulo("sa-east-1");
+   pending("pending"),
+   running("running"),
+   shutting_down("shutting-down"),
+   terminated("terminated"),
+   stopping("stopping"),
+   stopped("stopped");
 
    private final String value;
 
-   private S3Region(String value)
+   private InstanceState(String value)
    {
       this.value = value;
    }
 
-   @Override
    public String toString()
    {
       return value;
    }
 
-   public static S3Region fromValue(String value)
+   public static InstanceState fromValue(String value)
    {
-      for (S3Region v : S3Region.values())
+      for (InstanceState v : InstanceState.values())
       {
-         if (v.value == null)
-         {
-            if (value == null)
-            {
-               return v;
-            }
-         }
-         else if (v.value.equals(value))
+         if (v.value.equals(value))
          {
             return v;
          }
