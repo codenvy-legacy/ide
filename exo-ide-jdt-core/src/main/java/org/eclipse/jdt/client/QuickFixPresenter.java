@@ -35,6 +35,7 @@ import org.eclipse.jdt.client.internal.text.correction.JavaCorrectionProcessor;
 import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.internal.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jdt.client.runtime.CoreException;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -117,7 +118,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
          problemClickHandler.removeHandler();
          problemClickHandler = null;
       }
-      if (event.getFile() == null)
+      if (event.getFile() == null || !MimeType.APPLICATION_JAVA.equals(event.getFile().getMimeType()))
          return;
 
       if (event.getEditor() instanceof Markable)
