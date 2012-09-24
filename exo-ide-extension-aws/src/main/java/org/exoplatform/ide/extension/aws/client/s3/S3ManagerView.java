@@ -107,6 +107,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    @Override
    public void setS3Buckets(List<S3Bucket> bucketsList)
    {
+      buckets.clear();
       buckets.setVisibleItemCount(bucketsList.size());
 
       for (S3Bucket s3Bucket : bucketsList)

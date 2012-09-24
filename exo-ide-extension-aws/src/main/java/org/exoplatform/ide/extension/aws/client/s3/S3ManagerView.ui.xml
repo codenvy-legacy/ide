@@ -29,7 +29,7 @@
 							<f:ImageButton ui:field="deleteBucketButton" width="90px" height="22" text="{locale.deleteButton}"
 								imageName="delete"></f:ImageButton>
 							<f:ImageButton ui:field="createBucketButton" width="90px" height="22" text="{locale.createButton}"
-								imageName="create"></f:ImageButton>
+								imageName="yes"></f:ImageButton>
 						</g:HorizontalPanel>
 						<g:ListBox ui:field="buckets" visibleItemCount="10"></g:ListBox>
 					</g:VerticalPanel>
