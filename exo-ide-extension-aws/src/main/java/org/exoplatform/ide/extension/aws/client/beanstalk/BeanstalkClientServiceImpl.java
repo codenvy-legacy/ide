@@ -74,6 +74,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
 
+   private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info";
+
    private static final String VERSIONS = BASE_URL + "/apps/versions";
 
    private static final String VERSION_DELETE = BASE_URL + "/apps/versions/delete";
@@ -249,6 +251,21 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironmentInfo(java.lang.String,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getEnvironmentInfo(String environmentId, AsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException
+   {
+      StringBuilder url =
+         new StringBuilder(restServiceContext).append(ENVIRONMENT_INFO).append("/").append(environmentId);
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getVersions(java.lang.String,
     *      java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -305,4 +322,5 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
+
 }

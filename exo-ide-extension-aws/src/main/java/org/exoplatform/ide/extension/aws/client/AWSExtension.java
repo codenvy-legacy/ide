@@ -36,6 +36,8 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.C
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -75,6 +77,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new DeleteVersionPresenter();
       new CreateVersionPresenter();
       new CreateEnvironmentPresenter();
+      //new EC2Manager();
       new S3Manager();
    }
 
@@ -85,6 +88,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      //new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    public static boolean canBeDeployedToBeanstalk(ProjectModel project)
