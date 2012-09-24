@@ -165,7 +165,7 @@ public class S3Service
             {
                throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
             }
-            if ("name".equals(item.getFieldName()))
+            if ("file".equals(item.getFieldName()))
             {
                name = item.getString().trim();
             }
@@ -177,6 +177,10 @@ public class S3Service
             {
                mediaType = MediaType.valueOf(m);
             }
+         }
+         else if ("name".equals(item.getFieldName()))
+         {
+            name = item.getString().trim();
          }
          
       }

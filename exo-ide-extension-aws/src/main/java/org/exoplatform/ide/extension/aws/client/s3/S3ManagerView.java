@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -52,6 +54,9 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    private static final int HEIGHT = 720;
 
    @UiField
+   ImageButton deleteBucketButton;
+   
+   @UiField
    ImageButton deleteButton;
    
    @UiField
@@ -68,22 +73,10 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    
    @UiField
    ImageButton backButton;
+   
+   @UiField
+   ImageButton refreshButton;
 
-   //   private static final String NAME_FIELD_ID = "ideCreateApplicationViewNameField";
-   //
-   //   private static final String DESCRIPTION_FIELD_ID = "ideCreateApplicationViewDescriptionField";
-   //
-   //   private static final String S3_BUCKET_FIELD_ID = "ideCreateApplicationViewS3BucketField";
-   //
-   //   private static final String S3_KEY_FIELD_ID = "ideCreateApplicationViewS3KeyField";
-   //
-   //   private static final String NEXT_BUTTON_ID = "ideCreateApplicationViewNextButton";
-   //
-   //   private static final String BACK_BUTTON_ID = "ideCreateApplicationViewBackButton";
-   //
-   //   private static final String FINISH_BUTTON_ID = "ideCreateApplicationViewFinishButton";
-   //
-   //   private static final String CANCEL_BUTTON_ID = "ideCreateApplicationViewCancelButton";
 
    private static S3ManagerViewUiBinder uiBinder = GWT.create(S3ManagerViewUiBinder.class);
 
@@ -164,9 +157,27 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    }
    
    @Override
+   public HasClickHandlers getRefreshButton()
+   {
+      return refreshButton;
+   }
+   
+   @Override
    public HasClickHandlers getUploadButton()
    {
       return uploadButton;
+   }
+   
+   @Override
+   public void setEnableBackButton(boolean enable)
+   {
+      backButton.setEnabled(enable);
+   }
+   
+   @Override
+   public HasClickHandlers getDeleteBucketButton()
+   {
+      return deleteBucketButton;
    }
 
 }

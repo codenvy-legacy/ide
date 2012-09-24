@@ -22,6 +22,7 @@ package org.exoplatform.ide.extension.aws.client.beanstalk;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
@@ -71,7 +72,7 @@ public abstract class BeanstalkClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void getAvailableSolutionStacks(BeanstalkAsyncRequestCallback<List<SolutionStack>> callback)
+   public abstract void getAvailableSolutionStacks(AwsAsyncRequestCallback<List<SolutionStack>> callback)
       throws RequestException;
 
    /**
@@ -130,6 +131,6 @@ public abstract class BeanstalkClientService
    public abstract void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
 
    public abstract void createEnvironment(String vfsId, String projectId,
-      CreateEnvironmentRequest createEnvironmentRequest, BeanstalkAsyncRequestCallback<EnvironmentInfo> callback)
+      CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
 }

@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
@@ -47,9 +48,10 @@ public class S3ServiceImpl extends S3Service
 
    private static final String OBJECT_DELETE = BASE_URL + "/objects/delete/";
 
-//   private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
+   private static final String BUCKETS_DELETE = BASE_URL + "/buckets/delete/";
+   
+   private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
 //
-//   private static final String BUCKETS_DELETE = BASE_URL + "/buckets/delete";
 //
 //   private static final String OBJECT_PUT = BASE_URL + "/objects/put";
 //
@@ -79,7 +81,7 @@ public class S3ServiceImpl extends S3Service
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getBuckets(AsyncRequestCallback<List<S3Bucket>> callback) throws RequestException
+   public void getBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback) throws RequestException
    {
       String url = restServiceContext + BUCKETS;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
@@ -102,6 +104,25 @@ public class S3ServiceImpl extends S3Service
       throws RequestException
    {
       String url = restServiceContext + OBJECT_DELETE + s3Bucket + "?s3key=" + s3key;
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+      
+   }
+   
+   
+   @Override
+   public void deleteBucket(AsyncRequestCallback<String> callback, String bucketId)
+      throws RequestException
+   {
+      String url = restServiceContext + BUCKETS_DELETE + bucketId;
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+   }
+   
+   
+   @Override
+   public void createBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback, String name, String region)
+      throws RequestException
+   {
+      String url = restServiceContext + BUCKETS_DELETE + "?name=" + name + "&region=" + region;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
       
    }

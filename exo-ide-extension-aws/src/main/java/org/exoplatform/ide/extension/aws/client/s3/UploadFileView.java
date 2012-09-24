@@ -183,6 +183,7 @@ public class UploadFileView extends ViewImpl implements
    public void setNameHiddedField(String name)
    {
       nameHiddenField.setValue(name);
+      nameHiddenField.setName("name");
       if (postFieldsPanel.getWidgetIndex(nameHiddenField) == -1)
          postFieldsPanel.add(nameHiddenField);
    }

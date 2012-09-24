@@ -32,7 +32,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginPresenter;
+import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 

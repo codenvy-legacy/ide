@@ -41,9 +41,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -208,7 +208,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       try
       {
          BeanstalkClientService.getInstance().deleteApplication(currentVfs.getId(), openedProject.getId(),
-            new BeanstalkAsyncRequestCallback<Object>(new LoggedInHandler()
+            new AwsAsyncRequestCallback<Object>(new LoggedInHandler()
             {
 
                @Override
