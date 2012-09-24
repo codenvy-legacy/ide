@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -105,9 +106,13 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private String fileName;
    
    private String id;
+   
+   private Loader loader; 
 
    public UploadFilePresenter()
    {
+      loader = new GWTLoader();
+      loader.setMessage("Uploading...");
       IDE.addHandler(UploadFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -284,7 +289,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          mimeType = null;
       }
       String name = display.getFileNameField().getValue();
-      String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/object/upload";
+      String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + id;
       display.getUploadForm().setAction(uploadUrl);
       display.setMimeTypeHiddedField(mimeType);
       display.setNameHiddedField(name);

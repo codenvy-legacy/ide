@@ -16,35 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.shared.ec2;
+package org.exoplatform.ide.extension.aws.client.login;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
- * @version $Id: $
+ * Handler for {@link LoginEvent}.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 14, 2012 3:04:53 PM anya $
+ * 
  */
-public interface InstanceStatusInfo
+public interface LoginHandler extends EventHandler
 {
-   String getInstanceId();
-
-   void setInstanceId(String instanceId);
-
-   String getAvailabilityZone();
-
-   void setAvailabilityZone(String availabilityZone);
-
-   Integer getInstanceStateCode();
-
-   void setInstanceStateCode(Integer instanceStateCode);
-
-   String getInstanceStateName();
-
-   void setInstanceStateName(String instanceStateName);
-
-   String getInstanceStatus();
-
-   void setInstanceStatus(String status);
-
-   String getSystemStatus();
-
-   void setSystemStatus(String status);
+   /**
+    * Perform login operations.
+    * 
+    * @param event
+    */
+   void onLogin(LoginEvent event);
 }

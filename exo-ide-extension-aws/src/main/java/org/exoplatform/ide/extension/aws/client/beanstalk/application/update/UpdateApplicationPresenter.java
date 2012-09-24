@@ -38,9 +38,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
@@ -165,7 +165,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Vie
             vfsId,
             projectId,
             updateApplicationRequest,
-            new BeanstalkAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
                new LoggedInHandler()
                {
 

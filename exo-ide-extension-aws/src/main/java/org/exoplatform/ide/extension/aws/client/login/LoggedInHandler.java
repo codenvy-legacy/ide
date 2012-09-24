@@ -16,23 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.login;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.extension.aws.client.login;
 
 /**
- * Handler for {@link LoginEvent}.
- * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 3:04:53 PM anya $
+ * @version $Id: Sep 18, 2012 11:15:01 AM anya $
  * 
  */
-public interface LoginHandler extends EventHandler
+public interface LoggedInHandler
 {
-   /**
-    * Perform login operations.
-    * 
-    * @param event
-    */
-   void onLogin(LoginEvent event);
+   void onLoggedIn();
 }

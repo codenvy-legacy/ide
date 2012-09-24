@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.shared.ec2;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum Image
+public enum ImageType
 {
    t1_micro("Micro", "t1.micro", 1, "Up to 2 ECUs", "613 MiB"),
    m1_small("Small", "m1.small", 1, "1 ECU", "1.7 GiB"),
@@ -50,7 +49,7 @@ public enum Image
    static
    {
       List<String> types = new ArrayList<String>(11);
-      for (Image image : Image.values())
+      for (ImageType image : ImageType.values())
       {
          types.add(image.getId());
       }
@@ -62,7 +61,7 @@ public enum Image
       return availableInstanceTypes;
    }
 
-   private Image(String name, String id, int cpuCores, String cpuUnits, String memory)
+   private ImageType(String name, String id, int cpuCores, String cpuUnits, String memory)
    {
       this.name = name;
       this.id = id;

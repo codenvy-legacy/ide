@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.aws.client.s3;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
@@ -45,6 +46,13 @@ public abstract class S3Service
       instance = this;
    }
 
+   /**
+    * Returns available buckets.
+    * 
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback) throws RequestException;
 
    /**
     * Returns available buckets.
@@ -52,10 +60,9 @@ public abstract class S3Service
     * @param callback
     * @throws RequestException
     */
-   public abstract void getBuckets(AsyncRequestCallback<List<S3Bucket>> callback)
+   public abstract void createBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback, String name, String region)
       throws RequestException;
-   
-   
+
    /**
     * Returns object list in the bucket.
     * 
@@ -63,10 +70,9 @@ public abstract class S3Service
     * @param nextMarker 
     * @throws RequestException
     */
-   public abstract void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker)
-      throws RequestException;
-   
-   
+   public abstract void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket,
+      String nextMarker) throws RequestException;
+
    /**
     * Delete object.
     * 
@@ -77,6 +83,12 @@ public abstract class S3Service
    public abstract void deleteObject(AsyncRequestCallback<String> callback, String s3Bucket, String s3Key)
       throws RequestException;
 
-
+   /**
+    * @param asyncRequestCallback
+    * @param bucketId
+    * @throws RequestException
+    */
+   public abstract void deleteBucket(AsyncRequestCallback<String> asyncRequestCallback, String bucketId)
+      throws RequestException;
 
 }

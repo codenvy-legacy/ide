@@ -48,7 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.ApplicationUpdatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationEvent;
@@ -59,7 +59,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.V
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionDeletedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentCreatedHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
@@ -318,7 +318,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       try
       {
          BeanstalkClientService.getInstance().deleteApplication(currentVfs.getId(), openedProject.getId(),
-            new BeanstalkAsyncRequestCallback<Object>(new LoggedInHandler()
+            new AwsAsyncRequestCallback<Object>(new LoggedInHandler()
             {
 
                @Override
@@ -365,7 +365,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          BeanstalkClientService.getInstance().getApplicationInfo(
             currentVfs.getId(),
             openedProject.getId(),
-            new BeanstalkAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
                new LoggedInHandler()
                {
 
@@ -421,7 +421,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          BeanstalkClientService.getInstance().getVersions(
             currentVfs.getId(),
             openedProject.getId(),
-            new BeanstalkAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
+            new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
                new LoggedInHandler()
                {
 

@@ -16,35 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk;
+package org.exoplatform.ide.extension.aws.client;
 
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginEvent;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
+import org.exoplatform.ide.extension.aws.client.login.LoginHandler;
+import org.exoplatform.ide.extension.aws.client.s3.S3BucketsUnmarshaller;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 18, 2012 11:07:50 AM anya $
  * 
  */
-public abstract class BeanstalkAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class AwsAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {
    private LoggedInHandler loggedInHandler;
 
-   public BeanstalkAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn)
+   public AwsAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn)
    {
       super(unmarshaller);
       this.loggedInHandler = loggedIn;
    }
 
-   public BeanstalkAsyncRequestCallback(LoggedInHandler loggedIn)
+   public AwsAsyncRequestCallback(LoggedInHandler loggedIn)
    {
       this.loggedInHandler = loggedIn;
    }
+
+  
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)

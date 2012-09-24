@@ -16,14 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.login;
+package org.exoplatform.ide.extension.aws.client.login;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 18, 2012 11:15:01 AM anya $
+ * @version $Id: Sep 14, 2012 11:52:17 AM anya $
  * 
  */
-public interface LoggedInHandler
+public interface Credentials
 {
-   void onLoggedIn();
+   /**
+    * @return the access_key
+    */
+   public String getAccess_key();
+
+   /**
+    * @param access_key the access_key to set
+    */
+   public void setAccess_key(String access_key);
+
+   /**
+    * @return the secret_key
+    */
+   public String getSecret_key();
+
+   /**
+    * @param secret_key the secret_key to set
+    */
+   public void setSecret_key(String secret_key);
 }

@@ -29,7 +29,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.Credentials;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
@@ -130,7 +131,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getAvailableSolutionStacks(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getAvailableSolutionStacks(BeanstalkAsyncRequestCallback<List<SolutionStack>> callback)
+   public void getAvailableSolutionStacks(AwsAsyncRequestCallback<List<SolutionStack>> callback)
       throws RequestException
    {
       String url = restServiceContext + SOLUTION_STACKS;
@@ -234,11 +235,11 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createEnvironment(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest,
-    *      org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback)
+    *      org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
     */
    @Override
    public void createEnvironment(String vfsId, String projectId, CreateEnvironmentRequest createEnvironmentRequest,
-      BeanstalkAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+      AwsAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
       url.append(ENVIRONMENT_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
@@ -310,7 +311,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    @Override
    public void createVersion(String vfsId, String projectId,
       CreateApplicationVersionRequest createApplicationVersionRequest,
-      BeanstalkAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException
+      AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
       url.append(VERSION_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);

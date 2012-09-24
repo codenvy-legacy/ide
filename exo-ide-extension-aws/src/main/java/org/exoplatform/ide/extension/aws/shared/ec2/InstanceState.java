@@ -16,32 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.login;
+package org.exoplatform.ide.extension.aws.shared.ec2;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 11:52:17 AM anya $
- * 
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public interface Credentials
+public enum InstanceState
 {
-   /**
-    * @return the access_key
-    */
-   public String getAccess_key();
+   pending("pending"),
+   running("running"),
+   shutting_down("shutting-down"),
+   terminated("terminated"),
+   stopping("stopping"),
+   stopped("stopped");
 
-   /**
-    * @param access_key the access_key to set
-    */
-   public void setAccess_key(String access_key);
+   private final String value;
 
-   /**
-    * @return the secret_key
-    */
-   public String getSecret_key();
+   private InstanceState(String value)
+   {
+      this.value = value;
+   }
 
-   /**
-    * @param secret_key the secret_key to set
-    */
-   public void setSecret_key(String secret_key);
+   public String toString()
+   {
+      return value;
+   }
+
+   public static InstanceState fromValue(String value)
+   {
+      for (InstanceState v : InstanceState.values())
+      {
+         if (v.value.equals(value))
+         {
+            return v;
+         }
+      }
+      throw new IllegalArgumentException("Invalid value '" + value + "' ");
+   }
 }

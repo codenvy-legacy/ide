@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.aws.client;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.Credentials;
+import org.exoplatform.ide.extension.aws.client.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;

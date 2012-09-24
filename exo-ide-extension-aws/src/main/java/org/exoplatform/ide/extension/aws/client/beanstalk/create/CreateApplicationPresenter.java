@@ -53,10 +53,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
@@ -327,7 +327,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
             vfsInfo.getId(),
             openedProject.getId(),
             createApplicationRequest,
-            new BeanstalkAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+            new AwsAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
                new LoggedInHandler()
                {
                   @Override
@@ -377,15 +377,14 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       try
       {
          BeanstalkClientService.getInstance().getAvailableSolutionStacks(
-            new BeanstalkAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(),
-               new LoggedInHandler()
+            new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(), new LoggedInHandler()
+            {
+               @Override
+               public void onLoggedIn()
                {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getSolutionStacks();
-                  }
-               })
+                  getSolutionStacks();
+               }
+            })
             {
                @Override
                protected void onSuccess(List<SolutionStack> result)
@@ -432,7 +431,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
             vfsInfo.getId(),
             openedProject.getId(),
             createEnvironmentRequest,
-            new BeanstalkAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
                new LoggedInHandler()
                {
                   @Override

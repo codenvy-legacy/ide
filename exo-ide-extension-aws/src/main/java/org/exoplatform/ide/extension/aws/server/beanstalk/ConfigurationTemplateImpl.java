@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.aws.server.beanstalk;
 
+import com.amazonaws.services.elasticbeanstalk.model.ConfigurationOptionSetting;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateDeploymentStatus;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -91,25 +93,39 @@ public class ConfigurationTemplateImpl implements ConfigurationTemplateInfo
 
       public Builder created(Date created)
       {
-         if (created != null)
+         if (created == null)
          {
-            this.created = created.getTime();
+            this.created = -1;
+            return this;
          }
+         this.created = created.getTime();
          return this;
       }
 
       public Builder updated(Date updated)
       {
-         if (updated != null)
+         if (updated == null)
          {
-            this.updated = updated.getTime();
+            this.updated = -1;
+            return this;
          }
+         this.updated = updated.getTime();
          return this;
       }
 
-      public Builder options(List<ConfigurationOption> options)
+      public Builder options(List<ConfigurationOptionSetting> awsOptions)
       {
-         this.options = options;
+         if (awsOptions == null)
+         {
+            this.options = null;
+            return this;
+         }
+         this.options = new ArrayList<ConfigurationOption>(awsOptions.size());
+         for (ConfigurationOptionSetting awsOption : awsOptions)
+         {
+            options.add(
+               new ConfigurationOptionImpl(awsOption.getNamespace(), awsOption.getOptionName(), awsOption.getValue()));
+         }
          return this;
       }
 

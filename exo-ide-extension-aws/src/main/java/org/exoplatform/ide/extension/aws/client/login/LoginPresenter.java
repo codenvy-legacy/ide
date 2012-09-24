@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.login;
+package org.exoplatform.ide.extension.aws.client.login;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -204,7 +204,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.beanstalk.login.LoginEvent)
+    * @see org.exoplatform.ide.extension.aws.client.login.LoginHandler#onLogin(org.exoplatform.ide.extension.aws.client.login.LoginEvent)
     */
    @Override
    public void onLogin(LoginEvent event)

@@ -22,18 +22,20 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
-import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
+import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -64,8 +66,7 @@ public class S3Service
    @Path("buckets/create")
    @POST
    public S3Bucket createBucket(@QueryParam("name") String name,
-                                @QueryParam("region") String region)
-      throws AWSException
+                                @QueryParam("region") String region) throws AWSException
    {
       S3Region s3Region = S3Region.fromValue(region);
       return s3.createBucket(name, s3Region);
@@ -84,6 +85,8 @@ public class S3Service
    {
       s3.deleteBucket(name);
    }
+
+   //
 
    @Path("objects/put/{s3bucket}")
    @POST
@@ -107,48 +110,13 @@ public class S3Service
       return s3.uploadProject(s3Bucket, s3Key, vfs, projectId);
    }
 
-   @Path("objects/{s3bucket}")
-   @POST
-   public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
-                                    @QueryParam("prefix") String prefix,
-                                    @QueryParam("nextmarker") String nextMarker,
-                                    @QueryParam("maxkeys") int maxKeys)
-      throws AWSException
-   {
-      return s3.listObjects(s3Bucket, prefix, nextMarker, maxKeys);
-   }
-
-   @Path("objects/delete/{s3bucket}")
-   @POST
-   public void deleteObject(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3key)
-      throws AWSException
-   {
-      s3.deleteObject(s3Bucket, s3key);
-   }
-
-   @Path("objects/{s3bucket}")
-   @GET
-   public Response getObjectContent(@PathParam("s3bucket") String s3Bucket, @QueryParam("s3key") String s3Key)
-      throws AWSException
-   {
-      S3Content content = s3.getObjectContent(s3Bucket, s3Key);
-
-      return Response
-         .ok(content.getStream(), content.getContentType())
-         .lastModified(content.getLastModificationDate())
-         .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength()))
-         .header("Content-Disposition", "attachment; filename=\"" + s3Key + "\"")
-         .build();
-   }
-
    @Path("objects/upload/{s3bucket}")
    @POST
    public Response uploadFile(@PathParam("s3bucket") String s3Bucket,
-                              java.util.Iterator<FileItem> formData)
-      throws IOException, InvalidArgumentException, AWSException
+                              Iterator<FileItem> formData) throws IOException, InvalidArgumentException, AWSException
    {
       FileItem contentItem = null;
-      MediaType mediaType = null;
+      String mediaType = null;
       String name = null;
 
       while (formData.hasNext())
@@ -165,20 +133,20 @@ public class S3Service
             {
                throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
             }
-            if ("name".equals(item.getFieldName()))
+            if ("file".equals(item.getFieldName()))
             {
                name = item.getString().trim();
             }
          }
          else if ("mimeType".equals(item.getFieldName()))
          {
-            String m = item.getString().trim();
-            if (m.length() > 0)
-            {
-               mediaType = MediaType.valueOf(m);
-            }
+            mediaType = item.getString().trim();
          }
-         
+         else if ("name".equals(item.getFieldName()))
+         {
+            name = item.getString().trim();
+         }
+
       }
 
       if (contentItem == null)
@@ -191,13 +159,46 @@ public class S3Service
          throw new InvalidArgumentException("File name is required. ");
       }
 
-      if (mediaType == null)
+      if (mediaType == null || mediaType.isEmpty())
       {
-         mediaType = MediaType.APPLICATION_OCTET_STREAM_TYPE;
+         mediaType = MediaType.APPLICATION_OCTET_STREAM;
       }
 
-      s3.putObject(s3Bucket, name, contentItem.getInputStream(), mediaType.getType(), contentItem.getSize());
+      s3.putObject(s3Bucket, name, contentItem.getInputStream(), mediaType, contentItem.getSize());
 
       return Response.ok("", MediaType.TEXT_HTML).build();
+   }
+
+   @Path("objects/{s3bucket}")
+   @GET
+   public Response downloadFile(@PathParam("s3bucket") String s3Bucket,
+                                @QueryParam("s3key") String s3Key) throws AWSException
+   {
+      S3Content content = s3.getObjectContent(s3Bucket, s3Key);
+
+      return Response
+         .ok(content.getStream(), content.getContentType())
+         .lastModified(content.getLastModificationDate())
+         .header(HttpHeaders.CONTENT_LENGTH, Long.toString(content.getLength()))
+         .header("Content-Disposition", "attachment; filename=\"" + s3Key + "\"")
+         .build();
+   }
+
+   @Path("objects/delete/{s3bucket}")
+   @POST
+   public void deleteObject(@PathParam("s3bucket") String s3Bucket,
+                            @QueryParam("s3key") String s3key) throws AWSException
+   {
+      s3.deleteObject(s3Bucket, s3key);
+   }
+
+   @Path("objects/{s3bucket}")
+   @POST
+   public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
+                                    @QueryParam("prefix") String prefix,
+                                    @QueryParam("nextmarker") String nextMarker,
+                                    @QueryParam("maxkeys") int maxKeys) throws AWSException
+   {
+      return s3.listObjects(s3Bucket, prefix, nextMarker, maxKeys);
    }
 }

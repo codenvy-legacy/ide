@@ -42,9 +42,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
@@ -198,7 +198,7 @@ public class CreateVersionPresenter implements CreateVersionHandler, ViewClosedH
             vfsId,
             project.getId(),
             createApplicationVersionRequest,
-            new BeanstalkAsyncRequestCallback<ApplicationVersionInfo>(new AutoBeanUnmarshaller<ApplicationVersionInfo>(
+            new AwsAsyncRequestCallback<ApplicationVersionInfo>(new AutoBeanUnmarshaller<ApplicationVersionInfo>(
                autoBean), new LoggedInHandler()
             {
 

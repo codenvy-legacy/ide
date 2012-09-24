@@ -33,9 +33,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 
 /**
@@ -135,7 +135,7 @@ public class DeleteVersionPresenter implements DeleteVersionHandler, ViewClosedH
       {
          BeanstalkClientService.getInstance().deleteVersion(vfsId, projectId, version.getApplicationName(),
             version.getVersionLabel(), display.getDeleteS3Bundle().getValue(),
-            new BeanstalkAsyncRequestCallback<Object>(new LoggedInHandler()
+            new AwsAsyncRequestCallback<Object>(new LoggedInHandler()
             {
 
                @Override

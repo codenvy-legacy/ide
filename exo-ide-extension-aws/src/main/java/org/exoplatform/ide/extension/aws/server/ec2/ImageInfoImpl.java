@@ -94,7 +94,7 @@ public class ImageInfoImpl implements ImageInfo
          return this;
       }
 
-      public  ImageInfo build()
+      public ImageInfo build()
       {
          return new ImageInfoImpl(this);
       }
@@ -177,6 +177,10 @@ public class ImageInfoImpl implements ImageInfo
    @Override
    public Map<String, String> getTags()
    {
+      if (tags == null)
+      {
+         tags = new HashMap<String, String>();
+      }
       return tags;
    }
 

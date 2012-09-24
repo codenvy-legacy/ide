@@ -43,10 +43,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
@@ -167,7 +167,7 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
       try
       {
          BeanstalkClientService.getInstance().getAvailableSolutionStacks(
-            new BeanstalkAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(),
+            new AwsAsyncRequestCallback<List<SolutionStack>>(new SolutionStackListUnmarshaller(),
                new LoggedInHandler()
                {
                   @Override
@@ -220,7 +220,7 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
             vfsId,
             projectId,
             createEnvironmentRequest,
-            new BeanstalkAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
                new LoggedInHandler()
                {
 
