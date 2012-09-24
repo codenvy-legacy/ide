@@ -38,6 +38,7 @@ public class ServicesJavaTextFuction extends BaseTest
    
    public void openSpringJavaTetsFile(String PROJECT) throws Exception
    {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
@@ -54,6 +55,7 @@ public class ServicesJavaTextFuction extends BaseTest
 
    public void openJavaClassForFormat(String PROJECT) throws Exception
    {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
@@ -70,6 +72,7 @@ public class ServicesJavaTextFuction extends BaseTest
 
    public void openJavaCommenTest(String PROJECT) throws Exception
    {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
@@ -86,6 +89,7 @@ public class ServicesJavaTextFuction extends BaseTest
 
    public void openJavaRemoveCommenTest (String PROJECT) throws Exception
    {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "src" + "/" + "main");
