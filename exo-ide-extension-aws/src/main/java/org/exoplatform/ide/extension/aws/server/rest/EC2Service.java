@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.extension.aws.server.rest;
 
-import com.amazonaws.services.ec2.model.Reservation;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.ec2.EC2;
 import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceStatusInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.RebootInstanceRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
@@ -137,21 +136,20 @@ public class EC2Service
       ec2.terminateInstance(request.getInstanceIds());
    }
 
-//   @Path("instance/status")
-//   @GET
-//   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
-//   {
-//      return ec2.getStatus(
-//         request.getMaxResult(),
-//         request.getIncludeAllInstances(),
-//         request.getNextToken());
-//   }
+   @Path("instance/status")
+   @GET
+   public List<InstanceStatusInfo> getStatus(StatusRequest request) throws AWSException
+   {
+      return ec2.getStatus(
+         request.getMaxResult(),
+         request.getIncludeAllInstances(),
+         request.getNextToken());
+   }
 //
 //   @Path("instance/list")
 //   @GET
-//   public List<Reservation> getInstances() throws AWSException
+//   public void getInstances() throws AWSException
 //   {
-//      return ec2.getInstances();
 //      //TODO get list of instances for this owner and return to client
 //   }
 }

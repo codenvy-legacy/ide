@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.shared.ec2;
 
-import com.amazonaws.services.ec2.model.InstanceState;
-import com.amazonaws.services.ec2.model.InstanceStatusEvent;
-import com.amazonaws.services.ec2.model.InstanceStatusSummary;
-import java.util.List;
-
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
@@ -37,19 +32,19 @@ public interface InstanceStatusInfo
 
    void setAvailabilityZone(String availabilityZone);
 
-   List<InstanceStatusEvent> getEvents();
+   Integer getInstanceStateCode();
 
-   void setEvents(List<InstanceStatusEvent> events);
+   void setInstanceStateCode(Integer instanceStateCode);
 
-   InstanceState getInstanceState();
+   String getInstanceStateName();
 
-   void setInstanceState(InstanceState instanceState);
+   void setInstanceStateName(String instanceStateName);
 
-   InstanceStatusSummary getInstanceStatus();
+   String getInstanceStatus();
 
-   void setInstanceStatus(InstanceStatusSummary instanceStatus);
+   void setInstanceStatus(String status);
 
-   InstanceStatusSummary getSystemStatus();
+   String getSystemStatus();
 
-   void setSystemStatus(InstanceStatusSummary systemStatus);
+   void setSystemStatus(String status);
 }
