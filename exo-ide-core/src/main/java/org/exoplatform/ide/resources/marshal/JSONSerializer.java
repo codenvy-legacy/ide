@@ -30,10 +30,10 @@ import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.model.AccessControlEntry;
-import org.exoplatform.ide.resources.properties.BooleanProperty;
-import org.exoplatform.ide.resources.properties.NumberProperty;
-import org.exoplatform.ide.resources.properties.Property;
-import org.exoplatform.ide.resources.properties.StringProperty;
+import org.exoplatform.ide.resources.model.BooleanProperty;
+import org.exoplatform.ide.resources.model.NumberProperty;
+import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.resources.model.StringProperty;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>

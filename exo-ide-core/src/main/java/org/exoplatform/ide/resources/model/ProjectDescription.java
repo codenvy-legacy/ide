@@ -18,7 +18,6 @@ package org.exoplatform.ide.resources.model;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringSet;
-import org.exoplatform.ide.resources.properties.Property;
 
 /**
  * Desription of the project containing nature set and it's specific properties

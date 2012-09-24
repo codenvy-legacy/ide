@@ -16,25 +16,22 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.api.resources.ResourceManager;
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
-import org.exoplatform.ide.core.Component;
-import org.exoplatform.ide.core.event.ComponentLifecycleEvent;
-import org.exoplatform.ide.core.event.ComponentLifecycleHandler;
-import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.core.ComponentException;
+import org.exoplatform.ide.core.ComponentRegistry;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.resources.properties.Property;
+import org.exoplatform.ide.resources.model.Property;
 
 import java.util.Date;
 
@@ -49,70 +46,34 @@ public class BootstrapController
 
    WorkspacePeresenter workspacePeresenter;
 
-   EventBus eventBus;
-
-   ResourceManager resourceProvider;
-
    ProjectExplorerPresenter projectExpolrerPresenter;
 
+   private final ResourceProvider resourceManager;
+
    @Inject
-   public BootstrapController(WorkspacePeresenter workspacePeresenter, ResourceManager resourceProvider,
-      ProjectExplorerPresenter projectExpolorerPresenter, EventBus eventBus)
+   public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePeresenter workspacePeresenter,
+      ResourceProvider resourceManager, ProjectExplorerPresenter projectExpolorerPresenter)
    {
       this.workspacePeresenter = workspacePeresenter;
-      this.eventBus = eventBus;
-      this.resourceProvider = resourceProvider;
+      this.resourceManager = resourceManager;
       this.projectExpolrerPresenter = projectExpolorerPresenter;
 
-      JsonArray<Component> pendingServices = JsonCollections.<Component> createArray();
-
-      pendingServices.add(resourceProvider);
-
-      initializeHandlers(pendingServices);
-      initializeServices(resourceProvider);
-   }
-
-   /**
-    * @param resourceProvider
-    */
-   public void initializeServices(ResourceManager resourceProvider)
-   {
-      try
+      // initialize components
+      componentRegistry.start(new Callback<Void, ComponentException>()
       {
-         resourceProvider.start();
-      }
-      catch (Exception e)
-      {
-         GWT.log("BootstrapController:Failed to start resource provider" + e.getMessage() + ">" + e);
-         RootLayoutPanel.get().add(
-            new Label("BootstrapController:Failed to start resource provider" + e.getMessage() + ">" + e));
-      }
-   }
-
-   /**
-    * @param pendingServices
-    */
-   private void initializeHandlers(final JsonArray<Component> pendingServices)
-   {
-      eventBus.addHandler(ComponentLifecycleEvent.TYPE, new ComponentLifecycleHandler()
-      {
-
          @Override
-         public void onComponentStarted(ComponentLifecycleEvent event)
+         public void onSuccess(Void result)
          {
-            pendingServices.remove(event.getComponent());
-            // services started
-            if (pendingServices.size() == 0)
-            {
-               GWT.log("All services initialized. Starting.");
-               onInitialized();
-            }
+            // Start UI
+            workspacePeresenter.go(RootLayoutPanel.get());
+
+            createDemoContent();
          }
 
          @Override
-         public void onComponentFailed(ComponentLifecycleEvent event)
+         public void onFailure(ComponentException caught)
          {
-            GWT.log("FAILED to start service:" + event.getComponent());
+            GWT.log("FAILED to start service:" + caught.getComponent());
          }
       });
    }
@@ -120,12 +81,12 @@ public class BootstrapController
    /**
     * 
     */
-   void onInitialized()
+   @SuppressWarnings("rawtypes")
+   protected void createDemoContent()
    {
-      workspacePeresenter.go(RootLayoutPanel.get());
-
-      resourceProvider.createProject("Test Project " + (new Date().getTime()),
-         JsonCollections.<Property> createArray(), new AsyncCallback<Project>()
+      // DUMMY CREATE DEMO CONTENT
+      resourceManager.createProject("Test Project " + (new Date().getTime()), JsonCollections.<Property> createArray(),
+         new AsyncCallback<Project>()
          {
 
             @Override
@@ -171,6 +132,5 @@ public class BootstrapController
                GWT.log("Error creating demo content" + caught);
             }
          });
-
    }
 }

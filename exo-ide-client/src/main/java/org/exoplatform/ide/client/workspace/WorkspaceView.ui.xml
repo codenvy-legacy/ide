@@ -14,7 +14,7 @@
    <g:HTMLPanel>
       <g:DockLayoutPanel unit="EM" width="100%" height="100%">
          <g:north size="2">
-            <g:MenuBar styleName="menu" width="100%">
+            <g:MenuBar styleName="menu" width="100%" ui:field="mainMenu">
                <g:MenuItem text="New item" />
                <g:MenuItem text="New menu">
                	<g:MenuBar vertical="true">

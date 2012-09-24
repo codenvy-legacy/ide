@@ -23,7 +23,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import org.exoplatform.ide.api.resources.ResourceManager;
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -35,7 +35,6 @@ import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.StringUnmarshaller;
-import org.exoplatform.ide.resources.properties.Property;
 import org.exoplatform.ide.rest.AsyncRequest;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.HTTPHeader;
@@ -60,7 +59,7 @@ public class Project extends Folder
    @SuppressWarnings("rawtypes")
    protected JsonArray<Property> properties;
 
-   protected ResourceManager provider;
+   protected ResourceProvider provider;
 
    private Loader loader;
 

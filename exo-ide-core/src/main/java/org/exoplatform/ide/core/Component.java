@@ -18,13 +18,18 @@ package org.exoplatform.ide.core;
 
 /**
  * Components that have to be started on application's startup
- * must implement this interface.
+ * must implement this interface. Please don't directly implement this interface
+ * used {@link ComponentImpl} instead.
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface Component
 {
-   // TODO: MOVE CLASS
-
-   public void start() throws Exception;
+   /**
+    * Starts Component. It should send corresponding Event, when started.
+    * Please refer for {@link ComponentImpl}
+    * 
+    * @throws Exception
+    */
+   public void start();
 }

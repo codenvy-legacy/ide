@@ -16,16 +16,16 @@
  */
 package org.exoplatform.ide.resources.marshal;
 
-import org.exoplatform.ide.api.resources.ResourceManager;
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.ProjectDescription;
-import org.exoplatform.ide.resources.properties.Property;
+import org.exoplatform.ide.resources.model.Property;
 
 /**
  * This class is used during unmarshaling of the project. It encapsulates both 
- * {@link ResourceManager} used to get proper {@link ModelProvider} and the 
+ * {@link ResourceProvider} used to get proper {@link ModelProvider} and the 
  * new {@link Project} instance that is filled with response data. 
  * 
  * Created by The eXo Platform SAS
@@ -35,14 +35,14 @@ import org.exoplatform.ide.resources.properties.Property;
  */
 public class ProjectModelProviderAdapter
 {
-   private final ResourceManager resourceProvider;
+   private final ResourceProvider resourceProvider;
 
    private Project project;
 
    /**
     * @param resourceProvider
     */
-   public ProjectModelProviderAdapter(ResourceManager resourceProvider)
+   public ProjectModelProviderAdapter(ResourceProvider resourceProvider)
    {
       this.resourceProvider = resourceProvider;
    }

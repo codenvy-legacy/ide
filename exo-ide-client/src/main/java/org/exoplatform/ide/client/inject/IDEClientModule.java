@@ -18,11 +18,8 @@ package org.exoplatform.ide.client.inject;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.AppContext;
-import org.exoplatform.ide.api.resources.ResourceManager;
 import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.client.editor.EditorPresenter;
 import org.exoplatform.ide.client.editor.EditorView;
@@ -30,9 +27,6 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
-import org.exoplatform.ide.loader.EmptyLoader;
-import org.exoplatform.ide.loader.Loader;
-import org.exoplatform.ide.resources.ResourceManagerImpl;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 /**
@@ -61,11 +55,10 @@ public class IDEClientModule extends AbstractGinModule
       bind(ProjectExplorerPresenter.class).in(Singleton.class);
       bind(EditorPresenter.Display.class).to(EditorView.class).in(Singleton.class); // TODO : not singleton 
       bind(EditorView.class).in(Singleton.class); // TODO : not singleton
-      bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
+      
       bind(AppContext.class).in(Singleton.class);
       bind(BaseTextEditor.class).in(Singleton.class);
-      bind(ResourceManager.class).to(ResourceManagerImpl.class).in(Singleton.class);
-      bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+      
       
       //      bind(IDEAppController.class).in(Singleton.class);
       //      bind(Presenter.class).to(IDEAppPresenter.class);

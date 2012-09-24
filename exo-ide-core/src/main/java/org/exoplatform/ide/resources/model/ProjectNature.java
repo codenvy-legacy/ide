@@ -50,7 +50,7 @@ public interface ProjectNature
    String getLabel();
 
    /**
-    * Returns the unique identifiers of the natures required by this nature.
+    * Returns the identifiers of the natures required by this nature.
     * 
     * @return an array of nature ids that this nature requires,
     *    possibly an empty array.

@@ -32,11 +32,11 @@ import org.exoplatform.ide.resources.VirtualFileSystemInfo;
 import org.exoplatform.ide.resources.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.resources.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.ide.resources.model.AccessControlEntry;
+import org.exoplatform.ide.resources.model.BooleanProperty;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Link;
-import org.exoplatform.ide.resources.properties.BooleanProperty;
-import org.exoplatform.ide.resources.properties.NumberProperty;
-import org.exoplatform.ide.resources.properties.StringProperty;
+import org.exoplatform.ide.resources.model.NumberProperty;
+import org.exoplatform.ide.resources.model.StringProperty;
 
 import java.util.Iterator;
 import java.util.Set;

@@ -10,16 +10,15 @@ import org.exoplatform.ide.client.inject.IDEInjector;
  */
 public class IDE implements EntryPoint
 {
-   // TODO : to be replaced by Application Controller invocation
-
    /**
     * This is the entry point method.
     */
    @Override
    public void onModuleLoad()
    {
-
       IDEInjector injector = GWT.create(IDEInjector.class);
+      // Force instance to be created 
+      @SuppressWarnings("unused")
       BootstrapController bootstrap = injector.getBootstrapController();
    }
 }

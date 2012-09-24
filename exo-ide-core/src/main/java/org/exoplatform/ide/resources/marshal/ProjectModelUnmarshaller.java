@@ -25,7 +25,7 @@ import com.google.gwt.json.client.JSONParser;
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.resources.properties.Property;
+import org.exoplatform.ide.resources.model.Property;
 import org.exoplatform.ide.rest.Unmarshallable;
 
 /**

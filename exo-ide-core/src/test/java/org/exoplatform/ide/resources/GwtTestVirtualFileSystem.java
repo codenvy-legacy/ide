@@ -32,7 +32,7 @@ import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
 import org.exoplatform.ide.resources.model.Link;
 import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.resources.properties.Property;
+import org.exoplatform.ide.resources.model.Property;
 
 /**
  * 
@@ -45,7 +45,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
 
    private VirtualFileSystemInfo info;
 
-   ResourceManagerImpl resourceProvider;
+   ResourceProviderComponent resourceProvider;
 
    @Override
    protected void gwtSetUp() throws Exception
@@ -59,7 +59,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
          new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", JsonCollections.<String> createArray(),
             ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, links, new Folder());
 
-      resourceProvider = new ResourceManagerImpl(new SimpleEventBus(), new GenericModelProvider(), new EmptyLoader());
+      resourceProvider = new ResourceProviderComponent(new SimpleEventBus(), new GenericModelProvider(), new EmptyLoader());
       resourceProvider.vfsInfo = info;
    }
 
