@@ -44,17 +44,17 @@ public class WebDavFolderBinder
 
    private final static String BASE_URL = "base-url";
 
-   private final String workspaceName;
+   protected final String workspaceName;
 
-   private final String gitRepoDir;
+   protected final String gitRepoDir;
 
-   private final String webDavUser;
+   protected final String webDavUser;
 
-   private final String baseUri;
+   protected final String baseUri;
 
-   private final String webDavPassword;
+   protected final String webDavPassword;
 
-   private final String webDavServiceUrl;
+   protected final String webDavServiceUrl;
 
    private final DavFSMounter davFsMounter;
 
@@ -73,8 +73,12 @@ public class WebDavFolderBinder
     * @param priority
     * @throws ConfigurationException
     */
-   public WebDavFolderBinder(int priority, String workspaceName, String webDavUser, String webDavPassword,
-      String webDavServiceUrl, String baseUri) throws ConfigurationException
+   public WebDavFolderBinder(int priority,
+                             String workspaceName,
+                             String webDavUser,
+                             String webDavPassword,
+                             String webDavServiceUrl,
+                             String baseUri) throws ConfigurationException
    {
       this.webDavUser = webDavUser;
       this.webDavPassword = webDavPassword;
@@ -200,7 +204,7 @@ public class WebDavFolderBinder
    public void cleanGitDirectory(String repositoryName, String fsWsDirName)
    {
       File fsWsDir = new File(fsWsDirName);
-      
+
       if (!fsWsDir.exists())
       {
          LOG.warn("Unable to clean webdav dir {}, its not exists", fsWsDirName);

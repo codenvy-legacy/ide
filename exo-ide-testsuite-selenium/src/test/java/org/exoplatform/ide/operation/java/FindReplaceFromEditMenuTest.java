@@ -1,8 +1,7 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -22,7 +21,7 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
    private static final String PROJECT = FindReplaceFromEditMenuTest.class.getSimpleName();
 
    final String pathForReopenTestFile = PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
-      + "SimpleSum.txt";
+      + "SimpleSum.java";
 
    @BeforeClass
    public static void setUp()
@@ -120,11 +119,12 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertTrue(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
 
       IDE.FINDREPLACE.clickReplaceAllButton();
-      IDE.JAVAEDITOR.waitErrorLabel("Duplicate field SimpleSum.replace");
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).endsWith(
+         "String replace =\"\";\n" + "String replace =\"\";\n" + "}"));
 
    }
 
-   @Test
+    @Test
    public void findAndReplaceWithNoneCaseSensitive() throws Exception
    {
       driver.navigate().refresh();
@@ -151,7 +151,7 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
 
    }
 
-   @Test
+    @Test
    public void replaseAllWithCaseSensitive() throws Exception
    {
       driver.navigate().refresh();
@@ -215,7 +215,7 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "f");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "f");
       //IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "f");
 
       IDE.FINDREPLACE.waitOpened();

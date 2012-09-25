@@ -60,7 +60,7 @@ public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuction
       assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
 
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_DOWN.toString());
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 26).trim());
    }
 
 }
