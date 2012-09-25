@@ -57,10 +57,10 @@ public abstract class S3Service
    /**
     * Returns available buckets.
     * 
-    * @param callback
+    * @param asyncRequestCallback
     * @throws RequestException
     */
-   public abstract void createBuckets(AwsAsyncRequestCallback<List<S3Bucket>> callback, String name, String region)
+   public abstract void createBucket(AsyncRequestCallback<String> asyncRequestCallback, String name, String region)
       throws RequestException;
 
    /**

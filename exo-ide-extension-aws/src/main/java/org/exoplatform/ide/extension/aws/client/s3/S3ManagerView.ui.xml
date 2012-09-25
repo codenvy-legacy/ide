@@ -26,10 +26,10 @@
 				<g:west size="260">
 					<g:VerticalPanel spacing="10">
 						<g:HorizontalPanel spacing="10">
-							<f:ImageButton ui:field="deleteBucketButton" width="110px" height="22" text="{locale.deleteButton}"
+							<f:ImageButton ui:field="deleteBucketButton" width="90px" height="22" text="{locale.deleteButton}"
 								imageName="delete"></f:ImageButton>
-							<f:ImageButton ui:field="createButton" width="110px" height="22" text="{locale.createButton}"
-								imageName="create"></f:ImageButton>
+							<f:ImageButton ui:field="createBucketButton" width="90px" height="22" text="{locale.createButton}"
+								imageName="yes"></f:ImageButton>
 						</g:HorizontalPanel>
 						<g:ListBox ui:field="buckets" visibleItemCount="10"></g:ListBox>
 					</g:VerticalPanel>

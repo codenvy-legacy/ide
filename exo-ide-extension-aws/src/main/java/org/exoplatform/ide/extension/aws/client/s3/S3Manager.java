@@ -34,9 +34,12 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -67,7 +70,7 @@ import java.util.Stack;
  *
  */
 public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler, ViewClosedHandler,
-   ShowS3ManagerHandler
+   ShowS3ManagerHandler, BucketCreatedHandler
 {
    interface Display extends IsView
    {
@@ -98,6 +101,8 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       HasClickHandlers getRefreshButton();
 
       HasClickHandlers getDeleteBucketButton();
+      
+      HasClickHandlers getCreateBucketButton();
 
    }
 
@@ -117,11 +122,14 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
    private Stack<String> visit = new Stack<String>();
 
+   private CreateBucketPresenter createBucketPresenter;
+
    public S3Manager()
    {
       IDE.getInstance().addControl(new S3ManagerControl());
       new UploadFilePresenter();
       new S3ServiceImpl(Utils.getRestContext(), new EmptyLoader());
+      createBucketPresenter = new CreateBucketPresenter(); 
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
@@ -129,6 +137,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ShowS3ManagerEvent.TYPE, this);
+      IDE.addHandler(BucketCreatedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -152,9 +161,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     AWSError awsError = new AWSError(exception.getMessage());
-                     Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                        awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                     showError(exception);
 
                   }
                }, display.getSelectedBucketId(), display.getSelectedObject().getS3Key());
@@ -245,9 +252,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                   @Override
                   protected void onFailure(Throwable exception)
                   {
-                     AWSError awsError = new AWSError(exception.getMessage());
-                     Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                        awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                     showError(exception);
                   }
                }, display.getSelectedBucketId());
             }
@@ -259,6 +264,19 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
          }
 
       });
+      
+      display.getCreateBucketButton().addClickHandler(new ClickHandler()
+      {
+         
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            createBucketPresenter.onOpenView();
+           
+         }
+      });
+      
+      display.setEnableBackButton(false);
    }
 
    protected void getPrev(final String marker)
@@ -285,14 +303,16 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                   {
                      display.setEnableNextButton(true);
                   }
+                  if (visit.empty())
+                  {
+                     display.setEnableBackButton(false);
+                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  AWSError awsError = new AWSError(exception.getMessage());
-                  Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                     awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                  showError(exception);
 
                }
             }, display.getSelectedBucketId(), marker);
@@ -334,9 +354,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onFailure(Throwable exception)
                {
-                  AWSError awsError = new AWSError(exception.getMessage());
-                  Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                     awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                  showError(exception);
 
                }
             }, display.getSelectedBucketId(), s3ObjectsList.getNextMarker());
@@ -382,9 +400,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onFailure(Throwable exception)
                {
-                  AWSError awsError = new AWSError(exception.getMessage());
-                  Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                     awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                  showError(exception);
 
                }
             }, s3Bucket, nextMarker);
@@ -476,9 +492,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
             @Override
             protected void processFail(Throwable exception)
             {
-               AWSError awsError = new AWSError(exception.getMessage());
-               Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                  awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+               showError(exception);
                
             }
          });
@@ -518,9 +532,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onFailure(Throwable exception)
                {
-                  AWSError awsError = new AWSError(exception.getMessage());
-                  Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                     awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                  showError(exception);
 
                }
             }, display.getSelectedBucketId(), curent);
@@ -529,6 +541,27 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       {
          // TODO Auto-generated catch block
          e.printStackTrace();
+      }
+   }
+
+   @Override
+   public void onBucketCreated(BucketCreatedEvent event)
+   {
+      getBuckets();
+      
+   }
+
+   private void showError(Throwable exception)
+   {
+      AWSError awsError = new AWSError(exception.getMessage());
+      if (awsError.getAwsErrorMessage() != null)
+      {
+             Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
+         awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+      }
+      else
+      {
+         IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
       }
    }
 }
