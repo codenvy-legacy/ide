@@ -310,7 +310,7 @@ public class S3 extends AWSClient
 
    /**
     * Returns object which contains information about objects which stored in specified bucket.
-    *
+    * List results are always returned in lexicographic (alphabetical) order.
     *
     * @param s3Bucket
     *    name of bucket
@@ -375,7 +375,8 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Deletes the specified object in the specified bucket.
+    * Deletes the specified object in the specified bucket. If attempting to delete an object that does not exist,
+    * Amazon S3 will return a success message instead of an error message.
     *
     * @param s3Bucket
     *    bucket name
