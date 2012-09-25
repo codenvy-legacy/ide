@@ -25,13 +25,13 @@
       <org.exoplatform.kernel.version>2.3.9-GA-SNAPSHOT</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA-SNAPSHOT</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.9-GA-SNAPSHOT</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M10</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M11-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
-      <gwt.version>2.4.0</gwt.version>
+      <gwt.version>2.5.0-rc1</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <gwt.maven.plugin.version>2.4.0</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.5.0-rc1</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
@@ -360,6 +360,12 @@
             <artifactId>exo-ide-extension-git</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-aws</artifactId>
+            <version>${project.version}</version>
+         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -412,6 +418,12 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-extension-googleappengine</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-extension-aws</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -881,6 +893,7 @@
       <module>exo-ide-extension-openshift</module>
       <module>exo-ide-extension-cloudbees</module>
       <module>exo-ide-extension-cloudfoundry</module>
+      <module>exo-ide-extension-aws</module>
       <module>exo-ide-extension-jenkins</module>
       <module>exo-ide-extension-ruby</module>
       <module>exo-ide-extension-samples</module>

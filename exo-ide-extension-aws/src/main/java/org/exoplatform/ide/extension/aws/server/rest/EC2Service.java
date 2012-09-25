@@ -1,0 +1,165 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.extension.aws.server.rest;
+
+import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.server.ec2.EC2;
+import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
+import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.KeyPairInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.RegionInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.RunInstanceRequest;
+import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+@Path("ide/aws/ec2")
+public class EC2Service
+{
+   @Inject
+   private EC2 ec2;
+
+   public EC2Service()
+   {
+   }
+
+   //
+
+   @Path("login")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void login(Map<String, String> credentials) throws AWSException
+   {
+      ec2.login(credentials.get("access_key"), credentials.get("secret_key"));
+   }
+
+   @Path("logout")
+   @POST
+   public void logout() throws AWSException
+   {
+      ec2.logout();
+   }
+
+   //
+
+   @Path("images")
+   @GET
+   public ImagesList listImages(@QueryParam("owner") String owner,
+                                @QueryParam("ispublic") boolean isPublic,
+                                @QueryParam("architecture") String architecture,
+                                @QueryParam("skipcount") int skipCount,
+                                @QueryParam("maxitems") int maxItems) throws AWSException
+   {
+      Architecture arch = Architecture.fromValue(architecture);
+
+      return ec2.listImages(owner, isPublic, arch, skipCount, maxItems);
+   }
+
+   @Path("key_pairs")
+   @GET
+   public List<KeyPairInfo> listKeyPairs() throws AWSException
+   {
+      return ec2.listKeyPairs();
+   }
+
+   @Path("security_groups")
+   @GET
+   public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
+   {
+      return ec2.listSecurityGroups();
+   }
+
+   @Path("regions")
+   @GET
+   public List<RegionInfo> listRegions() throws AWSException
+   {
+      return ec2.listRegions();
+   }
+
+   @Path("availability_zones")
+   @GET
+   public List<String> listAvailabilityZones() throws AWSException
+   {
+      return ec2.listAvailabilityZones();
+   }
+
+   @Path("instances/run")
+   @POST
+   public List<String> runInstance(RunInstanceRequest request) throws AWSException
+   {
+       return ec2.runInstance(
+          request.getImageId(),
+          request.getInstanceType(),
+          request.getNumberOfInstances(),
+          request.getKeyName(),
+          request.getSecurityGroupsIds(),
+          request.getAvailabilityZone()
+       );
+   }
+
+   @Path("instances/start/{id}")
+   @POST
+   public void startInstance(@PathParam("id") String id) throws AWSException
+   {
+      ec2.startInstance(id);
+   }
+
+   @Path("instances/stop/{id}")
+   @POST
+   public void stopInstance(@PathParam("id") String id, @QueryParam("force") Boolean force) throws AWSException
+   {
+      ec2.stopInstance(id, force);
+   }
+
+   @Path("instances/reboot/{id}")
+   @POST
+   public void rebootInstance(@PathParam("id") String id) throws AWSException
+   {
+      ec2.rebootInstance(id);
+   }
+
+   @Path("instances/terminate/{id}")
+   @POST
+   public void terminateInstance(@PathParam("id") String id) throws AWSException
+   {
+      ec2.terminateInstance(id);
+   }
+
+   @Path("instances")
+   @GET
+   public List<InstanceInfo> getInstances() throws AWSException
+   {
+      return ec2.getInstances();
+   }
+}

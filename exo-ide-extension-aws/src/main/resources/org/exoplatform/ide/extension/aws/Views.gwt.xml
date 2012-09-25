@@ -20,47 +20,47 @@
 -->
 <module>
    <inherits name='com.google.gwt.user.User' />
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.login.LoginView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.login.LoginPresenter.Display" />
+    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.UploadFileView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.UploadFilePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.ec2.EC2ManagerView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.rename.RenameApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter.Display" />
    </replace-with>
-
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display" />
-   </replace-with>
-
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter.Display" />
-   </replace-with>
-
-   <replace-with class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceView">
-      <when-type-is class="org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServicePresenter.Display" />
+   
+   <replace-with class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketPresenter.Display" />
    </replace-with>
 </module>
