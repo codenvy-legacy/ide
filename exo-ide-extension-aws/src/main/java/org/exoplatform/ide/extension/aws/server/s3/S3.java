@@ -67,12 +67,10 @@ public class S3 extends AWSClient
    /**
     * Creates a new Amazon S3 bucket in the specified region. US region by default.
     * To confirm creating bucket there is some constrains:
-    *  <ul>
-    *      <li>Bucket names should not contain underscores</li>
-    *      <li>Bucket names should be between 3 and 63 characters long</li>
-    *      <li>Bucket names should not end with a dash</li>
-    *      <li>Bucket names cannot contain uppercase characters</li>
-    *  </ul>
+    *    - Bucket names should not contain underscores
+    *    - Bucket names should be between 3 and 63 characters long
+    *    - Bucket names should not end with a dash
+    *    - Bucket names cannot contain uppercase characters
     *
     * @param name
     *    name of the bucket
