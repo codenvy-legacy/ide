@@ -19,12 +19,14 @@
 package org.exoplatform.ide.extension.aws.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.Language;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
@@ -35,12 +37,15 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.Upd
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
 import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -66,6 +71,10 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    @Override
    public void initialize()
    {
+      IDE.getInstance().registerPaaS(
+         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays.asList(
+            ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS), new DeployApplicationPresenter()));
+
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new BeanstalkControl());

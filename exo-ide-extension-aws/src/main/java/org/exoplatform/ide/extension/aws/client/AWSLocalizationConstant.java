@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.aws.client;
 
+import com.google.gwt.i18n.client.LocalizableResource.Key;
+
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 9:51:41 AM anya $
@@ -63,6 +65,10 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("button.launch.environment")
    String launchEnvironmentButton();
+
+   // Messages
+   @Key("creatingProject")
+   String creatingProject();
 
    // Controls
    @Key("button.properties")
