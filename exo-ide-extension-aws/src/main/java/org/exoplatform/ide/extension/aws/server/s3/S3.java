@@ -71,12 +71,8 @@ public class S3 extends AWSClient
     *      <li>Bucket names should not contain underscores</li>
     *      <li>Bucket names should be between 3 and 63 characters long</li>
     *      <li>Bucket names should not end with a dash</li>
-    *      <li>Bucket names cannot contain adjacent periods</li>
-    *      <li>Bucket names cannot contain dashes next to periods (e.g.,
-    *      "my-.bucket.com" and "my.-bucket" are invalid)</li>
     *      <li>Bucket names cannot contain uppercase characters</li>
     *  </ul>
-    *  Buckets cannot be nested; buckets cannot be created within other buckets.
     *
     * @param name
     *    name of the bucket
@@ -158,8 +154,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Delete bucket. All objects (including all object versions and Delete Markers)
-    * in the bucket must be deleted before the bucket itself can be deleted
+    * Delete bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
     *
     * @param name
     *    bucket name
@@ -313,7 +308,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Returns a list of summary information about the objects in the specified bucket.
+    * Returns object which contains information about objects which stored in specified bucket.
     *
     * @param s3Bucket
     *    name of bucket
@@ -324,9 +319,7 @@ public class S3 extends AWSClient
     * @param maxKeys
     *    the maximum number of results to return
     * @return
-    *    A listing of the objects in the specified bucket, along with any other associated
-    *    information, such as common prefixes (if delimiter was specified), the original
-    *    request parameters, etc.
+    *    result object containing bucket name and listing objects in this bucket
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -380,9 +373,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Deletes the specified object in the specified bucket. Once deleted, the
-    * object can only be restored if versioning was enabled when the object was
-    * deleted.
+    * Deletes the specified object in the specified bucket.
     *
     * @param s3Bucket
     *    bucket name
@@ -416,7 +407,7 @@ public class S3 extends AWSClient
     * @param s3Key
     *    the key of object to be read
     * @return
-    *    result object which consists of stream, content type and last modification date for object to be read
+    *    result object containing stream, content type and last modification date for object to be read
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
