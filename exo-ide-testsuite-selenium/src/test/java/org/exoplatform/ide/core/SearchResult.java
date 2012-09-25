@@ -105,6 +105,30 @@ public class SearchResult extends AbstractTestModule
       });
    }
 
+   /**
+    * Wait Search results view closed.
+    * 
+    * @throws Exception
+    */
+   public void waitItemIsSelected(final WebElement elem) throws Exception
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+              return elem.findElement(By.cssSelector("div.gwt-TreeItem-selected")).isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
    public void close()
    {
       IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
@@ -170,13 +194,18 @@ public class SearchResult extends AbstractTestModule
     */
    public void selectItem(String path) throws Exception
    {
-      WebElement item = driver().findElement(By.id(getItemId(path)));
-      new Actions(driver()).moveToElement(item, 1, 1).click().perform();
+      driver().findElement(By.id(getItemId(path))).click();
    }
 
    public void typeKeys(String keys)
    {
       new Actions(driver()).sendKeys(treeGrid, keys).build().perform();
+   }
+
+   public void typeKeysToItem(String path, String keys) throws Exception
+   {
+      WebElement elem = driver().findElement(By.id(getItemId(path)));
+      elem.sendKeys(keys);
    }
 
    /**
@@ -192,6 +221,24 @@ public class SearchResult extends AbstractTestModule
       itemId = Utils.md5(itemId);
       return Locators.TREE_PREFIX + itemId;
    }
+   
+   
+
+   /**
+    * Generate item id
+    * 
+    * @param path item's name
+    * @return id of item
+    */
+   public WebElement getWebElem(String path) throws Exception
+   {
+      path = (path.startsWith(BaseTest.WS_URL)) ? path.replace(BaseTest.WS_URL, "") : path;
+      String itemId = (path.startsWith("/")) ? path : "/" + path;
+      itemId = Utils.md5(itemId);
+      WebElement elem = driver().findElement(By.id(Locators.TREE_PREFIX + itemId));
+      return elem;
+   }
+   
 
    public void waitForItem(final String path) throws Exception
    {

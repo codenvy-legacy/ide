@@ -210,8 +210,7 @@ public class ProjectExplorer extends AbstractTestModule
     */
    public void selectItem(String path) throws Exception
    {
-      WebElement item = driver().findElement(By.id(getItemId(path)));
-      new Actions(driver()).moveToElement(item, 1, 1).click().perform();
+    driver().findElement(By.id(getItemId(path))).click();
    }
 
    /**
@@ -323,6 +322,20 @@ public class ProjectExplorer extends AbstractTestModule
       new Actions(driver()).sendKeys(treeGrid, keys).build().perform();
    }
 
+   
+   /**
+    * send your keys commands to item in project explorer
+    * @param keys
+    * @param item
+    * @throws Exception
+    */
+   public void typeKeysToItem(String item, String keys) throws Exception
+   {
+      WebElement elem = driver().findElement(By.id(getItemId(item)));
+      elem.sendKeys(keys);
+   }
+   
+   
    /**
     * click on tab with name of the project
     * 
