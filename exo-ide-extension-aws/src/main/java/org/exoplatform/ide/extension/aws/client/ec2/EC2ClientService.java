@@ -21,8 +21,7 @@ package org.exoplatform.ide.extension.aws.client.ec2;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.List;
 
@@ -47,22 +46,10 @@ public abstract class EC2ClientService
    }
 
    /**
-    * Returns available AMIs.
     * 
-    * @param owner
-    * @param isPublic
-    * @param architecture
-    * @param skipCount
-    * @param maxItems
+    * 
     * @param callback
     * @throws RequestException
     */
-   public abstract void images(String owner, boolean isPublic, String architecture, int skipCount, int maxItems,
-      AsyncRequestCallback<ImagesList> callback) throws RequestException;
-
-   public abstract void securityGroupInfo(AsyncRequestCallback<List<SecurityGroupInfo>> callback)
-      throws RequestException;
-
-//   public abstract void status(StatusRequest request, AsyncRequestCallback<List<InstanceStatusInfo>> callback)
-//      throws RequestException;
+   public abstract void instances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException;
 }

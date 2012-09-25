@@ -19,20 +19,15 @@
 package org.exoplatform.ide.extension.aws.client.ec2;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.shared.ec2.Architecture;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImageInfo;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -49,9 +44,15 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
 {
    interface Display extends IsView
    {
-      void setImages(List<ImageInfo> imagesList);
+      void setInstances(List<InstanceInfo> instanceList);
 
-      //HasClickHandlers getCloseButton();
+      HasClickHandlers getTerminateInstanceButton();
+
+      HasClickHandlers getRebootInstanceButton();
+
+      HasClickHandlers getStopInstanceButton();
+
+      HasClickHandlers getStartInstanceButton();
    }
 
    private Display display;
@@ -71,14 +72,14 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
     */
    public void bindDisplay()
    {
-      //      display.getCloseButton().addClickHandler(new ClickHandler()
-      //      {
-      //         @Override
-      //         public void onClick(ClickEvent event)
-      //         {
-      //            IDE.getInstance().closeView(display.asView().getId());
-      //         }
-      //      });
+//      display.getCloseButton().addClickHandler(new ClickHandler()
+//      {
+//         @Override
+//         public void onClick(ClickEvent event)
+//         {
+//            IDE.getInstance().closeView(display.asView().getId());
+//         }
+//      });
    }
 
    /**
@@ -106,18 +107,17 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
          IDE.getInstance().openView(display.asView());
       }
 
-      AutoBean<ImagesList> imageList = AWSExtension.AUTO_BEAN_FACTORY.create(ImagesList.class);
-      AutoBeanUnmarshaller<ImagesList> unmarshaller = new AutoBeanUnmarshaller<ImagesList>(imageList);
       try
       {
-         EC2ClientService.getInstance().images("self", false, Architecture.x86_64.toString(), 0, -1,
-            new AsyncRequestCallback<ImagesList>(unmarshaller)
+         List<InstanceInfo> instanceList = new ArrayList<InstanceInfo>();
+         EC2ClientService.getInstance().instances(
+            new AsyncRequestCallback<List<InstanceInfo>>(new InstanceListUnmarshaller(instanceList))
             {
 
                @Override
-               protected void onSuccess(ImagesList result)
+               protected void onSuccess(List<InstanceInfo> result)
                {
-                  display.setImages(result.getImages());
+                  display.setInstances(result);
                }
 
                @Override
@@ -133,62 +133,5 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-
-      try
-      {
-         List<SecurityGroupInfo> securityGroupList = new ArrayList<SecurityGroupInfo>();
-         EC2ClientService.getInstance().securityGroupInfo(
-            new AsyncRequestCallback<List<SecurityGroupInfo>>(new SecurityGroupsUnmarshaller(securityGroupList))
-            {
-
-               @Override
-               protected void onSuccess(List<SecurityGroupInfo> result)
-               {
-                  System.out.println(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  // TODO Auto-generated method stub
-                  exception.printStackTrace();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-
-//      try
-//      {
-//         List<InstanceStatusInfo> instanceStatusesList = new ArrayList<InstanceStatusInfo>();
-//         StatusRequest statusRequestBean = AWSExtension.AUTO_BEAN_FACTORY.statusRequest().as();
-//         statusRequestBean.setIncludeAllInstances(true);
-//         EC2ClientService.getInstance().status(statusRequestBean,
-//            new AsyncRequestCallback<List<InstanceStatusInfo>>(new InstanceStatusesUnmarshaller(instanceStatusesList))
-//            {
-//
-//               @Override
-//               protected void onSuccess(List<InstanceStatusInfo> result)
-//               {
-//                  System.out.println(result);
-//               }
-//
-//               @Override
-//               protected void onFailure(Throwable exception)
-//               {
-//                  // TODO Auto-generated method stub
-//                  exception.printStackTrace();
-//               }
-//            });
-//      }
-//      catch (RequestException e)
-//      {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//      }
    }
-
 }
