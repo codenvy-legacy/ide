@@ -86,7 +86,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new DeleteVersionPresenter();
       new CreateVersionPresenter();
       new CreateEnvironmentPresenter();
-      new EC2Manager();
+      //new EC2Manager();
       new S3Manager();
    }
 
@@ -97,7 +97,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-      new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      //new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    public static boolean canBeDeployedToBeanstalk(ProjectModel project)
