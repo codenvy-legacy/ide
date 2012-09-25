@@ -50,7 +50,7 @@ public class TextEditFomContextMenuTest extends ServicesJavaTextFuction
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
       IDE.JAVAEDITOR.callContextMenuIntoJavaEditor(0);
-      IDE.CONTEXT_MENU.wait();
+      IDE.CONTEXT_MENU.waitOpened();
       IDE.CONTEXT_MENU.runCommand(MenuCommands.Edit.SELECT_ALL);
       IDE.CONTEXT_MENU.waitClosed();
 

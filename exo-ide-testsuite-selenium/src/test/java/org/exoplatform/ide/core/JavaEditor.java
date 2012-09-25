@@ -97,7 +97,7 @@ public class JavaEditor extends AbstractTestModule
             try
             {
                WebElement textJavaErr = driver().findElement(By.xpath(String.format(Locators.ERROR_LABEL_TEXT, errorMess)));
-               return true;
+               return textJavaErr!=null;
             }
             catch (Exception e)
             {
@@ -294,7 +294,7 @@ public class JavaEditor extends AbstractTestModule
       try
       {
          WebElement eleme =
-            driver().findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR + "//textarea", tabIndex)));
+            driver().findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, tabIndex)));
          new Actions(driver()).contextClick(eleme).build().perform();
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
