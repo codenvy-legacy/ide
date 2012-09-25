@@ -76,8 +76,9 @@ public class S3 extends AWSClient
     *    name of the bucket
     * @param region
     *    region, where bucket must be created
+    *    valid values: null, us-west-1,us-west-2, EU, ap-southeast-1, ap-northeast-1, sa-east-1
     * @return
-    *    the newly created bucket.
+    *    the newly created bucket with provided information
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -113,7 +114,7 @@ public class S3 extends AWSClient
     * Returns list of all Amazon S3 buckets that the authenticated user owns
     *
     * @return
-    *    a list of all of the Amazon S3 buckets owned by the authenticated sender of the request
+    *    a list of all of the Amazon S3 buckets with provided information owned by the authenticated user
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -155,7 +156,7 @@ public class S3 extends AWSClient
     * Delete bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
     *
     * @param name
-    *    bucket name
+    *    bucket name which will deleted
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -178,6 +179,7 @@ public class S3 extends AWSClient
 
    /**
     * Upload content from specified URL to Amazon S3 storage.
+    * If content with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
     *    bucket name
@@ -197,7 +199,7 @@ public class S3 extends AWSClient
       try
       {
          conn = data.openConnection();
-         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), null, conn.getContentLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentType(), conn.getContentLength());
       }
       finally
       {
@@ -213,6 +215,7 @@ public class S3 extends AWSClient
 
    /**
     * Uploads a new object to the specified Amazon S3 bucket.
+    * If object with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
     *    bucket name
@@ -221,9 +224,9 @@ public class S3 extends AWSClient
     * @param stream
     *    input stream of given file to upload
     * @param mediaType
-    *    media type of file
+    *    media type of file to upload
     * @param length
-    *    size in bytes for file
+    *    size in bytes for file to upload
     * @return
     *    a result object containing the information returned by Amazon S3 for the newly created object.
     * @throws AWSException
@@ -246,6 +249,7 @@ public class S3 extends AWSClient
 
    /**
     * Upload specified eXo IDE project to Amazon S3 storage. Project is zipped before uploading to S3.
+    * If project with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
     *    bucket name
@@ -269,7 +273,7 @@ public class S3 extends AWSClient
       ContentStream zippedProject = vfs.exportZip(projectId);
       try
       {
-         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), null, zippedProject.getLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getMimeType(), zippedProject.getLength());
       }
       catch (AmazonClientException e)
       {
@@ -292,10 +296,9 @@ public class S3 extends AWSClient
          {
             metadata.setContentLength(length);
          }
-         if (mediaType != null)
-         {
-            metadata.setContentType(mediaType);
-         }
+
+         metadata.setContentType(mediaType);
+
          PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, stream, metadata));
          return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
       }
@@ -307,6 +310,7 @@ public class S3 extends AWSClient
 
    /**
     * Returns object which contains information about objects which stored in specified bucket.
+    *
     *
     * @param s3Bucket
     *    name of bucket
