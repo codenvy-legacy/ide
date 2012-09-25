@@ -64,6 +64,29 @@ public class S3 extends AWSClient
       super(authenticator);
    }
 
+   /**
+    * Creates a new Amazon S3 bucket in the specified region. US region by default.
+    * To confirm creating bucket there is some constrains:
+    *  <ul>
+    *      <li>Bucket names should not contain underscores</li>
+    *      <li>Bucket names should be between 3 and 63 characters long</li>
+    *      <li>Bucket names should not end with a dash</li>
+    *      <li>Bucket names cannot contain adjacent periods</li>
+    *      <li>Bucket names cannot contain dashes next to periods (e.g.,
+    *      "my-.bucket.com" and "my.-bucket" are invalid)</li>
+    *      <li>Bucket names cannot contain uppercase characters</li>
+    *  </ul>
+    *  Buckets cannot be nested; buckets cannot be created within other buckets.
+    *
+    * @param name
+    *    name of the bucket
+    * @param region
+    *    region, where bucket must be created
+    * @return
+    *    the newly created bucket.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3Bucket createBucket(String name, S3Region region) throws AWSException
    {
       try
@@ -92,6 +115,14 @@ public class S3 extends AWSClient
       return bucket;
    }
 
+   /**
+    * Returns list of all Amazon S3 buckets that the authenticated user owns
+    *
+    * @return
+    *    a list of all of the Amazon S3 buckets owned by the authenticated sender of the request
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<S3Bucket> listBuckets() throws AWSException
    {
       try
@@ -126,6 +157,15 @@ public class S3 extends AWSClient
       return buckets;
    }
 
+   /**
+    * Delete bucket. All objects (including all object versions and Delete Markers)
+    * in the bucket must be deleted before the bucket itself can be deleted
+    *
+    * @param name
+    *    bucket name
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void deleteBucket(String name) throws AWSException
    {
       try
@@ -149,7 +189,6 @@ public class S3 extends AWSClient
     * @param s3Bucket
     *    bucket name
     * @param s3Key
-    *    key
     *    key
     * @param data
     *    data location
@@ -179,6 +218,26 @@ public class S3 extends AWSClient
       }
    }
 
+   /**
+    * Uploads a new object to the specified Amazon S3 bucket.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    key
+    * @param stream
+    *    input stream of given file to upload
+    * @param mediaType
+    *    media type of file
+    * @param length
+    *    size in bytes for file
+    * @return
+    *    a result object containing the information returned by Amazon S3 for the newly created object.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws IOException
+    *    if any i/o error occurs
+    */
    public NewS3Object putObject(String s3Bucket, String s3Key, InputStream stream, String mediaType, long length)
       throws AWSException, IOException
    {
@@ -253,6 +312,24 @@ public class S3 extends AWSClient
       }
    }
 
+   /**
+    * Returns a list of summary information about the objects in the specified bucket.
+    *
+    * @param s3Bucket
+    *    name of bucket
+    * @param prefix
+    *    the prefix restricting what keys will be listed
+    * @param nextMarker
+    *    the key marker indicating where listing results should begin
+    * @param maxKeys
+    *    the maximum number of results to return
+    * @return
+    *    A listing of the objects in the specified bucket, along with any other associated
+    *    information, such as common prefixes (if delimiter was specified), the original
+    *    request parameters, etc.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
       try
@@ -302,11 +379,23 @@ public class S3 extends AWSClient
       return s3ObjectsList;
    }
 
-   public void deleteObject(String s3Bucket, String s3Key) throws AWSException
+   /**
+    * Deletes the specified object in the specified bucket. Once deleted, the
+    * object can only be restored if versioning was enabled when the object was
+    * deleted.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3key
+    *    key of the object
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteObject(String s3Bucket, String s3key) throws AWSException
    {
       try
       {
-         deleteObject(getS3Client(), s3Bucket, s3Key);
+         deleteObject(getS3Client(), s3Bucket, s3key);
       }
       catch (AmazonClientException e)
       {
@@ -319,6 +408,18 @@ public class S3 extends AWSClient
       s3.deleteObject(new DeleteObjectRequest(s3Bucket, s3Key));
    }
 
+   /**
+    * Gets the object stored in Amazon S3 under the specified bucket and key.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    the key of object to be read
+    * @return
+    *    result object which consists of stream, content type and last modification date for object to be read
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException
    {
       try
