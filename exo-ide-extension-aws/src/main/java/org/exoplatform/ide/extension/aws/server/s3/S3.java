@@ -302,11 +302,11 @@ public class S3 extends AWSClient
       return s3ObjectsList;
    }
 
-   public void deleteObject(String s3Bucket, String s3key) throws AWSException
+   public void deleteObject(String s3Bucket, String s3Key) throws AWSException
    {
       try
       {
-         deleteObject(getS3Client(), s3Bucket, s3key);
+         deleteObject(getS3Client(), s3Bucket, s3Key);
       }
       catch (AmazonClientException e)
       {
