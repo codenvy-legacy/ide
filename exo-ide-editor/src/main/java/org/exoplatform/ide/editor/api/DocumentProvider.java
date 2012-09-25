@@ -19,7 +19,7 @@
 package org.exoplatform.ide.editor.api;
 
 import org.exoplatform.ide.source.AnnotationModel;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  *  A document provider maps between domain elements and documents. A document provider has the
@@ -79,7 +79,7 @@ public interface DocumentProvider
     * @param element the element, or <code>null</code>
     * @return the document, or <code>null</code> if none
     */
-   IDocument getDocument(Object element);
+   Document getDocument(Object element);
    
    /**
     * Saves the given document provided for the given element.
@@ -90,7 +90,7 @@ public interface DocumentProvider
     * @param overwrite indicates whether overwrite should be performed
     *          while saving the given element if necessary
     */
-   void saveDocument(Object element, IDocument document, boolean overwrite);
+   void saveDocument(Object element, Document document, boolean overwrite);
    
    /**
     * Returns the annotation model for the given element.

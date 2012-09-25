@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.IRegion;
 
 import java.util.List;
@@ -176,13 +176,13 @@ public class MultiTextEdit extends TextEdit
    }
 
    /* @see TextEdit#performConsistencyCheck */
-   void performConsistencyCheck(TextEditProcessor processor, IDocument document) throws MalformedTreeException
+   void performConsistencyCheck(TextEditProcessor processor, Document document) throws MalformedTreeException
    {
       checkIntegrity();
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       fDelta = 0;
       return fDelta;

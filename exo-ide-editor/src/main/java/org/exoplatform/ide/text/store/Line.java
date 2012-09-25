@@ -35,13 +35,13 @@ import org.exoplatform.ide.json.JsonStringMap;
  */
 public class Line implements TaggableLine {
 
-  static Line create(TextStore document, String text) {
+  static Line create(DocumentModel document, String text) {
     return new Line(document, text);
   }
 
   private boolean attached;
 
-  private final TextStore document;
+  private final DocumentModel document;
 
   private Line nextLine;
 
@@ -52,14 +52,14 @@ public class Line implements TaggableLine {
 
   private String text;
 
-  private Line(TextStore document, String text) {
+  private Line(DocumentModel document, String text) {
     this.document = document;
     this.text = text;
 
     tags = JsonCollections.createStringMap();
   }
 
-  public TextStore getDocument() {
+  public DocumentModel getDocument() {
     return document;
   }
 

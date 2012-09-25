@@ -15,7 +15,7 @@
 package org.exoplatform.ide.texteditor.renderer;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.Editor;
@@ -40,7 +40,7 @@ import java.util.EnumSet;
 public class Renderer
 {
 
-   public static Renderer create(TextStore document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
+   public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
       SelectionModel selection, FocusManager focusManager, Editor editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {
@@ -95,7 +95,7 @@ public class Renderer
 
    private final RenderTimeExecutor renderTimeExecutor;
 
-   private Renderer(TextStore document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
+   private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
       SelectionModel selection, FocusManager focusManager, Editor editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {

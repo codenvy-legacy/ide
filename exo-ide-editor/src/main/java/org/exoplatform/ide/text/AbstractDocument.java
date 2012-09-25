@@ -49,7 +49,7 @@ import java.util.Map;
  * @see org.eclipse.jface.text.ITextStore
  * @see org.eclipse.jface.text.ILineTracker
  */
-public abstract class AbstractDocument implements IDocument
+public abstract class AbstractDocument implements Document
 {
 
    /** The document's text store */
@@ -120,7 +120,7 @@ public abstract class AbstractDocument implements IDocument
     * The registered document partitioners.
     * 
     */
-   private Map<String, IDocumentPartitioner> fDocumentPartitioners;
+   private Map<String, DocumentPartitioner> fDocumentPartitioners;
 
    /**
     * The partitioning changed event.
@@ -228,7 +228,7 @@ public abstract class AbstractDocument implements IDocument
    }
 
    /* @see org.eclipse.jface.text.IDocument#getDocumentPartitioner() */
-   public IDocumentPartitioner getDocumentPartitioner()
+   public DocumentPartitioner getDocumentPartitioner()
    {
       return getDocumentPartitioner(DEFAULT_PARTITIONING);
    }
@@ -258,7 +258,7 @@ public abstract class AbstractDocument implements IDocument
    /*
     * @see org.eclipse.jface.text.IDocument#setDocumentPartitioner(org.eclipse.jface .text.IDocumentPartitioner)
     */
-   public void setDocumentPartitioner(IDocumentPartitioner partitioner)
+   public void setDocumentPartitioner(DocumentPartitioner partitioner)
    {
       setDocumentPartitioner(DEFAULT_PARTITIONING, partitioner);
    }
@@ -287,7 +287,7 @@ public abstract class AbstractDocument implements IDocument
    /*
     * @see org.eclipse.jface.text.IDocument#addDocumentListener(org.eclipse.jface .text.IDocumentListener)
     */
-   public void addDocumentListener(IDocumentListener listener)
+   public void addDocumentListener(DocumentListener listener)
    {
       Assert.isNotNull(listener);
       fDocumentListeners.add(listener);
@@ -296,7 +296,7 @@ public abstract class AbstractDocument implements IDocument
    /*
     * @see org.eclipse.jface.text.IDocument#removeDocumentListener(org.eclipse.jface .text.IDocumentListener)
     */
-   public void removeDocumentListener(IDocumentListener listener)
+   public void removeDocumentListener(DocumentListener listener)
    {
       Assert.isNotNull(listener);
       fDocumentListeners.remove(listener);
@@ -305,7 +305,7 @@ public abstract class AbstractDocument implements IDocument
    /*
     * @see org.eclipse.jface.text.IDocument#addPrenotifiedDocumentListener(org.eclipse .jface.text.IDocumentListener)
     */
-   public void addPrenotifiedDocumentListener(IDocumentListener listener)
+   public void addPrenotifiedDocumentListener(DocumentListener listener)
    {
       Assert.isNotNull(listener);
       fPrenotifiedDocumentListeners.add(listener);
@@ -314,7 +314,7 @@ public abstract class AbstractDocument implements IDocument
    /*
     * @see org.eclipse.jface.text.IDocument#removePrenotifiedDocumentListener(org .eclipse.jface.text.IDocumentListener)
     */
-   public void removePrenotifiedDocumentListener(IDocumentListener listener)
+   public void removePrenotifiedDocumentListener(DocumentListener listener)
    {
       Assert.isNotNull(listener);
       fPrenotifiedDocumentListeners.remove(listener);
@@ -668,10 +668,10 @@ public abstract class AbstractDocument implements IDocument
 
       if (fDocumentPartitioners != null)
       {
-         Iterator<IDocumentPartitioner> e = fDocumentPartitioners.values().iterator();
+         Iterator<DocumentPartitioner> e = fDocumentPartitioners.values().iterator();
          while (e.hasNext())
          {
-            IDocumentPartitioner p = e.next();
+            DocumentPartitioner p = e.next();
             // if (p instanceof IDocumentPartitionerExtension3) {
             // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) p;
             // if (extension.getActiveRewriteSession() != null)
@@ -693,7 +693,7 @@ public abstract class AbstractDocument implements IDocument
       {
          try
          {
-            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+            ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
          }
          catch (Exception ex)
          {
@@ -706,7 +706,7 @@ public abstract class AbstractDocument implements IDocument
       {
          try
          {
-            ((IDocumentListener)listeners[i]).documentAboutToBeChanged(event);
+            ((DocumentListener)listeners[i]).documentAboutToBeChanged(event);
          }
          catch (Exception ex)
          {
@@ -731,7 +731,7 @@ public abstract class AbstractDocument implements IDocument
          while (e.hasNext())
          {
             String partitioning = e.next();
-            IDocumentPartitioner partitioner = (IDocumentPartitioner)fDocumentPartitioners.get(partitioning);
+            DocumentPartitioner partitioner = (DocumentPartitioner)fDocumentPartitioners.get(partitioning);
 
             // if (partitioner instanceof IDocumentPartitionerExtension3) {
             // IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) partitioner;
@@ -812,7 +812,7 @@ public abstract class AbstractDocument implements IDocument
       {
          try
          {
-            ((IDocumentListener)listeners[i]).documentChanged(event);
+            ((DocumentListener)listeners[i]).documentChanged(event);
          }
          catch (Exception ex)
          {
@@ -825,7 +825,7 @@ public abstract class AbstractDocument implements IDocument
       {
          try
          {
-            ((IDocumentListener)listeners[i]).documentChanged(event);
+            ((DocumentListener)listeners[i]).documentChanged(event);
          }
          catch (Exception ex)
          {
@@ -1472,7 +1472,7 @@ public abstract class AbstractDocument implements IDocument
       if ((0 > offset) || (0 > length) || (offset + length > getLength()))
          throw new BadLocationException();
 
-      IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
+      DocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
       //
       // if (partitioner instanceof IDocumentPartitionerExtension2)
       // {
@@ -1502,7 +1502,7 @@ public abstract class AbstractDocument implements IDocument
       if ((0 > offset) || (offset > getLength()))
          throw new BadLocationException();
 
-      IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
+      DocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
 
       // if (partitioner instanceof IDocumentPartitionerExtension2)
       // {
@@ -1525,9 +1525,9 @@ public abstract class AbstractDocument implements IDocument
     * @see org.eclipse.jface.text.IDocumentExtension3#getDocumentPartitioner(java .lang.String)
     * @since 3.0
     */
-   public IDocumentPartitioner getDocumentPartitioner(String partitioning)
+   public DocumentPartitioner getDocumentPartitioner(String partitioning)
    {
-      return fDocumentPartitioners != null ? (IDocumentPartitioner)fDocumentPartitioners.get(partitioning) : null;
+      return fDocumentPartitioners != null ? (DocumentPartitioner)fDocumentPartitioners.get(partitioning) : null;
    }
 
    /*
@@ -1536,7 +1536,7 @@ public abstract class AbstractDocument implements IDocument
     */
    public String[] getLegalContentTypes(String partitioning) throws BadPartitioningException
    {
-      IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
+      DocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
       if (partitioner != null)
          return partitioner.getLegalContentTypes();
       if (DEFAULT_PARTITIONING.equals(partitioning))
@@ -1554,7 +1554,7 @@ public abstract class AbstractDocument implements IDocument
       if ((0 > offset) || (offset > getLength()))
          throw new BadLocationException();
 
-      IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
+      DocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
 
       // if (partitioner instanceof IDocumentPartitionerExtension2)
       // {
@@ -1591,7 +1591,7 @@ public abstract class AbstractDocument implements IDocument
     * org.eclipse.jface.text.IDocumentPartitioner)
     * @since 3.0
     */
-   public void setDocumentPartitioner(String partitioning, IDocumentPartitioner partitioner)
+   public void setDocumentPartitioner(String partitioning, DocumentPartitioner partitioner)
    {
       if (partitioner == null)
       {
@@ -1605,7 +1605,7 @@ public abstract class AbstractDocument implements IDocument
       else
       {
          if (fDocumentPartitioners == null)
-            fDocumentPartitioners = new HashMap<String, IDocumentPartitioner>();
+            fDocumentPartitioners = new HashMap<String, DocumentPartitioner>();
          fDocumentPartitioners.put(partitioning, partitioner);
       }
       DocumentPartitioningChangedEvent event = new DocumentPartitioningChangedEvent(this);
@@ -1804,7 +1804,7 @@ public abstract class AbstractDocument implements IDocument
     * @param partitioning the document partitioning the partitioner is registered for
     * @since 3.1
     */
-   protected final void checkStateOfPartitioner(IDocumentPartitioner partitioner, String partitioning)
+   protected final void checkStateOfPartitioner(DocumentPartitioner partitioner, String partitioning)
    {
       // if (!(partitioner instanceof IDocumentPartitionerExtension3))
       // return;

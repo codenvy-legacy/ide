@@ -32,9 +32,9 @@ import org.exoplatform.ide.text.store.util.LineUtils;
  */
 public class LineFinder {
 
-  private final TextStore document;
+  private final DocumentModel document;
 
-  LineFinder(TextStore document) {
+  LineFinder(DocumentModel document) {
     this.document = document;
   }
 

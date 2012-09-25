@@ -22,7 +22,7 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
@@ -208,7 +208,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     }
   }
 
-  public static SelectionModel create(TextStore document, Buffer buffer) {
+  public static SelectionModel create(DocumentModel document, Buffer buffer) {
     ListenerRegistrar.RemoverManager removalManager = new ListenerRegistrar.RemoverManager();
     SelectionModel selection = new SelectionModel(document, buffer, removalManager);
     removalManager.track(buffer.getMouseDragListenerRegistrar().add(selection));
@@ -216,7 +216,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     return selection;
   }
 
-  private Anchor createSelectionAnchor(Line line, int lineNumber, int column, TextStore document,
+  private Anchor createSelectionAnchor(Line line, int lineNumber, int column, DocumentModel document,
       AnchorListener anchorListener) {
     Anchor anchor =
         document.getAnchorManager().createAnchor(SELECTION_ANCHOR_TYPE, line, lineNumber, column);
@@ -237,7 +237,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   /** The cursor of the selection */
   private final Anchor cursorAnchor;
   private final ListenerManager<CursorListener> cursorListenerManager;
-  private final TextStore document;
+  private final DocumentModel document;
   /**
    * While the user is dragging, this defines the lower bound for the minimum
    * selection that must be selected regardless of where the user's mouse
@@ -266,7 +266,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   private ViewportModel viewport;
 
   private SelectionModel(
-      TextStore document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager) {
+      DocumentModel document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager) {
     this.document = document;
     this.buffer = buffer;
     this.removerManager = removerManager;

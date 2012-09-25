@@ -15,7 +15,7 @@
 package org.exoplatform.ide.text.store.util;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineFinder;
 import org.exoplatform.ide.text.store.LineInfo;
@@ -179,7 +179,7 @@ public final class LineUtils {
    * Returns a line number in the range of the document closest to the
    * {@code targetLineNumber}.
    */
-  public static int getValidLineNumber(int targetLineNumber, TextStore document) {
+  public static int getValidLineNumber(int targetLineNumber, DocumentModel document) {
     int lastLineNumber = document.getLastLineNumber();
     if (targetLineNumber <= 0) {
       return 0;

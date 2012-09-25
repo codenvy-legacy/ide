@@ -19,7 +19,7 @@
 package org.exoplatform.ide.texteditor;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.edits.DeleteEdit;
 import org.exoplatform.ide.text.edits.InsertEdit;
 import org.exoplatform.ide.text.store.TextChange;
@@ -66,7 +66,7 @@ public class EditorTextStoreMutator implements TextStoreMutator
       {
          return null;
       }
-      IDocument document = editor.getDocument();
+      Document document = editor.getDocument();
       try
       {
          int lineOffset = document.getLineOffset(lineNumber);
@@ -110,7 +110,7 @@ public class EditorTextStoreMutator implements TextStoreMutator
       {
          return null;
       }
-      IDocument document = editor.getDocument();
+      Document document = editor.getDocument();
       try
       {
          int lineOffset = document.getLineOffset(lineNumber);

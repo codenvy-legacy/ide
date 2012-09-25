@@ -66,7 +66,7 @@ public class DefaultPositionUpdater implements IPositionUpdater
    protected int fReplaceLength;
 
    /** Caches the document */
-   protected IDocument fDocument;
+   protected Document fDocument;
 
    /**
     * Creates a new default position updater for the given category.

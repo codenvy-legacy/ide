@@ -22,16 +22,16 @@ import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.BadPartitioningException;
 import org.exoplatform.ide.text.BadPositionCategoryException;
 import org.exoplatform.ide.text.FindReplaceDocumentAdapter;
-import org.exoplatform.ide.text.IDocument;
-import org.exoplatform.ide.text.IDocumentListener;
-import org.exoplatform.ide.text.IDocumentPartitioner;
+import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.DocumentListener;
+import org.exoplatform.ide.text.DocumentPartitioner;
 import org.exoplatform.ide.text.IDocumentPartitioningListener;
 import org.exoplatform.ide.text.IPositionUpdater;
 import org.exoplatform.ide.text.IRegion;
 import org.exoplatform.ide.text.ITypedRegion;
 import org.exoplatform.ide.text.Position;
 
-class EditDocument implements IDocument
+class EditDocument implements Document
 {
 
    private StringBuffer fBuffer;
@@ -106,7 +106,7 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   public IDocumentPartitioner getDocumentPartitioner()
+   public DocumentPartitioner getDocumentPartitioner()
    {
       throw new UnsupportedOperationException();
    }
@@ -191,7 +191,7 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   public void removeDocumentListener(IDocumentListener listener)
+   public void removeDocumentListener(DocumentListener listener)
    {
       throw new UnsupportedOperationException();
    }
@@ -221,7 +221,7 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter)
+   public void removePrenotifiedDocumentListener(DocumentListener documentAdapter)
    {
       throw new UnsupportedOperationException();
    }
@@ -247,29 +247,29 @@ class EditDocument implements IDocument
       throw new UnsupportedOperationException();
    }
 
-   /** @see org.exoplatform.ide.editor.text.IDocument#addPositionCategory(java.lang.String) */
+   /** @see org.exoplatform.ide.editor.Document.IDocument#addPositionCategory(java.lang.String) */
    @Override
    public void addPositionCategory(String category)
    {
       throw new UnsupportedOperationException();
    }
 
-   public void setDocumentPartitioner(IDocumentPartitioner partitioner)
+   public void setDocumentPartitioner(DocumentPartitioner partitioner)
    {
       throw new UnsupportedOperationException();
    }
 
    /**
-    * @see org.exoplatform.ide.editor.text.IDocument#addDocumentListener(org.exoplatform.ide.editor.text.IDocumentListener)
+    * @see org.exoplatform.ide.editor.Document.IDocument#addDocumentListener(org.exoplatform.ide.editor.DocumentListener.IDocumentListener)
     */
    @Override
-   public void addDocumentListener(IDocumentListener listener)
+   public void addDocumentListener(DocumentListener listener)
    {
       throw new UnsupportedOperationException();
    }
 
    /**
-    * @see org.exoplatform.ide.editor.text.IDocument#addDocumentPartitioningListener(org.exoplatform.ide.editor.text.IDocumentPartitioningListener)
+    * @see org.exoplatform.ide.editor.Document.IDocument#addDocumentPartitioningListener(org.exoplatform.ide.editor.text.IDocumentPartitioningListener)
     */
    @Override
    public void addDocumentPartitioningListener(IDocumentPartitioningListener listener)
@@ -278,7 +278,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getPartitionings()
+    * @see org.exoplatform.ide.text.Document#getPartitionings()
     */
    @Override
    public String[] getPartitionings()
@@ -287,7 +287,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getLegalContentTypes(java.lang.String)
+    * @see org.exoplatform.ide.text.Document#getLegalContentTypes(java.lang.String)
     */
    @Override
    public String[] getLegalContentTypes(String partitioning) throws BadPartitioningException
@@ -296,7 +296,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getContentType(java.lang.String, int, boolean)
+    * @see org.exoplatform.ide.text.Document#getContentType(java.lang.String, int, boolean)
     */
    @Override
    public String getContentType(String partitioning, int offset, boolean preferOpenPartitions)
@@ -306,7 +306,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getPartition(java.lang.String, int, boolean)
+    * @see org.exoplatform.ide.text.Document#getPartition(java.lang.String, int, boolean)
     */
    @Override
    public ITypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
@@ -316,7 +316,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#computePartitioning(java.lang.String, int, int, boolean)
+    * @see org.exoplatform.ide.text.Document#computePartitioning(java.lang.String, int, int, boolean)
     */
    @Override
    public ITypedRegion[] computePartitioning(String partitioning, int offset, int length,
@@ -326,25 +326,25 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#setDocumentPartitioner(java.lang.String, org.exoplatform.ide.text.IDocumentPartitioner)
+    * @see org.exoplatform.ide.text.Document#setDocumentPartitioner(java.lang.String, org.exoplatform.ide.text.DocumentPartitioner)
     */
    @Override
-   public void setDocumentPartitioner(String partitioning, IDocumentPartitioner partitioner)
+   public void setDocumentPartitioner(String partitioning, DocumentPartitioner partitioner)
    {
       throw new UnsupportedOperationException();
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getDocumentPartitioner(java.lang.String)
+    * @see org.exoplatform.ide.text.Document#getDocumentPartitioner(java.lang.String)
     */
    @Override
-   public IDocumentPartitioner getDocumentPartitioner(String partitioning)
+   public DocumentPartitioner getDocumentPartitioner(String partitioning)
    {
       throw new UnsupportedOperationException();
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#getModificationStamp()
+    * @see org.exoplatform.ide.text.Document#getModificationStamp()
     */
    @Override
    public long getModificationStamp()
@@ -353,7 +353,7 @@ class EditDocument implements IDocument
    }
 
    /**
-    * @see org.exoplatform.ide.text.IDocument#replace(int, int, java.lang.String, long)
+    * @see org.exoplatform.ide.text.Document#replace(int, int, java.lang.String, long)
     */
    @Override
    public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException

@@ -16,7 +16,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import org.exoplatform.ide.commands.ExecutionException;
 import org.exoplatform.ide.commands.operations.IUndoContext;
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.undo.DocumentUndoEvent;
 import org.exoplatform.ide.text.undo.DocumentUndoManagerRegistry;
@@ -226,7 +226,7 @@ public class TextEditorUndoManager
    private IDocumentUndoManager fDocumentUndoManager;
 
    /** The document that is active. */
-   private IDocument fDocument;
+   private Document fDocument;
 
    /** The document undo listener */
    private IDocumentUndoListener fDocumentUndoListener;
@@ -372,7 +372,7 @@ public class TextEditorUndoManager
          this.textViewer = textViewer;
          addListeners();
       }
-      IDocument doc = textViewer.getDocument();
+      Document doc = textViewer.getDocument();
       connectDocumentUndoManager(doc);
    }
 
@@ -463,7 +463,7 @@ public class TextEditorUndoManager
     */
    private void selectAndReveal(int offset, int length)
    {
-      IDocument document = textViewer.getDocument();
+      Document document = textViewer.getDocument();
       try
       {
          int startLine = document.getLineOfOffset(offset);
@@ -506,7 +506,7 @@ public class TextEditorUndoManager
       return null;
    }
 
-   private void connectDocumentUndoManager(IDocument document)
+   private void connectDocumentUndoManager(Document document)
    {
       disconnectDocumentUndoManager();
       if (document != null)

@@ -25,8 +25,8 @@ import org.exoplatform.ide.runtime.IStatus;
 import org.exoplatform.ide.runtime.Status;
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.DocumentEvent;
-import org.exoplatform.ide.text.IDocument;
-import org.exoplatform.ide.text.IDocumentListener;
+import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.DocumentListener;
 import org.exoplatform.ide.text.ListenerList;
 import org.exoplatform.ide.text.TextUtilities;
 
@@ -52,7 +52,7 @@ import java.util.List;
  * @see IDocumentUndoManager
  * @see DocumentUndoManagerRegistry
  * @see IDocumentUndoListener
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class DocumentUndoManager implements IDocumentUndoManager
@@ -81,10 +81,10 @@ public class DocumentUndoManager implements IDocumentUndoManager
       protected String fPreservedText;
 
       /** The undo modification stamp. */
-      protected long fUndoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
+      protected long fUndoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
 
       /** The redo modification stamp. */
-      protected long fRedoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
+      protected long fRedoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
 
       /** The undo manager that generated the change. */
       protected DocumentUndoManager fDocumentUndoManager;
@@ -108,8 +108,8 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          fStart = fEnd = -1;
          fText = fPreservedText = null;
-         fUndoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
-         fRedoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
+         fUndoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
+         fRedoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
       }
 
       /**
@@ -141,8 +141,8 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          try
          {
-            if (fDocumentUndoManager.fDocument instanceof IDocument)
-               ((IDocument)fDocumentUndoManager.fDocument).replace(fStart, fText.length(), fPreservedText,
+            if (fDocumentUndoManager.fDocument instanceof Document)
+               ((Document)fDocumentUndoManager.fDocument).replace(fStart, fText.length(), fPreservedText,
                   fUndoModificationStamp);
             else
                fDocumentUndoManager.fDocument.replace(fStart, fText.length(), fPreservedText);
@@ -159,14 +159,14 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          if (isValid())
          {
-            if (fDocumentUndoManager.fDocument instanceof IDocument)
+            if (fDocumentUndoManager.fDocument instanceof Document)
             {
-               long docStamp = ((IDocument)fDocumentUndoManager.fDocument).getModificationStamp();
+               long docStamp = ((Document)fDocumentUndoManager.fDocument).getModificationStamp();
 
                // Normal case: an undo is valid if its redo will restore
                // document to its current modification stamp
                boolean canUndo =
-                  docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp >= getRedoModificationStamp();
+                  docStamp == Document.UNKNOWN_MODIFICATION_STAMP || docStamp >= getRedoModificationStamp();
 
                /*
                 * Special case to check if the answer is false. If the last
@@ -191,7 +191,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
                   // modification
                   && fDocumentUndoManager.fCurrent.fUndoModificationStamp !=
                   // the invalid current operation has a document stamp
-                  IDocument.UNKNOWN_MODIFICATION_STAMP)
+                  Document.UNKNOWN_MODIFICATION_STAMP)
                {
                   canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
                }
@@ -205,7 +205,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
                   && this == fDocumentUndoManager.fHistory.getUndoOperation(fDocumentUndoManager.fUndoContext) && // this is the latest operation
                   this instanceof UndoableCompoundTextChange && this == fDocumentUndoManager.fCurrent && // this is the current operation
                   this.fStart == -1 && // the current operation text is not valid
-                  fDocumentUndoManager.fCurrent.fRedoModificationStamp != IDocument.UNKNOWN_MODIFICATION_STAMP)
+                  fDocumentUndoManager.fCurrent.fRedoModificationStamp != Document.UNKNOWN_MODIFICATION_STAMP)
                {
                   // but it has a redo stamp
                   canUndo = fDocumentUndoManager.fCurrent.fRedoModificationStamp == docStamp;
@@ -227,10 +227,10 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          if (isValid())
          {
-            if (fDocumentUndoManager.fDocument instanceof IDocument)
+            if (fDocumentUndoManager.fDocument instanceof Document)
             {
-               long docStamp = ((IDocument)fDocumentUndoManager.fDocument).getModificationStamp();
-               return docStamp == IDocument.UNKNOWN_MODIFICATION_STAMP || docStamp == getUndoModificationStamp();
+               long docStamp = ((Document)fDocumentUndoManager.fDocument).getModificationStamp();
+               return docStamp == Document.UNKNOWN_MODIFICATION_STAMP || docStamp == getUndoModificationStamp();
             }
             // if there is no timestamp to check, simply return true per the
             // 3.0.1 behavior
@@ -282,8 +282,8 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          try
          {
-            if (fDocumentUndoManager.fDocument instanceof IDocument)
-               ((IDocument)fDocumentUndoManager.fDocument)
+            if (fDocumentUndoManager.fDocument instanceof Document)
+               ((Document)fDocumentUndoManager.fDocument)
                   .replace(fStart, fEnd - fStart, fText, fRedoModificationStamp);
             else
                fDocumentUndoManager.fDocument.replace(fStart, fEnd - fStart, fText);
@@ -625,7 +625,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    /**
     * Internal listener to document changes.
     */
-   private class DocumentListener implements IDocumentListener
+   private class DocumentListenerImpl implements DocumentListener
    {
 
       private String fReplacedText;
@@ -758,7 +758,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    /**
     * The document whose changes are being tracked.
     */
-   private IDocument fDocument;
+   private Document fDocument;
 
    /**
     * The currently constructed edit.
@@ -796,7 +796,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    /**
     * The document modification stamp for redo.
     */
-   private long fPreservedRedoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
+   private long fPreservedRedoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
 
    /**
     * Text buffer to collect viewer content which has been replaced
@@ -806,7 +806,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
    /**
     * The document modification stamp for undo.
     */
-   private long fPreservedUndoModificationStamp = IDocument.UNKNOWN_MODIFICATION_STAMP;
+   private long fPreservedUndoModificationStamp = Document.UNKNOWN_MODIFICATION_STAMP;
 
    /**
     * The last delete text edit.
@@ -836,7 +836,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
     *
     * @param document the document whose undo history is being managed.
     */
-   public DocumentUndoManager(IDocument document)
+   public DocumentUndoManager(Document document)
    {
       super();
       Assert.isNotNull(document);
@@ -1110,7 +1110,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
       {
          if (fDocumentListener == null && fDocument != null)
          {
-            fDocumentListener = new DocumentListener();
+            fDocumentListener = new DocumentListenerImpl();
             fDocument.addDocumentListener(fDocumentListener);
          }
       }
@@ -1137,7 +1137,7 @@ public class DocumentUndoManager implements IDocumentUndoManager
       int length = insertedText.length();
       int diff = modelEnd - modelStart;
 
-      if (fCurrent.fUndoModificationStamp == IDocument.UNKNOWN_MODIFICATION_STAMP)
+      if (fCurrent.fUndoModificationStamp == Document.UNKNOWN_MODIFICATION_STAMP)
          fCurrent.fUndoModificationStamp = beforeChangeModificationStamp;
 
       // normalize
@@ -1393,9 +1393,9 @@ public class DocumentUndoManager implements IDocumentUndoManager
       UndoableTextChange cmd = new UndoableTextChange(this);
       cmd.fStart = cmd.fEnd = 0;
       cmd.fText = cmd.fPreservedText = ""; //$NON-NLS-1$
-      if (fDocument instanceof IDocument)
+      if (fDocument instanceof Document)
       {
-         cmd.fRedoModificationStamp = ((IDocument)fDocument).getModificationStamp();
+         cmd.fRedoModificationStamp = ((Document)fDocument).getModificationStamp();
          if (op != null)
             cmd.fUndoModificationStamp = ((UndoableTextChange)op).fRedoModificationStamp;
       }

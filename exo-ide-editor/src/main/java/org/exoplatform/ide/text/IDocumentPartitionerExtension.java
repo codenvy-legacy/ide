@@ -19,11 +19,11 @@
 package org.exoplatform.ide.text;
 
 /**
- * Extension interface for {@link org.eclipse.jface.text.IDocumentPartitioner}.
+ * Extension interface for {@link org.eclipse.DocumentPartitioner.text.IDocumentPartitioner}.
  * <p>
  * Replaces the original concept of the document partitioner by returning the minimal region that includes all partition changes
  * caused by the invocation of the document partitioner. The method <code>documentChanged2</code> is considered the replacement of
- * {@link org.eclipse.jface.text.IDocumentPartitioner#documentChanged(DocumentEvent)}.
+ * {@link org.eclipse.DocumentPartitioner.text.IDocumentPartitioner#documentChanged(DocumentEvent)}.
  * 
  * @since 2.0
  */
@@ -38,7 +38,7 @@ public interface IDocumentPartitionerExtension
     * 
     * Will be called by the connected document and is not intended to be used by clients other than the connected document.
     * <p>
-    * Replaces {@link IDocumentPartitioner#documentChanged(DocumentEvent)}.
+    * Replaces {@link DocumentPartitioner#documentChanged(DocumentEvent)}.
     * 
     * @param event the event describing the document change
     * @return the region of the document in which the partition type changed or <code>null</code>

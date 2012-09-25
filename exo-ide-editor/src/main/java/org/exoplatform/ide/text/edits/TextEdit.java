@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.IRegion;
 import org.exoplatform.ide.text.Region;
 
@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * A text edit describes an elementary text manipulation operation. Edits are executed by applying them to a document (e.g. an
- * instance of <code>IDocument
+ * instance of <code>Document
  * </code>).
  * <p>
  * Text edits form a tree. Clients can navigate the tree upwards, from child to parent, as well as downwards. Newly created edits
@@ -51,7 +51,7 @@ import java.util.List;
  * executed in the order in which they have been added to a parent. The following code example:
  * 
  * <pre>
- * IDocument document = new Document(&quot;org&quot;);
+ * Document document = new DocumentImpl(&quot;org&quot;);
  * MultiTextEdit edit = new MultiTextEdit();
  * edit.addChild(new InsertEdit(0, &quot;www.&quot;));
  * edit.addChild(new InsertEdit(0, &quot;eclipse.&quot;));
@@ -63,7 +63,7 @@ import java.util.List;
  * <p>
  * Text edits can be executed in a mode where the edit's region is updated to reflect the edit's position in the changed document.
  * Region updating is enabled by default or can be requested by passing <code>UPDATE_REGIONS</code> to the
- * {@link #apply(IDocument, int) apply(IDocument, int)} method. In the above example the region of the
+ * {@link #apply(Document, int) apply(Document, int)} method. In the above example the region of the
  * <code>InsertEdit(0, "eclipse.")</code> edit after executing the root edit is <code>[3, 8]</code>. If the region of an edit got
  * deleted during change execution the region is set to <code>[-1, -1]</code> and the method {@link #isDeleted() isDeleted}
  * returns <code>true</code>.
@@ -95,13 +95,10 @@ public abstract class TextEdit
     */
    public static final int UPDATE_REGIONS = 1 << 1;
 
-   private static class InsertionComparator implements Comparator
+   private static class InsertionComparator implements Comparator<TextEdit>
    {
-      public int compare(Object o1, Object o2) throws MalformedTreeException
+      public int compare(TextEdit edit1, TextEdit edit2) throws MalformedTreeException
       {
-         TextEdit edit1 = (TextEdit)o1;
-         TextEdit edit2 = (TextEdit)o2;
-
          int offset1 = edit1.getOffset();
          int length1 = edit1.getLength();
 
@@ -136,7 +133,7 @@ public abstract class TextEdit
 
    private TextEdit fParent;
 
-   private List fChildren;
+   private List<TextEdit> fChildren;
 
    int fDelta;
 
@@ -720,7 +717,7 @@ public abstract class TextEdit
     * 
     * @see TextEditProcessor#performEdits()
     */
-   public final UndoEdit apply(IDocument document, int style) throws MalformedTreeException, BadLocationException
+   public final UndoEdit apply(Document document, int style) throws MalformedTreeException, BadLocationException
    {
       try
       {
@@ -745,9 +742,9 @@ public abstract class TextEdit
     *               executed. So the document is still in its original state.
     * @exception BadLocationException is thrown if one of the edits in the tree can't be executed. The state of the document is
     *               undefined if this exception is thrown.
-    * @see #apply(IDocument, int)
+    * @see #apply(Document, int)
     */
-   public final UndoEdit apply(IDocument document) throws MalformedTreeException, BadLocationException
+   public final UndoEdit apply(Document document) throws MalformedTreeException, BadLocationException
    {
       return apply(document, CREATE_UNDO | UPDATE_REGIONS);
    }
@@ -888,7 +885,7 @@ public abstract class TextEdit
     * 
     * @return the number of indirect move or copy target edit children
     */
-   int traverseConsistencyCheck(TextEditProcessor processor, IDocument document, List sourceEdits)
+   int traverseConsistencyCheck(TextEditProcessor processor, Document document, List sourceEdits)
    {
       int result = 0;
       if (fChildren != null)
@@ -912,7 +909,7 @@ public abstract class TextEdit
     * @param processor the text edit processor
     * @param document the document to be manipulated
     */
-   void performConsistencyCheck(TextEditProcessor processor, IDocument document)
+   void performConsistencyCheck(TextEditProcessor processor, Document document)
    {
    }
 
@@ -922,7 +919,7 @@ public abstract class TextEdit
     * @param processor the text edit processor
     * @param document the document to be manipulated
     */
-   void traverseSourceComputation(TextEditProcessor processor, IDocument document)
+   void traverseSourceComputation(TextEditProcessor processor, Document document)
    {
    }
 
@@ -932,11 +929,11 @@ public abstract class TextEdit
     * @param processor the text edit processor
     * @param document the document to be manipulated
     */
-   void performSourceComputation(TextEditProcessor processor, IDocument document)
+   void performSourceComputation(TextEditProcessor processor, Document document)
    {
    }
 
-   int traverseDocumentUpdating(TextEditProcessor processor, IDocument document) throws BadLocationException
+   int traverseDocumentUpdating(TextEditProcessor processor, Document document) throws BadLocationException
    {
       int delta = 0;
       if (fChildren != null)
@@ -962,7 +959,7 @@ public abstract class TextEdit
 
    /**
     * Hook method called when the document updating of a child edit has been completed. When a client calls
-    * {@link #apply(IDocument)} or {@link #apply(IDocument, int)} this method is called {@link #getChildrenSize()} times.
+    * {@link #apply(Document)} or {@link #apply(Document, int)} this method is called {@link #getChildrenSize()} times.
     * <p>
     * May be overridden by subclasses of {@link MultiTextEdit}.
     * 
@@ -972,9 +969,9 @@ public abstract class TextEdit
    {
    }
 
-   abstract int performDocumentUpdating(IDocument document) throws BadLocationException;
+   abstract int performDocumentUpdating(Document document) throws BadLocationException;
 
-   int traverseRegionUpdating(TextEditProcessor processor, IDocument document, int accumulatedDelta, boolean delete)
+   int traverseRegionUpdating(TextEditProcessor processor, Document document, int accumulatedDelta, boolean delete)
    {
       performRegionUpdating(accumulatedDelta, delete);
       if (fChildren != null)
@@ -992,8 +989,8 @@ public abstract class TextEdit
 
    /**
     * Hook method called when the region updating of a child edit has been completed. When a client calls
-    * {@link #apply(IDocument)} this method is called {@link #getChildrenSize()} times. When calling
-    * {@link #apply(IDocument, int)} this method is called {@link #getChildrenSize()} times, when the style parameter contains the
+    * {@link #apply(Document)} this method is called {@link #getChildrenSize()} times. When calling
+    * {@link #apply(Document, int)} this method is called {@link #getChildrenSize()} times, when the style parameter contains the
     * {@link #UPDATE_REGIONS} flag.
     * <p>
     * May be overridden by subclasses of {@link MultiTextEdit}.

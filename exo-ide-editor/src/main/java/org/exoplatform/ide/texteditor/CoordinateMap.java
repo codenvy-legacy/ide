@@ -15,7 +15,7 @@
 package org.exoplatform.ide.texteditor;
 
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.anchor.Anchor;
@@ -37,7 +37,7 @@ import org.exoplatform.ide.util.loging.Log;
  * account spacer objects in between lines. Lines and columns are 0-indexed.
  * </ul>
  */
-class CoordinateMap implements TextStore.LineListener
+class CoordinateMap implements DocumentModel.LineListener
 {
 
    interface DocumentSizeProvider
@@ -106,7 +106,7 @@ class CoordinateMap implements TextStore.LineListener
    /** Used by {@link #getPrecedingOffsetCache(int, int)} */
    private static final int IGNORE = Integer.MIN_VALUE;
 
-   private TextStore document;
+   private DocumentModel document;
 
    private DocumentSizeProvider documentSizeProvider;
 
@@ -333,7 +333,7 @@ class CoordinateMap implements TextStore.LineListener
       return false;
    }
 
-   void handleDocumentChange(TextStore document)
+   void handleDocumentChange(DocumentModel document)
    {
       if (documentLineListenerRemover != null)
       {
@@ -350,13 +350,13 @@ class CoordinateMap implements TextStore.LineListener
    }
 
    @Override
-   public void onLineAdded(TextStore document, int lineNumber, JsonArray<Line> addedLines)
+   public void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines)
    {
       invalidateLineNumberAndFollowing(lineNumber);
    }
 
    @Override
-   public void onLineRemoved(TextStore document, int lineNumber, JsonArray<Line> removedLines)
+   public void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines)
    {
       invalidateLineNumberAndFollowing(lineNumber);
    }

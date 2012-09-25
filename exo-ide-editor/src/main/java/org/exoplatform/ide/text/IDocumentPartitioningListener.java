@@ -37,8 +37,8 @@ package org.exoplatform.ide.text;
  * 
  * @see org.eclipse.jface.text.IDocumentPartitioningListenerExtension
  * @see org.eclipse.jface.text.IDocumentPartitioningListenerExtension2
- * @see org.eclipse.jface.text.IDocument
- * @see org.eclipse.jface.text.IDocumentPartitioner
+ * @see org.eclipse.Document.text.IDocument
+ * @see org.eclipse.DocumentPartitioner.text.IDocumentPartitioner
  */
 public interface IDocumentPartitioningListener
 {
@@ -47,7 +47,7 @@ public interface IDocumentPartitioningListener
     * The partitioning of the given document changed.
     * <p>
     * In version 2.0 this method has been replaces by
-    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}.
+    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(Document, IRegion)}.
     * <p>
     * In version 3.0 this method has been replaces by
     * {@link IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)}
@@ -55,9 +55,9 @@ public interface IDocumentPartitioningListener
     * 
     * @param document the document whose partitioning changed
     * 
-    * @see IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)
+    * @see IDocumentPartitioningListenerExtension#documentPartitioningChanged(Document, IRegion)
     * @see IDocumentPartitioningListenerExtension2#documentPartitioningChanged(DocumentPartitioningChangedEvent)
-    * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
+    * @see Document#addDocumentPartitioningListener(IDocumentPartitioningListener)
     */
-   void documentPartitioningChanged(IDocument document);
+   void documentPartitioningChanged(Document document);
 }

@@ -26,9 +26,9 @@ package org.exoplatform.ide.text;
  * Clients may implement this interface.
  * </p>
  * 
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  */
-public interface IDocumentListener
+public interface DocumentListener
 {
 
    /**

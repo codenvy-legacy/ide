@@ -33,7 +33,7 @@ import org.exoplatform.ide.commands.operations.IUndoContext;
  *
  * @see DocumentUndoManagerRegistry
  * @see IDocumentUndoListener
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  * @since 3.2
  */
 public interface IDocumentUndoManager {

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  * Text edit to replace a range in a document with a different string.
@@ -82,7 +82,7 @@ public final class ReplaceEdit extends TextEdit
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       document.replace(getOffset(), getLength(), fText);
       fDelta = fText.length() - getLength();

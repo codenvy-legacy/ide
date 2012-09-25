@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  * Text edit to delete a range in a document.
@@ -66,7 +66,7 @@ public final class DeleteEdit extends TextEdit
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       document.replace(getOffset(), getLength(), ""); //$NON-NLS-1$
       fDelta = -getLength();

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  * A range marker can be used to track positions when executing text edits.
@@ -62,7 +62,7 @@ public final class RangeMarker extends TextEdit
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       fDelta = 0;
       return fDelta;

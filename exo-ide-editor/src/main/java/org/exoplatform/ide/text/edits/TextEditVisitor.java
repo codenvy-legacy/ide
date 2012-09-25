@@ -46,7 +46,6 @@ package org.exoplatform.ide.text.edits;
  * </p>
  * 
  * @see TextEdit#accept(TextEditVisitor)
- * @since 3.0
  */
 public class TextEditVisitor
 {
@@ -89,55 +88,7 @@ public class TextEditVisitor
    {
       return true;
    }
-
-   /**
-    * Visits a <code>CopySourceEdit</code> instance.
-    * 
-    * @param edit the node to visit
-    * @return If <code>true</code> is returned, the given node's child nodes will be visited next; however, if <code>false</code>
-    *         is returned, the given node's child nodes will not be visited.
-    */
-   public boolean visit(CopySourceEdit edit)
-   {
-      return visitNode(edit);
-   }
-
-   /**
-    * Visits a <code>CopyTargetEdit</code> instance.
-    * 
-    * @param edit the node to visit
-    * @return If <code>true</code> is returned, the given node's child nodes will be visited next; however, if <code>false</code>
-    *         is returned, the given node's child nodes will not be visited.
-    */
-   public boolean visit(CopyTargetEdit edit)
-   {
-      return visitNode(edit);
-   }
-
-   /**
-    * Visits a <code>MoveSourceEdit</code> instance.
-    * 
-    * @param edit the node to visit
-    * @return If <code>true</code> is returned, the given node's child nodes will be visited next; however, if <code>false</code>
-    *         is returned, the given node's child nodes will not be visited.
-    */
-   public boolean visit(MoveSourceEdit edit)
-   {
-      return visitNode(edit);
-   }
-
-   /**
-    * Visits a <code>MoveTargetEdit</code> instance.
-    * 
-    * @param edit the node to visit
-    * @return If <code>true</code> is returned, the given node's child nodes will be visited next; however, if <code>false</code>
-    *         is returned, the given node's child nodes will not be visited.
-    */
-   public boolean visit(MoveTargetEdit edit)
-   {
-      return visitNode(edit);
-   }
-
+   
    /**
     * Visits a <code>RangeMarker</code> instance.
     * 

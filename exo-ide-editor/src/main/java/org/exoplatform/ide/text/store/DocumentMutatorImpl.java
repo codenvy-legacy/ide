@@ -27,7 +27,7 @@ import org.exoplatform.ide.util.StringUtils;
 
 /**
  * Mutator for the document that provides high-level document mutation API. The
- * {@link TextStore} delegates to this class to actually perform the mutations.
+ * {@link DocumentModel} delegates to this class to actually perform the mutations.
  */
 class DocumentMutatorImpl implements TextStoreMutator {
 
@@ -152,10 +152,10 @@ class DocumentMutatorImpl implements TextStoreMutator {
   }
 
   private AnchorManager anchorManager;
-  private final TextStore document;
+  private final DocumentModel document;
   private final JsonArray<TextChange> textChanges;
 
-  DocumentMutatorImpl(TextStore document) {
+  DocumentMutatorImpl(DocumentModel document) {
     this.document = document;
     this.anchorManager = document.getAnchorManager();
 

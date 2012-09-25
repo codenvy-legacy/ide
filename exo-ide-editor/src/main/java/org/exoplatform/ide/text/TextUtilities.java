@@ -193,7 +193,7 @@ public class TextUtilities
     * @return returns the merged document event
     * @throws BadLocationException might be thrown if document is not in the correct state with respect to document events
     */
-   public static DocumentEvent mergeUnprocessedDocumentEvents(IDocument unprocessedDocument, List<DocumentEvent> documentEvents)
+   public static DocumentEvent mergeUnprocessedDocumentEvents(Document unprocessedDocument, List<DocumentEvent> documentEvents)
       throws BadLocationException
    {
 
@@ -204,7 +204,7 @@ public class TextUtilities
       final DocumentEvent firstEvent = iterator.next();
 
       // current merged event
-      final IDocument document = unprocessedDocument;
+      final Document document = unprocessedDocument;
       int offset = firstEvent.getOffset();
       int length = firstEvent.getLength();
       final StringBuffer text = new StringBuffer(firstEvent.getText() == null ? "" : firstEvent.getText()); //$NON-NLS-1$
@@ -275,7 +275,7 @@ public class TextUtilities
       final DocumentEvent firstEvent = iterator.previous();
 
       // current merged event
-      final IDocument document = firstEvent.getDocument();
+      final Document document = firstEvent.getDocument();
       int offset = firstEvent.getOffset();
       int length = firstEvent.getLength();
       int textLength = firstEvent.getText() == null ? 0 : firstEvent.getText().length();
@@ -328,16 +328,16 @@ public class TextUtilities
     * partitioner.
     * 
     * @param document the document
-    * @return the map containing the removed partitioners (key type: {@link String}, value type: {@link IDocumentPartitioner})
+    * @return the map containing the removed partitioners (key type: {@link String}, value type: {@link DocumentPartitioner})
     */
-   public static Map<String, IDocumentPartitioner> removeDocumentPartitioners(IDocument document)
+   public static Map<String, DocumentPartitioner> removeDocumentPartitioners(Document document)
    {
-      Map<String, IDocumentPartitioner> partitioners = new HashMap<String, IDocumentPartitioner>();
+      Map<String, DocumentPartitioner> partitioners = new HashMap<String, DocumentPartitioner>();
 
       String[] partitionings = document.getPartitionings();
       for (int i = 0; i < partitionings.length; i++)
       {
-         IDocumentPartitioner partitioner = document.getDocumentPartitioner(partitionings[i]);
+         DocumentPartitioner partitioner = document.getDocumentPartitioner(partitionings[i]);
          if (partitioner != null)
          {
             document.setDocumentPartitioner(partitionings[i], null);
@@ -365,16 +365,16 @@ public class TextUtilities
     * 
     * @param document the document
     * @param partitioners the map containing the partitioners to be connected (key type: {@link String}, value type:
-    *           {@link IDocumentPartitioner})
+    *           {@link DocumentPartitioner})
     * @since 3.0
     */
-   public static void addDocumentPartitioners(IDocument document, Map<String, IDocumentPartitioner> partitioners)
+   public static void addDocumentPartitioners(Document document, Map<String, DocumentPartitioner> partitioners)
    {
       Iterator<String> e = partitioners.keySet().iterator();
       while (e.hasNext())
       {
          String partitioning = e.next();
-         IDocumentPartitioner partitioner = partitioners.get(partitioning);
+         DocumentPartitioner partitioner = partitioners.get(partitioning);
          partitioner.connect(document);
          document.setDocumentPartitioner(partitioning, partitioner);
       }
@@ -401,7 +401,7 @@ public class TextUtilities
     * @throws BadLocationException if offset is invalid in the document
     * @since 3.0
     */
-   public static String getContentType(IDocument document, String partitioning, int offset, boolean preferOpenPartitions)
+   public static String getContentType(Document document, String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException
    {
       try
@@ -410,7 +410,7 @@ public class TextUtilities
       }
       catch (BadPartitioningException x)
       {
-         return IDocument.DEFAULT_CONTENT_TYPE;
+         return Document.DEFAULT_CONTENT_TYPE;
       }
 
       //      return document.getContentType(offset);
@@ -428,7 +428,7 @@ public class TextUtilities
     * @throws BadLocationException if offset is invalid in the given document
     * @since 3.0
     */
-   public static ITypedRegion getPartition(IDocument document, String partitioning, int offset,
+   public static ITypedRegion getPartition(Document document, String partitioning, int offset,
       boolean preferOpenPartitions) throws BadLocationException
    {
       try
@@ -437,7 +437,7 @@ public class TextUtilities
       }
       catch (BadPartitioningException x)
       {
-         return new TypedRegion(0, document.getLength(), IDocument.DEFAULT_CONTENT_TYPE);
+         return new TypedRegion(0, document.getLength(), Document.DEFAULT_CONTENT_TYPE);
       }
       //      return document.getPartition(offset);
    }
@@ -454,7 +454,7 @@ public class TextUtilities
     * @throws BadLocationException if the given region is invalid for the given document
     * @since 3.0
     */
-   public static ITypedRegion[] computePartitioning(IDocument document, String partitioning, int offset, int length,
+   public static ITypedRegion[] computePartitioning(Document document, String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException
    {
       try
@@ -517,7 +517,7 @@ public class TextUtilities
     * @return the document's default line delimiter
     * @since 3.0
     */
-   public static String getDefaultLineDelimiter(IDocument document)
+   public static String getDefaultLineDelimiter(Document document)
    {
 
       // if (document instanceof IDocumentExtension4)

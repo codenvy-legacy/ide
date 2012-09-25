@@ -26,13 +26,13 @@ import org.exoplatform.ide.runtime.Assert;
  * range whose text gets replaced with different text. In addition to this information, the event also contains the changed
  * document.
  * 
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  */
 public class DocumentEvent
 {
 
    /** The changed document */
-   public IDocument fDocument;
+   public Document fDocument;
 
    /** The document offset */
    public int fOffset;
@@ -58,7 +58,7 @@ public class DocumentEvent
     * @param length the length of the replaced text
     * @param text the substitution text
     */
-   public DocumentEvent(IDocument doc, int offset, int length, String text)
+   public DocumentEvent(Document doc, int offset, int length, String text)
    {
 
       Assert.isNotNull(doc);
@@ -89,7 +89,7 @@ public class DocumentEvent
     * 
     * @return the changed document
     */
-   public IDocument getDocument()
+   public Document getDocument()
    {
       return fDocument;
    }

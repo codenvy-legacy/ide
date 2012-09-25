@@ -33,7 +33,7 @@ import org.exoplatform.ide.editor.api.EditorInput;
 import org.exoplatform.ide.editor.api.EditorSite;
 import org.exoplatform.ide.editor.api.SelectionProvider;
 import org.exoplatform.ide.editor.api.TextEditor;
-import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.DocumentImpl;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -82,7 +82,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    @Override
    public void init(EditorSite site, EditorInput input) throws EditorInitException
    {
-      Document d = new Document(input.getName());
+      DocumentImpl d = new DocumentImpl(input.getName());
       editor.setDocument(d);
    }
 

@@ -24,9 +24,9 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
+import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.IDocument;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.TextChange;
@@ -203,7 +203,7 @@ public class Editor extends UiComponent<Editor.View>
    /**
     * A listener that is called when the user enters or deletes text.
     *
-    * Similar to {@link TextStore.TextListener} except is only called when the
+    * Similar to {@link DocumentModel.TextListener} except is only called when the
     * text is entered/deleted by the local user.
     */
    public interface TextListener
@@ -226,11 +226,11 @@ public class Editor extends UiComponent<Editor.View>
     * A listener that is called when the document changes.
     *
     *  This can be used by external clients of the editor; if the client is a
-    * component of the editor, use {@link Editor#setDocument(TextStore)} instead.
+    * component of the editor, use {@link Editor#setDocument(DocumentModel)} instead.
     */
    public interface DocumentListener
    {
-      void onDocumentChanged(TextStore oldDocument, TextStore newDocument);
+      void onDocumentChanged(DocumentModel oldDocument, DocumentModel newDocument);
    }
 
    /**
@@ -304,7 +304,7 @@ public class Editor extends UiComponent<Editor.View>
 
    private final Buffer buffer;
 
-   private TextStore textStore;
+   private DocumentModel textStore;
 
    private final ListenerManager<DocumentListener> documentListenerManager = ListenerManager.create();
 
@@ -355,7 +355,7 @@ public class Editor extends UiComponent<Editor.View>
 
    private CurrentLineHighlighter currentLineHighlighter;
 
-   private IDocument document;
+   private Document document;
 
    private Editor(AppContext appContext, View view, Buffer buffer, InputController input, FocusManager focusManager,
       FontDimensionsCalculator editorFontDimensionsCalculator, RenderTimeExecutor renderTimeExecutor)
@@ -489,7 +489,7 @@ public class Editor extends UiComponent<Editor.View>
       return leftGutterManager.getGutter();
    }
 
-   public TextStore getTextStore()
+   public DocumentModel getTextStore()
    {
       return textStore;
    }
@@ -571,10 +571,10 @@ public class Editor extends UiComponent<Editor.View>
       renderer.removeLineRenderer(lineRenderer);
    }
 
-   public void setDocument(final Document document)
+   public void setDocument(final DocumentImpl document)
    {
       this.document = document;
-      final TextStore oldTextstore = textStore;
+      final DocumentModel oldTextstore = textStore;
       if (oldTextstore != null)
       {
          editorUndoManager.disconnect();
@@ -644,7 +644,7 @@ public class Editor extends UiComponent<Editor.View>
    /**
     * @return the document
     */
-   public IDocument getDocument()
+   public Document getDocument()
    {
       return document;
    }

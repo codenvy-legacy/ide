@@ -33,11 +33,11 @@ public interface IDocumentPartitioningListenerExtension2
    /**
     * Signals the change of document partitionings.
     * <p>
-    * This method replaces {@link IDocumentPartitioningListener#documentPartitioningChanged(IDocument)} and
-    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)}
+    * This method replaces {@link IDocumentPartitioningListener#documentPartitioningChanged(Document)} and
+    * {@link IDocumentPartitioningListenerExtension#documentPartitioningChanged(Document, IRegion)}
     * 
     * @param event the event describing the change
-    * @see IDocument#addDocumentPartitioningListener(IDocumentPartitioningListener)
+    * @see Document#addDocumentPartitioningListener(IDocumentPartitioningListener)
     */
    void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
 }

@@ -32,7 +32,7 @@ public class DocumentPartitioningChangedEvent
 {
 
    /** The document whose partitionings changed */
-   private final IDocument fDocument;
+   private final Document fDocument;
 
    /** The map of partitionings to changed regions. */
    private final Map<String, IRegion> fMap = new HashMap<String, IRegion>();
@@ -43,7 +43,7 @@ public class DocumentPartitioningChangedEvent
     * 
     * @param document the changed document
     */
-   public DocumentPartitioningChangedEvent(IDocument document)
+   public DocumentPartitioningChangedEvent(Document document)
    {
       fDocument = document;
    }
@@ -53,7 +53,7 @@ public class DocumentPartitioningChangedEvent
     * 
     * @return the changed document
     */
-   public IDocument getDocument()
+   public Document getDocument()
    {
       return fDocument;
    }

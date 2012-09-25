@@ -24,7 +24,7 @@ package org.exoplatform.ide.text;
  * This class is not intended to be serialized.
  * </p>
  * 
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  * @see org.eclipse.jface.text.IDocumentExtension3
  * @since 3.0
  */

@@ -22,9 +22,9 @@ import com.google.gwt.regexp.shared.RegExp;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.text.store.TextStore;
-import org.exoplatform.ide.text.store.TextStore.PreTextListener;
-import org.exoplatform.ide.text.store.TextStore.TextListener;
+import org.exoplatform.ide.text.store.DocumentModel;
+import org.exoplatform.ide.text.store.DocumentModel.PreTextListener;
+import org.exoplatform.ide.text.store.DocumentModel.TextListener;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.text.store.TextChange.Type;
@@ -220,7 +220,7 @@ public class LineDimensionsCalculator {
    */
   private static TextListener textListener = new TextListener() {
     @Override
-    public void onTextChange(TextStore document,
+    public void onTextChange(DocumentModel document,
         JsonArray<TextChange> textChanges) {
       for (int i = 0; i < textChanges.size(); i++) {
         TextChange change = textChanges.get(i);
@@ -238,7 +238,7 @@ public class LineDimensionsCalculator {
    */
   private static PreTextListener preTextListener = new PreTextListener() {
     @Override
-    public void onPreTextChange(TextStore document,
+    public void onPreTextChange(DocumentModel document,
         Type type,
         Line line,
         int lineNumber,
@@ -264,7 +264,7 @@ public class LineDimensionsCalculator {
   /**
    * Sets the currently opened document so we can listen for mutations.
    */
-  public void handleDocumentChange(TextStore newDocument) {
+  public void handleDocumentChange(DocumentModel newDocument) {
     // Remove old document listener
     listenerManager.remove();
     // add the new ones

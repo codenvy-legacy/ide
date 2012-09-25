@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +89,7 @@ public final class UndoEdit extends TextEdit
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       fDelta = 0;
       return fDelta;

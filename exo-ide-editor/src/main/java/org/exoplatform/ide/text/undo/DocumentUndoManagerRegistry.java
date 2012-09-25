@@ -11,7 +11,7 @@
 package org.exoplatform.ide.text.undo;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  * connected and returns the same undo manager to each client as long as the
  * document is connected.
  * <p>
- * <em>The recoding of changes starts with the first {@link #connect(IDocument)}.</em></p>
+ * <em>The recoding of changes starts with the first {@link #connect(Document)}.</em></p>
  *
  * @since 3.2
  * @noinstantiate This class is not intended to be instantiated by clients.
@@ -36,7 +36,7 @@ public final class DocumentUndoManagerRegistry
 
    private static final class Record
    {
-      public Record(IDocument document)
+      public Record(Document document)
       {
          count = 0;
          undoManager = new DocumentUndoManager(document);
@@ -47,7 +47,7 @@ public final class DocumentUndoManagerRegistry
       private IDocumentUndoManager undoManager;
    }
 
-   private static Map<IDocument, Record> fgFactory = new HashMap<IDocument, DocumentUndoManagerRegistry.Record>();
+   private static Map<Document, Record> fgFactory = new HashMap<Document, DocumentUndoManagerRegistry.Record>();
 
    private DocumentUndoManagerRegistry()
    {
@@ -59,11 +59,11 @@ public final class DocumentUndoManagerRegistry
     * successfully completed it is guaranteed that each call to <code>getFileBuffer</code>
     * returns the same file buffer until <code>disconnect</code> is called.
     * <p>
-    * <em>The recoding of changes starts with the first {@link #connect(IDocument)}.</em></p>
+    * <em>The recoding of changes starts with the first {@link #connect(Document)}.</em></p>
     *
     * @param document the document to be connected
     */
-   public static void connect(IDocument document)
+   public static void connect(Document document)
    {
       Assert.isNotNull(document);
       Record record = (Record)fgFactory.get(document);
@@ -80,7 +80,7 @@ public final class DocumentUndoManagerRegistry
     *
     * @param document the document to be disconnected
     */
-   public static void disconnect(IDocument document)
+   public static void disconnect(Document document)
    {
       Assert.isNotNull(document);
       Record record = fgFactory.get(document);
@@ -103,7 +103,7 @@ public final class DocumentUndoManagerRegistry
     * @param document the document for which to get its undo manager
     * @return the document undo manager or <code>null</code>
     */
-   public static IDocumentUndoManager getDocumentUndoManager(IDocument document)
+   public static IDocumentUndoManager getDocumentUndoManager(Document document)
    {
       Assert.isNotNull(document);
       Record record = (Record)fgFactory.get(document);

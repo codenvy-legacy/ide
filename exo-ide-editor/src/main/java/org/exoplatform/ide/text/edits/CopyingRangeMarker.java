@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  * A <code>CopyingRangeMarker</code> can be used to track positions when executing text edits. Additionally a copying range marker
@@ -67,7 +67,7 @@ public final class CopyingRangeMarker extends TextEdit
    }
 
    /* @see TextEdit#performDocumentUpdating */
-   int performDocumentUpdating(IDocument document) throws BadLocationException
+   int performDocumentUpdating(Document document) throws BadLocationException
    {
       fText = document.get(getOffset(), getLength());
       fDelta = 0;

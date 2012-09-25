@@ -16,7 +16,7 @@ package org.exoplatform.ide.texteditor.renderer;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.Position;
@@ -45,7 +45,7 @@ import java.util.EnumSet;
  * A class to track changes in the document or editor state that result in a
  * render pass.
  */
-class ChangeTracker implements TextStore.TextListener, ViewportModel.Listener, SelectionModel.SelectionListener,
+class ChangeTracker implements DocumentModel.TextListener, ViewportModel.Listener, SelectionModel.SelectionListener,
    Buffer.SpacerListener, FocusManager.FocusListener
 {
 
@@ -139,7 +139,7 @@ class ChangeTracker implements TextStore.TextListener, ViewportModel.Listener, S
 
    private final EnumSet<ViewportModel.Edge> viewportLineNumberChangedEdges = EnumSet.noneOf(ViewportModel.Edge.class);
 
-   ChangeTracker(Renderer renderer, Buffer buffer, TextStore document, ViewportModel viewport, SelectionModel selection,
+   ChangeTracker(Renderer renderer, Buffer buffer, DocumentModel document, ViewportModel viewport, SelectionModel selection,
       FocusManager focusManager)
    {
       this.buffer = buffer;
@@ -241,7 +241,7 @@ class ChangeTracker implements TextStore.TextListener, ViewportModel.Listener, S
    }
 
    @Override
-   public void onTextChange(TextStore document, JsonArray<TextChange> textChanges)
+   public void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges)
    {
 
       for (int i = 0, n = textChanges.size(); i < n; i++)
@@ -362,7 +362,7 @@ class ChangeTracker implements TextStore.TextListener, ViewportModel.Listener, S
       renderCommand.cancel();
    }
 
-   private void attach(Buffer buffer, TextStore document, ViewportModel viewport, SelectionModel selection,
+   private void attach(Buffer buffer, DocumentModel document, ViewportModel viewport, SelectionModel selection,
       FocusManager focusManager)
    {
       listenerRemovers.add(focusManager.getFocusListenerRegistrar().add(this));

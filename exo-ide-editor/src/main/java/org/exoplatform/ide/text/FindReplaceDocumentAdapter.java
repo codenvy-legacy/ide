@@ -26,9 +26,9 @@ import org.exoplatform.ide.runtime.Assert;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Provides search and replace operations on {@link org.eclipse.jface.text.IDocument}.
+ * Provides search and replace operations on {@link org.eclipse.Document.text.IDocument}.
  * <p>
- * Replaces {@link org.eclipse.jface.text.IDocument#search(int, String, boolean, boolean, boolean)}.
+ * Replaces {@link org.eclipse.Document.text.IDocument#search(int, String, boolean, boolean, boolean)}.
  * 
  * @since 3.0
  */
@@ -50,7 +50,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
    private static final FindReplaceOperationCode REPLACE_FIND_NEXT = new FindReplaceOperationCode();
 
    /** The adapted document. */
-   private IDocument fDocument;
+   private Document fDocument;
 
    /** State for findReplace. */
    private FindReplaceOperationCode fFindReplaceState = null;
@@ -66,7 +66,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
     * 
     * @param document the adapted document
     */
-   public FindReplaceDocumentAdapter(IDocument document)
+   public FindReplaceDocumentAdapter(Document document)
    {
       Assert.isNotNull(document);
       fDocument = document;
@@ -210,7 +210,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
     * @throws PatternSyntaxException if a regular expression has invalid syntax
     * 
     * @see DocumentEvent
-    * @see IDocumentListener
+    * @see DocumentListener
     */
    public IRegion replace(String text, boolean regExReplace) throws BadLocationException
    {

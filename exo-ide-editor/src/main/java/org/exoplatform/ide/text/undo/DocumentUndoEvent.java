@@ -11,7 +11,7 @@
 package org.exoplatform.ide.text.undo;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 /**
  * Describes document changes initiated by undo or redo.
@@ -57,7 +57,7 @@ public class DocumentUndoEvent
    public static final int COMPOUND = 1 << 4;
 
    /** The changed document. */
-   private IDocument fDocument;
+   private Document fDocument;
 
    /** The document offset where the change begins. */
    private int fOffset;
@@ -84,7 +84,7 @@ public class DocumentUndoEvent
     * @param eventType a bit mask describing the type(s) of event
     * @param source the source that triggered this event or <code>null</code> if unknown
     */
-   DocumentUndoEvent(IDocument doc, int offset, String text, String preservedText, int eventType, Object source)
+   DocumentUndoEvent(Document doc, int offset, String text, String preservedText, int eventType, Object source)
    {
 
       Assert.isNotNull(doc);
@@ -103,7 +103,7 @@ public class DocumentUndoEvent
     *
     * @return the changed document
     */
-   public IDocument getDocument()
+   public Document getDocument()
    {
       return fDocument;
    }

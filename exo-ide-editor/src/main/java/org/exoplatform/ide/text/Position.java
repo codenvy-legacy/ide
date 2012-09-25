@@ -35,7 +35,7 @@ import org.exoplatform.ide.runtime.Assert;
  * value objects.
  * </p>
  * 
- * @see org.eclipse.jface.text.IDocument
+ * @see org.eclipse.Document.text.IDocument
  */
 public class Position
 {

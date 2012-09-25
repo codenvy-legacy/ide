@@ -19,7 +19,7 @@
 package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ import java.util.List;
  * This class isn't intended to be subclassed.
  * </p>
  * 
- * @see org.eclipse.text.edits.TextEdit#apply(IDocument)
+ * @see org.eclipse.text.edits.TextEdit#apply(Document)
  * 
  * @since 3.0
  * @noextend This class is not intended to be subclassed by clients.
@@ -39,7 +39,7 @@ import java.util.List;
 public class TextEditProcessor
 {
 
-   private IDocument fDocument;
+   private Document fDocument;
 
    private TextEdit fRoot;
 
@@ -61,12 +61,12 @@ public class TextEditProcessor
     * 
     * @param style {@link TextEdit#NONE}, {@link TextEdit#CREATE_UNDO} or {@link TextEdit#UPDATE_REGIONS})
     */
-   public TextEditProcessor(IDocument document, TextEdit root, int style)
+   public TextEditProcessor(Document document, TextEdit root, int style)
    {
       this(document, root, style, false);
    }
 
-   private TextEditProcessor(IDocument document, TextEdit root, int style, boolean secondary)
+   private TextEditProcessor(Document document, TextEdit root, int style, boolean secondary)
    {
       // Assert.isNotNull(document);
       // Assert.isNotNull(root);
@@ -91,7 +91,7 @@ public class TextEditProcessor
     * @return a secondary text edit processor
     * @since 3.1
     */
-   static TextEditProcessor createSourceComputationProcessor(IDocument document, TextEdit root, int style)
+   static TextEditProcessor createSourceComputationProcessor(Document document, TextEdit root, int style)
    {
       return new TextEditProcessor(document, root, style, true);
    }
@@ -101,7 +101,7 @@ public class TextEditProcessor
     * 
     * @return the document
     */
-   public IDocument getDocument()
+   public Document getDocument()
    {
       return fDocument;
    }

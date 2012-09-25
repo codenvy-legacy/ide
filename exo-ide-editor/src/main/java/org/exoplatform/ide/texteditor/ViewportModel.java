@@ -19,7 +19,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineFinder;
 import org.exoplatform.ide.text.store.LineInfo;
@@ -47,7 +47,7 @@ public class ViewportModel
     implements
       Buffer.ScrollListener,
       Buffer.ResizeListener,
-      TextStore.LineListener,
+      DocumentModel.LineListener,
       SelectionModel.CursorListener,
       Buffer.SpacerListener {
 
@@ -67,7 +67,7 @@ public class ViewportModel
      *        removed (note that when removed, the lines will no longer be in
      *        the document)
      * @param lines the lines added or removed (see the parameters on
-     *        {@link TextStore.LineListener})
+     *        {@link DocumentModel.LineListener})
      */
     void onViewportContentChanged(ViewportModel viewport, int lineNumber, boolean added,
         JsonArray<Line> lines);
@@ -115,7 +115,7 @@ public class ViewportModel
     }
   }
 
-  static ViewportModel create(TextStore document, SelectionModel selection, Buffer buffer) {
+  static ViewportModel create(DocumentModel document, SelectionModel selection, Buffer buffer) {
     return new ViewportModel(document, selection, buffer);
   }
 
@@ -141,7 +141,7 @@ public class ViewportModel
   private final AnchorManager anchorManager;
   private Anchor bottomAnchor;
   private final Buffer buffer;
-  private final TextStore document;
+  private final DocumentModel document;
   private final ChangeDispatcher changeDispatcher;
   private final ListenerManager<Listener> listenerManager;
   private final SelectionModel selection;
@@ -149,7 +149,7 @@ public class ViewportModel
   private final ListenerRegistrar.RemoverManager removerManager =
       new ListenerRegistrar.RemoverManager();
 
-  private ViewportModel(TextStore document, SelectionModel selection, Buffer buffer) {
+  private ViewportModel(DocumentModel document, SelectionModel selection, Buffer buffer) {
     this.document = document;
     this.anchorManager = document.getAnchorManager();
     this.buffer = buffer;
@@ -176,7 +176,7 @@ public class ViewportModel
     return bottomAnchor.getLineInfo();
   }
 
-  public TextStore getDocument() {
+  public DocumentModel getDocument() {
     return document;
   }
 
@@ -282,7 +282,7 @@ public class ViewportModel
   }
 
   @Override
-  public void onLineAdded(TextStore document, final int lineNumber,
+  public void onLineAdded(DocumentModel document, final int lineNumber,
       final JsonArray<Line> addedLines) {
     if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
       listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
@@ -295,7 +295,7 @@ public class ViewportModel
   }
 
   @Override
-  public void onLineRemoved(TextStore document, final int lineNumber,
+  public void onLineRemoved(DocumentModel document, final int lineNumber,
       final JsonArray<Line> removedLines) {
     if (adjustViewportBoundsForLineAdditionOrRemoval(document, lineNumber)) {
       listenerManager.dispatch(new Dispatcher<ViewportModel.Listener>() {
@@ -333,7 +333,7 @@ public class ViewportModel
    * Adjusts the viewport bounds after a line is added or removed, returning
    * whether there an adjustment was made.
    */
-  private boolean adjustViewportBoundsForLineAdditionOrRemoval(TextStore document, int lineNumber) {
+  private boolean adjustViewportBoundsForLineAdditionOrRemoval(DocumentModel document, int lineNumber) {
     int bottomLineNumber = bottomAnchor.getLineNumber();
     int topLineNumber = topAnchor.getLineNumber();
     int lastVisibleLineNumber = topLineNumber + buffer.getFlooredHeightInLines();
