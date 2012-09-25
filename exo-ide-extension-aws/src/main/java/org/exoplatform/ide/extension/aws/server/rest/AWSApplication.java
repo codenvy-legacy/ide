@@ -32,17 +32,16 @@ import javax.ws.rs.core.Application;
 public class AWSApplication extends Application
 {
    private final Set<Class<?>> classes;
-
-//   private final Set<Object> singletons;
+   private final Set<Object> singletons;
 
    public AWSApplication()
    {
-      classes = new HashSet<Class<?>>(1);
+      classes = new HashSet<Class<?>>(3);
       classes.add(BeanstalkService.class);
       classes.add(S3Service.class);
       classes.add(EC2Service.class);
-//      singletons = new HashSet<Object>(1); TODO
-//      singletons.add(new AWSExceptionMapper());
+      singletons = new HashSet<Object>(1);
+      singletons.add(new AWSExceptionMapper());
    }
 
    @Override
@@ -51,9 +50,9 @@ public class AWSApplication extends Application
       return classes;
    }
 
-//   @Override
-//   public Set<Object> getSingletons()
-//   {
-//      return singletons;
-//   }
+   @Override
+   public Set<Object> getSingletons()
+   {
+      return singletons;
+   }
 }
