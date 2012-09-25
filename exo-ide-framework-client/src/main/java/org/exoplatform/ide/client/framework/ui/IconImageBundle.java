@@ -99,4 +99,7 @@ public interface IconImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/php_type.png")
    ImageResource phpType();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/elasticBeanstalk.png")
+   ImageResource elasticBeanstalk();
 }

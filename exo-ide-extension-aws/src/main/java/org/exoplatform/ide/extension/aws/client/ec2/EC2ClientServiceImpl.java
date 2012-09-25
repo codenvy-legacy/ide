@@ -26,8 +26,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
-import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.List;
 
@@ -42,11 +41,7 @@ public class EC2ClientServiceImpl extends EC2ClientService
 
    private static final String BASE_URL = "/ide/aws/ec2";
 
-   private static final String IMAGES = BASE_URL + "/images";
-
-   private static final String INSTANCE_SATUS = BASE_URL + "/instance/status";
-
-   private static final String SECURITY_GROUPS = BASE_URL + "/security_groups";
+   private static final String INSTANCES = BASE_URL + "/instances";
 
    /**
     * REST service context.
@@ -65,54 +60,15 @@ public class EC2ClientServiceImpl extends EC2ClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#images(java.lang.String, boolean,
-    *       java.lang.String, int, int, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#instances(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void images(String owner, boolean isPublic, String architecture, int skipCount, int maxItems,
-      AsyncRequestCallback<ImagesList> callback) throws RequestException
+   public void instances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException
    {
-      final String url = restServiceContext + IMAGES;
+      final String url = restServiceContext + INSTANCES;
 
-      String params = "owner=" + owner;
-      params += "&ispublic=" + isPublic;
-      if (architecture != null)
-      {
-         params += "&architecture=" + architecture;
-      }
-      params += "&skipcount=" + skipCount;
-      params += "&maxitems=" + maxItems;
-
-      AsyncRequest.build(RequestBuilder.GET, url + "?" + params).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#securityGroupInfo(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-   @Override
-   public void securityGroupInfo(AsyncRequestCallback<List<SecurityGroupInfo>> callback) throws RequestException
-   {
-      final String url = restServiceContext + SECURITY_GROUPS;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#status(org.exoplatform.ide.extension.aws.shared.ec2.StatusRequest,
-    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    */
-//   @Override
-//   public void status(StatusRequest request, AsyncRequestCallback<List<InstanceStatusInfo>> callback)
-//      throws RequestException
-//   {
-//      final String url = restServiceContext + INSTANCE_SATUS;
-//
-//      String statusRequest = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
-//
-//      AsyncRequest.build(RequestBuilder.GET, url).data(statusRequest).loader(loader)
-//         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
-//         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-//   }
 
 }

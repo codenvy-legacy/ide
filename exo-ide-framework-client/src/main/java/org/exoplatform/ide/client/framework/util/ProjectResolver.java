@@ -127,9 +127,10 @@ public class ProjectResolver
          projectImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject());
          projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
          projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
+         projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.elasticBeanstalk());
       }
 
-      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING));
+      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));

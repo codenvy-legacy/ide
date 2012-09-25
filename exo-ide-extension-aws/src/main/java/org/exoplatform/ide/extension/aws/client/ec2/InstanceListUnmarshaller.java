@@ -28,24 +28,24 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.List;
 
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: SecuriryGroupsUnmarshaller.java Sep 21, 2012 4:56:02 PM azatsarynnyy $
+ * @version $Id: InstanceListUnmarshaller.java Sep 21, 2012 4:56:02 PM azatsarynnyy $
  *
  */
-public class SecurityGroupsUnmarshaller implements Unmarshallable<List<SecurityGroupInfo>>
+public class InstanceListUnmarshaller implements Unmarshallable<List<InstanceInfo>>
 {
 
-   private List<SecurityGroupInfo> secutiryGroupsList;
+   private List<InstanceInfo> instanceList;
 
-   public SecurityGroupsUnmarshaller(List<SecurityGroupInfo> secutiryGroupsList)
+   public InstanceListUnmarshaller(List<InstanceInfo> instanceList)
    {
-      this.secutiryGroupsList = secutiryGroupsList;
+      this.instanceList = instanceList;
    }
 
    /**
@@ -69,9 +69,9 @@ public class SecurityGroupsUnmarshaller implements Unmarshallable<List<SecurityG
          {
             JSONObject jsonObject = array.get(i).isObject();
             String value = (jsonObject.isObject() != null) ? jsonObject.isObject().toString() : "";
-            AutoBean<SecurityGroupInfo> autoBean =
-               AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, SecurityGroupInfo.class, value);
-            secutiryGroupsList.add(autoBean.as());
+            AutoBean<InstanceInfo> autoBean =
+               AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, InstanceInfo.class, value);
+            instanceList.add(autoBean.as());
          }
       }
       catch (Exception e)
@@ -84,9 +84,9 @@ public class SecurityGroupsUnmarshaller implements Unmarshallable<List<SecurityG
     * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
     */
    @Override
-   public List<SecurityGroupInfo> getPayload()
+   public List<InstanceInfo> getPayload()
    {
-      return secutiryGroupsList;
+      return instanceList;
    }
 
 }
