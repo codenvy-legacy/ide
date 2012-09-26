@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -50,8 +49,11 @@ public class Preview extends AbstractTestModule
    private static final String GADGET_PREVIEW_IFRAME = GADGET_PREVIEW + "//iframe";
 
    private static final String VIEW_TITLE = "Preview";
-   
-   private static final String PREVIEW_TABLE ="//table[@cellspacing='1' and @cellpadding='1' and @style]/tbody/tr[%s]/td[%s]";
+
+   private static final String PREVIEW_TABLE =
+      "//table[@cellspacing='1' and @cellpadding='1' and @style]/tbody/tr[%s]/td[%s]";
+
+   private static final String GADGET_PREVIEW_TITLE = "gadgets-gadget-title";
 
    @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
@@ -67,6 +69,9 @@ public class Preview extends AbstractTestModule
 
    @FindBy(xpath = GROOVY_TEMPLATE_PREVIEW)
    private WebElement gtmplPreview;
+
+   @FindBy(className = GADGET_PREVIEW_TITLE)
+   private WebElement gadgetPreviewTitle;
 
    @FindBy(tagName = "body")
    private WebElement body;
@@ -128,7 +133,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGadgetPreviewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 15).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -347,13 +352,26 @@ public class Preview extends AbstractTestModule
    public void selectGadgetPreviewIframe()
    {
       driver().switchTo().frame(gadgetIframe);
+      driver().switchTo().frame(driver().findElement(By.tagName("iframe")));
+   }
+
+   /**
+    * return of the text of the title Google Gadget from preview panel
+    * @return
+    */
+   public String getTitlePreview()
+   {
+      driver().switchTo().frame(gadgetIframe);
+      String txt = gadgetPreviewTitle.getText();
+      IDE().selectMainFrame();
+      return txt;
    }
 
    public void closeView()
    {
       IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
    }
-   
+
    public boolean isTablePresent(final int row, final int cell)
    {
       WebElement table = driver().findElement(By.xpath(String.format(PREVIEW_TABLE, row, cell)));
