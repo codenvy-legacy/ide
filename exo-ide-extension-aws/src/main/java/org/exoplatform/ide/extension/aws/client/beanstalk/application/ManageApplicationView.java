@@ -1,12 +1,11 @@
 package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -75,15 +74,6 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    public HasValue<String> getApplicationNameField()
    {
       return mainTabPain.getNameField();
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getUrlField()
-    */
-   @Override
-   public HasValue<String> getUrlField()
-   {
-      return mainTabPain.getUrlField();
    }
 
    /**

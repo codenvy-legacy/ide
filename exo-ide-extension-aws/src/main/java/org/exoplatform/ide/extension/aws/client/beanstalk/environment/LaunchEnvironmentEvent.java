@@ -21,51 +21,48 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 21, 2012 2:57:38 PM anya $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: LaunchEnvironmentEvent.java Sep 26, 2012 1:36:00 PM azatsarynnyy $
+ *
  */
-public class CreateEnvironmentEvent extends GwtEvent<CreateEnvironmentHandler>
+public class LaunchEnvironmentEvent extends GwtEvent<LaunchEnvironmentHandler>
 {
    /**
     * Type used to register the event.
     */
-   public static final GwtEvent.Type<CreateEnvironmentHandler> TYPE = new GwtEvent.Type<CreateEnvironmentHandler>();
+   public static final GwtEvent.Type<LaunchEnvironmentHandler> TYPE = new GwtEvent.Type<LaunchEnvironmentHandler>();
 
    private String applicationName;
-
-   private String versionLabel;
 
    private String vfsId;
 
    private String projectId;
 
-   private EnvironmentCreatedHandler environmentCreatedHandler;
+   private EnvironmentLaunchedHandler environmentLaunchedHandler;
 
-   public CreateEnvironmentEvent(String vfsId, String projectId, String applicationName, String versionLabel,
-      EnvironmentCreatedHandler environmentCreatedHandler)
+   public LaunchEnvironmentEvent(String vfsId, String projectId, String applicationName,
+      EnvironmentLaunchedHandler environmentLaunchedHandler)
    {
       this.vfsId = vfsId;
       this.projectId = projectId;
       this.applicationName = applicationName;
-      this.versionLabel = versionLabel;
-      this.environmentCreatedHandler = environmentCreatedHandler;
+      this.environmentLaunchedHandler = environmentLaunchedHandler;
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(CreateEnvironmentHandler handler)
+   protected void dispatch(LaunchEnvironmentHandler handler)
    {
-      handler.onCreateEnvironment(this);
+      handler.onLaunchEnvironment(this);
    }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateEnvironmentHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<LaunchEnvironmentHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -76,14 +73,6 @@ public class CreateEnvironmentEvent extends GwtEvent<CreateEnvironmentHandler>
    public String getApplicationName()
    {
       return applicationName;
-   }
-
-   /**
-    * @return the versionLabel
-    */
-   public String getVersionLabel()
-   {
-      return versionLabel;
    }
 
    /**
@@ -103,10 +92,10 @@ public class CreateEnvironmentEvent extends GwtEvent<CreateEnvironmentHandler>
    }
 
    /**
-    * @return the environmentCreatedHandler
+    * @return the environmentLaunchedHandler
     */
-   public EnvironmentCreatedHandler getEnvironmentCreatedHandler()
+   public EnvironmentLaunchedHandler getEnvironmentLaunchedHandler()
    {
-      return environmentCreatedHandler;
+      return environmentLaunchedHandler;
    }
 }

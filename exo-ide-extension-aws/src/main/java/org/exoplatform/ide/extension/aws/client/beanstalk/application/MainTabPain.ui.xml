@@ -73,10 +73,6 @@
                <f:ImageButton ui:field="deleteApplicationButton" width="22" height="22px" text="" styleName="{style.left}"
                   imageResource="{resource.delete}" disabledImageResource="{resource.deleteDisabled}" title="{locale.deleteApplicationPrompt}"></f:ImageButton>
             </g:FlowPanel>
-            <g:FlowPanel width="100%" height="25px">
-               <g:Label text="{locale.environmentUrl}" addStyleNames="{style.labelH}" width="24%"></g:Label>
-               <f:Label ui:field="urlField" addStyleNames="{style.left}"></f:Label>
-            </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.applicationDescription}" addStyleNames="{style.labelH} {style.middle}" width="24%"></g:Label>
                <f:TextInput ui:field="descriptionField" width="69%" height="22px" enabled="false" addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>

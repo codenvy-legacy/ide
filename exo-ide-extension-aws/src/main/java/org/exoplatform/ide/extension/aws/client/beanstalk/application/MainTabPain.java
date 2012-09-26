@@ -18,16 +18,15 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
-
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -45,8 +44,6 @@ public class MainTabPain extends Composite
 
    private static final String NAME_FIELD_ID = "ideMainTabPainNameField";
 
-   private static final String URL_FIELD_ID = "ideMainTabPainURLField";
-
    private static final String DESCRIPTION_FIELD_ID = "ideMainTabPainDescriptionField";
 
    private static final String CREATION_DATE_FIELD_ID = "ideMainTabPainCreateDateField";
@@ -63,9 +60,6 @@ public class MainTabPain extends Composite
 
    @UiField
    TextInput nameField;
-
-   @UiField
-   Label urlField;
 
    @UiField
    TextInput descriptionField;
@@ -93,8 +87,6 @@ public class MainTabPain extends Composite
       initWidget(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
-      urlField.setID(URL_FIELD_ID);
-      urlField.setIsHTML(true);
       descriptionField.setName(DESCRIPTION_FIELD_ID);
       creationDateField.setID(CREATION_DATE_FIELD_ID);
       updatedDateField.setID(UPDATED_DATE_FIELD_ID);
@@ -111,14 +103,6 @@ public class MainTabPain extends Composite
    public TextInput getNameField()
    {
       return nameField;
-   }
-
-   /**
-    * @return the urlField
-    */
-   public Label getUrlField()
-   {
-      return urlField;
    }
 
    /**

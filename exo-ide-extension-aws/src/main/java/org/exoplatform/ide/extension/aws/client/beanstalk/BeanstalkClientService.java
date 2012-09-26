@@ -151,6 +151,15 @@ public abstract class BeanstalkClientService
    public abstract void deleteVersion(String vfsId, String projectId, String applicationName, String versionLabel,
       boolean isDeleteS3Bundle, AsyncRequestCallback<Object> callback) throws RequestException;
 
+   /**
+    * Create new version of application.
+    * 
+    * @param vfsId VFS identifier
+    * @param projectId project identifier
+    * @param createApplicationVersionRequest {@link CreateApplicationVersionRequest}
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void createVersion(String vfsId, String projectId,
       CreateApplicationVersionRequest createApplicationVersionRequest,
       AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;

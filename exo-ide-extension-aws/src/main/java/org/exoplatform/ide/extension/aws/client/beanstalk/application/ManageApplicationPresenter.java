@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
@@ -32,6 +33,7 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -58,17 +60,15 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.D
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionCreatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionDeletedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentCreatedHandler;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.Date;
@@ -88,8 +88,6 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       // GeneralInfo
 
       HasValue<String> getApplicationNameField();
-
-      HasValue<String> getUrlField();
 
       HasValue<String> getDescriptionField();
 
@@ -124,7 +122,15 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
 
    private ApplicationInfo applicationInfo;
 
-   private EnvironmentInfo environmentInfo;
+   protected RequestStatusHandler environmentStatusHandler;
+
+   // TODO
+   private EnvironmentInfo newEnvironmentInfo;
+
+   /**
+    * Delay in millisecond between environment status checking.
+    */
+   private static final int delay = 2000;
 
    private VersionDeletedHandler versionDeletedHandler = new VersionDeletedHandler()
    {
@@ -167,7 +173,12 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       @Override
       public void onEnvironmentCreated(EnvironmentInfo environmentInfo)
       {
-         // TODO do actions when environment is created
+         newEnvironmentInfo = environmentInfo;
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentLaunching(newEnvironmentInfo
+            .getName()), Type.INFO));
+         environmentStatusHandler = new EnvironmentRequestStatusHandler(newEnvironmentInfo.getName());
+         environmentStatusHandler.requestInProgress(openedProject.getId());
+         checkEnvironmentStatusTimer.schedule(delay);
       }
    };
 
@@ -194,7 +205,6 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          return;
       }
 
-      environmentInfo = null;
       getApplicationInfo();
    }
 
@@ -231,6 +241,19 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
+      display.getVersionActions().addLaunchHandler(new SelectionHandler<ApplicationVersionInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<ApplicationVersionInfo> event)
+         {
+            //            IDE.fireEvent(new LaunchEnvironmentEvent(currentVfs.getId(), openedProject.getId(), applicationInfo
+            //               .getName(), environmentLaunchedHandler));
+            IDE.fireEvent(new CreateEnvironmentEvent(currentVfs.getId(), openedProject.getId(), applicationInfo
+               .getName(), event.getSelectedItem().getVersionLabel(), environmentCreatedHandler));
+         }
+      });
+
       display.getVersionActions().addDeleteHandler(new SelectionHandler<ApplicationVersionInfo>()
       {
 
@@ -260,7 +283,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          public void onClick(ClickEvent event)
          {
             IDE.fireEvent(new CreateEnvironmentEvent(currentVfs.getId(), openedProject.getId(), applicationInfo
-               .getName(), environmentCreatedHandler));
+               .getName(), null, environmentCreatedHandler));
          }
       });
    }
@@ -397,89 +420,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                protected void onSuccess(ApplicationInfo result)
                {
                   applicationInfo = result;
-                  getEnvironmentId();
+                  openView();
                }
             });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Get the application's environment identifier from the project properties.
-    */
-   private void getEnvironmentId()
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getItemById(openedProject.getId(),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(openedProject)))
-            {
-
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  StringProperty awsEnvironmentId = (StringProperty)result.getItem().getProperty("awsEnvironmentId");
-                  if (awsEnvironmentId != null && !awsEnvironmentId.getValue().isEmpty())
-                  {
-                     getEnvironmentInfo(awsEnvironmentId.getValue().get(0));
-                  }
-                  else
-                  {
-                     openView();
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  openView();
-                  exception.printStackTrace();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         openView();
-         e.printStackTrace();
-      }
-   }
-
-   /**
-    * Get the environment info by the provided identifier and open view.
-    * 
-    * @param environmentId environment identifier
-    */
-   private void getEnvironmentInfo(String environmentId)
-   {
-      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-      AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
-      try
-      {
-         BeanstalkClientService.getInstance().getEnvironmentInfo(environmentId,
-            new AsyncRequestCallback<EnvironmentInfo>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(EnvironmentInfo result)
-               {
-                  environmentInfo = result;
-                  openView();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  openView();
-                  exception.printStackTrace();
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         openView();
-         e.printStackTrace();
       }
    }
 
@@ -492,20 +439,6 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          bindDisplay();
       }
       display.getApplicationNameField().setValue(applicationInfo.getName());
-      if (environmentInfo != null && environmentInfo.getEndpointUrl() != null)
-      {
-         String envUrl = environmentInfo.getEndpointUrl();
-         if (!envUrl.startsWith("http"))
-         {
-            envUrl = "http://" + envUrl;
-         }
-
-         display.getUrlField().setValue("<a href =\"" + envUrl + "\" target=\"_blank\">" + envUrl + "</a>");
-      }
-      else
-      {
-         display.getUrlField().setValue("n/a");
-      }
       display.getDescriptionField().setValue(
          applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
       display.getCreateDateField().setValue(new Date(applicationInfo.getCreated()).toString());
@@ -549,5 +482,73 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * A timer for periodically sending request of environment status.
+    */
+   private Timer checkEnvironmentStatusTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+         AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
+         try
+         {
+            BeanstalkClientService.getInstance().getEnvironmentInfo(newEnvironmentInfo.getId(),
+               new AsyncRequestCallback<EnvironmentInfo>(unmarshaller)
+               {
+                  @Override
+                  protected void onSuccess(EnvironmentInfo result)
+                  {
+                     updateEnvironmentStatus(result);
+                     if (result.getStatus() == EnvironmentStatus.Launching)
+                     {
+                        schedule(delay);
+                     }
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     String message =
+                        AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(newEnvironmentInfo.getName());
+                     if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                     {
+                        message += "<br>" + ((ServerException)exception).getMessage();
+                     }
+                     IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                     environmentStatusHandler.requestError(openedProject.getId(), exception);
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
+      }
+   };
+
+   private void updateEnvironmentStatus(EnvironmentInfo environment)
+   {
+      if (environment.getStatus() == EnvironmentStatus.Ready)
+      {
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationStartedOnUrl(
+            environment.getApplicationName(), getAppUrl(environment)), Type.INFO));
+
+         environmentStatusHandler.requestFinished(openedProject.getId());
+      }
+   }
+
+   private String getAppUrl(EnvironmentInfo environment)
+   {
+      String appUrl = environment.getEndpointUrl();
+      if (!appUrl.startsWith("http"))
+      {
+         appUrl = "http://" + appUrl;
+      }
+      appUrl = "<a href=\"" + appUrl + "\" target=\"_blank\">" + appUrl + "</a>";
+      return appUrl;
    }
 }
