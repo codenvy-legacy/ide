@@ -44,19 +44,24 @@ public class CkEditor extends AbstractTestModule
 
    private interface Locators
    {
+      String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
+
+      String IFRAME_SELECTOR = "//div[@panel-id='editor']//div[@class='CodeMirror-wrapping']/iframe";
 
       String CK_EDITOR = "//table[@class='cke_editor']";
 
-      String CK_EDITOR_IFRAME = "td.cke_contents>iframe";
+      String CK_EDITOR_IFRAME = "td#cke_contents_editor%s>iframe";
 
       String CK_EDITOR_TOOLS_BAR = "td#cke_top_editor%s";
+
+      String CK_EDITOR_GET_TEXT = "cke_show_borders";
 
       String CK_EDITOR_TOOL_SELECT =
          "//span[@class='cke_toolgroup']//span[@class='cke_button']//a[@href=\"javascript:void('%s')\"]";
 
-      String CK_EDITOR_WYSWYG_TABLE = "table.cke_dialog_contents";
-
       String CK_EDITOR_OPENED = "//span[@id='cke_editor%s']" + "/span[@class='cke_browser_gecko cke_focus']";
+
+      String CK_EDITOR_WYSWYG_TABLE = "table.cke_dialog_contents";
 
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
@@ -91,6 +96,8 @@ public class CkEditor extends AbstractTestModule
 
       String CONTEXT_SUB_MENU_ELEMENT = "//a[@title='%s']";
 
+      String DESIGN_BUTTON_XPATH = "//div[@title='Design']//div[text()='Design']";
+
    }
 
    private WebElement editor;
@@ -112,6 +119,12 @@ public class CkEditor extends AbstractTestModule
 
    @FindBy(xpath = Locators.CONTEXT_SUB_MENU_IFRAME)
    private WebElement contextSubMenuFrame;
+
+   @FindBy(className = Locators.CK_EDITOR_GET_TEXT)
+   private WebElement ckTextContainer;
+
+   @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
+   private WebElement editorCodemirr;
 
    /**
     * wait tools panel in ck editor
@@ -164,25 +177,17 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * Type text to file, opened in tab.
-    * 
-    * Index of tabs begins from 0.
-    * 
-    * Sometimes, if you can't type text to editor, try before to click on editor:
-    * 
-    * selenium().clickAt("//body[@class='editbox']", "5,5");
-    * 
-    * @param tabIndex begins from 0
-    * @param text (can be used '\n' as line break)
+    * switch to iframe of the ck_editor
+    * and type text
+    * @param tabIndex
+    * @param text
+    * @throws Exception
     */
    public void typeTextIntoCkEditor(int tabIndex, String text) throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
-      IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
-      driver().switchTo().frame(ckEditorIframe);
-      driver().switchTo().activeElement().sendKeys(text);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      ckTextContainer.sendKeys(text);
       IDE().selectMainFrame();
    }
 
@@ -211,24 +216,6 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
-    * 
-    * @param tabIndex
-    * @return
-    * @throws Exception
-    */
-   public String getTextFromCKEditor(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
-      driver().switchTo().frame(ckEditorIframe);
-      String text = driver().switchTo().activeElement().getText();
-      IDE().selectMainFrame();
-      return text;
-   }
-
-   /**
     * Wait while tab appears in editor
     * 
     * @param tabIndex - index of tab, starts at 0
@@ -252,6 +239,27 @@ public class CkEditor extends AbstractTestModule
             {
                return false;
             }
+         }
+      });
+   }
+
+   /**
+    * waiting while switch between ckeditor on codeeditor
+    * 
+    * @param numCodeEditor
+    */
+   public void waitSwitchOnCodeEditor()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            IDE().selectMainFrame();
+            WebElement elem = driver().findElement(By.xpath(Locators.IFRAME_SELECTOR));
+            driver().switchTo().frame(elem);
+            return editorCodemirr != null && editorCodemirr.isDisplayed();
          }
       });
    }
@@ -306,7 +314,9 @@ public class CkEditor extends AbstractTestModule
     */
    public void clickDesignButton() throws Exception
    {
-      editor.findElement(By.id(Locators.DESIGN_BUTTON_ID)).click();
+
+      editor.findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+
    }
 
    /**
@@ -366,7 +376,7 @@ public class CkEditor extends AbstractTestModule
    {
       new Actions(driver()).sendKeys(Keys.ARROW_UP.toString()).build().perform();
       //heed for set cursor in position
-      Thread.sleep(TestConstants.REDRAW_PERIOD*2);
+      Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
    }
 
    /**
@@ -375,6 +385,22 @@ public class CkEditor extends AbstractTestModule
    public void switchToContextMenuIframe()
    {
       driver().switchTo().frame(contextMainMenuFrame);
+   }
+
+   /**
+    * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
+    * 
+    * @param tabIndex
+    * @return
+    * @throws Exception
+    */
+   public String getTextFromCKEditor(int tabIndex) throws Exception
+   {
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      String ck_txt = ckTextContainer.getText();
+      IDE().selectMainFrame();
+      return ck_txt;
    }
 
    /**
@@ -417,10 +443,10 @@ public class CkEditor extends AbstractTestModule
     */
    public void clickOnContextSubMenu(String name) throws InterruptedException
    {
-    driver().findElement(By.xpath(String.format(Locators.CONTEXT_SUB_MENU_ELEMENT, name))).click();
-    //heed for close context menu
-    Thread.sleep(TestConstants.REDRAW_PERIOD);
-    
+      driver().findElement(By.xpath(String.format(Locators.CONTEXT_SUB_MENU_ELEMENT, name))).click();
+      //heed for close context menu
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
    }
 
    /**
@@ -435,8 +461,8 @@ public class CkEditor extends AbstractTestModule
          driver().findElement(By.xpath(String.format(Locators.CONTEXT_MAIN_MENU_ELEMENT, titleMenu)));
       new Actions(driver()).moveToElement(nameMenu).build().perform();
       //heed for open context submenu
-      Thread.sleep(TestConstants.REDRAW_PERIOD*2);
-      
+      Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
+
    }
 
    /**

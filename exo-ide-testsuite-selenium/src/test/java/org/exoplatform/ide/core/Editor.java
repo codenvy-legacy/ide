@@ -50,18 +50,7 @@ public class Editor extends AbstractTestModule
    {
 
       String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
-
-      String CK_EDITOR = "//table[@class='cke_editor']";
-
-      String CK_EDITOR_IFRAME = "td.cke_contents>iframe";
-
-      String CK_EDITOR_TOOLS_BAR = "td#cke_top_editor%s";
-
-      String CK_EDITOR_TOOL_SELECT =
-         "//span[@class='cke_toolgroup']//span[@class='cke_button']//a[@href=\"javascript:void('%s')\"]";
-
-      String CK_EDITOR_OPENED = "//span[@id='cke_editor%s']" + "/span[@class='cke_browser_gecko cke_focus']";
-
+      
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
       String TAB_LOCATOR = "//div[@tab-bar-index='%s']";
@@ -104,8 +93,6 @@ public class Editor extends AbstractTestModule
       String HIGHLITER_BORDER = DESIGN_EDITOR_PREFIX
          + "//div[@component= 'Border' and contains(@style, 'color: rgb(182, 204, 232)')]";
 
-      String IFRAME_SELECTOR = "//div[@panel-id='editor']//div[@class='CodeMirror-wrapping']/iframe";
-
       String IFRAME = "iframe";
 
    }
@@ -115,11 +102,13 @@ public class Editor extends AbstractTestModule
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
    private WebElement highlighter;
 
-   @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
-   private WebElement editorCodemirr;
-
    @FindBy(tagName = Locators.IFRAME)
    private WebElement iframe;
+   
+   @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
+   private WebElement editorCodemirr;
+   
+   
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -369,27 +358,6 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * waiting while switch between ckeditor on codeeditor
-    * 
-    * @param numCodeEditor
-    */
-   public void waitSwitchOnCodeEditor()
-   {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            IDE().selectMainFrame();
-            WebElement elem = driver().findElement(By.xpath(Locators.IFRAME_SELECTOR));
-            driver().switchTo().frame(elem);
-            return editorCodemirr != null && editorCodemirr.isDisplayed();
-         }
-      });
-   }
-
-   /**
     * 
     * 
     * @param tabIndex index of tab, starts at 0
@@ -604,16 +572,6 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Delete all file content via Ctrl+a, Delete
-    */
-   public void deleteFileContentInCKEditor(int tabIndex) throws Exception
-   {
-
-      typeTextIntoCkEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
-
-   }
-
-   /**
     * Type text to file, opened in tab.
     * 
     * Index of tabs begins from 0.
@@ -638,29 +596,6 @@ public class Editor extends AbstractTestModule
       {
          IDE().selectMainFrame();
       }
-   }
-
-   /**
-    * Type text to file, opened in tab.
-    * 
-    * Index of tabs begins from 0.
-    * 
-    * Sometimes, if you can't type text to editor, try before to click on editor:
-    * 
-    * selenium().clickAt("//body[@class='editbox']", "5,5");
-    * 
-    * @param tabIndex begins from 0
-    * @param text (can be used '\n' as line break)
-    */
-   public void typeTextIntoCkEditor(int tabIndex, String text) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
-      driver().switchTo().frame(ckEditorIframe);
-      driver().switchTo().activeElement().sendKeys(text);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-      IDE().selectMainFrame();
    }
 
    /**
@@ -778,23 +713,6 @@ public class Editor extends AbstractTestModule
       return text;
    }
 
-   /**
-    * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
-    * 
-    * @param tabIndex
-    * @return
-    * @throws Exception
-    */
-   public String getTextFromCKEditor(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      IDE().selectMainFrame();
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
-      driver().switchTo().frame(ckEditorIframe);
-      String text = driver().switchTo().activeElement().getText();
-      IDE().selectMainFrame();
-      return text;
-   }
 
    /**
     * Wait while tab appears in editor
