@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.api;
 
+import org.exoplatform.ide.resources.model.File;
+
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -25,7 +27,7 @@ import com.google.gwt.resources.client.ImageResource;
  * like a file name but more abstract. It is not a model. It is a description of
  * the model source for an <code>Editor</code>.
  * <p>
- * An editor input is passed to an editor via the <code>IEditorPart.init</code>
+ * An editor input is passed to an editor via the <code>EditorPartPresenter.init</code>
  * method.
  * </p>
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -37,19 +39,7 @@ public interface EditorInput
    /**
     * Returns the image descriptor for this input.
     * 
-    * <p>
-    * Note: although a null return value has never been permitted from this
-    * method, there are many known buggy implementations that return null.
-    * Clients that need the image for an editor are advised to use
-    * IWorkbenchPart.getImage() instead of IEditorInput.getImageDescriptor(),
-    * or to recover from a null return value in a manner that records the ID of
-    * the problematic editor input. Implementors that have been returning null
-    * from this method should pick some other default return value (such as
-    * ImageDescriptor.getMissingImageDescriptor()).
-    * </p>
-    * 
-    * @return the image resource for this input; may be <code>null</code> if
-    * there is no image.
+    * @return the image resource for this input; never <code>null</code>
     */
    public ImageResource getImageResource();
 
@@ -73,4 +63,10 @@ public interface EditorInput
     * @return the tool tip text; never <code>null</code>.
     */
    public String getToolTipText();
+   
+   /**
+    * Return the file of this input
+    * @return the File; never <code>null</code>
+    */
+   public File getFile();
 }

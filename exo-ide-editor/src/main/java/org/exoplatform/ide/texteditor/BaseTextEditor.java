@@ -19,20 +19,18 @@
 package org.exoplatform.ide.texteditor;
 
 
-import com.google.inject.Inject;
-
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.editor.api.DocumentProvider;
 import org.exoplatform.ide.editor.api.EditorInitException;
 import org.exoplatform.ide.editor.api.EditorInput;
-import org.exoplatform.ide.editor.api.EditorSite;
 import org.exoplatform.ide.editor.api.SelectionProvider;
-import org.exoplatform.ide.editor.api.TextEditor;
+import org.exoplatform.ide.editor.api.TextEditorPartPresenter;
 import org.exoplatform.ide.text.DocumentImpl;
 
 /**
@@ -40,7 +38,7 @@ import org.exoplatform.ide.text.DocumentImpl;
  * @version $Id:
  *
  */
-public class BaseTextEditor implements TextEditor, IsWidget
+public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
 {
 
    private Editor editor;
@@ -55,39 +53,19 @@ public class BaseTextEditor implements TextEditor, IsWidget
       
       
    }
-   
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#getEditorInput()
-    */
-   @Override
-   public EditorInput getEditorInput()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getEditorSite()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.api.EditorInput)
     */
    @Override
-   public EditorSite getEditorSite()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.api.EditorInput)
-    */
-   @Override
-   public void init(EditorSite site, EditorInput input) throws EditorInitException
+   public void init(EditorInput input) throws EditorInitException
    {
       DocumentImpl d = new DocumentImpl(input.getName());
       editor.setDocument(d);
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#doSave()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#doSave()
     */
    @Override
    public void doSave()
@@ -97,7 +75,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#doSaveAs()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#doSaveAs()
     */
    @Override
    public void doSaveAs()
@@ -107,7 +85,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isDirty()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isDirty()
     */
    @Override
    public boolean isDirty()
@@ -117,7 +95,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isSaveAsAllowed()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isSaveAsAllowed()
     */
    @Override
    public boolean isSaveAsAllowed()
@@ -127,7 +105,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isSaveOnCloseNeeded()
+    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isSaveOnCloseNeeded()
     */
    @Override
    public boolean isSaveOnCloseNeeded()
@@ -137,7 +115,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#getDocumentProvider()
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#getDocumentProvider()
     */
    @Override
    public DocumentProvider getDocumentProvider()
@@ -147,7 +125,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#close(boolean)
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#close(boolean)
     */
    @Override
    public void close(boolean save)
@@ -157,7 +135,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#isEditable()
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#isEditable()
     */
    @Override
    public boolean isEditable()
@@ -167,7 +145,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#doRevertToSaved()
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#doRevertToSaved()
     */
    @Override
    public void doRevertToSaved()
@@ -177,7 +155,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#getSelectionProvider()
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#getSelectionProvider()
     */
    @Override
    public SelectionProvider getSelectionProvider()
@@ -187,7 +165,7 @@ public class BaseTextEditor implements TextEditor, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditor#selectAndReveal(int, int)
+    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#selectAndReveal(int, int)
     */
    @Override
    public void selectAndReveal(int offset, int length)

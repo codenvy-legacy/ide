@@ -21,7 +21,7 @@ package org.exoplatform.ide.editor.api;
 
 /**
  * Interface to a text editor. This interface defines functional extensions to
- * <code>Editor</code> as well as the configuration capabilities of a text editor.
+ * <code>EditorPartPresenter</code> as well as the configuration capabilities of a text editor.
  * <p>
  * Text editors are configured with an <code>DocumentProvider</code> which delivers a textual
  * presentation (<code>Document</code>) of the editor's input. The editor works on the document and
@@ -33,7 +33,7 @@ package org.exoplatform.ide.editor.api;
  * @version $Id:
  *
  */
-public interface TextEditor extends Editor
+public interface TextEditorPartPresenter extends EditorPartPresenter
 {
    /**
     * Returns this text editor's document provider.
