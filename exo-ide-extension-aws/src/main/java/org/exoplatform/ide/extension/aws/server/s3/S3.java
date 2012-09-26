@@ -156,7 +156,7 @@ public class S3 extends AWSClient
     * Delete bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
     *
     * @param name
-    *    bucket name which will deleted
+    *    S3 bucket name which will deleted
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -182,11 +182,11 @@ public class S3 extends AWSClient
     * If content with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
-    *    bucket name
+    *    S3 bucket name
     * @param s3Key
-    *    key
+    *    key, where content(object) should be stored
     * @param data
-    *    data location
+    *    data location from which we take stream
     * @return S3 object description
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
@@ -218,9 +218,9 @@ public class S3 extends AWSClient
     * If object with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
-    *    bucket name
+    *    S3 bucket name
     * @param s3Key
-    *    key
+    *    key, where object should be stored
     * @param stream
     *    input stream of given file to upload
     * @param mediaType
@@ -252,13 +252,13 @@ public class S3 extends AWSClient
     * If project with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
-    *    bucket name
+    *    S3 bucket name
     * @param s3Key
-    *    key
+    *    key, where project should be stored
     * @param vfs
-    *    instance of Virtual File system
+    *    instance of Virtual File system which used by eXo IDE
     * @param projectId
-    *    id of project
+    *    id of project in eXo IDE virtual file system
     * @return S3 object description
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
@@ -317,11 +317,11 @@ public class S3 extends AWSClient
     * @param prefix
     *    the prefix restricting what keys will be listed
     * @param nextMarker
-    *    the key marker indicating where listing results should begin
+    *    the key marker indicating where listing results should begin, must be equals or greater 0
     * @param maxKeys
-    *    the maximum number of results to return
+    *    the maximum number of results to return, if max keys -1 then no limit to show objects in result set
     * @return
-    *    result object containing bucket name and listing objects in this bucket
+    *    result object containing S3 bucket name and listing objects in this bucket
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -379,9 +379,9 @@ public class S3 extends AWSClient
     * Amazon S3 will return a success message instead of an error message.
     *
     * @param s3Bucket
-    *    bucket name
+    *    S3 bucket name
     * @param s3key
-    *    key of the object
+    *    key, where object is stored
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
@@ -406,7 +406,7 @@ public class S3 extends AWSClient
     * Gets the object stored in Amazon S3 under the specified bucket and key.
     *
     * @param s3Bucket
-    *    bucket name
+    *    S3 bucket name
     * @param s3Key
     *    the key of object to be read
     * @return
