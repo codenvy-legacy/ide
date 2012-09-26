@@ -105,11 +105,11 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(1);
       IDE.EDITOR.clickDesignButton();
-      IDE.EDITOR.deleteFileContentInCKEditor(0);
-      IDE.EDITOR.getTextFromCKEditor(0);
-      assertEquals("", IDE.EDITOR.getTextFromCKEditor(0));
-      IDE.EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString() + "z");
-      IDE.EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString() + "b");
+      IDE.CK_EDITOR.deleteFileContentInCKEditor(0);
+      IDE.CK_EDITOR.getTextFromCKEditor(0);
+      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor(0));
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString() + "z");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL.toString() + "b");
       Thread.sleep(3000);
       //----- old section ------------
       //      //Press Ctrl+B

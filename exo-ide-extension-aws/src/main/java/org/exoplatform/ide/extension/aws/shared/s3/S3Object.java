@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.aws.shared.s3;
 
 /**
+ * Information about S3 object
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
