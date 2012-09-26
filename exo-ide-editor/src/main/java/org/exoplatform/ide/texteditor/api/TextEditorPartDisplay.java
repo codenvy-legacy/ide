@@ -67,8 +67,7 @@ public interface TextEditorPartDisplay
    
    /**
     * Configures the source viewer using the given configuration. Prior to 3.0 this
-    * method can only be called once. Since 3.0 this method can be called again
-    * after a call to {@link ISourceViewerExtension2#unconfigure()}.
+    * method can only be called once.
     *
     * @param configuration the source viewer configuration to be used
     */
