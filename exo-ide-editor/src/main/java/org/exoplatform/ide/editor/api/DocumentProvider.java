@@ -45,58 +45,29 @@ import org.exoplatform.ide.text.Document;
 public interface DocumentProvider
 {
    /**
-    * Connects the given element to this document provider. This tells the provider
-    * that caller of this method is interested to work with the document provided for
-    * the given domain model element. By counting the invocations of this method and
-    * <code>disconnect(Object)</code> this provider can assume to know the
-    * correct number of clients working with the document provided for that
-    * domain model element. <p>
-    * The given element must not be <code>null</code>.
-    *
-    * @param element the element
-    *
-    */
-   //TODO throw some exception 
-   void connect(Object element);
-
-   /**
-    * Disconnects the given element from this document provider. This tells the provider
-    * that the caller of this method is no longer interested in working with the document
-    * provided for the given domain model element. By counting the invocations of
-    * <code>connect(Object)</code> and of this method this provider can assume to
-    * know the correct number of clients working with the document provided for that
-    * domain model element. <p>
-    * The given element must not be <code>null</code>.
-    *
-    * @param element the element
-    */
-   void disconnect(Object element);
-
-   /**
     * Returns the document for the given element. Usually the document contains
     * a textual presentation of the content of the element, or is the element itself.
     *
-    * @param element the element, or <code>null</code>
+    * @param input the input, or <code>null</code>
     * @return the document, or <code>null</code> if none
     */
-   Document getDocument(Object element);
+   Document getDocument(EditorInput input);
    
    /**
     * Saves the given document provided for the given element.
     *
-    * @param monitor a progress monitor to report progress and request cancelation
-    * @param element the element, or <code>null</code>
+    * @param input the input, or <code>null</code>
     * @param document the document
     * @param overwrite indicates whether overwrite should be performed
     *          while saving the given element if necessary
     */
-   void saveDocument(Object element, Document document, boolean overwrite);
+   void saveDocument(EditorInput input, Document document, boolean overwrite);
    
    /**
-    * Returns the annotation model for the given element.
+    * Returns the annotation model for the given input.
     *
-    * @param element the element, or <code>null</code>
+    * @param input the input, or <code>null</code>
     * @return the annotation model, or <code>null</code> if none
     */
-   AnnotationModel getAnnotationModel(Object element);
+   AnnotationModel getAnnotationModel(EditorInput input);
 }

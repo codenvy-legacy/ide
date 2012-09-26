@@ -29,10 +29,10 @@ import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.util.LineUtils;
 import org.exoplatform.ide.texteditor.Editor;
-import org.exoplatform.ide.texteditor.Editor.KeyListener;
-import org.exoplatform.ide.texteditor.Editor.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.Editor.ReadOnlyListener;
 import org.exoplatform.ide.texteditor.ViewportModel;
+import org.exoplatform.ide.texteditor.api.KeyListener;
+import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.util.Elements;
@@ -207,7 +207,7 @@ public class InputController
 
    boolean dispatchKeyUp(final Event event)
    {
-      class NativeKeyUpDispatcher implements Dispatcher<Editor.NativeKeyUpListener>
+      class NativeKeyUpDispatcher implements Dispatcher<NativeKeyUpListener>
       {
          boolean handled;
 

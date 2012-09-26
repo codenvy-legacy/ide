@@ -23,6 +23,8 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.text.store.LineInfo;
+import org.exoplatform.ide.texteditor.api.KeyListener;
+import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
@@ -88,7 +90,7 @@ public class MouseHoverManager
 
    private ListenerRegistrar.Remover nativeKeyUpListenerRemover;
 
-   private final Editor.NativeKeyUpListener keyUpListener = new Editor.NativeKeyUpListener()
+   private final NativeKeyUpListener keyUpListener = new NativeKeyUpListener()
    {
       @Override
       public boolean onNativeKeyUp(Event event)
@@ -104,7 +106,7 @@ public class MouseHoverManager
       }
    };
 
-   private final Editor.KeyListener keyPressListener = new Editor.KeyListener()
+   private final KeyListener keyPressListener = new KeyListener()
    {
       @Override
       public boolean onKeyPress(SignalEvent signal)

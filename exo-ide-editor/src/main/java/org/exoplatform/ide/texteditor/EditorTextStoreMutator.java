@@ -25,8 +25,8 @@ import org.exoplatform.ide.text.edits.InsertEdit;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
-import org.exoplatform.ide.texteditor.Editor.BeforeTextListener;
-import org.exoplatform.ide.texteditor.Editor.TextListener;
+import org.exoplatform.ide.texteditor.api.BeforeTextListener;
+import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.util.ListenerRegistrar;
 
 /**

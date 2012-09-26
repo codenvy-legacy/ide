@@ -32,6 +32,7 @@ import org.exoplatform.ide.editor.api.EditorInput;
 import org.exoplatform.ide.editor.api.SelectionProvider;
 import org.exoplatform.ide.editor.api.TextEditorPartPresenter;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -41,7 +42,7 @@ import org.exoplatform.ide.text.DocumentImpl;
 public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
 {
 
-   private Editor editor;
+   private TextEditorPartDisplay editor;
 
    /**
     * 
