@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>exo-ide-extension-aws</artifactId>
 	<version>1.2.0-M12-SNAPSHOT</version>
-	<name>eXo IDE :: Extension :: Amason Web Services</name>
+	<name>eXo IDE :: Extension :: Amazon Web Services</name>
 
    <dependencies>
 

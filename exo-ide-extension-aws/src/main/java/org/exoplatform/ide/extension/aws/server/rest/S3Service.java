@@ -43,6 +43,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -86,6 +87,7 @@ public class S3Service
 
    @Path("buckets/create")
    @POST
+   @Produces(MediaType.APPLICATION_JSON)
    public S3Bucket createBucket(@QueryParam("name") String name,
                                 @QueryParam("region") String region) throws AWSException
    {
@@ -95,6 +97,7 @@ public class S3Service
 
    @Path("buckets")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<S3Bucket> listBuckets() throws AWSException
    {
       return s3.listBuckets();
@@ -111,6 +114,7 @@ public class S3Service
 
    @Path("objects/put/{s3bucket}")
    @POST
+   @Produces(MediaType.APPLICATION_JSON)
    public NewS3Object putObject(@PathParam("s3bucket") String s3Bucket,
                                 @QueryParam("s3key") String s3Key,
                                 @QueryParam("data") URL data)
@@ -121,6 +125,7 @@ public class S3Service
 
    @Path("objects/upload_project/{s3bucket}")
    @POST
+   @Produces(MediaType.APPLICATION_JSON)
    public NewS3Object uploadProject(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("s3key") String s3Key,
                                     @QueryParam("vfsid") String vfsid,
@@ -215,6 +220,7 @@ public class S3Service
 
    @Path("objects/{s3bucket}")
    @POST
+   @Produces(MediaType.APPLICATION_JSON)
    public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("prefix") String prefix,
                                     @QueryParam("nextmarker") String nextMarker,

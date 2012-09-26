@@ -38,6 +38,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
+import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
@@ -166,4 +167,11 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<DeleteApplicationVersionRequest> deleteVersionRequest();
    
    AutoBean<CreateApplicationVersionRequest> createVersionRequest();
+
+   /**
+    * A factory method for an instance info bean.
+    * 
+    * @return an {@link AutoBean} of type {@link InstanceInfo}
+    */
+   AutoBean<InstanceInfo> instanceInfo();
 }

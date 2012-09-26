@@ -547,7 +547,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler#onDeployFinished(boolean)
+    * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onDeployFinished(boolean)
     */
    @Override
    public void onDeployFinished(boolean success)
@@ -575,7 +575,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model.ProjectModel)
+    * @see org.exoplatform.ide.client.framework.paas.DeployResultHandler#onProjectCreated(org.exoplatform.ide.vfs.client.model.ProjectModel)
     */
    @Override
    public void onProjectCreated(ProjectModel project)

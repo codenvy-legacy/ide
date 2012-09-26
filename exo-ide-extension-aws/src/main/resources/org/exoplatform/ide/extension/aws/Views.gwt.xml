@@ -28,6 +28,10 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter.Display" />
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
    </replace-with>
