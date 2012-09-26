@@ -21,8 +21,8 @@ import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.undo.DocumentUndoEvent;
 import org.exoplatform.ide.text.undo.DocumentUndoManagerRegistry;
-import org.exoplatform.ide.text.undo.IDocumentUndoListener;
-import org.exoplatform.ide.text.undo.IDocumentUndoManager;
+import org.exoplatform.ide.text.undo.DocumentUndoListener;
+import org.exoplatform.ide.text.undo.DocumentUndoManager;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.util.SignalEvent;
@@ -143,7 +143,7 @@ public class TextEditorUndoManager
    /**
     * Internal document undo listener.
     */
-   private class DocumentUndoListener implements IDocumentUndoListener
+   private class DocumentUndoListenerImpl implements DocumentUndoListener
    {
 
       /*
@@ -224,13 +224,13 @@ public class TextEditorUndoManager
    private int fUndoLevel;
 
    /** The document undo manager that is active. */
-   private IDocumentUndoManager fDocumentUndoManager;
+   private DocumentUndoManager fDocumentUndoManager;
 
    /** The document that is active. */
    private Document fDocument;
 
    /** The document undo listener */
-   private IDocumentUndoListener fDocumentUndoListener;
+   private DocumentUndoListener fDocumentUndoListener;
 
    /**
     * Creates a new undo manager who remembers the specified number of edit commands.
@@ -517,7 +517,7 @@ public class TextEditorUndoManager
          fDocumentUndoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(fDocument);
          fDocumentUndoManager.connect(this);
          setMaximalUndoLevel(fUndoLevel);
-         fDocumentUndoListener = new DocumentUndoListener();
+         fDocumentUndoListener = new DocumentUndoListenerImpl();
          fDocumentUndoManager.addDocumentUndoListener(fDocumentUndoListener);
       }
    }

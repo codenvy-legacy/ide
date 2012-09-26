@@ -22,9 +22,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.client.presenter.Presenter;
-import org.exoplatform.ide.editor.api.EditorInitException;
-import org.exoplatform.ide.editor.api.EditorInput;
-import org.exoplatform.ide.editor.api.EditorPartPresenter;
+import org.exoplatform.ide.editor.EditorInitException;
+import org.exoplatform.ide.editor.EditorInput;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.resources.model.File;
 
 /**

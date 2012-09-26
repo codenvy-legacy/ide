@@ -16,25 +16,25 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.ConfigurableLineTracker;
-import org.exoplatform.ide.text.ILineTracker;
+import org.exoplatform.ide.text.LineTracker;
 import org.exoplatform.ide.text.IRegion;
-import org.exoplatform.ide.text.ITextStore;
+import org.exoplatform.ide.text.TextStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Correctness tests for {@link ITextStore} implementations.
+ * Correctness tests for {@link TextStore} implementations.
  *
  * @since 3.3
  */
 public abstract class TextStoreTest
 {
 
-   private ITextStore fTextStore;
+   private TextStore fTextStore;
 
-   protected ILineTracker fTracker;
+   protected LineTracker fTracker;
 
    //   @BeforeClass
    //   public static void before()
@@ -59,7 +59,7 @@ public abstract class TextStoreTest
       set("x\nx\nx\nx\nx\n");
    }
 
-   protected ILineTracker createTracker()
+   protected LineTracker createTracker()
    {
       return new ConfigurableLineTracker(new String[]{"\n"});
    }
@@ -76,7 +76,7 @@ public abstract class TextStoreTest
       fTracker.set(text);
    }
 
-   abstract protected ITextStore createTextStore();
+   abstract protected TextStore createTextStore();
 
    @After
    public void tearDown()

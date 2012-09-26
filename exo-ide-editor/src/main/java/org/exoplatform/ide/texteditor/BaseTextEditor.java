@@ -26,11 +26,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.AppContext;
-import org.exoplatform.ide.editor.api.DocumentProvider;
-import org.exoplatform.ide.editor.api.EditorInitException;
-import org.exoplatform.ide.editor.api.EditorInput;
-import org.exoplatform.ide.editor.api.SelectionProvider;
-import org.exoplatform.ide.editor.api.TextEditorPartPresenter;
+import org.exoplatform.ide.editor.DocumentProvider;
+import org.exoplatform.ide.editor.EditorInitException;
+import org.exoplatform.ide.editor.EditorInput;
+import org.exoplatform.ide.editor.SelectionProvider;
+import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 
@@ -56,7 +56,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.api.EditorInput)
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.EditorInput)
     */
    @Override
    public void init(EditorInput input) throws EditorInitException
@@ -66,7 +66,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#doSave()
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSave()
     */
    @Override
    public void doSave()
@@ -76,7 +76,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#doSaveAs()
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSaveAs()
     */
    @Override
    public void doSaveAs()
@@ -86,7 +86,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isDirty()
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#isDirty()
     */
    @Override
    public boolean isDirty()
@@ -96,7 +96,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isSaveAsAllowed()
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#isSaveAsAllowed()
     */
    @Override
    public boolean isSaveAsAllowed()
@@ -106,7 +106,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.EditorPartPresenter#isSaveOnCloseNeeded()
+    * @see org.exoplatform.ide.editor.EditorPartPresenter#isSaveOnCloseNeeded()
     */
    @Override
    public boolean isSaveOnCloseNeeded()
@@ -116,7 +116,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#getDocumentProvider()
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#getDocumentProvider()
     */
    @Override
    public DocumentProvider getDocumentProvider()
@@ -126,7 +126,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#close(boolean)
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#close(boolean)
     */
    @Override
    public void close(boolean save)
@@ -136,7 +136,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#isEditable()
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#isEditable()
     */
    @Override
    public boolean isEditable()
@@ -146,7 +146,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#doRevertToSaved()
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#doRevertToSaved()
     */
    @Override
    public void doRevertToSaved()
@@ -156,7 +156,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#getSelectionProvider()
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#getSelectionProvider()
     */
    @Override
    public SelectionProvider getSelectionProvider()
@@ -166,7 +166,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.TextEditorPartPresenter#selectAndReveal(int, int)
+    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#selectAndReveal(int, int)
     */
    @Override
    public void selectAndReveal(int offset, int length)

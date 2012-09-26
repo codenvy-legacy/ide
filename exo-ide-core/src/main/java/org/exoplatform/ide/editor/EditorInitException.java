@@ -16,27 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.text.store;
-
-import org.exoplatform.ide.text.TextStore;
-import org.exoplatform.ide.text.store.DocumentTextStore;
+package org.exoplatform.ide.editor;
 
 /**
+ *  A checked exception indicating a editor cannot be initialized 
+ *  correctly. The message text provides a further description of the problem.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-
-public class DocumentTextStoreTest extends TextStoreTest
+public class EditorInitException extends Exception
 {
 
    /**
-    * @see org.exoplatform.text.store.TextStoreTest#createTextStore()
+    * 
     */
-   @Override
-   protected TextStore createTextStore()
+   private static final long serialVersionUID = 1L;
+
+   /**
+    * @param message
+    * @param cause
+    */
+   public EditorInitException(String message, Throwable cause)
    {
-      return new DocumentTextStore(fTracker);
+      super(message, cause);
    }
 
+   /**
+    * @param message
+    */
+   public EditorInitException(String message)
+   {
+      super(message);
+   }
+
+   
 }

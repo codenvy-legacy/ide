@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,27 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.text.store;
-
-import org.exoplatform.ide.text.TextStore;
-import org.exoplatform.ide.text.store.DocumentTextStore;
+package org.exoplatform.ide.text;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
+ * 
  */
-
-public class DocumentTextStoreTest extends TextStoreTest
+public interface DocumentPartitioningListener
 {
 
    /**
-    * @see org.exoplatform.text.store.TextStoreTest#createTextStore()
+    * Signals the change of document partitionings.
+    * <p>
+    * @param event the event describing the change
+    * @see Document#addDocumentPartitioningListener(DocumentPartitioningListener)
     */
-   @Override
-   protected TextStore createTextStore()
-   {
-      return new DocumentTextStore(fTracker);
-   }
-
+   void documentPartitioningChanged(DocumentPartitioningChangedEvent event);
 }

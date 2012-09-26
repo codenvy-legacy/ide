@@ -16,27 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.text.store;
-
-import org.exoplatform.ide.text.TextStore;
-import org.exoplatform.ide.text.store.DocumentTextStore;
+package org.exoplatform.ide.editor;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-
-public class DocumentTextStoreTest extends TextStoreTest
+public interface SelectionProvider
 {
-
-   /**
-    * @see org.exoplatform.text.store.TextStoreTest#createTextStore()
-    */
-   @Override
-   protected TextStore createTextStore()
-   {
-      return new DocumentTextStore(fTracker);
-   }
 
 }

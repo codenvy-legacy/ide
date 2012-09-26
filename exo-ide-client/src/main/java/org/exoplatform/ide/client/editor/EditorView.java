@@ -19,7 +19,7 @@ package org.exoplatform.ide.client.editor;
 import com.google.gwt.dom.client.Style.Position;
 
 import org.exoplatform.ide.client.editor.EditorPresenter.Display;
-import org.exoplatform.ide.editor.api.EditorPartPresenter;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 import com.google.gwt.core.client.GWT;
