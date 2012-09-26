@@ -40,8 +40,6 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicati
 import org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentPresenter;
-import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
-import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;

@@ -41,6 +41,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -94,7 +95,10 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
          @Override
          public void onClick(ClickEvent event)
          {
-            stopEnvironment();
+            if (environment.getStatus().equals(EnvironmentStatus.Ready))
+              stopEnvironment();
+            else
+               Dialogs.getInstance().showError("Environment alredy terminated"); 
          }
       });
    }
@@ -118,6 +122,11 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
    public void onStopEnvironment(StopEnvironmentEvent event)
    {
       this.environment = event.getEnvironmentInfo();
+      if (!environment.getStatus().equals(EnvironmentStatus.Ready))
+      {
+        Dialogs.getInstance().showError("Environment alredy terminated");
+        return;
+      }
 
       if (display == null)
       {
@@ -125,7 +134,6 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
          IDE.getInstance().openView(display.asView());
          bindDisplay();
       }
-//      display.getDeleteS3Bundle().setValue(true);
       display.getDeleteQuestion().setValue(
          AWSExtension.LOCALIZATION_CONSTANT.stopEnvironmentQuestion(environment.getId()));
    }
@@ -151,7 +159,7 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
                @Override
                protected void processFail(Throwable exception)
                {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.deleteVersionFailed(environment.getVersionLabel());
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.deleteVersionFailed(environment.getId());
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();

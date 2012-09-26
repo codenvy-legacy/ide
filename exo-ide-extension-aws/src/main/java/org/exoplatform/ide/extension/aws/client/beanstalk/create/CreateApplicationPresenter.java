@@ -66,7 +66,10 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -465,6 +468,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                   }
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
                      .createEnvironmentLaunching(environmentName), Type.INFO));
+                  writeEnvironmentId();
                   checkEnvironmentStatusTimer.schedule(delay);
                }
             });
@@ -553,6 +557,36 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       {
          warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
+      }
+   }
+
+   /**
+    * Writes application's AWS environment identifier to the project properties.
+    */
+   private void writeEnvironmentId()
+   {
+      openedProject.getProperties().add(new StringProperty("awsEnvironmentId", environment.getId()));
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(openedProject, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               // nothing to do
+            }
+
+            @Override
+            protected void onFailure(Throwable ignore)
+            {
+               // ignore this exception
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
       }
    }
 

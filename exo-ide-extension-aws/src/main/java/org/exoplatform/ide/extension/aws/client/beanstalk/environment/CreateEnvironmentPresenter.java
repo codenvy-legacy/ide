@@ -83,6 +83,8 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
 
    private String applicationName;
 
+   private String versionLabel;
+
    private String projectId;
 
    private String vfsId;
@@ -149,6 +151,7 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
       this.projectId = event.getProjectId();
       this.vfsId = event.getVfsId();
       this.applicationName = event.getApplicationName();
+      this.versionLabel = event.getVersionLabel();
       this.environmentCreatedHandler = event.getEnvironmentCreatedHandler();
 
       if (display == null)
@@ -209,6 +212,10 @@ public class CreateEnvironmentPresenter implements CreateEnvironmentHandler, Vie
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
       createEnvironmentRequest.setApplicationName(applicationName);
+      if (versionLabel != null)
+      {
+         createEnvironmentRequest.setVersionLabel(versionLabel);
+      }
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());

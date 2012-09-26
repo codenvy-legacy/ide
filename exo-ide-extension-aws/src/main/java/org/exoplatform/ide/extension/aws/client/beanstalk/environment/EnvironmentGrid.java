@@ -31,6 +31,7 @@ import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -93,6 +94,8 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
    private final String APPLICATION = "Application";
 
    private final String VERSION = "Version";
+   
+   private final String STATUS = "Status";
 
    private final String STOP = "Stop";
 
@@ -144,6 +147,16 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
             return environmentInfo.getVersionLabel();
          }
       };
+      
+      Column<EnvironmentInfo, String> statusColumn = new Column<EnvironmentInfo, String>(new TextCell())
+               {
+
+                  @Override
+                  public String getValue(EnvironmentInfo environmentInfo)
+                  {
+                     return environmentInfo.getStatus().name();
+                  }
+               };
 
       Column<EnvironmentInfo, String> urlColumn = new Column<EnvironmentInfo, String>(new LinkCell())
       {
@@ -169,6 +182,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
       getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
       getCellTable().addColumn(appNameColumn, APPLICATION);
       getCellTable().addColumn(appVersionColumn, VERSION);
+      getCellTable().addColumn(statusColumn, STATUS);
       getCellTable().addColumn(urlColumn, URL);
       getCellTable().addColumn(stopColumn, STOP);
    }

@@ -246,7 +246,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AwsAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(ENVIRONMENT_STOP).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      url.append(ENVIRONMENT_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createEnvironmentRequest)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)

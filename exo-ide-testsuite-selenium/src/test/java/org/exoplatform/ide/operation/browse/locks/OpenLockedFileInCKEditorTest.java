@@ -60,8 +60,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
 
-         VirtualFileSystemUtils.put(
-            "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html",
+         VirtualFileSystemUtils.put("src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html",
             MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       }
       catch (Exception e)
@@ -96,14 +95,19 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
-      
+      //open file save content 
       IDE.CK_EDITOR.WaitCkEditorOpened(1);
-      String contentEditor = IDE.EDITOR.getTextFromCodeEditor(0);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.CONTROL+"s");
-      IDE.LOADER.waitClosed();
+      String contentEditor = IDE.CK_EDITOR.getTextFromCKEditor(1);
+     
+      //save file for correct logout, popup ask window can't appearance
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+      //lock file
+      
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
+      //check state buttons and logout
       checkAllUnlockStateButtons();
       IDE.LOGIN.logout();
 
@@ -122,21 +126,25 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-
-     
+      
+      
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
-      
       IDE.CK_EDITOR.WaitCkEditorOpened(1);
-      
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
+      checkLockStateButtonsOnUserCredentinal();
+      IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "i try is change content");
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+      IDE.EDITOR.closeFile(0);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.CK_EDITOR.clickDesignButton();
+      assertEquals(contentEditor, IDE.CK_EDITOR.getTextFromCKEditor(2));
 
-      //TODO Here failed but after fix issue IDE-1476 should be pass
-      // checkAllUnlockStateButtons();
-      
-      IDE.CK_EDITOR.deleteFileContentInCKEditor(0);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "i try is change content");
-      IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE);
    }
 
    /**
@@ -152,5 +160,21 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
    }
+   
+   
+   /**
+    * check enabled ulock icon and button on toolbar and Edit menu
+    * @throws Exception
+    */
+   private void checkLockStateButtonsOnUserCredentinal() throws Exception
+   {
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      assertFalse(IDE.LOCK_FILE.isUnLockCommandActive());
+      IDE.MENU.clickOnLockLayer();
+      IDE.LOADER.waitClosed();
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
+   }
+   
 
 }
