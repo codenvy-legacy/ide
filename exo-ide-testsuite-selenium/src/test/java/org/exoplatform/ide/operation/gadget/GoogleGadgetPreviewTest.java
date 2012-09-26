@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.operation.gadget;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -26,9 +27,12 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.fest.assertions.AssertExtension;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.PageFactory;
 
 import java.io.IOException;
@@ -46,9 +50,19 @@ public class GoogleGadgetPreviewTest extends BaseTest
    private static final String PROJECT = GoogleGadgetPreviewTest.class.getSimpleName();
 
    private final static String FILE_NAME = "Calculator.gadget";
-   
+
    public GadgetPreviewPage CALCULATOR;
+
+   private final static String CHANGE_DIRECTORY_TITLE = "                directory_title=\"eXoCalculator\"";
+
+   private final static String CHANGE_TITLE = "                title=\"eXoCalculator\"";
+
+   private final static String CHANGE_X_BUTTON =
+      "                <a class=\"Red\" onClick=\"MultButton(1); return false;\">multiply</a>";
    
+   
+   private final static String CHANGED_CONTENT_ELEMENT_LOCATOR ="//a[@class=\"Red\" and text()='multiply']";
+
    @BeforeClass
    public static void setUp()
    {
@@ -63,7 +77,7 @@ public class GoogleGadgetPreviewTest extends BaseTest
       {
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -79,6 +93,8 @@ public class GoogleGadgetPreviewTest extends BaseTest
    @Test
    public void testGadgetPreview() throws Exception
    {
+
+      //open gadget and check preview
       CALCULATOR = PageFactory.initElements(driver, GadgetPreviewPage.class);
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
@@ -87,23 +103,65 @@ public class GoogleGadgetPreviewTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
       IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.SHOW_GADGET_PREVIEW, true);
-      
+
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
-      
       IDE.PREVIEW.waitGadgetPreviewOpened();
-      
       IDE.PREVIEW.selectGadgetPreviewIframe();
-      
+
       assertTrue(CALCULATOR.calculatorPresent());
       assertTrue(CALCULATOR.displayPresent());
       assertTrue(CALCULATOR.numberPresent());
-      
       IDE.selectMainFrame();
       
+      //change gadget and save changes
+      changeContentInGadget();
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL + "s");
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+      //close, reopen gadget and check changes in preview
+      IDE.EDITOR.closeFile(1);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      
+      // 2 run preview for redraw preview 
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      IDE.PREVIEW.waitGadgetPreviewOpened();
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GADGET_PREVIEW);
+      IDE.PREVIEW.waitGadgetPreviewOpened();
+      
+      assertEquals("eXoCalculator", IDE.PREVIEW.getTitlePreview());
+      IDE.PREVIEW.selectGadgetPreviewIframe();
+      assertEquals("multiply", driver.findElement(By.xpath(CHANGED_CONTENT_ELEMENT_LOCATOR)).getText());
+      IDE.selectMainFrame();
       IDE.EDITOR.closeFile(FILE_NAME);
+
       //TODO: this test is uncomplete. Changes content of gadget, save and click Preview.
+   }
+
+   private void changeContentInGadget() throws Exception
+   {
+      IDE.GOTOLINE.goToLine(33);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, CHANGE_TITLE);
+
+      IDE.GOTOLINE.goToLine(34);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, CHANGE_DIRECTORY_TITLE);
+
+      IDE.GOTOLINE.goToLine(283);
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(0, CHANGE_X_BUTTON);
    }
 
 }
