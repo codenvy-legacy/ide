@@ -39,8 +39,6 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.D
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter;
-import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
-import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
 import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -72,8 +70,9 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays.asList(
-            ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS), new DeployApplicationPresenter()));
+         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays
+            .asList(ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS),
+            new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

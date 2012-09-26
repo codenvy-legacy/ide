@@ -63,9 +63,11 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -351,6 +353,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                   deployResultHandler.onDeployFinished(true);
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
                      .createEnvironmentLaunching(environmentName), Type.INFO));
+                  writeEnvironmentId();
                   checkEnvironmentStatusTimer.schedule(delay);
                }
             });
@@ -519,6 +522,36 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
+      }
+   }
+
+   /**
+    * Writes application's AWS environment identifier to the project properties.
+    */
+   private void writeEnvironmentId()
+   {
+      project.getProperties().add(new StringProperty("awsEnvironmentId", environment.getId()));
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               // nothing to do
+            }
+
+            @Override
+            protected void onFailure(Throwable ignore)
+            {
+               // ignore this exception
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
       }
    }
 

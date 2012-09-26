@@ -48,7 +48,11 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
 
    private final String UPDATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridUpdated();
 
+   private final String LAUNCH = AWSExtension.LOCALIZATION_CONSTANT.launchButton();
+
    private final String DELETE = AWSExtension.LOCALIZATION_CONSTANT.deleteButton();
+
+   private Column<ApplicationVersionInfo, String> launchColumn;
 
    private Column<ApplicationVersionInfo, String> deleteColumn;
 
@@ -100,6 +104,16 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
          }
       };
 
+      launchColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(ApplicationVersionInfo application)
+         {
+            return LAUNCH;
+         }
+      };
+
       deleteColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
       {
 
@@ -114,7 +128,24 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
       getCellTable().addColumn(descriptionColumn, DESCRIPTION);
       getCellTable().addColumn(createdColumn, CREATED);
       getCellTable().addColumn(updatedColumn, UPDATED);
+      getCellTable().addColumn(launchColumn, LAUNCH);
       getCellTable().addColumn(deleteColumn, DELETE);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions#addLaunchHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addLaunchHandler(final SelectionHandler<ApplicationVersionInfo> handler)
+   {
+      launchColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>()
+      {
+         @Override
+         public void update(int index, ApplicationVersionInfo object, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(object));
+         }
+      });
    }
 
    /**
@@ -143,4 +174,5 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
          super(selectedItem);
       }
    }
+
 }

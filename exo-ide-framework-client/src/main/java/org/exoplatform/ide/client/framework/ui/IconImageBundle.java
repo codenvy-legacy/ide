@@ -81,6 +81,9 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
 
+   @Source("org/exoplatform/ide/client/bundled-images/projects/aws.png")
+   ImageResource awsProject();
+
    /* Languages */
    @Source("org/exoplatform/ide/client/bundled-images/projects/java_type.png")
    ImageResource javaType();
@@ -99,7 +102,4 @@ public interface IconImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/php_type.png")
    ImageResource phpType();
-
-   @Source("org/exoplatform/ide/client/bundled-images/projects/elasticBeanstalk.png")
-   ImageResource elasticBeanstalk();
 }

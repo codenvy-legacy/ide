@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.aws.client;
 
-import com.google.gwt.i18n.client.LocalizableResource.Key;
-
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 14, 2012 9:51:41 AM anya $
@@ -38,6 +36,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("button.rename")
    String renameButton();
+
+   @Key("button.launch")
+   String launchButton();
 
    @Key("button.delete")
    String deleteButton();
@@ -73,14 +74,13 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // Controls
    @Key("button.properties")
    String propertiesButton();
-   
+
    @Key("button.upload")
    String uploadButton();
-   
+
    @Key("button.refresh")
    String refreshButton();
-   
-   
+
    //Controls
    @Key("control.beanstalk.id")
    String beanstalkControlId();
@@ -210,6 +210,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("application.name")
    String applicationName();
+
+   @Key("environment.url")
+   String environmentUrl();
 
    @Key("application.description")
    String applicationDescription();
