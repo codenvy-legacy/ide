@@ -74,7 +74,11 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
 
+   private static final String ENVIRONMENT_STOP = BASE_URL + "/environments/stop/";
+
    private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info";
+   
+   private static final String ENVIRONMENTS = BASE_URL + "/environments";
 
    private static final String VERSIONS = BASE_URL + "/apps/versions";
 
@@ -242,7 +246,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AwsAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(ENVIRONMENT_CREATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      url.append(ENVIRONMENT_STOP).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createEnvironmentRequest)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
@@ -321,6 +325,27 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+   
+   @Override
+   public void getEnvironments(String vfsId, String projectId,AsyncRequestCallback<List<EnvironmentInfo>> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENTS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      
+   }
+   
+   @Override
+   public void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+   {
+      String url = restServiceContext + ENVIRONMENT_STOP + environmentId;
+      
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+      .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      
    }
 
 }

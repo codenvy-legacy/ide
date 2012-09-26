@@ -91,7 +91,7 @@ public class S3ServiceImpl extends S3Service
    @Override
    public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker) throws RequestException
    {
-      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=18";
+      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=2";
       if (nextMarker != null)
          url += "&nextmarker=" + nextMarker;
       

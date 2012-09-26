@@ -19,9 +19,18 @@
 
 package org.exoplatform.ide.extension.aws.client.s3;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
@@ -43,20 +52,10 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -196,11 +195,11 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    {
       FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
       List<String> mimeTypeList = new ArrayList<String>();
+      mimeTypeList.add("application/octet-stream");
       for (FileType fileType : fileTypes)
       {
          mimeTypeList.add(fileType.getMimeType());
       }
-
       return mimeTypeList;
    }
 
@@ -214,6 +213,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
       FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
       List<String> mimeTypeList = new ArrayList<String>();
+      mimeTypeList.add("application/octet-stream");
 
       for (FileType fileType : fileTypes)
       {
@@ -243,7 +243,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          display.setMimeTypeFieldEnabled(true);
 
          List<String> mimeTypes = getSupportedMimeTypes();
-         Collections.sort(mimeTypes);
+//         Collections.sort(mimeTypes);
 
          List<String> proposalMimeTypes = getMimeTypesByFileName(event.getFileName());
 
@@ -350,16 +350,8 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void completeUpload()
    {
       closeView();
-
-      Item item = selectedItems.get(0);
-      if (item instanceof FileModel)
-      {
-         IDE.fireEvent(new RefreshBrowserEvent(((FileModel)item).getParent()));
-      }
-      else if (item instanceof Folder)
-      {
-         IDE.fireEvent(new RefreshBrowserEvent((Folder)item));
-      }
+      IDE.fireEvent(new S3ObjectUploadedEvent());
+      
    }
 
    private void closeView()

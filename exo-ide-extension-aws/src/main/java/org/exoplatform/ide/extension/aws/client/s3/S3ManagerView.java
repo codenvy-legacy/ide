@@ -49,7 +49,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    private static final int WIDTH = 1200;
 
-   private static final int HEIGHT = 720;
+   private static final int HEIGHT = 750;
 
    @UiField
    ImageButton deleteBucketButton;
@@ -87,7 +87,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    public S3ManagerView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.createApplicationViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managemntViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -108,8 +108,6 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    public void setS3Buckets(List<S3Bucket> bucketsList)
    {
       buckets.clear();
-      buckets.setVisibleItemCount(bucketsList.size());
-
       for (S3Bucket s3Bucket : bucketsList)
       {
          buckets.addItem(s3Bucket.getName());

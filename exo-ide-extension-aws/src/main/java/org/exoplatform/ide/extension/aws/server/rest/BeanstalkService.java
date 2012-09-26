@@ -321,8 +321,7 @@ public class BeanstalkService
    }
 
    @Path("environments/stop/{id}")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
+   @GET
    @Produces(MediaType.APPLICATION_JSON)
    public EnvironmentInfo stopEnvironment(@PathParam("id") String id) throws AWSException
    {

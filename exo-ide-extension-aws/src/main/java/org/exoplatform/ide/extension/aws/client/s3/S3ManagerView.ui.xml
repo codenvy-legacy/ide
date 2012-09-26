@@ -18,39 +18,51 @@
 			font-family: Verdana, Bitstream Vera Sans, sans-serif;
 			float: left;
 		}
+		
+		.buckets {
+			font-size: 14px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			float: left;
+			background-color: #B6CCE8;
+			color: white;
+			font-weight: bold;
+		}
 	</ui:style>
 
-	<f:Border margin="5" borderColor="transparent">
-		<f:layer top="0" bottom="35">
+	<f:Border borderColor="transparent">
+		<f:layer top="0" bottom="0">
 			<g:SplitLayoutPanel>
 				<g:west size="260">
-					<g:VerticalPanel spacing="10">
+					<g:VerticalPanel>
+						<g:Label text="Buckets" styleName="{style.buckets}" width="100%"></g:Label>
 						<g:HorizontalPanel spacing="10">
 							<f:ImageButton ui:field="deleteBucketButton" width="90px" height="22" text="{locale.deleteButton}"
 								imageName="delete"></f:ImageButton>
 							<f:ImageButton ui:field="createBucketButton" width="90px" height="22" text="{locale.createButton}"
 								imageName="yes"></f:ImageButton>
 						</g:HorizontalPanel>
-						<g:ListBox ui:field="buckets" visibleItemCount="10"></g:ListBox>
+						<g:ListBox ui:field="buckets" visibleItemCount="42" width="255px"></g:ListBox>
 					</g:VerticalPanel>
 				</g:west>
 				<g:center>
-					<g:VerticalPanel>
+					<g:VerticalPanel width="100%">
 						<u:ObjectGrid ui:field="s3ObjectsGrid" width="100%" height="100%"></u:ObjectGrid>
 					</g:VerticalPanel>
 				</g:center>
-				<g:north size="40">
-					<g:HorizontalPanel spacing="10">
-						<f:ImageButton ui:field="deleteButton" width="110px" height="22" text="{locale.deleteButton}"
-							imageName="delete"></f:ImageButton>
-						<f:ImageButton ui:field="uploadButton" width="100" height="22" text="{locale.uploadButton}"
-							imageName="upload"></f:ImageButton>
-						<g:Label text="Page Navigation : " styleName="{style.labelH}"></g:Label>
-						<f:ImageButton ui:field="backButton" width="100" height="22" text="{locale.backButton}" imageName="back"></f:ImageButton>
-						<f:ImageButton ui:field="refreshButton" width="100" height="22" text="{locale.refreshButton}"
-							imageName="refresh"></f:ImageButton>
-						<f:ImageButton ui:field="nextButton" width="100" height="22" text="{locale.nextButton}" imageName="next"></f:ImageButton>
-					</g:HorizontalPanel>
+				<g:north size="55">
+					<g:VerticalPanel width="100%">
+						<g:Label text="Objects" styleName="{style.buckets}" width="100%"></g:Label>
+						<g:HorizontalPanel spacing="10">
+							<f:ImageButton ui:field="deleteButton" width="110px" height="22" text="{locale.deleteButton}"
+								imageName="delete"></f:ImageButton>
+							<f:ImageButton ui:field="uploadButton" width="100" height="22" text="{locale.uploadButton}"
+								imageName="upload"></f:ImageButton>
+							<g:Label text="Page Navigation : " styleName="{style.labelH}"></g:Label>
+							<f:ImageButton ui:field="backButton" width="100" height="22" text="{locale.backButton}" imageName="back"></f:ImageButton>
+							<f:ImageButton ui:field="refreshButton" width="100" height="22" text="{locale.refreshButton}" imageResource="{resource.s3Refresh}"></f:ImageButton>
+							<f:ImageButton ui:field="nextButton" width="100" height="22" text="{locale.nextButton}" imageName="next"></f:ImageButton>
+						</g:HorizontalPanel>
+					</g:VerticalPanel>
 				</g:north>
 			</g:SplitLayoutPanel>
 		</f:layer>
