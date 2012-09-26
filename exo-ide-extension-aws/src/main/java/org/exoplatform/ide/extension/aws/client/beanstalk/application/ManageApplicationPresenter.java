@@ -30,6 +30,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -47,8 +48,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.ApplicationUpdatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationEvent;
@@ -63,7 +64,11 @@ import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.Date;
@@ -83,6 +88,8 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       // GeneralInfo
 
       HasValue<String> getApplicationNameField();
+
+      HasValue<String> getUrlField();
 
       HasValue<String> getDescriptionField();
 
@@ -116,6 +123,8 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
    private VirtualFileSystemInfo currentVfs;
 
    private ApplicationInfo applicationInfo;
+
+   private EnvironmentInfo environmentInfo;
 
    private VersionDeletedHandler versionDeletedHandler = new VersionDeletedHandler()
    {
@@ -185,6 +194,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          return;
       }
 
+      environmentInfo = null;
       getApplicationInfo();
    }
 
@@ -387,13 +397,89 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                protected void onSuccess(ApplicationInfo result)
                {
                   applicationInfo = result;
-                  openView();
+                  getEnvironmentId();
                }
             });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Get the application's environment identifier from the project properties.
+    */
+   private void getEnvironmentId()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemById(openedProject.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(openedProject)))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  StringProperty awsEnvironmentId = (StringProperty)result.getItem().getProperty("awsEnvironmentId");
+                  if (awsEnvironmentId != null && !awsEnvironmentId.getValue().isEmpty())
+                  {
+                     getEnvironmentInfo(awsEnvironmentId.getValue().get(0));
+                  }
+                  else
+                  {
+                     openView();
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  openView();
+                  exception.printStackTrace();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         openView();
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * Get the environment info by the provided identifier and open view.
+    * 
+    * @param environmentId environment identifier
+    */
+   private void getEnvironmentInfo(String environmentId)
+   {
+      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+      AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
+      try
+      {
+         BeanstalkClientService.getInstance().getEnvironmentInfo(environmentId,
+            new AsyncRequestCallback<EnvironmentInfo>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(EnvironmentInfo result)
+               {
+                  environmentInfo = result;
+                  openView();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  openView();
+                  exception.printStackTrace();
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         openView();
+         e.printStackTrace();
       }
    }
 
@@ -406,6 +492,20 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          bindDisplay();
       }
       display.getApplicationNameField().setValue(applicationInfo.getName());
+      if (environmentInfo != null && environmentInfo.getEndpointUrl() != null)
+      {
+         String envUrl = environmentInfo.getEndpointUrl();
+         if (!envUrl.startsWith("http"))
+         {
+            envUrl = "http://" + envUrl;
+         }
+
+         display.getUrlField().setValue("<a href =\"" + envUrl + "\" target=\"_blank\">" + envUrl + "</a>");
+      }
+      else
+      {
+         display.getUrlField().setValue("n/a");
+      }
       display.getDescriptionField().setValue(
          applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
       display.getCreateDateField().setValue(new Date(applicationInfo.getCreated()).toString());

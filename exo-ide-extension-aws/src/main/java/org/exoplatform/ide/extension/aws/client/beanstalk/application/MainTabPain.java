@@ -45,6 +45,8 @@ public class MainTabPain extends Composite
 
    private static final String NAME_FIELD_ID = "ideMainTabPainNameField";
 
+   private static final String URL_FIELD_ID = "ideMainTabPainURLField";
+
    private static final String DESCRIPTION_FIELD_ID = "ideMainTabPainDescriptionField";
 
    private static final String CREATION_DATE_FIELD_ID = "ideMainTabPainCreateDateField";
@@ -61,6 +63,9 @@ public class MainTabPain extends Composite
 
    @UiField
    TextInput nameField;
+
+   @UiField
+   Label urlField;
 
    @UiField
    TextInput descriptionField;
@@ -88,6 +93,8 @@ public class MainTabPain extends Composite
       initWidget(uiBinder.createAndBindUi(this));
 
       nameField.setName(NAME_FIELD_ID);
+      urlField.setID(URL_FIELD_ID);
+      urlField.setIsHTML(true);
       descriptionField.setName(DESCRIPTION_FIELD_ID);
       creationDateField.setID(CREATION_DATE_FIELD_ID);
       updatedDateField.setID(UPDATED_DATE_FIELD_ID);
@@ -104,6 +111,14 @@ public class MainTabPain extends Composite
    public TextInput getNameField()
    {
       return nameField;
+   }
+
+   /**
+    * @return the urlField
+    */
+   public Label getUrlField()
+   {
+      return urlField;
    }
 
    /**

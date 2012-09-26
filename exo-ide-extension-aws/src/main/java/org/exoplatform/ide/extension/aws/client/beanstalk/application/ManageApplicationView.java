@@ -78,6 +78,15 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    }
 
    /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getUrlField()
+    */
+   @Override
+   public HasValue<String> getUrlField()
+   {
+      return mainTabPain.getUrlField();
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display#getDescriptionField()
     */
    @Override
@@ -175,4 +184,5 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    {
       applicationTabPanel.selectTab(VERSIONS_TAB_ID);
    }
+
 }
