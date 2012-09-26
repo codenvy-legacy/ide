@@ -58,6 +58,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       projectTypes.add(ProjectType.JAVA.value());
       projectTypes.add(ProjectType.SPRING.value());
       projectTypes.add(ProjectType.JSP.value());
+      projectTypes.add(ProjectType.AWS.value());
    }
 
    /**

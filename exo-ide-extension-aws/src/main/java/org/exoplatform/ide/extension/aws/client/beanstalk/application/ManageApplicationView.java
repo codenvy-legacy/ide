@@ -1,11 +1,12 @@
 package org.exoplatform.ide.extension.aws.client.beanstalk.application;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -17,7 +18,10 @@ import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionsTabPain;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentTabPain;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 public class ManageApplicationView extends ViewImpl implements ManageApplicationPresenter.Display
 {
@@ -50,6 +54,8 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    private MainTabPain mainTabPain;
 
    private VersionsTabPain versionsTabPain;
+   
+   private EnvironmentTabPain environmentTabPain;;
 
    public ManageApplicationView()
    {
@@ -65,6 +71,10 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
       versionsTabPain = new VersionsTabPain();
       applicationTabPanel.addTab(VERSIONS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()),
          AWSExtension.LOCALIZATION_CONSTANT.versionsTab(), versionsTabPain, false);
+      
+      environmentTabPain = new EnvironmentTabPain();
+      applicationTabPanel.addTab(ENVIRONMENTS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()),
+         "Environments", environmentTabPain, false);
    }
 
    /**
@@ -174,5 +184,22 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    {
       applicationTabPanel.selectTab(VERSIONS_TAB_ID);
    }
-
+   
+   @Override
+   public void selectEnvironmentTab()
+   {
+      applicationTabPanel.selectTab(ENVIRONMENTS_TAB_ID);
+   }
+   
+   @Override
+   public HasEnvironmentActions getEnvironmentActions()
+   {
+      return environmentTabPain.getVersionsGrid();
+   }
+   
+   @Override
+   public ListGridItem<EnvironmentInfo> getEnvironmentGrid()
+   {
+      return environmentTabPain.getVersionsGrid();
+   }
 }

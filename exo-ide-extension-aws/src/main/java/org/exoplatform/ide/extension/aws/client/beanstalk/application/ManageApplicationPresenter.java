@@ -50,8 +50,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
+import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.ApplicationUpdatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationEvent;
@@ -63,6 +64,8 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.V
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentCreatedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
@@ -110,6 +113,14 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       ListGridItem<ApplicationVersionInfo> getVersionsGrid();
 
       HasVersionActions getVersionActions();
+
+      //Environment
+      
+      void selectEnvironmentTab();
+      
+      ListGridItem<EnvironmentInfo> getEnvironmentGrid();
+
+      HasEnvironmentActions getEnvironmentActions();
 
       void selectVersionsTab();
    }
@@ -264,6 +275,17 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                versionDeletedHandler));
          }
       });
+      
+      
+      display.getEnvironmentActions().addDeleteHandler(new SelectionHandler<EnvironmentInfo>()
+         {
+
+            @Override
+            public void onSelection(SelectionEvent<EnvironmentInfo> event)
+            {
+              IDE.fireEvent(new StopEnvironmentEvent(event.getSelectedItem()));
+            }
+         });
 
       display.getCreateVersionButton().addClickHandler(new ClickHandler()
       {
@@ -445,6 +467,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       display.getUpdatedDateField().setValue(new Date(applicationInfo.getUpdated()).toString());
 
       getVersions();
+      getEnvironments();
    }
 
    private void getVersions()
@@ -475,6 +498,43 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
                protected void onSuccess(List<ApplicationVersionInfo> result)
                {
                   display.getVersionsGrid().setValue(result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+   private void getEnvironments()
+   {
+      try
+      {
+         BeanstalkClientService.getInstance().getEnvironments(
+            currentVfs.getId(),
+            openedProject.getId(),
+            new AwsAsyncRequestCallback<List<EnvironmentInfo>>(new EnvironmentsInfoListUnmarshaller(),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getVersions();
+                  }
+               })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+               }
+
+               @Override
+               protected void onSuccess(List<EnvironmentInfo> result)
+               {
+                  display.getEnvironmentGrid().setValue(result);
                }
             });
       }

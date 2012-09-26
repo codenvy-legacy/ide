@@ -84,4 +84,10 @@ public interface AWSClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/aws/client/images/new_env_Disabled.png")
    ImageResource newEnvironmentDisabled();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/refresh.png")
+   ImageResource s3Refresh();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/refresh_Disabled.png")
+   ImageResource s3RefreshDisabled();
 }

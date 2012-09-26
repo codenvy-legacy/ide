@@ -56,6 +56,10 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentPresenter.Display" />
+   </replace-with>
+   
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter.Display" />
    </replace-with>
