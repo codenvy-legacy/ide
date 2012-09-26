@@ -152,7 +152,10 @@ public class SaveFileAsTemplateTest extends BaseTest
       //first line "// test groovy file template" in content and with "Groovy" 
       //highlighting opened in the Content Panel.
       assertEquals(REST_SERVICE_FILE_NAME + " *", IDE.EDITOR.getTabTitle(2));
+      IDE.EDITOR.selectTab(1);
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(TEXT));
+      IDE.EDITOR.forcedClosureFile(1);
+      IDE.EDITOR.forcedClosureFile(1);
    }
    
 }
