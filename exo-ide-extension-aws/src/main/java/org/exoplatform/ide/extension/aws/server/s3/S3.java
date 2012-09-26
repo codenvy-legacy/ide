@@ -64,6 +64,24 @@ public class S3 extends AWSClient
       super(authenticator);
    }
 
+   /**
+    * Creates a new Amazon S3 bucket in the specified region. US region by default.
+    * To confirm creating bucket there is some constrains:
+    *    - Bucket names should not contain underscores
+    *    - Bucket names should be between 3 and 63 characters long
+    *    - Bucket names should not end with a dash
+    *    - Bucket names cannot contain uppercase characters
+    *
+    * @param name
+    *    name of the bucket
+    * @param region
+    *    region, where bucket must be created
+    *    valid values: null, us-west-1,us-west-2, EU, ap-southeast-1, ap-northeast-1, sa-east-1
+    * @return
+    *    the newly created bucket with provided information
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3Bucket createBucket(String name, S3Region region) throws AWSException
    {
       try
@@ -92,6 +110,14 @@ public class S3 extends AWSClient
       return bucket;
    }
 
+   /**
+    * Returns list of all Amazon S3 buckets that the authenticated user owns
+    *
+    * @return
+    *    a list of all of the Amazon S3 buckets with provided information owned by the authenticated user
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<S3Bucket> listBuckets() throws AWSException
    {
       try
@@ -126,6 +152,14 @@ public class S3 extends AWSClient
       return buckets;
    }
 
+   /**
+    * Delete bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
+    *
+    * @param name
+    *    bucket name which will deleted
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void deleteBucket(String name) throws AWSException
    {
       try
@@ -145,11 +179,11 @@ public class S3 extends AWSClient
 
    /**
     * Upload content from specified URL to Amazon S3 storage.
+    * If content with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
     *    bucket name
     * @param s3Key
-    *    key
     *    key
     * @param data
     *    data location
@@ -165,7 +199,7 @@ public class S3 extends AWSClient
       try
       {
          conn = data.openConnection();
-         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), null, conn.getContentLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentType(), conn.getContentLength());
       }
       finally
       {
@@ -179,6 +213,27 @@ public class S3 extends AWSClient
       }
    }
 
+   /**
+    * Uploads a new object to the specified Amazon S3 bucket.
+    * If object with the same key already exist it may be rewritten with new content.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    key
+    * @param stream
+    *    input stream of given file to upload
+    * @param mediaType
+    *    media type of file to upload
+    * @param length
+    *    size in bytes for file to upload
+    * @return
+    *    a result object containing the information returned by Amazon S3 for the newly created object.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws IOException
+    *    if any i/o error occurs
+    */
    public NewS3Object putObject(String s3Bucket, String s3Key, InputStream stream, String mediaType, long length)
       throws AWSException, IOException
    {
@@ -194,6 +249,7 @@ public class S3 extends AWSClient
 
    /**
     * Upload specified eXo IDE project to Amazon S3 storage. Project is zipped before uploading to S3.
+    * If project with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
     *    bucket name
@@ -217,7 +273,7 @@ public class S3 extends AWSClient
       ContentStream zippedProject = vfs.exportZip(projectId);
       try
       {
-         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), null, zippedProject.getLength());
+         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getMimeType(), zippedProject.getLength());
       }
       catch (AmazonClientException e)
       {
@@ -240,10 +296,9 @@ public class S3 extends AWSClient
          {
             metadata.setContentLength(length);
          }
-         if (mediaType != null)
-         {
-            metadata.setContentType(mediaType);
-         }
+
+         metadata.setContentType(mediaType);
+
          PutObjectResult result = s3.putObject(new PutObjectRequest(s3Bucket, s3Key, stream, metadata));
          return new NewS3ObjectImpl(s3Bucket, s3Key, result.getVersionId());
       }
@@ -253,6 +308,23 @@ public class S3 extends AWSClient
       }
    }
 
+   /**
+    * Returns object which contains information about objects which stored in specified bucket.
+    * List results are always returned in lexicographic (alphabetical) order.
+    *
+    * @param s3Bucket
+    *    name of bucket
+    * @param prefix
+    *    the prefix restricting what keys will be listed
+    * @param nextMarker
+    *    the key marker indicating where listing results should begin
+    * @param maxKeys
+    *    the maximum number of results to return
+    * @return
+    *    result object containing bucket name and listing objects in this bucket
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3ObjectsList listObjects(String s3Bucket, String prefix, String nextMarker, int maxKeys) throws AWSException
    {
       try
@@ -302,6 +374,17 @@ public class S3 extends AWSClient
       return s3ObjectsList;
    }
 
+   /**
+    * Deletes the specified object in the specified bucket. If attempting to delete an object that does not exist,
+    * Amazon S3 will return a success message instead of an error message.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3key
+    *    key of the object
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void deleteObject(String s3Bucket, String s3key) throws AWSException
    {
       try
@@ -319,6 +402,18 @@ public class S3 extends AWSClient
       s3.deleteObject(new DeleteObjectRequest(s3Bucket, s3Key));
    }
 
+   /**
+    * Gets the object stored in Amazon S3 under the specified bucket and key.
+    *
+    * @param s3Bucket
+    *    bucket name
+    * @param s3Key
+    *    the key of object to be read
+    * @return
+    *    result object containing stream, content type and last modification date for object to be read
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public S3Content getObjectContent(String s3Bucket, String s3Key) throws AWSException
    {
       try
