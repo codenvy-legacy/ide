@@ -23,16 +23,16 @@ import elemental.events.TextEvent;
 import elemental.html.Element;
 import elemental.html.TextAreaElement;
 
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.util.LineUtils;
 import org.exoplatform.ide.texteditor.Editor;
-import org.exoplatform.ide.texteditor.Editor.KeyListener;
-import org.exoplatform.ide.texteditor.Editor.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.Editor.ReadOnlyListener;
 import org.exoplatform.ide.texteditor.ViewportModel;
+import org.exoplatform.ide.texteditor.api.KeyListener;
+import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.util.Elements;
@@ -62,7 +62,7 @@ public class InputController
 
    //  final InputScheme vimScheme;
 
-   private TextStore document;
+   private DocumentModel document;
 
    private Editor editor;
 
@@ -90,7 +90,7 @@ public class InputController
       //    vimScheme = new VimScheme(this);
    }
 
-   public TextStore getDocument()
+   public DocumentModel getDocument()
    {
       return document;
    }
@@ -130,7 +130,7 @@ public class InputController
       return selection;
    }
 
-   public void handleDocumentChanged(TextStore document, SelectionModel selection, ViewportModel viewport)
+   public void handleDocumentChanged(DocumentModel document, SelectionModel selection, ViewportModel viewport)
    {
       this.document = document;
       this.selection = selection;
@@ -207,7 +207,7 @@ public class InputController
 
    boolean dispatchKeyUp(final Event event)
    {
-      class NativeKeyUpDispatcher implements Dispatcher<Editor.NativeKeyUpListener>
+      class NativeKeyUpDispatcher implements Dispatcher<NativeKeyUpListener>
       {
          boolean handled;
 

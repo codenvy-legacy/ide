@@ -16,17 +16,18 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import org.exoplatform.ide.commands.ExecutionException;
 import org.exoplatform.ide.commands.operations.IUndoContext;
 import org.exoplatform.ide.text.BadLocationException;
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.undo.DocumentUndoEvent;
 import org.exoplatform.ide.text.undo.DocumentUndoManagerRegistry;
-import org.exoplatform.ide.text.undo.IDocumentUndoListener;
-import org.exoplatform.ide.text.undo.IDocumentUndoManager;
+import org.exoplatform.ide.text.undo.DocumentUndoListener;
+import org.exoplatform.ide.text.undo.DocumentUndoManager;
+import org.exoplatform.ide.texteditor.api.KeyListener;
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.util.SignalEvent;
 
 /**
- * Implementation of {@link org.eclipse.jface.text.IUndoManager} using the shared
- * document undo manager.
  * <p>
  * It registers with the connected text viewer as text input listener, and obtains
  * its undo manager from the current document.  It also monitors mouse and keyboard
@@ -113,11 +114,11 @@ public class TextEditorUndoManager
    //		}
    //	}
 
-   private class KeyListener implements Editor.KeyListener
+   private class KeyListenerImpl implements KeyListener
    {
 
       /**
-       * @see org.exoplatform.ide.texteditor.Editor.KeyListener#onKeyPress(org.exoplatform.ide.util.SignalEvent)
+       * @see org.exoplatform.ide.texteditor.api.KeyListener#onKeyPress(org.exoplatform.ide.util.SignalEvent)
        */
       @Override
       public boolean onKeyPress(SignalEvent event)
@@ -142,7 +143,7 @@ public class TextEditorUndoManager
    /**
     * Internal document undo listener.
     */
-   private class DocumentUndoListener implements IDocumentUndoListener
+   private class DocumentUndoListenerImpl implements DocumentUndoListener
    {
 
       /*
@@ -217,19 +218,19 @@ public class TextEditorUndoManager
    private KeyListener inputListener;
 
    /** The text viewer the undo manager is connected to */
-   private Editor textViewer;
+   private TextEditorPartDisplay textViewer;
 
    /** The undo level */
    private int fUndoLevel;
 
    /** The document undo manager that is active. */
-   private IDocumentUndoManager fDocumentUndoManager;
+   private DocumentUndoManager fDocumentUndoManager;
 
    /** The document that is active. */
-   private IDocument fDocument;
+   private Document fDocument;
 
    /** The document undo listener */
-   private IDocumentUndoListener fDocumentUndoListener;
+   private DocumentUndoListener fDocumentUndoListener;
 
    /**
     * Creates a new undo manager who remembers the specified number of edit commands.
@@ -239,7 +240,7 @@ public class TextEditorUndoManager
    public TextEditorUndoManager(int undoLevel)
    {
       fUndoLevel = undoLevel;
-      inputListener = new KeyListener();
+      inputListener = new KeyListenerImpl();
    }
 
    /**
@@ -365,14 +366,14 @@ public class TextEditorUndoManager
    /*
     * @see org.eclipse.jface.text.IUndoManager#connect(org.eclipse.jface.text.ITextViewer)
     */
-   public void connect(Editor textViewer)
+   public void connect(TextEditorPartDisplay textViewer)
    {
       if (this.textViewer == null && textViewer != null)
       {
          this.textViewer = textViewer;
          addListeners();
       }
-      IDocument doc = textViewer.getDocument();
+      Document doc = textViewer.getDocument();
       connectDocumentUndoManager(doc);
    }
 
@@ -463,15 +464,15 @@ public class TextEditorUndoManager
     */
    private void selectAndReveal(int offset, int length)
    {
-      IDocument document = textViewer.getDocument();
+      DocumentImpl document = (DocumentImpl)textViewer.getDocument();
       try
       {
          int startLine = document.getLineOfOffset(offset);
          int lineOffset = document.getLineOffset(startLine);
-         LineInfo baseLine = textViewer.getTextStore().getLineFinder().findLine(startLine);
+         LineInfo baseLine = document.getTextStore().getLineFinder().findLine(startLine);
          int endOffset = offset + length;
          int endLine = document.getLineOfOffset(endOffset);
-         LineInfo endLineInfo = textViewer.getTextStore().getLineFinder().findLine(endLine);
+         LineInfo endLineInfo = document.getTextStore().getLineFinder().findLine(endLine);
          int endLineOffset = document.getLineOffset(endLine);
          textViewer.getSelection().setSelection(baseLine, offset - lineOffset, endLineInfo, endOffset - endLineOffset);
 
@@ -506,7 +507,7 @@ public class TextEditorUndoManager
       return null;
    }
 
-   private void connectDocumentUndoManager(IDocument document)
+   private void connectDocumentUndoManager(Document document)
    {
       disconnectDocumentUndoManager();
       if (document != null)
@@ -516,7 +517,7 @@ public class TextEditorUndoManager
          fDocumentUndoManager = DocumentUndoManagerRegistry.getDocumentUndoManager(fDocument);
          fDocumentUndoManager.connect(this);
          setMaximalUndoLevel(fUndoLevel);
-         fDocumentUndoListener = new DocumentUndoListener();
+         fDocumentUndoListener = new DocumentUndoListenerImpl();
          fDocumentUndoManager.addDocumentUndoListener(fDocumentUndoListener);
       }
    }

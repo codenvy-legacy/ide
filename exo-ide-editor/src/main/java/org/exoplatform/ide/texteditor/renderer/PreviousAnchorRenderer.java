@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor.renderer;
 
-import org.exoplatform.ide.text.store.TextStore;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.anchor.Anchor;
 import org.exoplatform.ide.text.store.anchor.AnchorManager;
@@ -57,7 +57,7 @@ public class PreviousAnchorRenderer implements LineRenderer
     */
    private static final AnchorType START_SEARCH_ANCHOR_TYPE = AnchorType.create(PreviousAnchorRenderer.class, "start");
 
-   protected final TextStore document;
+   protected final DocumentModel document;
 
    private final AnchorType anchorType;
 
@@ -71,7 +71,7 @@ public class PreviousAnchorRenderer implements LineRenderer
 
    private Anchor prevAnchor = null;
 
-   public PreviousAnchorRenderer(TextStore document, AnchorType anchorType, AnchorStyleGetter styleGetter)
+   public PreviousAnchorRenderer(DocumentModel document, AnchorType anchorType, AnchorStyleGetter styleGetter)
    {
       this.document = document;
       this.anchorType = anchorType;

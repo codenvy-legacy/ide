@@ -17,7 +17,7 @@ package org.exoplatform.ide.texteditor;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
-import org.exoplatform.ide.texteditor.Editor.KeyListener;
+import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
 import org.exoplatform.ide.util.SignalEvent;

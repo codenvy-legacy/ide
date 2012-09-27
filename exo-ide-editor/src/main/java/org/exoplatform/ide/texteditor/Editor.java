@@ -16,7 +16,6 @@ package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-import elemental.events.Event;
 import elemental.html.Element;
 
 import org.exoplatform.ide.AppContext;
@@ -24,14 +23,18 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
+import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.IDocument;
-import org.exoplatform.ide.text.store.TextStore;
-import org.exoplatform.ide.text.store.Line;
+import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.LineInfo;
-import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
+import org.exoplatform.ide.texteditor.api.BeforeTextListener;
+import org.exoplatform.ide.texteditor.api.KeyListener;
+import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
+import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
 import org.exoplatform.ide.texteditor.input.InputController;
@@ -49,7 +52,6 @@ import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
-import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
@@ -66,13 +68,13 @@ import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class Editor extends UiComponent<Editor.View>
+public class Editor extends UiComponent<Editor.View> implements TextEditorPartDisplay
 {
 
    /**
     * Static factory method for obtaining an instance of the Editor.
     */
-   public static Editor create(AppContext appContext)
+   public static TextEditorPartDisplay create(AppContext appContext)
    {
 
       FontDimensionsCalculator fontDimensionsCalculator =
@@ -124,45 +126,6 @@ public class Editor extends UiComponent<Editor.View>
    }
 
    /**
-    * A listener that is called when the user presses a key.
-    */
-   public interface KeyListener
-   {
-      /*
-       * The reason for preventDefault() not preventing default behavior is that
-       * Firefox does not have support the defaultPrevented attribute, so we have
-       * know way of knowing if it was prevented from the native event. We could
-       * create a proxy for SignalEvent to note calls to preventDefault(), but
-       * this would not catch the case that the implementor interacts directly to
-       * the native event.
-       */
-      /**
-       * @param event the event for the key press. Note: Calling preventDefault()
-       *        may not prevent the default behavior in some cases. The return
-       *        value of this method is a better channel for indicating the
-       *        default behavior should be prevented.
-       * @return true if the event was handled (the default behavior will not run
-       *         in this case), false to proceed with the default behavior. Even
-       *         if true is returned, other listeners will still get the callback
-       */
-      boolean onKeyPress(SignalEvent event);
-   }
-
-   /**
-    * A listener that is called on "keyup" native event.
-    */
-   public interface NativeKeyUpListener
-   {
-
-      /**
-       * @param event the event for the key up
-       * @return true if the event was handled, false to proceed with default
-       *         behavior
-       */
-      boolean onNativeKeyUp(Event event);
-   }
-
-   /**
     * ClientBundle for the editor.
     */
    public interface Resources extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources
@@ -178,59 +141,14 @@ public class Editor extends UiComponent<Editor.View>
    }
 
    /**
-    * A listener that is called after the user enters or deletes text and before
-    * it is applied to the document.
-    */
-   public interface BeforeTextListener
-   {
-      /**
-       * Note: You should not mutate the document within this callback, as this is
-       * not supported yet and can lead to other clients having stale position
-       * information inside the {@code textChange}.
-       * 
-       * Note: The {@link TextChange} contains a reference to the live
-       * {@link Line} from the document model. If you hold on to a reference after
-       * {@link #onBeforeTextChange} returns, beware that the contents of the
-       * {@link Line} could change, invalidating some of the state in the
-       * {@link TextChange}.
-       *
-       * @param textChange the text change whose last line will be the same as the
-       *        insertion point (since the text hasn't been inserted yet)
-       */
-      void onBeforeTextChange(TextChange textChange);
-   }
-
-   /**
-    * A listener that is called when the user enters or deletes text.
-    *
-    * Similar to {@link TextStore.TextListener} except is only called when the
-    * text is entered/deleted by the local user.
-    */
-   public interface TextListener
-   {
-      /**
-       * Note: You should not mutate the document within this callback, as this is
-       * not supported yet and can lead to other clients having stale position
-       * information inside the {@code textChange}.
-       *
-       * Note: The {@link TextChange} contains a reference to the live
-       * {@link Line} from the document model. If you hold on to a reference after
-       * {@link #onTextChange} returns, beware that the contents of the
-       * {@link Line} could change, invalidating some of the state in the
-       * {@link TextChange}.
-       */
-      void onTextChange(TextChange textChange);
-   }
-
-   /**
     * A listener that is called when the document changes.
     *
     *  This can be used by external clients of the editor; if the client is a
-    * component of the editor, use {@link Editor#setDocument(TextStore)} instead.
+    * component of the editor, use {@link Editor#setDocument(DocumentModel)} instead.
     */
    public interface DocumentListener
    {
-      void onDocumentChanged(TextStore oldDocument, TextStore newDocument);
+      void onDocumentChanged(DocumentModel oldDocument, DocumentModel newDocument);
    }
 
    /**
@@ -304,7 +222,7 @@ public class Editor extends UiComponent<Editor.View>
 
    private final Buffer buffer;
 
-   private TextStore textStore;
+   private DocumentModel textStore;
 
    private final ListenerManager<DocumentListener> documentListenerManager = ListenerManager.create();
 
@@ -355,7 +273,7 @@ public class Editor extends UiComponent<Editor.View>
 
    private CurrentLineHighlighter currentLineHighlighter;
 
-   private IDocument document;
+   private Document document;
 
    private Editor(AppContext appContext, View view, Buffer buffer, InputController input, FocusManager focusManager,
       FontDimensionsCalculator editorFontDimensionsCalculator, RenderTimeExecutor renderTimeExecutor)
@@ -432,6 +350,10 @@ public class Editor extends UiComponent<Editor.View>
       });
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#addLineRenderer(org.exoplatform.ide.texteditor.renderer.LineRenderer)
+    */
+   @Override
    public void addLineRenderer(LineRenderer lineRenderer)
    {
       /*
@@ -468,6 +390,10 @@ public class Editor extends UiComponent<Editor.View>
       getView().setAnimationEnabled(enabled);
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getBeforeTextListenerRegistrar()
+    */
+   @Override
    public ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar()
    {
       return editorDocumentMutator.getBeforeTextListenerRegistrar();
@@ -489,24 +415,34 @@ public class Editor extends UiComponent<Editor.View>
       return leftGutterManager.getGutter();
    }
 
-   public TextStore getTextStore()
+
+   public DocumentModel getTextStore()
    {
       return textStore;
    }
 
    /**
-    * Returns a document mutator that will also notify editor text listeners.
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getEditorDocumentMutator()
     */
+   @Override
    public TextStoreMutator getEditorDocumentMutator()
    {
       return editorDocumentMutator;
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getElement()
+    */
+   @Override
    public Element getElement()
    {
       return getView().getElement();
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getFocusManager()
+    */
+   @Override
    public FocusManager getFocusManager()
    {
       return focusManager;
@@ -517,6 +453,10 @@ public class Editor extends UiComponent<Editor.View>
       return mouseHoverManager;
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getKeyListenerRegistrar()
+    */
+   @Override
    public ListenerRegistrar<KeyListener> getKeyListenerRegistrar()
    {
       return input.getKeyListenerRegistrar();
@@ -527,6 +467,10 @@ public class Editor extends UiComponent<Editor.View>
       return input.getNativeKeyUpListenerRegistrar();
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getRenderer()
+    */
+   @Override
    public Renderer getRenderer()
    {
       return renderer;
@@ -536,6 +480,10 @@ public class Editor extends UiComponent<Editor.View>
    //    return searchModel;
    //  }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getSelection()
+    */
+   @Override
    public SelectionModel getSelection()
    {
       return selectionManager.getSelectionModel();
@@ -551,6 +499,10 @@ public class Editor extends UiComponent<Editor.View>
       return editorDocumentMutator.getTextListenerRegistrar();
    }
 
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getDocumentListenerRegistrar()
+    */
+   @Override
    public ListenerRegistrar<DocumentListener> getDocumentListenerRegistrar()
    {
       return documentListenerManager;
@@ -571,10 +523,14 @@ public class Editor extends UiComponent<Editor.View>
       renderer.removeLineRenderer(lineRenderer);
    }
 
-   public void setDocument(final Document document)
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setDocument(org.exoplatform.ide.text.DocumentImpl)
+    */
+   @Override
+   public void setDocument(final DocumentImpl document)
    {
       this.document = document;
-      final TextStore oldTextstore = textStore;
+      final DocumentModel oldTextstore = textStore;
       if (oldTextstore != null)
       {
          editorUndoManager.disconnect();
@@ -642,9 +598,10 @@ public class Editor extends UiComponent<Editor.View>
    }
 
    /**
-    * @return the document
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getDocument()
     */
-   public IDocument getDocument()
+   @Override
+   public Document getDocument()
    {
       return document;
    }
@@ -732,4 +689,25 @@ public class Editor extends UiComponent<Editor.View>
          getView().removeGutter(gutterElement);
       }
    }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setUndoManager(org.exoplatform.ide.texteditor.TextEditorUndoManager)
+    */
+   @Override
+   public void setUndoManager(TextEditorUndoManager undoManager)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#configure(org.exoplatform.ide.texteditor.api.TextEditorConfiguration)
+    */
+   @Override
+   public void configure(TextEditorConfiguration configuration)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
 }

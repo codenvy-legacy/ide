@@ -18,7 +18,7 @@
  */
 package org.exoplatform.text.store;
 
-import org.exoplatform.ide.text.ITextStore;
+import org.exoplatform.ide.text.TextStore;
 import org.exoplatform.ide.text.store.DocumentTextStore;
 
 /**
@@ -34,7 +34,7 @@ public class DocumentTextStoreTest extends TextStoreTest
     * @see org.exoplatform.text.store.TextStoreTest#createTextStore()
     */
    @Override
-   protected ITextStore createTextStore()
+   protected TextStore createTextStore()
    {
       return new DocumentTextStore(fTracker);
    }

@@ -17,19 +17,16 @@
 package org.exoplatform.ide.client.editor;
 
 import com.google.gwt.resources.client.ImageResource;
-
-import com.google.gwt.resources.client.ImageResource;
-
-import com.google.inject.Inject;
-
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.Inject;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorInitException;
-import org.exoplatform.ide.editor.api.EditorInput;
+import org.exoplatform.ide.editor.EditorInitException;
+import org.exoplatform.ide.editor.EditorInput;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
+import org.exoplatform.ide.resources.model.File;
+
 
 /**
  * 
@@ -52,7 +49,7 @@ public class EditorPresenter implements Presenter
    public interface Display extends IsWidget
    {
 //      HasText getTextArea();
-      Editor getEditor();
+      EditorPartPresenter getEditor();
    }
 
    Display display;
@@ -66,6 +63,7 @@ public class EditorPresenter implements Presenter
    /**
    * {@inheritDoc}
    */
+   @Override
    public void go(HasWidgets container)
    {
       container.add(display.asWidget());
@@ -82,21 +80,31 @@ public class EditorPresenter implements Presenter
 //      display.getTextArea().setText(text);
       try
       {
-         display.getEditor().init(null, new EditorInput()
+         display.getEditor().init(new EditorInput()
          {
             
+            @Override
             public String getToolTipText()
             {
                // TODO Auto-generated method stub
                return null;
             }
             
+            @Override
             public String getName()
             {
                return text;
             }
             
+            @Override
             public ImageResource getImageResource()
+            {
+               // TODO Auto-generated method stub
+               return null;
+            }
+
+            @Override
+            public File getFile()
             {
                // TODO Auto-generated method stub
                return null;

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.source;
 
 
-import org.exoplatform.ide.text.IDocument;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.Position;
 
 import java.util.Iterator;
@@ -68,7 +68,7 @@ public interface AnnotationModel
     *
     * @see #disconnect(Document)
     */
-   void connect(IDocument document);
+   void connect(Document document);
 
    /**
     * Disconnects this model from a document. After that, document changes no longer matter.
@@ -80,9 +80,9 @@ public interface AnnotationModel
     * @param document the document the model gets disconnected from,
     *    may not be <code>null</code>
     *
-    * @see #connect(IDocument) for further specification details
+    * @see #connect(Document) for further specification details
     */
-   void disconnect(IDocument document);
+   void disconnect(Document document);
 
    /**
     * Adds a annotation to this annotation model. The annotation is associated with
