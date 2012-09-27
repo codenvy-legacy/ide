@@ -57,8 +57,6 @@ public class IDEClientModule extends AbstractGinModule
       bind(EditorView.class).in(Singleton.class); // TODO : not singleton
       
       bind(AppContext.class).in(Singleton.class);
-      bind(BaseTextEditor.class).in(Singleton.class);
-      
       
       //      bind(IDEAppController.class).in(Singleton.class);
       //      bind(Presenter.class).to(IDEAppPresenter.class);
