@@ -167,11 +167,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-commons</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -445,7 +440,6 @@
    <modules>
       <module>exo-ide-commons</module>
       <module>exo-ide-core</module>
-      <module>exo-ide-editor</module>
       <module>exo-ide-client</module>
    </modules>
 </project>

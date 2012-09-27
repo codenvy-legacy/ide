@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -48,9 +47,6 @@ public class ProjectExplorerPresenter implements Presenter
    public interface Display extends IsWidget
    {
       String getSelectedFileName();
-
-      @Deprecated
-      HasDoubleClickHandlers getTree();
 
       void registerListener(Listener listener);
 

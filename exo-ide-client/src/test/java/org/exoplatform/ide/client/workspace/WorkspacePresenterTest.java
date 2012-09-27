@@ -33,6 +33,8 @@ import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
+import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +60,12 @@ public class WorkspacePresenterTest
 
    @Mock
    ProjectExplorerPresenter projectExpolorerPresenter;
+   
+   @Mock
+   MainMenuPresenter mainMenuPresenter;
+   
+   @Mock
+   ExpressionManager expressionManager;
 
    @Mock
    EditorPresenter editorPresenter;

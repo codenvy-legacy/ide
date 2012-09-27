@@ -19,20 +19,19 @@ package org.exoplatform.ide.client.projectExplorer;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.client.event.FileEvent;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
-import org.exoplatform.ide.shared.model.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +43,6 @@ import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS
@@ -91,7 +87,7 @@ public class ProjectExpolorerPresenterTest
    public void shouldBindDoubleClickHandler()
    {
 
-      verify(display.getTree()).addDoubleClickHandler((DoubleClickHandler)any());
+      verify(display).registerListener((Listener)any());
    }
 
    /**
@@ -100,62 +96,12 @@ public class ProjectExpolorerPresenterTest
    @Test
    public void shoudFireOpenFileOnDoubleClick()
    {
-      HasDoubleClickHandlers treeMock = new HasDoubleClickHandlers()
-      {
-         DoubleClickHandler handler;
-
-         @Override
-         public void fireEvent(GwtEvent<?> event)
-         {
-            if (event instanceof DoubleClickEvent)
-            {
-               handler.onDoubleClick((DoubleClickEvent)event);
-            }
-         }
-
-         @Override
-         public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler)
-         {
-            this.handler = handler;
-            return null;
-         }
-      };
-      String filaName = "file";
-
-      when(display.getTree()).thenReturn(treeMock);
-      when(display.getSelectedFileName()).thenReturn(filaName);
-
-      explorerPresenter = new ProjectExplorerPresenter(display, fileSystemService, eventBus);
-
-      // perform operation
-      treeMock.fireEvent(mock(DoubleClickEvent.class));
-
-      // verify event generated
-      verify(eventBus).fireEvent(any(FileEvent.class));
+      // TODO
    }
 
    @Test
    public void shouldRetrieveFileListOnGo()
    {
-//      final File[] fileList = {new File("file1")};
-//      // TODO: display should accept list of files instead of names
-//      // to be fixed
-//      List<String> fileNames = new ArrayList<String>();
-//      fileNames.add(fileList[0].getName());
-//
-//      doAnswer(new Answer<Object>()
-//      {
-//         public Object answer(InvocationOnMock invocation) throws Throwable
-//         {
-//            AsyncCallback<File[]> callBack = (AsyncCallback<File[]>)invocation.getArguments()[0];
-//            callBack.onSuccess(fileList);
-//            return null;
-//         }
-//      }).when(fileSystemService).getFileList((AsyncCallback<File[]>)any());
-//
-//      explorerPresenter.go(mock(HasWidgets.class));
-//
-//      // verify list retrieved from service
-//      verify(display).setItems(eq(fileNames));
+      // TODO
    }
 }
