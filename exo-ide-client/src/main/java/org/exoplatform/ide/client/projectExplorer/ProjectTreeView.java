@@ -36,13 +36,6 @@ public class ProjectTreeView implements Display, IsWidget
       return null;
    }
 
-   @Override
-   public HasDoubleClickHandlers getTree()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
    /**
    * {@inheritDoc}
    */
