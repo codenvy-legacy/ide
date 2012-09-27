@@ -3,6 +3,7 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User' />
   <inherits name="com.google.gwt.inject.Inject"/>
+  <inherits name="com.google.gwt.json.JSON" />
 
   <!-- We need the JUnit module in the main module,               -->
   <!-- otherwise eclipse complains (Google plugin bug?)           -->
@@ -16,7 +17,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  <inherits name='org.exoplatform.ide.Editor' />
+  <inherits name='org.exoplatform.ide.Core' />
   
   
   <!-- Specify the app entry point class.                         -->

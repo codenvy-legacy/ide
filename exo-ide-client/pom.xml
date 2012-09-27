@@ -76,10 +76,6 @@
          <groupId>org.exoplatform</groupId>
          <artifactId>exo-jcr-services</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor</artifactId>
-      </dependency>
 
     <!-- fix dependecies in JCR. Used for VFS-JCR -->
             <dependency>

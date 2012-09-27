@@ -1,0 +1,104 @@
+/* Annotated CSS for the Editor presenter. */
+
+.root {
+  background-color: white;
+  bottom: 0;
+  font-family: monospace;
+  font-size: 13px;
+  left: 0;
+  line-height: editorLineHeight;
+  position: absolute;
+  right: 0;
+  text-wrap: none;
+  top: 0;
+  user-select: none;
+  white-space: pre;
+}
+
+.editorFont, .root {
+  font-family: monospace;
+  font-size: 13px;
+}
+
+/* Same selection colors as the editor's manually drawn selection */
+::selection {
+  background: #d4e2ff;
+}
+
+::selection:window-inactive {
+  background: #d4d4d4;
+}
+
+/* FF doesn't support inactive selection */
+::-moz-selection {
+  background: #d4e2ff;
+}
+
+.scrolled {
+}
+
+.gutter {
+}
+
+.scrolled > .gutter, .scrolled > .scrollable {
+  box-shadow: inset 0px 4px 2px -2px #DDD;
+}
+
+.leftGutterBase, .leftGutter, .leftGutterNotification {
+  cursor: default;
+  font-size: 11px;
+  font-face: Verdana;
+  height: 100%;	
+  line-height: editorLineHeight;
+  overflow: hidden;
+  /* Allow children to position absolutely against us */
+  position: relative;
+  
+  /* Allow decorations with z-index:-1 such as breakpoints */
+  z-index: 0;
+}
+
+.leftGutterBase{
+	border-right: 1px dotted;
+	color: #bbbbbb;
+}
+
+.leftGutter {
+  color: #bbbbbb;
+  min-width: 2em;
+  padding-left: 5px;
+  padding-right: 6px;
+  border-right: 1px dotted;
+  text-align: right;
+}
+.leftGutterNotification {
+  width: 14px;
+  background-color: #eee;
+  text-align: right;
+}
+
+/* Empty rule for enabling CSS3 animations for editor changes. */
+.animationEnabled {
+  
+}
+
+@sprite .lineRendererError {
+  gwt-image: "squiggle";
+  background-position: bottom;
+  background-repeat: repeat-x;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: auto;
+  overflow: visible;
+}
+@sprite .lineWarning {
+  gwt-image: "squiggleWarning";
+  background-position: bottom;
+  background-repeat: repeat-x;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  width: auto;
+  overflow: visible;
+}
