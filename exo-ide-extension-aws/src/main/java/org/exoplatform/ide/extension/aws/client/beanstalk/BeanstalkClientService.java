@@ -29,6 +29,8 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 
@@ -130,6 +132,18 @@ public abstract class BeanstalkClientService
     * @throws RequestException
     */
    public abstract void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
+
+   /**
+    * Returns list of application events.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param listEventsRequest
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getApplicationEvents(String vfsId, String projectId, ListEventsRequest listEventsRequest,
+      AsyncRequestCallback<EventsList> callback) throws RequestException;
 
    public abstract void createEnvironment(String vfsId, String projectId,
       CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)

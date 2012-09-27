@@ -45,7 +45,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("button.stop")
    String stopButton();
-   
+
    @Key("button.close")
    String closeButton();
 
@@ -198,6 +198,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.application.started")
    String createApplicationStartedOnUrl(String name, String url);
 
+   @Key("create.application.terminated")
+   String createApplicationTerminated();
+
    @Key("create.environment.success")
    String createEnvironmentSuccess(String environment);
 
@@ -315,14 +318,14 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("stop.environment.question")
    String stopEnvironmentQuestion(String environment);
-   
+
    @Key("stop.environment.failed")
    String stopEnvironmentFailed(String version);
 
    // S3 Management
    @Key("s3.managemnt.view.title")
    String s3managemntViewTitle();
-   
+
    @Key("control.s3.managemnt.id")
    String s3ManagementControlId();
 
@@ -331,8 +334,6 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("control.s3.managemnt.promt")
    String s3ManagementControlPrompt();
-   
-   
 
    // EC2 Management View
    @Key("management.ec2.id")

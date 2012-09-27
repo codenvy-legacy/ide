@@ -54,8 +54,12 @@ import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentHealth;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -95,6 +99,11 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    private static final AWSLocalizationConstant LOCALIZATION_CONSTANT = AWSExtension.LOCALIZATION_CONSTANT;
 
+   /**
+    * Label of AWS Beanstalk application initial version.
+    */
+   private static final String INITIAL_VERSION_LABEL = "initial version";
+
    private VirtualFileSystemInfo vfsInfo;
 
    private ProjectModel project;
@@ -108,9 +117,24 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    private DeployResultHandler deployResultHandler;
 
+   /**
+    * Info about environment for launching application.
+    * <code>null</code> if environment is not launched.
+    */
    private EnvironmentInfo environment;
 
+   /**
+    * Info about created AWS Beanstalk application.
+    * <code>null</code> if application is not created.
+    */
+   private ApplicationInfo applicationInfo;
+
    private String projectName;
+
+   /**
+    * Time of last received event.
+    */
+   protected long lastReceivedEventTime;
 
    /**
     * Delay in millisecond between environment status checking.
@@ -275,6 +299,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(ApplicationInfo result)
                {
+                  applicationInfo = result;
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(result
                      .getName()), Type.INFO));
                   createEnvironment(result.getName());
@@ -406,17 +431,75 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
          {
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
+
+         ListEventsRequest listEventsRequest = AWSExtension.AUTO_BEAN_FACTORY.listEventsRequest().as();
+         listEventsRequest.setApplicationName(applicationInfo.getName());
+         listEventsRequest.setVersionLabel(INITIAL_VERSION_LABEL);
+         listEventsRequest.setEnvironmentId(environment.getId());
+         listEventsRequest.setStartTime(lastReceivedEventTime);
+         AutoBean<EventsList> eventsListAutoBean = AWSExtension.AUTO_BEAN_FACTORY.eventList();
+         AutoBeanUnmarshaller<EventsList> eventsListUnmarshaller =
+            new AutoBeanUnmarshaller<EventsList>(eventsListAutoBean);
+         try
+         {
+            BeanstalkClientService.getInstance().getApplicationEvents(vfsInfo.getId(), project.getId(),
+               listEventsRequest, new AsyncRequestCallback<EventsList>(eventsListUnmarshaller)
+               {
+                  @Override
+                  protected void onSuccess(EventsList result)
+                  {
+                     StringBuffer message = new StringBuffer();
+                     // shows events in chronological order
+                     List<Event> eventsList = result.getEvents();
+                     if (eventsList.size() > 0)
+                     {
+                        for (int i = eventsList.size() - 1; i >= 0; i--)
+                        {
+                           Event event = eventsList.get(i);
+                           message.append(event.getMessage()).append("</br>");
+                        }
+                        IDE.fireEvent(new OutputEvent(message.toString()));
+                        lastReceivedEventTime = eventsList.get(0).getEventDate() + 1;
+                     }
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     // nothing to do
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            IDE.fireEvent(new ExceptionThrownEvent(e));
+         }
       }
    };
 
    private void updateEnvironmentStatus(EnvironmentInfo environment)
    {
+      StringBuffer message = new StringBuffer();
       if (environment.getStatus() == EnvironmentStatus.Ready)
       {
-         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationStartedOnUrl(
-            environment.getApplicationName(), getAppUrl(environment)), Type.INFO));
-
          environmentStatusHandler.requestFinished(project.getId());
+
+         message.append(AWSExtension.LOCALIZATION_CONSTANT.createApplicationStartedOnUrl(
+            environment.getApplicationName(), getAppUrl(environment)));
+
+         if (environment.getHealth() != EnvironmentHealth.Green)
+         {
+            message.append(", but health status of the application's environment is " + environment.getHealth().name());
+         }
+         IDE.fireEvent(new OutputEvent(message.toString(), Type.INFO));
+      }
+      else if (environment.getStatus() == EnvironmentStatus.Terminated)
+      {
+         environmentStatusHandler.requestError(project.getId(), null);
+
+         message
+            .append(AWSExtension.LOCALIZATION_CONSTANT.createApplicationTerminated());
+         IDE.fireEvent(new OutputEvent(message.toString(), Type.ERROR));
       }
    }
 

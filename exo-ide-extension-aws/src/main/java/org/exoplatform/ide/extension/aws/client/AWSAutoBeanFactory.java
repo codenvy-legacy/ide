@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
@@ -138,6 +139,13 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return {@link UpdateApplicationRequest} update application request
     */
    AutoBean<UpdateApplicationRequest> updateApplicationRequest();
+
+   /**
+    * A factory method for list events request bean.
+    * 
+    * @return {@link ListEventsRequest} list events request
+    */
+   AutoBean<ListEventsRequest> listEventsRequest();
 
    /**
     * A factory method for create environment request bean.
