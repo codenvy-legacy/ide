@@ -44,16 +44,25 @@ import org.exoplatform.ide.text.Document;
 public interface DocumentProvider
 {
    /**
-    * Returns the document for the given element. Usually the document contains
-    * a textual presentation of the content of the element, or is the element itself.
-    *
-    * @param input the input, or <code>null</code>
-    * @return the document, or <code>null</code> if none
+    * Callback for document 
     */
-   Document getDocument(EditorInput input);
+   public interface DocumentCallback
+   {
+      void onDocument(Document document);
+   }
    
    /**
-    * Saves the given document provided for the given element.
+    * Returns the document for the given element. Usually the document contains
+    * a textual presentation of the content of the element, or is the element itself.
+    * Through asynchronous nature of IDE document may create after request to server, so use callback for 
+    * receiving document 
+    * @param input the input, or <code>null</code>
+    * @param callback the document callback 
+    */
+   void getDocument(EditorInput input, DocumentCallback callback);
+   
+   /**
+    * Saves the given document provided for the given input.
     *
     * @param input the input, or <code>null</code>
     * @param document the document
@@ -61,6 +70,16 @@ public interface DocumentProvider
     *          while saving the given element if necessary
     */
    void saveDocument(EditorInput input, Document document, boolean overwrite);
+   
+   /**
+    * Saves as the given document provided for the given input.
+    *
+    * @param input the input, or <code>null</code>
+    * @param document the document
+    * @param overwrite indicates whether overwrite should be performed
+    *          while saving the given element if necessary
+    */
+   void saveDocumentAs(EditorInput input, Document document, boolean overwrite);
    
    //TODO
 //   /**
