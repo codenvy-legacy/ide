@@ -59,7 +59,8 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
          new VirtualFileSystemInfo("test", true, true, "ANONIM", "ANY", JsonCollections.<String> createArray(),
             ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, links, new Folder());
 
-      resourceProvider = new ResourceProviderComponent(new SimpleEventBus(), new GenericModelProvider(), new EmptyLoader());
+      resourceProvider =
+         new ResourceProviderComponent(new GenericModelProvider(new SimpleEventBus()), new EmptyLoader(), new SimpleEventBus());
       resourceProvider.vfsInfo = info;
    }
 
@@ -67,33 +68,6 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
    public void testCreateProject()
    {
       final String parentId = String.valueOf(Random.nextDouble());
-      //      JsonStringMap<Link> links = JsonCollections.<Link>createStringMap();
-      //      Link link = new Link("/rest/vfs/mock/project/" + parentId, Link.REL_CREATE_PROJECT, "*/*");
-      //      links.put(Link.REL_CREATE_PROJECT, link);
-      //      
-      //      
-      //      
-      //      
-      //      FolderModel parent = new FolderModel("folder", new FolderModel(info.getRoot()), links);
-      //      ProjectModel newProject = new ProjectModel("proj", parent, "test-proj", Collections.EMPTY_LIST);
-      //      VirtualFileSystem.getInstance().createProject(parent,
-      //         new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
-      //         {
-      //            @Override
-      //            protected void onSuccess(ProjectModel result)
-      //            {
-      //               assertNotNull(result);
-      //               assertEquals("proj", result.getName());
-      //               finishTest();
-      //            }
-      //
-      //            @Override
-      //            protected void onFailure(Throwable exception)
-      //            {
-      //               fail();
-      //            }
-      //         });
-
       info.getRoot().getLinks()
          .put(Link.REL_CREATE_PROJECT, new Link("/rest/vfs/mock/project/" + parentId, Link.REL_CREATE_PROJECT, "*/*"));
 

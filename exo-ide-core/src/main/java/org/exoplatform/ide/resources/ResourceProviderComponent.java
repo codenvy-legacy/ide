@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.resources;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -27,6 +29,7 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.core.ComponentException;
+import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -79,16 +82,19 @@ public class ResourceProviderComponent implements ResourceProvider
 
    private Project activeProject;
 
+   private final EventBus eventBus;
+
    /**
     * Resources API for client application.
     * It deals with VFS to retrieve the content of  the files 
     * @throws ResourceException 
     */
    @Inject
-   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader)
+   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus)
    {
       super();
       this.genericModelProvider = genericModelProvider;
+      this.eventBus = eventBus;
       this.workspaceURL = "http://127.0.0.1:8888/rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
       this.natures = JsonCollections.<ProjectNature> createStringMap();
@@ -153,6 +159,7 @@ public class ResourceProviderComponent implements ResourceProvider
                Project project = result.getProject();
                project.setParent(vfsInfo.getRoot());
                activeProject = project;
+               eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                callback.onSuccess(project);
             }
 
@@ -198,6 +205,7 @@ public class ResourceProviderComponent implements ResourceProvider
                project.setParent(rootFolder);
                project.setProject(project);
                activeProject = project;
+               eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
                callback.onSuccess(project);
             }
 
@@ -312,7 +320,21 @@ public class ResourceProviderComponent implements ResourceProvider
          {
             // finally add property and flush settings
             project.getProperty(ProjectDescription.PROPERTY_MIXIN_NATURES).getValue().add(natureId);
-            project.flushProjectProperties(callback);
+            project.flushProjectProperties(new AsyncCallback<Project>()
+            {
+
+               @Override
+               public void onSuccess(Project result)
+               {
+                  callback.onSuccess(result);
+               }
+
+               @Override
+               public void onFailure(Throwable caught)
+               {
+                  callback.onFailure(caught);
+               }
+            });
          }
 
          @Override

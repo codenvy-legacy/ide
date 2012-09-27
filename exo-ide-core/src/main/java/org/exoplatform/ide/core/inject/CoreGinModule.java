@@ -23,8 +23,10 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
+import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
@@ -46,6 +48,8 @@ public class CoreGinModule extends AbstractGinModule
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
       bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+      bind(MainMenuPresenter.class).in(Singleton.class);
+      bind(ExpressionManager.class).in(Singleton.class);
    }
 
    /**

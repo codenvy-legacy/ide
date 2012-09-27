@@ -26,10 +26,10 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 
-import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorInitException;
 import org.exoplatform.ide.editor.api.EditorInput;
+import org.exoplatform.ide.presenter.Presenter;
 
 /**
  * 

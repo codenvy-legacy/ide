@@ -17,7 +17,6 @@
 package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -25,8 +24,12 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
-import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
+import org.exoplatform.ide.core.event.ProjectActionEvent;
+import org.exoplatform.ide.core.event.ProjectActionHandler;
+import org.exoplatform.ide.core.event.ResourceChangedEvent;
+import org.exoplatform.ide.core.event.ResourceChangedHandler;
+import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
 
@@ -82,23 +85,6 @@ public class ProjectExplorerPresenter implements Presenter
    {
       container.clear();
       container.add(display.asWidget());
-
-//      // Set up the callback object.
-//      AsyncCallback<File[]> callback = new AsyncCallback<File[]>()
-//      {
-//         @Override
-//         public void onFailure(Throwable caught)
-//         {
-//         }
-//
-//         @Override
-//         public void onSuccess(File[] result)
-//         {
-//            updateFileList(result);
-//         }
-//      };
-
-      //fileSystemService.getFileList(callback);
    }
 
    public void setContent(Resource resource)
@@ -116,14 +102,53 @@ public class ProjectExplorerPresenter implements Presenter
             openFile(resource);
          }
       });
-      //      display.getTree().addDoubleClickHandler(new DoubleClickHandler()
-      //      {
-      //         public void onDoubleClick(DoubleClickEvent event)
-      //         {
-      //            String string = display.getSelectedFileName();
-      //            openFile(string);
-      //         }
-      //      });
+      eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler()
+      {
+         @Override
+         public void onProjectOpened(ProjectActionEvent event)
+         {
+            setContent(event.getProject().getParent());
+         }
+         
+         @Override
+         public void onProjectDescriptionChanged(ProjectActionEvent event)
+         {
+         }
+         
+         @Override
+         public void onProjectClosed(ProjectActionEvent event)
+         {
+            setContent(null);
+         }
+      });
+      
+      eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler()
+      {
+         
+         @Override
+         public void onResourceRenamed(ResourceChangedEvent event)
+         {
+            // TODO handle it
+         }
+         
+         @Override
+         public void onResourceMoved(ResourceChangedEvent event)
+         {
+            // TODO handle it
+         }
+         
+         @Override
+         public void onResourceDeleted(ResourceChangedEvent event)
+         {
+            setContent(event.getResource().getProject().getParent());
+         }
+         
+         @Override
+         public void onResourceCreated(ResourceChangedEvent event)
+         {
+            setContent(event.getResource().getProject().getParent());
+         }
+      });
    }
 
    protected void openFile(Resource resource)
@@ -132,16 +157,6 @@ public class ProjectExplorerPresenter implements Presenter
       {
          eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
       }
-   }
-
-   protected void updateFileList(File[] result)
-   {
-      //      List<String> names = new ArrayList<String>();
-      //      for (File file : result)
-      //      {
-      //         names.add(file.getName());
-      //      }
-      //      display.setItems(names);
    }
 
 }

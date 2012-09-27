@@ -203,6 +203,7 @@ public class Folder extends Resource
    void removeChild(Resource resource)
    {
       children.remove(resource);
+      resource.setParent(null);
    }
 
    /**
