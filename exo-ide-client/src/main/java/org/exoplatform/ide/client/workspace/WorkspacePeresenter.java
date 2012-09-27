@@ -17,21 +17,32 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.client.editor.EditorPresenter;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
-import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
+import org.exoplatform.ide.core.expressions.AbstractExpression;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
+import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
+import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.resources.model.Property;
+
+import java.util.Date;
 
 /**
  * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
@@ -49,10 +60,11 @@ public class WorkspacePeresenter implements Presenter
    {
       HasWidgets getCenterPanel();
 
-      // TODO : temporary
       void clearCenterPanel();
 
       HasWidgets getLeftPanel();
+
+      HasWidgets getMenuPanel();
    }
 
    Display display;
@@ -65,9 +77,13 @@ public class WorkspacePeresenter implements Presenter
 
    ProjectExplorerPresenter projectExpolorerPresenter;
 
+   private final MainMenuPresenter menuPresenter;
+
    @Inject
-   protected WorkspacePeresenter(Display display, ProjectExplorerPresenter projectExpolorerPresenter,
-      EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService)
+   protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
+      EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService,
+      MainMenuPresenter menuPresenter, final ResourceProvider resourceManager, final ExpressionManager expressionManager)
+
    {
       super();
       this.display = display;
@@ -75,6 +91,19 @@ public class WorkspacePeresenter implements Presenter
       this.editorPresenter = editorPresenter;
       this.fileSystemService = fileSystemService;
       this.eventBus = eventBus;
+      this.menuPresenter = menuPresenter;
+      menuPresenter.addMenuItem("File/New/new File", null);
+      menuPresenter.addMenuItem("File/New/new Project", null);
+
+      NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
+      expressionManager.registerExpression(noProjectOpenedExpression);
+      menuPresenter.addMenuItem("File/Create Demo Content", new CreadDemoContentCommand(resourceManager), null,
+         noProjectOpenedExpression);
+
+      ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
+      expressionManager.registerExpression(projectOpenedExpression);
+      menuPresenter.addMenuItem("Project", null, projectOpenedExpression, null);
+      menuPresenter.addMenuItem("Project-scoped", null, projectOpenedExpression, null);
       bind();
    }
 
@@ -85,7 +114,8 @@ public class WorkspacePeresenter implements Presenter
    public void go(HasWidgets container)
    {
       container.clear();
-      // Expose Project Explorer into Tools Panel 
+      // Expose Project Explorer into Tools Panel
+      menuPresenter.go(display.getMenuPanel());
       projectExpolorerPresenter.go(display.getLeftPanel());
       container.add(display.asWidget());
    }
@@ -135,6 +165,105 @@ public class WorkspacePeresenter implements Presenter
       display.clearCenterPanel();
       editorPresenter.setText(file.getContent());
       editorPresenter.go(display.getCenterPanel());
+   }
+
+   // FOR DEMO:
+   private final class ProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
+   {
+      public ProjectOpenedExpression()
+      {
+         super(false);
+      }
+
+      @Override
+      public boolean onProjectChanged(Project project)
+      {
+         value = project != null;
+         return value;
+      }
+
+   }
+
+   // FOR DEMO:
+   private final class NoProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
+   {
+      public NoProjectOpenedExpression()
+      {
+         super(true);
+      }
+
+      @Override
+      public boolean onProjectChanged(Project project)
+      {
+         value = project == null;
+         return value;
+      }
+
+   }
+
+   // FOR DEMO:
+   private final class CreadDemoContentCommand implements Command
+   {
+      private final ResourceProvider resourceManager;
+
+      private CreadDemoContentCommand(ResourceProvider resourceManager)
+      {
+         this.resourceManager = resourceManager;
+      }
+
+      @SuppressWarnings("rawtypes")
+      @Override
+      public void execute()
+      {
+         // DUMMY CREATE DEMO CONTENT
+         resourceManager.createProject("Test Project " + (new Date().getTime()),
+            JsonCollections.<Property> createArray(), new AsyncCallback<Project>()
+            {
+
+               @Override
+               public void onSuccess(final Project project)
+               {
+                  project.createFolder(project, "Test Folder", new AsyncCallback<Folder>()
+                  {
+
+                     @Override
+                     public void onSuccess(Folder result)
+                     {
+                        project.createFile(result, "Test file on FS", "This is file content of the file from VFS",
+                           "text/text-pain", new AsyncCallback<File>()
+                           {
+
+                              @Override
+                              public void onSuccess(File result)
+                              {
+                                 // ok
+                              }
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 GWT.log("Error creating demo folder" + caught);
+                              }
+                           });
+
+                     }
+
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                        GWT.log("Error creating demo folder" + caught);
+                     }
+                  });
+
+               }
+
+               @Override
+               public void onFailure(Throwable caught)
+               {
+                  GWT.log("Error creating demo content" + caught);
+               }
+            });
+      }
    }
 
 }

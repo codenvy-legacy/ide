@@ -21,11 +21,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.presenter.Presenter;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
+import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
+
 
 /**
  * 
@@ -62,6 +63,7 @@ public class EditorPresenter implements Presenter
    /**
    * {@inheritDoc}
    */
+   @Override
    public void go(HasWidgets container)
    {
       container.add(display.asWidget());
@@ -81,17 +83,20 @@ public class EditorPresenter implements Presenter
          display.getEditor().init(new EditorInput()
          {
             
+            @Override
             public String getToolTipText()
             {
                // TODO Auto-generated method stub
                return null;
             }
             
+            @Override
             public String getName()
             {
                return text;
             }
             
+            @Override
             public ImageResource getImageResource()
             {
                // TODO Auto-generated method stub

@@ -6,32 +6,27 @@
       .important {
       	font-weight: bold;
       }
-      .position{
-	    position: static;
-
-	}
+      
+      .position {
+      	position: static;
+      }
    </ui:style>
    <g:HTMLPanel>
-      <g:DockLayoutPanel unit="EM" width="100%" height="100%">
-         <g:north size="2">
-            <g:MenuBar styleName="menu" width="100%" ui:field="mainMenu">
-               <g:MenuItem text="New item" />
-               <g:MenuItem text="New menu">
-               	<g:MenuBar vertical="true">
-               		<g:MenuItem text="New item"/>
-               	</g:MenuBar>
-               </g:MenuItem>
-            </g:MenuBar>
+      <g:DockLayoutPanel unit="PX" width="100%" height="100%">
+         <g:north size="22">
+            <g:SimplePanel width="100%" ui:field="topPanel" />
          </g:north>
-         <g:west size="25">
-            <g:ScrollPanel ui:field="leftPanel">
-               <!-- p1:CellTree width="100%" height="100%" ui:field="cellTree" /-->
-            </g:ScrollPanel>
-         </g:west>
          <g:center>
-            <g:SimplePanel ui:field="centerPanel"  styleName="{style.position}">
-               <!-- g:TextArea ui:field="textArea" text="Simple text" height="100%" width="100%"/-->
-            </g:SimplePanel>
+            <g:SplitLayoutPanel>
+               <g:west size="240">
+                  <g:ScrollPanel ui:field="leftPanel">
+                     <!-- p1:CellTree width="100%" height="100%" ui:field="cellTree" / -->
+                  </g:ScrollPanel>
+               </g:west>
+               <g:center>
+                  <g:SimplePanel ui:field="centerPanel" styleName="{style.position}" />
+               </g:center>
+            </g:SplitLayoutPanel>
          </g:center>
       </g:DockLayoutPanel>
    </g:HTMLPanel>

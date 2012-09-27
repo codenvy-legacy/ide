@@ -14,41 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.resources.model;
-
-import com.google.inject.Inject;
-
-import com.google.web.bindery.event.shared.EventBus;
-
-import org.exoplatform.ide.resources.ModelProvider;
+package org.exoplatform.ide.core.expressions;
 
 /**
- * Model provider for generic Project 
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * Abstract Expression class. Should be used instead of dirrectly implementing {@link Expression}
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class GenericModelProvider implements ModelProvider
+public class AbstractExpression implements Expression
 {
+   private static int UNIQUE_ID = 0;
 
-   private final EventBus eventBus;
+   protected boolean value;
+
+   protected int id;
 
    /**
-    * Creates GenericModel provider
+    * Construct expression with auto-generated id
+    * @param value default initial value
     */
-   @Inject
-   public GenericModelProvider(EventBus eventBus)
+   public AbstractExpression(boolean value)
    {
-      this.eventBus = eventBus;
-
+      this.value = value;
+      this.id = ++UNIQUE_ID;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int getId()
+   {
+      return id;
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
-   public Project createProjectInstance()
+   public boolean getValue()
    {
-      return new Project(eventBus);
+      return value;
    }
-
 }

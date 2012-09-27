@@ -14,9 +14,13 @@
 
 package org.exoplatform.ide.util;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArrayString;
+
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
+import org.exoplatform.ide.json.js.JsoArray;
 
 
 
@@ -65,12 +69,27 @@ public class StringUtils {
       }
     }
   }
+  
+  private static class NativeImplementation implements Implementation
+  {
+     @Override
+     public JsonArray<String> split(String string, String separator) {
+       return nativeSplit(string, separator).<JsoArray<String>>cast();
+     }
+     
+     // call to native JS Split
+     public static native JsArrayString nativeSplit(String s, String separator) /*-{
+     return s.split(separator);
+     }-*/;
+     
+   };
 
   /**
    * By default, this is a pure java implementation, but can be set to a more
    * optimized version by the client
    */
-  private static Implementation implementation = new PureJavaImplementation();
+  private static Implementation implementation = GWT.isClient() || !GWT.isScript() ?
+     new PureJavaImplementation() : new NativeImplementation();
 
   /**
    * Sets the implementation for methods

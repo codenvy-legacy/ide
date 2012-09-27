@@ -14,27 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.menu;
+package org.exoplatform.ide.presenter;
 
-import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.HasWidgets;
 
 /**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * Common interface for Presenters that are responsible for driving the UI
+ * 
+ * Created by The eXo Platform SAS
+ * Author : eXoPlatform
+ *          exo@exoplatform.com
+ * Jul 24, 2012  
  */
-public class MenuController
+public interface Presenter
 {
-
-   private final MenuBar menu;
-
-   public MenuController(MenuBar menu)
-   {
-      this.menu = menu;
-   }
-   
-   public void registerMenuContribution()
-   {
-      
-   }
-   
+   /**
+    * Allows presenter to expose it's view to the container.
+    * 
+    * @param container
+    */
+   void go(final HasWidgets container);
 }

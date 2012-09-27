@@ -22,8 +22,11 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.core.event.ProjectActionEvent;
+import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -63,14 +66,17 @@ public class Project extends Folder
 
    private Loader loader;
 
+   private final EventBus eventBus;
+
    /**
     * Constructor for empty project. Used for serialization only.
     * 
     * Not intended to be used by client.
     */
-   public Project()
+   public Project(EventBus eventBus)
    {
-      this(null, null, PROJECT_MIME_TYPE, null, new Date().getTime(), null, JsonCollections.<Link> createStringMap());
+      this(null, null, PROJECT_MIME_TYPE, null, new Date().getTime(), null, JsonCollections.<Link> createStringMap(),
+         eventBus);
    }
 
    /**
@@ -81,9 +87,9 @@ public class Project extends Folder
     * @param properties
     */
    @SuppressWarnings("rawtypes")
-   public Project(String name, Folder parent, JsonArray<Property> properties)
+   public Project(String name, Folder parent, JsonArray<Property> properties, EventBus eventBus)
    {
-      this(null, name, PROJECT_MIME_TYPE, parent, 0, properties, JsonCollections.<Link> createStringMap());
+      this(null, name, PROJECT_MIME_TYPE, parent, 0, properties, JsonCollections.<Link> createStringMap(), eventBus);
    }
 
    /**
@@ -92,10 +98,11 @@ public class Project extends Folder
     */
    @SuppressWarnings("rawtypes")
    protected Project(String id, String name, String mimeType, //String path, 
-      Folder parent, long creationDate, JsonArray<Property> properties, JsonStringMap<Link> links)
+      Folder parent, long creationDate, JsonArray<Property> properties, JsonStringMap<Link> links, EventBus eventBus)
    {
       super(id, name, TYPE, mimeType, parent, creationDate, links);
       this.properties = properties;
+      this.eventBus = eventBus;
       // TODO : receive it in some way
       this.loader = new EmptyLoader();
    }
@@ -239,16 +246,17 @@ public class Project extends Folder
          AsyncRequestCallback<File> internalCallback = new AsyncRequestCallback<File>(new FileUnmarshaller(new File()))
          {
             @Override
-            protected void onSuccess(File result)
+            protected void onSuccess(File newFile)
             {
                // initialize file after unmarshaling
-               File file = result;
+               File file = newFile;
                // add to the list of items
                file.setParent(parent);
                //parent.addChild(file);
                // set proper parent project
                file.setProject(Project.this);
-               callback.onSuccess(result);
+               eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
+               callback.onSuccess(newFile);
             }
 
             @Override
@@ -291,16 +299,17 @@ public class Project extends Folder
             new AsyncRequestCallback<Folder>(new FolderUnmarshaller(new Folder()))
             {
                @Override
-               protected void onSuccess(Folder result)
+               protected void onSuccess(Folder newFolder)
                {
                   // initialize file after unmarshaling
-                  Folder folder = result;
+                  Folder folder = newFolder;
                   // add to the list of items
                   folder.setParent(parent);
                   //parent.addChild(folder);
                   // set proper parent project
                   folder.setProject(Project.this);
-                  callback.onSuccess(result);
+                  eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
+                  callback.onSuccess(newFolder);
                }
 
                @Override
@@ -343,6 +352,7 @@ public class Project extends Folder
             {
                // remove from the list of child
                parent.removeChild(resource);
+               eventBus.fireEvent(ResourceChangedEvent.createResourceDeletedEvent(resource));
                callback.onSuccess(result);
             }
 
@@ -551,6 +561,7 @@ public class Project extends Folder
             {
                // TODO : check consistency
                source.setParent(destination);
+               eventBus.fireEvent(ResourceChangedEvent.createResourceMovedEvent(source));
                callback.onSuccess(source);
             }
 
@@ -613,6 +624,7 @@ public class Project extends Folder
             {
                // TODO : check consistency
                resource.setName(newname);
+               eventBus.fireEvent(ResourceChangedEvent.createResourceRenamedEvent(resource));
                callback.onSuccess(resource);
             }
 
@@ -660,6 +672,7 @@ public class Project extends Folder
             @Override
             protected void onSuccess(Void result)
             {
+               eventBus.fireEvent(ProjectActionEvent.createProjectDescriptionChangedEvent(Project.this));
                callback.onSuccess(Project.this);
             }
 
@@ -695,7 +708,6 @@ public class Project extends Folder
       callback.onFailure(new Exception("Operation not currently supported"));
    }
 
-   
    // ====================================================================================================
 
    /**

@@ -22,23 +22,11 @@ import org.exoplatform.ide.resources.model.Project;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class ProjectConstraintExpression implements Expression
+public interface ProjectConstraintExpression extends Expression
 {
-
-   protected boolean value;
-   
-   public boolean onProjectChanged(Project project)
-   {
-      return value;
-   }
-
    /**
-   * {@inheritDoc}
-   */
-   @Override
-   public boolean getValue()
-   {
-      return value;
-   }
-
+    * @param project
+    * @return new value of the expression
+    */
+   public boolean onProjectChanged(Project project);
 }

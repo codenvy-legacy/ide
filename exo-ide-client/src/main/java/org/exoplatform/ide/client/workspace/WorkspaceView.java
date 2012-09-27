@@ -16,18 +16,11 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.google.gwt.user.client.Timer;
-
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -57,7 +50,7 @@ public class WorkspaceView extends Composite implements Display
    ScrollPanel leftPanel;
 
    @UiField
-   MenuBar mainMenu;
+   SimplePanel topPanel;
 
    /**
     * Because this class has a default constructor, it can
@@ -74,24 +67,6 @@ public class WorkspaceView extends Composite implements Display
    protected WorkspaceView()
    {
       initWidget(uiBinder.createAndBindUi(this));
-      mainMenu.addItem(new CustomMenuItem("this will dissapear",new Command()
-      {
-         
-         @Override
-         public void execute()
-         {
-            
-         }
-      }));
-      mainMenu.addItem(new MenuItem("ordinary",new Command()
-      {
-         
-         @Override
-         public void execute()
-         {
-         }
-      }));
-  
    }
 
    /**
@@ -121,38 +96,13 @@ public class WorkspaceView extends Composite implements Display
       centerPanel.clear();
    }
 
-   class CustomMenuItem extends MenuItem
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public HasWidgets getMenuPanel()
    {
-
-      
-      
-      /**
-       * @param text
-       * @param cmd
-       */
-      public CustomMenuItem(String text, Command cmd)
-      {
-         super(text, cmd);
-         new Timer()
-         {
-            @Override
-            public void run()
-            {
-               CustomMenuItem.this.setVisible(!CustomMenuItem.this.isVisible());
-            }
-         }.scheduleRepeating(1000*15);
-         setVisible(false);
-      }
-
-      /**
-      * {@inheritDoc}
-      */
-      @Override
-      public String getHTML()
-      {
-            return super.getHTML();
-      }
-
+      return topPanel;
    }
 
 }

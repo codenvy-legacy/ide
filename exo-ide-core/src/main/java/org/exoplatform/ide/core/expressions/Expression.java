@@ -22,5 +22,13 @@ package org.exoplatform.ide.core.expressions;
  */
 public interface Expression
 {
+   /**
+    * @return
+    */
+   public int getId();
+   
+   /**
+    * @return
+    */
    public boolean getValue();
 }
