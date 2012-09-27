@@ -16,13 +16,16 @@
  */
 package org.exoplatform.ide.core.inject;
 
+import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import com.google.gwt.inject.client.AbstractGinModule;
-import com.google.inject.Singleton;
-
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.core.editor.DefaultEditorProvider;
+import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.resources.ModelProvider;
@@ -43,9 +46,19 @@ public class CoreGinModule extends AbstractGinModule
    protected void configure()
    {
       resourcesAPIconfigure();
+      editorAPIconfigure();
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
       bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+   }
+
+   /**Configures binding for Editor API
+    * 
+    */
+   protected void editorAPIconfigure()
+   {
+      bind(EditorRegistry.class).in(Singleton.class);
+      bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
    }
 
    /**

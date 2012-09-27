@@ -28,7 +28,7 @@ import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
- * Document 
+ * Document provider implementation on Resource API
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *

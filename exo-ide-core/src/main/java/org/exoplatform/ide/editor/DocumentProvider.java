@@ -72,7 +72,7 @@ public interface DocumentProvider
    void saveDocument(EditorInput input, Document document, boolean overwrite);
    
    /**
-    * Saves as the given document provided for the given input.
+    * Saves the given document as new resource, provided for the given input.
     *
     * @param input the input, or <code>null</code>
     * @param document the document
