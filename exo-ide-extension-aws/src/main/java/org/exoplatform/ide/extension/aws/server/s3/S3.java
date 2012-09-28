@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
@@ -483,6 +484,40 @@ public class S3 extends AWSClient
    {
       BucketVersioningConfiguration configuration = new BucketVersioningConfiguration(status);
       s3Client.setBucketVersioningConfiguration(new SetBucketVersioningConfigurationRequest(s3Bucket, configuration));
+   }
+
+   /**
+    * Delete specified objects in S3 bucket.
+    *
+    * @param s3Bucket
+    *    S3 bucket name
+    * @param s3Keys
+    *    list of objects which should be deleted
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteObjects(String s3Bucket, List<String> s3Keys) throws AWSException
+   {
+      try
+      {
+         deleteObjects(getS3Client(), s3Bucket, s3Keys);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void deleteObjects(AmazonS3 s3Client, String s3Bucket, List<String> s3Keys)
+   {
+      List<DeleteObjectsRequest.KeyVersion> keyVersions = new ArrayList<DeleteObjectsRequest.KeyVersion>(s3Keys.size());
+
+      for (String s3Key : s3Keys)
+      {
+         keyVersions.add(new DeleteObjectsRequest.KeyVersion(s3Key));
+      }
+
+      s3Client.deleteObjects(new DeleteObjectsRequest(s3Bucket).withKeys(keyVersions)).getDeletedObjects();
    }
 
    //
