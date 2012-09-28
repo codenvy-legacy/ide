@@ -16,18 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
+package org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link CreateVersionEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 4:36:10 PM anya $
+ * @version $Id: Sep 21, 2012 11:45:14 AM anya $
  * 
  */
-public interface HasEnvironmentActions
+public interface CreateVersionHandler extends EventHandler
 {
-   void addStopHandler(SelectionHandler<EnvironmentInfo> handler);
+   /**
+    * Perform actions, when user tries to create new version.
+    * 
+    * @param event
+    */
+   void onCreateVersion(CreateVersionEvent event);
 }

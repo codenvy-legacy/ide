@@ -16,18 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
-
-import com.google.gwt.event.logical.shared.SelectionHandler;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.create;
 
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 4:36:10 PM anya $
- * 
+ * @version $Id:  Sep 21, 2012 2:58:09 PM anya $
+ *
  */
-public interface HasEnvironmentActions
+public interface EnvironmentCreatedHandler
 {
-   void addStopHandler(SelectionHandler<EnvironmentInfo> handler);
+   /**
+    * Perform actions, when environment was created.
+    * 
+    * @param environmentInfo
+    */
+   void onEnvironmentCreated(EnvironmentInfo environmentInfo);
 }

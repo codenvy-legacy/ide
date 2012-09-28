@@ -99,11 +99,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    private static final AWSLocalizationConstant LOCALIZATION_CONSTANT = AWSExtension.LOCALIZATION_CONSTANT;
 
-   /**
-    * Label of AWS Beanstalk application initial version.
-    */
-   private static final String INITIAL_VERSION_LABEL = "initial version";
-
    private VirtualFileSystemInfo vfsInfo;
 
    private ProjectModel project;
@@ -434,7 +429,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
          ListEventsRequest listEventsRequest = AWSExtension.AUTO_BEAN_FACTORY.listEventsRequest().as();
          listEventsRequest.setApplicationName(applicationInfo.getName());
-         listEventsRequest.setVersionLabel(INITIAL_VERSION_LABEL);
+         listEventsRequest.setVersionLabel(environment.getVersionLabel());
          listEventsRequest.setEnvironmentId(environment.getId());
          listEventsRequest.setStartTime(lastReceivedEventTime);
          AutoBean<EventsList> eventsListAutoBean = AWSExtension.AUTO_BEAN_FACTORY.eventList();

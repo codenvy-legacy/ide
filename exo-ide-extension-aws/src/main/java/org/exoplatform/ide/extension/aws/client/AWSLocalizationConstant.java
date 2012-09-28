@@ -37,8 +37,8 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.rename")
    String renameButton();
 
-   @Key("button.launch")
-   String launchButton();
+   @Key("button.deploy")
+   String deployButton();
 
    @Key("button.delete")
    String deleteButton();
@@ -289,6 +289,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("versions.grid.updated")
    String versionsGridUpdated();
 
+   // Delete Version
    @Key("delete.version.view.title")
    String deleteVersionViewTitle();
 
@@ -301,6 +302,20 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("delete.version.failed")
    String deleteVersionFailed(String version);
 
+   // Deploy Version
+   @Key("deploy.version.view.title")
+   String deployVersionViewTitle();
+
+   @Key("deploy.version.failed")
+   String deployVersionFailed(String version);
+
+   @Key("deploy.version.newenvironment")
+   String deployVersionToNewEnvironment();
+
+   @Key("deploy.version.existingenvironment")
+   String deployVersionToExistingEnvironment();
+
+   // Create Version
    @Key("create.version.failed")
    String createVersionFailed(String version);
 
@@ -316,6 +331,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.environment.view.title")
    String createEnvironmentViewTitle();
 
+   // Terminate Environment
    @Key("stop.environment.question")
    String stopEnvironmentQuestion(String environment);
 

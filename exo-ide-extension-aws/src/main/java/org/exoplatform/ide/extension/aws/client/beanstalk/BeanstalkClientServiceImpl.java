@@ -43,6 +43,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 
 import java.util.List;
 
@@ -81,6 +82,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    private static final String ENVIRONMENT_STOP = BASE_URL + "/environments/stop/";
 
    private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info";
+
+   private static final String ENVIRONMENT_UPDATE = BASE_URL + "/environments/update";
 
    private static final String ENVIRONMENTS = BASE_URL + "/environments";
 
@@ -288,6 +291,24 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#updateEnvironment(java.lang.String,
+    *       org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
+      AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENT_UPDATE).append("/").append(environmentId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updateEnvironmentRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    /**

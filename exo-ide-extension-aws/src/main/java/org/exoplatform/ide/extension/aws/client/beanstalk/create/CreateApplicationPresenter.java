@@ -128,11 +128,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       void showCreateEnvironmentStep();
    }
 
-   /**
-    * Label of AWS Beanstalk application initial version.
-    */
-   private static final String INITIAL_VERSION_LABEL = "initial version";
-
    private Display display;
 
    private ProjectModel openedProject;
@@ -547,7 +542,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
 
          ListEventsRequest listEventsRequest = AWSExtension.AUTO_BEAN_FACTORY.listEventsRequest().as();
          listEventsRequest.setApplicationName(applicationInfo.getName());
-         listEventsRequest.setVersionLabel(INITIAL_VERSION_LABEL);
+         listEventsRequest.setVersionLabel(environment.getVersionLabel());
          listEventsRequest.setEnvironmentId(environment.getId());
          listEventsRequest.setStartTime(lastReceivedEventTime);
          AutoBean<EventsList> eventsListAutoBean = AWSExtension.AUTO_BEAN_FACTORY.eventList();

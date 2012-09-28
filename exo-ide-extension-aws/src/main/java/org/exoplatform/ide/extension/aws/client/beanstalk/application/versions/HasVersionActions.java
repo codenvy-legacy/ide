@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo
  */
 public interface HasVersionActions
 {
-   void addLaunchHandler(SelectionHandler<ApplicationVersionInfo> handler);
+   void addDeployHandler(SelectionHandler<ApplicationVersionInfo> handler);
 
    void addDeleteHandler(SelectionHandler<ApplicationVersionInfo> handler);
 }
