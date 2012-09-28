@@ -96,11 +96,9 @@ public class CkEditor extends AbstractTestModule
 
       String CONTEXT_SUB_MENU_ELEMENT = "//a[@title='%s']";
 
-      String DESIGN_BUTTON_XPATH = "//div[@title='Design']//div[text()='Design']";
+      String DESIGN_BUTTON_XPATH = "//div[@view-id='editor-%s']//div[@class='html-face' and text()='Design']";
 
    }
-
-   private WebElement editor;
 
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
    private WebElement highlighter;
@@ -167,6 +165,7 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
+    * start with 1
     * Delete all file content via Ctrl+a, Delete
     */
    public void deleteFileContentInCKEditor(int tabIndex) throws Exception
@@ -179,6 +178,7 @@ public class CkEditor extends AbstractTestModule
    /**
     * switch to iframe of the ck_editor
     * and type text
+    * start with one
     * @param tabIndex
     * @param text
     * @throws Exception
@@ -270,7 +270,7 @@ public class CkEditor extends AbstractTestModule
     * @param tabIndex index of tab, starts at 1
     * @throws Exception
     */
-   public boolean WaitCkEditorOpened(final int tabIndex) throws Exception
+   public boolean waitCkEditorOpened(final int ckEditNum) throws Exception
    {
       return new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
       {
@@ -279,7 +279,9 @@ public class CkEditor extends AbstractTestModule
          {
             try
             {
-               return driver().findElement(By.xpath(String.format(Locators.CK_EDITOR_OPENED, tabIndex))).isDisplayed();
+               return driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, ckEditNum)))
+                  .isDisplayed();
+
             }
             catch (NoSuchElementException e)
             {
@@ -312,11 +314,12 @@ public class CkEditor extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void clickDesignButton() throws Exception
+   public void clickDesignButton(int numEditor) throws Exception
    {
-
-      editor.findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
-
+      //click 
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
    }
 
    /**
@@ -349,9 +352,10 @@ public class CkEditor extends AbstractTestModule
    /**
     * switch to CkEditorIframe
     */
-   public void switchToCkEditorIframe()
+   public void switchToCkEditorIframe(int ckEdit)
    {
-      WebElement ckEditorIframe = driver().findElement(By.cssSelector(Locators.CK_EDITOR_IFRAME));
+      WebElement ckEditorIframe =
+         driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, ckEdit)));
       driver().switchTo().frame(ckEditorIframe);
    }
 

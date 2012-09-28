@@ -864,7 +864,9 @@ public class Editor extends AbstractTestModule
     */
    public void clickDesignButton() throws Exception
    {
-      editor.findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+      driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+      driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+      driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
    }
 
    public void selectCkEditorIframe(int tabIndex)
