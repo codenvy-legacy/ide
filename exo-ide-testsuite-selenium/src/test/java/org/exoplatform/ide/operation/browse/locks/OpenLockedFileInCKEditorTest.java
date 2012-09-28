@@ -96,7 +96,9 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
       //open file save content 
-      IDE.CK_EDITOR.WaitCkEditorOpened(1);
+      IDE.CK_EDITOR.switchToCkEditorIframe(1);
+      IDE.selectMainFrame();
+      IDE.CK_EDITOR.waitCkEditorOpened(1);
       String contentEditor = IDE.CK_EDITOR.getTextFromCKEditor(1);
      
       //save file for correct logout, popup ask window can't appearance
@@ -130,7 +132,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
-      IDE.CK_EDITOR.WaitCkEditorOpened(1);
+      IDE.CK_EDITOR.waitCkEditorOpened(1);
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       checkLockStateButtonsOnUserCredentinal();
       IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
@@ -142,7 +144,7 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.CK_EDITOR.clickDesignButton();
+      IDE.CK_EDITOR.clickDesignButton(1);
       assertEquals(contentEditor, IDE.CK_EDITOR.getTextFromCKEditor(2));
 
    }

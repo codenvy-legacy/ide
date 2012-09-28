@@ -144,7 +144,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       //step 3 Create default table and check
       IDE.CK_EDITOR.clickOkWyswygTable();
-      IDE.CK_EDITOR.switchToCkEditorIframe();
+      IDE.CK_EDITOR.switchToCkEditorIframe(1);
       isDefaultTableCreated();
 
       //step 4 Add row in table and check
@@ -158,7 +158,7 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       IDE.CK_EDITOR.switchToContextSubMenuIframe();
       IDE.CK_EDITOR.clickOnContextSubMenu("Insert Row After");
       IDE.selectMainFrame();
-      IDE.CK_EDITOR.switchToCkEditorIframe();
+      IDE.CK_EDITOR.switchToCkEditorIframe(1);
       isInsertTableCreated();
 
       //step 4 select codeeditor and check html code

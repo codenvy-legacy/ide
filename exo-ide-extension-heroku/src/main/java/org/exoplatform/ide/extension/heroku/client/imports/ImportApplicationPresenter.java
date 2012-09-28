@@ -52,7 +52,6 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -329,9 +328,9 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void updateProperties()
    {
-      project.getProperties().add(new StringProperty("heroku-application", herokuApplication));
-      project.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties().add(new StringProperty("vfs:projectType", ProjectResolver.RAILS));
+      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("heroku-application", herokuApplication));
+      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {

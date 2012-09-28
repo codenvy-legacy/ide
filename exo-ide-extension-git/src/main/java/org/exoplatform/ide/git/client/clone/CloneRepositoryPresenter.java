@@ -47,7 +47,7 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 
 /**
  * Presenter for Clone Repository View.
@@ -63,27 +63,23 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       /**
        * Returns working directory field.
        * 
-       * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getWorkDirValue();
 
       /**
        * Returns remote URI field.
        * 
-       * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getRemoteUriValue();
 
       /**
        * Returns remote name field.
        * 
-       * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getRemoteNameValue();
 
       /**
        * Return list of project types
-       * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getProjectType();
 
@@ -124,9 +120,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
    private static final String DEFAULT_REPO_NAME = "origin";
 
-   /**
-    * @param eventBus
-    */
    public CloneRepositoryPresenter()
    {
       IDE.addHandler(CloneRepositoryEvent.TYPE, this);
@@ -305,8 +298,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    protected void convertFolderToProject(FolderModel folder, String projectType)
    {
-      folder.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folder.getProperties().add(new StringProperty("vfs:projectType", projectType));
+      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folder.getProperties().add(new Property("vfs:projectType", projectType));
       ProjectModel project = new ProjectModel();
       ItemWrapper item = new ItemWrapper(project);
       ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);

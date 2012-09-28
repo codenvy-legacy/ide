@@ -19,16 +19,42 @@
 package org.exoplatform.ide.extension.aws.shared.ec2;
 
 /**
+ * Information about user's key pairs
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface KeyPairInfo
 {
+   /**
+    * Get name of the key pair
+    *
+    * @return
+    *    name of the key pair
+    */
    String getName();
 
+   /**
+    * Set name of the key pair
+    *
+    * @param name
+    *    name of the key pair
+    */
    void setName(String name);
 
+   /**
+    * Get SHA-1 digest of the DER encoded private key.
+    *
+    * @return
+    *    String containing SHA-1 digest of the DER encoded private key
+    */
    String getFingerprint();
 
+   /**
+    * Set SHA-1 digest of the DER encoded private key.
+    *
+    * @param fingerprint
+    *    String containing SHA-1 digest of the DER encoded private key
+    */
    void setFingerprint(String fingerprint);
 }

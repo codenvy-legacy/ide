@@ -93,7 +93,8 @@ public class CodeOutLineHtmlTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
+      //this delay needed for reparse all html code on staging
+      Thread.sleep(500);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
       IDE.OUTLINE.waitOutlineTreeVisible();

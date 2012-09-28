@@ -263,8 +263,10 @@ public class CodeAssistant extends AbstractTestModule
 
    public void clickOnLineNumer(int num)
    {
+      driver().switchTo().frame(driver().findElement(By.cssSelector("iframe.gwt-Frame")));
       driver().findElement(By.xpath("//div[@class='CodeMirror-line-numbers']/div[contains(text(), '" + num + "')]"))
          .click();
+      IDE().selectMainFrame();
    }
 
    public void waitForImportAssistForOpened()

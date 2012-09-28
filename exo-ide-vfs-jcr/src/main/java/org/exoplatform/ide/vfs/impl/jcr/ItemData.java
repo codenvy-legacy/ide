@@ -27,11 +27,8 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -316,80 +313,26 @@ abstract class ItemData
       {
          case PropertyType.DATE:
          {
-            List<Double> v;
+            List<String> v;
             if (multiple)
             {
                Value[] jcrValues = property.getValues();
-               v = new ArrayList<Double>(jcrValues.length);
+               v = new ArrayList<String>(jcrValues.length);
                for (int i = 0; i < jcrValues.length; i++)
                {
-                  v.add((double)jcrValues[i].getLong());
+                  v.add(Long.toString(jcrValues[i].getLong()));
                }
             }
             else
             {
-               v = new ArrayList<Double>(1);
-               v.add((double)property.getLong());
+               v = new ArrayList<String>(1);
+               v.add(Long.toString(property.getLong()));
             }
-            return new NumberProperty(property.getName(), v);
+            return new Property(property.getName(), v);
          }
          case PropertyType.DOUBLE:
-         {
-            List<Double> v;
-            if (multiple)
-            {
-               Value[] jcrValues = property.getValues();
-               v = new ArrayList<Double>(jcrValues.length);
-               for (int i = 0; i < jcrValues.length; i++)
-               {
-                  v.add(jcrValues[i].getDouble());
-               }
-            }
-            else
-            {
-               v = new ArrayList<Double>(1);
-               v.add(property.getDouble());
-            }
-            return new NumberProperty(property.getName(), v);
-         }
          case PropertyType.LONG:
-         {
-            List<Double> v;
-            if (multiple)
-            {
-               Value[] jcrValues = property.getValues();
-               v = new ArrayList<Double>(jcrValues.length);
-               for (int i = 0; i < jcrValues.length; i++)
-               {
-                  v.add((double)jcrValues[i].getLong());
-               }
-            }
-            else
-            {
-               v = new ArrayList<Double>(1);
-               v.add((double)property.getLong());
-            }
-            return new NumberProperty(property.getName(), v);
-         }
          case PropertyType.BOOLEAN:
-         {
-            List<Boolean> v;
-            if (multiple)
-            {
-               Value[] jcrValues = property.getValues();
-               v = new ArrayList<Boolean>(jcrValues.length);
-               for (int i = 0; i < jcrValues.length; i++)
-               {
-                  v.add(jcrValues[i].getBoolean());
-               }
-            }
-            else
-            {
-               v = new ArrayList<Boolean>(1);
-               v.add(property.getBoolean());
-            }
-            return new BooleanProperty(property.getName(), v);
-         }
          case PropertyType.STRING:
          case PropertyType.BINARY:
          case PropertyType.NAME:
@@ -412,7 +355,7 @@ abstract class ItemData
                v = new ArrayList<String>(1);
                v.add(property.getString());
             }
-            return new StringProperty(property.getName(), v);
+            return new Property(property.getName(), v);
          }
       }
    }

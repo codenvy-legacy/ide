@@ -34,9 +34,9 @@ import java.util.Collection;
 public class GroovyPropertyUtil
 {
 
-   public static Property<?> getProperty(Collection<Property> properties, QName name)
+   public static Property getProperty(Collection<Property> properties, QName name)
    {
-      for (Property<?> property : properties)
+      for (Property property : properties)
       {
          if (property.getName().equals(name))
          {
