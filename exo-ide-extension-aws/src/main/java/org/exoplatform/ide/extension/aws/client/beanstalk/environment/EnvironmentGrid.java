@@ -31,20 +31,16 @@ import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
+
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 12:28:23 PM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: EnvironmentGrid.java Sep 27, 2012 vetal $
+ *
  */
 public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnvironmentActions
 {
-   /**
-       * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
-       * @version $Id: EnvironmentGrid.java Sep 26, 2012 vetal $
-       *
-       */
+
    public class LinkCell extends AbstractSafeHtmlCell<String>
    {
 

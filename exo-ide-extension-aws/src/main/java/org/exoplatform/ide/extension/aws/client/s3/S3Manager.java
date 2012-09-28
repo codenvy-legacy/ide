@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.aws.client.s3;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -28,14 +29,10 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -48,13 +45,11 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.aws.client.AWSError;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
-import org.exoplatform.ide.extension.aws.client.login.LoginHandler;
+import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
@@ -81,9 +76,17 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
       void setS3ObjectsList(S3ObjectsList s3ObjectsList);
 
-      HasClickHandlers getDeleteButton();
-
-      HasClickHandlers getUploadButton();
+      void setEnableDeleteAction(boolean enabled);
+      
+      void setEnableUploadAction(boolean enabled);
+      
+      void setEnableUploadProjectAction(boolean enabled);
+      
+      void setDeleteAction(ScheduledCommand command);
+      
+      void setUploadAction(ScheduledCommand command);
+      
+      void setUploadOpenedProjectAction(ScheduledCommand command);
 
       HasClickHandlers getNextButton();
 
@@ -127,7 +130,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
    {
       IDE.getInstance().addControl(new S3ManagerControl());
       new UploadFilePresenter();
-      new S3ServiceImpl(Utils.getRestContext(), new GWTLoader());
       createBucketPresenter = new CreateBucketPresenter();
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -138,14 +140,21 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       IDE.addHandler(ShowS3ManagerEvent.TYPE, this);
       IDE.addHandler(BucketCreatedEvent.TYPE, this);
       IDE.addHandler(S3ObjectUploadedEvent.TYPE, this);
+      
+      
+      
    }
 
    public void bindDisplay()
    {
-      display.getDeleteButton().addClickHandler(new ClickHandler()
+      if (openedProject == null)
+         display.setEnableUploadProjectAction(false);
+      
+      display.setDeleteAction(new ScheduledCommand()
       {
+         
          @Override
-         public void onClick(ClickEvent event)
+         public void execute()
          {
             try
             {
@@ -174,13 +183,24 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
          }
       });
 
-      display.getUploadButton().addClickHandler(new ClickHandler()
+      display.setUploadAction(new ScheduledCommand()
       {
-
+         
          @Override
-         public void onClick(ClickEvent event)
+         public void execute()
          {
             IDE.fireEvent(new UploadFileEvent(id));
+         }
+      });
+      
+      display.setUploadOpenedProjectAction(new ScheduledCommand()
+      {
+         
+         @Override
+         public void execute()
+         {
+            doUploadProject();
+            
          }
       });
 
@@ -276,6 +296,37 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       });
 
       display.setEnableBackButton(false);
+   }
+
+   protected void doUploadProject()
+   {
+      AutoBean<NewS3Object> autoBean = AWSExtension.AUTO_BEAN_FACTORY.newS3Object();
+      try
+      {
+         S3Service.getInstance().uploadProject(new AsyncRequestCallback<NewS3Object>(new AutoBeanUnmarshaller<NewS3Object>(autoBean))
+         {
+
+            @Override
+            protected void onSuccess(NewS3Object result)
+            {
+               Dialogs.getInstance().showInfo(result.getS3Bucket() + result.getVersionId());
+               
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               showError(exception);
+               
+            }
+         }, display.getSelectedBucketId(), openedProject.getName(), vfsInfo.getId(), openedProject.getId());
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      
    }
 
    protected void getPrev(final String marker)

@@ -320,8 +320,7 @@
                      <tasks>
                         <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
                            buildNumber = ${buildNumber}
-                           buildTime
-                           =${timestamp}
+                           buildTime = ${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
                   </configuration>
@@ -378,6 +377,7 @@
                <logLevel>INFO</logLevel>
                <skipTests>${gwt.test.skip}</skipTests>
                <extraJvmArgs>-Xmx2048m</extraJvmArgs>
+               <extra>${project.build.directory}/extra</extra>
             </configuration>
             <executions>
                <execution>
