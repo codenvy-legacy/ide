@@ -19,13 +19,27 @@
 package org.exoplatform.ide.extension.aws.shared.s3;
 
 /**
+ * S3 bucket versioning configuration states.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public enum VersioningStatus
 {
+   /**
+    * By default, for new S3 Buckets versioning value is off.
+    * Once versioning is enabled, it can never be reverted to status "Off", it's can be changed to "Suspend".
+    */
    OFF("Off"),
+
+   /**
+    * Indicating that versioning is disabled for S3 bucked that has enabled value before.
+    */
    SUSPENDED("Suspended"),
+
+   /**
+    * Indicating that versioning is enabled for S3 bucket.
+    */
    ENABLED("Enabled");
 
    private final String value;

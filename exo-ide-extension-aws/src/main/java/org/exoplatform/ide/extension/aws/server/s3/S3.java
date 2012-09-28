@@ -475,7 +475,7 @@ public class S3 extends AWSClient
       }
    }
 
-   private void setVersioningStatus(AmazonS3 s3Client, String s3Bucket, String status) throws AWSException
+   private void setVersioningStatus(AmazonS3 s3Client, String s3Bucket, String status)
    {
       BucketVersioningConfiguration configuration = new BucketVersioningConfiguration(status);
       s3Client.setBucketVersioningConfiguration(new SetBucketVersioningConfigurationRequest(s3Bucket, configuration));
