@@ -157,11 +157,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-vfs</artifactId>
-            <version>${org.exoplatform.vfs.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-jcr</artifactId>
             <version>${org.exoplatform.vfs.version}</version>
          </dependency>

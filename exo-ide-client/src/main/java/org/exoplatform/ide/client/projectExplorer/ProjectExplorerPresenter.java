@@ -23,7 +23,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
-import org.exoplatform.ide.client.services.FileSystemServiceAsync;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
@@ -62,13 +61,11 @@ public class ProjectExplorerPresenter implements Presenter
 
    EventBus eventBus;
 
-   FileSystemServiceAsync fileSystemService;
 
    @Inject
-   public ProjectExplorerPresenter(Display display, FileSystemServiceAsync fileSystemService, EventBus eventBus)
+   public ProjectExplorerPresenter(Display display,EventBus eventBus)
    {
       this.display = display;
-      this.fileSystemService = fileSystemService;
       this.eventBus = eventBus;
       bind();
    }

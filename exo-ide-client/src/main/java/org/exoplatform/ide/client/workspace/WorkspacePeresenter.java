@@ -30,9 +30,6 @@ import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
-import org.exoplatform.ide.client.services.FileSystemServiceAsync;
-import org.exoplatform.ide.core.editor.EditorRegistry;
-import org.exoplatform.ide.core.editor.JavaEditorProvider;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
@@ -75,24 +72,20 @@ public class WorkspacePeresenter implements Presenter
 
    EventBus eventBus;
 
-   FileSystemServiceAsync fileSystemService;
-
    ProjectExplorerPresenter projectExpolorerPresenter;
 
    private final MainMenuPresenter menuPresenter;
 
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
-      EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService,
-      MainMenuPresenter menuPresenter, final ResourceProvider resourceManager,
-      final ExpressionManager expressionManager)
+      EditorPresenter editorPresenter, EventBus eventBus, MainMenuPresenter menuPresenter,
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager)
 
    {
       super();
       this.display = display;
       this.projectExpolorerPresenter = projectExpolorerPresenter;
       this.editorPresenter = editorPresenter;
-      this.fileSystemService = fileSystemService;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
       menuPresenter.addMenuItem("File/New/new File", null);
@@ -106,7 +99,7 @@ public class WorkspacePeresenter implements Presenter
       ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
       expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
-      menuPresenter.addMenuItem("Project-scoped", null, null, projectOpenedExpression, null);
+      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression, noProjectOpenedExpression);
       bind();
    }
 

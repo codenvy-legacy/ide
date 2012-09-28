@@ -66,11 +66,8 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs-jcr</artifactId>
+         <scope>runtime</scope>
       </dependency>
 
     <!-- fix dependecies in JCR. Used for VFS-JCR -->
