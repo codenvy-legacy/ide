@@ -74,16 +74,22 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       // open autocomplete form
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForDocPanelOpened();
-      
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStore"));
       assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
 
+      // can does not work on standalone because different orders in list 
+      IDE.CODEASSISTANT.closeForm();
+      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollectionCertStore");
+      IDE.CODEASSISTANT.openForm();
+      IDE.CODEASSISTANT.waitForDocPanelOpened();
+      assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStoreParameters"));
+
+      
       IDE.CODEASSISTANT.setFocusTInput(); //insure that focus set to proposal from
-      IDE.CODEASSISTANT.moveCursorDown(4);
+      IDE.CODEASSISTANT.moveCursorDown(1);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("CollectionCertStore"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("CollectionCertStoreParameters"));
    }
 
 }

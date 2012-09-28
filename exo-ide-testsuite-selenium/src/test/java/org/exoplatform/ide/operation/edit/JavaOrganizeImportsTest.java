@@ -26,22 +26,19 @@ import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.operation.autocompletion.java.JavaCodeAssistantTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.lang.reflect.Array;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OrganizeImportsTest extends CodeAssistantBaseTest
+public class JavaOrganizeImportsTest extends CodeAssistantBaseTest
 {
    private static final String FILE_NAME = "GreetingController.java";
+
    @Before
    public void beforeTest() throws Exception
    {
@@ -72,38 +69,40 @@ public class OrganizeImportsTest extends CodeAssistantBaseTest
    @Test
    public void organizeImportTest() throws Exception
    {
+
       //step 1 check organize import
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
-      assertThat(IDE.EDITOR.getTextFromCodeEditor(0)).doesNotContain("import java.util.HashMap;").doesNotContain(
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).doesNotContain("import java.util.HashMap;").doesNotContain(
          "import java.util.Map;");
 
       //step 3 add two new objects
       IDE.GOTOLINE.goToLine(21);
-      IDE.EDITOR.typeTextIntoEditor(0, "List a;\n Label b;");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "Array a;\n Element b;");
       //To editor parse text 
       Thread.sleep(TestConstants.SLEEP);
 
       //step 3 organize import for new objects
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "O");
       IDE.ORGINIZEIMPORT.waitForWindowOpened();
       String ss = IDE.ORGINIZEIMPORT.getTextFromImportList();
-      assertThat(ss).contains("com.sun.xml.internal.bind.v2.schemagen.xmlschema.List").contains("java.util.List")
-         .contains("java.awt.List");
-      
+      assertThat(ss).contains("java.sql.Array").contains("java.lang.reflect.Array");
+      IDE.ORGINIZEIMPORT.selectValueInImportList("java.lang.reflect.Array");
+
       //driver.findElement(By.id("ideOrganizeImportNext")).click();
       IDE.ORGINIZEIMPORT.nextBtnclick();
-      IDE.ORGINIZEIMPORT.waitForValueInImportList("com.sun.xml.internal.ws.org.objectweb.asm.Label");
-      IDE.ORGINIZEIMPORT.selectValueInImportList("com.sun.xml.internal.ws.org.objectweb.asm.Label");
+      IDE.ORGINIZEIMPORT.waitForValueInImportList("javax.lang.model.element.Element");
+      IDE.ORGINIZEIMPORT.waitForValueInImportList("javax.xml.bind.Element");
+      IDE.ORGINIZEIMPORT.waitForValueInImportList("org.w3c.dom.Element");
+      IDE.ORGINIZEIMPORT.selectValueInImportList("org.w3c.dom.Element");
       IDE.ORGINIZEIMPORT.finishBtnclick();
       //driver.findElement(By.id("ideOrganizeImportFinish")).click();
       IDE.ORGINIZEIMPORT.waitForWindowClosed();
       //To editor parse text 
       Thread.sleep(TestConstants.SLEEP);
-      
+
       //step 4 check complete of the organize import
-      assertThat(IDE.EDITOR.getTextFromCodeEditor(0)).contains(
-         "import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;").contains(
-         "import com.sun.xml.internal.ws.org.objectweb.asm.Label;");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("import org.w3c.dom.Element;").contains(
+         "import java.lang.reflect.Array;");
    }
 
 }

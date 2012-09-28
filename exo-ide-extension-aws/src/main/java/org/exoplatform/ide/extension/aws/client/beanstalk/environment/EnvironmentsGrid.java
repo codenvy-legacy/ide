@@ -243,7 +243,7 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
     */
    private String createLinks(String s)
    {
-      return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s + " target=\"_blank\">View Running Version</a><br>";
+      return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
+         + " target=\"_blank\">View Running Version</a><br>";
    }
-
 }

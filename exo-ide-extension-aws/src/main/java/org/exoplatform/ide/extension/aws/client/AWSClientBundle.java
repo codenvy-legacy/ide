@@ -90,4 +90,16 @@ public interface AWSClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/aws/client/images/refresh_Disabled.png")
    ImageResource s3RefreshDisabled();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/download.png")
+   ImageResource download();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/download_Disabled.png")
+   ImageResource downloadDisabled();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/upload.png")
+   ImageResource upload();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/upload_Disabled.png")
+   ImageResource uploadDisabled();
 }

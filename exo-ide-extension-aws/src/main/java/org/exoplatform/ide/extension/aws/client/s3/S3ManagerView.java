@@ -18,12 +18,15 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -37,10 +40,11 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
 import java.util.List;
 
+
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 17, 2012 3:32:44 PM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: S3ManagerView.java Sep 28, 2012 vetal $
+ *
  */
 public class S3ManagerView extends ViewImpl implements S3Manager.Display
 {
@@ -55,16 +59,19 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    ImageButton deleteBucketButton;
    
    @UiField
-   ImageButton deleteButton;
+   MenuItem deleteAction;
    
    @UiField
-   ImageButton uploadButton;
+   MenuItem uploadAction;
+   
+   @UiField
+   MenuItem uploadProjectAction;
 
    @UiField
    ListBox buckets;
    
    @UiField
-   ObjectGrid s3ObjectsGrid;
+   S3ObjectGrid s3ObjectsGrid;
    
    @UiField
    ImageButton nextButton;
@@ -77,6 +84,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    @UiField
    ImageButton createBucketButton;
+   
 
 
    private static S3ManagerViewUiBinder uiBinder = GWT.create(S3ManagerViewUiBinder.class);
@@ -89,21 +97,16 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    {
       super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managemntViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      
    }
 
    @Override
    public ListGridItem<S3Object> getS3Object()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return s3ObjectsGrid;
    }
 
-   @Override
-   public HasClickHandlers getDeleteButton()
-   {
-      return deleteButton;
-   }
-
+   
    @Override
    public void setS3Buckets(List<S3Bucket> bucketsList)
    {
@@ -162,11 +165,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
       return refreshButton;
    }
    
-   @Override
-   public HasClickHandlers getUploadButton()
-   {
-      return uploadButton;
-   }
+   
    
    @Override
    public void setEnableBackButton(boolean enable)
@@ -184,6 +183,47 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    public HasClickHandlers getCreateBucketButton()
    {
       return createBucketButton;
+   }
+
+   @Override
+   public void setEnableDeleteAction(boolean enabled)
+   {
+      deleteAction.setEnabled(enabled);
+      
+   }
+
+   @Override
+   public void setEnableUploadAction(boolean enabled)
+   {
+      uploadAction.setEnabled(enabled);
+      
+   }
+
+   @Override
+   public void setDeleteAction(ScheduledCommand command)
+   {
+      deleteAction.setScheduledCommand(command);
+   }
+
+   @Override
+   public void setUploadAction(ScheduledCommand command)
+   {
+      uploadAction.setScheduledCommand(command);
+      
+   }
+   
+   @Override
+   public void setEnableUploadProjectAction(boolean enabled)
+   {
+      uploadProjectAction.setEnabled(enabled);
+      
+   }
+   
+   @Override
+   public void setUploadOpenedProjectAction(ScheduledCommand command)
+   {
+      uploadProjectAction.setScheduledCommand(command);
+      
    }
 
 }

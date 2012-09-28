@@ -38,11 +38,11 @@ import java.util.List;
  * @version $Id: ObjectGrid.java Sep 18, 2012 vetal $
  *
  */
-public class ObjectGrid extends ListGrid<S3Object>
+public class S3ObjectGrid extends ListGrid<S3Object>
 {
    private static final String ID = "ideS3ObjectGrid";
 
-   public ObjectGrid()
+   public S3ObjectGrid()
    {
       setID(ID);
       initColumns();
