@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -108,6 +109,15 @@ public class S3Service
    public void deleteBucket(@PathParam("name") String name) throws AWSException
    {
       s3.deleteBucket(name);
+   }
+
+   @Path("buckets/versioning/{s3bucket}")
+   @POST
+   public void setVersioningStatus(@PathParam("s3bucket") String s3Bucket, @QueryParam("status") String status)
+      throws AWSException
+   {
+      VersioningStatus versioningStatus = VersioningStatus.fromValue(status);
+      s3.setVersioningStatus(s3Bucket, versioningStatus);
    }
 
    //
