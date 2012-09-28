@@ -1,2 +1,0 @@
-# Module org.exoplatform.ide.IDEJUnit
-# RPC service class, partial path of RPC policy file

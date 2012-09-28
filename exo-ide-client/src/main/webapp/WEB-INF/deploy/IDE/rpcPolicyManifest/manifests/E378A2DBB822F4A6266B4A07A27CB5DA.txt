@@ -1,2 +1,0 @@
-serviceClass: org.exoplatform.ide.client.services.FileSystemService
-path: 48099E6FA9E1173C03E36883F1BF0E8B.gwt.rpc
