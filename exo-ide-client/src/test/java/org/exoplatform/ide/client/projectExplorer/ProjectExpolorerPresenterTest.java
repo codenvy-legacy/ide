@@ -19,19 +19,11 @@ package org.exoplatform.ide.client.projectExplorer;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
-import org.exoplatform.ide.client.services.FileSystemServiceAsync;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +32,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 /**
  * Created by The eXo Platform SAS
@@ -59,9 +49,6 @@ public class ProjectExpolorerPresenterTest
 
    @Spy
    EventBus eventBus = new SimpleEventBus();
-
-   @Mock
-   FileSystemServiceAsync fileSystemService;
 
    @InjectMocks
    ProjectExplorerPresenter explorerPresenter;
