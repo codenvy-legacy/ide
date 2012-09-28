@@ -26,6 +26,7 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,62 +96,55 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       }
    }
 
+   @After
+   public void closeTab()
+   {
+      try
+      {
+         IDE.EDITOR.forcedClosureFile(1);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
    @Test
    public void testFormatingHtml() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-
       String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
       assertEquals(formatingSource, postFormating);
    }
 
    @Test
    public void testFormatingCss() throws Exception
    {
-      driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(1);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
       assertEquals(formatingSource, postFormating);
    }
 
    @Test
    public void testFormatingJS() throws Exception
    {
-      driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
+      String postFormating = IDE.JAVAEDITOR.getTextFromJavaEditor(2);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
       assertEquals(formatingSource, postFormating);
 
    }
@@ -158,20 +152,15 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
    @Test
    public void testFormatingGadget() throws Exception
    {
-      driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
-
+      //for reparce all text in gadget file
+      Thread.sleep(1000);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(3);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
-      IDE.EDITOR.closeTabIgnoringChanges(1);
       assertEquals(formatingSource, postFormating);
    }
 }
