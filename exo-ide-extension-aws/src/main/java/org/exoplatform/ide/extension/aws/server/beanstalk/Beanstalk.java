@@ -42,9 +42,12 @@ import com.amazonaws.services.elasticbeanstalk.model.DescribeEnvironmentsRequest
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsResult;
 import com.amazonaws.services.elasticbeanstalk.model.EnvironmentDescription;
+import com.amazonaws.services.elasticbeanstalk.model.EnvironmentInfoDescription;
 import com.amazonaws.services.elasticbeanstalk.model.EventDescription;
 import com.amazonaws.services.elasticbeanstalk.model.RebuildEnvironmentRequest;
+import com.amazonaws.services.elasticbeanstalk.model.RequestEnvironmentInfoRequest;
 import com.amazonaws.services.elasticbeanstalk.model.RestartAppServerRequest;
+import com.amazonaws.services.elasticbeanstalk.model.RetrieveEnvironmentInfoRequest;
 import com.amazonaws.services.elasticbeanstalk.model.S3Location;
 import com.amazonaws.services.elasticbeanstalk.model.SolutionStackDescription;
 import com.amazonaws.services.elasticbeanstalk.model.SourceConfiguration;
@@ -86,7 +89,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -1683,6 +1688,76 @@ public class Beanstalk extends AWSClient
    private void restartApplicationServer(AWSElasticBeanstalk beanstalkClient, String environmentId)
    {
       beanstalkClient.restartAppServer(new RestartAppServerRequest().withEnvironmentId(environmentId));
+   }
+
+   /**
+    * Get web servers startup logs for specified environment ID.
+    *
+    * @param environmentId
+    *    EC2 environment ID on which application is started
+    * @param infoType
+    *    type of information to request. Valid values: tail
+    * @return
+    *    map in format: key => instanceId, value => log url
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public Map<String, String> getApplicationLog(String environmentId, String infoType) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return getApplicationLog(beanstalkClient, environmentId, infoType);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private Map<String, String> getApplicationLog(AWSElasticBeanstalk beanstalkClient,
+                                                 String environmentId,
+                                                 String infoType)
+   {
+      beanstalkClient.requestEnvironmentInfo(
+         new RequestEnvironmentInfoRequest()
+            .withEnvironmentId(environmentId)
+            .withInfoType(infoType)
+      );
+
+      List<EnvironmentInfoDescription> envList = beanstalkClient.retrieveEnvironmentInfo(
+         new RetrieveEnvironmentInfoRequest()
+            .withEnvironmentId(environmentId)
+            .withInfoType(infoType)
+      ).getEnvironmentInfo();
+
+      Map<String, EnvironmentInfoDescription> distinctEnvList = new HashMap<String, EnvironmentInfoDescription>();
+
+      for (EnvironmentInfoDescription description : envList)
+      {
+         if (!distinctEnvList.containsKey(description.getEc2InstanceId()) ||
+            distinctEnvList
+               .get(description.getEc2InstanceId())
+               .getSampleTimestamp()
+               .after(description.getSampleTimestamp())
+            )
+         {
+            distinctEnvList.put(description.getEc2InstanceId(), description);
+         }
+      }
+
+      Map<String, String> result = new HashMap<String, String>(distinctEnvList.size());
+
+      for (Map.Entry<String, EnvironmentInfoDescription> entry : distinctEnvList.entrySet())
+      {
+         result.put(entry.getKey(), entry.getValue().getMessage());
+      }
+
+      return result;
    }
 
    //

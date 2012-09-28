@@ -347,4 +347,14 @@ public class BeanstalkService
    {
       beanstalk.restartApplicationServer(id);
    }
+
+   @Path("environments/logs/{id}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> getApplicationLogs(@PathParam("id") String environmentId,
+                                                 @QueryParam("infotype") String infoType)
+      throws AWSException
+   {
+      return beanstalk.getApplicationLog(environmentId, infoType);
+   }
 }
