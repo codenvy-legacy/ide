@@ -37,6 +37,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -75,6 +76,7 @@ public class EC2Service
 
    @Path("images")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public ImagesList listImages(@QueryParam("owner") String owner,
                                 @QueryParam("ispublic") boolean isPublic,
                                 @QueryParam("architecture") String architecture,
@@ -88,6 +90,7 @@ public class EC2Service
 
    @Path("key_pairs")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<KeyPairInfo> listKeyPairs() throws AWSException
    {
       return ec2.listKeyPairs();
@@ -95,6 +98,7 @@ public class EC2Service
 
    @Path("security_groups")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
    {
       return ec2.listSecurityGroups();
@@ -102,6 +106,7 @@ public class EC2Service
 
    @Path("regions")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<RegionInfo> listRegions() throws AWSException
    {
       return ec2.listRegions();
@@ -109,6 +114,7 @@ public class EC2Service
 
    @Path("availability_zones")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<String> listAvailabilityZones() throws AWSException
    {
       return ec2.listAvailabilityZones();
@@ -116,16 +122,17 @@ public class EC2Service
 
    @Path("instances/run")
    @POST
+   @Produces(MediaType.APPLICATION_JSON)
    public List<String> runInstance(RunInstanceRequest request) throws AWSException
    {
-       return ec2.runInstance(
-          request.getImageId(),
-          request.getInstanceType(),
-          request.getNumberOfInstances(),
-          request.getKeyName(),
-          request.getSecurityGroupsIds(),
-          request.getAvailabilityZone()
-       );
+      return ec2.runInstance(
+         request.getImageId(),
+         request.getInstanceType(),
+         request.getNumberOfInstances(),
+         request.getKeyName(),
+         request.getSecurityGroupsIds(),
+         request.getAvailabilityZone()
+      );
    }
 
    @Path("instances/start/{id}")
@@ -158,6 +165,7 @@ public class EC2Service
 
    @Path("instances")
    @GET
+   @Produces(MediaType.APPLICATION_JSON)
    public List<InstanceInfo> getInstances() throws AWSException
    {
       return ec2.getInstances();

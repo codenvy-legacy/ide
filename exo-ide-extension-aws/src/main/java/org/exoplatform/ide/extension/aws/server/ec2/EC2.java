@@ -176,6 +176,15 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Return description of all key pairs available for current authorized user.
+    * EC2 key pairs used to launch and access EC2 instances.
+    *
+    * @return
+    *    list with objects containing key name and key fingerprint
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<KeyPairInfo> listKeyPairs() throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -206,6 +215,14 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Return description about security groups available for current authorized user.
+    *
+    * @return
+    *    list with objects containing description about AWS security group
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<SecurityGroupInfo> listSecurityGroups() throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -237,6 +254,14 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Return description about regions zones that are currently available to the account.
+    *
+    * @return
+    *    list of described EC2 regions available for account
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<RegionInfo> listRegions() throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -267,6 +292,15 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Return information about EC2 availability zones that are currently available to the account.
+    * The results include zones only for the Region you're currently using
+    *
+    * @return
+    *    list of described EC2 availability zones
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<String> listAvailabilityZones() throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -297,6 +331,30 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Launches the specified number of instances. Every instances is launched in a security group.
+    * If security group is not defined default security group is used.
+    * Launching public images without a key pair ID will leave them inaccessible.
+    *
+    * @param imageId
+    *    unique ID of machine image
+    * @param instanceType
+    *    specifies the instance type for the launched instances.
+    *    valid values: t1.micro | m1.small | m1.medium | m1.large | m1.xlarge | m2.xlarge | m2.2xlarge
+    *                   | m2.4xlarge | c1.medium | c1.xlarge | hi1.4xlarge | cc1.4xlarge | cc2.8xlarge | cg1.4xlarge
+    * @param numberOfInstances
+    *    number of instances to launch, must be greater 0
+    * @param keyName
+    *    the name of the key pair to use
+    * @param securityGroupsIds
+    *    list of security groups into which instances will be launched
+    * @param availabilityZone
+    *    availability zone into which instances wil be launched
+    * @return
+    *    list containing unique ID of launched instances
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<String> runInstance(String imageId,
                                    String instanceType,
                                    int numberOfInstances,
@@ -355,6 +413,16 @@ public class EC2 extends AWSClient
       return instances;
    }
 
+   /**
+    * Stops instance that uses an Amazon EBS volumes as its root device.
+    *
+    * @param instanceId
+    *    unique ID of instance
+    * @param force
+    *    forces the instance to stop
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void stopInstance(String instanceId, boolean force) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -379,6 +447,14 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Starts instance that uses an Amazon EBS volume as its root device.
+    *
+    * @param instanceId
+    *    unique ID of instance
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void startInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -403,6 +479,16 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Request reboot of specified instance. This operation is asynchronous; it only queues a request to
+    * reboot the specified instance. The operation will succeed if the instance are valid and belong to
+    * the user. Requests to reboot terminated instances are ignored.
+    *
+    * @param instanceId
+    *    unique ID of instance
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void rebootInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -427,6 +513,15 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Shuts down instance. Terminated instances will remain visible after termination
+    * (approximately one hour).
+    *
+    * @param instanceId
+    *    unique ID of instance
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public void terminateInstance(String instanceId) throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
@@ -451,6 +546,14 @@ public class EC2 extends AWSClient
 
    //
 
+   /**
+    * Returns information about instances that authorized user owns.
+    *
+    * @return
+    *    list of objects which contains various information about instance
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
    public List<InstanceInfo> getInstances() throws AWSException
    {
       AmazonEC2 ec2Client = getEC2Client();
