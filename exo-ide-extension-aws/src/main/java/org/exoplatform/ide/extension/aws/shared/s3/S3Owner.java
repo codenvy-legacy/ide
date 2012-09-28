@@ -27,7 +27,7 @@ package org.exoplatform.ide.extension.aws.shared.s3;
 public interface S3Owner
 {
    /**
-    * Get owner ID e.g. "111122223333"
+    * Get owner ID
     *
     * @return
     *    id of S3 bucket owner
@@ -43,19 +43,19 @@ public interface S3Owner
    void setId(String id);
 
    /**
-    * Get S3 bucket owner name
+    * Get S3 bucket owner display name
     *
     * @return
-    *    name of S3 bucket owner
+    *    display name of S3 bucket owner
     */
    String getName();
 
 
    /**
-    * Set S3 bucket owner name
+    * Set S3 bucket owner display name
     *
     * @param name
-    *    name of S3 bucket owner
+    *    display name of S3 bucket owner
     */
    void setName(String name);
 }

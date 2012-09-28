@@ -32,7 +32,7 @@ public interface S3ObjectsList
     * Get list of S3 objects with their properties
     *
     * @return
-    *    list containing S3 objects
+    *    list containing S3 objects and their description
     */
    List<S3Object> getObjects();
 
@@ -40,7 +40,7 @@ public interface S3ObjectsList
     * Set list of S3 objects with their properties
     *
     * @param objects
-    *    list containing S3 objects
+    *    list containing S3 objects and their description
     */
    void setObjects(List<S3Object> objects);
 
@@ -88,7 +88,8 @@ public interface S3ObjectsList
     * Set key marker indicating where listing results should begin
     *
     * @param nextMarker
-    *    value of key marker which indicate from what position should begin listing
+    *    value of key marker which indicate from what position should begin listing,
+    *    value must be equals or greater 0
     */
    void setNextMarker(String nextMarker);
 
@@ -104,7 +105,8 @@ public interface S3ObjectsList
     * Set the maximum number of the results to return
     *
     * @param maxKeys
-    *    value of the maximum number results to return
+    *    value of the maximum number results to return, if max keys -1 then will show objects in result set with
+    *    no limitations
     */
    void setMaxKeys(int maxKeys);
 }

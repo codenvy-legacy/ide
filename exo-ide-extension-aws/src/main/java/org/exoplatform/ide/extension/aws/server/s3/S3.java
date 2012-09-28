@@ -76,7 +76,7 @@ public class S3 extends AWSClient
     *    name of the bucket
     * @param region
     *    region, where bucket must be created
-    *    valid values: null, us-west-1,us-west-2, EU, ap-southeast-1, ap-northeast-1, sa-east-1
+    *    valid values: null | us-west-1 | us-west-2 | EU | ap-southeast-1 | ap-northeast-1 | sa-east-1
     * @return
     *    the newly created bucket with provided information
     * @throws AWSException
@@ -153,7 +153,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Delete bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
+    * Delete the S3 bucket. All objects in the bucket must be deleted before the bucket itself can be deleted.
     *
     * @param name
     *    S3 bucket name which will deleted
@@ -178,7 +178,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Upload content from specified URL to Amazon S3 storage.
+    * Upload content from specified URL into Amazon S3 storage.
     * If content with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
@@ -199,7 +199,13 @@ public class S3 extends AWSClient
       try
       {
          conn = data.openConnection();
-         return putObject(getS3Client(), s3Bucket, s3Key, conn.getInputStream(), conn.getContentType(), conn.getContentLength());
+         return putObject(
+            getS3Client(),
+            s3Bucket, s3Key,
+            conn.getInputStream(),
+            conn.getContentType(),
+            conn.getContentLength()
+         );
       }
       finally
       {
@@ -214,7 +220,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Uploads a new object to the specified Amazon S3 bucket.
+    * Uploads a new object into to specified Amazon S3 bucket.
     * If object with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
@@ -273,7 +279,14 @@ public class S3 extends AWSClient
       ContentStream zippedProject = vfs.exportZip(projectId);
       try
       {
-         return putObject(getS3Client(), s3Bucket, s3Key, zippedProject.getStream(), zippedProject.getMimeType(), zippedProject.getLength());
+         return putObject(
+            getS3Client(),
+            s3Bucket,
+            s3Key,
+            zippedProject.getStream(),
+            zippedProject.getMimeType(),
+            zippedProject.getLength()
+         );
       }
       catch (AmazonClientException e)
       {
@@ -309,7 +322,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Returns object which contains information about objects which stored in specified bucket.
+    * Returns object which contains information about S3 objects which stored in specified bucket.
     * List results are always returned in lexicographic (alphabetical) order.
     *
     * @param s3Bucket
@@ -375,8 +388,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Deletes the specified object in the specified bucket. If attempting to delete an object that does not exist,
-    * Amazon S3 will return a success message instead of an error message.
+    * Deletes the S3 object in the specified bucket.
     *
     * @param s3Bucket
     *    S3 bucket name

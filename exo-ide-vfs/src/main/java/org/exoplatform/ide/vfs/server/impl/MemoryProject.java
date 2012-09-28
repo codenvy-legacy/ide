@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,38 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.shared;
+package org.exoplatform.ide.vfs.server.impl;
 
-import java.util.List;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: NumberProperty.java 65787 2011-02-03 10:03:58Z andrew00x $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class NumberProperty extends Property<Double>
+public class MemoryProject extends MemoryFolder
 {
-   public NumberProperty()
+   private String projectType;
+
+   MemoryProject(String name, String mediaType, String projectType) throws VirtualFileSystemException
    {
-      super();
+      super(ItemType.PROJECT, name);
+      this.mediaType = mediaType;
+      this.projectType = projectType;
    }
 
-   public NumberProperty(String name, Double value)
+   public String getProjectType()
    {
-      super(name, value);
+      return projectType;
    }
 
-   public NumberProperty(String name, List<Double> value)
+   public void setProjectType(String projectType)
    {
-      super(name, value);
-   }
-
-   public List<Double> getValue()
-   {
-      return value;
-   }
-
-   public void setValue(List<Double> value)
-   {
-      this.value = value;
+      this.projectType = projectType;
    }
 }
