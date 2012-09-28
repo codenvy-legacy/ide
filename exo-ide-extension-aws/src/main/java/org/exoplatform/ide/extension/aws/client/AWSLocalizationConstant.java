@@ -43,8 +43,11 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.delete")
    String deleteButton();
 
-   @Key("button.stop")
-   String stopButton();
+   @Key("button.terminate")
+   String terminateButton();
+
+   @Key("button.rebuild")
+   String rebuildButton();
 
    @Key("button.close")
    String closeButton();
@@ -328,15 +331,23 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.version.description.field")
    String createVersionDescriptionField();
 
+   // Create Environment
    @Key("create.environment.view.title")
    String createEnvironmentViewTitle();
 
    // Terminate Environment
-   @Key("stop.environment.question")
-   String stopEnvironmentQuestion(String environment);
+   @Key("terminate.environment.question")
+   String terminateEnvironmentQuestion(String name);
 
-   @Key("stop.environment.failed")
-   String stopEnvironmentFailed(String version);
+   @Key("terminate.environment.failed")
+   String terminateEnvironmentFailed(String name);
+
+   // Rebuild Environment
+   @Key("rebuild.environment.question")
+   String rebuildEnvironmentQuestion(String name);
+
+   @Key("rebuild.environment.failed")
+   String rebuildEnvironmentFailed(String name);
 
    // S3 Management
    @Key("s3.managemnt.view.title")

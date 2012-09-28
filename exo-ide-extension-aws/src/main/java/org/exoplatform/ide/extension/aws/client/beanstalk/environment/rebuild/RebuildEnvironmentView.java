@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -33,11 +33,12 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 5:59:53 PM anya $
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: RebuildEnvironmentView.java Sep 28, 2012 4:34:01 PM azatsarynnyy $
+ *
  */
-public class StopEnvironmentView extends ViewImpl implements StopEnvironmentPresenter.Display
+public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironmentPresenter.Display
 {
    private static final String ID = "ideStopEnvironmentView";
 
@@ -58,35 +59,35 @@ public class StopEnvironmentView extends ViewImpl implements StopEnvironmentPres
 //   CheckBox deleteS3BundleField;
 
    @UiField
-   ImageButton stopButton;
+   ImageButton rebuildButton;
 
    @UiField
    ImageButton cancelButton;
 
    private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
 
-   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, StopEnvironmentView>
+   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, RebuildEnvironmentView>
    {
    }
 
-   public StopEnvironmentView()
+   public RebuildEnvironmentView()
    {
       super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deleteVersionViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       questionLabel.setIsHTML(true);
-      stopButton.setButtonId(DELETE_BUTTON_ID);
+      rebuildButton.setButtonId(DELETE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
 //      deleteS3BundleField.setName(DELETE_S3_BUNDLE_ID);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getDeleteButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getRebuildButton()
     */
    @Override
-   public HasClickHandlers getDeleteButton()
+   public HasClickHandlers getRebuildButton()
    {
-      return stopButton;
+      return rebuildButton;
    }
 
    /**
@@ -99,21 +100,12 @@ public class StopEnvironmentView extends ViewImpl implements StopEnvironmentPres
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getDeleteQuestion()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion()
     */
    @Override
-   public HasValue<String> getDeleteQuestion()
+   public HasValue<String> getRebuildQuestion()
    {
       return questionLabel;
    }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter.Display#getDeleteS3Bundle()
-    */
-//   @Override
-//   public HasValue<Boolean> getDeleteS3Bundle()
-//   {
-//      return deleteS3BundleField;
-//   }
 
 }

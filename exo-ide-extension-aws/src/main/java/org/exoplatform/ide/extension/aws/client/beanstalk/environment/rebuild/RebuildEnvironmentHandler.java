@@ -16,23 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link StopEnvironmentEvent} event.
+ * Handler for {@link RebuildEnvironmentEvent} event.
  * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 4:52:35 PM anya $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: RebuildEnvironmentHandler.java Sep 28, 2012 3:48:36 PM azatsarynnyy $
+ *
  */
-public interface StopEnvironmentHandler extends EventHandler
+public interface RebuildEnvironmentHandler extends EventHandler
 {
    /**
-    * Perform actions, when user tries to delete application version.
+    * Perform actions, when user tries to rebuild environment.
     * 
-    * @param event
+    * @param event {@link RebuildEnvironmentEvent}
     */
-   void onStopEnvironment(StopEnvironmentEvent event);
+   void onRebuildEnvironment(RebuildEnvironmentEvent event);
 }

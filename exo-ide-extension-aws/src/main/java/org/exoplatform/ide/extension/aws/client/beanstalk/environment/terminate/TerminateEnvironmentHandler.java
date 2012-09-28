@@ -16,41 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate;
 
-import com.google.gwt.uibinder.client.UiField;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link TerminateEnvironmentEvent} event.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: May 23, 2012 12:14:23 PM anya $
+ * @version $Id: Sep 20, 2012 4:52:35 PM anya $
  * 
  */
-public class EnvironmentTabPain extends Composite
+public interface TerminateEnvironmentHandler extends EventHandler
 {
-   private static EnvironmentTabPainUiBinder uiBinder = GWT.create(EnvironmentTabPainUiBinder.class);
-
-   interface EnvironmentTabPainUiBinder extends UiBinder<Widget, EnvironmentTabPain>
-   {
-   }
-
-   @UiField
-   EnvironmentGrid environmentGrid;
-
-   public EnvironmentTabPain()
-   {
-      initWidget(uiBinder.createAndBindUi(this));
-   }
-
    /**
-    * @return the versionsGrid
+    * Perform actions, when user tries to terminate environment.
+    * 
+    * @param event {@link TerminateEnvironmentEvent}
     */
-   public EnvironmentGrid getVersionsGrid()
-   {
-      return environmentGrid;
-   }
+   void onTerminateEnvironment(TerminateEnvironmentEvent event);
 }

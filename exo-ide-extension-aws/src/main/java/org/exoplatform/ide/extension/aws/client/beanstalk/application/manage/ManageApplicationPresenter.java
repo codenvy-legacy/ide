@@ -50,10 +50,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
+import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.ApplicationUpdatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
@@ -66,7 +66,8 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequ
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.CreateEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.EnvironmentCreatedHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop.StopEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
@@ -289,13 +290,23 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addStopHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentActions().addTerminateHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
          public void onSelection(SelectionEvent<EnvironmentInfo> event)
          {
-            IDE.fireEvent(new StopEnvironmentEvent(event.getSelectedItem()));
+            IDE.fireEvent(new TerminateEnvironmentEvent(event.getSelectedItem()));
+         }
+      });
+
+      display.getEnvironmentActions().addRebuildHandler(new SelectionHandler<EnvironmentInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<EnvironmentInfo> event)
+         {
+            IDE.fireEvent(new RebuildEnvironmentEvent(event.getSelectedItem()));
          }
       });
 
