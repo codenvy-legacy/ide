@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteConfigurationTemplateRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
@@ -351,10 +352,8 @@ public class BeanstalkService
    @Path("environments/logs/{id}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> getApplicationLogs(@PathParam("id") String environmentId,
-                                                 @QueryParam("infotype") String infoType)
-      throws AWSException
+   public List<InstanceLog> getApplicationLogs(@PathParam("id") String environmentId) throws AWSException
    {
-      return beanstalk.getApplicationLog(environmentId, infoType);
+      return beanstalk.getApplicationLog(environmentId);
    }
 }

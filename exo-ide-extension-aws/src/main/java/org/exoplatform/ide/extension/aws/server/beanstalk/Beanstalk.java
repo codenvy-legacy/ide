@@ -74,6 +74,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateI
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsSeverity;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
@@ -1695,19 +1696,17 @@ public class Beanstalk extends AWSClient
     *
     * @param environmentId
     *    EC2 environment ID on which application is started
-    * @param infoType
-    *    type of information to request. Valid values: tail
     * @return
     *    map in format: key => instanceId, value => log url
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public Map<String, String> getApplicationLog(String environmentId, String infoType) throws AWSException
+   public List<InstanceLog> getApplicationLog(String environmentId) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return getApplicationLog(beanstalkClient, environmentId, infoType);
+         return getApplicationLog(beanstalkClient, environmentId);
       }
       catch (AmazonClientException e)
       {
@@ -1719,42 +1718,36 @@ public class Beanstalk extends AWSClient
       }
    }
 
-   private Map<String, String> getApplicationLog(AWSElasticBeanstalk beanstalkClient,
-                                                 String environmentId,
-                                                 String infoType)
+   private List<InstanceLog> getApplicationLog(AWSElasticBeanstalk beanstalkClient, String environmentId)
    {
       beanstalkClient.requestEnvironmentInfo(
          new RequestEnvironmentInfoRequest()
             .withEnvironmentId(environmentId)
-            .withInfoType(infoType)
+            .withInfoType("tail")
       );
 
       List<EnvironmentInfoDescription> envList = beanstalkClient.retrieveEnvironmentInfo(
          new RetrieveEnvironmentInfoRequest()
             .withEnvironmentId(environmentId)
-            .withInfoType(infoType)
+            .withInfoType("tail")
       ).getEnvironmentInfo();
 
       Map<String, EnvironmentInfoDescription> distinctEnvList = new HashMap<String, EnvironmentInfoDescription>();
 
       for (EnvironmentInfoDescription description : envList)
       {
-         if (!distinctEnvList.containsKey(description.getEc2InstanceId()) ||
-            distinctEnvList
-               .get(description.getEc2InstanceId())
-               .getSampleTimestamp()
-               .after(description.getSampleTimestamp())
-            )
+         EnvironmentInfoDescription previousEnvDesc = distinctEnvList.get(description.getEc2InstanceId());
+         if (previousEnvDesc == null || previousEnvDesc.getSampleTimestamp().after(description.getSampleTimestamp()))
          {
             distinctEnvList.put(description.getEc2InstanceId(), description);
          }
       }
 
-      Map<String, String> result = new HashMap<String, String>(distinctEnvList.size());
+      List<InstanceLog> result = new ArrayList<InstanceLog>(distinctEnvList.size());
 
       for (Map.Entry<String, EnvironmentInfoDescription> entry : distinctEnvList.entrySet())
       {
-         result.put(entry.getKey(), entry.getValue().getMessage());
+         result.add(new InstanceLogImpl(entry.getKey(), entry.getValue().getMessage()));
       }
 
       return result;
