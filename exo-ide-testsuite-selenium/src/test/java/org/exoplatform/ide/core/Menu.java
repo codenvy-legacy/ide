@@ -75,7 +75,9 @@ public class Menu extends AbstractTestModule
       IDE().LOADER.waitClosed();
       topMenuItem.click();
       waitMenuPopUp();
-
+      
+      //for redraw all menus on staging
+      Thread.sleep(200);
       //Call command from menu popup:
       WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
       menuItem.click();
