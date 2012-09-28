@@ -81,9 +81,11 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String ENVIRONMENT_STOP = BASE_URL + "/environments/stop/";
 
-   private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info";
+   private static final String ENVIRONMENT_REBUILD = BASE_URL + "/environments/rebuild/";
 
-   private static final String ENVIRONMENT_UPDATE = BASE_URL + "/environments/update";
+   private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info/";
+
+   private static final String ENVIRONMENT_UPDATE = BASE_URL + "/environments/update/";
 
    private static final String ENVIRONMENTS = BASE_URL + "/environments";
 
@@ -261,6 +263,22 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
+    * 
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironments(java.lang.String,
+    *       java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getEnvironments(String vfsId, String projectId, AsyncRequestCallback<List<EnvironmentInfo>> callback)
+      throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENTS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createEnvironment(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest,
     *      org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
@@ -279,6 +297,35 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
+    * 
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#stopEnvironment(java.lang.String,
+    *       org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
+    */
+   @Override
+   public void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + ENVIRONMENT_STOP + environmentId;
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#rebuildEnvironment(java.lang.String,
+    *       org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
+    */
+   @Override
+   public void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + ENVIRONMENT_REBUILD + environmentId;
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironmentInfo(java.lang.String,
     *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
@@ -286,8 +333,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    public void getEnvironmentInfo(String environmentId, AsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException
    {
-      StringBuilder url =
-         new StringBuilder(restServiceContext).append(ENVIRONMENT_INFO).append("/").append(environmentId);
+      String url = restServiceContext + ENVIRONMENT_INFO + environmentId;
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
@@ -302,8 +348,7 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    public void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
       AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
    {
-      StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(ENVIRONMENT_UPDATE).append("/").append(environmentId);
+      String url = restServiceContext + ENVIRONMENT_UPDATE + environmentId;
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updateEnvironmentRequest)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
@@ -367,29 +412,6 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
-   }
-
-   @Override
-   public void getEnvironments(String vfsId, String projectId, AsyncRequestCallback<List<EnvironmentInfo>> callback)
-      throws RequestException
-   {
-      StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(ENVIRONMENTS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
-
-      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-
-   }
-
-   @Override
-   public void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
-      throws RequestException
-   {
-      String url = restServiceContext + ENVIRONMENT_STOP + environmentId;
-
-      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-
    }
 
 }

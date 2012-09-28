@@ -18,7 +18,7 @@ import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.VersionsTabPain;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentTabPain;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentsTabPain;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
@@ -27,7 +27,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
 {
    private static final String ID = "ideManageApplicationView";
 
-   private static final int WIDTH = 745;
+   private static final int WIDTH = 800;
 
    private static final int HEIGHT = 360;
 
@@ -54,8 +54,8 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    private MainTabPain mainTabPain;
 
    private VersionsTabPain versionsTabPain;
-   
-   private EnvironmentTabPain environmentTabPain;
+
+   private EnvironmentsTabPain environmentTabPain;
 
    public ManageApplicationView()
    {
@@ -71,10 +71,10 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
       versionsTabPain = new VersionsTabPain();
       applicationTabPanel.addTab(VERSIONS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()),
          AWSExtension.LOCALIZATION_CONSTANT.versionsTab(), versionsTabPain, false);
-      
-      environmentTabPain = new EnvironmentTabPain();
-      applicationTabPanel.addTab(ENVIRONMENTS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()),
-         "Environments", environmentTabPain, false);
+
+      environmentTabPain = new EnvironmentsTabPain();
+      applicationTabPanel.addTab(ENVIRONMENTS_TAB_ID, new Image(AWSClientBundle.INSTANCE.versions()), "Environments",
+         environmentTabPain, false);
    }
 
    /**
@@ -184,22 +184,31 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    {
       applicationTabPanel.selectTab(VERSIONS_TAB_ID);
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.manage.ManageApplicationPresenter.Display#selectEnvironmentTab()
+    */
    @Override
    public void selectEnvironmentTab()
    {
       applicationTabPanel.selectTab(ENVIRONMENTS_TAB_ID);
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.manage.ManageApplicationPresenter.Display#getEnvironmentActions()
+    */
    @Override
    public HasEnvironmentActions getEnvironmentActions()
    {
-      return environmentTabPain.getVersionsGrid();
+      return environmentTabPain.getEnvironmentsGrid();
    }
-   
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.manage.ManageApplicationPresenter.Display#getEnvironmentGrid()
+    */
    @Override
    public ListGridItem<EnvironmentInfo> getEnvironmentGrid()
    {
-      return environmentTabPain.getVersionsGrid();
+      return environmentTabPain.getEnvironmentsGrid();
    }
 }

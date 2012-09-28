@@ -60,10 +60,6 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.deploy.DeployVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop.StopEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop.StopEnvironmentPresenter.Display" />
-   </replace-with>
-   
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create.CreateVersionView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create.CreateVersionPresenter.Display" />
    </replace-with>
@@ -71,7 +67,15 @@
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.CreateEnvironmentView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.CreateEnvironmentPresenter.Display" />
    </replace-with>
-   
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentPresenter.Display" />
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketPresenter.Display" />
    </replace-with>

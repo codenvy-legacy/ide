@@ -37,6 +37,12 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentReque
 
 import java.util.List;
 
+/**
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: BeanstalkClientService.java Sep 28, 2012 3:00:04 PM azatsarynnyy $
+ *
+ */
 public abstract class BeanstalkClientService
 {
    private static BeanstalkClientService instance;
@@ -100,6 +106,15 @@ public abstract class BeanstalkClientService
       CreateApplicationRequest createApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
       throws RequestException;
 
+   /**
+    * Update application info.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param updateApplicationRequest
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void updateApplication(String vfsId, String projectId,
       UpdateApplicationRequest updateApplicationRequest, AsyncRequestCallback<ApplicationInfo> callback)
       throws RequestException;
@@ -116,7 +131,7 @@ public abstract class BeanstalkClientService
       AsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
 
    /**
-    * Deletes application.
+    * Deletes specified application.
     * 
     * @param vfsId
     * @param projectId
@@ -146,11 +161,49 @@ public abstract class BeanstalkClientService
    public abstract void getApplicationEvents(String vfsId, String projectId, ListEventsRequest listEventsRequest,
       AsyncRequestCallback<EventsList> callback) throws RequestException;
 
+   /**
+    * Returns the list of environments.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getEnvironments(String vfsId, String projectId,
+      AsyncRequestCallback<List<EnvironmentInfo>> callback) throws RequestException;
+
+   /**
+    * Create new environment.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param createEnvironmentRequest
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void createEnvironment(String vfsId, String projectId,
       CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
 
+   /**
+    * Terminates the specified environment.
+    * 
+    * @param environmentId
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException;
+
+   /**
+    * Rebuild the specified environment (deletes and recreates all of the AWS resources (for example: the Auto
+    * Scaling group, load balancer, etc.) for a specified environment and forces a restart).
+    * 
+    * @param environmentId
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
 
    /**
@@ -174,9 +227,28 @@ public abstract class BeanstalkClientService
    public abstract void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
       AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException;
 
+   /**
+    * Returns the list of application versions.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void getVersions(String vfsId, String projectId,
       AsyncRequestCallback<List<ApplicationVersionInfo>> callback) throws RequestException;
 
+   /**
+    * Delete the specified application's version.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param applicationName
+    * @param versionLabel
+    * @param isDeleteS3Bundle
+    * @param callback
+    * @throws RequestException
+    */
    public abstract void deleteVersion(String vfsId, String projectId, String applicationName, String versionLabel,
       boolean isDeleteS3Bundle, AsyncRequestCallback<Object> callback) throws RequestException;
 
@@ -193,6 +265,4 @@ public abstract class BeanstalkClientService
       CreateApplicationVersionRequest createApplicationVersionRequest,
       AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;
 
-   public abstract void getEnvironments(String vfsId, String projectId,
-      AsyncRequestCallback<List<EnvironmentInfo>> callback) throws RequestException;
 }

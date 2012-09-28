@@ -32,15 +32,13 @@ import com.google.gwt.user.cellview.client.Column;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
-
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: EnvironmentGrid.java Sep 27, 2012 vetal $
- *
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 20, 2012 12:28:23 PM anya $
+ * 
  */
-public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnvironmentActions
+public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEnvironmentActions
 {
-
    public class LinkCell extends AbstractSafeHtmlCell<String>
    {
 
@@ -79,7 +77,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
 
    }
 
-   private final String ID = "ideEnvironmentGrid";
+   private final String ID = "ideEnvironmentsGrid";
 
    private final String NAME = "Name";
 
@@ -93,14 +91,15 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
 
    private final String STATUS = "Status";
 
-   private final String STOP = "Stop";
+   private final String TERMINATE = "Terminate";
 
-   private Column<EnvironmentInfo, String> stopColumn;
+   private final String REBUILD = "Rebuild";
 
-   /**
-    * 
-    */
-   public EnvironmentGrid()
+   private Column<EnvironmentInfo, String> terminateColumn;
+
+   private Column<EnvironmentInfo, String> rebuildColumn;
+
+   public EnvironmentsGrid()
    {
       setID(ID);
 
@@ -164,13 +163,23 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
          }
       };
 
-      stopColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      terminateColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
       {
 
          @Override
          public String getValue(EnvironmentInfo environmentInfo)
          {
-            return STOP;
+            return TERMINATE;
+         }
+      };
+
+      rebuildColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return REBUILD;
          }
       };
 
@@ -180,16 +189,34 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
       getCellTable().addColumn(appVersionColumn, VERSION);
       getCellTable().addColumn(statusColumn, STATUS);
       getCellTable().addColumn(urlColumn, URL);
-      getCellTable().addColumn(stopColumn, STOP);
+      getCellTable().setColumnWidth(urlColumn, "130px");
+      getCellTable().addColumn(terminateColumn, TERMINATE);
+      getCellTable().addColumn(rebuildColumn, REBUILD);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions#addDeleteHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions#addTerminateHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addStopHandler(final SelectionHandler<EnvironmentInfo> handler)
+   public void addTerminateHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
-      stopColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      terminateColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      {
+         @Override
+         public void update(int index, EnvironmentInfo environmentInfo, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(environmentInfo));
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions#addRebuildHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addRebuildHandler(final SelectionHandler<EnvironmentInfo> handler)
+   {
+      rebuildColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {
          @Override
          public void update(int index, EnvironmentInfo environmentInfo, String value)
@@ -216,6 +243,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
     */
    private String createLinks(String s)
    {
-      return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s + " target=\"_blank\">" + s + "</a><br>";
+      return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
+         + " target=\"_blank\">View Running Version</a><br>";
    }
 }

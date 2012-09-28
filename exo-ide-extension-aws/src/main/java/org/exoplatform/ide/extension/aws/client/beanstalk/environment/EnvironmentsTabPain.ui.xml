@@ -32,7 +32,9 @@
       <f:layer>
          <f:Border margin="10">
             <f:layer>
-               <e:EnvironmentGrid width="100%" ui:field="environmentGrid"></e:EnvironmentGrid>
+               <g:ScrollPanel>
+                  <e:EnvironmentsGrid width="100%" ui:field="environmentsGrid"></e:EnvironmentsGrid>
+               </g:ScrollPanel>
             </f:layer>
          </f:Border>
       </f:layer>

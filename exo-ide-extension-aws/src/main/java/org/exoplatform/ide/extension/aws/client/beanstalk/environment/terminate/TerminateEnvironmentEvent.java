@@ -16,30 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * Event occurs, when user tries to stop application's environment.
+ * Event occurs, when user tries to terminate application's environment.
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 20, 2012 4:52:19 PM anya $
  * 
  */
-public class StopEnvironmentEvent extends GwtEvent<StopEnvironmentHandler>
+public class TerminateEnvironmentEvent extends GwtEvent<TerminateEnvironmentHandler>
 {
 
    /**
     * Type, used to register event.
     */
-   public static final GwtEvent.Type<StopEnvironmentHandler> TYPE = new GwtEvent.Type<StopEnvironmentHandler>();
+   public static final GwtEvent.Type<TerminateEnvironmentHandler> TYPE = new GwtEvent.Type<TerminateEnvironmentHandler>();
 
    private EnvironmentInfo environmentInfo;
 
-   public StopEnvironmentEvent(EnvironmentInfo environmentInfo)
+   public TerminateEnvironmentEvent(EnvironmentInfo environmentInfo)
    {
       this.environmentInfo = environmentInfo;
    }
@@ -48,7 +48,7 @@ public class StopEnvironmentEvent extends GwtEvent<StopEnvironmentHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StopEnvironmentHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<TerminateEnvironmentHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -57,9 +57,9 @@ public class StopEnvironmentEvent extends GwtEvent<StopEnvironmentHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(StopEnvironmentHandler handler)
+   protected void dispatch(TerminateEnvironmentHandler handler)
    {
-      handler.onStopEnvironment(this);
+      handler.onTerminateEnvironment(this);
    }
 
    public EnvironmentInfo getEnvironmentInfo()

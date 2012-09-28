@@ -18,19 +18,39 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.uibinder.client.UiField;
 
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: May 23, 2012 12:14:23 PM anya $
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: HasEnvironmentActions.java Sep 28, 2012 4:57:58 PM azatsarynnyy $
- *
  */
-public interface HasEnvironmentActions
+public class EnvironmentsTabPain extends Composite
 {
-   void addTerminateHandler(SelectionHandler<EnvironmentInfo> handler);
+   private static EnvironmentsTabPainUiBinder uiBinder = GWT.create(EnvironmentsTabPainUiBinder.class);
 
-   void addRebuildHandler(SelectionHandler<EnvironmentInfo> handler);
+   interface EnvironmentsTabPainUiBinder extends UiBinder<Widget, EnvironmentsTabPain>
+   {
+   }
+
+   @UiField
+   EnvironmentsGrid environmentsGrid;
+
+   public EnvironmentsTabPain()
+   {
+      initWidget(uiBinder.createAndBindUi(this));
+   }
+
+   /**
+    * @return the environmentsGrid
+    */
+   public EnvironmentsGrid getEnvironmentsGrid()
+   {
+      return environmentsGrid;
+   }
 }

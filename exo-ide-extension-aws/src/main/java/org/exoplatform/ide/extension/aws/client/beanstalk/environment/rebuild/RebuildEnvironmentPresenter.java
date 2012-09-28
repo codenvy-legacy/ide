@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -42,41 +42,46 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 5:01:04 PM anya $
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: RebuildEnvironmentPresenter.java Sep 28, 2012 3:56:46 PM azatsarynnyy $
+ *
  */
-public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClosedHandler
+public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
-      HasClickHandlers getDeleteButton();
+      HasClickHandlers getRebuildButton();
 
       HasClickHandlers getCancelButton();
 
-      HasValue<String> getDeleteQuestion();
-
-//      HasValue<Boolean> getDeleteS3Bundle();
+      HasValue<String> getRebuildQuestion();
    }
 
    private Display display;
 
-   private String vfsId;
-
-   private String projectId;
-
    private EnvironmentInfo environment;
 
-//   private VersionDeletedHandler versionDeletedHandler;
+   //   private VersionDeletedHandler versionDeletedHandler;
 
-   public StopEnvironmentPresenter()
+   public RebuildEnvironmentPresenter()
    {
-      IDE.addHandler(StopEnvironmentEvent.TYPE, this);
+      IDE.addHandler(RebuildEnvironmentEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    public void bindDisplay()
    {
+      display.getRebuildButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            rebuildEnvironment();
+         }
+      });
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
@@ -84,19 +89,6 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
          public void onClick(ClickEvent event)
          {
             IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getDeleteButton().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            if (environment.getStatus().equals(EnvironmentStatus.Ready))
-              stopEnvironment();
-            else
-               Dialogs.getInstance().showError("Environment alredy terminated"); 
          }
       });
    }
@@ -114,16 +106,16 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionHandler#onDeleteVersion(org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionEvent)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentHandler#onRebuildEnvironment(org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentEvent)
     */
    @Override
-   public void onStopEnvironment(StopEnvironmentEvent event)
+   public void onRebuildEnvironment(RebuildEnvironmentEvent event)
    {
       this.environment = event.getEnvironmentInfo();
       if (!environment.getStatus().equals(EnvironmentStatus.Ready))
       {
-        Dialogs.getInstance().showError("Environment alredy terminated");
-        return;
+         Dialogs.getInstance().showError("Environment is in an invalid state for this operation. Must be Ready");
+         return;
       }
 
       if (display == null)
@@ -132,24 +124,27 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
          IDE.getInstance().openView(display.asView());
          bindDisplay();
       }
-      display.getDeleteQuestion().setValue(
-         AWSExtension.LOCALIZATION_CONSTANT.stopEnvironmentQuestion(environment.getId()));
+      display.getRebuildQuestion().setValue(
+         AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentQuestion(environment.getName()));
    }
 
-   private void stopEnvironment()
+   /**
+    * Rebuilds specified environment.
+    */
+   private void rebuildEnvironment()
    {
       try
       {
          AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
          AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
-         BeanstalkClientService.getInstance().stopEnvironment(environment.getId(),
+         BeanstalkClientService.getInstance().rebuildEnvironment(environment.getId(),
             new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller, new LoggedInHandler()
             {
 
                @Override
                public void onLoggedIn()
                {
-                  stopEnvironment();
+                  rebuildEnvironment();
                }
             })
             {
@@ -157,7 +152,7 @@ public class StopEnvironmentPresenter implements StopEnvironmentHandler, ViewClo
                @Override
                protected void processFail(Throwable exception)
                {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.deleteVersionFailed(environment.getId());
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentFailed(environment.getId());
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();
