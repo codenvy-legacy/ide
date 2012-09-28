@@ -42,6 +42,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentReque
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
+import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 
@@ -188,4 +189,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link InstanceInfo}
     */
    AutoBean<InstanceInfo> instanceInfo();
+   
+   AutoBean<NewS3Object> newS3Object();
 }

@@ -19,6 +19,8 @@
 
 -->
 <module rename-to="IDE">
+   
+   <inherits name="com.google.gwt.i18n.I18N"/>
    <inherits name='com.google.gwt.user.User' />
    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
    
@@ -28,4 +30,9 @@
    <!-- Specify the app entry point class. -->
    <entry-point class='org.exoplatform.ide.client.IDEShell' />
    <source path="client" excludes="IDEGadget.java" />  
+   
+    <!--Defines all possible locales we'll use-->
+    <extend-property name="locale" values="en,ru"/>   
+    <!--Defines default locale-->
+    <set-property-fallback name="locale" value="en"/>
 </module>
