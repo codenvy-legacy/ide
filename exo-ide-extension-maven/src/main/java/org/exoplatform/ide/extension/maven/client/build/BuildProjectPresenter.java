@@ -58,7 +58,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -250,7 +250,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                @Override
                protected void onSuccess(ItemWrapper result)
                {
-                  StringProperty downloadUrlProp = (StringProperty)result.getItem().getProperty(ARTIFACT_DOWNLOAD_URL);
+                  Property downloadUrlProp = result.getItem().getProperty(ARTIFACT_DOWNLOAD_URL);
                   if (downloadUrlProp != null && !downloadUrlProp.getValue().isEmpty())
                   {
                      if (isProjectChangedAfterLastBuild(result))
@@ -287,12 +287,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       long buildTime = 0;
       long lastUpdateTime = 0;
-      StringProperty buildTimeProperty = (StringProperty)item.getItem().getProperty(LAST_SUCCESS_BUILD);
+      Property buildTimeProperty = item.getItem().getProperty(LAST_SUCCESS_BUILD);
       if (buildTimeProperty != null && !buildTimeProperty.getValue().isEmpty())
       {
          buildTime = Long.parseLong(buildTimeProperty.getValue().get(0));
       }
-      StringProperty lastUpdateTimeProp = (StringProperty)item.getItem().getProperty("vfs:lastUpdateTime");
+      Property lastUpdateTimeProp = item.getItem().getProperty("vfs:lastUpdateTime");
       if (lastUpdateTimeProp == null)
          return false;
       lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
@@ -493,8 +493,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    
    private void writeBuildInfo(BuildStatus buildStatus)
    {
-      project.getProperties().add(new StringProperty(LAST_SUCCESS_BUILD, buildStatus.getTime()));
-      project.getProperties().add(new StringProperty(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
+      project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
+      project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
       try
       {
          VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
@@ -644,9 +644,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       protected StringBuilder builder;
 
-      /**
-       * @param callback
-       */
       public StringUnmarshaller(StringBuilder builder)
       {
          this.builder = builder;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,38 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.shared;
+package org.exoplatform.ide.vfs.server.impl;
 
-import java.util.List;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: BooleanProperty.java 65773 2011-02-02 13:46:50Z andrew00x $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class BooleanProperty extends Property<Boolean>
+interface MemoryItemVisitor
 {
-   public BooleanProperty()
-   {
-      super();
-   }
-
-   public BooleanProperty(String name, Boolean value)
-   {
-      super(name, value);
-   }
-
-   public BooleanProperty(String name, List<Boolean> value)
-   {
-      super(name, value);
-   }
-
-   public List<Boolean> getValue()
-   {
-      return value;
-   }
-
-   public void setValue(List<Boolean> value)
-   {
-      this.value = value;
-   }
+   void visit(MemoryItem item) throws VirtualFileSystemException;
 }

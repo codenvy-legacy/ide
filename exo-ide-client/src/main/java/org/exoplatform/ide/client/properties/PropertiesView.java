@@ -124,10 +124,10 @@ public class PropertiesView extends ViewImpl implements
    {
       Map<String, String> propertiesMap = new LinkedHashMap<String, String>();
 
-      for (Property<?> property : properties)
+      for (Property property : properties)
       {
          String propertyName = property.getName();
-         propertiesMap.put(propertyName, property.getValue().get(0).toString());
+         propertiesMap.put(propertyName, property.getValue().get(0));
       }
 
       return propertiesMap;

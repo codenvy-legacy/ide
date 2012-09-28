@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.vfs.server;
 
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -45,7 +45,7 @@ import java.util.List;
  * @version $Id: ConvertibleProperty.java 79579 2012-02-17 13:27:25Z andrew00x $
  * @see #valueToArray(Class)
  */
-public class ConvertibleProperty extends StringProperty
+public class ConvertibleProperty extends Property
 {
    public ConvertibleProperty()
    {

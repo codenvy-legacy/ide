@@ -24,7 +24,7 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: StringProperty.java 65773 2011-02-02 13:46:50Z andrew00x $
  */
-public class StringProperty extends Property<String>
+public class StringProperty extends Property
 {
    public StringProperty()
    {

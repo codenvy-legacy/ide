@@ -24,16 +24,12 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.BooleanProperty;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
-import org.exoplatform.ide.vfs.shared.NumberProperty;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
@@ -138,11 +134,10 @@ public abstract class JSONDeserializer<O>
          }
       };
 
-   public static final JSONDeserializer<StringProperty> STRING_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<StringProperty>()
+   public static final JSONDeserializer<Property> STRING_PROPERTY_DESERIALIZER = new JSONDeserializer<Property>()
       {
          @Override
-         public StringProperty toObject(JSONValue json)
+         public Property toObject(JSONValue json)
          {
             if (json == null)
                return null;
@@ -151,71 +146,17 @@ public abstract class JSONDeserializer<O>
                return null;
             JSONValue jsonValue = jsonObject.get("value");
             if (jsonValue != null && jsonValue.isArray() != null)
-               return new StringProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+               return new Property(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
                   STRING_DESERIALIZER.toList(jsonValue));
             // Single String, null or some unexpected type.
-            return new StringProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+            return new Property(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
                STRING_DESERIALIZER.toObject(jsonValue));
          }
 
          @Override
-         protected StringProperty[] createArray(int length)
+         protected Property[] createArray(int length)
          {
-            return new StringProperty[length];
-         }
-      };
-
-   public static final JSONDeserializer<BooleanProperty> BOOLEAN_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<BooleanProperty>()
-      {
-         @Override
-         public BooleanProperty toObject(JSONValue json)
-         {
-            if (json == null)
-               return null;
-            JSONObject jsonObject = json.isObject();
-            if (jsonObject == null)
-               return null;
-            JSONValue jsonValue = jsonObject.get("value");
-            if (jsonValue != null && jsonValue.isArray() != null)
-               return new BooleanProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
-                  BOOLEAN_DESERIALIZER.toList(jsonValue));
-            // Single Boolean, null or some unexpected type.
-            return new BooleanProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
-               BOOLEAN_DESERIALIZER.toObject(jsonValue));
-         }
-
-         @Override
-         protected BooleanProperty[] createArray(int length)
-         {
-            return new BooleanProperty[length];
-         }
-      };
-
-   public static final JSONDeserializer<NumberProperty> NUMBER_PROPERTY_DESERIALIZER =
-      new JSONDeserializer<NumberProperty>()
-      {
-         @Override
-         public NumberProperty toObject(JSONValue json)
-         {
-            if (json == null)
-               return null;
-            JSONObject jsonObject = json.isObject();
-            if (jsonObject == null)
-               return null;
-            JSONValue jsonValue = jsonObject.get("value");
-            if (jsonValue != null && jsonValue.isArray() != null)
-               return new NumberProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
-                  NUMBER_DESERIALIZER.toList(jsonValue));
-            // Single Boolean, null or some unexpected type.
-            return new NumberProperty(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
-               NUMBER_DESERIALIZER.toObject(jsonValue));
-         }
-
-         @Override
-         protected NumberProperty[] createArray(int length)
-         {
-            return new NumberProperty[length];
+            return new Property[length];
          }
       };
 
