@@ -45,10 +45,12 @@ public class EditorRegistry
    private EditorProvider defaultProvider;
 
    @Inject
-   public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider)
+   public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider, JavaEditorProvider javaEditorProvider)
    {
       super();
       this.defaultProvider = defaultProvider;
+      //XXX for demo only
+      register("application/java", javaEditorProvider);
    }
 
    /**

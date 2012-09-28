@@ -85,7 +85,7 @@ public class WorkspacePeresenter implements Presenter
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService,
       MainMenuPresenter menuPresenter, final ResourceProvider resourceManager,
-      final ExpressionManager expressionManager, JavaEditorProvider javaEditorProvider, EditorRegistry registry)
+      final ExpressionManager expressionManager)
 
    {
       super();
@@ -107,8 +107,6 @@ public class WorkspacePeresenter implements Presenter
       expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, projectOpenedExpression, null);
       menuPresenter.addMenuItem("Project-scoped", null, projectOpenedExpression, null);
-      //XXX for demo only
-      registry.register("application/java", javaEditorProvider);
       bind();
    }
 
