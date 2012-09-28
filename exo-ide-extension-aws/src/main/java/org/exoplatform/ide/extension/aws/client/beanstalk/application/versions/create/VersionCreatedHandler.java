@@ -16,18 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
+package org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 4:36:10 PM anya $
+ * @version $Id: Sep 21, 2012 11:45:32 AM anya $
  * 
  */
-public interface HasEnvironmentActions
+public interface VersionCreatedHandler
 {
-   void addStopHandler(SelectionHandler<EnvironmentInfo> handler);
+   void onVersionCreate(ApplicationVersionInfo version);
 }

@@ -34,9 +34,11 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import org.exoplatform.ide.extension.aws.shared.ec2.SecurityGroupInfo;
@@ -89,13 +91,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<ConfigurationOptionRestriction> configurationOptionRestriction();
 
    /**
-    * A factory method for environment info bean.
-    * 
-    * @return an {@link AutoBean} of type {@link EnvironmentInfo}
-    */
-   AutoBean<EnvironmentInfo> environmentInfo();
-
-   /**
     * A factory method for S3 item bean.
     * 
     * @return an {@link AutoBean} of type {@link S3Item}
@@ -115,15 +110,13 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return {@link Credentials} credentials
     */
    AutoBean<Credentials> credentials();
-   
-   
+
    /**
     * @return
     */
    AutoBean<S3Bucket> s3Bucket();
-   
-   AutoBean<S3ObjectsList> s3ObjectsList(); 
 
+   AutoBean<S3ObjectsList> s3ObjectsList();
 
    /**
     * A factory method for create application request bean.
@@ -140,11 +133,32 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<UpdateApplicationRequest> updateApplicationRequest();
 
    /**
+    * A factory method for list events request bean.
+    * 
+    * @return {@link ListEventsRequest} list events request
+    */
+   AutoBean<ListEventsRequest> listEventsRequest();
+
+   /**
     * A factory method for create environment request bean.
     * 
     * @return {@link CreateEnvironmentRequest} create environment request
     */
    AutoBean<CreateEnvironmentRequest> createEnvironmentRequest();
+
+   /**
+    * A factory method for environment info bean.
+    * 
+    * @return an {@link AutoBean} of type {@link EnvironmentInfo}
+    */
+   AutoBean<EnvironmentInfo> environmentInfo();
+
+   /**
+    * A factory method for update environment request bean.
+    * 
+    * @return {@link UpdateEnvironmentRequest} update environment request
+    */
+   AutoBean<UpdateEnvironmentRequest> updateEnvironmentRequest();
 
    /**
     * A factory method for create images list bean.
@@ -165,7 +179,7 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<Event> event();
 
    AutoBean<DeleteApplicationVersionRequest> deleteVersionRequest();
-   
+
    AutoBean<CreateApplicationVersionRequest> createVersionRequest();
 
    /**

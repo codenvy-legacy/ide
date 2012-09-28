@@ -29,8 +29,11 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 
 import java.util.List;
 
@@ -131,6 +134,18 @@ public abstract class BeanstalkClientService
     */
    public abstract void getApplications(AsyncRequestCallback<List<ApplicationInfo>> callback) throws RequestException;
 
+   /**
+    * Returns list of application events.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param listEventsRequest
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getApplicationEvents(String vfsId, String projectId, ListEventsRequest listEventsRequest,
+      AsyncRequestCallback<EventsList> callback) throws RequestException;
+
    public abstract void createEnvironment(String vfsId, String projectId,
       CreateEnvironmentRequest createEnvironmentRequest, AwsAsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
@@ -147,6 +162,17 @@ public abstract class BeanstalkClientService
     */
    public abstract void getEnvironmentInfo(String environmentId, AsyncRequestCallback<EnvironmentInfo> callback)
       throws RequestException;
+
+   /**
+    * Update specified environment.
+    * 
+    * @param environmentId
+    * @param updateEnvironmentRequest
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
+      AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException;
 
    public abstract void getVersions(String vfsId, String projectId,
       AsyncRequestCallback<List<ApplicationVersionInfo>> callback) throws RequestException;

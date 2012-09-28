@@ -48,11 +48,11 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
 
    private final String UPDATED = AWSExtension.LOCALIZATION_CONSTANT.versionsGridUpdated();
 
-   private final String LAUNCH = AWSExtension.LOCALIZATION_CONSTANT.launchButton();
+   private final String DEPLOY = AWSExtension.LOCALIZATION_CONSTANT.deployButton();
 
    private final String DELETE = AWSExtension.LOCALIZATION_CONSTANT.deleteButton();
 
-   private Column<ApplicationVersionInfo, String> launchColumn;
+   private Column<ApplicationVersionInfo, String> deployColumn;
 
    private Column<ApplicationVersionInfo, String> deleteColumn;
 
@@ -104,13 +104,13 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
          }
       };
 
-      launchColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
+      deployColumn = new Column<ApplicationVersionInfo, String>(new ButtonCell())
       {
 
          @Override
          public String getValue(ApplicationVersionInfo application)
          {
-            return LAUNCH;
+            return DEPLOY;
          }
       };
 
@@ -128,17 +128,17 @@ public class VersionsGrid extends ListGrid<ApplicationVersionInfo> implements Ha
       getCellTable().addColumn(descriptionColumn, DESCRIPTION);
       getCellTable().addColumn(createdColumn, CREATED);
       getCellTable().addColumn(updatedColumn, UPDATED);
-      getCellTable().addColumn(launchColumn, LAUNCH);
+      getCellTable().addColumn(deployColumn, DEPLOY);
       getCellTable().addColumn(deleteColumn, DELETE);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions#addLaunchHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions#addDeployHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addLaunchHandler(final SelectionHandler<ApplicationVersionInfo> handler)
+   public void addDeployHandler(final SelectionHandler<ApplicationVersionInfo> handler)
    {
-      launchColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>()
+      deployColumn.setFieldUpdater(new FieldUpdater<ApplicationVersionInfo, String>()
       {
          @Override
          public void update(int index, ApplicationVersionInfo object, String value)
