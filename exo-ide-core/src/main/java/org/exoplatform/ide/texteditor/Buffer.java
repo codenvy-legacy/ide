@@ -14,6 +14,7 @@
 
 package org.exoplatform.ide.texteditor;
 
+import com.google.gwt.resources.client.ClientBundle;
 import elemental.client.Browser;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
@@ -25,7 +26,6 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 
 import org.exoplatform.ide.AppContext;
-import org.exoplatform.ide.common.BaseResources;
 import org.exoplatform.ide.common.Constants;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.mvp.CompositeView;
@@ -161,7 +161,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    /**
     * ClientBundle for the editor.
     */
-   public interface Resources extends BaseResources.Resources
+   public interface Resources extends ClientBundle
    {
       @Source({"Buffer.css", "constants.css", "org/exoplatform/ide/common/constants.css"})
       Css workspaceEditorBufferCss();
@@ -262,7 +262,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
          columnMarkerElement = Elements.createDivElement(css.columnMarkerLine());
          textLayerElement = Elements.createDivElement(css.textLayer());
 
-         scrollableElement = createScrollableElement(res.baseCss());
+         scrollableElement = createScrollableElement();
          if (false)
          {
             /*
@@ -275,7 +275,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
          }
          scrollableElement.appendChild(textLayerElement);
 
-         scrollbarElement = createScrollbarElement(res.baseCss());
+         scrollbarElement = createScrollbarElement();
 
          rootElement = Elements.createDivElement(css.root());
          rootElement.appendChild(scrollableElement);
@@ -283,10 +283,9 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
          setElement(rootElement);
       }
 
-      private Element createScrollbarElement(BaseResources.Css baseCss)
+      private Element createScrollbarElement()
       {
          final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
-         scrollbarElement.addClassName(baseCss.documentScrollable());
 
          scrollbarElement.addEventListener(Event.SCROLL, new EventListener()
          {
@@ -313,10 +312,10 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
          return scrollbarElement;
       }
 
-      private Element createScrollableElement(BaseResources.Css baseCss)
+      private Element createScrollableElement()
       {
          final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
-         scrollableElement.addClassName(baseCss.documentScrollable());
+         
 
          scrollableElement.addEventListener(Event.SCROLL, new EventListener()
          {

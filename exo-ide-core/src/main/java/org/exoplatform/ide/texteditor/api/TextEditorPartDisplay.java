@@ -48,7 +48,7 @@ import org.exoplatform.ide.util.ListenerRegistrar;
  * @version $Id:
  *
  */
-public interface TextEditorPartView
+public interface TextEditorPartDisplay
 {
 
    /**

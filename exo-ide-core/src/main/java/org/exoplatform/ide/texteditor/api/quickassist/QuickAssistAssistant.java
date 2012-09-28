@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.texteditor.api.quickassist;
 
-import org.exoplatform.ide.texteditor.api.TextEditorPartView;
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 
 
 /**
  * An <code>QuickAssistAssistant</code> provides support for quick fixes and quick
  * assists.
- * The quick assist assistant is a {@link TextEditorPartView} add-on. Its
+ * The quick assist assistant is a {@link TextEditorPartDisplay} add-on. Its
  * purpose is to propose, display, and insert quick assists and quick fixes
  * available at the current source viewer's quick assist invocation context.
  * <p>

@@ -17,18 +17,17 @@ package org.exoplatform.ide;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 
-import org.exoplatform.ide.common.BaseResources;
 import org.exoplatform.ide.texteditor.EditableContentArea;
 import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.renderer.LineNumberRenderer;
-import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.tree.FileTreeNodeRenderer;
+import org.exoplatform.ide.tree.Tree;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc. Make sure you
  * add your resource to
  */
-public interface Resources extends BaseResources.Resources,
+public interface Resources extends
    //    StatusPresenter.Resources,
    Tree.Resources, FileTreeNodeRenderer.Resources, Editor.Resources, LineNumberRenderer.Resources,
    EditableContentArea.Resources

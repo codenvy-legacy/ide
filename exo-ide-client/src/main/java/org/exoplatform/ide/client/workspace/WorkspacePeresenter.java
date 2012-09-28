@@ -245,6 +245,22 @@ public class WorkspacePeresenter implements Presenter
                                  GWT.log("Error creating demo folder" + caught);
                               }
                            });
+                        project.createFile(result, "TestJava.java", "public class TestJava\n{\n\n}",
+                           "application/java", new AsyncCallback<File>()
+                           {
+                           
+                           @Override
+                           public void onSuccess(File result)
+                           {
+                              // ok
+                           }
+                           
+                           @Override
+                           public void onFailure(Throwable caught)
+                           {
+                              GWT.log("Error creating demo folder" + caught);
+                           }
+                           });
 
                      }
 

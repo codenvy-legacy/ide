@@ -45,7 +45,7 @@ public class EditorPresenter implements Presenter
    // Editor should accept a model, not the content
 
    /**
-    * Editor view interface description
+    * Editor view interfacTe description
     */
    public interface Display extends IsWidget
    {

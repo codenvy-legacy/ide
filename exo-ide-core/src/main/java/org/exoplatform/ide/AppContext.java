@@ -39,7 +39,6 @@ public class AppContext
    public AppContext()
    {
       resources.appCss().ensureInjected();
-      resources.baseCss().ensureInjected();
       resources.editableContentAreaCss().ensureInjected();
       resources.editorSelectionLineRendererCss().ensureInjected();
       resources.lineNumberRendererCss().ensureInjected();

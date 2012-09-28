@@ -23,7 +23,6 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.SpanElement;
 
-import org.exoplatform.ide.common.BaseResources;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Resource;
@@ -65,7 +64,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource>
       String nodeNameInput();
    }
 
-   public interface Resources extends BaseResources.Resources, Tree.Resources
+   public interface Resources extends Tree.Resources
    {
       @Source({"FileTreeNodeRenderer.css", "org/exoplatform/ide/common/constants.css"})
       Css workspaceNavigationFileTreeNodeRendererCss();
