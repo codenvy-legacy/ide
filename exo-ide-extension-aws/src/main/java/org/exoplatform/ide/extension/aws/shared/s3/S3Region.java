@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.aws.shared.s3;
 
+/**
+ * Region where stores content on S3
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
 public enum S3Region
 {
    US_Standard(null),
