@@ -18,8 +18,8 @@ package org.exoplatform.ide.menu;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -30,78 +30,84 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
-import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
+ * Manages Main Menu Items, their runtime visibility and enabled state.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public class MainMenuPresenter implements Presenter
 {
-   private final MenuBar parentMenuBar;
 
-   private final JsonStringMap<MenuItem> menuItems;
+   /**
+    * Main Menu View 
+    */
+   public interface Display extends IsWidget
+   {
+      /**
+       * Set Menu Item by given path visible or invisible.
+       * 
+       * @param path menuItem path
+       * @param visible state
+       */
+      void setVisible(String path, boolean visible);
+
+      /**
+       * Set Menu Item by given path enabled or disabled.
+       * 
+       * @param path menuItem path
+       * @param enabled
+       */
+      void setEnabled(String path, boolean enabled);
+
+      /**
+       * Add menu item with the following path, icon, command, visible and enabled states
+       * 
+       * @param path
+       * @param icon
+       * @param command
+       * @param visible
+       * @param enabled
+       */
+      void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled);
+   }
 
    /** Map Expression ID <--> MenuItemPath */
-   private final JsonIntegerMap<JsonArray<MenuItem>> visibileWhenExpressions;
+   private final JsonIntegerMap<JsonArray<String>> visibileWhenExpressions;
 
    /** Map Expression ID <--> MenuItemPath */
-   private final JsonIntegerMap<JsonArray<MenuItem>> enabledWhenExpressions;
+   private final JsonIntegerMap<JsonArray<String>> enabledWhenExpressions;
 
    private final EventBus eventBus;
 
+   private final Display display;
+
+   /**
+    * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
+    * and View implementation
+    * 
+    * @param eventBus
+    * @param display
+    */
    @Inject
-   public MainMenuPresenter(EventBus eventBus)
+   public MainMenuPresenter(EventBus eventBus, Display display)
    {
       this.eventBus = eventBus;
-      this.parentMenuBar = new MenuBar();
-      this.parentMenuBar.setAnimationEnabled(true);
-      this.parentMenuBar.setAutoOpen(true);
-      this.menuItems = JsonCollections.createStringMap();
+      this.display = display;
+
       this.visibileWhenExpressions = JsonCollections.createIntegerMap();
       this.enabledWhenExpressions = JsonCollections.createIntegerMap();
       bind();
    }
 
+   /**
+    * Bind event handlers to Event Bus
+    */
    private void bind()
    {
-      eventBus.addHandler(ExpressionsChangedEvent.TYPE, new ExpressionsChangedHandler()
-      {
-         @Override
-         public void onExpressionsChanged(ExpressionsChangedEvent event)
-         {
-            JsonIntegerMap<Boolean> changedExpressions = event.getChangedExpressions();
-            changedExpressions.iterate(new IterationCallback<Boolean>()
-            {
-               @Override
-               public void onIteration(int key, Boolean val)
-               {
-                  // get the list of MenuItems registered with this expression
-                  if (visibileWhenExpressions.hasKey(key))
-                  {
-                     JsonArray<MenuItem> menuItems = visibileWhenExpressions.get(key);
-                     for (int i = 0; i < menuItems.size(); i++)
-                     {
-                        MenuItem menuItem = menuItems.get(i);
-                        menuItem.setVisible(val);
-                     }
-                  }
-                  // get the list of MenuItems registered with this expression
-                  if (enabledWhenExpressions.hasKey(key))
-                  {
-                     JsonArray<MenuItem> menuItems = enabledWhenExpressions.get(key);
-                     for (int i = 0; i < menuItems.size(); i++)
-                     {
-                        MenuItem menuItem = menuItems.get(i);
-                        menuItem.setEnabled(val);
-                     }
-                  }
-
-               }
-            });
-         }
-      });
+      // Listen to the Expression changed event to update menu item visible and enabled state
+      eventBus.addHandler(ExpressionsChangedEvent.TYPE, new MenuItemStateUpdateHandler());
    }
 
    /**
@@ -110,7 +116,23 @@ public class MainMenuPresenter implements Presenter
     */
    public void addMenuItem(String path, Command command)
    {
-      addMenuItem(path, command, null, null);
+      addMenuItem(path, null, command, null, null);
+   }
+
+   /**
+    * @param path
+    * @param command
+    */
+   public void addMenuItem(String path, ExtendedCommand command)
+   {
+      if (command == null)
+      {
+         addMenuItem(path, null, null, null, null);
+      }
+      else
+      {
+         addMenuItem(path, command.getIcon(), command, command.visibleWhen(), command.enabledWhen());
+      }
    }
 
    /**
@@ -119,92 +141,76 @@ public class MainMenuPresenter implements Presenter
     * @param visibilityExpression Value of this Core Expression is used to set Visible state of the menu item
     * @param enabledExpression Value of this Core Expression is used to set Enabled state of the menu item
     */
-   public void addMenuItem(String path, Command command, Expression visibileWhen, Expression enabledWhen)
+   public void addMenuItem(String path, Image icon, Command command, Expression visibileWhen, Expression enabledWhen)
    {
-      MenuPath menuPath = new MenuPath(path);
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
 
-      if (command instanceof ExtendedCommand)
-      {
-         // add icon
-      }
-      MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(menuPath.getSize() - 1), command);
-      menuItems.put(path, newItem);
+      display.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
+         enabledWhen == null ? true : enabledWhen.getValue());
       // put MenuItem in relation to Expressions
       if (visibileWhen != null)
       {
-         newItem.setVisible(visibileWhen.getValue());
          if (!visibileWhenExpressions.hasKey(visibileWhen.getId()))
          {
-            visibileWhenExpressions.put(visibileWhen.getId(), JsonCollections.<MenuItem> createArray());
+            visibileWhenExpressions.put(visibileWhen.getId(), JsonCollections.<String> createArray());
          }
-         visibileWhenExpressions.get(visibileWhen.getId()).add(newItem);
+         visibileWhenExpressions.get(visibileWhen.getId()).add(path);
       }
       if (enabledWhen != null)
       {
-         newItem.setEnabled(enabledWhen.getValue());
          if (!enabledWhenExpressions.hasKey(enabledWhen.getId()))
          {
-            enabledWhenExpressions.put(enabledWhen.getId(), JsonCollections.<MenuItem> createArray());
+            enabledWhenExpressions.put(enabledWhen.getId(), JsonCollections.<String> createArray());
          }
-         enabledWhenExpressions.get(enabledWhen.getId()).add(newItem);
+         enabledWhenExpressions.get(enabledWhen.getId()).add(path);
       }
    }
 
-   // Internal methods
-   // ========================================================================
-
    /**
-    * Recursively 
-    * 
-    * @param menuPath
-    * @param depth
-    * @return
+    * {@inheritDoc}
     */
-   private MenuBar getOrCreateParentMenuBar(MenuPath menuPath, int depth)
-   {
-      if (depth == 0)
-      {
-         return parentMenuBar;
-      }
-      else
-      {
-         // try to get parent
-         MenuItem menuItem = menuItems.get(menuPath.getParentPath(depth));
-         if (menuItem != null)
-         {
-            MenuBar subMenu = menuItem.getSubMenu();
-            if (subMenu == null)
-            {
-               subMenu = createMenuBar();
-               menuItem.setSubMenu(subMenu);
-            }
-            return subMenu;
-         }
-         else
-         {
-            MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth - 1);
-            MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(depth - 1), createMenuBar());
-            menuItems.put(menuPath.getParentPath(depth), newItem);
-            return newItem.getSubMenu();
-         }
-      }
-   }
-
-   private MenuBar createMenuBar()
-   {
-      MenuBar menuBar = new MenuBar(true);
-      menuBar.setAnimationEnabled(true);
-      menuBar.setAutoOpen(true);
-      return menuBar;
-   }
-
-   /**
-   * {@inheritDoc}
-   */
    @Override
    public void go(HasWidgets container)
    {
-      container.add(parentMenuBar);
+      container.add(display.asWidget());
    }
+
+   /**
+    * Handle {@link ExpressionsChangedEvent} and updated the state of corresponding menu items
+    */
+   private final class MenuItemStateUpdateHandler implements ExpressionsChangedHandler
+   {
+      @Override
+      public void onExpressionsChanged(ExpressionsChangedEvent event)
+      {
+         // process changed expression
+         JsonIntegerMap<Boolean> changedExpressions = event.getChangedExpressions();
+         changedExpressions.iterate(new IterationCallback<Boolean>()
+         {
+            @Override
+            public void onIteration(int key, Boolean val)
+            {
+               // get the list of MenuItems registered with this expression
+               if (visibileWhenExpressions.hasKey(key))
+               {
+                  JsonArray<String> itemsPath = visibileWhenExpressions.get(key);
+                  for (int i = 0; i < itemsPath.size(); i++)
+                  {
+                     display.setVisible(itemsPath.get(i), val);
+                  }
+               }
+               // get the list of MenuItems registered with this expression
+               if (enabledWhenExpressions.hasKey(key))
+               {
+                  JsonArray<String> itemsPath = enabledWhenExpressions.get(key);
+                  for (int i = 0; i < itemsPath.size(); i++)
+                  {
+                     display.setEnabled(itemsPath.get(i), val);
+                  }
+               }
+
+            }
+         });
+      }
+   }
+
 }

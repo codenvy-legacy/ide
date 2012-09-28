@@ -53,11 +53,11 @@ public interface ExtendedCommand extends Command
     * @return a Core Expression, it's result will be used
     * to determine Command's Visibility
     */
-   public Expression isVisible();
+   public Expression visibleWhen();
 
    /**
     * @return a Core Expression, it's result will be used
     * to determine Command's enabled state
     */
-   public Expression isEnabled();
+   public Expression enabledWhen();
 }

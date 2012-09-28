@@ -100,13 +100,13 @@ public class WorkspacePeresenter implements Presenter
 
       NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
       expressionManager.registerExpression(noProjectOpenedExpression);
-      menuPresenter.addMenuItem("File/Create Demo Content", new CreadDemoContentCommand(resourceManager), null,
+      menuPresenter.addMenuItem("File/Create Demo Content", null, new CreadDemoContentCommand(resourceManager), null,
          noProjectOpenedExpression);
 
       ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
       expressionManager.registerExpression(projectOpenedExpression);
-      menuPresenter.addMenuItem("Project", null, projectOpenedExpression, null);
-      menuPresenter.addMenuItem("Project-scoped", null, projectOpenedExpression, null);
+      menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
+      menuPresenter.addMenuItem("Project-scoped", null, null, projectOpenedExpression, null);
       //XXX for demo only
       registry.register("application/java", javaEditorProvider);
       bind();
