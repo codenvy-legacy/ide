@@ -1701,12 +1701,12 @@ public class Beanstalk extends AWSClient
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public List<InstanceLog> getApplicationLog(String environmentId) throws AWSException
+   public List<InstanceLog> getEnvironmentLogs(String environmentId) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
       {
-         return getApplicationLog(beanstalkClient, environmentId);
+         return getEnvironmentLogs(beanstalkClient, environmentId);
       }
       catch (AmazonClientException e)
       {
@@ -1718,7 +1718,7 @@ public class Beanstalk extends AWSClient
       }
    }
 
-   private List<InstanceLog> getApplicationLog(AWSElasticBeanstalk beanstalkClient, String environmentId)
+   private List<InstanceLog> getEnvironmentLogs(AWSElasticBeanstalk beanstalkClient, String environmentId)
    {
       beanstalkClient.requestEnvironmentInfo(
          new RequestEnvironmentInfoRequest()
@@ -1737,7 +1737,7 @@ public class Beanstalk extends AWSClient
       for (EnvironmentInfoDescription description : envList)
       {
          EnvironmentInfoDescription previousEnvDesc = distinctEnvList.get(description.getEc2InstanceId());
-         if (previousEnvDesc == null || previousEnvDesc.getSampleTimestamp().after(description.getSampleTimestamp()))
+         if (previousEnvDesc == null || previousEnvDesc.getSampleTimestamp().before(description.getSampleTimestamp()))
          {
             distinctEnvList.put(description.getEc2InstanceId(), description);
          }
@@ -1745,9 +1745,9 @@ public class Beanstalk extends AWSClient
 
       List<InstanceLog> result = new ArrayList<InstanceLog>(distinctEnvList.size());
 
-      for (Map.Entry<String, EnvironmentInfoDescription> entry : distinctEnvList.entrySet())
+      for (EnvironmentInfoDescription description : distinctEnvList.values())
       {
-         result.add(new InstanceLogImpl(entry.getKey(), entry.getValue().getMessage()));
+         result.add(new InstanceLogImpl(description.getEc2InstanceId(), description.getMessage()));
       }
 
       return result;

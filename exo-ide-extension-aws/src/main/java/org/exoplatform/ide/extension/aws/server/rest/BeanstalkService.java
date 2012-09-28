@@ -352,8 +352,8 @@ public class BeanstalkService
    @Path("environments/logs/{id}")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public List<InstanceLog> getApplicationLogs(@PathParam("id") String environmentId) throws AWSException
+   public List<InstanceLog> getEnvironmentLogs(@PathParam("id") String environmentId) throws AWSException
    {
-      return beanstalk.getApplicationLog(environmentId);
+      return beanstalk.getEnvironmentLogs(environmentId);
    }
 }
