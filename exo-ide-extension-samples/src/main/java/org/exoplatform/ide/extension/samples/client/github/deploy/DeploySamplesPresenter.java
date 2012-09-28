@@ -56,7 +56,7 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.LinkedHashMap;
@@ -374,12 +374,12 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private void convertToProject(FolderModel folderModel)
    {
       String projectType = data.getType();
-      folderModel.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folderModel.getProperties().add(new StringProperty("vfs:projectType", projectType));
+      folderModel.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folderModel.getProperties().add(new Property("vfs:projectType", projectType));
 
       if (!data.getTargets().isEmpty())
       {
-         folderModel.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), data.getTargets()));
+         folderModel.getProperties().add(new Property(ProjectProperties.TARGET.value(), data.getTargets()));
       }
 
       ItemWrapper item = new ItemWrapper(new ProjectModel());

@@ -23,6 +23,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -33,6 +34,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
@@ -41,6 +43,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -448,6 +451,34 @@ public class S3 extends AWSClient
          s3Object.getObjectMetadata().getLastModified(),
          s3Object.getObjectMetadata().getContentLength()
       );
+   }
+
+   /**
+    * Set versioning status for specified S3 bucket.
+    *
+    * @param s3Bucket
+    *    S3 bucket name
+    * @param status
+    *    current status of versioning. Valid values: Off, Suspended, Enabled
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void setVersioningStatus(String s3Bucket, VersioningStatus status) throws AWSException
+   {
+      try
+      {
+         setVersioningStatus(getS3Client(), s3Bucket, status.toString());
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void setVersioningStatus(AmazonS3 s3Client, String s3Bucket, String status)
+   {
+      BucketVersioningConfiguration configuration = new BucketVersioningConfiguration(status);
+      s3Client.setBucketVersioningConfiguration(new SetBucketVersioningConfigurationRequest(s3Bucket, configuration));
    }
 
    //

@@ -81,7 +81,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
 
    private final String ID = "ideEnvironmentGrid";
 
-   private final String LABEL = "ID";
+   private final String NAME = "Name";
 
    private final String SOLUTION_STACK = "Solution Stack";
 
@@ -90,7 +90,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
    private final String APPLICATION = "Application";
 
    private final String VERSION = "Version";
-   
+
    private final String STATUS = "Status";
 
    private final String STOP = "Stop";
@@ -104,13 +104,13 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
    {
       setID(ID);
 
-      Column<EnvironmentInfo, String> labelColumn = new Column<EnvironmentInfo, String>(new TextCell())
+      Column<EnvironmentInfo, String> nameColumn = new Column<EnvironmentInfo, String>(new TextCell())
       {
 
          @Override
          public String getValue(EnvironmentInfo environmentInfo)
          {
-            return environmentInfo.getId();
+            return environmentInfo.getName();
          }
       };
 
@@ -143,16 +143,16 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
             return environmentInfo.getVersionLabel();
          }
       };
-      
-      Column<EnvironmentInfo, String> statusColumn = new Column<EnvironmentInfo, String>(new TextCell())
-               {
 
-                  @Override
-                  public String getValue(EnvironmentInfo environmentInfo)
-                  {
-                     return environmentInfo.getStatus().name();
-                  }
-               };
+      Column<EnvironmentInfo, String> statusColumn = new Column<EnvironmentInfo, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return environmentInfo.getStatus().name();
+         }
+      };
 
       Column<EnvironmentInfo, String> urlColumn = new Column<EnvironmentInfo, String>(new LinkCell())
       {
@@ -174,7 +174,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
          }
       };
 
-      getCellTable().addColumn(labelColumn, LABEL);
+      getCellTable().addColumn(nameColumn, NAME);
       getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
       getCellTable().addColumn(appNameColumn, APPLICATION);
       getCellTable().addColumn(appVersionColumn, VERSION);
@@ -187,7 +187,7 @@ public class EnvironmentGrid extends ListGrid<EnvironmentInfo> implements HasEnv
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.HasVersionActions#addDeleteHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addDeleteHandler(final SelectionHandler<EnvironmentInfo> handler)
+   public void addStopHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
       stopColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {

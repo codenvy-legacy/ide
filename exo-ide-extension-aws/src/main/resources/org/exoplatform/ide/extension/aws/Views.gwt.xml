@@ -44,28 +44,32 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.ManageApplicationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.manage.ManageApplicationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.manage.ManageApplicationPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.update.UpdateApplicationPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.DeleteVersionPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.StopEnvironmentPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.deploy.DeployVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.deploy.DeployVersionPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop.StopEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.stop.StopEnvironmentPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.CreateVersionPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create.CreateVersionView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.create.CreateVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.CreateEnvironmentPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.CreateEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.create.CreateEnvironmentPresenter.Display" />
    </replace-with>
    
    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.CreateBucketView">

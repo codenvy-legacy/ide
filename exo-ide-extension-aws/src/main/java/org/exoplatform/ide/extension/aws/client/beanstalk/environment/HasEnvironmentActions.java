@@ -29,5 +29,5 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
  */
 public interface HasEnvironmentActions
 {
-   void addDeleteHandler(SelectionHandler<EnvironmentInfo> handler);
+   void addStopHandler(SelectionHandler<EnvironmentInfo> handler);
 }

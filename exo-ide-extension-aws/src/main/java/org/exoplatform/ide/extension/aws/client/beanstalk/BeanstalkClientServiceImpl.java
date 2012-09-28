@@ -39,8 +39,11 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 
 import java.util.List;
 
@@ -72,12 +75,16 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String APPLICATIONS = BASE_URL + "/apps";
 
+   private static final String APPLICATION_EVENTS = BASE_URL + "/apps/events";
+
    private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
 
    private static final String ENVIRONMENT_STOP = BASE_URL + "/environments/stop/";
 
    private static final String ENVIRONMENT_INFO = BASE_URL + "/environments/info";
-   
+
+   private static final String ENVIRONMENT_UPDATE = BASE_URL + "/environments/update";
+
    private static final String ENVIRONMENTS = BASE_URL + "/environments";
 
    private static final String VERSIONS = BASE_URL + "/apps/versions";
@@ -237,6 +244,23 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getApplicationEvents(java.lang.String,
+    *       java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getApplicationEvents(String vfsId, String projectId, ListEventsRequest listEventsRequest,
+      AsyncRequestCallback<EventsList> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(APPLICATION_EVENTS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(listEventsRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#createEnvironment(java.lang.String,
     *      java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest,
     *      org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
@@ -267,6 +291,24 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#updateEnvironment(java.lang.String,
+    *       org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
+      AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENT_UPDATE).append("/").append(environmentId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(updateEnvironmentRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    /**
@@ -326,26 +368,28 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
-   
+
    @Override
-   public void getEnvironments(String vfsId, String projectId,AsyncRequestCallback<List<EnvironmentInfo>> callback) throws RequestException
+   public void getEnvironments(String vfsId, String projectId, AsyncRequestCallback<List<EnvironmentInfo>> callback)
+      throws RequestException
    {
       StringBuilder url = new StringBuilder(restServiceContext);
       url.append(ENVIRONMENTS).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-      
+
    }
-   
+
    @Override
-   public void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback) throws RequestException
+   public void stopEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+      throws RequestException
    {
       String url = restServiceContext + ENVIRONMENT_STOP + environmentId;
-      
+
       AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-      .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
-      
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+
    }
 
 }

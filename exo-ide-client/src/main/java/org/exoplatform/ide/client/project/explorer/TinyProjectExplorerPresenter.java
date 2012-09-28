@@ -105,7 +105,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -299,7 +299,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     * 
     * Handling item selected event from browser
     * 
-    * @param item
     */
    protected void onItemSelected()
    {
@@ -553,7 +552,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    /**
     * Select chosen item in browser.
     * 
-    * @see org.exoplatform.ide.client.browser.event.SelectItemHandler#onSelectItem(org.exoplatform.ide.client.browser.event.SelectItemEvent)
     */
    public void onSelectItem(SelectItemEvent event)
    {
@@ -565,9 +563,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       display.selectItem(event.getItemHref());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
-    */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
       Item item = event.getItem();
@@ -594,9 +589,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
@@ -1239,7 +1231,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private void setTargets(ProjectModel project)
    {
       ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), targets));
+      project.getProperties().add(new Property(ProjectProperties.TARGET.value(), targets));
 
       try
       {

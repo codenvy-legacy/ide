@@ -42,9 +42,12 @@ import com.amazonaws.services.elasticbeanstalk.model.DescribeEnvironmentsRequest
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsResult;
 import com.amazonaws.services.elasticbeanstalk.model.EnvironmentDescription;
+import com.amazonaws.services.elasticbeanstalk.model.EnvironmentInfoDescription;
 import com.amazonaws.services.elasticbeanstalk.model.EventDescription;
 import com.amazonaws.services.elasticbeanstalk.model.RebuildEnvironmentRequest;
+import com.amazonaws.services.elasticbeanstalk.model.RequestEnvironmentInfoRequest;
 import com.amazonaws.services.elasticbeanstalk.model.RestartAppServerRequest;
+import com.amazonaws.services.elasticbeanstalk.model.RetrieveEnvironmentInfoRequest;
 import com.amazonaws.services.elasticbeanstalk.model.S3Location;
 import com.amazonaws.services.elasticbeanstalk.model.SolutionStackDescription;
 import com.amazonaws.services.elasticbeanstalk.model.SourceConfiguration;
@@ -71,6 +74,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateI
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsSeverity;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ConvertibleProperty;
@@ -86,7 +90,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
@@ -1683,6 +1689,68 @@ public class Beanstalk extends AWSClient
    private void restartApplicationServer(AWSElasticBeanstalk beanstalkClient, String environmentId)
    {
       beanstalkClient.restartAppServer(new RestartAppServerRequest().withEnvironmentId(environmentId));
+   }
+
+   /**
+    * Get web servers startup logs for specified environment ID.
+    *
+    * @param environmentId
+    *    EC2 environment ID on which application is started
+    * @return
+    *    map in format: key => instanceId, value => log url
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public List<InstanceLog> getEnvironmentLogs(String environmentId) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return getEnvironmentLogs(beanstalkClient, environmentId);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private List<InstanceLog> getEnvironmentLogs(AWSElasticBeanstalk beanstalkClient, String environmentId)
+   {
+      beanstalkClient.requestEnvironmentInfo(
+         new RequestEnvironmentInfoRequest()
+            .withEnvironmentId(environmentId)
+            .withInfoType("tail")
+      );
+
+      List<EnvironmentInfoDescription> envList = beanstalkClient.retrieveEnvironmentInfo(
+         new RetrieveEnvironmentInfoRequest()
+            .withEnvironmentId(environmentId)
+            .withInfoType("tail")
+      ).getEnvironmentInfo();
+
+      Map<String, EnvironmentInfoDescription> distinctEnvList = new HashMap<String, EnvironmentInfoDescription>();
+
+      for (EnvironmentInfoDescription description : envList)
+      {
+         EnvironmentInfoDescription previousEnvDesc = distinctEnvList.get(description.getEc2InstanceId());
+         if (previousEnvDesc == null || previousEnvDesc.getSampleTimestamp().before(description.getSampleTimestamp()))
+         {
+            distinctEnvList.put(description.getEc2InstanceId(), description);
+         }
+      }
+
+      List<InstanceLog> result = new ArrayList<InstanceLog>(distinctEnvList.size());
+
+      for (EnvironmentInfoDescription description : distinctEnvList.values())
+      {
+         result.add(new InstanceLogImpl(description.getEc2InstanceId(), description.getMessage()));
+      }
+
+      return result;
    }
 
    //
