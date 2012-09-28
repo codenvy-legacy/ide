@@ -41,14 +41,14 @@ import org.exoplatform.ide.util.ListenerRegistrar;
  * <li>undo manager</li>
  * <li>explicit configuration</li>
  * </ul>
- * A text diaplsy provides several text editing functions, some of them are
+ * A text view provides several text editing functions, some of them are
  * configurable, through a text operation target interface.
  * 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public interface TextEditorPartDisplay
+public interface TextEditorPartView
 {
 
    /**

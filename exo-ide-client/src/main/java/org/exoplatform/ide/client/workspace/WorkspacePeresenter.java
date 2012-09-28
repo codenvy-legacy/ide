@@ -163,7 +163,7 @@ public class WorkspacePeresenter implements Presenter
    {
       // Calling display.getCenterPanel.cler() violates the Law of Demeter
       display.clearCenterPanel();
-      editorPresenter.setText(file.getContent());
+      editorPresenter.openFile(file);
       editorPresenter.go(display.getCenterPanel());
    }
 

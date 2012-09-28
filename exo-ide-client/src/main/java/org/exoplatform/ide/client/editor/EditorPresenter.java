@@ -21,12 +21,13 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
+import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
+import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
-
 
 /**
  * 
@@ -48,16 +49,18 @@ public class EditorPresenter implements Presenter
     */
    public interface Display extends IsWidget
    {
-//      HasText getTextArea();
-      EditorPartPresenter getEditor();
+      void setEditor(EditorPartPresenter editor);
    }
 
    Display display;
 
+   private final EditorRegistry registry;
+
    @Inject
-   public EditorPresenter(Display display)
+   public EditorPresenter(Display display, EditorRegistry registry)
    {
       this.display = display;
+      this.registry = registry;
    }
 
    /**
@@ -72,30 +75,31 @@ public class EditorPresenter implements Presenter
    /**
     * Set the content of the file.
     * To be removed 
-    * 
-    * @param text
     */
-   public void setText(final String text)
+   public void openFile(final File file)
    {
-//      display.getTextArea().setText(text);
+      EditorProvider provider = registry.getDefaultEditor(file.getMimeType());
+      EditorPartPresenter editor = provider.getEditor();
+
       try
       {
-         display.getEditor().init(new EditorInput()
+         editor.init(new EditorInput()
          {
-            
+
             @Override
             public String getToolTipText()
             {
                // TODO Auto-generated method stub
                return null;
             }
-            
+
             @Override
             public String getName()
             {
-               return text;
+               // TODO Auto-generated method stub
+               return null;
             }
-            
+
             @Override
             public ImageResource getImageResource()
             {
@@ -106,10 +110,10 @@ public class EditorPresenter implements Presenter
             @Override
             public File getFile()
             {
-               // TODO Auto-generated method stub
-               return null;
+               return file;
             }
          });
+         display.setEditor(editor);
       }
       catch (EditorInitException e)
       {

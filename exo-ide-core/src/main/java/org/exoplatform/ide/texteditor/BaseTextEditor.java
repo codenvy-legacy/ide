@@ -18,21 +18,21 @@
  */
 package org.exoplatform.ide.texteditor;
 
-
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.editor.DocumentProvider;
+import org.exoplatform.ide.editor.DocumentProvider.DocumentCallback;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -42,17 +42,19 @@ import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
 {
 
-   private TextEditorPartDisplay editor;
+   private TextEditorPartView editor;
+
+   private final DocumentProvider documentProvider;
 
    /**
+    * @param documentProvider 
     * 
     */
-   @Inject
-   public BaseTextEditor(AppContext appContext)
+   public BaseTextEditor(AppContext appContext, DocumentProvider documentProvider)
    {
+      this.documentProvider = documentProvider;
       editor = Editor.create(appContext);
-      
-      
+
    }
 
    /**
@@ -61,8 +63,15 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    @Override
    public void init(EditorInput input) throws EditorInitException
    {
-      DocumentImpl d = new DocumentImpl(input.getName());
-      editor.setDocument(d);
+      documentProvider.getDocument(input, new DocumentCallback()
+      {
+         
+         @Override
+         public void onDocument(Document document)
+         {
+            editor.setDocument((DocumentImpl)document);
+         }
+      });
    }
 
    /**
@@ -72,7 +81,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public void doSave()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -82,7 +91,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public void doSaveAs()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -121,8 +130,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    @Override
    public DocumentProvider getDocumentProvider()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return documentProvider;
    }
 
    /**
@@ -132,7 +140,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public void close(boolean save)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -152,7 +160,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public void doRevertToSaved()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -172,7 +180,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public void selectAndReveal(int offset, int length)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**

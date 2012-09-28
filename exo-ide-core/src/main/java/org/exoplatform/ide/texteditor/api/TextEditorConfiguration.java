@@ -58,7 +58,7 @@ public class TextEditorConfiguration
     * @param display the display to be configured by this configuration
     * @return the tab width
     */
-   public int getTabWidth(TextEditorPartDisplay display)
+   public int getTabWidth(TextEditorPartView display)
    {
       return 4;
    }
@@ -71,7 +71,7 @@ public class TextEditorConfiguration
     * @param display the text display to be configured by this configuration
     * @return an undo manager or <code>null</code> if no undo/redo should not be supported
     */
-   public TextEditorUndoManager getUndoManager(TextEditorPartDisplay display)
+   public TextEditorUndoManager getUndoManager(TextEditorPartView display)
    {
       return new TextEditorUndoManager(25);
    }
@@ -83,7 +83,7 @@ public class TextEditorConfiguration
     * @param display the source viewer to be configured by this configuration
     * @return a content formatter or <code>null</code> if formatting should not be supported
     */
-   public ContentFormatter getContentFormatter(TextEditorPartDisplay display)
+   public ContentFormatter getContentFormatter(TextEditorPartView display)
    {
       return null;
    }
@@ -95,7 +95,7 @@ public class TextEditorConfiguration
     * @param display the source viewer to be configured by this configuration
     * @return a content assistant or <code>null</code> if content assist should not be supported
     */
-   public ContentAssistant getContentAssistant(TextEditorPartDisplay display)
+   public ContentAssistant getContentAssistant(TextEditorPartView display)
    {
       return null;
    }
@@ -108,7 +108,7 @@ public class TextEditorConfiguration
     * @param display thet ext display to be configured by this configuration
     * @return a quick assist assistant or <code>null</code> if quick assist should not be supported
     */
-   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartDisplay display)
+   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartView display)
    {
       return null;
    }
@@ -121,7 +121,7 @@ public class TextEditorConfiguration
     * @param contentType the content type for which the strategies are applicable
     * @return the auto edit strategies or <code>null</code> if automatic editing is not to be enabled
     */
-   public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartDisplay display, String contentType)
+   public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView display, String contentType)
    {
       //TODO return default
       return null; //new AutoEditStrategy[]{getAutoIndentStrategy(display, contentType)};
@@ -137,7 +137,7 @@ public class TextEditorConfiguration
     * @param display the source viewer to be configured by this configuration
     * @return the configured content types for the given viewer
     */
-   public String[] getConfiguredContentTypes(TextEditorPartDisplay display)
+   public String[] getConfiguredContentTypes(TextEditorPartView display)
    {
       return new String[]{Document.DEFAULT_CONTENT_TYPE};
    }
@@ -149,9 +149,9 @@ public class TextEditorConfiguration
     *
     * @param display the source viewer to be configured by this configuration
     * @return the configured partitioning
-    * @see #getConfiguredContentTypes(TextEditorPartDisplay)
+    * @see #getConfiguredContentTypes(TextEditorPartView)
     */
-   public String getConfiguredDocumentPartitioning(TextEditorPartDisplay display)
+   public String getConfiguredDocumentPartitioning(TextEditorPartView display)
    {
       return Document.DEFAULT_PARTITIONING;
    }

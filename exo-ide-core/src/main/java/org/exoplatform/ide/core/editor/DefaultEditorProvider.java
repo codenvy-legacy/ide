@@ -18,8 +18,13 @@
  */
 package org.exoplatform.ide.core.editor;
 
+import com.google.inject.Inject;
+
+import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
+import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -29,13 +34,25 @@ import org.exoplatform.ide.editor.EditorProvider;
 public class DefaultEditorProvider implements EditorProvider
 {
 
+   private AppContext context;
+
+   private final DocumentProvider documentProvider;
+
+   @Inject
+   public DefaultEditorProvider(AppContext context, DocumentProvider documentProvider)
+   {
+      super();
+      this.context = context;
+      this.documentProvider = documentProvider;
+   }
+
    /**
     * @see org.exoplatform.ide.editor.EditorProvider#getEditor()
     */
    @Override
    public EditorPartPresenter getEditor()
    {
-      return null;
+      return new BaseTextEditor(context, documentProvider);
    }
 
 }

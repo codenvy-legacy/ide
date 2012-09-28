@@ -16,20 +16,13 @@
  */
 package org.exoplatform.ide.client.editor;
 
-import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.user.client.ui.SimplePanel;
+
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import org.exoplatform.ide.client.editor.EditorPresenter.Display;
 import org.exoplatform.ide.editor.EditorPartPresenter;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 /**
  * Dummy Editor UI
@@ -42,48 +35,21 @@ import com.google.inject.Inject;
 public class EditorView extends Composite implements Display
 {
 
-   private final BaseTextEditor editor;
+   private SimplePanel panel;
 
-   //   interface EditorUiBinder extends UiBinder<Widget, EditorView>
-   //   {
-   //   }
-   //
-   //   private static EditorUiBinder uiBinder = GWT.create(EditorUiBinder.class);
-   //
-   //   @UiField
-   //   TextArea textArea;
-
-   /**
-    * Because this class has a default constructor, it can
-    * be used as a binder template. In other words, it can be used in other
-    * *.ui.xml files as follows:
-    * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-     *   xmlns:g="urn:import:**user's package**">
-    *  <g:**UserClassName**>Hello!</g:**UserClassName>
-    * </ui:UiBinder>
-    * Note that depending on the widget that is used, it may be necessary to
-    * implement HasHTML instead of HasText.
-    */
-   @Inject
-   public EditorView(BaseTextEditor editor)
+   public EditorView()
    {
-      this.editor = editor;
-      initWidget(editor.asWidget());
+      panel = new SimplePanel();
+      initWidget(panel);
    }
 
    /**
-    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#getEditor()
+    * @see org.exoplatform.ide.client.editor.EditorPresenter.Display#setEditor(org.exoplatform.ide.editor.EditorPartPresenter)
     */
-   public EditorPartPresenter getEditor()
+   @Override
+   public void setEditor(EditorPartPresenter editor)
    {
-      return editor;
+      panel.clear();
+      panel.add(((IsWidget)editor).asWidget());
    }
-
-//   /**
-//   * {@inheritDoc}
-//   */
-//   public HasText getTextArea()
-//   {
-//      return textArea;
-//   }
 }

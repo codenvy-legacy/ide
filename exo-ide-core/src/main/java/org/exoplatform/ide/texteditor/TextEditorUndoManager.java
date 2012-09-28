@@ -24,7 +24,7 @@ import org.exoplatform.ide.text.undo.DocumentUndoManagerRegistry;
 import org.exoplatform.ide.text.undo.DocumentUndoListener;
 import org.exoplatform.ide.text.undo.DocumentUndoManager;
 import org.exoplatform.ide.texteditor.api.KeyListener;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.util.SignalEvent;
 
 /**
@@ -218,7 +218,7 @@ public class TextEditorUndoManager
    private KeyListener inputListener;
 
    /** The text viewer the undo manager is connected to */
-   private TextEditorPartDisplay textViewer;
+   private TextEditorPartView textViewer;
 
    /** The undo level */
    private int fUndoLevel;
@@ -366,7 +366,7 @@ public class TextEditorUndoManager
    /*
     * @see org.eclipse.jface.text.IUndoManager#connect(org.eclipse.jface.text.ITextViewer)
     */
-   public void connect(TextEditorPartDisplay textViewer)
+   public void connect(TextEditorPartView textViewer)
    {
       if (this.textViewer == null && textViewer != null)
       {
