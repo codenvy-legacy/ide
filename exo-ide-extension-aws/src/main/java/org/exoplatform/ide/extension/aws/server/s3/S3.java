@@ -459,7 +459,11 @@ public class S3 extends AWSClient
     * @param s3Bucket
     *    S3 bucket name
     * @param status
-    *    current status of versioning. Valid values: Off, Suspended, Enabled
+    *    current status of versioning.
+    *    Valid values:
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#OFF VersioningStatus.OFF}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#SUSPENDED VersioningStatus.SUSPENDED}
+    *    {@see org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#ENABLED VersioningStatus.ENABLED}
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
