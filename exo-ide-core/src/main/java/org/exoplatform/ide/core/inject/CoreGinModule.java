@@ -25,6 +25,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.core.editor.JavaEditorProvider;
 import org.exoplatform.ide.core.editor.ResourceDocumentProvider;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.DocumentProvider;
@@ -66,6 +67,8 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorRegistry.class).in(Singleton.class);
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
+      //XXX for demo use only, remove this
+      bind(JavaEditorProvider.class).in(Singleton.class);
    }
 
    /**

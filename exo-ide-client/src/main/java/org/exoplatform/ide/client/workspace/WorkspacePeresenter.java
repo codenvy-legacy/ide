@@ -31,6 +31,8 @@ import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
+import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.core.editor.JavaEditorProvider;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
@@ -82,7 +84,8 @@ public class WorkspacePeresenter implements Presenter
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EditorPresenter editorPresenter, EventBus eventBus, FileSystemServiceAsync fileSystemService,
-      MainMenuPresenter menuPresenter, final ResourceProvider resourceManager, final ExpressionManager expressionManager)
+      MainMenuPresenter menuPresenter, final ResourceProvider resourceManager,
+      final ExpressionManager expressionManager, JavaEditorProvider javaEditorProvider, EditorRegistry registry)
 
    {
       super();
@@ -104,6 +107,8 @@ public class WorkspacePeresenter implements Presenter
       expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, projectOpenedExpression, null);
       menuPresenter.addMenuItem("Project-scoped", null, projectOpenedExpression, null);
+      //XXX for demo only
+      registry.register("application/java", javaEditorProvider);
       bind();
    }
 
@@ -248,18 +253,18 @@ public class WorkspacePeresenter implements Presenter
                         project.createFile(result, "TestJava.java", "public class TestJava\n{\n\n}",
                            "application/java", new AsyncCallback<File>()
                            {
-                           
-                           @Override
-                           public void onSuccess(File result)
-                           {
-                              // ok
-                           }
-                           
-                           @Override
-                           public void onFailure(Throwable caught)
-                           {
-                              GWT.log("Error creating demo folder" + caught);
-                           }
+
+                              @Override
+                              public void onSuccess(File result)
+                              {
+                                 // ok
+                              }
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 GWT.log("Error creating demo folder" + caught);
+                              }
                            });
 
                      }

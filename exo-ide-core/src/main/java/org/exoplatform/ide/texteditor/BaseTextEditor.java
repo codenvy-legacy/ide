@@ -42,9 +42,9 @@ import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
 {
 
-   private TextEditorPartDisplay editor;
+   protected TextEditorPartDisplay editor;
 
-   private final DocumentProvider documentProvider;
+   protected final DocumentProvider documentProvider;
 
    /**
     * @param documentProvider 
