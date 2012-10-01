@@ -22,8 +22,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
+import org.exoplatform.ide.extension.aws.shared.s3.S3KeyVersions;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
@@ -231,13 +233,35 @@ public class S3Service
    @Path("objects/delete/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void deleteObjects(@PathParam("s3bucket") String s3Bucket, List<String> s3Keys) throws AWSException
+   public void deleteObjects(@PathParam("s3bucket") String s3Bucket, List<S3KeyVersions> s3Keys) throws AWSException
    {
       s3.deleteObjects(s3Bucket, s3Keys);
    }
 
-   @Path("objects/{s3bucket}")
+   @Path("objects/versions/{s3bucket}")
    @POST
+   public void deleteVersion(@PathParam("s3bucket") String s3Bucket,
+                             @QueryParam("s3key") String s3Key,
+                             @QueryParam("versionid") String versionId) throws AWSException
+   {
+      s3.deleteVersion(s3Bucket, s3Key, versionId);
+   }
+
+   @Path("objects/versions/{s3bucket}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<S3ObjectVersion> listVersions(@PathParam("s3bucket") String s3Bucket,
+                                             @QueryParam("prefix") String prefix,
+                                             @QueryParam("keymarker") String keyMarker,
+                                             @QueryParam("versionidmarker") String versionIdMarker,
+                                             @QueryParam("delimiter") String delimiter,
+                                             @QueryParam("maxresults") Integer maxResults) throws AWSException
+   {
+      return s3.listVersions(s3Bucket, prefix, keyMarker, versionIdMarker, delimiter, maxResults);
+   }
+
+   @Path("objects/{s3bucket}")
+   @GET
    @Produces(MediaType.APPLICATION_JSON)
    public S3ObjectsList listObjects(@PathParam("s3bucket") String s3Bucket,
                                     @QueryParam("prefix") String prefix,
