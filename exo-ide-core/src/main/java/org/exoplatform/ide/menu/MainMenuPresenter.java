@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ExpressionsChangedHandler;
 import org.exoplatform.ide.core.expressions.Expression;
@@ -37,7 +38,7 @@ import org.exoplatform.ide.presenter.Presenter;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class MainMenuPresenter implements Presenter
+public class MainMenuPresenter implements Presenter, MainMenuAgent
 {
 
    /**
@@ -111,18 +112,18 @@ public class MainMenuPresenter implements Presenter
    }
 
    /**
-    * @param path
-    * @param command
+    * {@inheritDoc}
     */
+   @Override
    public void addMenuItem(String path, Command command)
    {
       addMenuItem(path, null, command, null, null);
    }
 
    /**
-    * @param path
-    * @param command
+    * {@inheritDoc}
     */
+   @Override
    public void addMenuItem(String path, ExtendedCommand command)
    {
       if (command == null)
@@ -136,11 +137,9 @@ public class MainMenuPresenter implements Presenter
    }
 
    /**
-    * @param path
-    * @param command
-    * @param visibilityExpression Value of this Core Expression is used to set Visible state of the menu item
-    * @param enabledExpression Value of this Core Expression is used to set Enabled state of the menu item
+    * {@inheritDoc}
     */
+   @Override
    public void addMenuItem(String path, Image icon, Command command, Expression visibileWhen, Expression enabledWhen)
    {
 

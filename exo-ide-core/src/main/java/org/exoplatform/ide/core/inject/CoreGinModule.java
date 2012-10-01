@@ -23,6 +23,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.core.editor.JavaEditorProvider;
@@ -57,6 +58,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
       bind(MainMenuPresenter.class).in(Singleton.class);
+      bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
       bind(ExpressionManager.class).in(Singleton.class);
       bind(MainMenuPresenter.Display.class).to(MainMenuView.class).in(Singleton.class);
    }
