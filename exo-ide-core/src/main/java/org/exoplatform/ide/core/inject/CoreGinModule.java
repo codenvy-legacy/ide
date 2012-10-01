@@ -33,6 +33,7 @@ import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
@@ -57,6 +58,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
       bind(MainMenuPresenter.class).in(Singleton.class);
       bind(ExpressionManager.class).in(Singleton.class);
+      bind(MainMenuPresenter.Display.class).to(MainMenuView.class).in(Singleton.class);
    }
 
   /**Configures binding for Editor API

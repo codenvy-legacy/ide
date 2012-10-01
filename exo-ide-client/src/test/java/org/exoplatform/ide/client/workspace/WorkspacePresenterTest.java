@@ -22,17 +22,13 @@ import static org.mockito.Mockito.*;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.client.editor.EditorPresenter;
-import org.exoplatform.ide.client.event.FileEvent;
-import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
-import org.exoplatform.ide.client.services.FileSystemServiceAsync;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.junit.After;
@@ -42,9 +38,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 /**
  * Created by The eXo Platform SAS
@@ -72,9 +66,6 @@ public class WorkspacePresenterTest
 
    @Spy
    EventBus eventBus = new SimpleEventBus();
-
-   @Mock
-   FileSystemServiceAsync fileSystemService;
 
    @InjectMocks
    WorkspacePeresenter wsPresenter;

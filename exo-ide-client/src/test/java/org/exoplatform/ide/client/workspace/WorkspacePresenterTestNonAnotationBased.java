@@ -24,7 +24,6 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.client.services.FileSystemServiceAsync;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,9 +50,6 @@ public class WorkspacePresenterTestNonAnotationBased
       // workspace presenter will be an object that calls real methods, not the mocked ones
       wsPresenter = mock(WorkspacePeresenter.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
       // initialize service with a mock
-      wsPresenter.fileSystemService =
-         mock(FileSystemServiceAsync.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
-      // initialize event with a mock
       wsPresenter.eventBus = mock(EventBus.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
       // initialize display mock
       wsPresenter.display = mock(WorkspacePeresenter.Display.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));

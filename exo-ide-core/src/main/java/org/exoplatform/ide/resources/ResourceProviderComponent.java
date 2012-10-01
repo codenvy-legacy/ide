@@ -95,7 +95,7 @@ public class ResourceProviderComponent implements ResourceProvider
       super();
       this.genericModelProvider = genericModelProvider;
       this.eventBus = eventBus;
-      this.workspaceURL = "http://127.0.0.1:8888/rest/ide/vfs/dev-monit";
+      this.workspaceURL = "rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
       this.natures = JsonCollections.<ProjectNature> createStringMap();
       this.loader = loader;

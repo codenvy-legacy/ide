@@ -37,15 +37,6 @@
          <artifactId>gwt-elemental</artifactId>
          <version>collide</version>
       </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs-jcr</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
