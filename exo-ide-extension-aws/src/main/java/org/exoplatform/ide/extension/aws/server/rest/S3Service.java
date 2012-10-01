@@ -228,8 +228,9 @@ public class S3Service
       s3.deleteObject(s3Bucket, s3key);
    }
 
-   @Path("objects/delete/all/{s3bucket}")
+   @Path("objects/delete/{s3bucket}")
    @POST
+   @Consumes(MediaType.APPLICATION_JSON)
    public void deleteObjects(@PathParam("s3bucket") String s3Bucket, List<String> s3Keys) throws AWSException
    {
       s3.deleteObjects(s3Bucket, s3Keys);
