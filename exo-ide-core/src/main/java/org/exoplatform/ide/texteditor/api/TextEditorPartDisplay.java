@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.texteditor.api;
 
-import elemental.html.Element;
+import com.google.gwt.user.client.Element;
 
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.store.TextStoreMutator;
-import org.exoplatform.ide.texteditor.Editor.DocumentListener;
 import org.exoplatform.ide.texteditor.FocusManager;
-import org.exoplatform.ide.texteditor.TextEditorUndoManager;
+import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
@@ -62,7 +61,7 @@ public interface TextEditorPartDisplay
     *
     * @param undoManager the new undo manager. <code>null</code> is a valid argument.
     */
-   void setUndoManager(TextEditorUndoManager undoManager);
+   void setUndoManager(UndoManager undoManager);
    
    
    /**
@@ -122,8 +121,6 @@ public interface TextEditorPartDisplay
    Renderer getRenderer();
 
    SelectionModel getSelection();
-
-   ListenerRegistrar<DocumentListener> getDocumentListenerRegistrar();
 
 
 }

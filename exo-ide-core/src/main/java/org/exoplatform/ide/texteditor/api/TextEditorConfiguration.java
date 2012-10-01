@@ -19,7 +19,7 @@
 package org.exoplatform.ide.texteditor.api;
 
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.texteditor.TextEditorUndoManager;
+import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.api.contentassistant.ContentAssistant;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 
@@ -60,7 +60,7 @@ public class TextEditorConfiguration
     */
    public int getTabWidth(TextEditorPartDisplay display)
    {
-      return 4;
+      return 3;
    }
 
    /**
@@ -71,9 +71,9 @@ public class TextEditorConfiguration
     * @param display the text display to be configured by this configuration
     * @return an undo manager or <code>null</code> if no undo/redo should not be supported
     */
-   public TextEditorUndoManager getUndoManager(TextEditorPartDisplay display)
+   public UndoManager getUndoManager(TextEditorPartDisplay display)
    {
-      return new TextEditorUndoManager(25);
+      return new UndoManager(25);
    }
 
    /**

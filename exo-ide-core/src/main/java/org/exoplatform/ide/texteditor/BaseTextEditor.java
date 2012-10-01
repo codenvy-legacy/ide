@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.texteditor;
 
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,6 +31,7 @@ import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 
 /**
@@ -53,8 +53,8 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public BaseTextEditor(AppContext appContext, DocumentProvider documentProvider)
    {
       this.documentProvider = documentProvider;
-      editor = Editor.create(appContext);
-
+      editor = new Editor(appContext);
+      editor.configure(new TextEditorConfiguration());
    }
 
    /**
@@ -190,7 +190,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    public Widget asWidget()
    {
       HTML h = new HTML();
-      h.getElement().appendChild((Node)editor.getElement());
+      h.getElement().appendChild(editor.getElement());
       return h;
    }
 

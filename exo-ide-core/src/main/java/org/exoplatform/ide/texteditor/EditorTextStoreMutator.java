@@ -144,4 +144,13 @@ public class EditorTextStoreMutator implements TextStoreMutator
       return null;
    }
 
+   /**
+    * @see org.exoplatform.ide.text.store.TextStoreMutator#getUndoManager()
+    */
+   @Override
+   public UndoManager getUndoManager()
+   {
+      return editor.getUndoManager();
+   }
+
 }

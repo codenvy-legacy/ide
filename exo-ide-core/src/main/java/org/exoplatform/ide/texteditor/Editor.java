@@ -39,6 +39,7 @@ import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
 import org.exoplatform.ide.texteditor.input.InputController;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
+import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.renderer.CurrentLineHighlighter;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.RenderTimeExecutor;
@@ -70,25 +71,6 @@ import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
  */
 public class Editor extends UiComponent<Editor.View> implements TextEditorPartDisplay
 {
-
-   /**
-    * Static factory method for obtaining an instance of the Editor.
-    */
-   public static TextEditorPartDisplay create(AppContext appContext)
-   {
-
-      FontDimensionsCalculator fontDimensionsCalculator =
-         FontDimensionsCalculator.get(appContext.getResources().workspaceEditorCss().editorFont());
-      RenderTimeExecutor renderTimeExecutor = new RenderTimeExecutor();
-      LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(fontDimensionsCalculator);
-
-      Buffer buffer =
-         Buffer.create(appContext, fontDimensionsCalculator.getFontDimensions(), lineDimensions, renderTimeExecutor);
-      InputController input = new InputController();
-      View view = new View(appContext.getResources(), buffer.getView().getElement(), input.getInputElement());
-      FocusManager focusManager = new FocusManager(buffer, input.getInputElement());
-      return new Editor(appContext, view, buffer, input, focusManager, fontDimensionsCalculator, renderTimeExecutor);
-   }
 
    /**
     * Animation CSS.
@@ -138,17 +120,6 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
       @Source("squiggle-warning.png")
       ImageResource squiggleWarning();
-   }
-
-   /**
-    * A listener that is called when the document changes.
-    *
-    *  This can be used by external clients of the editor; if the client is a
-    * component of the editor, use {@link Editor#setDocument(DocumentModel)} instead.
-    */
-   public interface DocumentListener
-   {
-      void onDocumentChanged(DocumentModel oldDocument, DocumentModel newDocument);
    }
 
    /**
@@ -224,14 +195,12 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private DocumentModel textStore;
 
-   private final ListenerManager<DocumentListener> documentListenerManager = ListenerManager.create();
-
    private final EditorTextStoreMutator editorDocumentMutator;
 
    private final FontDimensionsCalculator editorFontDimensionsCalculator;
 
-   private TextEditorUndoManager editorUndoManager;
-   
+   private UndoManager editorUndoManager;
+
    private final FocusManager focusManager;
 
    private final MouseHoverManager mouseHoverManager;
@@ -271,22 +240,25 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private final RenderTimeExecutor renderTimeExecutor;
 
-   private CurrentLineHighlighter currentLineHighlighter;
-
    private Document document;
 
-   private Editor(AppContext appContext, View view, Buffer buffer, InputController input, FocusManager focusManager,
-      FontDimensionsCalculator editorFontDimensionsCalculator, RenderTimeExecutor renderTimeExecutor)
+   public Editor(AppContext appContext)
    {
-      super(view);
       this.appContext = appContext;
-      this.buffer = buffer;
-      this.input = input;
-      this.focusManager = focusManager;
-      this.editorFontDimensionsCalculator = editorFontDimensionsCalculator;
-      this.renderTimeExecutor = renderTimeExecutor;
-      //TODO configure this
-      editorUndoManager = new TextEditorUndoManager(20);
+      editorFontDimensionsCalculator =
+         FontDimensionsCalculator.get(appContext.getResources().workspaceEditorCss().editorFont());
+      renderTimeExecutor = new RenderTimeExecutor();
+      LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
+
+      buffer =
+         Buffer.create(appContext, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
+            renderTimeExecutor);
+      input = new InputController();
+      View view = new View(appContext.getResources(), buffer.getView().getElement(), input.getInputElement());
+      setView(view);
+
+      focusManager = new FocusManager(buffer, input.getInputElement());
+
       Gutter leftGutter =
          createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
@@ -415,7 +387,6 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       return leftGutterManager.getGutter();
    }
 
-
    public DocumentModel getTextStore()
    {
       return textStore;
@@ -434,9 +405,9 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
     * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getElement()
     */
    @Override
-   public Element getElement()
+   public com.google.gwt.user.client.Element getElement()
    {
-      return getView().getElement();
+      return (com.google.gwt.user.client.Element)getView().getElement();
    }
 
    /**
@@ -476,10 +447,6 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       return renderer;
    }
 
-   //  public SearchModel getSearchModel() {
-   //    return searchModel;
-   //  }
-
    /**
     * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getSelection()
     */
@@ -499,24 +466,11 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       return editorDocumentMutator.getTextListenerRegistrar();
    }
 
-   /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getDocumentListenerRegistrar()
-    */
-   @Override
-   public ListenerRegistrar<DocumentListener> getDocumentListenerRegistrar()
-   {
-      return documentListenerManager;
-   }
-
    // TODO: need a public interface and impl
    public ViewportModel getViewport()
    {
       return viewport;
    }
-
-   //  public boolean isMutatingDocumentFromUndoOrRedo() {
-   //    return editorUndoManager.isMutatingDocument();
-   //  }
 
    public void removeLineRenderer(LineRenderer lineRenderer)
    {
@@ -530,20 +484,6 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    public void setDocument(final DocumentImpl document)
    {
       this.document = document;
-      final DocumentModel oldTextstore = textStore;
-      if (oldTextstore != null)
-      {
-         editorUndoManager.disconnect();
-         // Teardown the objects depending on the old document
-         renderer.teardown();
-         viewport.teardown();
-         selectionManager.teardown();
-         localCursorController.teardown();
-         //      editorUndoManager.teardown();
-         //      searchModel.teardown();
-         currentLineHighlighter.teardown();
-      }
-
       textStore = document.getTextStore();
 
       /*
@@ -563,12 +503,13 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       renderer =
          Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this,
             appContext.getResources(), renderTimeExecutor);
+      if (editorUndoManager != null)
+         editorUndoManager.connect(this);
 
       // Delayed core editor component initialization
       viewport.initialize();
       selection.initialize(viewport);
       selectionManager.initialize(renderer);
-      editorUndoManager.connect(this);
       buffer.handleComponentsInitialized(viewport, renderer);
       for (int i = 0, n = gutters.size(); i < n; i++)
       {
@@ -585,16 +526,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       //        editorDocumentMutator);
       localCursorController = LocalCursorController.create(appContext, focusManager, selection, buffer, this);
 
-      this.currentLineHighlighter = new CurrentLineHighlighter(buffer, selection, appContext.getResources());
+      new CurrentLineHighlighter(buffer, selection, appContext.getResources());
 
-      documentListenerManager.dispatch(new Dispatcher<Editor.DocumentListener>()
-      {
-         @Override
-         public void dispatch(DocumentListener listener)
-         {
-            listener.onDocumentChanged(oldTextstore, textStore);
-         }
-      });
    }
 
    /**
@@ -691,13 +624,20 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setUndoManager(org.exoplatform.ide.texteditor.TextEditorUndoManager)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setUndoManager(org.exoplatform.ide.texteditor.UndoManager)
     */
    @Override
-   public void setUndoManager(TextEditorUndoManager undoManager)
+   public void setUndoManager(UndoManager undoManager)
    {
-      // TODO Auto-generated method stub
-      
+      this.editorUndoManager = undoManager;
+   }
+
+   /**
+    * @return the editorUndoManager
+    */
+   public UndoManager getUndoManager()
+   {
+      return editorUndoManager;
    }
 
    /**
@@ -706,8 +646,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    @Override
    public void configure(TextEditorConfiguration configuration)
    {
-      // TODO Auto-generated method stub
-      
+      setUndoManager(configuration.getUndoManager(this));
+      LineDimensionsUtils.setTabSpaceEquivalence(configuration.getTabWidth(this));
    }
 
 }

@@ -14,66 +14,72 @@
 
 package org.exoplatform.ide.text.store;
 
+import org.exoplatform.ide.texteditor.UndoManager;
 
 /**
  * An interface that allows mutation of a document.
  */
-public interface TextStoreMutator {
+public interface TextStoreMutator
+{
 
-  /**
-   * Deletes the text from the given start point ({@code line} and
-   * {@code column}) with the given length ({@code deleteCount}). If the deleted
-   * text spans multiple lines, the {@link Line Lines} where the deletion
-   * started and ended may be joined and the deleted lines will be detached from
-   * the document.
-   * 
-   * @param line the line containing the begin position for the delete
-   * @param column the column (inclusive) where the delete will begin
-   * @param deleteCount the number of characters (including newlines) to delete
-   * @return the change that led to the deletion of the text, or {@code null}
-   *         if no changes applied
-   */
-  TextChange deleteText(Line line, int column, int deleteCount);
+   /**
+    * Deletes the text from the given start point ({@code line} and
+    * {@code column}) with the given length ({@code deleteCount}). If the deleted
+    * text spans multiple lines, the {@link Line Lines} where the deletion
+    * started and ended may be joined and the deleted lines will be detached from
+    * the document.
+    * 
+    * @param line the line containing the begin position for the delete
+    * @param column the column (inclusive) where the delete will begin
+    * @param deleteCount the number of characters (including newlines) to delete
+    * @return the change that led to the deletion of the text, or {@code null}
+    *         if no changes applied
+    */
+   TextChange deleteText(Line line, int column, int deleteCount);
 
-  /**
-   * Similar to {@link TextStoreMutator#deleteText(Line, int, int)} but accepts a
-   * line number for more efficient deletion.
-   *
-   * @return {@code null} if no changes applied
-   */
-  TextChange deleteText(Line line, int lineNumber, int column, int deleteCount);
+   /**
+    * Similar to {@link TextStoreMutator#deleteText(Line, int, int)} but accepts a
+    * line number for more efficient deletion.
+    *
+    * @return {@code null} if no changes applied
+    */
+   TextChange deleteText(Line line, int lineNumber, int column, int deleteCount);
 
-  /**
-   * Similar to
-   * {@link TextStoreMutator#insertText(Line, int, int, String, boolean)} but
-   * uses the default behavior.
-   *
-   * @return {@code null} if no changes applied
-   */
-  TextChange insertText(Line line, int column, String text);
+   /**
+    * Similar to
+    * {@link TextStoreMutator#insertText(Line, int, int, String, boolean)} but
+    * uses the default behavior.
+    *
+    * @return {@code null} if no changes applied
+    */
+   TextChange insertText(Line line, int column, String text);
 
-  /**
-   * Similar to {@link TextStoreMutator#insertText(Line, int, String)} but
-   * accepts a line number for more efficient insertion.
-   *
-   * @return {@code null} if no changes applied
-   */
-  TextChange insertText(Line line, int lineNumber, int column, String text);
+   /**
+    * Similar to {@link TextStoreMutator#insertText(Line, int, String)} but
+    * accepts a line number for more efficient insertion.
+    *
+    * @return {@code null} if no changes applied
+    */
+   TextChange insertText(Line line, int lineNumber, int column, String text);
 
-  /**
-   * Inserts the text starting at the given {@code line} and {@code column}. If
-   * the text spans multiple lines, multiple {@link Line Lines} will be created.
-   *
-   * @param canReplaceSelection whether the mutator is allowed to replace the
-   *        selection (if it exists) with the given text. Passing true does not
-   *        guarantee the mutator will choose to replace the selection; passing
-   *        false guarantees the mutator will never replace the selection
-   * @return the change that led to the insertion of text; if the selection was
-   *         replaced, this will only be the insertion text change, not the
-   *         deletion text change; if selection was deleted, but nothing was
-   *         inserted, then deletion text change is returned;
-   *         {@code null} if no changes applied
+   /**
+    * Inserts the text starting at the given {@code line} and {@code column}. If
+    * the text spans multiple lines, multiple {@link Line Lines} will be created.
+    *
+    * @param canReplaceSelection whether the mutator is allowed to replace the
+    *        selection (if it exists) with the given text. Passing true does not
+    *        guarantee the mutator will choose to replace the selection; passing
+    *        false guarantees the mutator will never replace the selection
+    * @return the change that led to the insertion of text; if the selection was
+    *         replaced, this will only be the insertion text change, not the
+    *         deletion text change; if selection was deleted, but nothing was
+    *         inserted, then deletion text change is returned;
+    *         {@code null} if no changes applied
+    */
+   TextChange insertText(Line line, int lineNumber, int column, String text, boolean canReplaceSelection);
+
+   /**
+   * @return
    */
-  TextChange insertText(Line line, int lineNumber, int column, String text,
-      boolean canReplaceSelection);
+   UndoManager getUndoManager();
 }
