@@ -19,12 +19,11 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.text.store.anchor.Anchor;
 import org.exoplatform.ide.text.store.anchor.AnchorManager;
+import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.StringUtils;
-
-
 
 /**
  * Document model for the code editor.
@@ -41,339 +40,394 @@ import org.exoplatform.ide.util.StringUtils;
  * <li>{@link TextListener}</li>
  * </ul>
  */
-public class DocumentModel implements TextStoreMutator {
+public class DocumentModel implements TextStoreMutator
+{
 
-  /**
-   * A listener that is called when the number of lines in the document changes.
-   * 
-   * See the callback ordering documented in {@link DocumentModel}. 
-   */
-  public interface LineCountListener {
-    void onLineCountChanged(DocumentModel document, int lineCount);
-  }
+   /**
+    * A listener that is called when the number of lines in the document changes.
+    * 
+    * See the callback ordering documented in {@link DocumentModel}. 
+    */
+   public interface LineCountListener
+   {
+      void onLineCountChanged(DocumentModel document, int lineCount);
+   }
 
-  /**
-   * A listener that is called when a line is added or removed from the
-   * document.
-   *
-   * Note: In the case of a multiline insertion/deletion, this will be called
-   * once.
-   * 
-   * See the callback ordering documented in {@link DocumentModel}. 
-   */
-  public interface LineListener {
-    /**
-     * @param lineNumber the line number of the first item in {@code addedLines}
-     * @param addedLines a contiguous list of lines that were added
-     */
-    void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines);
+   /**
+    * A listener that is called when a line is added or removed from the
+    * document.
+    *
+    * Note: In the case of a multiline insertion/deletion, this will be called
+    * once.
+    * 
+    * See the callback ordering documented in {@link DocumentModel}. 
+    */
+   public interface LineListener
+   {
+      /**
+       * @param lineNumber the line number of the first item in {@code addedLines}
+       * @param addedLines a contiguous list of lines that were added
+       */
+      void onLineAdded(DocumentModel document, int lineNumber, JsonArray<Line> addedLines);
 
-    /**
-     * @param lineNumber the previous line number of the first item in
-     *        {@code removedLines}
-     * @param removedLines a contiguous list of (now detached) lines that were
-     *        removed
-     */
-    void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines);
-  }
+      /**
+       * @param lineNumber the previous line number of the first item in
+       *        {@code removedLines}
+       * @param removedLines a contiguous list of (now detached) lines that were
+       *        removed
+       */
+      void onLineRemoved(DocumentModel document, int lineNumber, JsonArray<Line> removedLines);
+   }
 
-  /**
-   * A listener that is called when a text change occurs within a document.
-   * 
-   * See the callback ordering documented in {@link DocumentModel}. 
-   */
-  public interface TextListener {
-    /**
-     * Note: You should not mutate the document within this callback, as this is
-     * not supported yet and can lead to other clients having stale position
-     * information inside the {@code textChanges}.
-     *
-     * Note: The {@link TextChange} contains a reference to the live
-     * {@link Line} from the document model. If you hold on to a reference after
-     * {@link #onTextChange} returns, beware that the contents of the
-     * {@link Line} could change, invalidating some of the state in the
-     * {@link TextChange}.
-     */
-    void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges);
-  }
+   /**
+    * A listener that is called when a text change occurs within a document.
+    * 
+    * See the callback ordering documented in {@link DocumentModel}. 
+    */
+   public interface TextListener
+   {
+      /**
+       * Note: You should not mutate the document within this callback, as this is
+       * not supported yet and can lead to other clients having stale position
+       * information inside the {@code textChanges}.
+       *
+       * Note: The {@link TextChange} contains a reference to the live
+       * {@link Line} from the document model. If you hold on to a reference after
+       * {@link #onTextChange} returns, beware that the contents of the
+       * {@link Line} could change, invalidating some of the state in the
+       * {@link TextChange}.
+       */
+      void onTextChange(DocumentModel document, JsonArray<TextChange> textChanges);
+   }
 
-  /**
-   * A listener which is called before any changes are actually made to the
-   * document and any anchors are moved.
-   */
-  public interface PreTextListener {
-    /**
-     * Note: You should not mutate the document within this callback, as this is
-     * not supported yet and can lead to other clients having stale position
-     * information inside the {@code textChanges}.
-     *
-     * <p>
-     * This callback is called synchronously with document mutations, the less
-     * work you can do the better.
-     *
-     * @param line The line the text change will take place on.
-     * @param lineNumber The line number of the line.
-     * @param column The column the text change will start at.
-     * @param text The text which is either being inserted or deleted.
-     * @param type The type of {@link TextChange} that will be occurring.
-     */
-    void onPreTextChange(DocumentModel document,
-        TextChange.Type type,
-        Line line,
-        int lineNumber,
-        int column,
-        String text);
-  }
+   /**
+    * A listener which is called before any changes are actually made to the
+    * document and any anchors are moved.
+    */
+   public interface PreTextListener
+   {
+      /**
+       * Note: You should not mutate the document within this callback, as this is
+       * not supported yet and can lead to other clients having stale position
+       * information inside the {@code textChanges}.
+       *
+       * <p>
+       * This callback is called synchronously with document mutations, the less
+       * work you can do the better.
+       *
+       * @param line The line the text change will take place on.
+       * @param lineNumber The line number of the line.
+       * @param column The column the text change will start at.
+       * @param text The text which is either being inserted or deleted.
+       * @param type The type of {@link TextChange} that will be occurring.
+       */
+      void onPreTextChange(DocumentModel document, TextChange.Type type, Line line, int lineNumber, int column,
+         String text);
+   }
 
-  public static DocumentModel createEmpty() {
-    return new DocumentModel();
-  }
+   public static DocumentModel createEmpty()
+   {
+      return new DocumentModel();
+   }
 
-  public static DocumentModel createFromString(
-      String contents) {
-    DocumentModel doc = createEmpty();
-    doc.insertText(doc.getFirstLine(), 0, 0, contents);
+   public static DocumentModel createFromString(String contents)
+   {
+      DocumentModel doc = createEmpty();
+      doc.insertText(doc.getFirstLine(), 0, 0, contents);
 
-    return doc;
-  }
-  
-  private static int idCounter = 0;
+      return doc;
+   }
 
-  private final AnchorManager anchorManager;
+   private static int idCounter = 0;
 
-  private Line firstLine;
+   private final AnchorManager anchorManager;
 
-  private Line lastLine;
+   private Line firstLine;
 
-  private int lineCount = 1;
+   private Line lastLine;
 
-  private final ListenerManager<LineListener> lineListenerManager;
+   private int lineCount = 1;
 
-  private final ListenerManager<LineCountListener> lineCountListenerManager;
+   private final ListenerManager<LineListener> lineListenerManager;
 
-  private final LineFinder lineFinder;
+   private final ListenerManager<LineCountListener> lineCountListenerManager;
 
-  private final DocumentMutatorImpl documentMutator;
+   private final LineFinder lineFinder;
 
-  private final ListenerManager<TextListener> textListenerManager;
+   private final DocumentMutatorImpl documentMutator;
 
-  private final ListenerManager<PreTextListener> preTextListenerManager;
+   private final ListenerManager<TextListener> textListenerManager;
 
-  private final int id = idCounter++;
-  
-  private final JsonStringMap<Object> tags = JsonCollections.createStringMap();
+   private final ListenerManager<PreTextListener> preTextListenerManager;
 
-  protected DocumentModel() {
-    firstLine = lastLine = Line.create(this, "");
-    firstLine.setAttached(true);
+   private final int id = idCounter++;
 
-    anchorManager = new AnchorManager();
+   private final JsonStringMap<Object> tags = JsonCollections.createStringMap();
 
-    documentMutator = new DocumentMutatorImpl(this);
+   protected DocumentModel()
+   {
+      firstLine = lastLine = Line.create(this, "");
+      firstLine.setAttached(true);
 
-    lineListenerManager = ListenerManager.create();
+      anchorManager = new AnchorManager();
 
-    lineCountListenerManager = ListenerManager.create();
+      documentMutator = new DocumentMutatorImpl(this);
 
-    lineFinder = new LineFinder(this);
+      lineListenerManager = ListenerManager.create();
 
-    textListenerManager = ListenerManager.create();
+      lineCountListenerManager = ListenerManager.create();
 
-    preTextListenerManager = ListenerManager.create();
-  }
+      lineFinder = new LineFinder(this);
 
-  public String asText() {
-    StringBuilder sb = new StringBuilder();
-    for (Line line = firstLine; line != null; line = line.getNextLine()) {
-      sb.append(line.getText());
-    }
+      textListenerManager = ListenerManager.create();
 
-    return sb.toString();
-  }
+      preTextListenerManager = ListenerManager.create();
+   }
 
-  @Override
-  public TextChange deleteText(Line line, int column, int deleteCount) {
-    return documentMutator.deleteText(line, column, deleteCount);
-  }
+   public String asText()
+   {
+      StringBuilder sb = new StringBuilder();
+      for (Line line = firstLine; line != null; line = line.getNextLine())
+      {
+         sb.append(line.getText());
+      }
 
-  @Override
-  public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount) {
-    return documentMutator.deleteText(line, lineNumber, column, deleteCount);
-  }
+      return sb.toString();
+   }
 
-  public AnchorManager getAnchorManager() {
-    return anchorManager;
-  }
+   @Override
+   public TextChange deleteText(Line line, int column, int deleteCount)
+   {
+      return documentMutator.deleteText(line, column, deleteCount);
+   }
 
-  public Line getFirstLine() {
-    return firstLine;
-  }
+   @Override
+   public TextChange deleteText(Line line, int lineNumber, int column, int deleteCount)
+   {
+      return documentMutator.deleteText(line, lineNumber, column, deleteCount);
+   }
 
-  public LineInfo getFirstLineInfo() {
-    return new LineInfo(firstLine, 0);
-  }
+   public AnchorManager getAnchorManager()
+   {
+      return anchorManager;
+   }
 
-  public Line getLastLine() {
-    return lastLine;
-  }
+   public Line getFirstLine()
+   {
+      return firstLine;
+   }
 
-  public LineInfo getLastLineInfo() {
-    return new LineInfo(lastLine, getLastLineNumber());
-  }
+   public LineInfo getFirstLineInfo()
+   {
+      return new LineInfo(firstLine, 0);
+   }
 
-  public int getLastLineNumber() {
-    return lineCount - 1;
-  }
+   public Line getLastLine()
+   {
+      return lastLine;
+   }
 
-  public int getLineCount() {
-    return lineCount;
-  }
+   public LineInfo getLastLineInfo()
+   {
+      return new LineInfo(lastLine, getLastLineNumber());
+   }
 
-  public ListenerRegistrar<LineCountListener> getLineCountListenerRegistrar() {
-    return lineCountListenerManager;
-  }
+   public int getLastLineNumber()
+   {
+      return lineCount - 1;
+   }
 
-  public LineFinder getLineFinder() {
-    return lineFinder;
-  }
+   public int getLineCount()
+   {
+      return lineCount;
+   }
 
-  public ListenerRegistrar<LineListener> getLineListenerRegistrar() {
-    return lineListenerManager;
-  }
+   public ListenerRegistrar<LineCountListener> getLineCountListenerRegistrar()
+   {
+      return lineCountListenerManager;
+   }
 
-  public String getText(Line line, int column, int count) {
-    if(column > line.getText().length())
-       throw new IndexOutOfBoundsException();
+   public LineFinder getLineFinder()
+   {
+      return lineFinder;
+   }
 
-    StringBuilder s =
-        new StringBuilder(StringUtils.substringGuarded(line.getText(), column, count));
-    int remainingCount = count - s.length();
-    line = line.getNextLine();
+   public ListenerRegistrar<LineListener> getLineListenerRegistrar()
+   {
+      return lineListenerManager;
+   }
 
-    while (remainingCount > 0 && line != null) {
-      String capturedLineText = StringUtils.substringGuarded(line.getText(), 0, remainingCount);
-      s.append(capturedLineText);
-      remainingCount -= capturedLineText.length();
+   public String getText(Line line, int column, int count)
+   {
+      if (column > line.getText().length())
+         throw new IndexOutOfBoundsException();
 
+      StringBuilder s = new StringBuilder(StringUtils.substringGuarded(line.getText(), column, count));
+      int remainingCount = count - s.length();
       line = line.getNextLine();
-    }
 
-    return s.toString();
-  }
+      while (remainingCount > 0 && line != null)
+      {
+         String capturedLineText = StringUtils.substringGuarded(line.getText(), 0, remainingCount);
+         s.append(capturedLineText);
+         remainingCount -= capturedLineText.length();
 
-  public ListenerRegistrar<TextListener> getTextListenerRegistrar() {
-    return textListenerManager;
-  }
+         line = line.getNextLine();
+      }
 
-  public ListenerRegistrar<PreTextListener> getPreTextListenerRegistrar() {
-    return preTextListenerManager;
-  }
+      return s.toString();
+   }
 
-  @Override
-  public TextChange insertText(Line line, int column, String text) {
-    return documentMutator.insertText(line, column, text);
-  }
+   public ListenerRegistrar<TextListener> getTextListenerRegistrar()
+   {
+      return textListenerManager;
+   }
 
-  @Override
-  public TextChange insertText(Line line, int lineNumber, int column, String text) {
-    return documentMutator.insertText(line, lineNumber, column, text);
-  }
+   public ListenerRegistrar<PreTextListener> getPreTextListenerRegistrar()
+   {
+      return preTextListenerManager;
+   }
 
-  @Override
-  public TextChange insertText(Line line, int lineNumber, int column, String text,
-      boolean canReplaceSelection) {
-    return documentMutator.insertText(line, lineNumber, column, text, canReplaceSelection);
-  }
+   @Override
+   public TextChange insertText(Line line, int column, String text)
+   {
+      return documentMutator.insertText(line, column, text);
+   }
 
-  @Override
-  public String toString() {
-    return asText();
-  }
+   @Override
+   public TextChange insertText(Line line, int lineNumber, int column, String text)
+   {
+      return documentMutator.insertText(line, lineNumber, column, text);
+   }
 
-  public String asDebugString() {
-    StringBuilder sb = new StringBuilder("Line count: " + getLineCount() + "\n");
-    for (Line line = firstLine; line != null; line = line.getNextLine()) {
-      sb.append(line.getText()).append("---\n");
-    }
+   @Override
+   public TextChange insertText(Line line, int lineNumber, int column, String text, boolean canReplaceSelection)
+   {
+      return documentMutator.insertText(line, lineNumber, column, text, canReplaceSelection);
+   }
 
-    return sb.toString();
-  }
-  
-  public int getId() {
-    return id;
-  }
-  
-  /**
-   * @see Line#putTag(String, Object)
-   */
-  public <T> void putTag(String key, T value) {
-    tags.put(key, value);
-  }
-  
-  /**
-   * @see Line#getTag(String)
-   */
-  @SuppressWarnings("unchecked")
-  public <T> T getTag(String key) {
-    return (T) tags.get(key);
-  }
+   @Override
+   public String toString()
+   {
+      return asText();
+   }
 
-  void commitLineCountChange(int lineCountDelta) {
-    if (lineCountDelta != 0) {
-      lineCount += lineCountDelta;
-      lineCountListenerManager.dispatch(new Dispatcher<DocumentModel.LineCountListener>() {
-        @Override
-        public void dispatch(LineCountListener listener) {
-          listener.onLineCountChanged(DocumentModel.this, lineCount);
-        }
+   public String asDebugString()
+   {
+      StringBuilder sb = new StringBuilder("Line count: " + getLineCount() + "\n");
+      for (Line line = firstLine; line != null; line = line.getNextLine())
+      {
+         sb.append(line.getText()).append("---\n");
+      }
+
+      return sb.toString();
+   }
+
+   public int getId()
+   {
+      return id;
+   }
+
+   /**
+    * @see Line#putTag(String, Object)
+    */
+   public <T> void putTag(String key, T value)
+   {
+      tags.put(key, value);
+   }
+
+   /**
+    * @see Line#getTag(String)
+    */
+   @SuppressWarnings("unchecked")
+   public <T> T getTag(String key)
+   {
+      return (T)tags.get(key);
+   }
+
+   void commitLineCountChange(int lineCountDelta)
+   {
+      if (lineCountDelta != 0)
+      {
+         lineCount += lineCountDelta;
+         lineCountListenerManager.dispatch(new Dispatcher<DocumentModel.LineCountListener>()
+         {
+            @Override
+            public void dispatch(LineCountListener listener)
+            {
+               listener.onLineCountChanged(DocumentModel.this, lineCount);
+            }
+         });
+      }
+   }
+
+   void dispatchLineAdded(final int lineNumber, final JsonArray<Line> addedLines)
+   {
+      lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>()
+      {
+         @Override
+         public void dispatch(LineListener listener)
+         {
+            listener.onLineAdded(DocumentModel.this, lineNumber, addedLines);
+         }
       });
-    }
-  }
+   }
 
-  void dispatchLineAdded(final int lineNumber, final JsonArray<Line> addedLines) {
-    lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>() {
-      @Override
-      public void dispatch(LineListener listener) {
-        listener.onLineAdded(DocumentModel.this, lineNumber, addedLines);
-      }
-    });
-  }
+   void dispatchLineRemoved(final int lineNumber, final JsonArray<Line> removedLines)
+   {
+      lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>()
+      {
+         @Override
+         public void dispatch(LineListener listener)
+         {
+            listener.onLineRemoved(DocumentModel.this, lineNumber, removedLines);
+         }
+      });
+   }
 
-  void dispatchLineRemoved(final int lineNumber, final JsonArray<Line> removedLines) {
-    lineListenerManager.dispatch(new Dispatcher<DocumentModel.LineListener>() {
-      @Override
-      public void dispatch(LineListener listener) {
-        listener.onLineRemoved(DocumentModel.this, lineNumber, removedLines);
-      }
-    });
-  }
+   void dispatchTextChange(final JsonArray<TextChange> textChanges)
+   {
+      textListenerManager.dispatch(new Dispatcher<DocumentModel.TextListener>()
+      {
+         @Override
+         public void dispatch(TextListener listener)
+         {
+            listener.onTextChange(DocumentModel.this, textChanges);
+         }
+      });
+   }
 
-  void dispatchTextChange(final JsonArray<TextChange> textChanges) {
-    textListenerManager.dispatch(new Dispatcher<DocumentModel.TextListener>() {
-      @Override
-      public void dispatch(TextListener listener) {
-        listener.onTextChange(DocumentModel.this, textChanges);
-      }
-    });
-  }
-  
-  void dispatchPreTextChange(final TextChange.Type type, final Line line, final int lineNumber,
-      final int column, final String text) {
-    preTextListenerManager.dispatch(new Dispatcher<DocumentModel.PreTextListener>() {
-      @Override
-      public void dispatch(PreTextListener listener) {
-        listener.onPreTextChange(DocumentModel.this, type, line, lineNumber, column, text);
-      }
-    });
-  }
+   void dispatchPreTextChange(final TextChange.Type type, final Line line, final int lineNumber, final int column,
+      final String text)
+   {
+      preTextListenerManager.dispatch(new Dispatcher<DocumentModel.PreTextListener>()
+      {
+         @Override
+         public void dispatch(PreTextListener listener)
+         {
+            listener.onPreTextChange(DocumentModel.this, type, line, lineNumber, column, text);
+         }
+      });
+   }
 
-  void setFirstLine(Line line) {
-    assert line != null : "Line cannot be null";
-    firstLine = line;
-  }
+   void setFirstLine(Line line)
+   {
+      assert line != null : "Line cannot be null";
+      firstLine = line;
+   }
 
-  void setLastLine(Line line) {
-    assert line != null : "Line cannot be null";
-    lastLine = line;
-  }
+   void setLastLine(Line line)
+   {
+      assert line != null : "Line cannot be null";
+      lastLine = line;
+   }
+
+   /**
+    * @see org.exoplatform.ide.text.store.TextStoreMutator#getUndoManager()
+    */
+   @Override
+   public UndoManager getUndoManager()
+   {
+      return null;
+   }
 }

@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.services.FileSystemServiceAsync;
-import org.exoplatform.ide.core.editor.EditorRegistry;
-import org.exoplatform.ide.core.editor.JavaEditorProvider;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;

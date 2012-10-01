@@ -39,80 +39,8 @@ import org.exoplatform.ide.util.SignalEvent;
  *
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class TextEditorUndoManager
+public class UndoManager
 {
-
-   //	/**
-   //	 * Internal listener to mouse and key events.
-   //	 */
-   //	private class KeyAndMouseListener implements MouseListener, KeyListener {
-   //
-   //		/*
-   //		 * @see MouseListener#mouseDoubleClick
-   //		 */
-   //		public void mouseDoubleClick(MouseEvent e) {
-   //		}
-   //
-   //		/*
-   //		 * If the right mouse button is pressed, the current editing command is closed
-   //		 * @see MouseListener#mouseDown
-   //		 */
-   //		public void mouseDown(MouseEvent e) {
-   //			if (e.button == 1)
-   //				if (isConnected())
-   //					fDocumentUndoManager.commit();
-   //		}
-   //
-   //		/*
-   //		 * @see MouseListener#mouseUp
-   //		 */
-   //		public void mouseUp(MouseEvent e) {
-   //		}
-   //
-   //		/*
-   //		 * @see KeyListener#keyPressed
-   //		 */
-   //		public void keyReleased(KeyEvent e) {
-   //		}
-   //
-   //		/*
-   //		 * On cursor keys, the current editing command is closed
-   //		 * @see KeyListener#keyPressed
-   //		 */
-   //		public void keyPressed(KeyEvent e) {
-   //			switch (e.keyCode) {
-   //				case SWT.ARROW_UP:
-   //				case SWT.ARROW_DOWN:
-   //				case SWT.ARROW_LEFT:
-   //				case SWT.ARROW_RIGHT:
-   //					if (isConnected()) {
-   //						fDocumentUndoManager.commit();
-   //					}
-   //					break;
-   //			}
-   //		}
-   //	}
-
-   //
-   //	/**
-   //	 * Internal text input listener.
-   //	 */
-   //	private class TextInputListener implements ITextInputListener {
-   //
-   //		/*
-   //		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentAboutToBeChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-   //		 */
-   //		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-   //			disconnectDocumentUndoManager();
-   //		}
-   //
-   //		/*
-   //		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-   //		 */
-   //		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-   //			connectDocumentUndoManager(newInput);
-   //		}
-   //	}
 
    private class KeyListenerImpl implements KeyListener
    {
@@ -209,12 +137,6 @@ public class TextEditorUndoManager
 
    }
 
-   //
-   //	/** The internal key and mouse event listener */
-   //	private KeyAndMouseListener fKeyAndMouseListener;
-   //	/** The internal text input listener */
-   //	private TextInputListener fTextInputListener;
-
    private KeyListener inputListener;
 
    /** The text viewer the undo manager is connected to */
@@ -237,7 +159,7 @@ public class TextEditorUndoManager
     *
     * @param undoLevel the length of this manager's history
     */
-   public TextEditorUndoManager(int undoLevel)
+   public UndoManager(int undoLevel)
    {
       fUndoLevel = undoLevel;
       inputListener = new KeyListenerImpl();
