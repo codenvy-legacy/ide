@@ -79,27 +79,30 @@ public interface AWSClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/aws/client/images/new_version_Disabled.png")
    ImageResource newVersionDisabled();
 
+   @Source("org/exoplatform/ide/extension/aws/client/images/environments.png")
+   ImageResource environments();
+
    @Source("org/exoplatform/ide/extension/aws/client/images/new_env.png")
    ImageResource newEnvironment();
 
    @Source("org/exoplatform/ide/extension/aws/client/images/new_env_Disabled.png")
    ImageResource newEnvironmentDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/refresh.png")
    ImageResource s3Refresh();
 
    @Source("org/exoplatform/ide/extension/aws/client/images/refresh_Disabled.png")
    ImageResource s3RefreshDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/download.png")
    ImageResource download();
 
    @Source("org/exoplatform/ide/extension/aws/client/images/download_Disabled.png")
    ImageResource downloadDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/upload.png")
    ImageResource upload();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/upload_Disabled.png")
    ImageResource uploadDisabled();
 }

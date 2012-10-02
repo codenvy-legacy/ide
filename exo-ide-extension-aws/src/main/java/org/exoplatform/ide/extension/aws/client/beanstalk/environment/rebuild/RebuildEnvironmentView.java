@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,23 +39,18 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  */
 public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironmentPresenter.Display
 {
-   private static final String ID = "ideStopEnvironmentView";
+   private static final String ID = "ideRebuildEnvironmentView";
 
    private static final int WIDTH = 460;
 
    private static final int HEIGHT = 170;
 
-   private static final String DELETE_BUTTON_ID = "ideDeleteVersionViewDeleteButton";
+   private static final String REBUILD_BUTTON_ID = "ideRebuildEnvironmentViewRebuildButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideDeleteVersionViewCancelButton";
-
-//   private static final String DELETE_S3_BUNDLE_ID = "ideDeleteVersionViewDeleteS3Bundle";
+   private static final String CANCEL_BUTTON_ID = "ideRebuildEnvironmentViewCancelButton";
 
    @UiField
    Label questionLabel;
-
-//   @UiField
-//   CheckBox deleteS3BundleField;
 
    @UiField
    ImageButton rebuildButton;
@@ -72,17 +66,16 @@ public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironme
 
    public RebuildEnvironmentView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deleteVersionViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       questionLabel.setIsHTML(true);
-      rebuildButton.setButtonId(DELETE_BUTTON_ID);
+      rebuildButton.setButtonId(REBUILD_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
-//      deleteS3BundleField.setName(DELETE_S3_BUNDLE_ID);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getRebuildButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildButton()
     */
    @Override
    public HasClickHandlers getRebuildButton()
@@ -91,7 +84,7 @@ public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironme
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -100,7 +93,7 @@ public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironme
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.application.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion()
     */
    @Override
    public HasValue<String> getRebuildQuestion()

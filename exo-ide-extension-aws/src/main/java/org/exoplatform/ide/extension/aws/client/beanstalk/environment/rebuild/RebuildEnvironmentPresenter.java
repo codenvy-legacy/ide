@@ -24,11 +24,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -62,7 +60,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, V
 
    private EnvironmentInfo environment;
 
-   //   private VersionDeletedHandler versionDeletedHandler;
+   private RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler;
 
    public RebuildEnvironmentPresenter()
    {
@@ -112,6 +110,7 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, V
    public void onRebuildEnvironment(RebuildEnvironmentEvent event)
    {
       this.environment = event.getEnvironmentInfo();
+      this.rebuildEnvironmentStartedHandler = event.getRebuildEnvironmentStartedHandler();
       if (!environment.getStatus().equals(EnvironmentStatus.Ready))
       {
          Dialogs.getInstance().showError("Environment is in an invalid state for this operation. Must be Ready");
@@ -135,10 +134,8 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, V
    {
       try
       {
-         AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-         AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
          BeanstalkClientService.getInstance().rebuildEnvironment(environment.getId(),
-            new AwsAsyncRequestCallback<EnvironmentInfo>(unmarshaller, new LoggedInHandler()
+            new AwsAsyncRequestCallback<Object>(new LoggedInHandler()
             {
 
                @Override
@@ -161,9 +158,14 @@ public class RebuildEnvironmentPresenter implements RebuildEnvironmentHandler, V
                }
 
                @Override
-               protected void onSuccess(EnvironmentInfo result)
+               protected void onSuccess(Object result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
+
+                  if (rebuildEnvironmentStartedHandler != null)
+                  {
+                     rebuildEnvironmentStartedHandler.onRebuildEnvironmentStarted(environment);
+                  }
                }
             });
       }

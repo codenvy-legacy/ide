@@ -23,7 +23,6 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
  * Handler for environment status request.
@@ -35,18 +34,19 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 public class EnvironmentRequestStatusHandler implements RequestStatusHandler
 {
 
-   /**
-    * Environment's name.
-    */
-   private String environmentName;
+   private String startMessage;
+
+   private String finishMessage;
 
    /**
-    * @param environmentName environment's name
+    * @param startMessage
+    * @param finishMessage
     */
-   public EnvironmentRequestStatusHandler(String environmentName)
+   public EnvironmentRequestStatusHandler(String startMessage, String finishMessage)
    {
       super();
-      this.environmentName = environmentName;
+      this.startMessage = startMessage;
+      this.finishMessage = finishMessage;
    }
 
    /**
@@ -56,7 +56,7 @@ public class EnvironmentRequestStatusHandler implements RequestStatusHandler
    public void requestInProgress(String id)
    {
       Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentLaunching(environmentName));
+      job.setStartMessage(startMessage);
       IDE.fireEvent(new JobChangeEvent(job));
    }
 
@@ -67,7 +67,7 @@ public class EnvironmentRequestStatusHandler implements RequestStatusHandler
    public void requestFinished(String id)
    {
       Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentSuccess(environmentName));
+      job.setFinishMessage(finishMessage);
       IDE.fireEvent(new JobChangeEvent(job));
    }
 

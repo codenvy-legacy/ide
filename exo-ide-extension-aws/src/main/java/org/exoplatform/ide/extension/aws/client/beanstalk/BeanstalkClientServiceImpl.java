@@ -95,6 +95,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String VERSION_CREATE = BASE_URL + "/apps/versions/create";
 
+   private static final String SERVER_RESTART = BASE_URL + "/server/restart/";
+
    /**
     * REST service context.
     */
@@ -312,17 +314,16 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#rebuildEnvironment(java.lang.String,
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#rebuildEnvironment(java.lang.Object,
     *       org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback)
     */
    @Override
-   public void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+   public void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<Object> callback)
       throws RequestException
    {
       String url = restServiceContext + ENVIRONMENT_REBUILD + environmentId;
 
-      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader).send(callback);
    }
 
    /**
@@ -412,6 +413,19 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#restartApplicationServer(java.lang.Object,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void restartApplicationServer(String environmentId, AsyncRequestCallback<Object> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + SERVER_RESTART + environmentId;
+
+      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader).send(callback);
    }
 
 }

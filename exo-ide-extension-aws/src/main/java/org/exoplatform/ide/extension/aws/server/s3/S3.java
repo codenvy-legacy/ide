@@ -22,27 +22,37 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
+import com.amazonaws.services.s3.model.CanonicalGrantee;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteVersionRequest;
+import com.amazonaws.services.s3.model.EmailAddressGrantee;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.Grantee;
+import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ListVersionsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.S3VersionSummary;
+import com.amazonaws.services.s3.model.SetBucketAclRequest;
 import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.amazonaws.services.s3.model.VersionListing;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.shared.s3.S3AccessControl;
+import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityGroupType;
+import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityType;
 import org.exoplatform.ide.extension.aws.shared.s3.S3KeyVersions;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
@@ -50,7 +60,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
-import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
+import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -468,13 +478,13 @@ public class S3 extends AWSClient
     * @param status
     *    current status of versioning.
     *    Valid values:
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#OFF VersioningStatus.OFF}
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#SUSPENDED VersioningStatus.SUSPENDED}
-    *    {@see org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#ENABLED VersioningStatus.ENABLED}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#OFF S3VersioningStatus.OFF}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#SUSPENDED S3VersioningStatus.SUSPENDED}
+    *    {@see org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#ENABLED S3VersioningStatus.ENABLED}
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setVersioningStatus(String s3Bucket, VersioningStatus status) throws AWSException
+   public void setVersioningStatus(String s3Bucket, S3VersioningStatus status) throws AWSException
    {
       try
       {
@@ -579,11 +589,11 @@ public class S3 extends AWSClient
     *    if any error occurs when make request to Amazon API
     */
    public List<S3ObjectVersion> listVersions(String s3Bucket,
-                            String prefix,
-                            String keyMarker,
-                            String versionIdMarker,
-                            String delimiter,
-                            Integer maxResults) throws AWSException
+                                             String prefix,
+                                             String keyMarker,
+                                             String versionIdMarker,
+                                             String delimiter,
+                                             Integer maxResults) throws AWSException
    {
       try
       {
@@ -596,12 +606,12 @@ public class S3 extends AWSClient
    }
 
    private List<S3ObjectVersion> listVersions(AmazonS3 s3Client,
-                             String s3Bucket,
-                             String prefix,
-                             String keyMarker,
-                             String versionIdMarker,
-                             String delimiter,
-                             Integer maxResults)
+                                              String s3Bucket,
+                                              String prefix,
+                                              String keyMarker,
+                                              String versionIdMarker,
+                                              String delimiter,
+                                              Integer maxResults)
    {
       VersionListing versionListing = s3Client.listVersions(
          new ListVersionsRequest()
@@ -638,8 +648,124 @@ public class S3 extends AWSClient
       return objectVersions;
    }
 
-   //TODO create logic for setting ACL for specific S3 bucket
-   //TODO create logic for setting ACL for specific S3 key
+   /**
+    * Set Access Control List for specified S3 Bucket.
+    *
+    * @param s3Bucket
+    *    S3 bucket name
+    * @param accessControlList
+    *    list of access control contains info about user and permission which will be given for him
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void setBucketAcl(String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
+   {
+      try
+      {
+         setBucketAcl(getS3Client(), s3Bucket, accessControlList);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
+   {
+      AccessControlList acl = new AccessControlList();
+
+      for (S3AccessControl ac : accessControlList)
+      {
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
+
+         Grantee grantee;
+
+         switch (identityType)
+         {
+            case GROUP:
+               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+               break;
+            case CANONICAL:
+               grantee = new CanonicalGrantee(identifier);
+               break;
+            case EMAIL:
+               grantee = new EmailAddressGrantee(identifier);
+               break;
+            default:
+               throw new IllegalArgumentException("Invalid identity type.");
+         }
+
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
+      }
+
+      s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
+   }
+
+   /**
+    * Set Access Control List for the specific S3 key
+    *
+    * @param s3Bucket
+    *    name of the S3 bucket
+    * @param s3Key
+    *    name of the S3 key to add/change permissions
+    * @param versionId
+    *    (optional) version ID of the S3 key
+    * @param accessControlList
+    *    list of access control contains info about user and permission which will be given for him
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void setObjectAcl(String s3Bucket,
+                            String s3Key,
+                            String versionId,
+                            List<S3AccessControl> accessControlList) throws AWSException
+   {
+      try
+      {
+         setObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, accessControlList);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void setObjectAcl(AmazonS3 s3Client,
+                             String s3Bucket,
+                             String s3Key,
+                             String versionId,
+                             List<S3AccessControl> accessControlList)
+   {
+      AccessControlList acl = new AccessControlList();
+
+      for (S3AccessControl ac : accessControlList)
+      {
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
+
+         Grantee grantee;
+
+         switch (identityType)
+         {
+            case GROUP:
+               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+               break;
+            case CANONICAL:
+               grantee = new CanonicalGrantee(identifier);
+               break;
+            case EMAIL:
+               grantee = new EmailAddressGrantee(identifier);
+               break;
+            default:
+               throw new IllegalArgumentException("Invalid identity type.");
+         }
+
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
+      }
+
+      s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
+   }
    //
 
    protected AmazonS3 getS3Client() throws AWSException

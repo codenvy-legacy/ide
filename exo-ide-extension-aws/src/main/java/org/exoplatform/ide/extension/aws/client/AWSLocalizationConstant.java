@@ -25,6 +25,7 @@ package org.exoplatform.ide.extension.aws.client;
  */
 public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
+   // Buttons
    @Key("button.create")
    String createButton();
 
@@ -43,8 +44,14 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.delete")
    String deleteButton();
 
+   @Key("button.launch")
+   String launchButton();
+
    @Key("button.terminate")
    String terminateButton();
+
+   @Key("button.restart")
+   String restartButton();
 
    @Key("button.rebuild")
    String rebuildButton();
@@ -77,6 +84,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("creatingProject")
    String creatingProject();
 
+   @Key("unableGetEnvironmentInfo")
+   String unableToGetEnvironmentInfo(String name);
+
    // Controls
    @Key("button.properties")
    String propertiesButton();
@@ -87,7 +97,6 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.refresh")
    String refreshButton();
 
-   //Controls
    @Key("control.beanstalk.id")
    String beanstalkControlId();
 
@@ -177,20 +186,20 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.application.s3.title")
    String createApplicationS3Title();
 
-   @Key("create.environment.name")
-   String createEnvironmentName();
+   @Key("launch.environment.name")
+   String launchEnvironmentName();
 
-   @Key("create.environment.description")
-   String createEnvironmentDescription();
+   @Key("launch.environment.description")
+   String launchEnvironmentDescription();
 
-   @Key("create.environment.solution.stack")
-   String createEnvironmentSolutionStack();
+   @Key("launch.environment.solution.stack")
+   String launchEnvironmentSolutionStack();
 
-   @Key("create.environment.launch")
-   String createEnvironmentLaunch();
+   @Key("launch.environment.launch")
+   String launchEnvironmentLaunch();
 
-   @Key("create.environment.launching")
-   String createEnvironmentLaunching(String environment);
+   @Key("launch.environment.launching")
+   String launchEnvironmentLaunching(String environment);
 
    @Key("create.application.success")
    String createApplicationSuccess(String application);
@@ -204,11 +213,11 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.application.terminated")
    String createApplicationTerminated();
 
-   @Key("create.environment.success")
-   String createEnvironmentSuccess(String environment);
+   @Key("launch.environment.success")
+   String launchEnvironmentSuccess(String environment);
 
-   @Key("create.environment.fail")
-   String createEnvironmentFailed(String environment);
+   @Key("launch.environment.fail")
+   String launchEnvironmentFailed(String environment);
 
    // Manage Application
    @Key("not.aws.application.message")
@@ -247,11 +256,11 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("versions.tab")
    String versionsTab();
 
-   @Key("events.tab")
-   String eventsTab();
-
    @Key("environments.tab")
    String environmentsTab();
+
+   @Key("events.tab")
+   String eventsTab();
 
    // Delete Application
    @Key("delete.application.title")
@@ -331,23 +340,77 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("create.version.description.field")
    String createVersionDescriptionField();
 
-   // Create Environment
-   @Key("create.environment.view.title")
-   String createEnvironmentViewTitle();
+   // Environments
+   @Key("environments.grid.name")
+   String environmentsGridName();
+
+   @Key("environments.grid.stack")
+   String environmentsGridStack();
+
+   @Key("environments.grid.version")
+   String environmentsGridVersion();
+
+   @Key("environments.grid.status")
+   String environmentsGridStatus();
+
+   @Key("environments.grid.health")
+   String environmentsGridHealth();
+
+   @Key("environments.grid.url")
+   String environmentsGridUrl();
+
+   // Launch Environment
+   @Key("launch.environment.view.title")
+   String launchEnvironmentViewTitle();
 
    // Terminate Environment
+   @Key("terminate.environment.view.title")
+   String terminateEnvironmentViewTitle();
+
    @Key("terminate.environment.question")
    String terminateEnvironmentQuestion(String name);
+
+   @Key("terminate.environment.launching")
+   String terminateEnvironmentLaunching(String environment);
+
+   @Key("terminate.environment.success")
+   String terminateEnvironmentSuccess(String name);
 
    @Key("terminate.environment.failed")
    String terminateEnvironmentFailed(String name);
 
    // Rebuild Environment
+   @Key("rebuild.environment.view.title")
+   String rebuildEnvironmentViewTitle();
+
    @Key("rebuild.environment.question")
    String rebuildEnvironmentQuestion(String name);
 
+   @Key("rebuild.environment.launching")
+   String rebuildEnvironmentLaunching(String environment);
+
    @Key("rebuild.environment.failed")
    String rebuildEnvironmentFailed(String name);
+
+   @Key("rebuild.environment.success")
+   String rebuildEnvironmentSuccess(String name);
+
+   // Update Environment
+   @Key("update.environment.launching")
+   String updateEnvironmentLaunching(String environment);
+
+   @Key("update.environment.success")
+   String updateEnvironmentSuccess(String name);
+
+   // Restart App Server
+   @Key("restart.appserver.view.title")
+   String restartAppServerViewTitle();
+
+   @Key("restart.appserver.question")
+   String restartAppServerQuestion(String name);
+
+   @Key("restart.appserver.failed")
+   String restartAppServerFailed(String name);
 
    // S3 Management
    @Key("s3.managemnt.view.title")
@@ -365,4 +428,5 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // EC2 Management View
    @Key("management.ec2.id")
    String managementEC2ViewTitle();
+
 }

@@ -203,7 +203,7 @@ public abstract class BeanstalkClientService
     * @param callback
     * @throws RequestException
     */
-   public abstract void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<EnvironmentInfo> callback)
+   public abstract void rebuildEnvironment(String environmentId, AwsAsyncRequestCallback<Object> callback)
       throws RequestException;
 
    /**
@@ -264,5 +264,15 @@ public abstract class BeanstalkClientService
    public abstract void createVersion(String vfsId, String projectId,
       CreateApplicationVersionRequest createApplicationVersionRequest,
       AwsAsyncRequestCallback<ApplicationVersionInfo> callback) throws RequestException;
+
+   /**
+    * Restart an application server associated with the specified environment.
+    * 
+    * @param environmentId
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void restartApplicationServer(String environmentId, AsyncRequestCallback<Object> callback)
+      throws RequestException;
 
 }
