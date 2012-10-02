@@ -22,7 +22,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.s3.S3;
 import org.exoplatform.ide.extension.aws.server.s3.S3Content;
-import org.exoplatform.ide.extension.aws.shared.s3.S3BucketAcl;
+import org.exoplatform.ide.extension.aws.shared.s3.S3AccessControl;
 import org.exoplatform.ide.extension.aws.shared.s3.S3KeyVersions;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
@@ -126,9 +126,9 @@ public class S3Service
    @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void setBucketAcl(@PathParam("s3bucket") String s3Bucket, List<S3BucketAcl> bucketAclList) throws AWSException
+   public void setBucketAcl(@PathParam("s3bucket") String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
    {
-      s3.setBucketAcl(s3Bucket, bucketAclList);
+      s3.setBucketAcl(s3Bucket, accessControlList);
    }
    //
 
@@ -285,8 +285,8 @@ public class S3Service
    public void setObjectAcl(@PathParam("s3bucket") String s3Bucket,
                             @QueryParam("s3key") String s3Key,
                             @QueryParam("versionid") String versionId,
-                            List<S3BucketAcl> bucketAclList) throws AWSException
+                            List<S3AccessControl> accessControlList) throws AWSException
    {
-      s3.setObjectAcl(s3Bucket, s3Key, versionId, bucketAclList);
+      s3.setObjectAcl(s3Bucket, s3Key, versionId, accessControlList);
    }
 }

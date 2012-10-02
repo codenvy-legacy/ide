@@ -24,7 +24,7 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface S3BucketAcl
+public interface S3AccessControl
 {
    /**
     * Get type of identity e.g. uri, email or canonical name.
