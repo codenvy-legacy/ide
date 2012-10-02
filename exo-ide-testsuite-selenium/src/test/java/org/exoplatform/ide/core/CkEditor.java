@@ -98,6 +98,12 @@ public class CkEditor extends AbstractTestModule
 
       String DESIGN_BUTTON_XPATH = "//div[@view-id='editor-%s']//div[@class='html-face' and text()='Design']";
 
+      String CK_BOLD_TEXT_PREFIX = "body.cke_show_borders>strong";
+
+      String CK_BOLDITALIC_TEXT_PREFIX = "body.cke_show_borders>em>strong";
+
+      String CK_ITALIC_TEXT_PREFIX = "body.cke_show_borders>em";
+
    }
 
    @FindBy(className = Locators.LINE_HIGHLIGHTER_CLASS)
@@ -148,6 +154,123 @@ public class CkEditor extends AbstractTestModule
             }
          }
       });
+   }
+
+   /**
+    * wait bold-italic text in ck editor
+    * @param text
+    * @param tabIndex
+    */
+   public void waitItalicBoldTextPresent(final String text, final int tabIndex)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return isBoldItalicTextPresent(text, tabIndex);
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait italic text in ck editor
+    * @param text
+    * @param tabIndex
+    */
+   public void waitItalicTextPresent(final String text, final int tabIndex)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return isItalicTextPresent(text, tabIndex);
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait bold text in ck editor
+    * @param text
+    * @param tabIndex
+    */
+   public void waitBoldTextPresent(final String text, final int tabIndex)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return isBoldTextPresent(text, tabIndex);
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * return true is bold text fragment present
+    * @param text
+    */
+   public boolean isItalicTextPresent(String text, int tabIndex)
+   {
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      String boldText = driver().findElement(By.cssSelector(Locators.CK_ITALIC_TEXT_PREFIX)).getText();
+      IDE().selectMainFrame();
+      return boldText.contains(text);
+
+   }
+
+   /**
+    * return true is bold text fragment present
+    * @param text
+    */
+   public boolean isBoldItalicTextPresent(String text, int tabIndex)
+   {
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      String boldText = driver().findElement(By.cssSelector(Locators.CK_BOLDITALIC_TEXT_PREFIX)).getText();
+      IDE().selectMainFrame();
+      return boldText.contains(text);
+
+   }
+
+   /**
+    * return true is bold text fragment present
+    * @param text
+    */
+   public boolean isBoldTextPresent(String text, int tabIndex)
+   {
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      String boldText = driver().findElement(By.cssSelector(Locators.CK_BOLD_TEXT_PREFIX)).getText();
+      IDE().selectMainFrame();
+      return boldText.contains(text);
+
    }
 
    public void waitCkEditorTableOpen()
@@ -393,7 +516,6 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
-    * 
     * @param tabIndex
     * @return
     * @throws Exception
@@ -402,9 +524,9 @@ public class CkEditor extends AbstractTestModule
    {
       WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
       driver().switchTo().frame(ckiframe);
-      String ck_txt = ckTextContainer.getText();
+      String txt = ckTextContainer.getText();
       IDE().selectMainFrame();
-      return ck_txt;
+      return txt;
    }
 
    /**

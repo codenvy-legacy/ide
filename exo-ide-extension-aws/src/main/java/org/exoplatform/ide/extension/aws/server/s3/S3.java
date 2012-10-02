@@ -22,25 +22,43 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
+import com.amazonaws.services.s3.model.CanonicalGrantee;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteVersionRequest;
+import com.amazonaws.services.s3.model.EmailAddressGrantee;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.Grant;
+import com.amazonaws.services.s3.model.Grantee;
+import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ListVersionsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.S3VersionSummary;
+import com.amazonaws.services.s3.model.SetBucketAclRequest;
 import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
+import com.amazonaws.services.s3.model.VersionListing;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
+import org.exoplatform.ide.extension.aws.shared.s3.S3AccessControl;
+import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityGroupType;
+import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityType;
+import org.exoplatform.ide.extension.aws.shared.s3.S3KeyVersions;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
+import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
@@ -485,6 +503,266 @@ public class S3 extends AWSClient
       s3Client.setBucketVersioningConfiguration(new SetBucketVersioningConfigurationRequest(s3Bucket, configuration));
    }
 
+   /**
+    * Delete specified objects in S3 bucket.
+    *
+    * @param s3Bucket
+    *    S3 bucket name
+    * @param s3Keys
+    *    list of objects which should be deleted
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteObjects(String s3Bucket, List<S3KeyVersions> s3Keys) throws AWSException
+   {
+      try
+      {
+         deleteObjects(getS3Client(), s3Bucket, s3Keys);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void deleteObjects(AmazonS3 s3Client, String s3Bucket, List<S3KeyVersions> s3Keys)
+   {
+      List<DeleteObjectsRequest.KeyVersion> keyVersions = new ArrayList<DeleteObjectsRequest.KeyVersion>(s3Keys.size());
+
+      for (S3KeyVersions s3Key : s3Keys)
+      {
+         for (String version : s3Key.getVersions())
+         {
+            keyVersions.add(new DeleteObjectsRequest.KeyVersion(s3Key.getS3Key(), version));
+         }
+      }
+
+      s3Client.deleteObjects(new DeleteObjectsRequest(s3Bucket).withKeys(keyVersions)).getDeletedObjects();
+   }
+
+   /**
+    * Delete specified S3 key version in specified bucket.
+    *
+    * @param s3Bucket
+    *    name of the S3 bucket
+    * @param s3Key
+    *    name of the S3 key in the bucket
+    * @param versionId
+    *    version ID to be deleted
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void deleteVersion(String s3Bucket, String s3Key, String versionId) throws AWSException
+   {
+      try
+      {
+         deleteVersion(getS3Client(), s3Bucket, s3Key, versionId);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void deleteVersion(AmazonS3 s3Client, String s3Bucket, String s3Key, String versionId)
+   {
+      s3Client.deleteVersion(new DeleteVersionRequest(s3Bucket, s3Key, versionId));
+   }
+
+   /**
+    * Get information about versions in specified S3 bucket.
+    *
+    * @param s3Bucket
+    *    name of the S3 bucket
+    * @param prefix
+    *    (optional) prefix, which restricting what keys will be listed in result set
+    * @param keyMarker
+    *    (optional) marker from where results must begin to show (from specified key)
+    * @param versionIdMarker
+    *    (optional) marker from where results must begin to show (from specified version ID)
+    * @param delimiter
+    *    (optional) causes keys that contain the same string between the prefix and first occurrence of the delimiter
+    * @param maxResults
+    *    (optional) the maximum numbers of results to return
+    * @return
+    *    list of objects that describes key, containing info about version ID, owner, last modification date etc.
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public List<S3ObjectVersion> listVersions(String s3Bucket,
+                                             String prefix,
+                                             String keyMarker,
+                                             String versionIdMarker,
+                                             String delimiter,
+                                             Integer maxResults) throws AWSException
+   {
+      try
+      {
+         return listVersions(getS3Client(), s3Bucket, prefix, keyMarker, versionIdMarker, delimiter, maxResults);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private List<S3ObjectVersion> listVersions(AmazonS3 s3Client,
+                                              String s3Bucket,
+                                              String prefix,
+                                              String keyMarker,
+                                              String versionIdMarker,
+                                              String delimiter,
+                                              Integer maxResults)
+   {
+      VersionListing versionListing = s3Client.listVersions(
+         new ListVersionsRequest()
+            .withBucketName(s3Bucket)
+            .withPrefix(prefix)
+            .withKeyMarker(keyMarker)
+            .withVersionIdMarker(versionIdMarker)
+            .withDelimiter(delimiter)
+            .withMaxResults(maxResults)
+      );
+
+      List<S3ObjectVersion> objectVersions =
+         new ArrayList<S3ObjectVersion>(versionListing.getVersionSummaries().size());
+
+      for (S3VersionSummary versionSummary : versionListing.getVersionSummaries())
+      {
+         objectVersions.add(
+            new S3ObjectVersionImpl.Builder()
+               .withS3Bucket(versionSummary.getBucketName())
+               .withS3Key(versionSummary.getKey())
+               .withVersionId(versionSummary.getVersionId())
+               .withLastModifiedDate(versionSummary.getLastModified().getTime())
+               .withOwner(
+                  new S3OwnerImpl(
+                     versionSummary.getOwner().getId(),
+                     versionSummary.getOwner().getDisplayName()
+                  )
+               )
+               .withSize(versionSummary.getSize())
+               .build()
+         );
+      }
+
+      return objectVersions;
+   }
+
+   /**
+    * Set Access Control List for specified S3 Bucket.
+    *
+    * @param s3Bucket
+    *    S3 bucket name
+    * @param accessControlList
+    *    list of access control contains info about user and permission which will be given for him
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void setBucketAcl(String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
+   {
+      try
+      {
+         setBucketAcl(getS3Client(), s3Bucket, accessControlList);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
+   {
+      AccessControlList acl = new AccessControlList();
+
+      for (S3AccessControl ac : accessControlList)
+      {
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
+
+         Grantee grantee = null;
+
+         if (identityType == S3IdentityType.GROUP)
+         {
+            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+         }
+         else if (identityType == S3IdentityType.CANONICAL)
+         {
+            grantee = new CanonicalGrantee(identifier);
+         }
+         else if (identityType == S3IdentityType.EMAIL)
+         {
+            grantee = new EmailAddressGrantee(identifier);
+         }
+
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
+      }
+
+      s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
+   }
+
+   /**
+    * Set Access Control List for the specific S3 key
+    *
+    * @param s3Bucket
+    *    name of the S3 bucket
+    * @param s3Key
+    *    name of the S3 key to add/change permissions
+    * @param versionId
+    *    (optional) version ID of the S3 key
+    * @param accessControlList
+    *    list of access control contains info about user and permission which will be given for him
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public void setObjectAcl(String s3Bucket,
+                            String s3Key,
+                            String versionId,
+                            List<S3AccessControl> accessControlList) throws AWSException
+   {
+      try
+      {
+         setObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, accessControlList);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+   }
+
+   private void setObjectAcl(AmazonS3 s3Client,
+                             String s3Bucket,
+                             String s3Key,
+                             String versionId,
+                             List<S3AccessControl> accessControlList)
+   {
+      AccessControlList acl = new AccessControlList();
+
+      for (S3AccessControl ac : accessControlList)
+      {
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
+
+         Grantee grantee = null;
+
+         if (identityType == S3IdentityType.GROUP)
+         {
+            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+         }
+         else if (identityType == S3IdentityType.CANONICAL)
+         {
+            grantee = new CanonicalGrantee(identifier);
+         }
+         else if (identityType == S3IdentityType.EMAIL)
+         {
+            grantee = new EmailAddressGrantee(identifier);
+         }
+
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
+      }
+
+      s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
+   }
    //
 
    protected AmazonS3 getS3Client() throws AWSException
