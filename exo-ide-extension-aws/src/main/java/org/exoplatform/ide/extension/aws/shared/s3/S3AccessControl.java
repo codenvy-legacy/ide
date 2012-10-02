@@ -59,7 +59,8 @@ public interface S3AccessControl
    void setPermission(S3Permission permission);
 
    /**
-    * Get user identity value. e.g. "John", "admin@site.com" or "http://acs.amazonaws.com/groups/global/AllUsers".
+    * Get user identity value. For example it maybe canonical username or user email representing user account, or
+    * if maybe Amazon S3 group, representing by url link.
     *
     * @return
     *    value of the user identity
@@ -67,7 +68,8 @@ public interface S3AccessControl
    String getIdentifier();
 
    /**
-    * Set user identity value.
+    * Set user identity value. For example it maybe canonical username or user email representing user account, or
+    * if maybe Amazon S3 group, representing by url link.
     *
     * @param identifier
     *    value of the user identity

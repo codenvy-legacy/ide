@@ -33,7 +33,6 @@ import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteVersionRequest;
 import com.amazonaws.services.s3.model.EmailAddressGrantee;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.Grant;
 import com.amazonaws.services.s3.model.Grantee;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
@@ -61,7 +60,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
-import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
+import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -479,13 +478,13 @@ public class S3 extends AWSClient
     * @param status
     *    current status of versioning.
     *    Valid values:
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#OFF VersioningStatus.OFF}
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#SUSPENDED VersioningStatus.SUSPENDED}
-    *    {@see org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#ENABLED VersioningStatus.ENABLED}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#OFF S3VersioningStatus.OFF}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#SUSPENDED S3VersioningStatus.SUSPENDED}
+    *    {@see org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#ENABLED S3VersioningStatus.ENABLED}
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setVersioningStatus(String s3Bucket, VersioningStatus status) throws AWSException
+   public void setVersioningStatus(String s3Bucket, S3VersioningStatus status) throws AWSException
    {
       try
       {
@@ -680,19 +679,21 @@ public class S3 extends AWSClient
          S3IdentityType identityType = ac.getIdentityType();
          String identifier = ac.getIdentifier();
 
-         Grantee grantee = null;
+         Grantee grantee;
 
-         if (identityType == S3IdentityType.GROUP)
+         switch (identityType)
          {
-            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
-         }
-         else if (identityType == S3IdentityType.CANONICAL)
-         {
-            grantee = new CanonicalGrantee(identifier);
-         }
-         else if (identityType == S3IdentityType.EMAIL)
-         {
-            grantee = new EmailAddressGrantee(identifier);
+            case GROUP:
+               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+               break;
+            case CANONICAL:
+               grantee = new CanonicalGrantee(identifier);
+               break;
+            case EMAIL:
+               grantee = new EmailAddressGrantee(identifier);
+               break;
+            default:
+               throw new IllegalArgumentException("Invalid identity type.");
          }
 
          acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
@@ -743,19 +744,21 @@ public class S3 extends AWSClient
          S3IdentityType identityType = ac.getIdentityType();
          String identifier = ac.getIdentifier();
 
-         Grantee grantee = null;
+         Grantee grantee;
 
-         if (identityType == S3IdentityType.GROUP)
+         switch (identityType)
          {
-            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
-         }
-         else if (identityType == S3IdentityType.CANONICAL)
-         {
-            grantee = new CanonicalGrantee(identifier);
-         }
-         else if (identityType == S3IdentityType.EMAIL)
-         {
-            grantee = new EmailAddressGrantee(identifier);
+            case GROUP:
+               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+               break;
+            case CANONICAL:
+               grantee = new CanonicalGrantee(identifier);
+               break;
+            case EMAIL:
+               grantee = new EmailAddressGrantee(identifier);
+               break;
+            default:
+               throw new IllegalArgumentException("Invalid identity type.");
          }
 
          acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));

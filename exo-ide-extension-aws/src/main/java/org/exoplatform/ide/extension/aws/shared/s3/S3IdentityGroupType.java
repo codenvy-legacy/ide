@@ -24,9 +24,9 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  */
 public enum S3IdentityGroupType
 {
-   AllUsers("all", "http://acs.amazonaws.com/groups/global/AllUsers"),
-   AuthenticatedUsers("auth", "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"),
-   LogDelivery("log", "http://acs.amazonaws.com/groups/s3/LogDelivery");
+   AllUsers("AllUsers", "http://acs.amazonaws.com/groups/global/AllUsers"),
+   AuthenticatedUsers("AuthenticatedUsers", "http://acs.amazonaws.com/groups/global/AuthenticatedUsers"),
+   LogDelivery("LogDelivery", "http://acs.amazonaws.com/groups/s3/LogDelivery");
 
    private final String value;
    private final String uri;
