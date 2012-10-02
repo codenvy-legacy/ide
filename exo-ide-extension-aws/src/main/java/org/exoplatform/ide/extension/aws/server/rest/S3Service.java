@@ -126,7 +126,8 @@ public class S3Service
    @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void setBucketAcl(@PathParam("s3bucket") String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
+   public void setBucketAcl(@PathParam("s3bucket") String s3Bucket,
+                            List<S3AccessControl> accessControlList) throws AWSException
    {
       s3.setBucketAcl(s3Bucket, accessControlList);
    }
