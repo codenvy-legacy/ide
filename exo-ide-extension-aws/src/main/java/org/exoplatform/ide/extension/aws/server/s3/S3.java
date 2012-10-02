@@ -52,6 +52,7 @@ import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.s3.S3AccessControl;
+import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityGroupType;
 import org.exoplatform.ide.extension.aws.shared.s3.S3IdentityType;
 import org.exoplatform.ide.extension.aws.shared.s3.S3KeyVersions;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
@@ -673,19 +674,20 @@ public class S3 extends AWSClient
 
    private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
    {
-      AccessControlList acl = new AccessControlList();
       Grant[] grants = new Grant[accessControlList.size()];
 
       for (int i = 0; i < grants.length; i++)
       {
-         S3IdentityType identityType = accessControlList.get(i).getIdentityType();
-         S3Permission permission = accessControlList.get(i).getPermission();
-         String identifier = accessControlList.get(i).getIdentifier();
+         S3AccessControl control = accessControlList.get(i);
+
+         S3IdentityType identityType = control.getIdentityType();
+         String identifier = control.getIdentifier();
+
          Grantee grantee = null;
 
          if (identityType == S3IdentityType.GROUP)
          {
-            grantee = GroupGrantee.parseGroupGrantee(identifier);
+            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
          }
          else if (identityType == S3IdentityType.CANONICAL)
          {
@@ -696,14 +698,14 @@ public class S3 extends AWSClient
             grantee = new EmailAddressGrantee(identifier);
          }
 
-         grants[i] = new Grant(grantee, Permission.parsePermission(permission.toString()));
+         grants[i] = new Grant(grantee, Permission.parsePermission(control.getPermission().toString()));
       }
+
+      AccessControlList acl = new AccessControlList();
 
       acl.grantAllPermissions(grants);
 
-      SetBucketAclRequest request = new SetBucketAclRequest(s3Bucket, acl);
-
-      s3Client.setBucketAcl(request);
+      s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
    }
 
    /**
@@ -741,19 +743,20 @@ public class S3 extends AWSClient
                              String versionId,
                              List<S3AccessControl> accessControlList)
    {
-      AccessControlList acl = new AccessControlList();
       Grant[] grants = new Grant[accessControlList.size()];
 
       for (int i = 0; i < grants.length; i++)
       {
-         S3IdentityType identityType = accessControlList.get(i).getIdentityType();
-         S3Permission permission = accessControlList.get(i).getPermission();
-         String identifier = accessControlList.get(i).getIdentifier();
+         S3AccessControl control = accessControlList.get(i);
+
+         S3IdentityType identityType = control.getIdentityType();
+         String identifier = control.getIdentifier();
+
          Grantee grantee = null;
 
          if (identityType == S3IdentityType.GROUP)
          {
-            grantee = GroupGrantee.parseGroupGrantee(identifier);
+            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
          }
          else if (identityType == S3IdentityType.CANONICAL)
          {
@@ -764,8 +767,10 @@ public class S3 extends AWSClient
             grantee = new EmailAddressGrantee(identifier);
          }
 
-         grants[i] = new Grant(grantee, Permission.parsePermission(permission.toString()));
+         grants[i] = new Grant(grantee, Permission.parsePermission(control.getPermission().toString()));
       }
+
+      AccessControlList acl = new AccessControlList();
 
       acl.grantAllPermissions(grants);
 
