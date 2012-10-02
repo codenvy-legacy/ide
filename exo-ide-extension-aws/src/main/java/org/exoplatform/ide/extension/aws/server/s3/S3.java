@@ -673,14 +673,12 @@ public class S3 extends AWSClient
 
    private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
    {
-      Grant[] grants = new Grant[accessControlList.size()];
+      AccessControlList acl = new AccessControlList();
 
-      for (int i = 0; i < grants.length; i++)
+      for (S3AccessControl ac : accessControlList)
       {
-         S3AccessControl control = accessControlList.get(i);
-
-         S3IdentityType identityType = control.getIdentityType();
-         String identifier = control.getIdentifier();
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
 
          Grantee grantee = null;
 
@@ -697,12 +695,8 @@ public class S3 extends AWSClient
             grantee = new EmailAddressGrantee(identifier);
          }
 
-         grants[i] = new Grant(grantee, Permission.parsePermission(control.getPermission().toString()));
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
       }
-
-      AccessControlList acl = new AccessControlList();
-
-      acl.grantAllPermissions(grants);
 
       s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
    }
@@ -742,14 +736,12 @@ public class S3 extends AWSClient
                              String versionId,
                              List<S3AccessControl> accessControlList)
    {
-      Grant[] grants = new Grant[accessControlList.size()];
+      AccessControlList acl = new AccessControlList();
 
-      for (int i = 0; i < grants.length; i++)
+      for (S3AccessControl ac : accessControlList)
       {
-         S3AccessControl control = accessControlList.get(i);
-
-         S3IdentityType identityType = control.getIdentityType();
-         String identifier = control.getIdentifier();
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
 
          Grantee grantee = null;
 
@@ -766,12 +758,8 @@ public class S3 extends AWSClient
             grantee = new EmailAddressGrantee(identifier);
          }
 
-         grants[i] = new Grant(grantee, Permission.parsePermission(control.getPermission().toString()));
+         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
       }
-
-      AccessControlList acl = new AccessControlList();
-
-      acl.grantAllPermissions(grants);
 
       s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
    }
