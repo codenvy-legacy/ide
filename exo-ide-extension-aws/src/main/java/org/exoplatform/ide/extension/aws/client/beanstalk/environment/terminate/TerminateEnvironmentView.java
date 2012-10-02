@@ -32,9 +32,10 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 20, 2012 5:59:53 PM anya $
  * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: TerminateEnvironmentView.java Oct 1, 2012 10:59:10 AM azatsarynnyy $
+ *
  */
 public class TerminateEnvironmentView extends ViewImpl implements TerminateEnvironmentPresenter.Display
 {
@@ -65,7 +66,7 @@ public class TerminateEnvironmentView extends ViewImpl implements TerminateEnvir
 
    public TerminateEnvironmentView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.deleteVersionViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.terminateEnvironmentViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       questionLabel.setIsHTML(true);

@@ -44,7 +44,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: StopEnvironmentPresenter.java Sep 28, 2012 5:00:35 PM azatsarynnyy $
+ * @version $Id: TerminateEnvironmentPresenter.java Sep 28, 2012 5:00:35 PM azatsarynnyy $
  *
  */
 public class TerminateEnvironmentPresenter implements TerminateEnvironmentHandler, ViewClosedHandler
@@ -62,7 +62,7 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentHandle
 
    private EnvironmentInfo environment;
 
-//   private VersionDeletedHandler versionDeletedHandler;
+   private TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler;
 
    public TerminateEnvironmentPresenter()
    {
@@ -115,9 +115,10 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentHandle
    public void onTerminateEnvironment(TerminateEnvironmentEvent event)
    {
       this.environment = event.getEnvironmentInfo();
+      this.terminateEnvironmentStartedHandler = event.getTerminateEnvironmentStartedHandler();
       if (!environment.getStatus().equals(EnvironmentStatus.Ready))
       {
-        Dialogs.getInstance().showError("Environment alredy terminated");
+         Dialogs.getInstance().showError("Environment is in an invalid state for this operation. Must be Ready");
         return;
       }
 
@@ -164,6 +165,10 @@ public class TerminateEnvironmentPresenter implements TerminateEnvironmentHandle
                protected void onSuccess(EnvironmentInfo result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
+                  if (terminateEnvironmentStartedHandler != null)
+                  {
+                     terminateEnvironmentStartedHandler.onTerminateEnvironmentStarted(environment);
+                  }
                }
             });
       }
