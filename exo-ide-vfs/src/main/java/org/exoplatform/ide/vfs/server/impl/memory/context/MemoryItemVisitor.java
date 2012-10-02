@@ -16,33 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.impl;
+package org.exoplatform.ide.vfs.server.impl.memory.context;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.ItemType;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class MemoryProject extends MemoryFolder
+public interface MemoryItemVisitor
 {
-   private String projectType;
-
-   MemoryProject(String name, String mediaType, String projectType) throws VirtualFileSystemException
-   {
-      super(ItemType.PROJECT, name);
-      this.mediaType = mediaType;
-      this.projectType = projectType;
-   }
-
-   public String getProjectType()
-   {
-      return projectType;
-   }
-
-   public void setProjectType(String projectType)
-   {
-      this.projectType = projectType;
-   }
+   void visit(MemoryItem item) throws VirtualFileSystemException;
 }

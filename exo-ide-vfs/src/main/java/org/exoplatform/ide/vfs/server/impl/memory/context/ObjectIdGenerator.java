@@ -16,15 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.impl;
+package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.commons.NameGenerator;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-interface MemoryItemVisitor
+public class ObjectIdGenerator
 {
-   void visit(MemoryItem item) throws VirtualFileSystemException;
+   public static String generateId()
+   {
+      return NameGenerator.generate(null,32);
+   }
 }

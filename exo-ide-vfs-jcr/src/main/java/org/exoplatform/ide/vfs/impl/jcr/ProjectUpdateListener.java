@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,8 @@ class ProjectUpdateListener implements EventListener
    @Override
    public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
    {
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-      properties.add(new ConvertibleProperty("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
+      List<Property> properties = new ArrayList<Property>(1);
+      properties.add(new Property("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
       event.getVirtualFileSystem().updateItem(projectId, properties, null);
    }
 
