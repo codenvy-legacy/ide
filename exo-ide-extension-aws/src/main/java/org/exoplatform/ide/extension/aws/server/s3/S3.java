@@ -653,16 +653,16 @@ public class S3 extends AWSClient
     *
     * @param s3Bucket
     *    S3 bucket name
-    * @param accessControlList
+    * @param s3AccessControls
     *    list of access control contains info about user and permission which will be given for him
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setBucketAcl(String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
+   public void setBucketAcl(String s3Bucket, List<S3AccessControl> s3AccessControls) throws AWSException
    {
       try
       {
-         setBucketAcl(getS3Client(), s3Bucket, accessControlList);
+         setBucketAcl(getS3Client(), s3Bucket, s3AccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -670,35 +670,9 @@ public class S3 extends AWSClient
       }
    }
 
-   private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
+   private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> s3AccessControls)
    {
-      AccessControlList acl = new AccessControlList();
-
-      for (S3AccessControl ac : accessControlList)
-      {
-         S3IdentityType identityType = ac.getIdentityType();
-         String identifier = ac.getIdentifier();
-
-         Grantee grantee;
-
-         switch (identityType)
-         {
-            case GROUP:
-               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
-               break;
-            case CANONICAL:
-               grantee = new CanonicalGrantee(identifier);
-               break;
-            case EMAIL:
-               grantee = new EmailAddressGrantee(identifier);
-               break;
-            default:
-               throw new IllegalArgumentException("Invalid identity type.");
-         }
-
-         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
-      }
-
+      AccessControlList acl = getConfiguredAcl(s3AccessControls);
       s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
    }
 
@@ -711,7 +685,7 @@ public class S3 extends AWSClient
     *    name of the S3 key to add/change permissions
     * @param versionId
     *    (optional) version ID of the S3 key
-    * @param accessControlList
+    * @param s3AccessControls
     *    list of access control contains info about user and permission which will be given for him
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
@@ -719,11 +693,11 @@ public class S3 extends AWSClient
    public void setObjectAcl(String s3Bucket,
                             String s3Key,
                             String versionId,
-                            List<S3AccessControl> accessControlList) throws AWSException
+                            List<S3AccessControl> s3AccessControls) throws AWSException
    {
       try
       {
-         setObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, accessControlList);
+         setObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, s3AccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -735,7 +709,14 @@ public class S3 extends AWSClient
                              String s3Bucket,
                              String s3Key,
                              String versionId,
-                             List<S3AccessControl> accessControlList)
+                             List<S3AccessControl> s3AccessControls)
+   {
+      AccessControlList acl = getConfiguredAcl(s3AccessControls);
+      s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
+   }
+   //
+
+   private AccessControlList getConfiguredAcl(List<S3AccessControl> accessControlList)
    {
       AccessControlList acl = new AccessControlList();
 
@@ -764,9 +745,8 @@ public class S3 extends AWSClient
          acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
       }
 
-      s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
+      return acl;
    }
-   //
 
    protected AmazonS3 getS3Client() throws AWSException
    {
