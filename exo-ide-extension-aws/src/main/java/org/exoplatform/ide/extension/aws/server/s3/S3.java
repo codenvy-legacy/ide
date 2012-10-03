@@ -716,11 +716,11 @@ public class S3 extends AWSClient
    }
    //
 
-   private AccessControlList getConfiguredAcl(List<S3AccessControl> accessControlList)
+   private AccessControlList getConfiguredAcl(List<S3AccessControl> s3AccessControls)
    {
       AccessControlList acl = new AccessControlList();
 
-      for (S3AccessControl ac : accessControlList)
+      for (S3AccessControl ac : s3AccessControls)
       {
          S3IdentityType identityType = ac.getIdentityType();
          String identifier = ac.getIdentifier();
