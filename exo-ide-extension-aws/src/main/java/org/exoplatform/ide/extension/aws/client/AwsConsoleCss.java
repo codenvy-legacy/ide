@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.extension.aws.client;
 
-package org.exoplatform.ide.extension.aws.client.s3.events;
-
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.resources.client.CssResource;
 
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: AwsConsoleCss.java Oct 2, 2012 vetal $
+ *
  */
-
-public interface ObjectDeletedHandler extends EventHandler
+public interface AwsConsoleCss extends CssResource
 {
-
-   void onUploadFile(ObjectDeletedEvent event);
+   
+   @ClassName("aws-action-grad")
+   String awsActionGrad();
 
 }

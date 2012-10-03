@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -28,18 +28,12 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -47,24 +41,18 @@ import org.exoplatform.ide.client.framework.ui.upload.FileSelectedEvent;
 import org.exoplatform.ide.client.framework.ui.upload.FileSelectedHandler;
 import org.exoplatform.ide.client.framework.ui.upload.HasFileSelectedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.extension.aws.client.s3.UploadHelper.ErrorData;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.shared.ExitCodes;
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.extension.aws.client.s3.events.S3ObjectUploadedEvent;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 
- * Presenter for uploading file form.
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: UploadFilePresenter.java Oct 1, 2012 vetal $
+ *
  */
-public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler, ItemsSelectedHandler
+public class UploadFilePresenter implements ViewClosedHandler
 {
 
    public interface Display extends IsView
@@ -100,27 +88,40 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
    private Display display;
 
-   private List<Item> selectedItems = new ArrayList<Item>();
-
    private String fileName;
-   
-   private String id;
-   
-   private Loader loader; 
+
+   private String s3Bucket;
+
+   private Loader loader;
+
+   @SuppressWarnings("serial")
+   private static final Map<String, String> fileTypes = Collections.unmodifiableMap(new HashMap<String, String>()
+   {
+      {
+         put("txt", "text/plain");
+         put("jpg", "image/jpeg");
+         put("png", "image/png");
+         put("gif", "image/gif");
+         put("bmp", "image/bmp");
+         put("tiff", "image/tiff");
+         put("rtf", "text/rtf");
+         put("doc", "application/msword");
+         put("zip", "application/zip");
+         put("mpeg", "audio/mpeg");
+         put("pdf", "application/pdf");
+         put("gzip", "application/x-gzip");
+         put("rar", "application/x-compressed");
+         put("zip", "application/zip");
+         put("", "application/octet-stream");
+
+      }
+   });
 
    public UploadFilePresenter()
    {
       loader = new GWTLoader();
       loader.setMessage("Uploading...");
-      IDE.addHandler(UploadFileEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-   }
-
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
    }
 
    @Override
@@ -132,15 +133,13 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       }
    }
 
-   @Override
-   public void onUploadFile(UploadFileEvent event)
+   public void onUploadFile(String s3Bucket)
    {
-      id = event.getId();
+      this.s3Bucket = s3Bucket;
       if (display != null)
       {
          return;
       }
-      
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
@@ -174,14 +173,6 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          }
       });
 
-      display.getUploadForm().addSubmitHandler(new SubmitHandler()
-      {
-         public void onSubmit(SubmitEvent event)
-         {
-            submit(event);
-         }
-      });
-
       display.getUploadForm().addSubmitCompleteHandler(new SubmitCompleteHandler()
       {
          public void onSubmitComplete(SubmitCompleteEvent event)
@@ -191,41 +182,6 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       });
    }
 
-   private List<String> getSupportedMimeTypes()
-   {
-      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
-      List<String> mimeTypeList = new ArrayList<String>();
-      mimeTypeList.add("application/octet-stream");
-      for (FileType fileType : fileTypes)
-      {
-         mimeTypeList.add(fileType.getMimeType());
-      }
-      return mimeTypeList;
-   }
-
-   private List<String> getMimeTypesByFileName(String fileName)
-   {
-      if (fileName.indexOf(".") < 0)
-      {
-         return getSupportedMimeTypes();
-      }
-
-      String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-      FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
-      List<String> mimeTypeList = new ArrayList<String>();
-      mimeTypeList.add("application/octet-stream");
-
-      for (FileType fileType : fileTypes)
-      {
-         if (fileType.getExtension().equalsIgnoreCase(fileExtension))
-         {
-            mimeTypeList.add(fileType.getMimeType());
-         }
-      }
-
-      return mimeTypeList;
-   }   
-   
    private FileSelectedHandler fileSelectedHandler = new FileSelectedHandler()
    {
       @Override
@@ -242,18 +198,23 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
          display.getFileNameField().setValue(fileName);
          display.setMimeTypeFieldEnabled(true);
 
-         List<String> mimeTypes = getSupportedMimeTypes();
-//         Collections.sort(mimeTypes);
-
-         List<String> proposalMimeTypes = getMimeTypesByFileName(event.getFileName());
-
-         String[] valueMap = mimeTypes.toArray(new String[0]);
+         String[] valueMap = fileTypes.values().toArray(new String[fileTypes.size()]);
 
          display.setMimeTypes(valueMap);
 
-         if (proposalMimeTypes != null && proposalMimeTypes.size() > 0)
+         String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+         String mimeType = null;
+         if (fileTypes.containsKey(fileExtension))
          {
-            String mimeType = proposalMimeTypes.get(0);
+            mimeType = fileTypes.get(fileExtension);
+         }
+         else 
+         {
+            mimeType = fileTypes.get("");
+         }
+
+         if (valueMap != null && valueMap.length > 0)
+         {
             display.setSelectedMimeType(mimeType);
             display.setOpenButtonEnabled(true);
          }
@@ -283,75 +244,61 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
    private void doUploadFile()
    {
       String mimeType = display.getMimeTypeField().getValue();
-
       if (mimeType == null || "".equals(mimeType))
       {
          mimeType = null;
       }
       String name = display.getFileNameField().getValue();
-      String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + id;
+      String uploadUrl = Utils.getRestContext() + "/ide/aws/s3/objects/upload/" + s3Bucket;
       display.getUploadForm().setAction(uploadUrl);
       display.setMimeTypeHiddedField(mimeType);
       display.setNameHiddedField(name);
       display.getUploadForm().submit();
    }
 
-   protected void submit(SubmitEvent event)
-   {
-      
-   }
-
    private void submitComplete(String uploadServiceResponse)
    {
-//      IDELoader.getInstance().hide();
-
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {
          // if response is null or empty - than complete upload
-         completeUpload();
+         closeView();
+         IDE.fireEvent(new S3ObjectUploadedEvent());
          return;
       }
-
-      ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
-      if (ExitCodes.ITEM_EXISTS == errData.code)
-      {
-         AbstarctOverwriteDialog dialog = new AbstarctOverwriteDialog(fileName, errData.text)
-         {
-
-            @Override
-            public void onOverwrite()
-            {
-               display.setOverwriteHiddedField(true);
-               display.getUploadForm().submit();
-            }
-
-            @Override
-            public void onRename(String value)
-            {
-               display.setNameHiddedField(value);
-               display.getUploadForm().submit();
-            }
-
-            @Override
-            public void onCancel()
-            {
-               closeView();
-            }
-         };
-         IDE.getInstance().openView(dialog);
-      }
+// TODO : need add confirmation for replace existing object
+//      ErrorData errData = UploadHelper.parseError(uploadServiceResponse);
+//      if (ExitCodes.ITEM_EXISTS == errData.code)
+//      {
+//         AbstarctOverwriteDialog dialog = new AbstarctOverwriteDialog(fileName, uploadServiceResponse)
+//         {
+//
+//            @Override
+//            public void onOverwrite()
+//            {
+//               display.setOverwriteHiddedField(true);
+//               display.getUploadForm().submit();
+//            }
+//
+//            @Override
+//            public void onRename(String value)
+//            {
+//               display.setNameHiddedField(value);
+//               display.getUploadForm().submit();
+//            }
+//
+//            @Override
+//            public void onCancel()
+//            {
+//               closeView();
+//            }
+//         };
+//         IDE.getInstance().openView(dialog);
+//      }
       else
       {
          // in this case show the error, received from server.
-         Dialogs.getInstance().showError(errData.text);
+         Dialogs.getInstance().showError(uploadServiceResponse);
       }
-   }
-
-   private void completeUpload()
-   {
-      closeView();
-      IDE.fireEvent(new S3ObjectUploadedEvent());
-      
    }
 
    private void closeView()

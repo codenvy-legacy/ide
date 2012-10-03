@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.extension.aws.client;
 
+import com.google.gwt.resources.client.ClientBundle.Source;
+
+import org.exoplatform.ide.editor.java.client.JavaCss;
+
+import com.google.gwt.resources.client.CssResource.ClassName;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -31,6 +37,9 @@ public interface AWSClientBundle extends ClientBundle
 {
    AWSClientBundle INSTANCE = GWT.<AWSClientBundle> create(AWSClientBundle.class);
 
+   @Source("org/exoplatform/ide/extension/aws/client/style/aws-console-style.css")
+   AwsConsoleCss style();
+   
    @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk.png")
    ImageResource elasticBeanstalk();
 

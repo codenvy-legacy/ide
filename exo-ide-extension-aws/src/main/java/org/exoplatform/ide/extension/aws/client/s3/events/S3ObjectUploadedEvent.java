@@ -16,31 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in AWS.
+ * Event occurs, when object uploaded to the AWS S3.
  * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 3:04:41 PM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: S3ObjectUploadedEvent.java Sep 26, 2012 vetal $
+ *
  */
-public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
+public class S3ObjectUploadedEvent extends GwtEvent<S3ObjectUploadedHandler>
 {
 
    /**
     * Type used to register the event.
     */
-   public static final GwtEvent.Type<BucketCreatedHandler> TYPE = new GwtEvent.Type<BucketCreatedHandler>();
+   public static final GwtEvent.Type<S3ObjectUploadedHandler> TYPE = new GwtEvent.Type<S3ObjectUploadedHandler>();
 
   
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BucketCreatedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<S3ObjectUploadedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -49,8 +49,8 @@ public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(BucketCreatedHandler handler)
+   protected void dispatch(S3ObjectUploadedHandler handler)
    {
-      handler.onBucketCreated(this);
+      handler.onS3ObjectUploaded(this);
    }
 }

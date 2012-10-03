@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,54 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to log in AWS.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 14, 2012 3:04:41 PM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public class ObjectDeletedEvent extends GwtEvent<ObjectDeletedHandler>
+public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
 {
-   
-   private String id;
-   
-   public ObjectDeletedEvent()
-   {
-      // TODO Auto-generated constructor stub
-   }
-   
-   
 
-   public ObjectDeletedEvent(String id)
-   {
-      this.id = id;
-   }
+   /**
+    * Type used to register the event.
+    */
+   public static final GwtEvent.Type<BucketCreatedHandler> TYPE = new GwtEvent.Type<BucketCreatedHandler>();
 
-
-   public String getId()
-   {
-      return id;
-   }
-   
-   public static final GwtEvent.Type<ObjectDeletedHandler> TYPE = new GwtEvent.Type<ObjectDeletedHandler>();
-
+  
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ObjectDeletedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<BucketCreatedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
-   protected void dispatch(ObjectDeletedHandler handler)
+   protected void dispatch(BucketCreatedHandler handler)
    {
-      handler.onUploadFile(this);
+      handler.onBucketCreated(this);
    }
-
 }

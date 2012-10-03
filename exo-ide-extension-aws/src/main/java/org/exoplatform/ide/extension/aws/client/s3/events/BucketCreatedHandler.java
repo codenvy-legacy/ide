@@ -16,19 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: S3ObjectUploadedHandler.java Sep 26, 2012 vetal $
- *
+ * Handler for {@link BucketCreatedEvent}.
+ * 
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 14, 2012 3:04:53 PM anya $
+ * 
  */
-public interface S3ObjectUploadedHandler extends EventHandler
+public interface BucketCreatedHandler extends EventHandler
 {
    /**
+    * Perform login operations.
+    * 
     * @param event
     */
-   void onS3ObjectUploaded(S3ObjectUploadedEvent event);
+   void onBucketCreated(BucketCreatedEvent event);
 }
