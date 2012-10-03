@@ -299,6 +299,27 @@ public class CodeAssistantJava extends AbstractTestModule
       });
 
    }
+   
+   
+   /** wait import with specific name
+    * @param nameImport
+    */
+   public void waitFromImportContent (final String nameImport)
+   {
+      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver d)
+         {
+            WebElement elem =driver().findElement(By.xpath(String.format(ELEMENT_LOCATOR, nameImport)));
+            return elem.isDisplayed();
+         }
+      });
+
+   }
+   
+   
+   
 
    public String getDocPanelText()
    {

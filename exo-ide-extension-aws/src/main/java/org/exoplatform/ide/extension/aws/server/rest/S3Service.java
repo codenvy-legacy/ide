@@ -126,10 +126,10 @@ public class S3Service
    @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void setBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                            List<S3AccessControl> accessControlList) throws AWSException
+   public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
+                               List<S3AccessControl> s3AccessControls) throws AWSException
    {
-      s3.setBucketAcl(s3Bucket, accessControlList);
+      s3.updateBucketAcl(s3Bucket, s3AccessControls);
    }
    //
 
@@ -283,11 +283,11 @@ public class S3Service
    @Path("objects/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void setObjectAcl(@PathParam("s3bucket") String s3Bucket,
-                            @QueryParam("s3key") String s3Key,
-                            @QueryParam("versionid") String versionId,
-                            List<S3AccessControl> accessControlList) throws AWSException
+   public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
+                               @QueryParam("s3key") String s3Key,
+                               @QueryParam("versionid") String versionId,
+                               List<S3AccessControl> s3AccessControls) throws AWSException
    {
-      s3.setObjectAcl(s3Bucket, s3Key, versionId, accessControlList);
+      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
    }
 }
