@@ -23,6 +23,8 @@ import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
+ * Public interface of the Main Menu is represented by {@link MainMenuAgent}. It allows 3rd party code 
+ * to contribute their 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */

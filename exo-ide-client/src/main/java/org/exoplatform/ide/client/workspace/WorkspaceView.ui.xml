@@ -11,17 +11,16 @@
       	position: static;
       }
    </ui:style>
-   <g:HTMLPanel>
       <g:DockLayoutPanel unit="PX" width="100%" height="100%">
          <g:north size="22">
             <g:SimplePanel width="100%" ui:field="topPanel" />
          </g:north>
          <g:center>
-            <g:SplitLayoutPanel>
+            <g:SplitLayoutPanel ui:field="splitPanel">
                <g:west size="240">
-                  <g:ScrollPanel ui:field="leftPanel">
+                  <g:SimplePanel ui:field="leftPanel" width="100%" height="100%">
                      <!-- p1:CellTree width="100%" height="100%" ui:field="cellTree" / -->
-                  </g:ScrollPanel>
+                  </g:SimplePanel>
                </g:west>
                <g:center>
                   <g:SimplePanel ui:field="centerPanel" styleName="{style.position}" />
@@ -29,5 +28,4 @@
             </g:SplitLayoutPanel>
          </g:center>
       </g:DockLayoutPanel>
-   </g:HTMLPanel>
 </ui:UiBinder> 

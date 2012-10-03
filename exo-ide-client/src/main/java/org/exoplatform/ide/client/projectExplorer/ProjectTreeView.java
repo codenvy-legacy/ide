@@ -1,13 +1,11 @@
 package org.exoplatform.ide.client.projectExplorer;
 
-import elemental.html.DragEvent;
-
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import elemental.html.DragEvent;
 
 import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Display;

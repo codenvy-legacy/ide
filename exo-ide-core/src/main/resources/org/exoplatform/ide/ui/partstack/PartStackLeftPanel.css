@@ -1,0 +1,75 @@
+@CHARSET "UTF-8";
+
+@def tabBorder #D0D0D0;
+@def tabsBackground #DDDDDD;
+@def tabBackground #F0F0F0;
+@def tabBackgroundSelected #F8F8F8;
+@def highlight #FFB800;
+
+.ide-PartStack {
+	height: 100%;
+	width: 100%;
+}
+
+.ide-PartStack .ide-PartStack-Tabs {
+	background: tabsBackground;
+	border-bottom: 1px solid tabBorder;
+}
+
+.ide-PartStack .ide-PartStack-Content {
+	margin: 2px;
+	border-color: tabBorder;
+	box-shadow: inset -50px 0 40px -50px rgba(0, 0, 0, 0.19);
+	background-color: tabBackgroundSelected;
+}
+
+.ide-PartStack .ide-PartStack-Tab {
+	margin-left: 3px;
+	margin-top: 3px;
+	background: tabBackground;
+	-moz-border-radius: 4px 4px 0 0;
+	border-radius: 4px 4px 0 0;
+	border: 1px solid tabBorder;
+	padding: 3px 6px 2px 6px;
+	cursor: pointer;
+	cursor: hand;
+	position: relative;
+	display: inline-block;
+}
+
+.ide-PartStack .ide-PartStack-Tab span {
+	/* margin between text and image */
+	margin-right: 4px;
+}
+
+.ide-PartStack .ide-PartStack-Tab img {
+	/* change cursor for close button */
+	cursor: default;
+	opacity: 0.6;
+}
+
+.ide-PartStack .ide-PartStack-Tab img:hover {
+	opacity: 1;
+}
+
+.ide-PartStack .ide-PartStack-Tab-selected {
+	cursor: default;
+	font-weight: bold;
+	padding: 3px 6px 3px 6px;
+	border-bottom: 1px solid tabBackgroundSelected;
+	background: tabBackgroundSelected;
+}
+
+.ide-PartStack-focused
+{
+	
+}
+
+.ide-PartStack-focused .ide-PartStack-Content  {
+	border : 2px solid highlight;
+}
+
+.ide-PartStack-focused .ide-PartStack-Tab-selected
+{
+	background : highlight;
+}

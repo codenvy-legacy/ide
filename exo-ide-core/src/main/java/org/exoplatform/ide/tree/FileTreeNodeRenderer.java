@@ -140,7 +140,7 @@ public class FileTreeNodeRenderer implements NodeRenderer<Resource>
 
             if (parent != null)
             {
-               @SuppressWarnings("unchecked")
+               @SuppressWarnings({"unchecked", "unused"})
                TreeNodeElement<Resource> fileNode = (TreeNodeElement<Resource>)parent;
                // TODO ????
                //          anchor.setHref(

@@ -40,6 +40,7 @@ import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.ui.partstack.PartStackPresenter;
 
 import java.util.Date;
 
@@ -88,6 +89,8 @@ public class WorkspacePeresenter implements Presenter
       this.editorPresenter = editorPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
+
+      // FOR DEMO
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
 
@@ -99,7 +102,8 @@ public class WorkspacePeresenter implements Presenter
       ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
       expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
-      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression, noProjectOpenedExpression);
+      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression,
+         noProjectOpenedExpression);
       bind();
    }
 
@@ -112,7 +116,9 @@ public class WorkspacePeresenter implements Presenter
       container.clear();
       // Expose Project Explorer into Tools Panel
       menuPresenter.go(display.getMenuPanel());
-      projectExpolorerPresenter.go(display.getLeftPanel());
+      PartStackPresenter partStackPresenter = new PartStackPresenter();
+      partStackPresenter.go(display.getLeftPanel());
+      partStackPresenter.addPart(projectExpolorerPresenter);
       container.add(display.asWidget());
    }
 
