@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
@@ -107,7 +115,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
       void setRefreshAction(ScheduledCommand command);
 
-      HasChangeHandlers getBuckets();
+      HasSelectionHandlers<S3Bucket> getBuckets();
 
       String getSelectedBucketId();
 
@@ -128,6 +136,10 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       HasClickHandlers getUploadButton();
 
       HasClickHandlers getRefreshButton();
+      
+      HasClickHandlers getCreateButton();
+      
+      void setBucketId(String bucketId);
 
    }
 
@@ -141,10 +153,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
    private S3ObjectsList s3ObjectsList;
 
-   private String curent = null;
-
-   private Stack<String> visit = new Stack<String>();
-
    private CreateBucketPresenter createBucketPresenter;
 
    private UploadFilePresenter uploadFilePresenter;
@@ -155,14 +163,9 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
    private int lastScrollPos = 0;
 
    /**
-    * The default increment size.
-    */
-   private static final int DEFAULT_INCREMENT = 20;
-
-   /**
     * The increment size.
     */
-   private int incrementSize = DEFAULT_INCREMENT;
+   private int incrementSize = 10;
 
    public S3Manager()
    {
@@ -185,6 +188,15 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
    {
       if (openedProject == null)
          display.setEnableUploadProjectAction(false);
+      
+      display.getCreateButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            createBucketPresenter.onOpenView();
+         }
+      });
       
       display.getRefreshButton().addClickHandler(new ClickHandler()
       {
@@ -262,7 +274,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
             }
             catch (RequestException e)
             {
-               // TODO Auto-generated catch block
                e.printStackTrace();
             }
          }
@@ -289,16 +300,30 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
          }
       });
 
-      display.getBuckets().addChangeHandler(new ChangeHandler()
+//      display.getBuckets().addChangeHandler(new ChangeHandler()
+//      {
+//
+//         @Override
+//         public void onChange(ChangeEvent event)
+//         {
+//            currentBucketId = display.getSelectedBucketId();
+//            display.setBucketId(currentBucketId);
+//            getObjectsList(display.getSelectedBucketId(), null);
+//         }
+//      });
+      
+      display.getBuckets().addSelectionHandler(new SelectionHandler<S3Bucket>()
       {
-
+         
          @Override
-         public void onChange(ChangeEvent event)
+         public void onSelection(SelectionEvent<S3Bucket> event)
          {
-            currentBucketId = display.getSelectedBucketId();
-            getObjectsList(display.getSelectedBucketId(), null);
+            currentBucketId = event.getSelectedItem().getName();
+            display.setBucketId(currentBucketId);
+            getObjectsList(currentBucketId, null);
          }
       });
+
 
       display.setDeleteBucketAction(new ScheduledCommand()
       {
@@ -347,111 +372,10 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
    }
-
-   //   protected void getPrev(final String marker)
-   //   {
-   //      AutoBean<S3ObjectsList> autoBean = AWSExtension.AUTO_BEAN_FACTORY.s3ObjectsList();
-   //      try
-   //      {
-   //         S3Service.getInstance().getS3ObjectsList(
-   //            new AsyncRequestCallback<S3ObjectsList>(new AutoBeanUnmarshaller<S3ObjectsList>(autoBean))
-   //            {
-   //
-   //               @Override
-   //               protected void onSuccess(S3ObjectsList result)
-   //               {
-   //                  curent = marker;
-   //                  s3ObjectsList = result;
-   //
-   //                  display.setS3ObjectsList(result);
-   //                  if (result.getNextMarker() == null)
-   //                  {
-   //                     display.setEnableNextButton(false);
-   //                  }
-   //                  else
-   //                  {
-   //                     display.setEnableNextButton(true);
-   //                  }
-   //                  if (visit.empty())
-   //                  {
-   //                     display.setEnableBackButton(false);
-   //                  }
-   //                  else
-   //                  {
-   //                     display.setEnableBackButton(true);
-   //                  }
-   //               }
-   //
-   //               @Override
-   //               protected void onFailure(Throwable exception)
-   //               {
-   //                  showError(exception);
-   //
-   //               }
-   //            }, display.getSelectedBucketId(), marker);
-   //      }
-   //      catch (RequestException e)
-   //      {
-   //         // TODO Auto-generated catch block
-   //         e.printStackTrace();
-   //      }
-   //   }
-   //
-   //   protected void getNext()
-   //   {
-   //
-   //      AutoBean<S3ObjectsList> autoBean = AWSExtension.AUTO_BEAN_FACTORY.s3ObjectsList();
-   //      try
-   //      {
-   //         S3Service.getInstance().getS3ObjectsList(
-   //            new AsyncRequestCallback<S3ObjectsList>(new AutoBeanUnmarshaller<S3ObjectsList>(autoBean))
-   //            {
-   //
-   //               @Override
-   //               protected void onSuccess(S3ObjectsList result)
-   //               {
-   //                  visit.push(curent);
-   //                  curent = s3ObjectsList.getNextMarker();
-   //                  s3ObjectsList = result;
-   //                  display.setS3ObjectsList(result);
-   //                  if (result.getNextMarker() == null)
-   //                  {
-   //                     display.setEnableNextButton(false);
-   //                  }
-   //                  else
-   //                  {
-   //                     display.setEnableNextButton(true);
-   //                  }
-   //                  if (visit.empty())
-   //                  {
-   //                     display.setEnableBackButton(false);
-   //                  }
-   //                  else
-   //                  {
-   //                     display.setEnableBackButton(true);
-   //                  }
-   //               }
-   //
-   //               @Override
-   //               protected void onFailure(Throwable exception)
-   //               {
-   //                  showError(exception);
-   //
-   //               }
-   //            }, display.getSelectedBucketId(), s3ObjectsList.getNextMarker());
-   //      }
-   //      catch (RequestException e)
-   //      {
-   //         // TODO Auto-generated catch block
-   //         e.printStackTrace();
-   //      }
-   //
-   //   }
 
    protected void getObjectsList(String s3Bucket, String nextMarker)
    {
@@ -466,9 +390,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onSuccess(S3ObjectsList result)
                {
-                  if (s3ObjectsList != null)
-                     curent = s3ObjectsList.getNextMarker();
-
                   s3ObjectsList = result;
                   display.setS3ObjectsList(result);
                }
@@ -501,8 +422,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onSuccess(S3ObjectsList result)
                {
-                  if (s3ObjectsList != null)
-                     curent = s3ObjectsList.getNextMarker();
                   s3ObjectsList = result;
                   display.addS3ObjectsList(result);
                }
@@ -513,7 +432,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                   showError(exception);
 
                }
-            }, s3Bucket, nextMarker, 10);
+            }, s3Bucket, nextMarker, incrementSize);
       }
       catch (RequestException e)
       {
@@ -594,7 +513,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onSuccess(List<S3Bucket> result)
                {
-
                   display.setS3Buckets(result);
                }
 

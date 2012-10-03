@@ -48,6 +48,7 @@ import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
+import java.util.concurrent.AbstractExecutorService;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>

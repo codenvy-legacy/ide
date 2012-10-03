@@ -107,7 +107,7 @@ public class S3Service
       if (nextMarker != null)
          url += "&nextmarker=" + nextMarker;
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 
