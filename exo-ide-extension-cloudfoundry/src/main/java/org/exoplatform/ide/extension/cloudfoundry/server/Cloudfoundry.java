@@ -41,11 +41,11 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
 import org.exoplatform.ide.helper.ParsingResponseException;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -2028,8 +2028,8 @@ public class Cloudfoundry
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("cloudfoundry-application", name);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("cloudfoundry-application", name);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }
@@ -2054,8 +2054,8 @@ public class Cloudfoundry
    private void writeServerName(VirtualFileSystem vfs, String projectId, String server)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("vmc-target", server);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("vmc-target", server);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }

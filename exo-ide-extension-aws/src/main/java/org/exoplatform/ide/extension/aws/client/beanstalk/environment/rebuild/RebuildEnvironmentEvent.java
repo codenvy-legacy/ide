@@ -39,9 +39,13 @@ public class RebuildEnvironmentEvent extends GwtEvent<RebuildEnvironmentHandler>
 
    private EnvironmentInfo environmentInfo;
 
-   public RebuildEnvironmentEvent(EnvironmentInfo environmentInfo)
+   private RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler;
+
+   public RebuildEnvironmentEvent(EnvironmentInfo environmentInfo,
+      RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler)
    {
       this.environmentInfo = environmentInfo;
+      this.rebuildEnvironmentStartedHandler = rebuildEnvironmentStartedHandler;
    }
 
    /**
@@ -62,9 +66,21 @@ public class RebuildEnvironmentEvent extends GwtEvent<RebuildEnvironmentHandler>
       handler.onRebuildEnvironment(this);
    }
 
+   /**
+    * 
+    * @return
+    */
    public EnvironmentInfo getEnvironmentInfo()
    {
       return environmentInfo;
+   }
+
+   /**
+    * @return the rebuildEnvironmentStartedHandler
+    */
+   public RebuildEnvironmentStartedHandler getRebuildEnvironmentStartedHandler()
+   {
+      return rebuildEnvironmentStartedHandler;
    }
 
 }

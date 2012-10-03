@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -207,7 +206,7 @@ public class FolderData extends ItemData
                        String contentNodeType,
                        MediaType mediaType,
                        String[] mixinTypes,
-                       List<ConvertibleProperty> properties,
+                       List<Property> properties,
                        InputStream content) throws InvalidArgumentException,
       ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -233,7 +232,7 @@ public class FolderData extends ItemData
 
          if (properties != null && properties.size() > 0)
          {
-            for (ConvertibleProperty property : properties)
+            for (Property property : properties)
             {
                updateProperty(fileNode, property);
             }
@@ -276,7 +275,7 @@ public class FolderData extends ItemData
     * @throws VirtualFileSystemException if any other errors occurs
     * @throws InvalidArgumentException
     */
-   FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<ConvertibleProperty> properties)
+   FolderData createFolder(String name, String nodeType, String[] mixinTypes, List<Property> properties)
       throws InvalidArgumentException, ConstraintException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -323,7 +322,7 @@ public class FolderData extends ItemData
 
          if (properties != null && properties.size() > 0)
          {
-            for (ConvertibleProperty property : properties)
+            for (Property property : properties)
             {
                updateProperty(folderNode, property);
             }
@@ -394,8 +393,7 @@ public class FolderData extends ItemData
 
          if (mediaType != null)
          {
-            updateProperty(node,
-               new ConvertibleProperty("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));
+            updateProperty(node, new Property("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));
          }
 
          session.save();
@@ -420,7 +418,7 @@ public class FolderData extends ItemData
    }
 
    @Override
-   final void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
+   final void updateProperty(Node theNode, Property property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
       try

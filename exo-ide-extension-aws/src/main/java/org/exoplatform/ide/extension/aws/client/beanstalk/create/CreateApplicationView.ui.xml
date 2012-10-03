@@ -78,18 +78,18 @@
             </g:FlowPanel>
             <g:FlowPanel ui:field="createEnvironmentStep" width="100%" height="100%" visible="false">
                <g:FlowPanel width="100%" height="35px" styleName="{style.launch}">
-                  <g:CheckBox ui:field="launchEnvironment" width="100%" height="40px" HTML="{locale.createEnvironmentLaunch}"></g:CheckBox>
+                  <g:CheckBox ui:field="launchEnvironment" width="100%" height="40px" HTML="{locale.launchEnvironmentLaunch}"></g:CheckBox>
                </g:FlowPanel>
                <g:FlowPanel width="100%" height="30px">
-                  <g:Label text="{locale.createEnvironmentName}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <g:Label text="{locale.launchEnvironmentName}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
                   <f:TextInput ui:field="envNameField" width="69%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
                <g:FlowPanel width="100%" height="30px">
-                  <g:Label text="{locale.createEnvironmentDescription}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <g:Label text="{locale.launchEnvironmentDescription}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
                   <f:TextInput ui:field="envDescriptionField" width="69%" height="22px" addStyleNames="{style.right}"></f:TextInput>
                </g:FlowPanel>
                <g:FlowPanel width="100%" height="30px">
-                  <g:Label text="{locale.createEnvironmentSolutionStack}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+                  <g:Label text="{locale.launchEnvironmentSolutionStack}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
                   <f:SelectItem ui:field="solutionStackField" width="69%" height="22px" addStyleNames="{style.right}"></f:SelectItem>
                </g:FlowPanel>
             </g:FlowPanel>

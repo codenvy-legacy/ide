@@ -131,7 +131,7 @@ public class CreateBucketView extends ViewImpl implements CreateBucketPresenter.
 
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableCreateButton(boolean)
+    * @see org.exoplatform.ide.extension.aws.client.login.LoginPresenter.Display#enableLaunchButton(boolean)
     */
    @Override
    public void enableCreateButton(boolean enable)

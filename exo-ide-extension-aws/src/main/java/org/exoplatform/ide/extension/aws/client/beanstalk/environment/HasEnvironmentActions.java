@@ -33,4 +33,6 @@ public interface HasEnvironmentActions
    void addTerminateHandler(SelectionHandler<EnvironmentInfo> handler);
 
    void addRebuildHandler(SelectionHandler<EnvironmentInfo> handler);
+
+   void addRestartHandler(SelectionHandler<EnvironmentInfo> handler);
 }

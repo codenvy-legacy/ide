@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -379,7 +378,7 @@ abstract class ItemData
     * @throws PermissionDeniedException if properties can't be updated cause to security restriction
     * @throws VirtualFileSystemException if any other errors occurs
     */
-   void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
+   void updateProperties(List<Property> properties, String[] addMixinTypes, String[] removeMixinTypes,
                          String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -415,7 +414,7 @@ abstract class ItemData
             }
          }
 
-         for (ConvertibleProperty property : properties)
+         for (Property property : properties)
          {
             updateProperty(node, property);
          }
@@ -438,23 +437,23 @@ abstract class ItemData
       }
    }
 
-   void updateProperty(Node theNode, ConvertibleProperty property) throws ConstraintException, LockException,
+   void updateProperty(Node theNode, Property property) throws ConstraintException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {
-      String[] value = property.valueToArray(String[].class);
+      List<String> value = property.getValue();
 
       try
       {
-         if (value == null || value.length == 0)
+         if (value == null || value.isEmpty())
          {
             theNode.setProperty(property.getName(), (Value)null);
          }
          else
          {
-            Value[] jcrValue = new Value[value.length];
-            for (int i = 0; i < value.length; i++)
+            Value[] jcrValue = new Value[value.size()];
+            for (int i = 0; i < value.size(); i++)
             {
-               jcrValue[i] = new StringValue(value[i]);
+               jcrValue[i] = new StringValue(value.get(i));
             }
             if (jcrValue.length > 1)
             {

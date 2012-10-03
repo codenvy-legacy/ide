@@ -35,6 +35,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.IOException;
@@ -180,7 +181,7 @@ public interface VirtualFileSystem
    @POST
    @Path("project")
    @Produces({MediaType.APPLICATION_JSON})
-   Project createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
+   Project createProject(String parentId, String name, String type, List<Property> properties)
       throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException;
 
@@ -836,7 +837,7 @@ public interface VirtualFileSystem
    @Path("item")
    @Consumes({MediaType.APPLICATION_JSON})
    @Produces({MediaType.APPLICATION_JSON})
-   Item updateItem(String id, List<ConvertibleProperty> properties, String lockToken) throws ItemNotFoundException,
+   Item updateItem(String id, List<Property> properties, String lockToken) throws ItemNotFoundException,
       LockException, PermissionDeniedException, VirtualFileSystemException;
 
    /**

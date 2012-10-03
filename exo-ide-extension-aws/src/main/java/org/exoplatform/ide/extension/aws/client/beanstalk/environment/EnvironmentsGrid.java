@@ -30,6 +30,7 @@ import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
@@ -79,25 +80,29 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
 
    private final String ID = "ideEnvironmentsGrid";
 
-   private final String NAME = "Name";
+   private final String NAME = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridName();
 
-   private final String SOLUTION_STACK = "Solution Stack";
+   private final String SOLUTION_STACK = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStack();
 
-   private final String URL = "URL";
+   private final String URL = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridUrl();
 
-   private final String APPLICATION = "Application";
+   private final String VERSION = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridVersion();
 
-   private final String VERSION = "Version";
+   private final String STATUS = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridStatus();
 
-   private final String STATUS = "Status";
+   private final String HEALTH = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridHealth();
 
-   private final String TERMINATE = "Terminate";
+   private final String REBUILD = AWSExtension.LOCALIZATION_CONSTANT.rebuildButton();
 
-   private final String REBUILD = "Rebuild";
+   private final String TERMINATE = AWSExtension.LOCALIZATION_CONSTANT.terminateButton();
+
+   private final String RESTART = AWSExtension.LOCALIZATION_CONSTANT.restartButton();
+
+   private Column<EnvironmentInfo, String> rebuildColumn;
 
    private Column<EnvironmentInfo, String> terminateColumn;
 
-   private Column<EnvironmentInfo, String> rebuildColumn;
+   private Column<EnvironmentInfo, String> restartColumn;
 
    public EnvironmentsGrid()
    {
@@ -123,16 +128,6 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
-      Column<EnvironmentInfo, String> appNameColumn = new Column<EnvironmentInfo, String>(new TextCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return environmentInfo.getApplicationName();
-         }
-      };
-
       Column<EnvironmentInfo, String> appVersionColumn = new Column<EnvironmentInfo, String>(new TextCell())
       {
 
@@ -153,6 +148,16 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
+      Column<EnvironmentInfo, String> healthColumn = new Column<EnvironmentInfo, String>(new TextCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return environmentInfo.getHealth().name();
+         }
+      };
+
       Column<EnvironmentInfo, String> urlColumn = new Column<EnvironmentInfo, String>(new LinkCell())
       {
 
@@ -160,16 +165,6 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          public String getValue(EnvironmentInfo environmentInfo)
          {
             return environmentInfo.getEndpointUrl();
-         }
-      };
-
-      terminateColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return TERMINATE;
          }
       };
 
@@ -183,15 +178,53 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
+      terminateColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return TERMINATE;
+         }
+      };
+
+      restartColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return RESTART;
+         }
+      };
+
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
-      getCellTable().addColumn(appNameColumn, APPLICATION);
+      getCellTable().setColumnWidth(solutionStackColumn, "130px");
       getCellTable().addColumn(appVersionColumn, VERSION);
       getCellTable().addColumn(statusColumn, STATUS);
+      getCellTable().addColumn(healthColumn, HEALTH);
       getCellTable().addColumn(urlColumn, URL);
       getCellTable().setColumnWidth(urlColumn, "130px");
-      getCellTable().addColumn(terminateColumn, TERMINATE);
       getCellTable().addColumn(rebuildColumn, REBUILD);
+      getCellTable().addColumn(terminateColumn, TERMINATE);
+      getCellTable().addColumn(restartColumn, RESTART);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions#addRebuildHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addRebuildHandler(final SelectionHandler<EnvironmentInfo> handler)
+   {
+      rebuildColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      {
+         @Override
+         public void update(int index, EnvironmentInfo environmentInfo, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(environmentInfo));
+         }
+      });
    }
 
    /**
@@ -211,12 +244,12 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions#addRebuildHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions#addRestartHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addRebuildHandler(final SelectionHandler<EnvironmentInfo> handler)
+   public void addRestartHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
-      rebuildColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      restartColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {
          @Override
          public void update(int index, EnvironmentInfo environmentInfo, String value)
@@ -246,4 +279,5 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
       return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
          + " target=\"_blank\">View Running Version</a><br>";
    }
+
 }

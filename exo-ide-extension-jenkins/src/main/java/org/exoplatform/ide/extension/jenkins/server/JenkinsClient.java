@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.jenkins.server;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -715,8 +715,8 @@ public abstract class JenkinsClient
    private void writeJenkinsJobName(VirtualFileSystem vfs, String projectId, String jobName)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("jenkins-job", jobName);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("jenkins-job", jobName);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }

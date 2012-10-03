@@ -35,13 +35,18 @@ public class TerminateEnvironmentEvent extends GwtEvent<TerminateEnvironmentHand
    /**
     * Type, used to register event.
     */
-   public static final GwtEvent.Type<TerminateEnvironmentHandler> TYPE = new GwtEvent.Type<TerminateEnvironmentHandler>();
+   public static final GwtEvent.Type<TerminateEnvironmentHandler> TYPE =
+      new GwtEvent.Type<TerminateEnvironmentHandler>();
 
    private EnvironmentInfo environmentInfo;
 
-   public TerminateEnvironmentEvent(EnvironmentInfo environmentInfo)
+   private TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler;
+
+   public TerminateEnvironmentEvent(EnvironmentInfo environmentInfo,
+      TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler)
    {
       this.environmentInfo = environmentInfo;
+      this.terminateEnvironmentStartedHandler = terminateEnvironmentStartedHandler;
    }
 
    /**
@@ -65,6 +70,14 @@ public class TerminateEnvironmentEvent extends GwtEvent<TerminateEnvironmentHand
    public EnvironmentInfo getEnvironmentInfo()
    {
       return environmentInfo;
+   }
+
+   /**
+    * @return the terminateEnvironmentStartedHandler
+    */
+   public TerminateEnvironmentStartedHandler getTerminateEnvironmentStartedHandler()
+   {
+      return terminateEnvironmentStartedHandler;
    }
 
 }

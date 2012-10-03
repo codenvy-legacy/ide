@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.deploy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -50,16 +49,12 @@ import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequestStatusHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentHealth;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentStatus;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
@@ -67,11 +62,9 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -112,31 +105,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    private DeployResultHandler deployResultHandler;
 
-   /**
-    * Info about environment for launching application.
-    * <code>null</code> if environment is not launched.
-    */
-   private EnvironmentInfo environment;
-
-   /**
-    * Info about created AWS Beanstalk application.
-    * <code>null</code> if application is not created.
-    */
-   private ApplicationInfo applicationInfo;
-
    private String projectName;
-
-   /**
-    * Time of last received event.
-    */
-   protected long lastReceivedEventTime;
-
-   /**
-    * Delay in millisecond between environment status checking.
-    */
-   private static final int delay = 2000;
-
-   protected RequestStatusHandler environmentStatusHandler;
 
    public DeployApplicationPresenter()
    {
@@ -175,7 +144,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
       this.deployResultHandler = deployResultHandler;
-      environmentStatusHandler = new EnvironmentRequestStatusHandler(display.getEnvNameField().getValue());
       createProject(projectTemplate);
    }
 
@@ -294,7 +262,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(ApplicationInfo result)
                {
-                  applicationInfo = result;
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(result
                      .getName()), Type.INFO));
                   createEnvironment(result.getName());
@@ -323,8 +290,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    private void createEnvironment(final String applicationName)
    {
-      environmentStatusHandler.requestInProgress(project.getId());
-
       final String environmentName = display.getEnvNameField().getValue();
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
@@ -356,9 +321,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                protected void processFail(Throwable exception)
                {
                   deployResultHandler.onDeployFinished(false);
-                  environmentStatusHandler.requestError(project.getId(), exception);
-
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environmentName);
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.launchEnvironmentFailed(environmentName);
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();
@@ -369,12 +332,16 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(EnvironmentInfo result)
                {
-                  environment = result;
                   deployResultHandler.onDeployFinished(true);
                   IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT
-                     .createEnvironmentLaunching(environmentName), Type.INFO));
-                  writeEnvironmentId();
-                  checkEnvironmentStatusTimer.schedule(delay);
+                     .launchEnvironmentLaunching(environmentName), Type.INFO));
+
+                  RequestStatusHandler environmentStatusHandler =
+                     new EnvironmentRequestStatusHandler(AWSExtension.LOCALIZATION_CONSTANT
+                        .launchEnvironmentLaunching(result.getName()), AWSExtension.LOCALIZATION_CONSTANT
+                        .launchEnvironmentSuccess(result.getName()));
+                  new EnvironmentStatusChecker(vfsInfo, project, result, true, environmentStatusHandler)
+                     .startChecking();
                }
             });
       }
@@ -382,131 +349,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   /**
-    * A timer for periodically sending request of environment status.
-    */
-   private Timer checkEnvironmentStatusTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
-         AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
-         try
-         {
-            BeanstalkClientService.getInstance().getEnvironmentInfo(environment.getId(),
-               new AsyncRequestCallback<EnvironmentInfo>(unmarshaller)
-               {
-                  @Override
-                  protected void onSuccess(EnvironmentInfo result)
-                  {
-                     updateEnvironmentStatus(result);
-                     if (result.getStatus() == EnvironmentStatus.Launching)
-                     {
-                        schedule(delay);
-                     }
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     String message = AWSExtension.LOCALIZATION_CONSTANT.createEnvironmentFailed(environment.getName());
-                     if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                     {
-                        message += "<br>" + ((ServerException)exception).getMessage();
-                     }
-                     IDE.fireEvent(new OutputEvent(message, Type.ERROR));
-                     environmentStatusHandler.requestError(project.getId(), exception);
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-
-         ListEventsRequest listEventsRequest = AWSExtension.AUTO_BEAN_FACTORY.listEventsRequest().as();
-         listEventsRequest.setApplicationName(applicationInfo.getName());
-         listEventsRequest.setVersionLabel(environment.getVersionLabel());
-         listEventsRequest.setEnvironmentId(environment.getId());
-         listEventsRequest.setStartTime(lastReceivedEventTime);
-         AutoBean<EventsList> eventsListAutoBean = AWSExtension.AUTO_BEAN_FACTORY.eventList();
-         AutoBeanUnmarshaller<EventsList> eventsListUnmarshaller =
-            new AutoBeanUnmarshaller<EventsList>(eventsListAutoBean);
-         try
-         {
-            BeanstalkClientService.getInstance().getApplicationEvents(vfsInfo.getId(), project.getId(),
-               listEventsRequest, new AsyncRequestCallback<EventsList>(eventsListUnmarshaller)
-               {
-                  @Override
-                  protected void onSuccess(EventsList result)
-                  {
-                     StringBuffer message = new StringBuffer();
-                     // shows events in chronological order
-                     List<Event> eventsList = result.getEvents();
-                     if (eventsList.size() > 0)
-                     {
-                        for (int i = eventsList.size() - 1; i >= 0; i--)
-                        {
-                           Event event = eventsList.get(i);
-                           message.append(event.getMessage()).append("</br>");
-                        }
-                        IDE.fireEvent(new OutputEvent(message.toString()));
-                        lastReceivedEventTime = eventsList.get(0).getEventDate() + 1;
-                     }
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     // nothing to do
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-      }
-   };
-
-   private void updateEnvironmentStatus(EnvironmentInfo environment)
-   {
-      StringBuffer message = new StringBuffer();
-      if (environment.getStatus() == EnvironmentStatus.Ready)
-      {
-         environmentStatusHandler.requestFinished(project.getId());
-
-         message.append(AWSExtension.LOCALIZATION_CONSTANT.createApplicationStartedOnUrl(
-            environment.getApplicationName(), getAppUrl(environment)));
-
-         if (environment.getHealth() != EnvironmentHealth.Green)
-         {
-            message.append(", but health status of the application's environment is " + environment.getHealth().name());
-         }
-         IDE.fireEvent(new OutputEvent(message.toString(), Type.INFO));
-      }
-      else if (environment.getStatus() == EnvironmentStatus.Terminated)
-      {
-         environmentStatusHandler.requestError(project.getId(), null);
-
-         message
-            .append(AWSExtension.LOCALIZATION_CONSTANT.createApplicationTerminated());
-         IDE.fireEvent(new OutputEvent(message.toString(), Type.ERROR));
-      }
-   }
-
-   private String getAppUrl(EnvironmentInfo environment)
-   {
-      String appUrl = environment.getEndpointUrl();
-      if (!appUrl.startsWith("http"))
-      {
-         appUrl = "http://" + appUrl;
-      }
-      appUrl = "<a href=\"" + appUrl + "\" target=\"_blank\">" + appUrl + "</a>";
-      return appUrl;
    }
 
    private void buildApplication()
@@ -600,36 +442,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
-      }
-   }
-
-   /**
-    * Writes application's AWS environment identifier to the project properties.
-    */
-   private void writeEnvironmentId()
-   {
-      project.getProperties().add(new StringProperty("awsEnvironmentId", environment.getId()));
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               // nothing to do
-            }
-
-            @Override
-            protected void onFailure(Throwable ignore)
-            {
-               // ignore this exception
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
       }
    }
 

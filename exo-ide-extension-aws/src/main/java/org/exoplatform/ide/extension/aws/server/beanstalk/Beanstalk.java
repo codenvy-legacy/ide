@@ -77,11 +77,11 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsSeverity;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -1853,8 +1853,8 @@ public class Beanstalk extends AWSClient
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String applicationName)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("aws-application", applicationName);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("aws-application", applicationName);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }
