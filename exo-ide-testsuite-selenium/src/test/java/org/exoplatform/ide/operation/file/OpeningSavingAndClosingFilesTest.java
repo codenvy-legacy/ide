@@ -67,7 +67,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<Module>\n  <ModulePrefs title=\"Hello World!\" />\n  <Content type=\"html\">\n    <![CDATA[\n    <script type='text/javascript'>\n      function foo(bar, baz) {\n        alert('quux');\n        return bar + baz + 1;\n      }\n    </script>\n    <style type='text/css'>\n      div.border {\n        border: 1px solid black;\n        padding: 3px;\n      }\n      #foo code {\n        font-family: courier, monospace;\n        font-size: 80%;\n        color: #448888;\n      }\n    </style>\n    <p>Hello</p>\n    ]]></Content></Module>";
 
    private static String DEFAULT_CONTENT_JS_FILE =
-      "//Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n\n// Press enter inside the objects and your new line will\n// intended.\n\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
+      "//Here you see some JavaScript code. Mess around with it to get\n//acquinted with CodeMirror's features.\n// Press enter inside the objects and your new line will \n// intended.\nvar keyBindings ={\n  enter:\"newline-and-indent\",\n  tab:\"reindent-selection\",\n  ctrl_z: \"undo\",\n  ctrl_y:\"redo\"\n  };\n  var regex =/foo|bar/i;\n  function example (x){\n  var y=44.4;\n  return x+y;\n  }";
 
    private static String DEFAULT_CONTENT_GROOVY_FILE =
       "//simple groovy script\n\nimport javax.ws.rs.Path\nimport javax.ws.rs.GET\nimport javax.ws.rs.PathParam\n\n@Path (\"/\")\npublic class HelloWorld{\n@Get\n@Path (\"helloworld/{name}\")\npublic String hello(PathParam(\"name\")String name){\n  return \"Hello\"+name\n  }\n  }";
@@ -145,7 +145,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       assertFalse(IDE.EDITOR.isFileContentChanged(1));
 
       IDE.EDITOR.selectTab("newJavaScriptFile.js");
-      IDE.EDITOR.typeTextIntoEditor(2, "Change file\n");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(2, "Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitNoContentModificationMark("newJavaScriptFile.js");
@@ -222,7 +222,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
       IDE.EDITOR.selectTab(2);
-      assertEquals("Change file\n  " + DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
+      assertEquals("Change file\n" + DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor(2));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
@@ -275,7 +275,7 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
       IDE.EDITOR.selectTab(2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.EDITOR.getTextFromCodeEditor(2));
+      assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor(2));
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
