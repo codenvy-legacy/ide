@@ -27,7 +27,6 @@ import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.ItemNodeImpl;
 import org.exoplatform.ide.vfs.server.LazyIterator;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
@@ -56,6 +55,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -316,7 +316,7 @@ public class JcrFileSystem implements VirtualFileSystem
    public Project createProject(@PathParam("parentId") String parentId, //
                                 @QueryParam("name") String name, //
                                 @QueryParam("type") String type, //
-                                List<ConvertibleProperty> properties //
+                                List<Property> properties //
    ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -336,13 +336,13 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          if (properties == null)
          {
-            properties = new ArrayList<ConvertibleProperty>(2);
+            properties = new ArrayList<Property>(2);
          }
          if (type != null)
          {
-            properties.add(new ConvertibleProperty("vfs:projectType", type));
+            properties.add(new Property("vfs:projectType", type));
          }
-         properties.add(new ConvertibleProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+         properties.add(new Property("vfs:mimeType", Project.PROJECT_MIME_TYPE));
 
          FolderData newProject = ((FolderData)parentData).createFolder(name, //
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
@@ -1243,7 +1243,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("item/{id}")
    @Override
    public Item updateItem(@PathParam("id") String id, //
-                          List<ConvertibleProperty> properties, //
+                          List<Property> properties, //
                           @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -1255,14 +1255,14 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             String[] removeMixinTypes = null;
             String[] addMixinTypes = null;
-            for (ConvertibleProperty property : properties)
+            for (Property property : properties)
             {
                if ("vfs:mimeType".equals(property.getName()))
                {
-                  MediaType[] value = property.valueToArray(MediaType[].class);
-                  if (value != null && value.length > 0)
+                  List<String> value = property.getValue();
+                  if (!(value == null || value.isEmpty()))
                   {
-                     MediaType newMediaType = value[0];
+                     MediaType newMediaType = MediaType.valueOf(value.get(0));
                      MediaType currentMediaType = data.getMediaType();
                      if (!compareMediaTypeIgnoreParameters(currentMediaType, newMediaType))
                      {
@@ -1466,13 +1466,6 @@ public class JcrFileSystem implements VirtualFileSystem
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
-                  MediaType mediaType = child.getMediaType();
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
                current = (FolderData)child;
             }
@@ -1482,17 +1475,10 @@ public class JcrFileSystem implements VirtualFileSystem
             {
                if (!current.hasChild(name))
                {
-                  ItemData child = current.createFolder(name, //
+                  current.createFolder(name, //
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
-                  MediaType mediaType = child.getMediaType();
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
             }
             else if (".project".equals(name))
@@ -1504,19 +1490,13 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
-               notifyListeners(new ChangeEvent(this, //
-                  current.getId(), //
-                  current.getPath(), //
-                  mediaType != null ? mediaType.toString() : null, //
-                  ChangeEvent.ChangeType.RENAMED)
-               );
-               List<ConvertibleProperty> properties;
+               List<Property> properties;
                try
                {
                   JsonParser jp = new JsonParser();
                   jp.parse(noCloseZip);
-                  ConvertibleProperty[] array =
-                     (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
+                  Property[] array =
+                     (Property[])ObjectBuilder.createArray(Property[].class, jp.getJsonObject());
                   properties = Arrays.asList(array);
                }
                catch (JsonException e)
@@ -1526,12 +1506,6 @@ public class JcrFileSystem implements VirtualFileSystem
                if (properties.size() > 0)
                {
                   current.updateProperties(properties, null, null, null);
-                  notifyListeners(new ChangeEvent(this, //
-                     current.getId(), //
-                     current.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.PROPERTIES_UPDATED)
-                  );
                }
             }
             else
@@ -1540,29 +1514,17 @@ public class JcrFileSystem implements VirtualFileSystem
                if (child != null && overwrite && ItemType.FILE == child.getType())
                {
                   ((FileData)child).setContent(noCloseZip, child.getMediaType(), null);
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     child.getMediaType().toString(), //
-                     ChangeEvent.ChangeType.CONTENT_UPDATED)
-                  );
                }
                else
                {
                   final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
-                  child = current.createFile(name, //
+                  current.createFile(name, //
                      mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
                      mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
                      mediaType, //
                      mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                      null, //
                      noCloseZip);
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     child.getMediaType().toString(), //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
             }
             zip.closeEntry();
@@ -1991,8 +1953,8 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
          }
-         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-         properties.add(new ConvertibleProperty("vfs:lastUpdateTime", "0"));
+         List<Property> properties = new ArrayList<Property>(1);
+         properties.add(new Property("vfs:lastUpdateTime", "0"));
          projectData.updateProperties(properties, null, null, null);
       }
       finally

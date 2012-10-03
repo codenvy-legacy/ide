@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
 package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link BucketCreatedEvent}.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 14, 2012 3:04:53 PM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public interface ObjectDeletedHandler extends EventHandler
+public interface BucketCreatedHandler extends EventHandler
 {
-
-   void onUploadFile(ObjectDeletedEvent event);
-
+   /**
+    * Perform login operations.
+    * 
+    * @param event
+    */
+   void onBucketCreated(BucketCreatedEvent event);
 }

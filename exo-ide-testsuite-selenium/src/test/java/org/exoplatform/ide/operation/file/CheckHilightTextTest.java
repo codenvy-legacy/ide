@@ -160,7 +160,7 @@ public class CheckHilightTextTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-Thread.sleep(2000);
+      Thread.sleep(2000);
       checkHiligtGoogleGadget();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -217,33 +217,37 @@ Thread.sleep(2000);
     */
    public void checkHilightJavaScript() throws Exception
    {
-      IDE.EDITOR.selectIFrameWithEditor(2);
       //chek next elements in example file: var, undo,redo, x+y, 44.4
       driver
          .findElement(
-            By.xpath("//body[@class='editbox']/span[1][@class='js-comment' and text()=\"//Here you see some JavaScript code. Mess around with it to get\"]"))
+            By.xpath("//div[@class and @tabindex]/div/div[2]//span[text()='//Here you see some JavaScript code. Mess around with it to get']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[5][@class='js-keyword' and text()=\"var \"]"))
+      driver.findElement(
+         By.xpath("//div[@class and @tabindex]/div/div[9]//span[@class='javascript-keyword' and text()='var']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[21][@class='js-string' and text()='\"undo\"']"))
+      driver
+         .findElement(
+            By.xpath("//div[@class and @tabindex]/div/div[9]//span[@class='javascript-variable' and text()='keyBindings']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[26][@class='js-string' and text()='\"redo\"']"))
+      driver.findElement(
+         By.xpath("//div[@class and @tabindex]/div/div[12]//span[@class='javascript-string' and text()='\"undo\"']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[44][@class='js-keyword' and text()=\"var \"]"))
+      driver
+         .findElement(
+            By.xpath("//div[@class and @tabindex]/div/div[15]//span[@class='javascript-string-2' and text()='/foo|bar/i']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[45][@class='js-variabledef' and text()=\"y\"]"))
+      driver.findElement(
+         By.xpath("//div[@class and @tabindex]/div/div[16]//span[@class='javascript-def' and text()='x']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[46][@class='js-operator' and text()=\"=\"]"))
+
+      driver.findElement(
+         By.xpath("//div[@class and @tabindex]/div/div[17]//span[@class='javascript-number' and text()='44.4']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[47][@class='js-atom' and text()=\"44.4\"]"))
+
+      driver.findElement(
+         By.xpath("//div[@class and @tabindex]/div/div[18]//span[@class='javascript-variable-2' and text()='x']"))
          .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[51][@class='js-localvariable' and text()=\"x\"]"))
-         .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[52][@class='js-operator' and text()=\"+\"]"))
-         .isDisplayed();
-      driver.findElement(By.xpath("//body[@class='editbox']/span[53][@class='js-localvariable' and text()=\"y\"]"))
-         .isDisplayed();
-      IDE.selectMainFrame();
+
    }
 
    /**

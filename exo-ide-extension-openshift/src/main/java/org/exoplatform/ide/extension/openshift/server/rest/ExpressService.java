@@ -23,11 +23,11 @@ import org.exoplatform.ide.extension.openshift.server.ExpressException;
 import org.exoplatform.ide.extension.openshift.server.ParsingResponseException;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,8 +107,8 @@ public class ExpressService
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
       // Update VFS properties. Need it to uniform client.
-      ConvertibleProperty p = new ConvertibleProperty("openshift-express-application", application.getName());
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("openshift-express-application", application.getName());
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
 
@@ -147,9 +147,8 @@ public class ExpressService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         ConvertibleProperty p =
-            new ConvertibleProperty("openshift-express-application", Collections.<String> emptyList());
-         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         Property p = new Property("openshift-express-application", Collections.<String> emptyList());
+         List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
       }

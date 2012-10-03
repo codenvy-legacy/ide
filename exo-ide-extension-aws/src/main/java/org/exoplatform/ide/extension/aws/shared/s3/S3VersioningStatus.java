@@ -24,7 +24,7 @@ package org.exoplatform.ide.extension.aws.shared.s3;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public enum VersioningStatus
+public enum S3VersioningStatus
 {
    /**
     * By default, for new S3 Buckets versioning value is off.
@@ -44,7 +44,7 @@ public enum VersioningStatus
 
    private final String value;
 
-   private VersioningStatus(String value)
+   private S3VersioningStatus(String value)
    {
       this.value = value;
    }
@@ -55,9 +55,9 @@ public enum VersioningStatus
       return value;
    }
 
-   public static VersioningStatus fromValue(String value)
+   public static S3VersioningStatus fromValue(String value)
    {
-      for (VersioningStatus v : VersioningStatus.values())
+      for (S3VersioningStatus v : S3VersioningStatus.values())
       {
          if (v.value.equals(value))
          {

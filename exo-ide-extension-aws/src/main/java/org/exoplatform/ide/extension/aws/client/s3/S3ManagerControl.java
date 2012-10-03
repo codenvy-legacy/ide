@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.aws.client.s3;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.s3.events.ShowS3ManagerEvent;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>

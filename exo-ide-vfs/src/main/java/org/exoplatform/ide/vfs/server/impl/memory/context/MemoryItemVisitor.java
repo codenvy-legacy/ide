@@ -16,19 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: S3ObjectUploadedHandler.java Sep 26, 2012 vetal $
- *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public interface S3ObjectUploadedHandler extends EventHandler
+public interface MemoryItemVisitor
 {
-   /**
-    * @param event
-    */
-   void onS3ObjectUploaded(S3ObjectUploadedEvent event);
+   void visit(MemoryItem item) throws VirtualFileSystemException;
 }

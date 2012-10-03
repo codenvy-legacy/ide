@@ -32,6 +32,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteVersionRequest;
 import com.amazonaws.services.s3.model.EmailAddressGrantee;
+import com.amazonaws.services.s3.model.GetBucketAclRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.Grant;
 import com.amazonaws.services.s3.model.Grantee;
@@ -40,6 +41,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ListVersionsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.Owner;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -61,7 +63,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
-import org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus;
+import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -479,13 +481,13 @@ public class S3 extends AWSClient
     * @param status
     *    current status of versioning.
     *    Valid values:
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#OFF VersioningStatus.OFF}
-    *    {@link org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#SUSPENDED VersioningStatus.SUSPENDED}
-    *    {@see org.exoplatform.ide.extension.aws.shared.s3.VersioningStatus#ENABLED VersioningStatus.ENABLED}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#OFF S3VersioningStatus.OFF}
+    *    {@link org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#SUSPENDED S3VersioningStatus.SUSPENDED}
+    *    {@see org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus#ENABLED S3VersioningStatus.ENABLED}
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setVersioningStatus(String s3Bucket, VersioningStatus status) throws AWSException
+   public void setVersioningStatus(String s3Bucket, S3VersioningStatus status) throws AWSException
    {
       try
       {
@@ -650,20 +652,20 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Set Access Control List for specified S3 Bucket.
+    * Update Access Control List for specified S3 Bucket.
     *
     * @param s3Bucket
     *    S3 bucket name
-    * @param accessControlList
+    * @param s3AccessControls
     *    list of access control contains info about user and permission which will be given for him
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setBucketAcl(String s3Bucket, List<S3AccessControl> accessControlList) throws AWSException
+   public void updateBucketAcl(String s3Bucket, List<S3AccessControl> s3AccessControls) throws AWSException
    {
       try
       {
-         setBucketAcl(getS3Client(), s3Bucket, accessControlList);
+         updateBucketAcl(getS3Client(), s3Bucket, s3AccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -671,58 +673,40 @@ public class S3 extends AWSClient
       }
    }
 
-   private void setBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> accessControlList)
+   private void updateBucketAcl(AmazonS3 s3Client, String s3Bucket, List<S3AccessControl> s3AccessControls)
    {
+      Owner owner = s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket)).getOwner();
+
       AccessControlList acl = new AccessControlList();
+      acl.getGrants().addAll(createGrants(s3AccessControls));
 
-      for (S3AccessControl ac : accessControlList)
-      {
-         S3IdentityType identityType = ac.getIdentityType();
-         String identifier = ac.getIdentifier();
-
-         Grantee grantee = null;
-
-         if (identityType == S3IdentityType.GROUP)
-         {
-            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
-         }
-         else if (identityType == S3IdentityType.CANONICAL)
-         {
-            grantee = new CanonicalGrantee(identifier);
-         }
-         else if (identityType == S3IdentityType.EMAIL)
-         {
-            grantee = new EmailAddressGrantee(identifier);
-         }
-
-         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
-      }
+      acl.setOwner(owner);
 
       s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, acl));
    }
 
    /**
-    * Set Access Control List for the specific S3 key
+    * Update Access Control List for the specific S3 key
     *
     * @param s3Bucket
     *    name of the S3 bucket
     * @param s3Key
     *    name of the S3 key to add/change permissions
     * @param versionId
-    *    (optional) version ID of the S3 key
-    * @param accessControlList
+    *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
+    * @param s3AccessControls
     *    list of access control contains info about user and permission which will be given for him
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void setObjectAcl(String s3Bucket,
-                            String s3Key,
-                            String versionId,
-                            List<S3AccessControl> accessControlList) throws AWSException
+   public void updateObjectAcl(String s3Bucket,
+                               String s3Key,
+                               String versionId,
+                               List<S3AccessControl> s3AccessControls) throws AWSException
    {
       try
       {
-         setObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, accessControlList);
+         updateObjectAcl(getS3Client(), s3Bucket, s3Key, versionId, s3AccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -730,40 +714,54 @@ public class S3 extends AWSClient
       }
    }
 
-   private void setObjectAcl(AmazonS3 s3Client,
-                             String s3Bucket,
-                             String s3Key,
-                             String versionId,
-                             List<S3AccessControl> accessControlList)
+   private void updateObjectAcl(AmazonS3 s3Client,
+                                String s3Bucket,
+                                String s3Key,
+                                String versionId,
+                                List<S3AccessControl> s3AccessControls)
    {
+      Owner owner = s3Client.getObjectAcl(s3Bucket, s3Key, versionId).getOwner();
+
       AccessControlList acl = new AccessControlList();
+      acl.getGrants().addAll(createGrants(s3AccessControls));
 
-      for (S3AccessControl ac : accessControlList)
-      {
-         S3IdentityType identityType = ac.getIdentityType();
-         String identifier = ac.getIdentifier();
-
-         Grantee grantee = null;
-
-         if (identityType == S3IdentityType.GROUP)
-         {
-            grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
-         }
-         else if (identityType == S3IdentityType.CANONICAL)
-         {
-            grantee = new CanonicalGrantee(identifier);
-         }
-         else if (identityType == S3IdentityType.EMAIL)
-         {
-            grantee = new EmailAddressGrantee(identifier);
-         }
-
-         acl.grantPermission(grantee, Permission.parsePermission(ac.getPermission().toString()));
-      }
+      acl.setOwner(owner);
 
       s3Client.setObjectAcl(s3Bucket, s3Key, versionId, acl);
    }
    //
+
+   private List<Grant> createGrants(List<S3AccessControl> s3AccessControls)
+   {
+      List<Grant> grants = new ArrayList<Grant>(s3AccessControls.size());
+
+      for (S3AccessControl ac : s3AccessControls)
+      {
+         S3IdentityType identityType = ac.getIdentityType();
+         String identifier = ac.getIdentifier();
+
+         Grantee grantee;
+
+         switch (identityType)
+         {
+            case GROUP:
+               grantee = GroupGrantee.parseGroupGrantee(S3IdentityGroupType.fromValue(identifier).getUri());
+               break;
+            case CANONICAL:
+               grantee = new CanonicalGrantee(identifier);
+               break;
+            case EMAIL:
+               grantee = new EmailAddressGrantee(identifier);
+               break;
+            default:
+               throw new IllegalArgumentException("Invalid identity type.");
+         }
+
+         grants.add(new Grant(grantee, Permission.parsePermission(ac.getPermission().toString())));
+      }
+
+      return grants;
+   }
 
    protected AmazonS3 getS3Client() throws AWSException
    {

@@ -100,14 +100,14 @@ public class S3Service
          .send(callback);
    }
 
-   public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker)
+   public void getS3ObjectsList(AsyncRequestCallback<S3ObjectsList> callback, String s3Bucket, String nextMarker, int itemNums)
       throws RequestException
    {
-      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=20";
+      String url = restServiceContext + OBJECTS + s3Bucket + "?maxkeys=" + String.valueOf(itemNums);
       if (nextMarker != null)
          url += "&nextmarker=" + nextMarker;
 
-      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
    }
 

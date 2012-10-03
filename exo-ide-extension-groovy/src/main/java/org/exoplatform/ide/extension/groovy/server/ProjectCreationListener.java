@@ -25,13 +25,13 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -119,8 +119,7 @@ public class ProjectCreationListener implements EventListener
 
       if (!project.hasProperty(EXOIDE_CLASSPATH))
       {
-         List<ConvertibleProperty> properties =
-            Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty(EXOIDE_CLASSPATH, dependencys)});
+         List<Property> properties = Arrays.asList(new Property(EXOIDE_CLASSPATH, dependencys));
          vfs.updateItem(project.getId(), properties, null);
       }
 

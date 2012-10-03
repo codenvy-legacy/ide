@@ -125,39 +125,19 @@ public class S3ObjectGrid extends ListGrid<S3Object>
    }
 
 //   /**
-//    * Handler for deleting applications.
-//    * 
-//    * @param handler
-//    * @return
+//    * Implementation of {@link SelectionEvent} event.
 //    */
-//   public HandlerRegistration addDeleteButtonSelectionHandler(final SelectionHandler<S3Object> handler)
+//   private class SelectionEventImpl extends SelectionEvent<S3Object>
 //   {
-//      deleteAppColumn.setFieldUpdater(new FieldUpdater<S3Object, String>()
+//      /**
+//       * @param selectedItem selected application
+//       */
+//      protected SelectionEventImpl(S3Object selectedItem)
 //      {
+//         super(selectedItem);
+//      }
 //
-//         @Override
-//         public void update(int index, S3Object object, String value)
-//         {
-//            handler.onSelection(new SelectionEventImpl(object));
-//         }
-//      });
-//      return null;
 //   }
-
-   /**
-    * Implementation of {@link SelectionEvent} event.
-    */
-   private class SelectionEventImpl extends SelectionEvent<S3Object>
-   {
-      /**
-       * @param selectedItem selected application
-       */
-      protected SelectionEventImpl(S3Object selectedItem)
-      {
-         super(selectedItem);
-      }
-
-   }
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)

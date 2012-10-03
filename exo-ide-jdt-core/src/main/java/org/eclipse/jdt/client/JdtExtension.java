@@ -252,7 +252,10 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
                for (int i = 0; i < unmarshaller.typesInfo.size(); i++)
                {
                   JSONObject o = unmarshaller.typesInfo.get(i).isObject();
-                  TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
+                  if (o.containsKey("name"))
+                  {
+                     TypeInfoStorage.get().putType(o.get("name").isString().stringValue(), o.toString());
+                  }
                }
             }
          }

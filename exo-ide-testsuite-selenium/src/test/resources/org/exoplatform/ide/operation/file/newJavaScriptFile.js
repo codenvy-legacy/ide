@@ -7,7 +7,7 @@
 var keyBindings ={
   enter:"newline-and-indent",
   tab:"reindent-selection",
-  ctrl_z "undo",
+  ctrl_z: "undo",
   ctrl_y:"redo"
   };
   var regex =/foo|bar/i;

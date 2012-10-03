@@ -25,10 +25,10 @@ import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -121,9 +121,8 @@ public class GenerateDependencysTask extends TimerTask
          String message =
             "Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError();
          LOG.warn(message);
-         List<ConvertibleProperty> properties =
-            Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:build_error", buildId),
-               new ConvertibleProperty("exoide:classpath", (String)null)});
+         List<Property> properties =
+            Arrays.asList(new Property("exoide:build_error", buildId), new Property("exoide:classpath", (String)null));
          try
          {
             ConversationState.setCurrent(new ConversationState(new Identity("__system")));
@@ -157,9 +156,8 @@ public class GenerateDependencysTask extends TimerTask
          {
             ConversationState.setCurrent(new ConversationState(new Identity("__system")));
             String dependencys = readBody(data, http.getContentLength());
-            List<ConvertibleProperty> properties =
-               Arrays.asList(new ConvertibleProperty[]{new ConvertibleProperty("exoide:classpath", dependencys),
-                  new ConvertibleProperty("exoide:build_error", (String)null)});
+            List<Property> properties = Arrays.asList(new Property("exoide:classpath", dependencys),
+                  new Property("exoide:build_error", (String)null));
 
             vfs.updateItem(project.getId(), properties, null);
             copyDependencys(project, vfs, dependencys);

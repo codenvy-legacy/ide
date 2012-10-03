@@ -105,4 +105,10 @@ public interface AWSClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/aws/client/images/upload_Disabled.png")
    ImageResource uploadDisabled();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/new-bucket.png")
+   ImageResource newBucket();
+   
+   @Source("org/exoplatform/ide/extension/aws/client/images/bucket.png")
+   ImageResource bucket();
 }
