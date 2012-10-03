@@ -43,6 +43,9 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicati
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.deploy.DeployVersionPresenter;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2ClientServiceImpl;
+import org.exoplatform.ide.extension.aws.client.ec2.EC2Manager;
+import org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstancePresenter;
 import org.exoplatform.ide.extension.aws.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -74,8 +77,9 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays.asList(
-            ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS), new DeployApplicationPresenter()));
+         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays
+            .asList(ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS),
+            new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -92,7 +96,8 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new TerminateEnvironmentPresenter();
       new RebuildEnvironmentPresenter();
       new RestartAppServerPresenter();
-      //new EC2Manager();
+      new EC2Manager();
+      new StopInstancePresenter();
       new S3Manager();
    }
 
@@ -103,7 +108,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new BeanstalkClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
-      //new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new EC2ClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
    public static boolean canBeDeployedToBeanstalk(ProjectModel project)

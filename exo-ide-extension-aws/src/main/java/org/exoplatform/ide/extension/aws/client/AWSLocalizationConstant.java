@@ -80,6 +80,18 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.launch.environment")
    String launchEnvironmentButton();
 
+   @Key("button.instance.terminate")
+   String terminateInstanceButton();
+
+   @Key("button.instance.reboot")
+   String rebootInstanceButton();
+
+   @Key("button.instance.stop")
+   String stopInstanceButton();
+
+   @Key("button.instance.start")
+   String startInstanceButton();
+
    // Messages
    @Key("creatingProject")
    String creatingProject();
@@ -428,5 +440,56 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // EC2 Management View
    @Key("management.ec2.id")
    String managementEC2ViewTitle();
+
+   @Key("terminate.ec2.view.title")
+   String terminateEC2InstanceViewTitle();
+
+   @Key("terminate.ec2.question")
+   String terminateEC2InstanceQuestion(String instance);
+
+   @Key("terminate.ec2.success")
+   String terminateInstanceSuccess(String version);
+
+   @Key("terminate.ec2.failed")
+   String terminateInstanceFailed(String version);
+
+   @Key("reboot.ec2.view.title")
+   String rebootEC2InstanceViewTitle();
+
+   @Key("reboot.ec2.question")
+   String rebootEC2InstanceQuestion(String instance);
+
+   @Key("reboot.ec2.success")
+   String rebootInstanceSuccess(String version);
+
+   @Key("reboot.ec2.failed")
+   String rebootInstanceFailed(String version);
+
+   @Key("stop.ec2.view.title")
+   String stopEC2InstanceViewTitle();
+
+   @Key("stop.ec2.question")
+   String stopEC2InstanceQuestion(String instance);
+
+   @Key("stop.ec2.force")
+   String stopEC2Force();
+
+   @Key("stop.ec2.failed")
+   String stopInstanceFailed(String version);
+
+   @Key("stop.ec2.success")
+   String stopInstanceSuccess(String version);
+
+   @Key("start.ec2.view.title")
+   String startEC2InstanceViewTitle();
+
+   @Key("start.ec2.question")
+   String startEC2InstanceQuestion(String instance);
+
+   @Key("start.ec2.success")
+   String startInstanceSuccess(String version);
+
+   @Key("start.ec2.failed")
+   String startInstanceFailed(String version);
 
 }
