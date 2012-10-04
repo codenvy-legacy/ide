@@ -63,7 +63,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Permission;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
-import org.exoplatform.ide.extension.aws.shared.s3.S3UpdateAccessControl;
+import org.exoplatform.ide.extension.aws.shared.s3.UpdateAccessControlRequest;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -664,7 +664,7 @@ public class S3 extends AWSClient
     *    if any error occurs when make request to Amazon API
     */
    public void updateBucketAcl(String s3Bucket,
-                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
    {
       try
       {
@@ -693,7 +693,7 @@ public class S3 extends AWSClient
    public void updateObjectAcl(String s3Bucket,
                                String s3Key,
                                String versionId,
-                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
    {
       try
       {
@@ -709,37 +709,29 @@ public class S3 extends AWSClient
                           String s3Bucket,
                           String s3Key,
                           String versionId,
-                          S3UpdateAccessControl s3UpdateAccessControls)
+                          UpdateAccessControlRequest s3UpdateAccessControls)
    {
       AccessControlList currentAcl;
-
-      List<Grant> grantsToAdd = new ArrayList<Grant>();
-      List<Grant> grantsToDelete = new ArrayList<Grant>();
 
       List<S3AccessControl> s3AccessControlsToAdd = s3UpdateAccessControls.getS3AccessControlsToAdd();
       List<S3AccessControl> s3AccessControlsToDelete = s3UpdateAccessControls.getS3AccessControlsToDelete();
 
-      if (s3AccessControlsToAdd != null)
-      {
-         grantsToAdd.addAll(createGrants(s3AccessControlsToAdd));
-      }
-      if (s3AccessControlsToDelete != null)
-      {
-         grantsToDelete.addAll(createGrants(s3AccessControlsToDelete));
-      }
-
       if (s3Key == null)
       {
          currentAcl = s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket));
-         currentAcl.getGrants().addAll(grantsToAdd);
-         currentAcl.getGrants().removeAll(grantsToDelete);
+         if (s3AccessControlsToAdd != null)
+            currentAcl.getGrants().addAll(createGrants(s3AccessControlsToAdd));
+         if (s3AccessControlsToDelete != null)
+            currentAcl.getGrants().removeAll(createGrants(s3AccessControlsToDelete));
          s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, currentAcl));
       }
       else
       {
          currentAcl = s3Client.getObjectAcl(s3Bucket, s3Key, versionId);
-         currentAcl.getGrants().addAll(grantsToAdd);
-         currentAcl.getGrants().removeAll(grantsToDelete);
+         if (s3AccessControlsToAdd != null)
+            currentAcl.getGrants().addAll(createGrants(s3AccessControlsToAdd));
+         if (s3AccessControlsToDelete != null)
+            currentAcl.getGrants().removeAll(createGrants(s3AccessControlsToDelete));
          s3Client.setObjectAcl(s3Bucket, s3Key, versionId, currentAcl);
       }
    }

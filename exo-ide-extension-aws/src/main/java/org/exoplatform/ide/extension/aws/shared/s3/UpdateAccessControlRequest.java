@@ -27,7 +27,7 @@ import java.util.List;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public interface S3UpdateAccessControl
+public interface UpdateAccessControlRequest
 {
    /**
     * Get list of permissions to add to current ACL.
