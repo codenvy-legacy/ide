@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.S3UpdateAccessControl;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -135,10 +136,9 @@ public class S3Service
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                               List<S3AccessControl> s3AccessControlsToAdd,
-                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
+                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
    {
-      s3.updateBucketAcl(s3Bucket, s3AccessControlsToAdd, s3AccessControlsToDelete);
+      s3.updateBucketAcl(s3Bucket, s3UpdateAccessControls);
    }
    //
 
@@ -305,9 +305,8 @@ public class S3Service
    public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                @QueryParam("s3key") String s3Key,
                                @QueryParam("versionid") String versionId,
-                               List<S3AccessControl> s3AccessControlsToAdd,
-                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
+                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
    {
-      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3AccessControlsToAdd, s3AccessControlsToDelete);
+      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3UpdateAccessControls);
    }
 }

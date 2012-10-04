@@ -63,6 +63,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Permission;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.S3UpdateAccessControl;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -657,20 +658,17 @@ public class S3 extends AWSClient
     *
     * @param s3Bucket
     *    name of the S3 bucket
-    * @param s3AccessControlsToAdd
-    *    list with user permissions which should be added to Access Control List
-    * @param s3AccessControlsToDelete
-    *    list with user permissions which should be deleted from Access Control list
+    * @param s3UpdateAccessControls
+    *    object contains lists with user permissions which should be added and deleted from Access Control List
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
    public void updateBucketAcl(String s3Bucket,
-                               List<S3AccessControl> s3AccessControlsToAdd,
-                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
+                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
    {
       try
       {
-         updateAcl(getS3Client(), s3Bucket, null, null, s3AccessControlsToAdd, s3AccessControlsToDelete);
+         updateAcl(getS3Client(), s3Bucket, null, null, s3UpdateAccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -687,22 +685,19 @@ public class S3 extends AWSClient
     *    name of the S3 key
     * @param versionId
     *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
-    * @param s3AccessControlsToAdd
-    *    list with user permissions which should be added to Access Control List
-    * @param s3AccessControlsToDelete
-    *    list with user permissions which should be deleted from Access Control list
+    * @param s3UpdateAccessControls
+    *    object contains lists with user permissions which should be added and deleted from Access Control List
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
    public void updateObjectAcl(String s3Bucket,
                                String s3Key,
                                String versionId,
-                               List<S3AccessControl> s3AccessControlsToAdd,
-                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
+                               S3UpdateAccessControl s3UpdateAccessControls) throws AWSException
    {
       try
       {
-         updateAcl(getS3Client(), s3Bucket, s3Key, versionId, s3AccessControlsToAdd, s3AccessControlsToDelete);
+         updateAcl(getS3Client(), s3Bucket, s3Key, versionId, s3UpdateAccessControls);
       }
       catch (AmazonClientException e)
       {
@@ -714,13 +709,12 @@ public class S3 extends AWSClient
                           String s3Bucket,
                           String s3Key,
                           String versionId,
-                          List<S3AccessControl> s3AccessControlsToAdd,
-                          List<S3AccessControl> s3AccessControlsToDelete)
+                          S3UpdateAccessControl s3UpdateAccessControls)
    {
       AccessControlList currentAcl;
 
-      List<Grant> grantsToDelete = new ArrayList<Grant>(createGrants(s3AccessControlsToDelete));
-      List<Grant> grantsToAdd = new ArrayList<Grant>(createGrants(s3AccessControlsToAdd));
+      List<Grant> grantsToAdd = new ArrayList<Grant>(createGrants(s3UpdateAccessControls.getS3AccessControlsToAdd()));
+      List<Grant> grantsToDelete = new ArrayList<Grant>(createGrants(s3UpdateAccessControls.getS3AccessControlToDelete()));
 
       if (s3Key == null)
       {
@@ -792,10 +786,8 @@ public class S3 extends AWSClient
       {
          return createAccessControls(s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket)).getGrants());
       }
-      else
-      {
-         return createAccessControls(s3Client.getObjectAcl(s3Bucket, s3key, versionId).getGrants());
-      }
+
+      return createAccessControls(s3Client.getObjectAcl(s3Bucket, s3key, versionId).getGrants());
    }
    //
 
