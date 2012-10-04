@@ -124,12 +124,29 @@ public class S3Service
    }
 
    @Path("buckets/acl/{s3bucket}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<S3AccessControl> getBucketAcl(@PathParam("s3bucket") String s3Bucket) throws AWSException
+   {
+      return s3.getBucketAcl(s3Bucket);
+   }
+
+   @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
+   public void addBucketAcl(@PathParam("s3bucket") String s3Bucket,
+                            List<S3AccessControl> s3AccessControls) throws AWSException
+   {
+      s3.addBucketAcl(s3Bucket, s3AccessControls);
+   }
+
+   @Path("buckets/acl/delete/{s3bucket}")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void deleteBucketAcl(@PathParam("s3bucket") String s3Bucket,
                                List<S3AccessControl> s3AccessControls) throws AWSException
    {
-      s3.updateBucketAcl(s3Bucket, s3AccessControls);
+      s3.deleteBucketAcl(s3Bucket, s3AccessControls);
    }
    //
 
@@ -281,13 +298,34 @@ public class S3Service
    }
 
    @Path("objects/acl/{s3bucket}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<S3AccessControl> getObjectAcl(@PathParam("s3bucket") String s3Bucket,
+                                             @QueryParam("s3key") String s3Key,
+                                             @QueryParam("versionid") String versionId) throws AWSException
+   {
+      return s3.getObjectAcl(s3Bucket, s3Key, versionId);
+   }
+
+   @Path("objects/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
+   public void addObjectAcl(@PathParam("s3bucket") String s3Bucket,
+                            @QueryParam("s3key") String s3Key,
+                            @QueryParam("versionid") String versionId,
+                            List<S3AccessControl> s3AccessControls) throws AWSException
+   {
+      s3.addObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
+   }
+
+   @Path("objects/acl/delete/{s3bucket}")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void deleteObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                @QueryParam("s3key") String s3Key,
                                @QueryParam("versionid") String versionId,
                                List<S3AccessControl> s3AccessControls) throws AWSException
    {
-      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
+      s3.deleteObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
    }
 }
