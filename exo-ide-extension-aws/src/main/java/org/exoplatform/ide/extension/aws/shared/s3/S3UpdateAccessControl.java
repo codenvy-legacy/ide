@@ -51,7 +51,7 @@ public interface S3UpdateAccessControl
     * @return
     *    list of permissions to delete from Acl
     */
-   List<S3AccessControl> getS3AccessControlToDelete();
+   List<S3AccessControl> getS3AccessControlsToDelete();
 
    /**
     * Set list of permissions to delete from current ACL.

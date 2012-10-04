@@ -713,8 +713,20 @@ public class S3 extends AWSClient
    {
       AccessControlList currentAcl;
 
-      List<Grant> grantsToAdd = new ArrayList<Grant>(createGrants(s3UpdateAccessControls.getS3AccessControlsToAdd()));
-      List<Grant> grantsToDelete = new ArrayList<Grant>(createGrants(s3UpdateAccessControls.getS3AccessControlToDelete()));
+      List<Grant> grantsToAdd = new ArrayList<Grant>();
+      List<Grant> grantsToDelete = new ArrayList<Grant>();
+
+      List<S3AccessControl> s3AccessControlsToAdd = s3UpdateAccessControls.getS3AccessControlsToAdd();
+      List<S3AccessControl> s3AccessControlsToDelete = s3UpdateAccessControls.getS3AccessControlsToDelete();
+
+      if (s3AccessControlsToAdd != null)
+      {
+         grantsToAdd.addAll(createGrants(s3AccessControlsToAdd));
+      }
+      if (s3AccessControlsToDelete != null)
+      {
+         grantsToDelete.addAll(createGrants(s3AccessControlsToDelete));
+      }
 
       if (s3Key == null)
       {
