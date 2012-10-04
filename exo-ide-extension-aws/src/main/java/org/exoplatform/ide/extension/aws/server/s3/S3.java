@@ -653,20 +653,24 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Change Access Control List by adding controls for specified S3 Bucket.
+    * Update Amazon S3 Bucket ACL
     *
     * @param s3Bucket
-    *    S3 bucket name
-    * @param s3AccessControls
-    *    list of access control contains info about user and permission which will be given for him
+    *    name of the S3 bucket
+    * @param s3AccessControlsToAdd
+    *    list with user permissions which should be added to Access Control List
+    * @param s3AccessControlsToDelete
+    *    list with user permissions which should be deleted from Access Control list
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void addBucketAcl(String s3Bucket, List<S3AccessControl> s3AccessControls) throws AWSException
+   public void updateBucketAcl(String s3Bucket,
+                               List<S3AccessControl> s3AccessControlsToAdd,
+                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
    {
       try
       {
-         addAcl(getS3Client(), s3Bucket, null, null, s3AccessControls);
+         updateAcl(getS3Client(), s3Bucket, null, null, s3AccessControlsToAdd, s3AccessControlsToDelete);
       }
       catch (AmazonClientException e)
       {
@@ -675,27 +679,30 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Change Access Control List  by adding controls for specified for the specific S3 key
+    * Update Amazon S3 Key ACL
     *
     * @param s3Bucket
     *    name of the S3 bucket
     * @param s3Key
-    *    name of the S3 key to add/change permissions
+    *    name of the S3 key
     * @param versionId
     *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
-    * @param s3AccessControls
-    *    list of access control contains info about user and permission which will be given for him
+    * @param s3AccessControlsToAdd
+    *    list with user permissions which should be added to Access Control List
+    * @param s3AccessControlsToDelete
+    *    list with user permissions which should be deleted from Access Control list
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public void addObjectAcl(String s3Bucket,
-                            String s3Key,
-                            String versionId,
-                            List<S3AccessControl> s3AccessControls) throws AWSException
+   public void updateObjectAcl(String s3Bucket,
+                               String s3Key,
+                               String versionId,
+                               List<S3AccessControl> s3AccessControlsToAdd,
+                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
    {
       try
       {
-         addAcl(getS3Client(), s3Bucket, s3Key, versionId, s3AccessControls);
+         updateAcl(getS3Client(), s3Bucket, s3Key, versionId, s3AccessControlsToAdd, s3AccessControlsToDelete);
       }
       catch (AmazonClientException e)
       {
@@ -703,100 +710,31 @@ public class S3 extends AWSClient
       }
    }
 
-   private void addAcl(AmazonS3 s3Client,
-                       String s3Bucket,
-                       String s3Key,
-                       String versionId,
-                       List<S3AccessControl> s3AccessControls)
+   private void updateAcl(AmazonS3 s3Client,
+                          String s3Bucket,
+                          String s3Key,
+                          String versionId,
+                          List<S3AccessControl> s3AccessControlsToAdd,
+                          List<S3AccessControl> s3AccessControlsToDelete)
    {
       AccessControlList currentAcl;
+
+      List<Grant> grantsToDelete = new ArrayList<Grant>(createGrants(s3AccessControlsToDelete));
+      List<Grant> grantsToAdd = new ArrayList<Grant>(createGrants(s3AccessControlsToAdd));
 
       if (s3Key == null)
       {
          currentAcl = s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket));
-         currentAcl.getGrants().addAll(createGrants(s3AccessControls));
+         currentAcl.getGrants().addAll(grantsToAdd);
+         currentAcl.getGrants().removeAll(grantsToDelete);
          s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, currentAcl));
       }
       else
       {
          currentAcl = s3Client.getObjectAcl(s3Bucket, s3Key, versionId);
-         currentAcl.getGrants().addAll(createGrants(s3AccessControls));
+         currentAcl.getGrants().addAll(grantsToAdd);
+         currentAcl.getGrants().removeAll(grantsToDelete);
          s3Client.setObjectAcl(s3Bucket, s3Key, versionId, currentAcl);
-      }
-   }
-
-   /**
-    * Change Access Control List by deleting controls from specified S3 bucket
-    *
-    * @param s3Bucket
-    *    name of the S3 bucket
-    * @param s3AccessControls
-    *    list of access control contains info about user and permission which will be deleted from current Acl
-    * @throws AWSException
-    *    if any error occurs when make request to Amazon API
-    */
-   public void deleteBucketAcl(String s3Bucket, List<S3AccessControl> s3AccessControls) throws AWSException
-   {
-      try
-      {
-         deleteAcl(getS3Client(), s3Bucket, null, null, s3AccessControls);
-      }
-      catch (AmazonClientException e)
-      {
-         throw new AWSException(e);
-      }
-   }
-
-   /**
-    * Change Access Control List by deleting controls from specified S3 key
-    *
-    * @param s3Bucket
-    *    name of the S3 bucket
-    * @param s3key
-    *    name of the S3 key
-    * @param versionId
-    *    (optional) version ID of the S3 key, if not defined it uses the latest version of key
-    * @param s3AccessControls
-    *    list of access control contains info about user and permission which will be deleted from current Acl
-    * @throws AWSException
-    *    if any error occurs when make request to Amazon API
-    */
-   public void deleteObjectAcl(String s3Bucket,
-                               String s3key,
-                               String versionId,
-                               List<S3AccessControl> s3AccessControls) throws AWSException
-   {
-      try
-      {
-         deleteAcl(getS3Client(), s3Bucket, s3key, versionId, s3AccessControls);
-      }
-      catch (AmazonClientException e)
-      {
-         throw new AWSException(e);
-      }
-   }
-
-   private void deleteAcl(AmazonS3 s3Client,
-                          String s3Bucket,
-                          String s3key,
-                          String versionId,
-                          List<S3AccessControl> s3AccessControls)
-   {
-      AccessControlList currentAcl;
-
-      List<Grant> grantsToDelete = new ArrayList<Grant>(createGrants(s3AccessControls));
-
-      if (s3key == null)
-      {
-         currentAcl = s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket));
-         currentAcl.getGrants().removeAll(grantsToDelete);
-         s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, currentAcl));
-      }
-      else
-      {
-         currentAcl = s3Client.getObjectAcl(s3Bucket, s3key, versionId);
-         currentAcl.getGrants().removeAll(grantsToDelete);
-         s3Client.setObjectAcl(s3Bucket, s3key, versionId, currentAcl);
       }
    }
 

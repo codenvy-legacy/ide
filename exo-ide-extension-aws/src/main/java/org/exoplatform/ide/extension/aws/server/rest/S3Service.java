@@ -134,19 +134,11 @@ public class S3Service
    @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void addBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                            List<S3AccessControl> s3AccessControls) throws AWSException
+   public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
+                               List<S3AccessControl> s3AccessControlsToAdd,
+                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
    {
-      s3.addBucketAcl(s3Bucket, s3AccessControls);
-   }
-
-   @Path("buckets/acl/delete/{s3bucket}")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void deleteBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                               List<S3AccessControl> s3AccessControls) throws AWSException
-   {
-      s3.deleteBucketAcl(s3Bucket, s3AccessControls);
+      s3.updateBucketAcl(s3Bucket, s3AccessControlsToAdd, s3AccessControlsToDelete);
    }
    //
 
@@ -310,22 +302,12 @@ public class S3Service
    @Path("objects/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void addObjectAcl(@PathParam("s3bucket") String s3Bucket,
-                            @QueryParam("s3key") String s3Key,
-                            @QueryParam("versionid") String versionId,
-                            List<S3AccessControl> s3AccessControls) throws AWSException
-   {
-      s3.addObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
-   }
-
-   @Path("objects/acl/delete/{s3bucket}")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   public void deleteObjectAcl(@PathParam("s3bucket") String s3Bucket,
+   public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                @QueryParam("s3key") String s3Key,
                                @QueryParam("versionid") String versionId,
-                               List<S3AccessControl> s3AccessControls) throws AWSException
+                               List<S3AccessControl> s3AccessControlsToAdd,
+                               List<S3AccessControl> s3AccessControlsToDelete) throws AWSException
    {
-      s3.deleteObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
+      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3AccessControlsToAdd, s3AccessControlsToDelete);
    }
 }
