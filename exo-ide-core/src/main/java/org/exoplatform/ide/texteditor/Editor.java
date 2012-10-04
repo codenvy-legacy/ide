@@ -35,6 +35,8 @@ import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.TextListener;
+import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.documentparser.DocumentParser;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
 import org.exoplatform.ide.texteditor.input.InputController;
@@ -56,6 +58,7 @@ import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
+import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 
 /**
  * The presenter for the editor.
@@ -241,6 +244,10 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    private final RenderTimeExecutor renderTimeExecutor;
 
    private Document document;
+
+   private SyntaxHighlighter syntaxHighlighter;
+
+   private Parser parser;
 
    public Editor(AppContext appContext)
    {
@@ -525,7 +532,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       //        selection,
       //        editorDocumentMutator);
       localCursorController = LocalCursorController.create(appContext, focusManager, selection, buffer, this);
-
+      createSyntaxHighligter(parser);
       new CurrentLineHighlighter(buffer, selection, appContext.getResources());
 
    }
@@ -648,6 +655,22 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    {
       setUndoManager(configuration.getUndoManager(this));
       LineDimensionsUtils.setTabSpaceEquivalence(configuration.getTabWidth(this));
+      parser = configuration.getParser();
+   }
+
+   /**
+    * @param parser
+    */
+   private void createSyntaxHighligter(Parser parser)
+   {
+      if (parser == null)
+         return;
+      DocumentParser documentParser = DocumentParser.create(textStore, parser, appContext.getUserActivityManager());
+      syntaxHighlighter =
+         SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
+            appContext.getResources().workspaceEditorCss());
+      addLineRenderer(syntaxHighlighter.getRenderer());
+//      Autoindenter.create(documentParser, this);
    }
 
 }

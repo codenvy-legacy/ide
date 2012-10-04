@@ -50,11 +50,11 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
     * @param documentProvider 
     * 
     */
-   public BaseTextEditor(AppContext appContext, DocumentProvider documentProvider)
+   public BaseTextEditor(AppContext appContext, DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       this.documentProvider = documentProvider;
       editor = new Editor(appContext);
-      editor.configure(new TextEditorConfiguration());
+      editor.configure(configuration);
    }
 
    /**
@@ -65,7 +65,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
    {
       documentProvider.getDocument(input, new DocumentCallback()
       {
-         
+
          @Override
          public void onDocument(Document document)
          {

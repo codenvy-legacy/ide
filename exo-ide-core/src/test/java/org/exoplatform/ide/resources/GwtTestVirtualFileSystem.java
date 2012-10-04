@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.loader.EmptyLoader;
@@ -60,7 +61,7 @@ public class GwtTestVirtualFileSystem extends GWTTestCase
             ACLCapability.MANAGE, QueryCapability.BOTHCOMBINED, links, new Folder());
 
       resourceProvider =
-         new ResourceProviderComponent(new GenericModelProvider(new SimpleEventBus()), new EmptyLoader(), new SimpleEventBus());
+         new ResourceProviderComponent(new GenericModelProvider(new SimpleEventBus()), new EmptyLoader(), new SimpleEventBus(), new FileType(null, null));
       resourceProvider.vfsInfo = info;
    }
 

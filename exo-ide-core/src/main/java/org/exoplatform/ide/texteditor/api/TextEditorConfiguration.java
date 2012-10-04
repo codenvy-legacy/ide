@@ -21,6 +21,7 @@ package org.exoplatform.ide.texteditor.api;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.api.contentassistant.ContentAssistant;
+import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 
 /**
@@ -154,6 +155,16 @@ public class TextEditorConfiguration
    public String getConfiguredDocumentPartitioning(TextEditorPartDisplay display)
    {
       return Document.DEFAULT_PARTITIONING;
+   }
+   
+   /**
+    * Returns parser for syntax highlight.
+    * This implementation always returns <code>null</code>.
+    * @return the Parser
+    */
+   public Parser getParser()
+   {
+      return null;
    }
 
 }

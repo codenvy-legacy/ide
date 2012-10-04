@@ -27,6 +27,8 @@ import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.texteditor.api.BeforeTextListener;
 import org.exoplatform.ide.texteditor.api.TextListener;
+import org.exoplatform.ide.util.ListenerManager;
+import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 
 /**
@@ -38,6 +40,10 @@ public class EditorTextStoreMutator implements TextStoreMutator
 {
 
    private Editor editor;
+
+   private final ListenerManager<BeforeTextListener> beforeTextListenerManager = ListenerManager.create();
+
+   private final ListenerManager<TextListener> textListenerManager = ListenerManager.create();
 
    /**
     * @param editor
@@ -116,6 +122,8 @@ public class EditorTextStoreMutator implements TextStoreMutator
          int lineOffset = document.getLineOffset(lineNumber);
          InsertEdit insert = new InsertEdit(lineOffset + column, text);
          insert.apply(document);
+         TextChange textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
+         dispatchTextChange(textChange);
 
       }
       catch (BadLocationException e)
@@ -126,13 +134,24 @@ public class EditorTextStoreMutator implements TextStoreMutator
       return null;
    }
 
+   void dispatchTextChange(final TextChange textChange)
+   {
+      textListenerManager.dispatch(new Dispatcher<TextListener>()
+      {
+         @Override
+         public void dispatch(TextListener listener)
+         {
+            listener.onTextChange(textChange);
+         }
+      });
+   }
+
    /**
     * @return
     */
    public ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return beforeTextListenerManager;
    }
 
    /**
@@ -140,8 +159,7 @@ public class EditorTextStoreMutator implements TextStoreMutator
     */
    public ListenerRegistrar<TextListener> getTextListenerRegistrar()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return textListenerManager;
    }
 
    /**

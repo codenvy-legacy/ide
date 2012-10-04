@@ -18,21 +18,17 @@
  */
 package org.exoplatform.ide.core.editor;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import com.google.inject.Inject;
-
+import org.exoplatform.ide.api.resources.FileType;
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.editor.EditorProvider;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.json.JsonStringMap;
+import org.exoplatform.ide.json.JsonIntegerMap;
 
 /**
- * Registry interface for holding {@link EditorProvider} for specific mime types.
- * <p>
- * Editor register not limit number providers for one mime type. In general for specific mime type
- * can exist more the one {@link EditorProvider}
- * </p> 
+ * Registry for holding {@link EditorProvider} for specific {@link FileType}.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -40,63 +36,44 @@ import org.exoplatform.ide.json.JsonStringMap;
 public class EditorRegistry
 {
 
-   private JsonStringMap<JsonArray<EditorProvider>> registry = JsonCollections.createStringMap();
-
-   private EditorProvider defaultProvider;
+   private JsonIntegerMap<EditorProvider> registry;
 
    @Inject
-   public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider, JavaEditorProvider javaEditorProvider)
+   public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider,
+      @Named("defaultFileType") FileType defaultFile, JavaEditorProvider javaEditorProvider,
+      ResourceProvider resourceProvider)
    {
       super();
-      this.defaultProvider = defaultProvider;
+      registry = JsonCollections.createIntegerMap();
+      register(defaultFile, defaultProvider);
       //XXX for demo only
-      register("application/java", javaEditorProvider);
+      FileType javaFile = new FileType(null, "application/java", "java");
+      register(javaFile, javaEditorProvider);
+      resourceProvider.registerFileType(javaFile);
    }
 
    /**
-    * Register editor provider for mime type.
-    * @param mimeType
+    * Register editor provider for file type.
+    * @param fileType
     * @param provider
     */
-   public void register(String mimeType, EditorProvider provider)
+   public void register(FileType fileType, EditorProvider provider)
    {
-      if (!registry.containsKey(mimeType))
-      {
-         registry.put(mimeType, JsonCollections.<EditorProvider> createArray());
-      }
-      registry.get(mimeType).add(provider);
+      //      if (!registry.containsKey(mimeType))
+      //      {
+      //         registry.put(mimeType, JsonCollections.<EditorProvider> createArray());
+      //      }
+      //      registry.get(mimeType).add(provider);
+      registry.put(fileType.getId(), provider);
    }
 
    /**
-    * Get default editor provide assigned for mime type;
-    * @param mimeType resource mime type 
+    * Get default editor provide assigned for file type;
+    * @param fileType resource mime type 
     * @return editor provider
     */
-   public EditorProvider getDefaultEditor(String mimeType)
+   public EditorProvider getDefaultEditor(FileType fileType)
    {
-      //FIXME first dummy implementation return first found editor as default
-      if (registry.containsKey(mimeType))
-      {
-         return registry.get(mimeType).get(0);
-      }
-      else
-      {
-         return defaultProvider;
-      }
-
+      return registry.get(fileType.getId());
    }
-
-   /**
-    * Get all registered providers for mime type
-    * @param mimeType the mime type of resource
-    * @return array of <code>EditorProvider</code>
-    */
-   public EditorProvider[] getAvailableEditors(String mimeType)
-   {
-      //TODO
-      return null;
-   }
-
-   //TODO maybe need setDefaultEditor
-
 }

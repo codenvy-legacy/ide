@@ -21,6 +21,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.ModelProvider;
+import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.ProjectNature;
 import org.exoplatform.ide.resources.model.Property;
@@ -108,5 +109,18 @@ public interface ResourceProvider extends Component
     * @param callback
     */
    public void applyNature(Project project, String natureId, AsyncCallback<Project> callback);
+   
+   /**
+    * Register file type.
+    * @param fileType
+    */
+   public void registerFileType(FileType fileType);
+   
+   /**
+    * Get file type matched for file
+    * @param file
+    * @return
+    */
+   public FileType getFileType(File file);
    
 }

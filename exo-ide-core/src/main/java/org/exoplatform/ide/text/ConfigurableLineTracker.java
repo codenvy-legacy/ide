@@ -12,8 +12,6 @@ package org.exoplatform.ide.text;
 
 import org.exoplatform.ide.runtime.Assert;
 
-
-
 /**
  * Standard implementation of a generic
  * {@link org.eclipse.LineTracker.text.ILineTracker}.
@@ -27,52 +25,58 @@ import org.exoplatform.ide.runtime.Assert;
  * </p>
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class ConfigurableLineTracker extends AbstractLineTracker {
+public class ConfigurableLineTracker extends AbstractLineTracker
+{
 
+   /** The strings which are considered being the line delimiter */
+   private String[] fDelimiters;
 
-	/** The strings which are considered being the line delimiter */
-	private String[] fDelimiters;
-	/** A predefined delimiter information which is always reused as return value */
-	private DelimiterInfo fDelimiterInfo= new DelimiterInfo();
+   /** A predefined delimiter information which is always reused as return value */
+   private DelimiterInfo fDelimiterInfo = new DelimiterInfo();
 
+   /**
+    * Creates a standard line tracker for the given line delimiters.
+    *
+    * @param legalLineDelimiters the tracker's legal line delimiters,
+    *		may not be <code>null</code> and must be longer than 0
+    */
+   public ConfigurableLineTracker(String[] legalLineDelimiters)
+   {
+      Assert.isTrue(legalLineDelimiters != null && legalLineDelimiters.length > 0);
+      fDelimiters = TextUtilities.copy(legalLineDelimiters);
+   }
 
-	/**
-	 * Creates a standard line tracker for the given line delimiters.
-	 *
-	 * @param legalLineDelimiters the tracker's legal line delimiters,
-	 *		may not be <code>null</code> and must be longer than 0
-	 */
-	public ConfigurableLineTracker(String[] legalLineDelimiters) {
-		Assert.isTrue(legalLineDelimiters != null && legalLineDelimiters.length > 0);
-		fDelimiters= TextUtilities.copy(legalLineDelimiters);
-	}
+   /*
+    * @see org.eclipse.jface.text.ILineTracker#getLegalLineDelimiters()
+    */
+   public String[] getLegalLineDelimiters()
+   {
+      return TextUtilities.copy(fDelimiters);
+   }
 
-	/*
-	 * @see org.eclipse.jface.text.ILineTracker#getLegalLineDelimiters()
-	 */
-	public String[] getLegalLineDelimiters() {
-		return TextUtilities.copy(fDelimiters);
-	}
+   /*
+    * @see org.eclipse.jface.text.AbstractLineTracker#nextDelimiterInfo(java.lang.String, int)
+    */
+   protected DelimiterInfo nextDelimiterInfo(String text, int offset)
+   {
+      if (fDelimiters.length > 1)
+      {
+         int[] info = TextUtilities.indexOf(fDelimiters, text, offset);
+         if (info[0] == -1)
+            return null;
+         fDelimiterInfo.delimiterIndex = info[0];
+         fDelimiterInfo.delimiter = fDelimiters[info[1]];
+      }
+      else
+      {
+         int index = text.indexOf(fDelimiters[0], offset);
+         if (index == -1)
+            return null;
+         fDelimiterInfo.delimiterIndex = index;
+         fDelimiterInfo.delimiter = fDelimiters[0];
+      }
 
-	/*
-	 * @see org.eclipse.jface.text.AbstractLineTracker#nextDelimiterInfo(java.lang.String, int)
-	 */
-	protected DelimiterInfo nextDelimiterInfo(String text, int offset) {
-		if (fDelimiters.length > 1) {
-			int[] info= TextUtilities.indexOf(fDelimiters, text, offset);
-			if (info[0] == -1)
-				return null;
-			fDelimiterInfo.delimiterIndex= info[0];
-			fDelimiterInfo.delimiter= fDelimiters[info[1]];
-		} else {
-			int index= text.indexOf(fDelimiters[0], offset);
-			if (index == -1)
-				return null;
-			fDelimiterInfo.delimiterIndex= index;
-			fDelimiterInfo.delimiter= fDelimiters[0];
-		}
-
-		fDelimiterInfo.delimiterLength= fDelimiterInfo.delimiter.length();
-		return fDelimiterInfo;
-	}
+      fDelimiterInfo.delimiterLength = fDelimiterInfo.delimiter.length();
+      return fDelimiterInfo;
+   }
 }

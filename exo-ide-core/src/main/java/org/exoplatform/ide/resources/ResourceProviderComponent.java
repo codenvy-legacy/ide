@@ -16,22 +16,27 @@
  */
 package org.exoplatform.ide.resources;
 
-import com.google.web.bindery.event.shared.EventBus;
+import com.google.inject.name.Named;
 
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.core.ComponentException;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.json.JsonIntegerMap;
+import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.loader.Loader;
@@ -39,6 +44,7 @@ import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.ProjectModelProviderAdapter;
 import org.exoplatform.ide.resources.marshal.ProjectModelUnmarshaller;
 import org.exoplatform.ide.resources.marshal.VFSInfoUnmarshaller;
+import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Link;
 import org.exoplatform.ide.resources.model.Project;
@@ -73,6 +79,8 @@ public class ResourceProviderComponent implements ResourceProvider
 
    private final JsonStringMap<ProjectNature> natures;
 
+   private final JsonIntegerMap<FileType> fileTypes;
+
    protected VirtualFileSystemInfo vfsInfo;
 
    protected final ModelProvider genericModelProvider;
@@ -84,20 +92,25 @@ public class ResourceProviderComponent implements ResourceProvider
 
    private final EventBus eventBus;
 
+   private final FileType defaulFile;
+
    /**
     * Resources API for client application.
     * It deals with VFS to retrieve the content of  the files 
     * @throws ResourceException 
     */
    @Inject
-   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus)
+   public ResourceProviderComponent(ModelProvider genericModelProvider, Loader loader, EventBus eventBus,
+      @Named("defaultFileType") FileType defaulFile)
    {
       super();
       this.genericModelProvider = genericModelProvider;
       this.eventBus = eventBus;
+      this.defaulFile = defaulFile;
       this.workspaceURL = "rest/ide/vfs/dev-monit";
       this.modelProviders = JsonCollections.<ModelProvider> createStringMap();
       this.natures = JsonCollections.<ProjectNature> createStringMap();
+      this.fileTypes = JsonCollections.createIntegerMap();
       this.loader = loader;
    }
 
@@ -398,6 +411,87 @@ public class ResourceProviderComponent implements ResourceProvider
             }
          }
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void registerFileType(FileType fileType)
+   {
+      fileTypes.put(fileType.getId(), fileType);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public FileType getFileType(File file)
+   {
+      String mimeType = file.getMimeType();
+      final String name = file.getName();
+      final JsonArray<FileType> filtered = JsonCollections.createArray();
+      final JsonArray<FileType> nameMatch = JsonCollections.createArray();
+      fileTypes.iterate(new IterationCallback<FileType>()
+      {
+
+         @Override
+         public void onIteration(int key, FileType val)
+         {
+            if (val.getNamePattern() != null)
+            {
+               RegExp regExp = RegExp.compile(val.getNamePattern());
+               if (regExp.test(name))
+               {
+                  nameMatch.add(val);
+               }
+            }
+            else
+            {
+               filtered.add(val);
+            }
+         }
+      });
+      if (!nameMatch.isEmpty())
+      {
+         //TODO what if name matches more than one
+         return nameMatch.get(0);
+      }
+      for (FileType type : filtered.asIterable())
+      {
+         if (type.getMimeTypes().contains(mimeType))
+         {
+            return type;
+         }
+      }
+      String extension = getFileExtension(name);
+      if (extension != null)
+      {
+         for (FileType type : filtered.asIterable())
+         {
+            if (extension.equals(type.getExtension()))
+            {
+               return type;
+            }
+         }
+      }
+      return defaulFile;
+
+   }
+
+   /**
+    * @param name
+    * @return
+    */
+   private String getFileExtension(String name)
+   {
+      int lastDotPos = name.lastIndexOf('.');
+      //file has no extension
+      if (lastDotPos < 0)
+      {
+         return null;
+      }
+      return name.substring(lastDotPos + 1);
    }
 
 }

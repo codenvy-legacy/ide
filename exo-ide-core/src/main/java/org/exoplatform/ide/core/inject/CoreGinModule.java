@@ -16,12 +16,17 @@
  */
 package org.exoplatform.ide.core.inject;
 
+import com.google.inject.name.Named;
+
+import com.google.inject.Provides;
+
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
@@ -81,5 +86,15 @@ public class CoreGinModule extends AbstractGinModule
       // Generic Model Provider
       bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
    }
+
+   @Provides
+   @Named("defaultFileType")
+   @Singleton
+   protected FileType provideDefaultFileType()
+   {
+      //TODO
+      return new FileType(null, null);
+   }
+   
 
 }

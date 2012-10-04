@@ -21,6 +21,8 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
+import org.exoplatform.ide.api.resources.FileType;
+import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
@@ -56,11 +58,14 @@ public class EditorPresenter implements Presenter
 
    private final EditorRegistry registry;
 
+   private final ResourceProvider resourceProvider;
+
    @Inject
-   public EditorPresenter(Display display, EditorRegistry registry)
+   public EditorPresenter(Display display, EditorRegistry registry, ResourceProvider provider)
    {
       this.display = display;
       this.registry = registry;
+      this.resourceProvider = provider;
    }
 
    /**
@@ -78,7 +83,8 @@ public class EditorPresenter implements Presenter
     */
    public void openFile(final File file)
    {
-      EditorProvider provider = registry.getDefaultEditor(file.getMimeType());
+      FileType fileType = resourceProvider.getFileType(file);
+      EditorProvider provider = registry.getDefaultEditor(fileType);
       EditorPartPresenter editor = provider.getEditor();
 
       try

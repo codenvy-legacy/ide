@@ -18,36 +18,28 @@
  */
 package org.exoplatform.ide.core.editor;
 
-import org.exoplatform.ide.AppContext;
-import org.exoplatform.ide.editor.DocumentProvider;
-import org.exoplatform.ide.editor.EditorInitException;
-import org.exoplatform.ide.editor.EditorInput;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
+import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.parser.BasicTokenFactory;
+import org.exoplatform.ide.texteditor.parser.CmParser;
+import org.exoplatform.ide.texteditor.parser.CodeMirror2;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaEditor extends BaseTextEditor
+public class JavaEditorConfiguration extends TextEditorConfiguration
 {
 
    /**
-    * @param appContext
-    * @param documentProvider
-    */
-   public JavaEditor(AppContext appContext, DocumentProvider documentProvider, TextEditorConfiguration configuration)
-   {
-      super(appContext, documentProvider, configuration);
-   }
-
-   /**
-    * @see org.exoplatform.ide.texteditor.BaseTextEditor#init(org.exoplatform.ide.editor.EditorInput)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorConfiguration#getParser()
     */
    @Override
-   public void init(EditorInput input) throws EditorInitException
+   public Parser getParser()
    {
-      super.init(input);
+      CmParser parser = CodeMirror2.getParserForMime("text/x-java");
+      parser.setNameAndFactory("clike", new BasicTokenFactory());
+      return parser;
    }
 }

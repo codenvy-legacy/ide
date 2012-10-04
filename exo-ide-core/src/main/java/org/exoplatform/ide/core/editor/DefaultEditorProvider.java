@@ -25,6 +25,7 @@ import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
+import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -37,6 +38,8 @@ public class DefaultEditorProvider implements EditorProvider
    private AppContext context;
 
    private final DocumentProvider documentProvider;
+   
+   private final TextEditorConfiguration configuration = new TextEditorConfiguration();
 
    @Inject
    public DefaultEditorProvider(AppContext context, DocumentProvider documentProvider)
@@ -52,7 +55,7 @@ public class DefaultEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new BaseTextEditor(context, documentProvider);
+      return new BaseTextEditor(context, documentProvider, configuration);
    }
 
 }

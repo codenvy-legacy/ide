@@ -55,7 +55,7 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new JavaEditor(context, documentProvider);
+      return new JavaEditor(context, documentProvider, new JavaEditorConfiguration());
    }
 
 }
