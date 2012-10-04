@@ -413,8 +413,11 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String restartAppServerFailed(String name);
 
    // S3 Management
-   @Key("s3.managemnt.view.title")
-   String s3managemntViewTitle();
+   @Key("s3.management.view.title")
+   String s3managementViewTitle();
+
+   @Key("s3.management.empty.bucket")
+   String s3managementEmptyBucket(String bucket);
 
    @Key("control.s3.managemnt.id")
    String s3ManagementControlId();

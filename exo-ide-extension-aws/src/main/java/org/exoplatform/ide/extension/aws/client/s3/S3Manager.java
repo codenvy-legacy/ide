@@ -18,36 +18,22 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.HasChangeHandlers;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -81,7 +67,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -93,8 +78,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 {
    interface Display extends IsView
    {
-      ListGridItem<S3Object> getS3Object();
-
+      
       void setS3Buckets(List<S3Bucket> bucketsList);
 
       void setS3ObjectsList(S3ObjectsList s3ObjectsList);
@@ -300,18 +284,6 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
          }
       });
 
-//      display.getBuckets().addChangeHandler(new ChangeHandler()
-//      {
-//
-//         @Override
-//         public void onChange(ChangeEvent event)
-//         {
-//            currentBucketId = display.getSelectedBucketId();
-//            display.setBucketId(currentBucketId);
-//            getObjectsList(display.getSelectedBucketId(), null);
-//         }
-//      });
-      
       display.getBuckets().addSelectionHandler(new SelectionHandler<S3Bucket>()
       {
          

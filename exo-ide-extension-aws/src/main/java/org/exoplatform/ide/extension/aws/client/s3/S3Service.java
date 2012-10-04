@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
@@ -48,7 +47,7 @@ public class S3Service
    {
       if (instance == null)
       {
-         instance = new S3Service(Utils.getRestContext(), new GWTLoader());
+         instance = new S3Service(Utils.getRestContext(), new S3Loader());
       }
       return instance;
    }
