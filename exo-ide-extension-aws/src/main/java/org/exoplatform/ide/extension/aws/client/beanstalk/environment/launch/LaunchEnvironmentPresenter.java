@@ -208,10 +208,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
       createEnvironmentRequest.setApplicationName(applicationName);
-      if (versionLabel != null)
-      {
-         createEnvironmentRequest.setVersionLabel(versionLabel);
-      }
+      createEnvironmentRequest.setVersionLabel(versionLabel);
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());

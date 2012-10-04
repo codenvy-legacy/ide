@@ -31,6 +31,7 @@ import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 import java.util.List;
 
 /**
+ * Implementation of {@link EC2ClientService} service.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EC2ClientServiceImpl.java Sep 21, 2012 12:31:29 PM azatsarynnyy $
@@ -42,6 +43,14 @@ public class EC2ClientServiceImpl extends EC2ClientService
    private static final String BASE_URL = "/ide/aws/ec2";
 
    private static final String INSTANCES = BASE_URL + "/instances";
+
+   private static final String TERMINATE_INSTANCE = BASE_URL + "/instances/terminate/";
+
+   private static final String REBOOT_INSTANCE = BASE_URL + "/instances/reboot/";
+
+   private static final String START_INSTANCE = BASE_URL + "/instances/start/";
+
+   private static final String STOP_INSTANCE = BASE_URL + "/instances/stop/";
 
    /**
     * REST service context.
@@ -60,15 +69,64 @@ public class EC2ClientServiceImpl extends EC2ClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#instances(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#getInstances(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void instances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException
+   public void getInstances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException
    {
       final String url = restServiceContext + INSTANCES;
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#terminateInstance(java.lang.String,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String url = restServiceContext + TERMINATE_INSTANCE + id;
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#rebootInstance(java.lang.String,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String url = restServiceContext + REBOOT_INSTANCE + id;
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#stopInstance(java.lang.String, boolean,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String url = restServiceContext + STOP_INSTANCE + id + "?force=" + force;
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2ClientService#startInstance(java.lang.String,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      final String url = restServiceContext + START_INSTANCE + id;
+
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
 }

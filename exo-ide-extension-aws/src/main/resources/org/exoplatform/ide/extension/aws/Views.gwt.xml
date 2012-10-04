@@ -72,6 +72,10 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstanceView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstancePresenter.Display" />
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.extension.aws.client.s3.S3ManagerView">
       <when-type-is class="org.exoplatform.ide.extension.aws.client.s3.S3Manager.Display" />
    </replace-with>

@@ -46,10 +46,48 @@ public abstract class EC2ClientService
    }
 
    /**
-    * 
+    * Returns the list of EC2 instances.
     * 
     * @param callback
     * @throws RequestException
     */
-   public abstract void instances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException;
+   public abstract void getInstances(AsyncRequestCallback<List<InstanceInfo>> callback) throws RequestException;
+
+   /**
+    * Terminate the specified EC2 instance.
+    * 
+    * @param id EC2 instance identifier
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
+
+   /**
+    * Reboot the specified EC2 instance.
+    * 
+    * @param id EC2 instance identifier
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
+
+   /**
+    * Stop the specified EC2 instance.
+    * 
+    * @param id EC2 instance identifier
+    * @param force forces the instance to stop
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback)
+      throws RequestException;
+
+   /**
+    * Start the specified EC2 instance.
+    * 
+    * @param id EC2 instance identifier
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException;
 }
