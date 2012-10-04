@@ -492,4 +492,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("start.ec2.failed")
    String startInstanceFailed(String version);
 
+   @Key("management.ec2.tags")
+   String managementEC2Tags();
+
 }

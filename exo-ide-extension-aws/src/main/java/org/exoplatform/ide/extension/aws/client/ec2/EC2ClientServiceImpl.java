@@ -87,9 +87,9 @@ public class EC2ClientServiceImpl extends EC2ClientService
    @Override
    public void terminateInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
    {
-      final String url = restServiceContext + TERMINATE_INSTANCE;
+      final String url = restServiceContext + TERMINATE_INSTANCE + id;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -99,9 +99,9 @@ public class EC2ClientServiceImpl extends EC2ClientService
    @Override
    public void rebootInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
    {
-      final String url = restServiceContext + REBOOT_INSTANCE;
+      final String url = restServiceContext + REBOOT_INSTANCE + id;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
    /**
@@ -111,7 +111,7 @@ public class EC2ClientServiceImpl extends EC2ClientService
    @Override
    public void stopInstance(String id, boolean force, AsyncRequestCallback<Object> callback) throws RequestException
    {
-      final String url = restServiceContext + STOP_INSTANCE + "?force=" + force;
+      final String url = restServiceContext + STOP_INSTANCE + id + "?force=" + force;
 
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -124,9 +124,9 @@ public class EC2ClientServiceImpl extends EC2ClientService
    @Override
    public void startInstance(String id, AsyncRequestCallback<Object> callback) throws RequestException
    {
-      final String url = restServiceContext + START_INSTANCE;
+      final String url = restServiceContext + START_INSTANCE + id;
 
-      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 
 }

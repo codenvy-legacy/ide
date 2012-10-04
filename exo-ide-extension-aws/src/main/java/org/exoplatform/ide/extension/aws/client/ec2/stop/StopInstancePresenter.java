@@ -135,17 +135,16 @@ public class StopInstancePresenter implements StopInstanceHandler, ViewClosedHan
                @Override
                protected void onSuccess(Object result)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
-                  Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.rebootEC2InstanceViewTitle(),
-                     AWSExtension.LOCALIZATION_CONSTANT.rebootInstanceSuccess(instanceId));
-                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.rebootInstanceSuccess(instanceId),
+                  Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.stopEC2InstanceViewTitle(),
+                     AWSExtension.LOCALIZATION_CONSTANT.stopInstanceSuccess(instanceId));
+                  IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.stopInstanceSuccess(instanceId),
                      Type.INFO));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.rebootInstanceFailed(instanceId);
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.stopInstanceFailed(instanceId);
                   if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();
@@ -158,5 +157,6 @@ public class StopInstancePresenter implements StopInstanceHandler, ViewClosedHan
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+      IDE.getInstance().closeView(display.asView().getId());
    }
 }
