@@ -69,6 +69,8 @@ public class WorkspaceView extends Composite implements Display
    protected WorkspaceView()
    {
       initWidget(uiBinder.createAndBindUi(this));
+      // add shadow from editor to all parts of ui
+      splitPanel.getWidgetContainerElement(centerPanel).addClassName("ide-editor-area");
    }
 
    /**

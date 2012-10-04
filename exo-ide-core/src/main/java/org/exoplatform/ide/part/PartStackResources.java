@@ -14,32 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.ui.partstack;
+package org.exoplatform.ide.part;
 
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
+
+import com.google.gwt.resources.client.ClientBundle;
 
 /**
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface PartStackCss extends CssResource
+public interface PartStackResources extends ClientBundle
 {
+   @Source("PartStack.css")
+   PartStackCss partStackCSS();
 
-   @ClassName("ide-PartStack")
-   String idePartStack();
+   ImageResource close();
 
-   @ClassName("ide-PartStack-Tab")
-   String idePartStackTab();
-
-   @ClassName("ide-PartStack-Tabs")
-   String idePartStackTabs();
-
-   @ClassName("ide-PartStack-Tab-selected")
-   String idePartStackTabSelected();
-
-   @ClassName("ide-PartStack-Content")
-   String idePartStackContent();
-
-   @ClassName("ide-PartStack-focused")
-   String idePartStackFocused();
 }

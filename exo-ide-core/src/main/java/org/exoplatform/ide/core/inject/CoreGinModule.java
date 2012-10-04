@@ -35,6 +35,7 @@ import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
+import org.exoplatform.ide.part.PartAgent;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
@@ -52,19 +53,18 @@ public class CoreGinModule extends AbstractGinModule
    @Override
    protected void configure()
    {
-      resourcesAPIconfigure();
-      editorAPIconfigure();
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
-      bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
-      bind(MainMenuPresenter.class).in(Singleton.class);
-      bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
-      bind(ExpressionManager.class).in(Singleton.class);
-      bind(MainMenuPresenter.Display.class).to(MainMenuView.class).in(Singleton.class);
+
+      resourcesAPIconfigure();
+
+      uiAPIconfigure();
+
+      editorAPIconfigure();
    }
 
-  /**Configures binding for Editor API
-    * 
+   /**
+    * Configures binding for Editor API
     */
    protected void editorAPIconfigure()
    {
@@ -80,8 +80,23 @@ public class CoreGinModule extends AbstractGinModule
     */
    protected void resourcesAPIconfigure()
    {
+      bind(ResourceProvider.class).to(ResourceProviderComponent.class).in(Singleton.class);
       // Generic Model Provider
       bind(ModelProvider.class).to(GenericModelProvider.class).in(Singleton.class);
+   }
+
+   protected void uiAPIconfigure()
+   {
+      // expression manager
+      bind(ExpressionManager.class).in(Singleton.class);
+
+      // main menu
+      bind(MainMenuPresenter.class).in(Singleton.class);
+      bind(MainMenuPresenter.Display.class).to(MainMenuView.class).in(Singleton.class);
+      bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
+
+      // part agent
+      bind(PartAgent.class).in(Singleton.class);
    }
 
 }

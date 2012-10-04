@@ -1,12 +1,17 @@
 /** Add css rules here for your application. */
-
 /* Style for splitter */
 .gwt-SplitLayoutPanel-HDragger {
-  background: #DDDDDD;
-  cursor: col-resize;
+	background: #DDDDDD;
+	cursor: col-resize;
 }
 
 .gwt-SplitLayoutPanel-VDragger {
-  background: #DDDDDD;
-  cursor: row-resize;
+	background: #DDDDDD;
+	cursor: row-resize;
+}
+
+.ide-editor-area {
+	box-shadow: 0px 0px 20px 10px #DDD;
+	-moz-box-shadow: 0px 0px 20px 10px #DDD;
+	-webkit-box-shadow: 0px 0px 20px 10px #DDD;
 }
