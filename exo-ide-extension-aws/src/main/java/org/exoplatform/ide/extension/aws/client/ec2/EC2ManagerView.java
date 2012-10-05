@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.extension.aws.client.ec2;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * View for manage Amazon EC2 virtual sever instances.
@@ -45,24 +46,32 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
 
    private static final String ID = "ideEC2ManagerView";
 
+   private static final String CLOSE_BUTTON_ID = "ideEC2ManagerViewCloseButton";
+
    private static final int WIDTH = 1000;
 
-   private static final int HEIGHT = 500;
+   private static final int HEIGHT = 600;
 
    @UiField
-   ImageButton terminateInstanceButton;
+   ImageButton terminateButton;
 
    @UiField
-   ImageButton rebootInstanceButton;
+   ImageButton rebootButton;
 
    @UiField
-   ImageButton stopInstanceButton;
+   ImageButton stopButton;
 
    @UiField
-   ImageButton startInstanceButton;
+   ImageButton startButton;
 
    @UiField
-   EC2InstancesGrid ec2ImagesGrid;
+   ImageButton closeButton;
+
+   @UiField
+   EC2InstancesGrid ec2InstancesGrid;
+
+   @UiField
+   EC2InstancesTagsGrid ec2InstancesTagsGrid;
 
    private static EC2ManagerViewUiBinder uiBinder = GWT.create(EC2ManagerViewUiBinder.class);
 
@@ -74,42 +83,52 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
    {
       super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.managementEC2ViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      closeButton.setButtonId(CLOSE_BUTTON_ID);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getStopInstanceButton()
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getTerminateButton()
     */
    @Override
-   public HasClickHandlers getStopInstanceButton()
+   public HasClickHandlers getTerminateButton()
    {
-      return stopInstanceButton;
+      return terminateButton;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getTerminateInstanceButton()
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getRebootButton()
     */
    @Override
-   public HasClickHandlers getTerminateInstanceButton()
+   public HasClickHandlers getRebootButton()
    {
-      return terminateInstanceButton;
+      return rebootButton;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getRebootInstanceButton()
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getStopButton()
     */
    @Override
-   public HasClickHandlers getRebootInstanceButton()
+   public HasClickHandlers getStopButton()
    {
-      return rebootInstanceButton;
+      return stopButton;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getStartInstanceButton()
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getStartButton()
     */
    @Override
-   public HasClickHandlers getStartInstanceButton()
+   public HasClickHandlers getStartButton()
    {
-      return startInstanceButton;
+      return startButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getInstances()
+    */
+   @Override
+   public HasSelectionHandlers<InstanceInfo> getInstances()
+   {
+      return ec2InstancesGrid;
    }
 
    /**
@@ -118,7 +137,34 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
    @Override
    public void setInstances(List<InstanceInfo> instatceList)
    {
-      ec2ImagesGrid.setValue(instatceList);
+      ec2InstancesGrid.setValue(instatceList);
    }
 
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getTags()
+    */
+   @Override
+   public HasSelectionHandlers<Entry<String, String>> getTags()
+   {
+      return ec2InstancesTagsGrid;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#setTags(java.util.List)
+    */
+   @Override
+   public void setTags(List<Entry<String, String>> tags)
+   {
+      ec2InstancesTagsGrid.setValue(tags);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#getCloseButton()
+    */
+   @Override
+   public HasClickHandlers getCloseButton()
+   {
+      return closeButton;
+   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,22 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.EventHandler;
 
+
 /**
- * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Parfonov Vitaly</a>
+ * @version $Id: OpenS3ManagerHandler.java Sep 18, 2012 vetal $
+ *
  */
-
-public interface UploadFileHandler extends EventHandler
+public interface ShowS3ManagerHandler extends EventHandler
 {
-
-   void onUploadFile(UploadFileEvent event);
-
+   /**
+    * Perform actions, when user tries to create application on Elastic Beanstalk.
+    * 
+    * @param event
+    */
+   void onShowS3Manager(ShowS3ManagerEvent event);
 }

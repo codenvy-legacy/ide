@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSError;
+import org.exoplatform.ide.extension.aws.client.s3.events.BucketCreatedEvent;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
 
 /**
@@ -89,7 +90,7 @@ public class CreateBucketPresenter implements ViewClosedHandler
          public void onClick(ClickEvent event)
          {
             doCreate();
-            
+
          }
       });
 
@@ -142,8 +143,7 @@ public class CreateBucketPresenter implements ViewClosedHandler
          S3Region s3Region = regions[i];
          display.getRegion().addItem(s3Region.toString());
       }
-      
-      
+
    }
 
    /**
@@ -161,26 +161,37 @@ public class CreateBucketPresenter implements ViewClosedHandler
    {
       try
       {
-         S3Service.getInstance().createBucket(new AsyncRequestCallback<String>()
-         {
+         S3Service.getInstance()
+            .createBucket(
+               new AsyncRequestCallback<String>()
+               {
 
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.getInstance().closeView(display.asView().getId());
-               IDE.fireEvent(new BucketCreatedEvent());
-            }
+                  @Override
+                  protected void onSuccess(String result)
+                  {
+                     IDE.getInstance().closeView(display.asView().getId());
+                     IDE.fireEvent(new BucketCreatedEvent());
+                  }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.getInstance().closeView(display.asView().getId());
-               AWSError awsError = new AWSError(exception.getMessage());
-               Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-                  awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
-            }
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.getInstance().closeView(display.asView().getId());
+                     AWSError awsError = new AWSError(exception.getMessage());
+                     if (awsError.getAwsErrorMessage() != null)
+                     {
+                        Dialogs.getInstance().showError(
+                           awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
+                           awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+                     }
+                     else
+                     {
+                        Dialogs.getInstance().showError("Amazon S3 Service", awsError.getAwsErrorMessage());
+                     }
+                  }
 
-         }, display.getBucketName().getValue(), display.getRegion().getItemText(display.getRegion().getSelectedIndex()));
+               }, display.getBucketName().getValue(),
+               display.getRegion().getItemText(display.getRegion().getSelectedIndex()));
       }
       catch (RequestException e)
       {
@@ -200,7 +211,7 @@ public class CreateBucketPresenter implements ViewClosedHandler
       }
    }
 
-   public void onOpenView()
+   public void onCreateBucket()
    {
 
       if (display == null)

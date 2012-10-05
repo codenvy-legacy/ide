@@ -18,37 +18,40 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.dom.client.Style.Cursor;
+
+import com.google.gwt.user.client.ui.RootPanel;
+
+import com.google.gwt.user.client.DOM;
+
+import org.exoplatform.gwtframework.commons.loader.Loader;
 
 /**
- * Event occurs, when user tries to create application on Beanstalk.
- * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 17, 2012 11:32:25 AM anya $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: S3Loader.java Oct 4, 2012 vetal $
+ *
  */
-public class ShowS3ManagerEvent extends GwtEvent<ShowS3ManagerHandler>
+public class S3Loader extends Loader
 {
-   /**
-    * Type, used to register the event.
-    */
-   public static final GwtEvent.Type<ShowS3ManagerHandler> TYPE = new GwtEvent.Type<ShowS3ManagerHandler>();
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#show()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowS3ManagerHandler> getAssociatedType()
+   public void show()
    {
-      return TYPE;
+      DOM.getElementById("gwt-debug-s3loader").setAttribute("style", "visibility: visible;");
+      RootPanel.get().getElement().getStyle().setCursor(Cursor.WAIT);
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader#hide()
     */
    @Override
-   protected void dispatch(ShowS3ManagerHandler handler)
+   public void hide()
    {
-      handler.onShowS3Manager(this);
+     DOM.getElementById("gwt-debug-s3loader").setAttribute("style", "visibility: hidden;");
+     RootPanel.get().getElement().getStyle().setCursor(Cursor.DEFAULT);
    }
+
 }

@@ -54,6 +54,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
@@ -416,6 +417,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       createEnvironmentRequest.setApplicationName(applicationName);
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
+      createEnvironmentRequest.setVersionLabel("initial version");
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
 
       AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();

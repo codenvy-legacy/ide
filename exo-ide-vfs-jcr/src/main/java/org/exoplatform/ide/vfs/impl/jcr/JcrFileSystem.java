@@ -506,7 +506,7 @@ public class JcrFileSystem implements VirtualFileSystem
             throw new InvalidArgumentException("Unable get tree. Item " + data.getName()
                + " is not a folder or project. ");
          }
-         return new ItemNodeImpl(fromItemData(data, propertyFilter, false), getTreeLevel(data, depth, propertyFilter));
+         return new ItemNodeImpl(fromItemData(data, propertyFilter), getTreeLevel(data, depth, propertyFilter));
       }
       finally
       {
@@ -527,7 +527,7 @@ public class JcrFileSystem implements VirtualFileSystem
       while (children.hasNext())
       {
          ItemData c = children.next();
-         level.add(new ItemNodeImpl(fromItemData(c, propertyFilter, false), getTreeLevel(c, depth - 1, propertyFilter)));
+         level.add(new ItemNodeImpl(fromItemData(c, propertyFilter), getTreeLevel(c, depth - 1, propertyFilter)));
       }
       return level;
    }
@@ -2117,6 +2117,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
       links.put(Link.REL_CHILDREN, //
          new Link(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
+
+      links.put(Link.REL_TREE, //
+         new Link(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
          new Link(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));

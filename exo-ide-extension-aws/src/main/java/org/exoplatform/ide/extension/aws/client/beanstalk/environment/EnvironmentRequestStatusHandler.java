@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.create;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environment;
 
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.job.Job;

@@ -20,7 +20,9 @@ package org.exoplatform.ide.extension.aws.client.s3;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.s3.events.ShowS3ManagerEvent;
 
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
@@ -39,6 +41,7 @@ public class S3ManagerControl extends SimpleControl implements IDEControl
    public S3ManagerControl()
    {
       super(ID);
+      setImages(AWSClientBundle.INSTANCE.s3(), AWSClientBundle.INSTANCE.s3());
       setTitle(TITLE);
       setPrompt(PROMPT);
 

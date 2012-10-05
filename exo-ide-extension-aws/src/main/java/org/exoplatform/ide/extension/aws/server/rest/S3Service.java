@@ -29,6 +29,7 @@ import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectVersion;
 import org.exoplatform.ide.extension.aws.shared.s3.S3ObjectsList;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Region;
+import org.exoplatform.ide.extension.aws.shared.s3.UpdateAccessControlRequest;
 import org.exoplatform.ide.extension.aws.shared.s3.S3VersioningStatus;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -124,12 +125,20 @@ public class S3Service
    }
 
    @Path("buckets/acl/{s3bucket}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<S3AccessControl> getBucketAcl(@PathParam("s3bucket") String s3Bucket) throws AWSException
+   {
+      return s3.getBucketAcl(s3Bucket);
+   }
+
+   @Path("buckets/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void updateBucketAcl(@PathParam("s3bucket") String s3Bucket,
-                               List<S3AccessControl> s3AccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
    {
-      s3.updateBucketAcl(s3Bucket, s3AccessControls);
+      s3.updateBucketAcl(s3Bucket, s3UpdateAccessControls);
    }
    //
 
@@ -281,13 +290,23 @@ public class S3Service
    }
 
    @Path("objects/acl/{s3bucket}")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<S3AccessControl> getObjectAcl(@PathParam("s3bucket") String s3Bucket,
+                                             @QueryParam("s3key") String s3Key,
+                                             @QueryParam("versionid") String versionId) throws AWSException
+   {
+      return s3.getObjectAcl(s3Bucket, s3Key, versionId);
+   }
+
+   @Path("objects/acl/{s3bucket}")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void updateObjectAcl(@PathParam("s3bucket") String s3Bucket,
                                @QueryParam("s3key") String s3Key,
                                @QueryParam("versionid") String versionId,
-                               List<S3AccessControl> s3AccessControls) throws AWSException
+                               UpdateAccessControlRequest s3UpdateAccessControls) throws AWSException
    {
-      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3AccessControls);
+      s3.updateObjectAcl(s3Bucket, s3Key, versionId, s3UpdateAccessControls);
    }
 }

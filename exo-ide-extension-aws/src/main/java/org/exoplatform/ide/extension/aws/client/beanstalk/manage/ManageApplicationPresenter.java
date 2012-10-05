@@ -52,9 +52,9 @@ import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentEvent;
@@ -402,8 +402,8 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new LaunchEnvironmentEvent(vfs.getId(), project.getId(), applicationInfo.getName(), null,
-               launchEnvironmentStartedHandler));
+            IDE.fireEvent(new LaunchEnvironmentEvent(vfs.getId(), project.getId(), applicationInfo.getName(),
+               AWSExtension.INIT_VER_LABEL, launchEnvironmentStartedHandler));
          }
       });
    }

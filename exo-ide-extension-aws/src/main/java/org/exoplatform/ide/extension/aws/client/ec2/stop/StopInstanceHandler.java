@@ -16,19 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.ec2.stop;
 
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: S3ObjectUploadedHandler.java Sep 26, 2012 vetal $
+ * Handler for {@link StopInstanceEvent} event.
+ * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: StopInstanceHandler.java Sep 28, 2012 3:48:36 PM azatsarynnyy $
  *
  */
-public interface S3ObjectUploadedHandler extends EventHandler
+public interface StopInstanceHandler extends EventHandler
 {
    /**
-    * @param event
+    * Perform actions, when user tries to stop an EC2 insatnce.
+    * 
+    * @param event {@link StopInstanceEvent}
     */
-   void onS3ObjectUploaded(S3ObjectUploadedEvent event);
+   void onStopInstance(StopInstanceEvent event);
 }

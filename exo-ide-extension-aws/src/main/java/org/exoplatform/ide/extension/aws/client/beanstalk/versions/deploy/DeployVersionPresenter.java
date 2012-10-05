@@ -48,7 +48,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.create.EnvironmentRequestStatusHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentStartedHandler;

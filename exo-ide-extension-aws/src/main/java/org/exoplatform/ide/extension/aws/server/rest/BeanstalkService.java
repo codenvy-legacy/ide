@@ -22,8 +22,9 @@ import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateConfigurationTemplateRequest;
@@ -189,9 +190,9 @@ public class BeanstalkService
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public ConfigurationTemplateInfo createConfigurationTemplate(@QueryParam("vfsid") String vfsId,
-                                                                @QueryParam("projectid") String projectId,
-                                                                CreateConfigurationTemplateRequest params)
+   public Configuration createConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                                    @QueryParam("projectid") String projectId,
+                                                    CreateConfigurationTemplateRequest params)
       throws AWSException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
@@ -200,13 +201,26 @@ public class BeanstalkService
          params.getDescription(), params.getOptions(), vfs, projectId);
    }
 
+   @Path("apps/template")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public Configuration getConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                                 @QueryParam("projectid") String projectId,
+                                                 ConfigurationRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.getConfigurationTemplate(params.getTemplateName(), vfs, projectId);
+   }
+
    @Path("apps/template/update")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public ConfigurationTemplateInfo updateConfigurationTemplate(@QueryParam("vfsid") String vfsId,
-                                                                @QueryParam("projectid") String projectId,
-                                                                UpdateConfigurationTemplateRequest params)
+   public Configuration updateConfigurationTemplate(@QueryParam("vfsid") String vfsId,
+                                                    @QueryParam("projectid") String projectId,
+                                                    UpdateConfigurationTemplateRequest params)
       throws AWSException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
@@ -327,6 +341,19 @@ public class BeanstalkService
    public EnvironmentInfo stopEnvironment(@PathParam("id") String id) throws AWSException
    {
       return beanstalk.stopEnvironment(id);
+   }
+
+   @Path("environments/configuration")
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<Configuration> getEnvironmentConfigurations(@QueryParam("vfsid") String vfsId,
+                                                           @QueryParam("projectid") String projectId,
+                                                           ConfigurationRequest params)
+      throws AWSException, VirtualFileSystemException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      return beanstalk.getEnvironmentConfigurations(params.getEnvironmentName(), vfs, projectId);
    }
 
    @Path("environments")

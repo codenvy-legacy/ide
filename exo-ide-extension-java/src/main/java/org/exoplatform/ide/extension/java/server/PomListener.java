@@ -62,7 +62,7 @@ public class PomListener implements Startable
 
    private final BuilderClient client;
 
-   private Timer timer = new Timer();
+   private Timer timer = new Timer(true);
 
    private final CodeAssistantStorageClient storageClient;
 
@@ -133,6 +133,7 @@ public class PomListener implements Startable
    @Override
    public void stop()
    {
+      timer.cancel();
    }
 
 }

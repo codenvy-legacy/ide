@@ -16,31 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.ec2.stop;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to log in AWS.
+ * Event occurs, when user tries to stop an EC2 instance.
  * 
- * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
- * @version $Id: Sep 14, 2012 3:04:41 PM anya $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
+ * @version $Id: RestartAppServerEvent.java Sep 28, 2012 3:49:51 PM azatsarynnyy $
+ *
  */
-public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
+public class StopInstanceEvent extends GwtEvent<StopInstanceHandler>
 {
 
    /**
-    * Type used to register the event.
+    * Type, used to register event.
     */
-   public static final GwtEvent.Type<BucketCreatedHandler> TYPE = new GwtEvent.Type<BucketCreatedHandler>();
+   public static final GwtEvent.Type<StopInstanceHandler> TYPE = new GwtEvent.Type<StopInstanceHandler>();
 
-  
+   private String instanceId;
+
+   public StopInstanceEvent(String instanceId)
+   {
+      this.instanceId = instanceId;
+   }
+
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<BucketCreatedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<StopInstanceHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -49,8 +55,18 @@ public class BucketCreatedEvent extends GwtEvent<BucketCreatedHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(BucketCreatedHandler handler)
+   protected void dispatch(StopInstanceHandler handler)
    {
-      handler.onBucketCreated(this);
+      handler.onStopInstance(this);
    }
+
+   /**
+    * 
+    * @return
+    */
+   public String getInstanceId()
+   {
+      return instanceId;
+   }
+
 }

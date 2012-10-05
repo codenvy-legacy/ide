@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,54 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.extension.aws.client.s3;
+package org.exoplatform.ide.extension.aws.client.s3.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
+ * Event occurs, when user tries to create application on Beanstalk.
  * 
- * Created by The eXo Platform SAS .
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 17, 2012 11:32:25 AM anya $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public class UploadFileEvent extends GwtEvent<UploadFileHandler>
+public class ShowS3ManagerEvent extends GwtEvent<ShowS3ManagerHandler>
 {
-   
-   private String id;
-   
-   public UploadFileEvent()
-   {
-      // TODO Auto-generated constructor stub
-   }
-   
-   
+   /**
+    * Type, used to register the event.
+    */
+   public static final GwtEvent.Type<ShowS3ManagerHandler> TYPE = new GwtEvent.Type<ShowS3ManagerHandler>();
 
-   public UploadFileEvent(String id)
-   {
-      this.id = id;
-   }
-
-
-   public String getId()
-   {
-      return id;
-   }
-   
-   public static final GwtEvent.Type<UploadFileHandler> TYPE = new GwtEvent.Type<UploadFileHandler>();
-
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<UploadFileHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ShowS3ManagerHandler> getAssociatedType()
    {
       return TYPE;
    }
 
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
    @Override
-   protected void dispatch(UploadFileHandler handler)
+   protected void dispatch(ShowS3ManagerHandler handler)
    {
-      handler.onUploadFile(this);
+      handler.onShowS3Manager(this);
    }
-
 }
