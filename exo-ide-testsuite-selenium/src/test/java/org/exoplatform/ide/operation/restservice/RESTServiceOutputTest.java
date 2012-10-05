@@ -77,9 +77,9 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.launchRestService();
 
       checkFields("/overralTest/Inner/node/{paramList: .+}", "POST", "text/plain", "application/xml;charset=utf-8");
-      checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
+      checkQueryParameter(1, "Test Query Parameter 1", "string", "", " ");
       IDE.REST_SERVICE.selectHeaderParametersTab();
-      checkHeaderParameter(1, "Test-Header1", "string", "", "");
+      checkHeaderParameter(1, "Test-Header1", "string", "", " ");
 
       IDE.REST_SERVICE.selectPath("/overralTest");
       checkFields("/overralTest", "OPTIONS", "", "application/vnd.sun.wadl+xml");
@@ -97,7 +97,7 @@ public class RESTServiceOutputTest extends BaseTest
       checkFields("/overralTest/Inner/node/param1", "POST", "text/plain", "application/xml;charset=utf-8");
 
       IDE.REST_SERVICE.selectQueryParametersTab();
-      checkQueryParameter(1, "Test Query Parameter 1", "string", "", "");
+      checkQueryParameter(1, "Test Query Parameter 1", "string", "", " ");
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
       checkHeaderParameter(1, "Test-Header1", "string", "", "test");
@@ -127,9 +127,9 @@ public class RESTServiceOutputTest extends BaseTest
       IDE.REST_SERVICE.setMethodFieldValue("GET");
       assertEquals("", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
       assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
-      checkQueryParameter(1, "Test Query Parameter 2", "string", "", "");
+      checkQueryParameter(1, "Test Query Parameter 2", "string", "", " ");
       IDE.REST_SERVICE.selectHeaderParametersTab();
-      checkHeaderParameter(1, "Test-Header2", "string", "", "");
+      checkHeaderParameter(1, "Test-Header2", "string", "", " ");
       IDE.REST_SERVICE.typeToHeaderParameterValue(1, "value 2");
       IDE.REST_SERVICE.selectQueryParametersTab();
       IDE.REST_SERVICE.typeToQueryParameterValue(1, "value 1");

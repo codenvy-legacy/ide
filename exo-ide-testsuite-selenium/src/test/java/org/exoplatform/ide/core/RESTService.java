@@ -270,7 +270,7 @@ public class RESTService extends AbstractTestModule
 
             try
             {
-               WebElement view = table.findElement(By.xpath(xPathvalueField + "/div/input"));
+               WebElement view = table.findElement(By.xpath(xPathvalueField + "/input"));
                return (view != null && view.isDisplayed());
             }
 
@@ -730,11 +730,13 @@ public class RESTService extends AbstractTestModule
     */
    private void typeToTableValue(WebElement tableId, int row, int col, String valueText) throws InterruptedException
    {
-      String valuePrefix = String.format("tbody/tr[%1s]/td[%2s]", row, col);
+      String valuePrefix = String.format("tbody/tr[%1s]/td[%2s]/div", row, col);
       WebElement valueColumn = tableId.findElement(By.xpath(valuePrefix));
       valueColumn.click();
+      WebElement valueColumn2 = tableId.findElement(By.xpath(valuePrefix));
+      valueColumn2.click();
       waitValueOpened(tableId, valuePrefix);
-      WebElement valueInput = tableId.findElement(By.xpath(valuePrefix + "/div/input"));
+      WebElement valueInput = tableId.findElement(By.xpath(valuePrefix + "/input"));
       valueInput.sendKeys(valueText);
    }
 
