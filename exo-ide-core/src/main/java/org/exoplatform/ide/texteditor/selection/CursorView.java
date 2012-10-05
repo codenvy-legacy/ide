@@ -20,7 +20,6 @@ import com.google.gwt.user.client.Timer;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.util.CssUtils;
@@ -35,9 +34,9 @@ public class CursorView extends UiComponent<CursorView.View>
    /**
     * Static factory method for obtaining an instance of the CursorView.
     */
-   public static CursorView create(AppContext appContext, boolean isLocal)
+   public static CursorView create(Resources resources, boolean isLocal)
    {
-      View view = new View(appContext.getResources(), isLocal);
+      View view = new View(resources, isLocal);
       return new CursorView(view, isLocal);
    }
 

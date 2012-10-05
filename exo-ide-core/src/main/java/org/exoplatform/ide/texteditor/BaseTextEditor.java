@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.DocumentProvider.DocumentCallback;
 import org.exoplatform.ide.editor.EditorInitException;
@@ -33,6 +33,7 @@ import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.util.UserActivityManager;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -52,10 +53,11 @@ public class BaseTextEditor implements TextEditorPartPresenter
     * @param documentProvider 
     * 
     */
-   public BaseTextEditor(AppContext appContext, DocumentProvider documentProvider, TextEditorConfiguration configuration)
+   public BaseTextEditor(Resources resources, UserActivityManager userActivityManager,
+      DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       this.documentProvider = documentProvider;
-      editor = new Editor(appContext);
+      editor = new Editor(resources, userActivityManager);
       editor.configure(configuration);
    }
 

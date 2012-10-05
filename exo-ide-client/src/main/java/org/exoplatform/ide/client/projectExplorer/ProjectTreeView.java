@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import elemental.html.DragEvent;
 
-import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Display;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
 import org.exoplatform.ide.resources.model.Resource;
@@ -22,9 +22,9 @@ public class ProjectTreeView implements Display, IsWidget
    protected Listener presenterListener;
 
    @Inject
-   public ProjectTreeView(AppContext appContext)
+   public ProjectTreeView(Resources resources)
    {
-      tree = Tree.create(appContext);
+      tree = Tree.create(resources);
    }
 
    @Override

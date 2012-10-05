@@ -41,11 +41,12 @@ public class BootstrapController
 
    @Inject
    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePeresenter workspacePeresenter,
-      ProjectExplorerPresenter projectExpolorerPresenter)
+      ProjectExplorerPresenter projectExpolorerPresenter, StyleInjector styleInjector)
    {
       this.workspacePeresenter = workspacePeresenter;
       this.projectExpolrerPresenter = projectExpolorerPresenter;
-
+      styleInjector.inject();
+      
       // initialize components
       componentRegistry.start(new Callback<Void, ComponentException>()
       {

@@ -110,12 +110,12 @@ public class EditorAgent
 
    public void openEditor(final File file)
    {
-      if (openedEditors.containsKey(file.getId()))
-      {
-         partAgent.setActivePart(openedEditors.get(file.getId()));
-      }
-      else
-      {
+//      if (openedEditors.containsKey(file.getId()))
+//      {
+//         partAgent.setActivePart(openedEditors.get(file.getId()));
+//      }
+//      else
+//      {
          FileType fileType = provider.getFileType(file);
          EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
          EditorPartPresenter editor = editorProvider.getEditor();
@@ -130,6 +130,6 @@ public class EditorAgent
          partAgent.addPart(editor, PartStackType.EDITING);
          openedEditors.put(file.getId(), editor);
       }
-   }
+//   }
 
 }

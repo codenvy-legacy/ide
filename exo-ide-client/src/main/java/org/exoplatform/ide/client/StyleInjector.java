@@ -16,54 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide;
+package org.exoplatform.ide.client;
 
-import org.exoplatform.ide.util.UserActivityManager;
+import com.google.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
+import org.exoplatform.ide.Resources;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class AppContext
+public class StyleInjector
 {
-   private Resources resources = GWT.create(Resources.class);
-
-   private UserActivityManager userActivityManager;
+   private Resources resources;
 
    /**
-    * 
-    */
-   public AppContext()
+   * 
+   */
+   @Inject
+   public StyleInjector(Resources resources)
+   {
+      this.resources = resources;
+   }
+   
+   public void inject()
    {
       resources.appCss().ensureInjected();
       resources.editableContentAreaCss().ensureInjected();
       resources.editorSelectionLineRendererCss().ensureInjected();
       resources.lineNumberRendererCss().ensureInjected();
+      resources.treeCss().ensureInjected();
       resources.workspaceEditorBufferCss().ensureInjected();
       resources.workspaceEditorCss().ensureInjected();
       resources.workspaceEditorCursorCss().ensureInjected();
-      resources.treeCss().ensureInjected();
       resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
-
-      this.userActivityManager = new UserActivityManager();
-   }
-
-   /**
-    * @return the resources
-    */
-   public Resources getResources()
-   {
-      return resources;
-   }
-
-   /**
-    * @return
-    */
-   public UserActivityManager getUserActivityManager()
-   {
-      return userActivityManager;
    }
 }

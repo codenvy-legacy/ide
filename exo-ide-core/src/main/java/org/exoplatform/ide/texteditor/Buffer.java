@@ -25,7 +25,6 @@ import elemental.html.ClientRect;
 import elemental.html.DivElement;
 import elemental.html.Element;
 
-import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.common.Constants;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.mvp.CompositeView;
@@ -72,10 +71,10 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    /**
     * Static factory method for obtaining an instance of Buffer.
     */
-   public static Buffer create(AppContext appContext, FontDimensions fontDimensions,
+   public static Buffer create(Resources resources, FontDimensions fontDimensions,
       LineDimensionsCalculator lineDimensions, Executor renderTimeExecutor)
    {
-      View view = new View(appContext.getResources());
+      View view = new View(resources);
       Buffer buffer = new Buffer(view, fontDimensions, lineDimensions, renderTimeExecutor);
       MouseWheelRedirector.redirect(buffer, view.scrollableElement);
       return buffer;

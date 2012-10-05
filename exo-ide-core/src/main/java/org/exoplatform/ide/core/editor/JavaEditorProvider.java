@@ -20,10 +20,12 @@ package org.exoplatform.ide.core.editor;
 
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
+import org.exoplatform.ide.texteditor.BaseTextEditor;
+import org.exoplatform.ide.util.UserActivityManager;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -33,19 +35,22 @@ import org.exoplatform.ide.editor.EditorProvider;
 public class JavaEditorProvider implements EditorProvider
 {
 
-   private AppContext context;
-
    private final DocumentProvider documentProvider;
+
+   private final Resources resources;
+
+   private final UserActivityManager activityManager;
 
    /**
     * @param context
     * @param documentProvider
     */
    @Inject
-   public JavaEditorProvider(AppContext context, DocumentProvider documentProvider)
+   public JavaEditorProvider(Resources resources, UserActivityManager activityManager, DocumentProvider documentProvider)
    {
       super();
-      this.context = context;
+      this.resources = resources;
+      this.activityManager = activityManager;
       this.documentProvider = documentProvider;
    }
 
@@ -55,7 +60,7 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new JavaEditor(context, documentProvider, new JavaEditorConfiguration());
+      return new BaseTextEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration());
    }
 
 }
