@@ -2,8 +2,8 @@
 @def treeIndent 10px;
 @def itemHeight 20px;
 @def arrowImgOffset 5px;
-@def hoverBackground #ECEEF1;
-@def selectionBackground #DCDFE6;
+@def hoverBackground #F3F3F3;
+@def selectionBackground #ECECEC;
 
 .treeRoot {
   font-family: alternativeFontFamily;

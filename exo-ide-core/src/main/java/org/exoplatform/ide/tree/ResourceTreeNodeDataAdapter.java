@@ -1,7 +1,5 @@
 package org.exoplatform.ide.tree;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
@@ -19,7 +17,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource>
    @Override
    public boolean hasChildren(Resource data)
    {
-      return data.isFolder() && ((Folder)data).getChildren().size()>0;
+      return data.isFolder() && ((Folder)data).getChildren().size() > 0;
    }
 
    @Override
@@ -50,6 +48,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource>
       return data.getParent();
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public TreeNodeElement<Resource> getRenderedTreeNode(Resource data)
    {
@@ -92,7 +91,7 @@ public class ResourceTreeNodeDataAdapter implements NodeDataAdapter<Resource>
 
       for (int i = list.size(); i > 0; i--)
       {
-         result.add(list.get(i-1));
+         result.add(list.get(i - 1));
       }
       return result;
    }

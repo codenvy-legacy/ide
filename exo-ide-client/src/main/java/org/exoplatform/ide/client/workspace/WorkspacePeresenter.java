@@ -21,6 +21,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -35,6 +36,10 @@ import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.part.PartAgent;
+import org.exoplatform.ide.part.PartAgent.PartStackType;
+import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
@@ -76,10 +81,12 @@ public class WorkspacePeresenter implements Presenter
 
    private final MainMenuPresenter menuPresenter;
 
+   private final PartAgent partAgent;
+
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EditorPresenter editorPresenter, EventBus eventBus, MainMenuPresenter menuPresenter,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgent partAgent)
 
    {
       super();
@@ -88,6 +95,9 @@ public class WorkspacePeresenter implements Presenter
       this.editorPresenter = editorPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
+      this.partAgent = partAgent;
+
+      // FOR DEMO
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
 
@@ -99,8 +109,33 @@ public class WorkspacePeresenter implements Presenter
       ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
       expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
-      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression, noProjectOpenedExpression);
+      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression,
+         noProjectOpenedExpression);
       bind();
+
+      //XXX DEMO
+
+      partAgent.addPart(new PartPresenter()
+      {
+
+         @Override
+         public void go(HasWidgets container)
+         {
+            container.add(new Label("DUMMY"));
+         }
+
+         @Override
+         public String getTitle()
+         {
+            return "DUMMY";
+         }
+
+         @Override
+         public boolean close()
+         {
+            return true;
+         }
+      }, PartStackType.EDITING);
    }
 
    /**
@@ -112,7 +147,14 @@ public class WorkspacePeresenter implements Presenter
       container.clear();
       // Expose Project Explorer into Tools Panel
       menuPresenter.go(display.getMenuPanel());
-      projectExpolorerPresenter.go(display.getLeftPanel());
+
+      PartStackPresenter navigationStack = partAgent.getPartStack(PartStackType.NAVIGATION);
+      navigationStack.go(display.getLeftPanel());
+      navigationStack.addPart(projectExpolorerPresenter);
+
+      PartStackPresenter editoStack = partAgent.getPartStack(PartStackType.EDITING);
+      editoStack.go(display.getCenterPanel());
+
       container.add(display.asWidget());
    }
 
@@ -158,9 +200,9 @@ public class WorkspacePeresenter implements Presenter
    protected void openFile(File file)
    {
       // Calling display.getCenterPanel.cler() violates the Law of Demeter
-      display.clearCenterPanel();
       editorPresenter.openFile(file);
-      editorPresenter.go(display.getCenterPanel());
+      partAgent.addPart(editorPresenter, PartStackType.EDITING);
+      //editorPresenter.go(display.getCenterPanel());
    }
 
    // FOR DEMO:

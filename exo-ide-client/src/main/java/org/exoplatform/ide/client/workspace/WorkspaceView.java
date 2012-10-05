@@ -21,12 +21,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter.Display;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**
  * Created by The eXo Platform SAS
@@ -47,10 +47,12 @@ public class WorkspaceView extends Composite implements Display
    SimplePanel centerPanel;
 
    @UiField
-   ScrollPanel leftPanel;
+   SimplePanel leftPanel;
 
    @UiField
    SimplePanel topPanel;
+   
+   @UiField(provided=true) SplitLayoutPanel splitPanel = new SplitLayoutPanel(4);
 
    /**
     * Because this class has a default constructor, it can
@@ -67,6 +69,8 @@ public class WorkspaceView extends Composite implements Display
    protected WorkspaceView()
    {
       initWidget(uiBinder.createAndBindUi(this));
+      // add shadow from editor to all parts of ui
+      splitPanel.getWidgetContainerElement(centerPanel).addClassName("ide-editor-area");
    }
 
    /**

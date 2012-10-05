@@ -15,10 +15,10 @@
   <inherits name='com.google.gwt.user.theme.standard.Standard' />
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
-
   <!-- Other module inherits                                      -->
   <inherits name='org.exoplatform.ide.Core' />
   
+  <stylesheet src="IDE.css"/>
   
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.exoplatform.ide.client.IDE' />

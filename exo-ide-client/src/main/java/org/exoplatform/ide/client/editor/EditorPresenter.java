@@ -28,7 +28,7 @@ import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
-import org.exoplatform.ide.presenter.Presenter;
+import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.resources.model.File;
 
 /**
@@ -40,7 +40,7 @@ import org.exoplatform.ide.resources.model.File;
  *          exo@exoplatform.com
  * Jul 27, 2012  
  */
-public class EditorPresenter implements Presenter
+public class EditorPresenter implements PartPresenter
 {
    // TODO: rework. It should be generic type accepting file-resource model
    // Review Eclipse Workspace Resource model
@@ -126,6 +126,24 @@ public class EditorPresenter implements Presenter
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getTitle()
+   {
+      return "Editor";
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean close()
+   {
+      return true;
    }
 
 }
