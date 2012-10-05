@@ -298,6 +298,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       //createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setDescription("");
       createEnvironmentRequest.setEnvironmentName(environmentName);
+      createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
 
       AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
