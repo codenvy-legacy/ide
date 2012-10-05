@@ -16,8 +16,11 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -27,7 +30,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.client.editor.EditorPresenter;
+import org.exoplatform.ide.client.editor.EditorAgent;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.menu.MainMenuPresenter;
@@ -62,7 +65,7 @@ public class WorkspacePresenterTest
    ExpressionManager expressionManager;
 
    @Mock
-   EditorPresenter editorPresenter;
+   EditorAgent editorAgent;
 
    @Spy
    EventBus eventBus = new SimpleEventBus();

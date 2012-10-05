@@ -19,7 +19,7 @@
 package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.AppContext;
@@ -39,12 +39,14 @@ import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
  * @version $Id:
  *
  */
-public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
+public class BaseTextEditor implements TextEditorPartPresenter
 {
 
    protected TextEditorPartDisplay editor;
 
    protected final DocumentProvider documentProvider;
+
+   protected EditorInput input;
 
    /**
     * @param documentProvider 
@@ -72,6 +74,7 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
             editor.setDocument((DocumentImpl)document);
          }
       });
+      this.input = input;
    }
 
    /**
@@ -183,15 +186,38 @@ public class BaseTextEditor implements TextEditorPartPresenter, IsWidget
 
    }
 
-   /**
-    * @see com.google.gwt.user.client.ui.IsWidget#asWidget()
-    */
-   @Override
-   public Widget asWidget()
+   protected Widget getWidget()
    {
       HTML h = new HTML();
       h.getElement().appendChild(editor.getElement());
       return h;
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitle()
+    */
+   @Override
+   public String getTitle()
+   {
+      return input.getName();
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#close()
+    */
+   @Override
+   public boolean close()
+   {
+      return true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.presenter.Presenter#go(com.google.gwt.user.client.ui.HasWidgets)
+    */
+   @Override
+   public void go(HasWidgets container)
+   {
+      container.add(getWidget());
    }
 
 }

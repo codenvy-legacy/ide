@@ -19,8 +19,13 @@ package org.exoplatform.ide.text.store;
  * bounds.
  *
  */
-public class PositionOutOfBoundsException extends RuntimeException {
-  public PositionOutOfBoundsException(String message) {
-    super(message);
-  }
+public class PositionOutOfBoundsException extends RuntimeException
+{
+   
+   private static final long serialVersionUID = 1L;
+
+   public PositionOutOfBoundsException(String message)
+   {
+      super(message);
+   }
 }

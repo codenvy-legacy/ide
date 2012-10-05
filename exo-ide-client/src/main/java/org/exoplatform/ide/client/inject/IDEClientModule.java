@@ -21,13 +21,11 @@ import com.google.inject.Singleton;
 
 import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.client.BootstrapController;
-import org.exoplatform.ide.client.editor.EditorPresenter;
-import org.exoplatform.ide.client.editor.EditorView;
+import org.exoplatform.ide.client.editor.EditorAgent;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 /**
  * GIN Client module, describes relations and dependencies  
@@ -53,9 +51,7 @@ public class IDEClientModule extends AbstractGinModule
       bind(WorkspacePeresenter.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.Display.class).to(ProjectTreeView.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.class).in(Singleton.class);
-      bind(EditorPresenter.Display.class).to(EditorView.class).in(Singleton.class); // TODO : not singleton 
-      bind(EditorView.class).in(Singleton.class); // TODO : not singleton
-      
+      bind(EditorAgent.class).in(Singleton.class);
       bind(AppContext.class).in(Singleton.class);
       
       //      bind(IDEAppController.class).in(Singleton.class);

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor;
 
+import org.exoplatform.ide.part.PartPresenter;
+
 /**
  * An editor is a visual component.
  * It is typically used to edit or browse a document or input object. The input 
@@ -31,11 +33,7 @@ package org.exoplatform.ide.editor;
  * @version $Id:
  *
  */
-//TODO maybe editor must extends PartPresenter interface(or generic UI part interface) with methods
-// getImage()
-// getTitle()
-// and so on
-public interface EditorPartPresenter
+public interface EditorPartPresenter extends PartPresenter
 {
 
    /**

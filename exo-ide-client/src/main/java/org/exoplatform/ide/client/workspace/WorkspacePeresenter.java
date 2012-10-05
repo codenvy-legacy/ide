@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.client.editor.EditorPresenter;
+import org.exoplatform.ide.client.editor.EditorAgent;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -73,8 +73,6 @@ public class WorkspacePeresenter implements Presenter
 
    Display display;
 
-   EditorPresenter editorPresenter;
-
    EventBus eventBus;
 
    ProjectExplorerPresenter projectExpolorerPresenter;
@@ -83,18 +81,20 @@ public class WorkspacePeresenter implements Presenter
 
    private final PartAgent partAgent;
 
+   private final EditorAgent editorAgent;
+
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
-      EditorPresenter editorPresenter, EventBus eventBus, MainMenuPresenter menuPresenter,
+      EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
       final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgent partAgent)
 
    {
       super();
       this.display = display;
       this.projectExpolorerPresenter = projectExpolorerPresenter;
-      this.editorPresenter = editorPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
+      this.editorAgent = editorAgent;
       this.partAgent = partAgent;
 
       // FOR DEMO
@@ -168,24 +168,25 @@ public class WorkspacePeresenter implements Presenter
          {
             if (event.getOperationType() == FileOperation.OPEN)
             {
-               // Set up the callback object.
-               AsyncCallback<File> callback = new AsyncCallback<File>()
-               {
-                  @Override
-                  public void onFailure(Throwable caught)
-                  {
-                     GWT.log("error" + caught);
-                  }
-
-                  @Override
-                  public void onSuccess(File file)
-                  {
-                     openFile(file);
-                  }
-               };
-
-               Project project = event.getFile().getProject();
-               project.getContent(event.getFile(), callback);
+//               // Set up the callback object.
+//               AsyncCallback<File> callback = new AsyncCallback<File>()
+//               {
+//                  @Override
+//                  public void onFailure(Throwable caught)
+//                  {
+//                     GWT.log("error" + caught);
+//                  }
+//
+//                  @Override
+//                  public void onSuccess(File file)
+//                  {
+//                     openFile(file);
+//                  }
+//               };
+//
+//               Project project = event.getFile().getProject();
+//               project.getContent(event.getFile(), callback);
+               editorAgent.openEditor(event.getFile());
 
                //fileSystemService.getFileContent(event.getFileName(), callback);
             }
@@ -200,8 +201,8 @@ public class WorkspacePeresenter implements Presenter
    protected void openFile(File file)
    {
       // Calling display.getCenterPanel.cler() violates the Law of Demeter
-      editorPresenter.openFile(file);
-      partAgent.addPart(editorPresenter, PartStackType.EDITING);
+//      editorPresenter.openFile(file);
+//      partAgent.addPart(editorPresenter, PartStackType.EDITING);
       //editorPresenter.go(display.getCenterPanel());
    }
 
