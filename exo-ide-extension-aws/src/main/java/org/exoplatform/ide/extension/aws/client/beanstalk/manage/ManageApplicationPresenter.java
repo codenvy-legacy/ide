@@ -402,8 +402,8 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new LaunchEnvironmentEvent(vfs.getId(), project.getId(), applicationInfo.getName(), null,
-               launchEnvironmentStartedHandler));
+            IDE.fireEvent(new LaunchEnvironmentEvent(vfs.getId(), project.getId(), applicationInfo.getName(),
+               AWSExtension.INIT_VER_LABEL, launchEnvironmentStartedHandler));
          }
       });
    }

@@ -18,16 +18,13 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
-import com.google.gwt.dom.client.Style.Unit;
-
-import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.Column;
 
+import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
+import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
 
 import java.util.Date;
@@ -38,14 +35,19 @@ import java.util.List;
  * @version $Id: ObjectGrid.java Sep 18, 2012 vetal $
  *
  */
-public class S3ObjectGrid extends ListGrid<S3Object>
+public class S3ObjectsGrid extends ListGrid<S3Object>
 {
    private static final String ID = "ideS3ObjectGrid";
 
-   public S3ObjectGrid()
+   //TODO
+   private Label label;
+
+   public S3ObjectsGrid()
    {
       setID(ID);
       initColumns();
+      label = new Label();
+      getCellTable().setEmptyTableWidget(label);
    }
 
    /**
@@ -107,37 +109,20 @@ public class S3ObjectGrid extends ListGrid<S3Object>
             return new Date(object.getUpdated()).toString();
          }
       };
-      
-      getCellTable().addColumn(keyCol, "Key");
-      getCellTable().setColumnWidth(keyCol, 20, Unit.PCT );
-      getCellTable().addColumn(eTagCol, "ETag");
-      getCellTable().setColumnWidth(eTagCol, 20, Unit.PCT );
-      getCellTable().addColumn(ownerCol, "Owner");
-      getCellTable().setColumnWidth(ownerCol, 10, Unit.PCT );
-      getCellTable().addColumn(sizeCol, "Size");
-      getCellTable().setColumnWidth(sizeCol, 10, Unit.PCT );
-      getCellTable().addColumn(storageCol, "Storage Class");
-      getCellTable().setColumnWidth(storageCol, 15, Unit.PCT );
-      getCellTable().addColumn(lastModifiedCol, "Last Modified");
-      getCellTable().setColumnWidth(lastModifiedCol, 25, Unit.PCT );
-      
-      
-   }
 
-//   /**
-//    * Implementation of {@link SelectionEvent} event.
-//    */
-//   private class SelectionEventImpl extends SelectionEvent<S3Object>
-//   {
-//      /**
-//       * @param selectedItem selected application
-//       */
-//      protected SelectionEventImpl(S3Object selectedItem)
-//      {
-//         super(selectedItem);
-//      }
-//
-//   }
+      getCellTable().addColumn(keyCol, "Key");
+      getCellTable().setColumnWidth(keyCol, 20, Unit.PCT);
+      getCellTable().addColumn(eTagCol, "ETag");
+      getCellTable().setColumnWidth(eTagCol, 20, Unit.PCT);
+      getCellTable().addColumn(ownerCol, "Owner");
+      getCellTable().setColumnWidth(ownerCol, 10, Unit.PCT);
+      getCellTable().addColumn(sizeCol, "Size");
+      getCellTable().setColumnWidth(sizeCol, 10, Unit.PCT);
+      getCellTable().addColumn(storageCol, "Storage Class");
+      getCellTable().setColumnWidth(storageCol, 15, Unit.PCT);
+      getCellTable().addColumn(lastModifiedCol, "Last Modified");
+      getCellTable().setColumnWidth(lastModifiedCol, 25, Unit.PCT);
+   }
 
    /**
     * @see org.exoplatform.gwtframework.ui.client.component.ListGrid#setValue(java.util.List)
@@ -153,29 +138,8 @@ public class S3ObjectGrid extends ListGrid<S3Object>
       getCellTable().redraw();
    }
 
-   /**
-    * Cell for clicking to delete application.
-    */
-   private class Link extends ClickableTextCell
+   public void setBucketId(String bucketId)
    {
-      /**
-       * @see com.google.gwt.cell.client.ClickableTextCell#render(com.google.gwt.cell.client.Cell.Context,
-       *      com.google.gwt.safehtml.shared.SafeHtml, com.google.gwt.safehtml.shared.SafeHtmlBuilder)
-       */
-      @Override
-      protected void render(com.google.gwt.cell.client.Cell.Context context, final SafeHtml value, SafeHtmlBuilder sb)
-      {
-         SafeHtml s = new SafeHtml()
-         {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public String asString()
-            {
-               return "<u style=\"cursor: pointer; color:##555555\">" + value.asString() + "</u>";
-            }
-         };
-         sb.append(s);
-      }
+      label.setText(AWSExtension.LOCALIZATION_CONSTANT.s3managementEmptyBucket(bucketId));
    }
 }

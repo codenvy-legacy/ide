@@ -71,6 +71,8 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
     */
    public static final AWSLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AWSLocalizationConstant.class);
 
+   public static final String INIT_VER_LABEL = "initial version";
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */

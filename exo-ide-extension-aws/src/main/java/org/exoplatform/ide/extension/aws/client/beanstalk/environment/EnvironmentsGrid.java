@@ -164,6 +164,10 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          @Override
          public String getValue(EnvironmentInfo environmentInfo)
          {
+            if (environmentInfo.getEndpointUrl() == null)
+            {
+               return "";
+            }
             return environmentInfo.getEndpointUrl();
          }
       };
@@ -276,6 +280,10 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
     */
    private String createLinks(String s)
    {
+      if (s.isEmpty())
+      {
+         return "n/a";
+      }
       return "<a style=\"cursor: pointer; color:#2039f8\" href=http://" + s
          + " target=\"_blank\">View Running Version</a><br>";
    }

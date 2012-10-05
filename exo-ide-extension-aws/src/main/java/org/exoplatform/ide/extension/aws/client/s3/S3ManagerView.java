@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -72,15 +71,12 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    @UiField
    MenuItem uploadProjectAction;
-
-//   @UiField
-//   ListBox buckets;
    
    @UiField
    S3BucketsGrid s3BucketsGrid;
 
    @UiField
-   S3ObjectGrid s3ObjectsGrid;
+   S3ObjectsGrid s3ObjectsGrid;
    
    @UiField
    ImageButton uploadButton;
@@ -105,24 +101,14 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    public S3ManagerView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managemntViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managementViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
    }
 
-   @Override
-   public ListGridItem<S3Object> getS3Object()
-   {
-      return s3ObjectsGrid;
-   }
 
    @Override
    public void setS3Buckets(List<S3Bucket> bucketsList)
    {
-//      buckets.clear();
-//      for (S3Bucket s3Bucket : bucketsList)
-//      {
-//         buckets.addItem(s3Bucket.getName());
-//      }
       s3BucketsGrid.setValue(bucketsList);
    }
 
@@ -142,6 +128,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    public void setS3ObjectsList(S3ObjectsList s3ObjectsList)
    {
       s3ObjectsGrid.setValue(s3ObjectsList.getObjects());
+      s3ObjectsGrid.setBucketId(s3ObjectsList.getS3Bucket());
       scrollPanel.scrollToTop();
    }
 
@@ -262,4 +249,5 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    {
       this.bucketId.setText(bucketId);      
    }
+   
 }
