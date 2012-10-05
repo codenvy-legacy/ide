@@ -183,7 +183,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGtmplPreviewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
