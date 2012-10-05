@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.aws.client.s3;
 
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.cellview.client.Column;
 
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;

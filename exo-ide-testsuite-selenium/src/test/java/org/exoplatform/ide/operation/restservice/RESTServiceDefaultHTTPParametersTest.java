@@ -91,14 +91,14 @@ public class RESTServiceDefaultHTTPParametersTest extends BaseTest
       assertEquals("TestQueryParam 1", IDE.REST_SERVICE.getQueryParameterName(1));
       assertEquals("boolean", IDE.REST_SERVICE.getQueryParameterType(1));
       assertEquals("true", IDE.REST_SERVICE.getQueryParameterDefaultValue(1));
-      assertEquals("", IDE.REST_SERVICE.getQueryParameterValue(1));
+      assertEquals(" ", IDE.REST_SERVICE.getQueryParameterValue(1));
 
       IDE.REST_SERVICE.selectHeaderParametersTab();
 
       assertEquals("Test-Header", IDE.REST_SERVICE.getHeaderParameterName(1));
       assertEquals("integer", IDE.REST_SERVICE.getHeaderParameterType(1));
       assertEquals("3", IDE.REST_SERVICE.getHeaderParameterDefaultValue(1));
-      assertEquals("", IDE.REST_SERVICE.getHeaderParameterValue(1));
+      assertEquals(" ", IDE.REST_SERVICE.getHeaderParameterValue(1));
 
       IDE.REST_SERVICE.selectQueryParametersTab();
    }

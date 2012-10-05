@@ -26,7 +26,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.s3.NewS3Object;
@@ -48,7 +47,7 @@ public class S3Service
    {
       if (instance == null)
       {
-         instance = new S3Service(Utils.getRestContext(), new GWTLoader());
+         instance = new S3Service(Utils.getRestContext(), new S3Loader());
       }
       return instance;
    }
@@ -66,14 +65,7 @@ public class S3Service
    private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
 
    private static final String PROJECT_UPLOAD = BASE_URL + "/objects/upload_project/";
-   //
-   //
-   //   private static final String OBJECT_PUT = BASE_URL + "/objects/put";
-   //
-   //
-
-   //
-
+   
    /**
     * REST service context.
     */
@@ -136,4 +128,5 @@ public class S3Service
       String url = restServiceContext + PROJECT_UPLOAD + s3Bucket + "?s3key=" + s3key + "&vfsid=" + vfsid + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
+
 }

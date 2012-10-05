@@ -11,7 +11,24 @@
 	<ui:style>
 		.rightAlign {
 			float: right;
-			padding-right: 3px;
+			padding: 3px;
+		}
+		
+		.leftAlign {
+			float: left;
+			padding-left: 10px;
+			padding-top: 3px;
+		}
+		
+		.leftAlign2 {
+			float: left;
+			margin-top: 3px;
+			margin-left: 10px;
+		}
+		
+		.leftAlign3 {
+			float: left;
+			margin-right: 5px;
 		}
 		
 		.margintop {
@@ -83,100 +100,101 @@
 		<f:layer>
 			<g:SplitLayoutPanel>
 				<g:west size="260">
-					<g:VerticalPanel>
-						<g:Label text="Buckets" styleName="{style.buckets}" width="100%"></g:Label>
-						<g:FlowPanel styleName="{style.boderBottom}">
-							<g:HorizontalPanel spacing="10" width="100%">
-								<f:ImageButton ui:field="createButton" width="90" height="22" text="{locale.createButton}"
-									imageResource="{resource.newBucket}"></f:ImageButton>
-								<g:MenuBar styleName="{style.aws-action-grad}">
-									<g:MenuItem text="Actions" styleName="{style.downArrow}">
-										<g:MenuBar vertical="true">
-											<g:MenuItem ui:field="createBucketAction">
-												<div>
-													<img src="{resource.newBucket.getSafeUri}"></img>
-													<ui:msg description="action.createBucketAction">Create</ui:msg>
-												</div>
-											</g:MenuItem>
-											<g:MenuItem ui:field="deleteBucketAction">
-												<div>
-													<img src="{resource.delete.getSafeUri}"></img>
-													<ui:msg description="action.deleteBucketAction">Delete</ui:msg>
-												</div>
-											</g:MenuItem>
-										</g:MenuBar>
-									</g:MenuItem>
-								</g:MenuBar>
-							</g:HorizontalPanel>
+					<g:FlowPanel>
+						<g:FlowPanel styleName="{style.boderBottom}" height="46px">
+							<g:Label text="Buckets" styleName="{style.buckets}" width="100%"></g:Label>
+							<f:ImageButton ui:field="createButton" height="22" text="{locale.createBucketButton}"
+								imageResource="{resource.newBucket}" styleName="{style.leftAlign}"></f:ImageButton>
+							<g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}">
+								<g:MenuItem text="Actions" styleName="{style.downArrow}">
+									<g:MenuBar vertical="true">
+										<g:MenuItem ui:field="createBucketAction">
+											<div>
+												<img src="{resource.newBucket.getSafeUri}"></img>
+												<ui:msg description="action.createBucketAction">Create Bucket</ui:msg>
+											</div>
+										</g:MenuItem>
+										<g:MenuItem ui:field="deleteBucketAction">
+											<div>
+												<img src="{resource.delete.getSafeUri}"></img>
+												<ui:msg description="action.deleteBucketAction">Delete</ui:msg>
+											</div>
+										</g:MenuItem>
+									</g:MenuBar>
+								</g:MenuItem>
+							</g:MenuBar>
 						</g:FlowPanel>
-						<!-- <g:ListBox ui:field="buckets" visibleItemCount="42" width="260px" styleName="{style.margintop} {style.boderNone}"></g:ListBox> -->
-						<g:ScrollPanel verticalScrollPosition="0"	styleName="{style.margintop} {style.boderTop}">
+						<g:ScrollPanel verticalScrollPosition="0" styleName="{style.margintop}">
 							<u:S3BucketsGrid ui:field="s3BucketsGrid" height="100%" width="260px"></u:S3BucketsGrid>
 						</g:ScrollPanel>
-					</g:VerticalPanel>
+					</g:FlowPanel>
 				</g:west>
 				<g:center>
 					<g:DockLayoutPanel>
-						<g:north size="65">
-							<g:VerticalPanel width="100%">
+						<g:north size="50">
+							<g:FlowPanel width="100%">
 								<g:Label text="Objects" styleName="{style.buckets}" width="100%"></g:Label>
-								<g:FlowPanel width="100%" styleName="{style.boderBottom}">
-									<g:HorizontalPanel spacing="10">
-										<f:ImageButton ui:field="uploadButton" width="100" height="22" text="{locale.uploadButton}"
-											imageName="upload"></f:ImageButton>
-										<f:ImageButton ui:field="refreshButton" width="100" height="22" text="{locale.refreshButton}"
-											imageResource="{resource.s3Refresh}"></f:ImageButton>
-										<g:MenuBar styleName="{style.aws-action-grad}">
-											<g:MenuItem text="Actions" styleName="{style.downArrow}">
-												<g:MenuBar vertical="true">
-													<g:MenuItem ui:field="download">
-														<div>
-															<img src="{resource.download.getSafeUri}"></img>
-															<ui:msg description="action.download">Download</ui:msg>
-														</div>
-													</g:MenuItem>
-													<g:MenuItem ui:field="uploadAction">
-														<div>
-															<img src="{resource.upload.getSafeUri}"></img>
-															<ui:msg description="action.upload">Upload</ui:msg>
-														</div>
-													</g:MenuItem>
-													<g:MenuItem ui:field="uploadProjectAction">
-														<div>
-															<img src="{resource.upload.getSafeUri}"></img>
-															<ui:msg description="action.uploadProject">Upload Project</ui:msg>
-														</div>
-													</g:MenuItem>
-													<g:MenuItem ui:field="deleteAction">
-														<div>
-															<img src="{resource.delete.getSafeUri}"></img>
-															<ui:msg description="action.delete">Delete</ui:msg>
-														</div>
-													</g:MenuItem>
-													<g:MenuItem ui:field="refreshAction">
-														<div>
-															<img src="{resource.s3Refresh.getSafeUri}"></img>
-															<ui:msg description="action.refresh">Refresh</ui:msg>
-														</div>
-													</g:MenuItem>
-												</g:MenuBar>
-											</g:MenuItem>
-										</g:MenuBar>
-									</g:HorizontalPanel>
+								<g:FlowPanel width="100%" height="46px" styleName="{style.boderBottom}">
+									<f:ImageButton styleName="{style.leftAlign}" ui:field="uploadButton" width="100" height="22"
+										text="{locale.uploadButton}" imageName="upload"></f:ImageButton>
+									<f:ImageButton styleName="{style.leftAlign}" ui:field="refreshButton" width="100" height="22"
+										text="{locale.refreshButton}" imageResource="{resource.s3Refresh}"></f:ImageButton>
+									<g:MenuBar styleName="{style.aws-action-grad} {style.leftAlign2}" height="22">
+										<g:MenuItem text="Actions" styleName="{style.downArrow}">
+											<g:MenuBar vertical="true">
+												<g:MenuItem ui:field="downloadAction">
+													<div>
+														<img src="{resource.download.getSafeUri}"></img>
+														<ui:msg description="action.download">Download</ui:msg>
+													</div>
+												</g:MenuItem>
+												<g:MenuItem ui:field="uploadAction">
+													<div>
+														<img src="{resource.upload.getSafeUri}"></img>
+														<ui:msg description="action.upload">Upload</ui:msg>
+													</div>
+												</g:MenuItem>
+												<g:MenuItem ui:field="uploadProjectAction">
+													<div>
+														<img src="{resource.upload.getSafeUri}"></img>
+														<ui:msg description="action.uploadProject">Upload Project</ui:msg>
+													</div>
+												</g:MenuItem>
+												<g:MenuItem ui:field="deleteAction">
+													<div>
+														<img src="{resource.delete.getSafeUri}"></img>
+														<ui:msg description="action.delete">Delete</ui:msg>
+													</div>
+												</g:MenuItem>
+												<g:MenuItem ui:field="refreshAction">
+													<div>
+														<img src="{resource.s3Refresh.getSafeUri}"></img>
+														<ui:msg description="action.refresh">Refresh</ui:msg>
+													</div>
+												</g:MenuItem>
+											</g:MenuBar>
+										</g:MenuItem>
+									</g:MenuBar>
+									<g:FlowPanel debugId="s3loader" styleName="{style.rightAlign}">
+										<g:Image url="{resource.loader.getSafeUri.asString}"></g:Image>
+									</g:FlowPanel>
 								</g:FlowPanel>
-							</g:VerticalPanel>
+							</g:FlowPanel>
 						</g:north>
 						<g:center>
-							<g:VerticalPanel width="100%" styleName="{style.margintop}">
-								<g:HorizontalPanel>
-									<g:Image url="{resource.bucket.getSafeUri.asString}"></g:Image>
-									<g:Label styleName="{style.labelH}" ui:field="bucketId"></g:Label>
-								</g:HorizontalPanel>
-								<g:ScrollPanel width="100%" ui:field="scrollPanel" verticalScrollPosition="0"
-									styleName="{style.margintop} {style.boderTop}">
-									<u:S3ObjectGrid ui:field="s3ObjectsGrid" width="100%" height="100%"></u:S3ObjectGrid>
-								</g:ScrollPanel>
-							</g:VerticalPanel>
+							<g:DockLayoutPanel>
+								<g:north size="20">
+									<g:FlowPanel>
+										<g:Image url="{resource.bucket.getSafeUri.asString}" styleName="{style.leftAlign3}"></g:Image>
+										<g:Label styleName="{style.labelH} {style.leftAlign3}" ui:field="bucketId"></g:Label>
+									</g:FlowPanel>
+								</g:north>
+								<g:center>
+									<g:ScrollPanel width="100%" ui:field="scrollPanel"  styleName="{style.boderTop}">
+										<u:S3ObjectsGrid ui:field="s3ObjectsGrid" width="100%"></u:S3ObjectsGrid>
+									</g:ScrollPanel>
+								</g:center>
+							</g:DockLayoutPanel>
 						</g:center>
 					</g:DockLayoutPanel>
 				</g:center>
