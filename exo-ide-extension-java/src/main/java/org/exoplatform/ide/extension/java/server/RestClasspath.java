@@ -56,7 +56,7 @@ public class RestClasspath
    @Inject
    private CodeAssistantStorageClient storageClient;
 
-   private Timer timer = new Timer();
+   private Timer timer = new Timer(true);
 
    @POST
    @Path("/generate")

@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+import com.google.gwt.dom.client.Style.Cursor;
+
+import com.google.gwt.user.client.ui.RootPanel;
+
 import com.google.gwt.user.client.DOM;
 
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -37,6 +41,7 @@ public class S3Loader extends Loader
    public void show()
    {
       DOM.getElementById("gwt-debug-s3loader").setAttribute("style", "visibility: visible;");
+      RootPanel.get().getElement().getStyle().setCursor(Cursor.WAIT);
    }
 
    /**
@@ -46,6 +51,7 @@ public class S3Loader extends Loader
    public void hide()
    {
      DOM.getElementById("gwt-debug-s3loader").setAttribute("style", "visibility: hidden;");
+     RootPanel.get().getElement().getStyle().setCursor(Cursor.DEFAULT);
    }
 
 }

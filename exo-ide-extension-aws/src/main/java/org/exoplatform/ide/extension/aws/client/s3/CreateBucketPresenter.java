@@ -211,7 +211,7 @@ public class CreateBucketPresenter implements ViewClosedHandler
       }
    }
 
-   public void onOpenView()
+   public void onCreateBucket()
    {
 
       if (display == null)
