@@ -34,23 +34,29 @@ import org.exoplatform.ide.part.PartStackPresenter.Display.TabItem;
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
+ * Implements "Tab-like" UI Component, that accepts PartPresenters as child elements.
+ * It's designed to remove child from DOM, when it is hidden. So keeping DOM as small
+ * as possible.
  * 
- * 
+ * PartStack support "focus" (please don't mix with GWT Widget's Focus feature).
+ * Focused PartStack will highlight active Part, notifying user what component is 
+ * currently active.
  * 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public class PartStackPresenter implements Presenter
 {
-   // parts
+   /** list of parts */
    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
 
-   // view
+   /** view implementation */
    private final Display display;
 
-   // state of the presenter
+   /** current active part */
    private PartPresenter activePart;
 
+   /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
    public interface FocusRequstHandler
    {
       /** PartStack is being clicked and requests Focus */
@@ -58,13 +64,11 @@ public class PartStackPresenter implements Presenter
    }
 
    /**
-    * View interface
+    * PartStack View interface
     */
    public interface Display extends IsWidget
    {
-      /**
-       * Tab which can be clicked and closed
-       */
+      /** Tab which can be clicked and closed */
       public interface TabItem extends HasCloseHandlers<TabItem>, HasClickHandlers
       {
       }
@@ -89,6 +93,9 @@ public class PartStackPresenter implements Presenter
    }
 
    /**
+    * 
+    * Creates PartStack with given instance of display and resources (CSS and Images)
+    * 
     * @param partStackResources
     */
    @Inject
@@ -97,6 +104,11 @@ public class PartStackPresenter implements Presenter
       this.display = display;
    }
 
+   /**
+    * Set Handler that will listen the Focus Requests.
+    * 
+    * @param handler
+    */
    public void setFocusRequstHandler(FocusRequstHandler handler)
    {
       display.setFocusRequstHandler(handler);
@@ -111,11 +123,22 @@ public class PartStackPresenter implements Presenter
       container.add(display.asWidget());
    }
 
+   /**
+    * Change the focused state of the PartStack to desired value 
+    * 
+    * @param focused
+    */
    public void setFocus(boolean focused)
    {
       display.setFocus(focused);
    }
 
+   /**
+    * Add part to the PartStack. Newly added part will be activated. If the Part
+    * has already been added to this PartStack, then it will be activated only. 
+    * 
+    * @param part
+    */
    public void addPart(PartPresenter part)
    {
       if (parts.contains(part))
@@ -133,16 +156,43 @@ public class PartStackPresenter implements Presenter
       setActivePart(part);
    }
 
+   /**
+    * Ask if PartStack contains given Part. 
+    * 
+    * @param part
+    * @return
+    */
    public boolean containsPart(PartPresenter part)
    {
       return parts.contains(part);
    }
 
+   /**
+    * Number of parts in the PartStack
+    * 
+    * @return
+    */
+   public int getNumberOfParts()
+   {
+      return parts.size();
+   }
+
+   /**
+    * Get active Part. Active is the part that is currently displayed on the screen
+    * 
+    * @return
+    */
    public PartPresenter getActivePart()
    {
       return activePart;
    }
 
+   /**
+    * Activate given part (force show it on the screen). If part wasn't previously added
+    * to the PartStack or has been removed, that method has no effect.
+    * 
+    * @param part
+    */
    public void setActivePart(PartPresenter part)
    {
       if (activePart == part)
@@ -163,6 +213,11 @@ public class PartStackPresenter implements Presenter
       }
    }
 
+   /**
+    * Close Part
+    * 
+    * @param part
+    */
    protected void close(PartPresenter part)
    {
       // may cancel close
@@ -179,6 +234,12 @@ public class PartStackPresenter implements Presenter
       }
    }
 
+   /**
+    * Bind Activate and Close events to the Tab 
+    * 
+    * @param item
+    * @param part
+    */
    protected void bindEvents(final TabItem item, final PartPresenter part)
    {
       item.addClickHandler(new ClickHandler()

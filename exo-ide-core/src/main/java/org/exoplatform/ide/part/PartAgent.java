@@ -36,8 +36,6 @@ public class PartAgent
 
    /**
     *
-    * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
-    *
     */
    private final class PartStackFocusRequstHandler implements FocusRequstHandler
    {
