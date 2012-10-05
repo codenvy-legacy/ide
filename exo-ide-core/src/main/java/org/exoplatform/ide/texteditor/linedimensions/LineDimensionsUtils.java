@@ -19,7 +19,6 @@ import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.util.RegExpUtils;
 import org.exoplatform.ide.util.StringUtils;
 import org.exoplatform.ide.util.UnicodeUtils;
-import org.exoplatform.ide.util.loging.Log;
 
 /**
  * Various utility functions used by the {@link LineDimensionsCalculator}.
@@ -37,11 +36,6 @@ public class LineDimensionsUtils
     */
    // TODO: Delegate to EditorSettings once it is available.
    private static int tabSpaceEquivalence = 2;
-
-   /**
-    * Enables or disables timeline marking.
-    */
-   private static boolean enableLogging = false;
 
    /**
     * Checks if the line needs any offset other than indentation tabs and
@@ -91,7 +85,6 @@ public class LineDimensionsUtils
    public static void isOffsetNeededAndCache(Line line, int column, TextChange.Type type)
    {
       // TODO: Inspect the text instead of re-inspecting the entire line
-      markTimeline(LineDimensionsCalculator.class, "Begin maybe mark cache dirty");
       Boolean hadNeedsOffset = line.getTag(NEEDS_OFFSET_LINE_TAG);
       /*
        * if you backspace the first character in a line, the line will be the
@@ -123,7 +116,6 @@ public class LineDimensionsUtils
             }
          }
       }
-      markTimeline(LineDimensionsCalculator.class, "End maybe mark cache dirty");
    }
 
    public static void preTextIsOffsetNeededAndCache(Line line, int column, TextChange.Type type, String text)
@@ -207,15 +199,4 @@ public class LineDimensionsUtils
       return StringUtils.repeatString(" ", tabSpaceEquivalence);
    }
 
-   /**
-    * Emits a markTimeline message if logging is enabled via
-    * {@link #enableLogging}.
-    */
-   public static void markTimeline(Class<?> c, String message)
-   {
-      if (enableLogging)
-      {
-         Log.markTimeline(c, message);
-      }
-   }
 }

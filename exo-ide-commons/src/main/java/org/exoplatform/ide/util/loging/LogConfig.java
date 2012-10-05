@@ -14,7 +14,6 @@
 
 package org.exoplatform.ide.util.loging;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -25,86 +24,72 @@ import com.google.gwt.user.client.Window;
  * {@link Log}.
  *
  */
-abstract class LogConfig {
-  public static enum LogLevel {
-    DEBUG, INFO, WARNING, ERROR
-  }
+class LogConfig
+{
+   public static enum LogLevel {
+      DEBUG, INFO, WARNING, ERROR
+   }
 
-  /**
-   * Deferred binding for disabling logging.
-   */
-  static class Disabled extends LogConfig {
-    @Override
-    public boolean isLoggingEnabledImpl() {
-      return false;
-    }
-  }
+   private static final String LOG_LEVEL_PARAM = "logLevel";
 
-  /**
-   * Deferred binding for enabling logging.
-   */
-  static class Enabled extends LogConfig {
-    @Override
-    public boolean isLoggingEnabledImpl() {
-      return true;
-    }
-  }
+   private static final LogConfig INSTANCE = new LogConfig();
 
-  private static final String LOG_LEVEL_PARAM = "logLevel";
+   static LogLevel getLogLevel()
+   {
+      return INSTANCE.getLogLevelImpl();
+   }
 
-  private static final LogConfig INSTANCE = GWT.create(LogConfig.class);
+   static void setLogLevel(LogLevel level)
+   {
+      INSTANCE.setLogLevelImpl(level);
+   }
 
-  static LogLevel getLogLevel() {
-    return INSTANCE.getLogLevelImpl();
-  }
+   private LogLevel currentLevel = null;
 
-  static boolean isLoggingEnabled() {
-    return INSTANCE.isLoggingEnabledImpl();
-  }
+   private void ensureLogLevel()
+   {
+      if (currentLevel == null)
+      {
+         // First inspect the URL to see if it has one set.
+         setLogLevel(maybeGetLevelFromUrl());
 
-  static void setLogLevel(LogLevel level) {
-    INSTANCE.setLogLevelImpl(level);
-  }
+         // If it is still not set, make the default be INFO.
+         setLogLevel((currentLevel == null) ? LogLevel.INFO : currentLevel);
+      }
+   }
 
-  private LogLevel currentLevel = null;
+   private LogLevel getLogLevelImpl()
+   {
+      ensureLogLevel();
+      return currentLevel;
+   }
 
-  protected abstract boolean isLoggingEnabledImpl();
+   private LogLevel maybeGetLevelFromUrl()
+   {
+      String levelStr = Window.Location.getParameter(LOG_LEVEL_PARAM);
 
-  private void ensureLogLevel() {
-    if (currentLevel == null) {
-      // First inspect the URL to see if it has one set.
-      setLogLevel(maybeGetLevelFromUrl());
+      // The common case.
+      if (levelStr == null)
+      {
+         return null;
+      }
 
-      // If it is still not set, make the default be INFO.
-      setLogLevel((currentLevel == null) ? LogLevel.INFO : currentLevel);
-    }
-  }
+      levelStr = levelStr.toUpperCase();
 
-  private LogLevel getLogLevelImpl() {
-    ensureLogLevel();
-    return currentLevel;
-  }
+      try
+      {
+         // Extract the correct Enum value;
+         return LogLevel.valueOf(levelStr);
+      }
+      catch (IllegalArgumentException e)
+      {
+         // We had a String but it was malformed.
+         return null;
+      }
+   }
 
-  private LogLevel maybeGetLevelFromUrl() {
-    String levelStr = Window.Location.getParameter(LOG_LEVEL_PARAM);
-
-    // The common case.
-    if (levelStr == null) {
-      return null;
-    }
-
-    levelStr = levelStr.toUpperCase();
-
-    try {
-      // Extract the correct Enum value;
-      return LogLevel.valueOf(levelStr);
-    } catch (IllegalArgumentException e) {
-      // We had a String but it was malformed.
-      return null;
-    }
-  }
-
-  private void setLogLevelImpl(LogLevel level) {
-    currentLevel = level;
-  }
+   private void setLogLevelImpl(LogLevel level)
+   {
+      currentLevel = level;
+   }
 }

@@ -26,7 +26,6 @@ import org.exoplatform.ide.texteditor.renderer.ChangeTracker.ChangeType;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerRegistrar;
-import org.exoplatform.ide.util.loging.Log;
 
 import java.util.EnumSet;
 
@@ -68,8 +67,6 @@ public class Renderer
 
       void onRenderedLineShifted(Line line, int lineNumber);
    }
-
-   private static final boolean ENABLE_PROFILING = false;
 
    private final ChangeTracker changeTracker;
 
@@ -139,11 +136,6 @@ public class Renderer
 
    public void renderChanges()
    {
-      if (ENABLE_PROFILING)
-      {
-         Log.markTimeline(getClass(), "Rendering changes...");
-      }
-
       EnumSet<ChangeType> changes = changeTracker.getChanges();
 
       int viewportTopmostContentChangedLine =
@@ -151,37 +143,20 @@ public class Renderer
 
       if (changes.contains(ChangeType.VIEWPORT_LINE_NUMBER))
       {
-         if (ENABLE_PROFILING)
-         {
-            Log.markTimeline(getClass(), " - lineNumberRenderer...");
-         }
 
          lineNumberRenderer.render();
-
-         if (ENABLE_PROFILING)
-         {
-            Log.markTimeline(getClass(), " - renderViewportLineNumbersChanged...");
-         }
 
          viewportRenderer.renderViewportLineNumbersChanged(changeTracker.getViewportLineNumberChangedEdges());
       }
 
       if (changes.contains(ChangeType.VIEWPORT_CONTENT))
       {
-         if (ENABLE_PROFILING)
-         {
-            Log.markTimeline(getClass(), " - renderViewportContentChange...");
-         }
 
          viewportRenderer.renderViewportContentChange(viewportTopmostContentChangedLine,
             changeTracker.getViewportRemovedLines());
 
          if (changeTracker.hadContentChangeThatUpdatesFollowingLines())
          {
-            if (ENABLE_PROFILING)
-            {
-               Log.markTimeline(getClass(), " - renderLineAndFollowing...");
-            }
 
             lineNumberRenderer.renderLineAndFollowing(viewportTopmostContentChangedLine);
          }
@@ -189,10 +164,6 @@ public class Renderer
 
       if (changes.contains(ChangeType.VIEWPORT_SHIFT))
       {
-         if (ENABLE_PROFILING)
-         {
-            Log.markTimeline(getClass(), " - renderViewportShift...");
-         }
 
          viewportRenderer.renderViewportShift(false);
          lineNumberRenderer.render();
@@ -200,10 +171,6 @@ public class Renderer
 
       if (changes.contains(ChangeType.DIRTY_LINE))
       {
-         if (ENABLE_PROFILING)
-         {
-            Log.markTimeline(getClass(), " - renderDirtyLines...");
-         }
 
          viewportRenderer.renderDirtyLines(changeTracker.getDirtyLines());
       }
@@ -212,10 +179,6 @@ public class Renderer
 
       handleRenderCompleted();
 
-      if (ENABLE_PROFILING)
-      {
-         Log.markTimeline(getClass(), " - Done rendering changes");
-      }
    }
 
    private void handleRenderCompleted()

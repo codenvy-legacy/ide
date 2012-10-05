@@ -8,8 +8,4 @@
    <inherits name="com.google.gwt.inject.Inject"/>
    <source path="ui" />
    <source path="" />
-
-   <replace-with class="org.exoplatform.ide.util.loging.LogConfig.Enabled">
-      <when-type-is class="org.exoplatform.ide.util.loging.LogConfig" />
-   </replace-with>
 </module>
