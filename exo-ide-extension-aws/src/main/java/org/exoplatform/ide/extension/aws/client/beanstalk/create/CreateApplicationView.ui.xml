@@ -98,11 +98,11 @@
       <f:layer height="22px" bottom="0">
          <g:FlowPanel styleName="{style.rightAlign}">
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="finishButton" enabled="false" width="90" height="22" text="{locale.finishButton}" imageName="ok"
+            <f:ImageButton ui:field="finishButton" width="90" height="22" text="{locale.finishButton}" imageName="ok"
                addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="nextButton" enabled="false" width="90" height="22" text="{locale.nextButton}" imageName="next"
+            <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.nextButton}" imageName="next"
                addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="backButton" enabled="true" width="90" height="22" text="{locale.backButton}" imageName="back"
+            <f:ImageButton ui:field="backButton" width="90" height="22" text="{locale.backButton}" imageName="back"
                addStyleNames="{style.floatRight}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>

@@ -52,20 +52,20 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.restart.RestartAppServerView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environment.restart.RestartAppServerPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.aws.client.ec2.EC2ManagerView">

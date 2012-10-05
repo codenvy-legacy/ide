@@ -16,13 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.ec2.stop;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -35,56 +34,53 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: StopInstanceView.java Sep 28, 2012 4:34:01 PM azatsarynnyy $
+ * @version $Id: RebuildEnvironmentView.java Sep 28, 2012 4:34:01 PM azatsarynnyy $
  *
  */
-public class StopInstanceView extends ViewImpl implements StopInstancePresenter.Display
+public class RebuildEnvironmentView extends ViewImpl implements RebuildEnvironmentPresenter.Display
 {
-   private static final String ID = "ideStopInstanceView";
+   private static final String ID = "ideRebuildEnvironmentView";
 
    private static final int WIDTH = 460;
 
    private static final int HEIGHT = 170;
 
-   private static final String OK_BUTTON_ID = "ideStopInstanceViewOKButton";
+   private static final String REBUILD_BUTTON_ID = "ideRebuildEnvironmentViewRebuildButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideStopInstanceViewCancelButton";
+   private static final String CANCEL_BUTTON_ID = "ideRebuildEnvironmentViewCancelButton";
 
    @UiField
    Label questionLabel;
 
    @UiField
-   ImageButton okButton;
+   ImageButton rebuildButton;
 
    @UiField
    ImageButton cancelButton;
 
-   @UiField
-   CheckBox forceCheckBox;
-
    private static StopEnvironmentViewUiBinder uiBinder = GWT.create(StopEnvironmentViewUiBinder.class);
 
-   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, StopInstanceView>
+   interface StopEnvironmentViewUiBinder extends UiBinder<Widget, RebuildEnvironmentView>
    {
    }
 
-   public StopInstanceView()
+   public RebuildEnvironmentView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.restartAppServerViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       questionLabel.setIsHTML(true);
-      okButton.setButtonId(OK_BUTTON_ID);
+      rebuildButton.setButtonId(REBUILD_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getOKButton()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildButton()
     */
    @Override
-   public HasClickHandlers getOKButton()
+   public HasClickHandlers getRebuildButton()
    {
-      return okButton;
+      return rebuildButton;
    }
 
    /**
@@ -97,21 +93,12 @@ public class StopInstanceView extends ViewImpl implements StopInstancePresenter.
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter.Display#getStopQuestion()
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.versions.delete.DeleteVersionPresenter.Display#getRebuildQuestion()
     */
    @Override
-   public HasValue<String> getStopQuestion()
+   public HasValue<String> getRebuildQuestion()
    {
       return questionLabel;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstancePresenter.Display#getForce()
-    */
-   @Override
-   public HasValue<Boolean> getForce()
-   {
-      return forceCheckBox;
    }
 
 }

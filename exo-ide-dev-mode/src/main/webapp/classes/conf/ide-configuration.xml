@@ -473,14 +473,14 @@
       <type>org.exoplatform.ide.extension.aws.server.AWSAuthenticatorImpl</type>
    </component>
 	
-	<!--  Beanstalk -->
+<!--  Beanstalk -->
    <component>
       <type>org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk</type>
    </component>
    
 <!--  Beanstalk End -->
 
-   <!--  S3 -->
+<!--  S3 -->
    <component>
       <type>org.exoplatform.ide.extension.aws.server.s3.S3</type>
    </component>

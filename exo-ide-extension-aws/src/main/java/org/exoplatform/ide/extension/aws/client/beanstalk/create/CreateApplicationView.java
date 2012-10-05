@@ -197,15 +197,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display#enableNextButton(boolean)
-    */
-   @Override
-   public void enableNextButton(boolean enabled)
-   {
-      nextButton.setEnabled(enabled);
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display#focusInApplicationNameField()
     */
    @Override
@@ -312,15 +303,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void setSolutionStackValues(String[] values)
    {
       solutionStackField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter.Display#enableFinishButton(boolean)
-    */
-   @Override
-   public void enableFinishButton(boolean enabled)
-   {
-      finishButton.setEnabled(enabled);
    }
 
 }

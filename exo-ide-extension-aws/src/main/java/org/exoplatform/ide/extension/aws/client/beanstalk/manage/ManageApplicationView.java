@@ -16,8 +16,8 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentsTabPain;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentsTabPain;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.VersionsTabPain;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
@@ -27,7 +27,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
 {
    private static final String ID = "ideManageApplicationView";
 
-   private static final int WIDTH = 860;
+   private static final int WIDTH = 930;
 
    private static final int HEIGHT = 360;
 

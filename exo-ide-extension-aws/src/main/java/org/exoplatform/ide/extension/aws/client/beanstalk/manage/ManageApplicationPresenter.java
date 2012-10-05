@@ -52,18 +52,19 @@ import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedEvent;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.HasEnvironmentActions;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentEvent;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentStartedHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentEvent;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentStartedHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.restart.RestartAppServerEvent;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentEvent;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentStartedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ViewConfigurationEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentStartedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentStartedHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.update.ApplicationUpdatedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicationEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions;
@@ -356,13 +357,26 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addTerminateHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentActions().addViewConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
          public void onSelection(SelectionEvent<EnvironmentInfo> event)
          {
-            IDE.fireEvent(new TerminateEnvironmentEvent(event.getSelectedItem(), terminateEnvironmentStartedHandler));
+            if (event.getSelectedItem() != null)
+            {
+               IDE.fireEvent(new ViewConfigurationEvent(event.getSelectedItem().getId()));
+            }
+         }
+      });
+
+      display.getEnvironmentActions().addRestartHandler(new SelectionHandler<EnvironmentInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<EnvironmentInfo> event)
+         {
+            IDE.fireEvent(new RestartAppServerEvent(event.getSelectedItem()));
          }
       });
 
@@ -376,13 +390,13 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addRestartHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentActions().addTerminateHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
          public void onSelection(SelectionEvent<EnvironmentInfo> event)
          {
-            IDE.fireEvent(new RestartAppServerEvent(event.getSelectedItem()));
+            IDE.fireEvent(new TerminateEnvironmentEvent(event.getSelectedItem(), terminateEnvironmentStartedHandler));
          }
       });
 
@@ -652,7 +666,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedHandler#onEnvironmentInfoChanged(org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentInfoChangedEvent)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedHandler#onEnvironmentInfoChanged(org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedEvent)
     */
    @Override
    public void onEnvironmentInfoChanged(EnvironmentInfoChangedEvent event)

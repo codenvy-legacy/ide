@@ -48,8 +48,8 @@ import org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
@@ -132,6 +132,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
          display = GWT.create(Display.class);
       }
       bindDisplay();
+      display.getNameField().setValue(projectName);
       getSolutionStacks();
       return display.getView();
    }

@@ -34,10 +34,10 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.launch.LaunchEnvironmentPresenter;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.rebuild.RebuildEnvironmentPresenter;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.restart.RestartAppServerPresenter;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.terminate.TerminateEnvironmentPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.terminate.TerminateEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter;

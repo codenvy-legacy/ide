@@ -47,14 +47,17 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.launch")
    String launchButton();
 
-   @Key("button.terminate")
-   String terminateButton();
+   @Key("button.environment.configuration.view")
+   String viewConfigurationButton();
 
    @Key("button.restart")
    String restartButton();
 
    @Key("button.rebuild")
    String rebuildButton();
+
+   @Key("button.terminate")
+   String terminateButton();
 
    @Key("button.close")
    String closeButton();
@@ -98,6 +101,18 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("unableGetEnvironmentInfo")
    String unableToGetEnvironmentInfo(String name);
+
+   @Key("validationErrorTitle")
+   String validationErrorTitile();
+
+   @Key("validationErrorSpecifyAppName")
+   String validationErrorSpecifyAppName();
+
+   @Key("validationErrorEnvNameLength")
+   String validationErrorEnvNameLength();
+
+   @Key("validationErrorEnvNameHyphen")
+   String validationErrorEnvNameHyphen();
 
    // Controls
    @Key("button.properties")

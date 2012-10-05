@@ -33,6 +33,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -54,8 +55,8 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentRequestStatusHandler;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environment.EnvironmentStatusChecker;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
@@ -111,10 +112,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
 
       HasClickHandlers getCancelButton();
 
-      void enableNextButton(boolean enabled);
-
-      void enableFinishButton(boolean enabled);
-
       void enableCreateEnvironmentStep(boolean enabled);
 
       void focusInApplicationNameField();
@@ -169,6 +166,14 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
+            String appName = display.getNameField().getValue();
+            if (appName == null || appName.length() == 0)
+            {
+               Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                  AWSExtension.LOCALIZATION_CONSTANT.validationErrorSpecifyAppName());
+               return;
+            }
+
             display.showCreateEnvironmentStep();
          }
       });
@@ -189,30 +194,26 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onClick(ClickEvent event)
          {
+            if (display.getLaunchEnvField().getValue())
+            {
+               String envName = display.getEnvNameField().getValue();
+               if (envName == null || envName.length() < 4 || envName.length() > 23)
+               {
+                  Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                     AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameLength());
+                  return;
+               }
+               else if (envName.startsWith("-") || envName.endsWith("-"))
+               {
+                  Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+                     AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameHyphen());
+                  return;
+               }
+            }
+
             warUrl = null;
             launchEnvironment = display.getLaunchEnvField().getValue();
             beforeCreation();
-         }
-      });
-
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableNextButton(event.getValue() != null);
-         }
-      });
-
-      display.getEnvNameField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            display.enableFinishButton(!display.getLaunchEnvField().getValue()
-               || (display.getLaunchEnvField().getValue() && event.getValue() != null && !event.getValue().isEmpty()));
          }
       });
 
@@ -223,9 +224,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             display.enableCreateEnvironmentStep(event.getValue());
-            display.enableFinishButton(!event.getValue()
-               || (event.getValue() && display.getEnvNameField().getValue() != null && !display.getEnvNameField()
-                  .getValue().isEmpty()));
          }
       });
    }
@@ -244,8 +242,6 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       }
       display.showCreateApplicationStep();
       display.focusInApplicationNameField();
-      display.enableNextButton(false);
-      display.enableFinishButton(false);
       display.getLaunchEnvField().setValue(true);
 
       getSolutionStacks();
@@ -359,6 +355,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                   {
                      message += "<br>" + ((ServerException)exception).getMessage();
                   }
+                  Dialogs.getInstance().showError(message);
                   IDE.fireEvent(new OutputEvent(message, Type.ERROR));
                }
             });
