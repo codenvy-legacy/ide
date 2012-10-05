@@ -26,12 +26,12 @@ package org.exoplatform.ide.util.loging;
 interface Logger
 {
    void debug(Class<?> clazz, Object... args);
-   
+
    void error(Class<?> clazz, Object... args);
-   
+
    void info(Class<?> clazz, Object... args);
-   
-   boolean isLoggingEnabled();
-   
+
    void warn(Class<?> clazz, Object... args);
+
+   boolean isLoggingEnabled();
 }

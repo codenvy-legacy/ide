@@ -51,14 +51,14 @@ public class Log
       delegate.info(clazz, args);
    }
 
-   public static boolean isLoggingEnabled()
-   {
-      return delegate.isLoggingEnabled();
-   }
-
    public static void warn(Class<?> clazz, Object... args)
    {
       delegate.warn(clazz, args);
+   }
+   
+   public static boolean isLoggingEnabled()
+   {
+      return delegate.isLoggingEnabled();
    }
 
 }
