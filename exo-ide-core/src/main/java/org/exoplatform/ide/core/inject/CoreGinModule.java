@@ -41,6 +41,9 @@ import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.part.PartAgent;
+import org.exoplatform.ide.part.PartStackPresenter;
+import org.exoplatform.ide.part.PartStackResources;
+import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
@@ -101,7 +104,11 @@ public class CoreGinModule extends AbstractGinModule
       bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
 
       // part agent
+      bind(PartStackPresenter.Display.class).to(PartStackView.class);
+      bind(PartStackPresenter.class);
       bind(PartAgent.class).in(Singleton.class);
+      // resources: images and css
+      bind(PartStackResources.class).in(Singleton.class);
    }
 
    @Provides

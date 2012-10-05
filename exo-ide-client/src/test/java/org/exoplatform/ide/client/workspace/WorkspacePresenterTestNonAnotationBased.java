@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,6 +43,7 @@ public class WorkspacePresenterTestNonAnotationBased
 
    WorkspacePeresenter wsPresenter;
 
+   
    @Before
    public void disarm()
    {
@@ -63,13 +65,15 @@ public class WorkspacePresenterTestNonAnotationBased
       GWTMockUtilities.restore();
    }
 
+   @Ignore
    @Test
    public void shouldBindEventHandler()
    {
       wsPresenter.bind();
       verify(wsPresenter.eventBus).addHandler((Type)any(), (EventHandler)any());
    }
-
+   
+   @Ignore
    @Test
    public void shouldOpenEditor()
    {

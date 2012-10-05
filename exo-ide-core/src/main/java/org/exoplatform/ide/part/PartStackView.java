@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
@@ -70,8 +71,11 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
     * Create View
     * @param partStackResources 
     */
+   @Inject
    public PartStackView(PartStackResources partStackResources)
    {
+      // TODO: make it elsewhere
+      partStackResources.partStackCSS().ensureInjected();
       this.resources = partStackResources;
       parent = new DockLayoutPanel(Unit.PX);
       initWidget(parent);
