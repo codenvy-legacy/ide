@@ -27,6 +27,8 @@ public class Link
    // Folder
    public static String REL_CHILDREN = "children";
 
+   public static String REL_TREE = "tree";
+
    public static String REL_CREATE_PROJECT = "create-project";
 
    public static String REL_CREATE_FOLDER = "create-folder";
