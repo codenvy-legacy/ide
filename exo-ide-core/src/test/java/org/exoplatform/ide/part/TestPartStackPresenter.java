@@ -14,36 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.workspace;
+package org.exoplatform.ide.part;
 
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Aug 6, 2012  
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class WorkspaceViewTest extends GwtTestWithMockito
+public class TestPartStackPresenter
 {
 
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ide.IDE";
-   }
-   
-   @Ignore
    @Test
-   public void shouldSelectOnClick()
+   public void test()
    {
-      // unable to test cell widgets with gwt-test-utils
+      //fail("Not yet implemented");
    }
 
 }

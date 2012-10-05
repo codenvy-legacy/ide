@@ -16,9 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.gwt.core.client.GWT;
-
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
@@ -30,8 +29,6 @@ import org.exoplatform.ide.part.PartStackPresenter.FocusRequstHandler;
  */
 public class PartAgent
 {
-
-   private static PartStackResources partStackResources = GWT.create(PartStackResources.class);
 
    private final JsonStringMap<PartStackPresenter> partStacks = JsonCollections.createStringMap();
 
@@ -97,13 +94,11 @@ public class PartAgent
     * 
     */
    @Inject
-   public PartAgent()
+   public PartAgent(Provider<PartStackPresenter> partStackProvider)
    {
-      partStackResources.partStackCSS().ensureInjected();
-
       for (PartStackType partStackType : PartStackType.values())
       {
-         PartStackPresenter partStack = new PartStackPresenter(partStackResources);
+         PartStackPresenter partStack = partStackProvider.get();
          partStack.setFocusRequstHandler(new PartStackFocusRequstHandler(partStack));
          partStacks.put(partStackType.toString(), partStack);
       }

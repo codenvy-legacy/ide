@@ -27,7 +27,6 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
 
 /**
  * GIN Client module, describes relations and dependencies  

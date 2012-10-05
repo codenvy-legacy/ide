@@ -33,6 +33,7 @@ import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -84,6 +85,7 @@ public class WorkspacePresenterTest
       GWTMockUtilities.restore();
    }
 
+   @Ignore
    @Test
    public void shouldBindEventHandler()
    {
@@ -91,6 +93,7 @@ public class WorkspacePresenterTest
       verify(wsPresenter.eventBus).addHandler((Type)any(), (EventHandler)any());
    }
 
+   @Ignore
    @Test
    public void shouldExposeUItoContainer()
    {
@@ -104,6 +107,7 @@ public class WorkspacePresenterTest
       verify(container).add(eq(wsDisplayAsWidget));
    }
 
+   @Ignore
    @Test
    public void shouldExposeProjectExplorerOnGo()
    {
@@ -114,6 +118,7 @@ public class WorkspacePresenterTest
       verify(wsPresenter.projectExpolorerPresenter).go(eq(leftWorkspacePanel));
    }
 
+   @Ignore
    @Test
    public void shouldOpenEditorOnEvent()
    {

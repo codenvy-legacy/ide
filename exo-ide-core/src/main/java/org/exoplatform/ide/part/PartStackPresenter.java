@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.inject.Inject;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -89,9 +91,10 @@ public class PartStackPresenter implements Presenter
    /**
     * @param partStackResources
     */
-   public PartStackPresenter(PartStackResources partStackResources)
+   @Inject
+   public PartStackPresenter(Display display,PartStackResources partStackResources)
    {
-      display = new PartStackView(partStackResources);
+      this.display = display;
    }
 
    public void setFocusRequstHandler(FocusRequstHandler handler)
@@ -118,6 +121,9 @@ public class PartStackPresenter implements Presenter
       if (parts.contains(part))
       {
          // part already exists
+         // activate it
+         setActivePart(part);
+         // and return
          return;
       }
       parts.add(part);
