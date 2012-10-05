@@ -48,9 +48,8 @@ import javax.jcr.Session;
  */
 public class ProjectTest extends JcrFileSystemTest
 {
-   private String createTestPath;
-   private String createTestID;
-   private Node createTestNode;
+   private String projectTestPath;
+   private String projectTestId;
 
    /** @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp() */
    @Override
@@ -58,10 +57,10 @@ public class ProjectTest extends JcrFileSystemTest
    {
       super.setUp();
       String name = getClass().getName();
-      createTestNode = testRoot.addNode(name, "nt:unstructured");
+      Node createTestNode = testRoot.addNode(name, "nt:unstructured");
       session.save();
-      createTestPath = createTestNode.getPath();
-      createTestID = ((ExtendedNode)createTestNode).getIdentifier();
+      projectTestPath = createTestNode.getPath();
+      projectTestId = ((ExtendedNode)createTestNode).getIdentifier();
    }
 
    public void testCreateProject() throws Exception
@@ -72,7 +71,7 @@ public class ProjectTest extends JcrFileSystemTest
       String path = new StringBuilder() //
          .append(SERVICE_URI) //
          .append("project/") //
-         .append(createTestID) //
+         .append(projectTestId) //
          .append("?") //
          .append("name=") //
          .append(name).append("&").append("type=") //
@@ -81,7 +80,7 @@ public class ProjectTest extends JcrFileSystemTest
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      String expectedPath = createTestPath + "/" + name;
+      String expectedPath = projectTestPath + "/" + name;
       assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
       Node project = (Node)session.getItem(expectedPath);
       assertEquals("java", project.getProperty(".project/vfs:projectType").getString());

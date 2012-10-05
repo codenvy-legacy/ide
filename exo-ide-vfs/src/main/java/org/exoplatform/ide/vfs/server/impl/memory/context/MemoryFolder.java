@@ -19,12 +19,17 @@
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
 import org.exoplatform.ide.vfs.server.PropertyFilter;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,15 +42,14 @@ public class MemoryFolder extends MemoryItem
 {
    private final Map<String, MemoryItem> children;
 
-   public MemoryFolder(String id, String name) throws VirtualFileSystemException
+   public MemoryFolder(String name)
    {
-      this(ItemType.FOLDER, id, name);
+      this(ObjectIdGenerator.generateId(), name);
    }
 
-   // Used directly for MemoryProject only!
-   MemoryFolder(ItemType type, String id, String name) throws VirtualFileSystemException
+   MemoryFolder(String id, String name)
    {
-      super(type, id, name);
+      super(ItemType.FOLDER, id, name);
       children = new LinkedHashMap<String, MemoryItem>();
    }
 
@@ -123,6 +127,32 @@ public class MemoryFolder extends MemoryItem
       return copy;
    }
 
+   public boolean isProject()
+   {
+      List<Property> properties;
+      try
+      {
+         properties = getProperties(PropertyFilter.valueOf("vfs:mimeType"));
+      }
+      catch (InvalidArgumentException e)
+      {
+         // Should not happen.
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+      }
+      if (properties.isEmpty())
+      {
+         return false;
+      }
+      List<String> values = properties.get(0).getValue();
+      return !(values == null || values.isEmpty()) && Project.PROJECT_MIME_TYPE.equals(values.get(0));
+   }
+
+   public void setProjectType(String projectType) throws VirtualFileSystemException
+   {
+      updateProperties(Arrays.asList(new Property("vfs:projectType", projectType)));
+      lastModificationDate = System.currentTimeMillis();
+   }
+
    @Override
    public String toString()
    {
@@ -131,6 +161,7 @@ public class MemoryFolder extends MemoryItem
          ", path=" + getPath() +
          ", name='" + getName() + '\'' +
          ", type=" + getType() +
+         ", isProject=" + isProject() +
          '}';
    }
 }

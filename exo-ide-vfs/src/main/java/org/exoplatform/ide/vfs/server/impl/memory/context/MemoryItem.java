@@ -23,9 +23,11 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -49,12 +51,14 @@ public abstract class MemoryItem
    String name;
    long lastModificationDate;
 
-   MemoryItem(ItemType type, String id, String name) throws VirtualFileSystemException
+   MemoryItem(ItemType type, String id, String name)
    {
       this.type = type;
       this.id = id;
       this.name = name;
       this.permissionsMap = new HashMap<String, Set<String>>();
+      permissionsMap.put(VirtualFileSystemInfo.ANY_PRINCIPAL,
+         new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
       this.properties = new HashMap<String, List<String>>();
       this.creationDate = this.lastModificationDate = System.currentTimeMillis();
    }
@@ -161,26 +165,42 @@ public abstract class MemoryItem
 
    public final void updateACL(List<AccessControlEntry> acl, boolean override)
    {
+      Map<String, Set<String>> update = new HashMap<String, Set<String>>(acl.size());
+      for (AccessControlEntry ace : acl)
+      {
+         String principal = ace.getPrincipal();
+         Set<String> permissions = update.get(principal);
+         if (permissions == null)
+         {
+            permissions = new HashSet<String>();
+            update.put(principal, permissions);
+         }
+         permissions.addAll(ace.getPermissions());
+      }
+
       synchronized (permissionsMap)
       {
          if (override)
          {
             permissionsMap.clear();
          }
-
-         for (AccessControlEntry ace : acl)
-         {
-            String principal = ace.getPrincipal();
-            Set<String> permissions = permissionsMap.get(principal);
-            if (permissions == null)
-            {
-               permissions = new HashSet<String>();
-               permissionsMap.put(principal, permissions);
-            }
-            permissions.addAll(ace.getPermissions());
-         }
+         permissionsMap.putAll(update);
       }
       lastModificationDate = System.currentTimeMillis();
+   }
+
+   public Map<String, Set<String>> getPermissions()
+   {
+      synchronized (permissionsMap)
+      {
+         Map<String, Set<String>> copy = new HashMap<String, Set<String>>(permissionsMap.size());
+         for (Map.Entry<String, Set<String>> e : permissionsMap.entrySet())
+         {
+            Set<String> values = e.getValue();
+            copy.put(e.getKey(), values == null ? Collections.<String>emptySet() : new HashSet<String>(values));
+         }
+         return copy;
+      }
    }
 
    public final List<Property> getProperties(PropertyFilter filter)

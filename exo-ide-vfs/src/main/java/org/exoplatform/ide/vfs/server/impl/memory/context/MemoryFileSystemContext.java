@@ -33,12 +33,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class MemoryFileSystemContext
 {
-   static final String ROOT_FOLDER_ID = "abcdef01-234567890-abcd-ef0123456789";
+   static final String ROOT_FOLDER_ID = ObjectIdGenerator.generateId();
 
-   public final ConcurrentMap<String, MemoryItem> entries; // TODO make private
+   private final ConcurrentMap<String, MemoryItem> entries;
    private final MemoryFolder root;
 
-   public MemoryFileSystemContext() throws VirtualFileSystemException
+   public MemoryFileSystemContext()
    {
       root = new MemoryFolder(ROOT_FOLDER_ID, "");
       entries = new ConcurrentHashMap<String, MemoryItem>();
@@ -50,7 +50,7 @@ public final class MemoryFileSystemContext
       return root;
    }
 
-   public void addItem(MemoryItem item) throws VirtualFileSystemException
+   public void putItem(MemoryItem item) throws VirtualFileSystemException
    {
       if (ItemType.FILE == item.getType())
       {
@@ -85,6 +85,33 @@ public final class MemoryFileSystemContext
    public MemoryItem getItem(String id)
    {
       return entries.get(id);
+   }
+
+   public MemoryItem getItemByPath(String path)
+   {
+      if (path == null)
+      {
+         throw new IllegalArgumentException("Item path may not be null. ");
+      }
+      if ("/".equals(path))
+      {
+         return getRoot();
+      }
+      if (path.startsWith("/"))
+      {
+         path = path.substring(1);
+      }
+      MemoryItem item = getRoot();
+      String[] split = path.split("/");
+      for (int i = 0, length = split.length; item != null && i < length; i++)
+      {
+         String name = split[i];
+         if (ItemType.FOLDER == item.getType() || ItemType.PROJECT == item.getType())
+         {
+            item = ((MemoryFolder)item).getChild(name);
+         }
+      }
+      return item;
    }
 
    public void deleteItem(String id)

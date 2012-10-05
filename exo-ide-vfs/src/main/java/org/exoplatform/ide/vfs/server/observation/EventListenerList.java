@@ -134,6 +134,11 @@ public class EventListenerList
       }
    }
 
+   public int size()
+   {
+      return listeners.size();
+   }
+
    private static class ListenerHolder
    {
       final ChangeEventFilter eventFilter;
