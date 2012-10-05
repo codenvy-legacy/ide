@@ -26,6 +26,7 @@ import com.amazonaws.services.elasticbeanstalk.model.ApplicationDescription;
 import com.amazonaws.services.elasticbeanstalk.model.ApplicationVersionDescription;
 import com.amazonaws.services.elasticbeanstalk.model.ConfigurationOptionDescription;
 import com.amazonaws.services.elasticbeanstalk.model.ConfigurationOptionSetting;
+import com.amazonaws.services.elasticbeanstalk.model.ConfigurationSettingsDescription;
 import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationRequest;
 import com.amazonaws.services.elasticbeanstalk.model.CreateApplicationVersionRequest;
 import com.amazonaws.services.elasticbeanstalk.model.CreateConfigurationTemplateRequest;
@@ -38,6 +39,7 @@ import com.amazonaws.services.elasticbeanstalk.model.DeleteConfigurationTemplate
 import com.amazonaws.services.elasticbeanstalk.model.DescribeApplicationVersionsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeApplicationsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeConfigurationOptionsRequest;
+import com.amazonaws.services.elasticbeanstalk.model.DescribeConfigurationSettingsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEnvironmentsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsRequest;
 import com.amazonaws.services.elasticbeanstalk.model.DescribeEventsResult;
@@ -68,9 +70,9 @@ import org.exoplatform.ide.extension.aws.server.AWSClient;
 import org.exoplatform.ide.extension.aws.server.AWSException;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsSeverity;
@@ -706,15 +708,15 @@ public class Beanstalk extends AWSClient
     * @throws VirtualFileSystemException
     *    if any VFS error occurs
     */
-   public ConfigurationTemplateInfo createConfigurationTemplate(String templateName,
-                                                                String solutionStackName,
-                                                                String sourceApplicationName,
-                                                                String sourceTemplateName,
-                                                                String environmentId,
-                                                                String description,
-                                                                List<ConfigurationOption> options,
-                                                                VirtualFileSystem vfs,
-                                                                String projectId)
+   public Configuration createConfigurationTemplate(String templateName,
+                                                    String solutionStackName,
+                                                    String sourceApplicationName,
+                                                    String sourceTemplateName,
+                                                    String environmentId,
+                                                    String description,
+                                                    List<ConfigurationOption> options,
+                                                    VirtualFileSystem vfs,
+                                                    String projectId)
       throws AWSException, VirtualFileSystemException
    {
       return createConfigurationTemplate(detectApplicationName(vfs, projectId), templateName, solutionStackName,
@@ -746,14 +748,14 @@ public class Beanstalk extends AWSClient
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public ConfigurationTemplateInfo createConfigurationTemplate(String applicationName,
-                                                                String templateName,
-                                                                String solutionStackName,
-                                                                String sourceApplicationName,
-                                                                String sourceTemplateName,
-                                                                String environmentId,
-                                                                String description,
-                                                                List<ConfigurationOption> options) throws AWSException
+   public Configuration createConfigurationTemplate(String applicationName,
+                                                    String templateName,
+                                                    String solutionStackName,
+                                                    String sourceApplicationName,
+                                                    String sourceTemplateName,
+                                                    String environmentId,
+                                                    String description,
+                                                    List<ConfigurationOption> options) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
@@ -771,15 +773,15 @@ public class Beanstalk extends AWSClient
       }
    }
 
-   private ConfigurationTemplateInfo createConfigurationTemplate(AWSElasticBeanstalk beanstalkClient,
-                                                                 String applicationName,
-                                                                 String templateName,
-                                                                 String solutionStackName,
-                                                                 String sourceApplicationName,
-                                                                 String sourceTemplateName,
-                                                                 String environmentId,
-                                                                 String description,
-                                                                 List<ConfigurationOption> options)
+   private Configuration createConfigurationTemplate(AWSElasticBeanstalk beanstalkClient,
+                                                     String applicationName,
+                                                     String templateName,
+                                                     String solutionStackName,
+                                                     String sourceApplicationName,
+                                                     String sourceTemplateName,
+                                                     String environmentId,
+                                                     String description,
+                                                     List<ConfigurationOption> options)
    {
       CreateConfigurationTemplateRequest request = new CreateConfigurationTemplateRequest()
          .withApplicationName(applicationName)
@@ -801,7 +803,7 @@ public class Beanstalk extends AWSClient
             .withTemplateName(sourceTemplateName));
       }
       CreateConfigurationTemplateResult result = beanstalkClient.createConfigurationTemplate(request);
-      return new ConfigurationTemplateImpl.Builder()
+      return new ConfigurationImpl.Builder()
          .solutionStackName(result.getSolutionStackName())
          .applicationName(result.getApplicationName())
          .templateName(result.getTemplateName())
@@ -831,10 +833,10 @@ public class Beanstalk extends AWSClient
     * @throws VirtualFileSystemException
     *    if any VFS error occurs
     */
-   public ConfigurationTemplateInfo updateConfigurationTemplate(String templateName,
-                                                                String description,
-                                                                VirtualFileSystem vfs,
-                                                                String projectId)
+   public Configuration updateConfigurationTemplate(String templateName,
+                                                    String description,
+                                                    VirtualFileSystem vfs,
+                                                    String projectId)
       throws AWSException, VirtualFileSystemException
    {
       return updateConfigurationTemplate(detectApplicationName(vfs, projectId), templateName, description);
@@ -853,9 +855,9 @@ public class Beanstalk extends AWSClient
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */
-   public ConfigurationTemplateInfo updateConfigurationTemplate(String applicationName,
-                                                                String templateName,
-                                                                String description) throws AWSException
+   public Configuration updateConfigurationTemplate(String applicationName,
+                                                    String templateName,
+                                                    String description) throws AWSException
    {
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       try
@@ -872,17 +874,17 @@ public class Beanstalk extends AWSClient
       }
    }
 
-   private ConfigurationTemplateInfo updateConfigurationTemplate(AWSElasticBeanstalk beanstalkClient,
-                                                                 String applicationName,
-                                                                 String templateName,
-                                                                 String description)
+   private Configuration updateConfigurationTemplate(AWSElasticBeanstalk beanstalkClient,
+                                                     String applicationName,
+                                                     String templateName,
+                                                     String description)
    {
       UpdateConfigurationTemplateResult result = beanstalkClient.updateConfigurationTemplate(
          new UpdateConfigurationTemplateRequest()
             .withApplicationName(applicationName)
             .withTemplateName(templateName)
             .withDescription(description));
-      return new ConfigurationTemplateImpl.Builder()
+      return new ConfigurationImpl.Builder()
          .solutionStackName(result.getSolutionStackName())
          .applicationName(result.getApplicationName())
          .templateName(result.getTemplateName())
@@ -1435,6 +1437,138 @@ public class Beanstalk extends AWSClient
    }
 
    /**
+    * Get configuration template. Name of application retrieved from project properties.
+    *
+    * @param templateName
+    *    name of configuration template
+    * @param vfs
+    *    virtual file system instance for access properties of project
+    * @param projectId
+    *    project id
+    * @return configuration template
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VirtualFileSystem error occurs
+    */
+   public Configuration getConfigurationTemplate(String templateName,
+                                                 VirtualFileSystem vfs,
+                                                 String projectId) throws AWSException, VirtualFileSystemException
+   {
+      return getConfigurationTemplate(detectApplicationName(vfs, projectId), templateName);
+   }
+
+   /**
+    * Get configuration template.
+    *
+    * @param applicationName
+    *    name of application
+    * @param templateName
+    *    name of configuration template
+    * @return environment configuration
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public Configuration getConfigurationTemplate(String applicationName, String templateName) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return getConfigurations(beanstalkClient, applicationName, null, templateName).get(0);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   /**
+    * Get configuration of environment. Name of application retrieved from project properties.
+    * List may contains more then one configuration. One is for deployed environment and one for environment that is
+    * either in the process of deployment or that failed to deploy.
+    *
+    * @param environmentName
+    *    name of application environment
+    * @param vfs
+    *    virtual file system instance for access properties of project
+    * @param projectId
+    *    project id
+    * @return environment configuration
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    * @throws VirtualFileSystemException
+    *    if any VirtualFileSystem error occurs
+    */
+   public List<Configuration> getEnvironmentConfigurations(String environmentName,
+                                                           VirtualFileSystem vfs,
+                                                           String projectId) throws AWSException, VirtualFileSystemException
+   {
+      return getEnvironmentConfigurations(detectApplicationName(vfs, projectId), environmentName);
+   }
+
+   /**
+    * Get configurations of environment. List may contains more then one configuration. One is for deployed environment
+    * and one for environment that is either in the process of deployment or that failed to deploy.
+    *
+    * @param applicationName
+    *    name of application
+    * @param environmentName
+    *    name of environment
+    * @return environment configuration
+    * @throws AWSException
+    *    if any error occurs when make request to Amazon API
+    */
+   public List<Configuration> getEnvironmentConfigurations(String applicationName, String environmentName) throws AWSException
+   {
+      AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
+      try
+      {
+         return getConfigurations(beanstalkClient, applicationName, environmentName, null);
+      }
+      catch (AmazonClientException e)
+      {
+         throw new AWSException(e);
+      }
+      finally
+      {
+         beanstalkClient.shutdown();
+      }
+   }
+
+   private List<Configuration> getConfigurations(AWSElasticBeanstalk beanstalkClient,
+                                                 String applicationName,
+                                                 String environmentName,
+                                                 String templateName)
+   {
+      List<ConfigurationSettingsDescription> configurations = beanstalkClient.describeConfigurationSettings(
+         new DescribeConfigurationSettingsRequest()
+            .withApplicationName(applicationName)
+            .withEnvironmentName(environmentName)
+            .withTemplateName(templateName))
+         .getConfigurationSettings();
+      List<Configuration> result = new ArrayList<Configuration>(configurations.size());
+      for (ConfigurationSettingsDescription configuration : configurations)
+      {
+         result.add(new ConfigurationImpl.Builder()
+            .applicationName(configuration.getApplicationName())
+            .solutionStackName(configuration.getSolutionStackName())
+            .environmentName(configuration.getEnvironmentName())
+            .templateName(configuration.getTemplateName())
+            .description(configuration.getDescription())
+            .deploymentStatus(configuration.getDeploymentStatus())
+            .created(configuration.getDateCreated())
+            .updated(configuration.getDateUpdated())
+            .options(configuration.getOptionSettings())
+            .build());
+      }
+      return result;
+   }
+
+   /**
     * Update specified environment.
     *
     * @param id
@@ -1696,8 +1830,7 @@ public class Beanstalk extends AWSClient
     *
     * @param environmentId
     *    EC2 environment ID on which application is started
-    * @return
-    *    map in format: key => instanceId, value => log url
+    * @return map in format: key => instanceId, value => log url
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
     */

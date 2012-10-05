@@ -19,9 +19,9 @@
 package org.exoplatform.ide.extension.aws.server.beanstalk;
 
 import com.amazonaws.services.elasticbeanstalk.model.ConfigurationOptionSetting;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateDeploymentStatus;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationTemplateInfo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ConfigurationTemplateImpl implements ConfigurationTemplateInfo
+public class ConfigurationImpl implements Configuration
 {
    private String solutionStackName;
    private String applicationName;
@@ -129,14 +129,14 @@ public class ConfigurationTemplateImpl implements ConfigurationTemplateInfo
          return this;
       }
 
-      public ConfigurationTemplateInfo build()
+      public Configuration build()
       {
-         return new ConfigurationTemplateImpl(this);
+         return new ConfigurationImpl(this);
       }
    }
 
 
-   private ConfigurationTemplateImpl(Builder builder)
+   private ConfigurationImpl(Builder builder)
    {
       this.solutionStackName = builder.solutionStackName;
       this.applicationName = builder.applicationName;
@@ -149,7 +149,7 @@ public class ConfigurationTemplateImpl implements ConfigurationTemplateInfo
       this.options = builder.options;
    }
 
-   public ConfigurationTemplateImpl()
+   public ConfigurationImpl()
    {
    }
 
@@ -264,7 +264,7 @@ public class ConfigurationTemplateImpl implements ConfigurationTemplateInfo
    @Override
    public String toString()
    {
-      return "ConfigurationTemplateImpl{" +
+      return "ConfigurationImpl{" +
          "solutionStackName='" + solutionStackName + '\'' +
          ", applicationName='" + applicationName + '\'' +
          ", templateName='" + templateName + '\'' +

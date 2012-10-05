@@ -18,47 +18,58 @@
  */
 package org.exoplatform.ide.extension.aws.shared.beanstalk;
 
-import java.util.List;
-
 /**
+ * Request for getting configuration of template or environment. Typically only <code>templateName</code> or
+ * <code>environment</code> should be set but not both.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ConfigurationTemplateInfo
+public interface ConfigurationRequest
 {
-   String getSolutionStackName();
-
-   void setSolutionStackName(String solutionStackName);
-
+   /**
+    * Get name of application.
+    *
+    * @return application name
+    */
    String getApplicationName();
 
-   void setApplicationName(String applicationName);
+   /**
+    * Set name of application.
+    *
+    * @param name
+    *    application name
+    * @see #getApplicationName()
+    */
+   void setApplicationName(String name);
 
+   /**
+    * Get name of configuration template.
+    *
+    * @return name of configuration template
+    */
    String getTemplateName();
 
+   /**
+    * Get name of configuration template.
+    *
+    * @param templateName
+    *    name of configuration template
+    */
    void setTemplateName(String templateName);
 
-   String getDescription();
-
-   void setDescription(String description);
-
+   /**
+    * Get name of application environment.
+    *
+    * @return name of application environment
+    */
    String getEnvironmentName();
 
+   /**
+    * Set name of application environment.
+    *
+    * @param environmentName
+    *    name of application environment
+    */
    void setEnvironmentName(String environmentName);
-
-   ConfigurationTemplateDeploymentStatus getDeploymentStatus();
-
-   void setDeploymentStatus(ConfigurationTemplateDeploymentStatus deploymentStatus);
-
-   long getCreated();
-
-   void setCreated(long created);
-
-   long getUpdated();
-
-   void setUpdated(long updated);
-
-   List<ConfigurationOption> getOptions();
-
-   void setOptions(List<ConfigurationOption> options);
 }
