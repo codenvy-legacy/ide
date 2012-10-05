@@ -28,6 +28,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // Buttons
    @Key("button.create")
    String createButton();
+   
+   @Key("button.create.bucket")
+   String createBucketButton();
 
    @Key("button.cancel")
    String cancelButton();
@@ -440,6 +443,12 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("control.s3.managemnt.promt")
    String s3ManagementControlPrompt();
 
+   @Key("s3.management.delete.question")
+   String s3ManagementDeleteQuestion(String bucket);
+   
+   @Key("s3.management.delete.title")
+   String s3ManagementDeleteTitle();
+   
    // EC2 Management View
    @Key("management.ec2.id")
    String managementEC2ViewTitle();

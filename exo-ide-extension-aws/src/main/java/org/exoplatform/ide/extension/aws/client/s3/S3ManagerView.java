@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.aws.client.s3;
 
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -33,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Bucket;
 import org.exoplatform.ide.extension.aws.shared.s3.S3Object;
@@ -68,6 +71,9 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    @UiField
    MenuItem uploadAction;
+   
+   @UiField
+   MenuItem downloadAction;
 
    @UiField
    MenuItem uploadProjectAction;
@@ -101,7 +107,7 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
 
    public S3ManagerView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managementViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.s3managementViewTitle(),new Image(AWSClientBundle.INSTANCE.s3()), WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -249,5 +255,21 @@ public class S3ManagerView extends ViewImpl implements S3Manager.Display
    {
       this.bucketId.setText(bucketId);      
    }
+
+
+   @Override
+   public void setEnableDowloadAction(boolean enabled)
+   {
+     downloadAction.setEnabled(enabled);
+   }
+
+
+   @Override
+   public void setDownloadAction(ScheduledCommand command)
+   {
+     downloadAction.setScheduledCommand(command);  
+   }
+   
+   
    
 }

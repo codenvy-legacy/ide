@@ -65,14 +65,7 @@ public class S3Service
    private static final String BUCKETS_CREATE = BASE_URL + "/buckets/create";
 
    private static final String PROJECT_UPLOAD = BASE_URL + "/objects/upload_project/";
-   //
-   //
-   //   private static final String OBJECT_PUT = BASE_URL + "/objects/put";
-   //
-   //
-
-   //
-
+   
    /**
     * REST service context.
     */
@@ -135,4 +128,5 @@ public class S3Service
       String url = restServiceContext + PROJECT_UPLOAD + s3Bucket + "?s3key=" + s3key + "&vfsid=" + vfsid + "&projectid=" + projectid;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
+
 }
