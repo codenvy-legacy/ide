@@ -92,7 +92,7 @@ public class PartStackPresenter implements Presenter
     * @param partStackResources
     */
    @Inject
-   public PartStackPresenter(Display display,PartStackResources partStackResources)
+   public PartStackPresenter(Display display, PartStackResources partStackResources)
    {
       this.display = display;
    }
@@ -156,6 +156,7 @@ public class PartStackPresenter implements Presenter
       {
          display.setActiveTabButton(-1);
       }
+      else
       {
          display.setActiveTabButton(parts.indexOf(activePart));
          activePart.go(contentPanel);
