@@ -20,6 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Project;

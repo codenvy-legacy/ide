@@ -17,7 +17,7 @@ package org.exoplatform.ide.texteditor.api.parser;
 import org.exoplatform.ide.json.JsonArray;
 
 /**
- * Interface that represents CodeMirror parser.
+ * Interface that represents parser.
  */
 public interface Parser
 {

@@ -16,38 +16,55 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.core.editor;
-
-import org.exoplatform.ide.AppContext;
-import org.exoplatform.ide.editor.DocumentProvider;
-import org.exoplatform.ide.editor.EditorInitException;
-import org.exoplatform.ide.editor.EditorInput;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
-import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
+package org.exoplatform.ide.util.loging;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaEditor extends BaseTextEditor
+class DummyLogger implements Logger
 {
 
    /**
-    * @param appContext
-    * @param documentProvider
+    * @see org.exoplatform.ide.util.loging.Logger#debug(java.lang.Class, java.lang.Object[])
     */
-   public JavaEditor(AppContext appContext, DocumentProvider documentProvider, TextEditorConfiguration configuration)
+   @Override
+   public void debug(Class<?> clazz, Object... args)
    {
-      super(appContext, documentProvider, configuration);
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.BaseTextEditor#init(org.exoplatform.ide.editor.EditorInput)
+    * @see org.exoplatform.ide.util.loging.Logger#error(java.lang.Class, java.lang.Object[])
     */
    @Override
-   public void init(EditorInput input) throws EditorInitException
+   public void error(Class<?> clazz, Object... args)
    {
-      super.init(input);
    }
+
+   /**
+    * @see org.exoplatform.ide.util.loging.Logger#info(java.lang.Class, java.lang.Object[])
+    */
+   @Override
+   public void info(Class<?> clazz, Object... args)
+   {
+   }
+
+   /**
+    * @see org.exoplatform.ide.util.loging.Logger#isLoggingEnabled()
+    */
+   @Override
+   public boolean isLoggingEnabled()
+   {
+      return false;
+   }
+
+   /**
+    * @see org.exoplatform.ide.util.loging.Logger#warn(java.lang.Class, java.lang.Object[])
+    */
+   @Override
+   public void warn(Class<?> clazz, Object... args)
+   {
+   }
+
 }

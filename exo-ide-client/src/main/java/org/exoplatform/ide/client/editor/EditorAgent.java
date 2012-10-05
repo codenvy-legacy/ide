@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.editor;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.editor.EditorInitException;
@@ -32,6 +31,7 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.part.PartAgent;
 import org.exoplatform.ide.part.PartAgent.PartStackType;
+import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.util.loging.Log;
 
@@ -110,12 +110,12 @@ public class EditorAgent
 
    public void openEditor(final File file)
    {
-      if (openedEditors.containsKey(file.getId()))
-      {
-         partAgent.setActivePart(openedEditors.get(file.getId()));
-      }
-      else
-      {
+//      if (openedEditors.containsKey(file.getId()))
+//      {
+//         partAgent.setActivePart(openedEditors.get(file.getId()));
+//      }
+//      else
+//      {
          FileType fileType = provider.getFileType(file);
          EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
          EditorPartPresenter editor = editorProvider.getEditor();
@@ -130,6 +130,6 @@ public class EditorAgent
          partAgent.addPart(editor, PartStackType.EDITING);
          openedEditors.put(file.getId(), editor);
       }
-   }
+//   }
 
 }

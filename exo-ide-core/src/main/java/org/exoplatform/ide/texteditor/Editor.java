@@ -18,13 +18,12 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.html.Element;
 
-import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
-import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.TextStoreMutator;
@@ -48,17 +47,18 @@ import org.exoplatform.ide.texteditor.renderer.RenderTimeExecutor;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
 import org.exoplatform.ide.texteditor.selection.CursorView;
 import org.exoplatform.ide.texteditor.selection.LocalCursorController;
+import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
 import org.exoplatform.ide.texteditor.selection.SelectionManager;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
+import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import org.exoplatform.ide.util.CssUtils;
 import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
+import org.exoplatform.ide.util.UserActivityManager;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
-import org.exoplatform.ide.texteditor.selection.SelectionLineRenderer;
-import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 
 /**
  * The presenter for the editor.
@@ -192,8 +192,6 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private static int idCounter = 0;
 
-   private final AppContext appContext;
-
    private final Buffer buffer;
 
    private DocumentModel textStore;
@@ -249,32 +247,37 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private Parser parser;
 
-   public Editor(AppContext appContext)
+   private final org.exoplatform.ide.Resources resources;
+
+   private final UserActivityManager userActivityManager;
+
+   public Editor(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
-      this.appContext = appContext;
+      this.resources = resources;
+      this.userActivityManager = userActivityManager;
       editorFontDimensionsCalculator =
-         FontDimensionsCalculator.get(appContext.getResources().workspaceEditorCss().editorFont());
+         FontDimensionsCalculator.get(resources.workspaceEditorCss().editorFont());
       renderTimeExecutor = new RenderTimeExecutor();
       LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
 
       buffer =
-         Buffer.create(appContext, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
+         Buffer.create(resources, editorFontDimensionsCalculator.getFontDimensions(), lineDimensions,
             renderTimeExecutor);
       input = new InputController();
-      View view = new View(appContext.getResources(), buffer.getView().getElement(), input.getInputElement());
+      View view = new View(resources, buffer.getView().getElement(), input.getInputElement());
       setView(view);
 
       focusManager = new FocusManager(buffer, input.getInputElement());
 
       Gutter leftGutter =
-         createGutter(false, Gutter.Position.LEFT, appContext.getResources().workspaceEditorCss().leftGutter());
+         createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
 
       editorDocumentMutator = new EditorTextStoreMutator(this);
       mouseHoverManager = new MouseHoverManager(this);
 
       editorActivityManager =
-         new EditorActivityManager(appContext.getUserActivityManager(), buffer.getScrollListenerRegistrar(),
+         new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(),
             getKeyListenerRegistrar());
 
       // TODO: instantiate input from here
@@ -502,14 +505,14 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       buffer.handleDocumentChanged(textStore);
       leftGutterManager.handleDocumentChanged(textStore);
 
-      selectionManager = SelectionManager.create(textStore, buffer, focusManager, appContext.getResources());
+      selectionManager = SelectionManager.create(textStore, buffer, focusManager, resources);
 
       SelectionModel selection = selectionManager.getSelectionModel();
       viewport = ViewportModel.create(textStore, selection, buffer);
       input.handleDocumentChanged(textStore, selection, viewport);
       renderer =
          Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this,
-            appContext.getResources(), renderTimeExecutor);
+            resources, renderTimeExecutor);
       if (editorUndoManager != null)
          editorUndoManager.connect(this);
 
@@ -531,9 +534,9 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       //        viewport,
       //        selection,
       //        editorDocumentMutator);
-      localCursorController = LocalCursorController.create(appContext, focusManager, selection, buffer, this);
+      localCursorController = LocalCursorController.create(resources, focusManager, selection, buffer, this);
       createSyntaxHighligter(parser);
-      new CurrentLineHighlighter(buffer, selection, appContext.getResources());
+      new CurrentLineHighlighter(buffer, selection, resources);
 
    }
 
@@ -665,10 +668,10 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    {
       if (parser == null)
          return;
-      DocumentParser documentParser = DocumentParser.create(textStore, parser, appContext.getUserActivityManager());
+      DocumentParser documentParser = DocumentParser.create(textStore, parser, userActivityManager);
       syntaxHighlighter =
          SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
-            appContext.getResources().workspaceEditorCss());
+            resources.workspaceEditorCss());
       addLineRenderer(syntaxHighlighter.getRenderer());
 //      Autoindenter.create(documentParser, this);
    }

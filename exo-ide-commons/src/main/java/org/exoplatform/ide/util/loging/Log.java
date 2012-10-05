@@ -14,11 +14,9 @@
 
 package org.exoplatform.ide.util.loging;
 
-import org.exoplatform.ide.util.ExceptionUtils;
-import org.exoplatform.ide.util.loging.LogConfig.LogLevel;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
+
+import org.exoplatform.ide.util.loging.LogConfig.LogLevel;
 
 /**
  * Simple Logging class that logs to the browser's console and to the DevMode
@@ -28,123 +26,39 @@ import com.google.gwt.core.client.JavaScriptObject;
  * of side effects, all Logging code should compile out of your application if
  * logging is disabled.
  */
-public class Log {
+public class Log
+{
 
-  public static void debug(Class<?> clazz, Object... args) {
-    if (LogConfig.isLoggingEnabled()) {
-      // DEBUG is the lowest log level, but we use <= for consistency, and in
-      // case we ever decide to introduce a SPAM level.
-      if (LogConfig.getLogLevel().ordinal() <= LogLevel.DEBUG.ordinal()) {
-        log(clazz, LogLevel.DEBUG, args);
-      }
-    }
-  }
+   private static final Logger delegate;
+   static
+   {
+      LogConfig.setLogLevel(LogLevel.INFO);
+      delegate = GWT.isClient() ? new DevModeLogger() : new DummyLogger();
+   }
 
-  public static void error(Class<?> clazz, Object... args) {
-    if (LogConfig.isLoggingEnabled()) {
-      log(clazz, LogLevel.ERROR, args);
-    }
-  }
+   public static void debug(Class<?> clazz, Object... args)
+   {
+      delegate.debug(clazz, args);
+   }
 
-  public static void info(Class<?> clazz, Object... args) {
-    if (LogConfig.isLoggingEnabled()) {
-      if (LogConfig.getLogLevel().ordinal() <= LogLevel.INFO.ordinal()) {
-        log(clazz, LogLevel.INFO, args);
-      }
-    }
-  }
+   public static void error(Class<?> clazz, Object... args)
+   {
+      delegate.error(clazz, args);
+   }
 
-  public static boolean isLoggingEnabled() {
-    return LogConfig.isLoggingEnabled();
-  }
+   public static void info(Class<?> clazz, Object... args)
+   {
+      delegate.info(clazz, args);
+   }
 
-  public static void warn(Class<?> clazz, Object... args) {
-    if (LogConfig.isLoggingEnabled()) {
-      if (LogConfig.getLogLevel().ordinal() <= LogLevel.WARNING.ordinal()) {
-        log(clazz, LogLevel.WARNING, args);
-      }
-    }
-  }
+   public static void warn(Class<?> clazz, Object... args)
+   {
+      delegate.warn(clazz, args);
+   }
+   
+   public static boolean isLoggingEnabled()
+   {
+      return delegate.isLoggingEnabled();
+   }
 
-  public static void markTimeline(Class<?> clazz, String label) {
-    if (LogConfig.isLoggingEnabled()) {
-      markTimelineUnconditionally(label + "(" + clazz.getName() + ")");
-    }
-  }
-
-  // TODO: markTimeLine is deprecated; remove it someday.
-  public static native void markTimelineUnconditionally(String label) /*-{
-    if ($wnd.console) {
-      if ($wnd.console.timeStamp) {
-        $wnd.console.timeStamp(label);
-      } else if ($wnd.console.markTimeline) {
-        $wnd.console.markTimeline(label);
-      }
-    }
-  }-*/;
-
-  private static native void invokeBrowserLogger(String logFuncName, Object o) /*-{
-    if ($wnd.console && $wnd.console[logFuncName]) {
-      $wnd.console[logFuncName](o);
-    }
-    return;
-  }-*/;
-
-
-  private static void log(Class<?> clazz, LogLevel logLevel, Object... args) {
-    String prefix = new StringBuilder(logLevel.toString())
-        .append(" (")
-        .append(clazz.getName())
-        .append("): ")
-        .toString();
-
-    for (Object o : args) {
-      if (o instanceof String) {
-        logToDevMode(prefix + (String) o);
-        logToBrowser(logLevel, prefix + (String) o);
-      } else if (o instanceof Throwable) {
-        Throwable t = (Throwable) o;
-        logToDevMode(prefix + "(click for stack)", t);
-        logToBrowser(logLevel, prefix + ExceptionUtils.getStackTraceAsString(t));
-      } else if (o instanceof JavaScriptObject) {
-        logToDevMode(prefix + "(JSO, see browser's console log for details)");
-        logToBrowser(logLevel, prefix + "(JSO below)");
-        logToBrowser(logLevel, o);
-      } else {
-        logToDevMode(prefix + (o != null ? o.toString() : "(null)"));
-        logToBrowser(logLevel, prefix + (o != null ? o.toString() : "(null)"));
-      }
-    }
-  }
-
-  private static void logToBrowser(LogLevel logLevel, Object o) {
-    switch (logLevel) {
-      case DEBUG:
-        invokeBrowserLogger("debug", o);
-        break;
-      case INFO:
-        invokeBrowserLogger("info", o);
-        break;
-      case WARNING:
-        invokeBrowserLogger("warn", o);
-        break;
-      case ERROR:
-        invokeBrowserLogger("error", o);
-        break;
-      default:
-        invokeBrowserLogger("log", o);
-    }
-  }
-
-  private static void logToDevMode(String msg) {
-    if (!GWT.isScript()) {
-      GWT.log(msg);
-    }
-  }
-
-  private static void logToDevMode(String msg, Throwable t) {
-    if (!GWT.isScript()) {
-      GWT.log(msg, t);
-    }
-  }
 }

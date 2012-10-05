@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor.selection;
 
-import org.exoplatform.ide.AppContext;
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.text.store.LineInfo;
@@ -37,10 +37,10 @@ public class LocalCursorController
       FocusManager.FocusListener,
       ReadOnlyListener {
 
-  public static LocalCursorController create(AppContext appContext, FocusManager focusManager,
+  public static LocalCursorController create(Resources resources, FocusManager focusManager,
       SelectionModel selectionModel, Buffer buffer, Editor editor) {
 
-    CursorView cursorView = CursorView.create(appContext, true);
+    CursorView cursorView = CursorView.create(resources, true);
 
     return new LocalCursorController(focusManager, selectionModel, cursorView, buffer, editor);
   }

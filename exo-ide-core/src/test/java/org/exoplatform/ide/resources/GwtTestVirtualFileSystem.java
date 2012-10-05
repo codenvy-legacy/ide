@@ -23,7 +23,6 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.loader.EmptyLoader;

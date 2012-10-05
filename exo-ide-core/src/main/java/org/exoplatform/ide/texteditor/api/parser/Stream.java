@@ -15,7 +15,7 @@
 package org.exoplatform.ide.texteditor.api.parser;
 
 /**
- * Abstraction of Codemirror StringStream object.
+ * Abstraction of Parser StringStream object.
  */
 public interface Stream {
 

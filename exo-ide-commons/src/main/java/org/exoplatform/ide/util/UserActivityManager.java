@@ -22,8 +22,6 @@ import com.google.gwt.user.client.Timer;
  * A class that manages the active status of the user so that other objects can
  * be intelligent about performing computationally intensive work.
  */
-// TODO: extract the user activity manager out of the editor and
-// make it more global so objects such 
 public class UserActivityManager
 {
 

@@ -29,7 +29,6 @@ import elemental.html.DragEvent;
 import elemental.html.Element;
 import elemental.js.html.JsElement;
 
-import org.exoplatform.ide.AppContext;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
@@ -78,23 +77,23 @@ public class Tree<D> extends UiComponent<Tree.View<D>>
     * Static factory method for obtaining an instance of the Tree.
     */
    @SuppressWarnings({"rawtypes", "unchecked"})
-   public static <NodeData> Tree<NodeData> create(AppContext appContext, NodeDataAdapter<NodeData> dataAdapter,
+   public static <NodeData> Tree<NodeData> create(Resources resources, NodeDataAdapter<NodeData> dataAdapter,
       NodeRenderer<NodeData> nodeRenderer)
    {
-      View view = new View(appContext.getResources());
+      View view = new View(resources);
 
-      Model<NodeData> model = new Model<NodeData>(dataAdapter, nodeRenderer, appContext.getResources());
+      Model<NodeData> model = new Model<NodeData>(dataAdapter, nodeRenderer, resources);
       return new Tree<NodeData>(view, model);
    }
 
    @SuppressWarnings({"rawtypes", "unchecked"})
-   public static Tree<Resource> create(AppContext appContext)
+   public static Tree<Resource> create(org.exoplatform.ide.Resources resources)
    {
-      View view = new View(appContext.getResources());
+      View view = new View(resources);
 
       Model<Resource> model =
-         new Model<Resource>(new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(appContext.getResources()),
-            appContext.getResources());
+         new Model<Resource>(new ResourceTreeNodeDataAdapter(), FileTreeNodeRenderer.create(resources),
+                  resources);
       return new Tree<Resource>(view, model);
    }
 

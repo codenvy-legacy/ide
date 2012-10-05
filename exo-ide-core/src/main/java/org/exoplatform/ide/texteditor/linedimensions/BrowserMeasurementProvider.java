@@ -63,7 +63,6 @@ class BrowserMeasurementProvider implements MeasurementProvider
    @Override
    public double measureStringWidth(String text)
    {
-      LineDimensionsUtils.markTimeline(getClass(), "Starting measurement of text");
       int instances = (int)Math.ceil(MINIMUM_TEXT_LENGTH / text.length());
       /*
        * We add a hardspace since this prevents bi-directional combining marks
@@ -75,7 +74,6 @@ class BrowserMeasurementProvider implements MeasurementProvider
       element.setTextContent(content);
       double elementWidht = element.getBoundingClientRect().getWidth();
       double width = (elementWidht - (getCharacterWidth() * instances)) / instances;
-      LineDimensionsUtils.markTimeline(getClass(), "End measurement of text");
       return width;
    }
 }
