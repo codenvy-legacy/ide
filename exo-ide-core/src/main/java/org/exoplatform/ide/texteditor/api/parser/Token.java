@@ -15,53 +15,58 @@
 package org.exoplatform.ide.texteditor.api.parser;
 
 /**
- * A representation of a single Codemirror2 token.
+ * A representation of a single Parser token.
  *
  * <p>A token consists of a type (function, keyword, variable, etc), and a value
  * (the piece of code that is classified as a single token of the same type).
  *
  */
-public class Token {
+public class Token
+{
 
-  public static final Token NEWLINE = new Token("", TokenType.NEWLINE, "\n");
+   public static final Token NEWLINE = new Token("", TokenType.NEWLINE, "\n");
 
-  public static final String LITERAL_PERIOD = ".";
+   public static final String LITERAL_PERIOD = ".";
 
-  private final String mode;
-  private final TokenType type;
-  private final String value;
+   private final String mode;
 
-  public Token(String mode, TokenType type, String value) {
-    this.mode = mode;
-    this.type = type;
-    this.value = value;
-  }
+   private final TokenType type;
 
-  public TokenType getType() {
-    return type;
-  }
+   private final String value;
 
-  public String getValue() {
-    return value;
-  }
+   public Token(String mode, TokenType type, String value)
+   {
+      this.mode = mode;
+      this.type = type;
+      this.value = value;
+   }
 
-  public String getMode() {
-    return mode;
-  }
+   public TokenType getType()
+   {
+      return type;
+   }
 
-  /**
-   * @return the type prefixed with the parsing mode it was found in
-   */
-  public final String getStyle() {
-    return mode + "-" + type.getTypeName();
-  }
+   public String getValue()
+   {
+      return value;
+   }
 
-  @Override
-  public String toString() {
-    return "Token{"
-        + "mode='" + mode + '\''
-        + ", type=" + type
-        + ", value='" + value + '\''
-        + '}';
-  }
+   public String getMode()
+   {
+      return mode;
+   }
+
+   /**
+    * @return the type prefixed with the parsing mode it was found in
+    */
+   public final String getStyle()
+   {
+      return mode + "-" + type.getTypeName();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "Token{" + "mode='" + mode + '\'' + ", type=" + type + ", value='" + value + '\'' + '}';
+   }
 }

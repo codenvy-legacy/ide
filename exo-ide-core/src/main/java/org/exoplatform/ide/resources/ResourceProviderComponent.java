@@ -28,7 +28,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.Component;
 import org.exoplatform.ide.core.ComponentException;

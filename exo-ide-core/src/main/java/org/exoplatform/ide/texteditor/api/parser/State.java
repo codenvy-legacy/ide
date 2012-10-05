@@ -15,16 +15,16 @@
 package org.exoplatform.ide.texteditor.api.parser;
 
 /**
- * Interface that represents CodeMirror state.
+ * Interface that represents Parser state.
  */
 public interface State {
 
   /**
    * Clones the object.
    *
-   * <p>Parser parameter is used by native CodeMirror implementation.
+   * <p>Parser parameter is used by native Parser implementation.
    *
-   * @param codeMirrorParser parser that created this instance
+   * @param parser parser that created this instance
    */
-  State copy(Parser codeMirrorParser);
+  State copy(Parser parser);
 }

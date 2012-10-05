@@ -27,7 +27,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
@@ -45,6 +44,7 @@ import org.exoplatform.ide.part.PartAgent;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackResources;
 import org.exoplatform.ide.part.PartStackView;
+import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;

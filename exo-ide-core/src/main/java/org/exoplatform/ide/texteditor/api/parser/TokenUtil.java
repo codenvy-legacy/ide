@@ -21,7 +21,7 @@ import org.exoplatform.ide.util.Pair;
 import org.exoplatform.ide.util.StringUtils;
 
 /**
- * Codemirror2 {@link Token} related utilities.
+ * Parser {@link Token} related utilities.
  */
 public class TokenUtil
 {

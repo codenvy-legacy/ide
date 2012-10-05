@@ -21,11 +21,11 @@ package org.exoplatform.ide.core.editor;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import org.exoplatform.ide.api.resources.FileType;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
+import org.exoplatform.ide.resources.FileType;
 
 /**
  * Registry for holding {@link EditorProvider} for specific {@link FileType}.
@@ -59,17 +59,12 @@ public class EditorRegistry
     */
    public void register(FileType fileType, EditorProvider provider)
    {
-      //      if (!registry.containsKey(mimeType))
-      //      {
-      //         registry.put(mimeType, JsonCollections.<EditorProvider> createArray());
-      //      }
-      //      registry.get(mimeType).add(provider);
       registry.put(fileType.getId(), provider);
    }
 
    /**
     * Get default editor provide assigned for file type;
-    * @param fileType resource mime type 
+    * @param fileType resource file type 
     * @return editor provider
     */
    public EditorProvider getDefaultEditor(FileType fileType)
