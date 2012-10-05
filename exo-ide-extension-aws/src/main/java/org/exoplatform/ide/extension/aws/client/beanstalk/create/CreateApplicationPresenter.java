@@ -417,6 +417,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       createEnvironmentRequest.setApplicationName(applicationName);
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
+      createEnvironmentRequest.setVersionLabel("initial version");
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
 
       AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
