@@ -114,7 +114,8 @@ public class PartAgent
       PartStackPresenter destPartStack = findPartStackByPart(part);
       if (destPartStack != null)
       {
-         // TODO : activate
+         destPartStack.setActivePart(part);
+         setActivePartStack(destPartStack);
       }
    }
 
@@ -144,7 +145,9 @@ public class PartAgent
     */
    public void addPart(PartPresenter part, PartStackType type)
    {
-      partStacks.get(type.toString()).addPart(part);
+      PartStackPresenter destPartStack = partStacks.get(type.toString());
+      destPartStack.addPart(part);
+      setActivePartStack(destPartStack);
    }
 
    /**

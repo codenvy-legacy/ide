@@ -143,7 +143,7 @@ public class PartStackPresenter implements Presenter
       return activePart;
    }
 
-   protected void setActivePart(PartPresenter part)
+   public void setActivePart(PartPresenter part)
    {
       if (activePart == part)
       {
