@@ -5,7 +5,7 @@
       .welcome {
       	background-image: url(logo.png);
       	background-repeat: no-repeat;
-      	background-position-x: 20px;
+      	background-position: 20px 0px;
       	text-align: center;
       	position: relative;
       	height: 100%;
@@ -30,9 +30,9 @@
    <div class="{style.welcome}">
       <h2>Welcome to eXo IDE 2</h2>
       <small>
-         * Please note, if Your name is not Benjamin, Gennady, Vitaly
+         * Please note, if Your name is not Benjamin, Gennady, Tyler, Vitaly
          <br />
-         Evgen or Nikolay, then probably
+         Andrey, Evgen or Nikolay, then probably
          <br />
          <b>YOU ARE NOT ALLOWED TO BE HERE :)</b>
       </small>
