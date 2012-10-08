@@ -658,7 +658,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    {
       setUndoManager(configuration.getUndoManager(this));
       LineDimensionsUtils.setTabSpaceEquivalence(configuration.getTabWidth(this));
-      parser = configuration.getParser();
+      parser = configuration.getParser(this);
    }
 
    /**

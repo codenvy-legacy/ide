@@ -16,12 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.core.editor;
+package org.exoplatform.ide.core.editor.css;
 
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
-import org.exoplatform.ide.texteditor.parser.BasicTokenFactory;
 import org.exoplatform.ide.texteditor.parser.CmParser;
 import org.exoplatform.ide.texteditor.parser.CodeMirror2;
 
@@ -30,7 +29,7 @@ import org.exoplatform.ide.texteditor.parser.CodeMirror2;
  * @version $Id:
  *
  */
-public class JavaEditorConfiguration extends TextEditorConfiguration
+public class CssEditorConfiguration extends TextEditorConfiguration
 {
 
    /**
@@ -39,8 +38,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    @Override
    public Parser getParser(TextEditorPartDisplay display)
    {
-      CmParser parser = CodeMirror2.getParserForMime("text/x-java");
-      parser.setNameAndFactory("clike", new BasicTokenFactory());
+      CmParser parser = CodeMirror2.getParserForMime("text/css");
+      parser.setNameAndFactory("css", new CssTokenFactory());
       return parser;
    }
 }

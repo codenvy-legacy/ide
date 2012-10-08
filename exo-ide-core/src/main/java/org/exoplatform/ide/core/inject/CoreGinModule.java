@@ -85,6 +85,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(Resources.class).in(Singleton.class);
       //XXX for demo use only, remove this
       bind(JavaEditorProvider.class).in(Singleton.class);
+      
    }
 
    /**

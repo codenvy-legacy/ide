@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.core.editor.css.CssEditorProvider;
 import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
@@ -41,7 +42,7 @@ public class EditorRegistry
    @Inject
    public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider,
       @Named("defaultFileType") FileType defaultFile, JavaEditorProvider javaEditorProvider,
-      ResourceProvider resourceProvider)
+      ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider)
    {
       super();
       registry = JsonCollections.createIntegerMap();
@@ -50,6 +51,9 @@ public class EditorRegistry
       FileType javaFile = new FileType(null, "application/java", "java");
       register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
+      FileType cssFile = new FileType(null, "text/css", "css");
+      register(cssFile, cssEditorProvider);
+      resourceProvider.registerFileType(cssFile);
    }
 
    /**

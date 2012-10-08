@@ -54,7 +54,7 @@ public class TextEditorConfiguration
    
    /**
     * Returns the visual width of the tab character. This implementation always
-    * returns 4.
+    * returns 3.
     *
     * @param display the display to be configured by this configuration
     * @return the tab width
@@ -133,7 +133,7 @@ public class TextEditorConfiguration
     * tells the caller which content types must be configured for the given text display,
     * i.e. for which content types the given display functionalities
     * must be specified. This implementation always returns <code>
-    * new String[] { IDocument.DEFAULT_CONTENT_TYPE }</code>.
+    * new String[] { Document.DEFAULT_CONTENT_TYPE }</code>.
     *
     * @param display the source viewer to be configured by this configuration
     * @return the configured content types for the given viewer
@@ -160,9 +160,10 @@ public class TextEditorConfiguration
    /**
     * Returns parser for syntax highlight.
     * This implementation always returns <code>null</code>.
+    *  @param display the source viewer to be configured by this configuration
     * @return the Parser
     */
-   public Parser getParser()
+   public Parser getParser(TextEditorPartDisplay display)
    {
       return null;
    }

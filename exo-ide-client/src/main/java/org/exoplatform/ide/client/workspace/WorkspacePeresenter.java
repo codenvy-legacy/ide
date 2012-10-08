@@ -45,6 +45,7 @@ import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.util.loging.Log;
 
 import java.util.Date;
 
@@ -299,6 +300,22 @@ public class WorkspacePeresenter implements Presenter
                               {
                                  GWT.log("Error creating demo folder" + caught);
                               }
+                           });
+                        project.createFile(result, "styles.css", ".test{\n\n}",
+                           "text/css", new AsyncCallback<File>()
+                           {
+                           
+                           @Override
+                           public void onSuccess(File result)
+                           {
+                              // ok
+                           }
+                           
+                           @Override
+                           public void onFailure(Throwable caught)
+                           {
+                              Log.error(getClass(), caught);
+                           }
                            });
 
                      }
