@@ -34,6 +34,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkControl;
 import org.exoplatform.ide.extension.aws.client.beanstalk.create.CreateApplicationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.deploy.DeployApplicationPresenter;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ConfigurationPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentPresenter;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.restart.RestartAppServerPresenter;
@@ -51,7 +52,6 @@ import org.exoplatform.ide.extension.aws.client.s3.S3Manager;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Arrays;
-import java.util.concurrent.AbstractExecutorService;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -95,6 +95,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       new CreateVersionPresenter();
       new DeployVersionPresenter();
       new DeleteVersionPresenter();
+      new ConfigurationPresenter();
       new LaunchEnvironmentPresenter();
       new TerminateEnvironmentPresenter();
       new RebuildEnvironmentPresenter();

@@ -100,7 +100,7 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
 
    private final String TERMINATE = AWSExtension.LOCALIZATION_CONSTANT.terminateButton();
 
-   //private Column<EnvironmentInfo, String> configurationColumn;
+   private Column<EnvironmentInfo, String> configurationColumn;
 
    private Column<EnvironmentInfo, String> restartColumn;
 
@@ -180,15 +180,15 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
-//      configurationColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-//      {
-//
-//         @Override
-//         public String getValue(EnvironmentInfo environmentInfo)
-//         {
-//            return VIEW_CONFIGURATION;
-//         }
-//      };
+      configurationColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return VIEW_CONFIGURATION;
+         }
+      };
 
       restartColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
       {
@@ -228,7 +228,7 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
       getCellTable().addColumn(healthColumn, HEALTH);
       getCellTable().addColumn(urlColumn, URL);
       getCellTable().setColumnWidth(urlColumn, "130px");
-      //getCellTable().addColumn(configurationColumn, VIEW_CONFIGURATION);
+      getCellTable().addColumn(configurationColumn, VIEW_CONFIGURATION);
       getCellTable().addColumn(restartColumn, RESTART);
       getCellTable().addColumn(rebuildColumn, REBUILD);
       getCellTable().addColumn(terminateColumn, TERMINATE);
@@ -240,14 +240,14 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    @Override
    public void addViewConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
-//      configurationColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-//      {
-//         @Override
-//         public void update(int index, EnvironmentInfo environmentInfo, String value)
-//         {
-//            handler.onSelection(new SelectionEventImpl(environmentInfo));
-//         }
-//      });
+      configurationColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      {
+         @Override
+         public void update(int index, EnvironmentInfo environmentInfo, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(environmentInfo));
+         }
+      });
    }
 
    /**

@@ -33,7 +33,9 @@ import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
@@ -77,6 +79,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
    private static final String APPLICATION_EVENTS = BASE_URL + "/apps/events";
 
+   private static final String APPLICATION_TEMPLATE = BASE_URL + "/apps/template";
+
    private static final String ENVIRONMENT_CREATE = BASE_URL + "/environments/create";
 
    private static final String ENVIRONMENT_STOP = BASE_URL + "/environments/stop/";
@@ -88,6 +92,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    private static final String ENVIRONMENT_UPDATE = BASE_URL + "/environments/update/";
 
    private static final String ENVIRONMENTS = BASE_URL + "/environments";
+
+   private static final String ENVIRONMENTS_CONFIGURATION = BASE_URL + "/environments/configuration";
 
    private static final String VERSIONS = BASE_URL + "/apps/versions";
 
@@ -265,6 +271,23 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getConfigurationTemplate(java.lang.String,
+    *       java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getConfigurationTemplate(String vfsId, String projectId, ConfigurationRequest configurationRequest,
+      AsyncRequestCallback<Configuration> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(APPLICATION_TEMPLATE).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(configurationRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .loader(loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
     * 
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironments(java.lang.String,
     *       java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
@@ -278,6 +301,23 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
 
       AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironmentConfigurations(java.lang.String,
+    *       java.lang.String, org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getEnvironmentConfigurations(String vfsId, String projectId, ConfigurationRequest configurationRequest,
+      AsyncRequestCallback<List<Configuration>> callback) throws RequestException
+   {
+      StringBuilder url = new StringBuilder(restServiceContext);
+      url.append(ENVIRONMENTS_CONFIGURATION).append("?vfsid=").append(vfsId).append("&projectid=").append(projectId);
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(configurationRequest)).getPayload();
+
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .loader(loader).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    /**

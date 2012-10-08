@@ -24,7 +24,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
@@ -162,6 +164,18 @@ public abstract class BeanstalkClientService
       AsyncRequestCallback<EventsList> callback) throws RequestException;
 
    /**
+    * Returns configuration template.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param configurationRequest
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getConfigurationTemplate(String vfsId, String projectId,
+      ConfigurationRequest configurationRequest, AsyncRequestCallback<Configuration> callback) throws RequestException;
+
+   /**
     * Returns the list of environments.
     * 
     * @param vfsId
@@ -171,6 +185,19 @@ public abstract class BeanstalkClientService
     */
    public abstract void getEnvironments(String vfsId, String projectId,
       AsyncRequestCallback<List<EnvironmentInfo>> callback) throws RequestException;
+
+   /**
+    * Returns the list of the environment configurations.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param configurationRequest
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getEnvironmentConfigurations(String vfsId, String projectId,
+      ConfigurationRequest configurationRequest, AsyncRequestCallback<List<Configuration>> callback)
+      throws RequestException;
 
    /**
     * Create new environment.
