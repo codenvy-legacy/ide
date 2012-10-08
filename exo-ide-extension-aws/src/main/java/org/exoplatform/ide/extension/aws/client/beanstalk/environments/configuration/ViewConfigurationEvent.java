@@ -33,11 +33,11 @@ public class ViewConfigurationEvent extends GwtEvent<ViewConfigurationHandler>
     */
    public static final GwtEvent.Type<ViewConfigurationHandler> TYPE = new GwtEvent.Type<ViewConfigurationHandler>();
 
-   private String environmentId;
+   private String environmentName;
 
-   public ViewConfigurationEvent(String environmentId)
+   public ViewConfigurationEvent(String environmentName)
    {
-      this.environmentId = environmentId;
+      this.environmentName = environmentName;
    }
 
    /**
@@ -59,13 +59,13 @@ public class ViewConfigurationEvent extends GwtEvent<ViewConfigurationHandler>
    }
 
    /**
-    * Returns the environment identifier.
+    * Returns the environment name.
     * 
-    * @return the environment identifier
+    * @return the environment name
     */
-   public String getEnvironmentId()
+   public String getEnvironmentName()
    {
-      return environmentId;
+      return environmentName;
    }
 
 }

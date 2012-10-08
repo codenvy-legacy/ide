@@ -71,7 +71,7 @@
       <f:layer>
          <g:FlowPanel ui:field="awsPanel" stylePrimaryName="{style.innerBox}">
             <g:FlowPanel styleName="{style.title}">
-               <g:Image resource="{resource.elasticBeanstalk}" styleName="{style.image}"></g:Image>
+               <g:Image resource="{resource.elasticBeanstalk32}" styleName="{style.image}"></g:Image>
                <g:Label text="Deploy project to AWS Elastic Beanstalk" styleName="{style.label}"></g:Label>
             </g:FlowPanel>
             <g:DockLayoutPanel width="100%" unit="PX" height="22px" stylePrimaryName="{style.formLine}">

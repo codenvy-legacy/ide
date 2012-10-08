@@ -1,1 +1,169 @@
-For your convenience, eXo IDE provides Shell application to work in console mode. To use the application, click *Shell* at the right part of the Menu Bar. The application window will be opened in the separate tab of your browser. The console prompt consists of user name and current folder. h1. Shell Commands Observation and usageType {{help}} command and press *Enter* key to see the all command list with description, in alphabetical sorted order and devided on next groups:1. General operations refer to virtual file system, project and job management.2. {{appcfg}} commands refer to configure of current application3. {{git}} commands refer to operations with GIT version control system. 4. {{jcr}} commands refer to operations with JCR - inbuild eXo IDE repository.5. {{vmc}} commands refer to operations with CloudFoundry PaaS. You can also view the command usage information by using {{-h}} key after the command name. For example: to learn more about {{jcr mixin}} command, type {{jcr mixin}} {{-h}} and press Enter. The following message will appear:{code}exo:op$ jcr mixin -husage: mixin[-h | --help] COMMAND [ARGS]The most commonly used mixin commands are:   add              add a mixin to one or several nodes   remove           removes a mixin from one or several nodes{code}To navigate the command history, press *Up* or *Down* keys. To clear the Shell window, run {{clear}} command or press *Ctrl+Shift+X**Select All*, *Copy*, *Paste* operations and their short cuts "Ctrl+A", "Ctrl+C", "Ctrl+V" are also available within the Shell application window. So you can copy and paste content from the window and to it.If you haven't indicated some mandatory command parameter, the error message explaining it will be displayed. For example: If you run {{mkdir}} command without indicating the new directory name, the following error message will appear:{code}mkdir: missing folder name{code}The autocomplete function for Shell commands list is also available. You can type a part of a command name and press Tab key. If there is one command containing this part, the command will be autocompleted. If there are several commands containing this part, the list of these commands will be displayed. To clear shell screen use command *clear*h1. Virtual file system operationsThe next commands are aimed to perform file eXo IDE file system operations:h2. Concatenate files and print on the consolecath2. Changes the current folder{screen}cd [FOLDER]{screen}h2. Get list of files and folders{screen}ls [FOLDER]{screen}If *FOLDER* parameter is ommited, than command will display info about current folder.h2. Create new foldermkdir h2. Print current folder path{screen}pwd{screen}h2. Remove file or folderrmh1. Project management commandsh2. Start project buildmvn clean packageh1. Job management commandsh2. List out the background jobs were being run in assinchronouse mode{screen}jobs{screen}*For example:*{code}cloud.ide.test2@gmail.com:spring$ jobsUSER                          ID        STAT      PATHcloud.ide.test2@gmail.com     104       done      /IDE/rest/private/ide/appengine/updatecloud.ide.test2@gmail.com     106       running   /IDE/rest/private/ide/appengine/update{code}h2. Cancels the job{screen}kill [JOB]{screen}Parameter *JOB* is the ID of asinchronouse job like _5737_.h1. Operations with GIT version control systemGit commands can be invoke from progect's root directory only.h2. Initialize new GIT repositorygit inith2. Get status of working directory{screen}git status{screen}For example:{code}test@cloud-ide.com:test$ git status# On branch test# Changes to be committed:##       modified:    domain/pom.xml## Changes not staged for commit:##       modified:    gwt/pom.xml#       modified:    pom.xm{code}h2. Add file contents to the index.{screen}git add [file1|folder1] [file2|folder2] [...]{screen}The command *git add* stages a file. If a file is untracked, "git add" converts that file’s status to tracked. When "git add" is used on a directory name, all of the files and subdirectories beneath it are staged recursively.{screen}git add{screen}Adds changed files of current folder and its subfolders.h2. Record changes to the repositorygit commit                   h2. Remote repositoriesh3. Show a list of existing remotesgit remote listh3. Add a new remotegit remote add --name/-n [NAME] --url/-u [URL]h3. Remove the remote repositorygit remote rm [NAME]All remote-tracking branches and configuration settings for the remote are removed.
+﻿For your convenience, eXo IDE provides Shell application to work in console mode. To use this application, click *Shell* at the right part of the Menu Bar. The application window will be opened in the separate tab of your browser. The console prompt consists of user name and current folder. 
+
+h1. Shell Commands Observation and usage
+
+Type {{help}} command and press *Enter* key to see the all command list with description, in alphabetical sorted order and divided on next groups:
+
+1. General operations refer to virtual file system, project and job management.
+
+2. {{appcfg}} commands refer to configure of current application
+
+3. {{git}} commands refer to operations with GIT version control system. 
+
+4. {{jcr}} commands refer to operations with JCR - inbuild eXo IDE repository.
+
+5. {{vmc}} commands refer to operations with CloudFoundry PaaS. 
+
+You can also view the command usage information by using {{-h}} key after the command name. For example: to learn more about {{jcr mixin}} command, type {{jcr mixin}} {{-h}} and press Enter. The following message will appear:
+
+{code}
+exo:op$ jcr mixin -h
+usage: mixin[-h | --help] COMMAND [ARGS]
+
+The most commonly used mixin commands are:
+   add              add a mixin to one or several nodes
+   remove           removes a mixin from one or several nodes
+{code}
+
+To navigate the command history, press *Up* or *Down* keys. 
+
+To clear the Shell window, run {{clear}} command or press *Ctrl+Shift+X*
+
+*Select All*, *Copy*, *Paste* operations and their short cuts "Ctrl+A", "Ctrl+C", "Ctrl+V" are also available within the Shell application window. So you can copy and paste content from the window and to it.
+
+If you haven't indicated some mandatory command parameter, the error message explaining it will be displayed. For example: If you run {{mkdir}} command without indicating the new directory name, the following error message will appear:
+
+{code}
+mkdir: missing folder name
+{code}
+
+The autocomplete function for Shell commands list is also available. You can type a part of a command name and press Tab key. If there is one command containing this part, the command will be autocompleted. If there are several commands containing this part, the list of these commands will be displayed. 
+
+To clear shell screen use command *clear*.
+
+h1. Virtual file system operations
+
+Commands below are aimed to perform file eXo IDE file system operations. 
+{tip}Use slash symbol as the path separator and around path consist of space symbols in double quotes.{tip}
+h2. Concatenate files and print on the console
+{screen}
+cat <file>...
+{screen}
+
+h2. Changes the current folder
+{screen}
+cd <directory>
+{screen}
+
+To go to root directory of workspace, use command *"cd /"*.
+To go to another project, use command *"cd /<another-project-name>"*.
+
+h2. Get list of files and folders
+{screen}
+ls <directory>
+{screen}
+*ls* displays info about current directory by default.
+
+h2. Create new directory
+{screen}
+mkdir <directory>...
+{screen}
+
+h2. Print current directory path
+{screen}
+pwd
+{screen}
+
+h2. Remove file or directory
+{screen}
+rm <file|directory>
+{screen}
+
+h1. Project management commands
+h2. Start project build
+{screen}
+mvn clean package
+{screen}
+Call this command from root directory of project only.
+Build is running in asynchronous mode, so use command *jobs* to see status of build.
+
+h1. Job management commands
+h2. Get list of background jobs were being run in asynchronous mode
+{screen}
+jobs
+{screen}
+For example:
+{code}
+cloud.ide.test2@gmail.com:spring$ jobs
+USER                          ID        STAT      PATH
+cloud.ide.test2@gmail.com     104       done      /IDE/rest/private/ide/appengine/update
+cloud.ide.test2@gmail.com     106       running   /IDE/rest/private/ide/appengine/update
+{code}
+
+h2. Cancel the job
+{screen}
+kill <job ID>
+{screen}
+Parameter *job ID* is the ID of asynchronous job like _5737_.
+
+h1. Operations with GIT version control system
+
+Git commands can be invoke from project's root directory only.
+
+h2. Initialize new GIT repository
+git init
+
+h2. Get status of working directory
+{screen}
+git status
+{screen}
+
+For example:
+{code}
+test@cloud-ide.com:test$ git status
+# On branch test
+# Changes to be committed:
+#
+#       modified:    domain/pom.xml
+#
+# Changes not staged for commit:
+#
+#       modified:    gwt/pom.xml
+#       modified:    pom.xm
+{code}
+
+h2. Add file contents to the index.
+{screen}
+git add <file>...
+{screen}
+
+The command *git add* stages a file. If a file is untracked, "git add" converts that file’s status to tracked. When "git add" is used on a directory name, or with no specified file/directory than all of the files and subdirectories beneath it are staged recursively.
+
+h2. Record changes to a repository
+{screen}
+git commit -m/--message "<message>"
+{screen}
+
+After successful commit Shell displays name of branch and hash of commit, for example:
+{code}
+[master 0930f24d44d2ebc73180a0415bff22488015d6fc] 
+{code}
+h2. Remote repositories management
+
+h3. Show a list of existing references to remote repositories
+{screen}
+git remote list
+{screen}
+
+h3. Add reference to remote repository
+{screen}
+git remote add --name/-n [NAME] --url/-u [URL]
+{screen}
+
+h3. Remove the remote repository reference from project
+{screen}
+git remote rm <name-of-remote>
+{screen}
+
+All remote-tracking branches and configuration settings for the remote are removed.
+

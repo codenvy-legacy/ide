@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.aws.client.ec2;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 
 /**
@@ -40,6 +41,7 @@ public class EC2ManagerControl extends SimpleControl implements IDEControl
    public EC2ManagerControl()
    {
       super(ID);
+      setImages(AWSClientBundle.INSTANCE.ec2(), AWSClientBundle.INSTANCE.ec2Disabled());
       setTitle(TITLE);
       setPrompt(PROMPT);
 

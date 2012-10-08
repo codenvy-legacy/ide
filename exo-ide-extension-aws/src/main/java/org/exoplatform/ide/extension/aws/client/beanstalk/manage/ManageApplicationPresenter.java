@@ -365,7 +365,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          {
             if (event.getSelectedItem() != null)
             {
-               IDE.fireEvent(new ViewConfigurationEvent(event.getSelectedItem().getId()));
+               IDE.fireEvent(new ViewConfigurationEvent(event.getSelectedItem().getName()));
             }
          }
       });

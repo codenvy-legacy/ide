@@ -233,11 +233,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       CreateApplicationRequest createApplicationRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
       createApplicationRequest.setApplicationName(applicationName);
-      //createApplicationRequest.setDescription(display.getDescriptionField().getValue());
       createApplicationRequest.setDescription("");
-      //createApplicationRequest.setS3Bucket(display.getS3BucketField().getValue());
       createApplicationRequest.setS3Bucket("");
-      //createApplicationRequest.setS3Key(display.getS3KeyField().getValue());
       createApplicationRequest.setS3Key("");
       createApplicationRequest.setWar(warUrl);
 
@@ -295,7 +292,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
       createEnvironmentRequest.setApplicationName(applicationName);
-      //createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setDescription("");
       createEnvironmentRequest.setEnvironmentName(environmentName);
       createEnvironmentRequest.setVersionLabel(AWSExtension.INIT_VER_LABEL);
