@@ -27,7 +27,6 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -178,6 +177,12 @@ public abstract class MemoryItem
          permissions.addAll(ace.getPermissions());
       }
 
+      if (override && update.isEmpty())
+      {
+         update.put(VirtualFileSystemInfo.ANY_PRINCIPAL,
+            new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      }
+
       synchronized (permissionsMap)
       {
          if (override)
@@ -196,8 +201,7 @@ public abstract class MemoryItem
          Map<String, Set<String>> copy = new HashMap<String, Set<String>>(permissionsMap.size());
          for (Map.Entry<String, Set<String>> e : permissionsMap.entrySet())
          {
-            Set<String> values = e.getValue();
-            copy.put(e.getKey(), values == null ? Collections.<String>emptySet() : new HashSet<String>(values));
+            copy.put(e.getKey(), new HashSet<String>(e.getValue()));
          }
          return copy;
       }
