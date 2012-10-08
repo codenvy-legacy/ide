@@ -1965,7 +1965,8 @@ public class JcrFileSystem implements VirtualFileSystem
 
    @Path("watch/stop/{projectId}")
    @Override
-   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException,
+      InvalidArgumentException, VirtualFileSystemException
    {
       if (listeners != null)
       {
@@ -1974,7 +1975,8 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             ItemData projectData = getItemData(session, projectId);
             if (ItemType.PROJECT != projectData.getType() // Do not check listeners if not a project.
-               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData), new ProjectUpdateListener(projectId)))
+               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData),
+               new ProjectUpdateListener(projectId)))
             {
                throw new InvalidArgumentException("'" + projectData.getName() + "' is not under watching. ");
             }

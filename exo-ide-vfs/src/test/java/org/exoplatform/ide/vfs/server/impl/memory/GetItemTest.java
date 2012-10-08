@@ -16,76 +16,81 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.impl.jcr;
+package org.exoplatform.ide.vfs.server.impl.memory;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
+import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.services.jcr.access.PermissionType;
-import org.exoplatform.services.jcr.core.ExtendedNode;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import javax.jcr.Node;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: GetItemTest.java 77587 2011-12-13 10:42:02Z andrew00x $
  */
-public class GetItemTest extends JcrFileSystemTest
+public class GetItemTest extends MemoryFileSystemTest
 {
-   private Node getObjectTestNode;
    private String folderId;
    private String folderPath;
    private String fileId;
    private String filePath;
+   private String projectId;
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
-    */
    @Override
    protected void setUp() throws Exception
    {
       super.setUp();
       String name = getClass().getName();
-      getObjectTestNode = testRoot.addNode(name, "nt:unstructured");
-      getObjectTestNode.addMixin("exo:privilegeable");
+      MemoryFolder getItemTestFolder = new MemoryFolder(name);
+      testRoot.addChild(getItemTestFolder);
 
-      Node folderNode = getObjectTestNode.addNode("GetObjectTest_FOLDER", "nt:folder");
-      folderId = ((ExtendedNode)folderNode).getIdentifier();
-      folderPath = folderNode.getPath();
+      MemoryFolder folder = new MemoryFolder("GetObjectTest_FOLDER");
+      getItemTestFolder.addChild(folder);
+      folderId = folder.getId();
+      folderPath = folder.getPath();
 
-      Node fileNode = getObjectTestNode.addNode("GetObjectTest_FILE", "nt:file");
-      Node contentNode = fileNode.addNode("jcr:content", "nt:resource");
-      contentNode.setProperty("jcr:mimeType", "text/plain");
-      contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
-      contentNode.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      fileNode.addMixin("exo:unstructuredMixin");
-      fileNode.setProperty("MyProperty01", "hello world");
-      fileNode.setProperty("MyProperty02", "to be or not to be");
-      fileNode.setProperty("MyProperty03", 123);
-      fileNode.setProperty("MyProperty04", true);
-      fileNode.setProperty("MyProperty05", Calendar.getInstance());
-      fileNode.setProperty("MyProperty06", 123.456);
-      fileId = ((ExtendedNode)fileNode).getIdentifier();
-      filePath = fileNode.getPath();
+      MemoryFile file = new MemoryFile("GetObjectTest_FILE", "text/plain",
+         new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
+      getItemTestFolder.addChild(file);
+      file.updateProperties(Arrays.asList(
+         new Property("MyProperty01", "hello world"),
+         new Property("MyProperty02", "to be or not to be"),
+         new Property("MyProperty03", "123"),
+         new Property("MyProperty04", "true"),
+         new Property("MyProperty05", Calendar.getInstance().toString()),
+         new Property("MyProperty06", "123.456")
+      ));
+      fileId = file.getId();
+      filePath = file.getPath();
 
-      session.save();
+      MemoryFolder project = new MemoryFolder("GetObjectTest_PROJECT");
+      project.setMediaType("text/vnd.ideproject+directory");
+      project.updateProperties(Arrays.asList(new Property("vfs:projectType", "java"),
+         new Property("prop1", "val1")));
+      assertTrue(project.isProject());
+      getItemTestFolder.addChild(project);
+      projectId = project.getId();
+
+      memoryContext.putItem(getItemTestFolder);
    }
 
    public void testGetFile() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId).toString();
+      String path = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -99,10 +104,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFileByPath() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(filePath).toString();
+      String path = SERVICE_URI + "itembypath" + filePath;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -118,11 +120,7 @@ public class GetItemTest extends JcrFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       // No filter - all properties
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId) //
-         .toString();
+      String path = SERVICE_URI + "item/" + fileId;
 
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
@@ -130,7 +128,9 @@ public class GetItemTest extends JcrFileSystemTest
       List<Property> properties = ((Item)response.getEntity()).getProperties();
       Map<String, List> m = new HashMap<String, List>(properties.size());
       for (Property p : properties)
+      {
          m.put(p.getName(), p.getValue());
+      }
       assertTrue(m.size() >= 6);
       assertTrue(m.containsKey("MyProperty01"));
       assertTrue(m.containsKey("MyProperty02"));
@@ -140,21 +140,16 @@ public class GetItemTest extends JcrFileSystemTest
       assertTrue(m.containsKey("MyProperty06"));
 
       // With filter
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId) //
-         .append("?") //
-         .append("propertyFilter=") //
-         .append("MyProperty02") //
-         .toString();
+      path = SERVICE_URI + "item/" + fileId + '?' + "propertyFilter=" + "MyProperty02";
 
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       m.clear();
       properties = ((Item)response.getEntity()).getProperties();
       for (Property p : properties)
+      {
          m.put(p.getName(), p.getValue());
+      }
       assertEquals(1, m.size());
       assertEquals("to be or not to be", m.get("MyProperty02").get(0));
    }
@@ -162,10 +157,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFileNotFound() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId + "_WRONG_ID_").toString();
+      String path = SERVICE_URI + "item/" + fileId + "_WRONG_ID_";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -173,15 +165,12 @@ public class GetItemTest extends JcrFileSystemTest
 
    public void testGetFileNoPermissions() throws Exception
    {
-      Map<String, String[]> permissions = new HashMap<String, String[]>(1);
-      permissions.put("root", PermissionType.ALL);
-      ((ExtendedNode)getObjectTestNode).setPermissions(permissions);
-      session.save();
+      AccessControlEntry ace = new AccessControlEntry();
+      ace.setPrincipal("admin");
+      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      memoryContext.getItem(fileId).updateACL(Arrays.asList(ace), true);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(fileId).toString();
+      String path = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -190,10 +179,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(folderId).toString();
+      String path = SERVICE_URI + "item/" + folderId;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -207,10 +193,7 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolderByPath() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(folderPath).toString();
+      String path = SERVICE_URI + "itembypath" + folderPath;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       //log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
@@ -224,15 +207,27 @@ public class GetItemTest extends JcrFileSystemTest
    public void testGetFolderByPathWithVersionID() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("itembypath") //
-         .append(folderPath) //
-         .append("?") //
-         .append("versionId=") //
-         .append("1").toString();
+      String path = SERVICE_URI + "itembypath" + folderPath + '?' + "versionId=" + "0";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(400, response.getStatus());
+   }
+
+   public void testGetProjectItem() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String path = SERVICE_URI + "item/" + projectId;
+      ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
+
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      assertEquals("application/json", response.getContentType().toString());
+
+      Project project = (Project)response.getEntity();
+      validateLinks(project);
+      assertEquals("GetObjectTest_PROJECT", project.getName());
+      assertEquals(Project.PROJECT_MIME_TYPE, project.getMimeType());
+      assertEquals("java", project.getProjectType());
+      assertEquals("val1", project.getPropertyValue("prop1"));
+      assertEquals(Project.PROJECT_MIME_TYPE, project.getPropertyValue("vfs:mimeType"));
    }
 }

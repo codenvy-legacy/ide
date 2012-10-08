@@ -133,7 +133,7 @@ public class CopyTest extends JcrFileSystemTest
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
       assertTrue("Source file not found. ", session.itemExists(fileNode.getPath()));
-      assertFalse("File must not be copied since destination folder is locked. ",
+      assertFalse("File must not be copied since destination accessible for reading only. ",
          session.itemExists(copyTestDestinationNode.getPath() + "/CopyTest_FILE"));
    }
 

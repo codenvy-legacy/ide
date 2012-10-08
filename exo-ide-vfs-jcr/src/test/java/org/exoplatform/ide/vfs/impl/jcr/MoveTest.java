@@ -148,7 +148,7 @@ public class MoveTest extends JcrFileSystemTest
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(423, response.getStatus());
-      assertTrue("File must not be moved since its parent is locked. ", session.itemExists(originPath));
+      assertTrue("File must not be moved since it is locked. ", session.itemExists(originPath));
    }
 
    public void testMoveFileNoPermissions() throws Exception
@@ -195,7 +195,7 @@ public class MoveTest extends JcrFileSystemTest
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
       assertTrue("Source file not found. ", session.itemExists(originPath));
-      assertFalse("File must not be moved since destination folder is locked. ",
+      assertFalse("File must not be moved since permissions restriction on destination folder. ",
          session.itemExists(moveTestDestinationNode.getPath() + "/MoveTest_FILE"));
    }
 

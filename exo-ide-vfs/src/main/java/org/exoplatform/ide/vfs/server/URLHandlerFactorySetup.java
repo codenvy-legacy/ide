@@ -87,7 +87,7 @@ public class URLHandlerFactorySetup
             throw new VirtualFileSystemRuntimeException(ae.getMessage(), ae);
          }
 
-         // Check 'ide+vfs' again. From not it should be possible to use such URLs.
+         // Check 'ide+vfs' again. From now it should be possible to use such URLs.
          // At the same time we force URL to remember our protocol handler.
          // URL knows about it even if the URLStreamHandlerFactory is changed.
 

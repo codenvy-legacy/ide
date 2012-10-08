@@ -43,10 +43,9 @@ public class MemoryFile extends MemoryItem
    private final AtomicReference<String> lockHolder = new AtomicReference<String>();
    private long contentLastModificationDate;
 
-   public MemoryFile(String id, String name, String mediaType, InputStream content)
-      throws VirtualFileSystemException, IOException
+   public MemoryFile(String name, String mediaType, InputStream content) throws IOException
    {
-      this(id, name, mediaType, content == null ? null : readContent(content));
+      this(ObjectIdGenerator.generateId(), name, mediaType, content == null ? null : readContent(content));
    }
 
    private static byte[] readContent(InputStream content) throws IOException
@@ -61,7 +60,7 @@ public class MemoryFile extends MemoryItem
       return bout.toByteArray();
    }
 
-   MemoryFile(String id, String name, String mediaType, byte[] bytes) throws VirtualFileSystemException
+   MemoryFile(String id, String name, String mediaType, byte[] bytes)
    {
       super(ItemType.FILE, id, name);
       setMediaType(mediaType);
@@ -71,7 +70,7 @@ public class MemoryFile extends MemoryItem
 
    public final String lock() throws VirtualFileSystemException
    {
-      final String lockToken = NameGenerator.generate(null, 16);
+      final String lockToken = NameGenerator.generate(null, 32);
       if (!lockHolder.compareAndSet(null, lockToken))
       {
          throw new LockException("File already locked. ");
@@ -86,15 +85,20 @@ public class MemoryFile extends MemoryItem
       {
          throw new LockException("Null lock token. ");
       }
-      if (!lockHolder.compareAndSet(lockToken, null))
+      final String thisLockToken = lockHolder.get();
+      if (lockToken.equals(thisLockToken))
       {
-         if (lockHolder.get() == null)
+         lockHolder.set(null);
+         lastModificationDate = System.currentTimeMillis();
+      }
+      else
+      {
+         if (thisLockToken == null)
          {
             throw new LockException("File is not locked. ");
          }
          throw new LockException("Unable remove lock from file. Lock token does not match. ");
       }
-      lastModificationDate = System.currentTimeMillis();
    }
 
    public final boolean isLocked()
