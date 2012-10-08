@@ -21,7 +21,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -31,6 +30,7 @@ import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.client.welcome.WelcomePage;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
@@ -38,7 +38,6 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.part.PartAgent;
 import org.exoplatform.ide.part.PartAgent.PartStackType;
-import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
@@ -116,27 +115,8 @@ public class WorkspacePeresenter implements Presenter
 
       //XXX DEMO
 
-      partAgent.addPart(new PartPresenter()
-      {
-
-         @Override
-         public void go(HasWidgets container)
-         {
-            container.add(new Label("DUMMY"));
-         }
-
-         @Override
-         public String getTitle()
-         {
-            return "DUMMY";
-         }
-
-         @Override
-         public boolean close()
-         {
-            return true;
-         }
-      }, PartStackType.EDITING);
+      partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
+      partAgent.addPart(projectExpolorerPresenter,PartStackType.NAVIGATION);
    }
 
    /**
@@ -151,7 +131,6 @@ public class WorkspacePeresenter implements Presenter
 
       PartStackPresenter navigationStack = partAgent.getPartStack(PartStackType.NAVIGATION);
       navigationStack.go(display.getLeftPanel());
-      navigationStack.addPart(projectExpolorerPresenter);
 
       PartStackPresenter editoStack = partAgent.getPartStack(PartStackType.EDITING);
       editoStack.go(display.getCenterPanel());
@@ -269,7 +248,7 @@ public class WorkspacePeresenter implements Presenter
                      @Override
                      public void onSuccess(Folder result)
                      {
-                        project.createFile(result, "Test file on FS", "This is file content of the file from VFS",
+                        project.createFile(result, "TestFileOnFs.txt", "This is file content of the file from VFS",
                            "text/text-pain", new AsyncCallback<File>()
                            {
 
