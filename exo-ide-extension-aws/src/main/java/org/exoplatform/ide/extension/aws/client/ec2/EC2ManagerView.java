@@ -167,4 +167,16 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
    {
       return closeButton;
    }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.ec2.EC2Manager.Display#setAllButtonsEnableState(boolean)
+    */
+   @Override
+   public void setAllButtonsEnableState(boolean isEnable)
+   {
+      terminateButton.setEnabled(isEnable);
+      rebootButton.setEnabled(isEnable);
+      stopButton.setEnabled(isEnable);
+      startButton.setEnabled(isEnable);
+   }
 }

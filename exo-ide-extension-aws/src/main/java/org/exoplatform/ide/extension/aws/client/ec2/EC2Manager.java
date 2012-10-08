@@ -75,6 +75,13 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
       HasClickHandlers getStartButton();
 
       HasClickHandlers getCloseButton();
+
+      /**
+       * Change the enable state of the all buttons.
+       * 
+       * @param isEnable enabled or not
+       */
+      void setAllButtonsEnableState(boolean isEnable);
    }
 
    /**
@@ -110,7 +117,7 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
             if (selectedInstance != null)
             {
                Set<Entry<String, String>> entrySet = selectedInstance.getTags().entrySet();
-               ArrayList<Entry<String,String>> arrayList = new ArrayList<Entry<String, String>>(entrySet);
+               ArrayList<Entry<String, String>> arrayList = new ArrayList<Entry<String, String>>(entrySet);
                display.setTags(arrayList);
             }
          }
@@ -190,7 +197,7 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
          bindDisplay();
          IDE.getInstance().openView(display.asView());
       }
-
+      display.setAllButtonsEnableState(false);
       getInstances();
    }
 
@@ -222,6 +229,10 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
                protected void onSuccess(List<InstanceInfo> result)
                {
                   display.setInstances(result);
+                  if (result.size() > 0)
+                  {
+                     display.setAllButtonsEnableState(true);
+                  }
                }
 
                @Override

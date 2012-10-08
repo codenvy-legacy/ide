@@ -37,6 +37,12 @@ public interface AWSClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_Disabled.png")
    ImageResource elasticBeanstalkDisabled();
 
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_32.png")
+   ImageResource elasticBeanstalk32();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_32_Disabled.png")
+   ImageResource elasticBeanstalk32Disabled();
+
    @Source("org/exoplatform/ide/extension/aws/client/images/switchAccount.png")
    ImageResource switchAccount();
 
@@ -105,16 +111,46 @@ public interface AWSClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/aws/client/images/upload_Disabled.png")
    ImageResource uploadDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/new-bucket.png")
    ImageResource newBucket();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/bucket.png")
    ImageResource bucket();
-   
+
    @Source("org/exoplatform/ide/extension/aws/client/images/s3.png")
    ImageResource s3();
-   
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2.png")
+   ImageResource ec2();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_Disabled.png")
+   ImageResource ec2Disabled();
+
    @Source("org/exoplatform/ide/extension/aws/client/images/loader.gif")
    ImageResource loader();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_reboot.png")
+   ImageResource ec2Reboot();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_reboot_Disabled.png")
+   ImageResource ec2RebootDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_start.png")
+   ImageResource ec2Start();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_start_Disabled.png")
+   ImageResource ec2StartDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_stop.png")
+   ImageResource ec2Stop();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_stop_Disabled.png")
+   ImageResource ec2StopDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_terminate.png")
+   ImageResource ec2Terminate();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/ec2_terminate_Disabled.png")
+   ImageResource ec2TerminateDisabled();
 }

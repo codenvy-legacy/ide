@@ -25,8 +25,6 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.client.login.LoginEvent;
-import org.exoplatform.ide.extension.aws.client.login.LoginHandler;
-import org.exoplatform.ide.extension.aws.client.s3.S3BucketsUnmarshaller;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
