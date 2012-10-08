@@ -24,9 +24,11 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.exoplatform.ide.extension.aws.client.login.Credentials;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionRestriction;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
@@ -69,6 +71,20 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link ApplicationVersionInfoBean}
     */
    AutoBean<ApplicationVersionInfo> applicationVersionInfo();
+
+   /**
+    * A factory method for configuration bean.
+    * 
+    * @return an {@link AutoBean} of type {@link Configuration}
+    */
+   AutoBean<Configuration> configuration();
+
+   /**
+    * A factory method for configuration request bean.
+    * 
+    * @return an {@link AutoBean} of type {@link ConfigurationRequest}
+    */
+   AutoBean<ConfigurationRequest> configurationRequest();
 
    /**
     * A factory method for configuration option bean.
@@ -189,6 +205,6 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link InstanceInfo}
     */
    AutoBean<InstanceInfo> instanceInfo();
-   
+
    AutoBean<NewS3Object> newS3Object();
 }

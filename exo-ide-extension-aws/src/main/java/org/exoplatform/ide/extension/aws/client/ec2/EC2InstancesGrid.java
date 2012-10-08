@@ -99,7 +99,12 @@ public class EC2InstancesGrid extends ListGrid<InstanceInfo>
          @Override
          public String getValue(InstanceInfo ec2Intance)
          {
-            return ec2Intance.getSetSecurityGroupsNames().toString();
+            StringBuffer securityGroups = new StringBuffer();
+            for (String securityGroup : ec2Intance.getSetSecurityGroupsNames())
+            {
+               securityGroups.append(securityGroup).append(", ");
+            }
+            return securityGroups.substring(0, securityGroups.length()-2);
          }
       };
 

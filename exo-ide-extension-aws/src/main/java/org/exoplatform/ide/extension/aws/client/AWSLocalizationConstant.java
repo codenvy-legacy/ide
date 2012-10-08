@@ -292,6 +292,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("events.tab")
    String eventsTab();
 
+   @Key("environment.configuration.title")
+   String environmentConfigurationTitle();
+
    // Delete Application
    @Key("delete.application.title")
    String deleteApplicationTitle();
@@ -467,6 +470,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // EC2 Management View
    @Key("management.ec2.id")
    String managementEC2ViewTitle();
+
+   @Key("configuration.ec2.failed")
+   String getEnvironmentConfigurationFailed();
 
    @Key("terminate.ec2.view.title")
    String terminateEC2InstanceViewTitle();

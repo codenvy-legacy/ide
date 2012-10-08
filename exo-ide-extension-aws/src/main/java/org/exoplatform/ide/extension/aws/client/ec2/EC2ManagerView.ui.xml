@@ -29,13 +29,17 @@
 			<g:FlowPanel width="100%" height="100%">
 				<g:FlowPanel width="100%" height="32px">
 					<f:ImageButton ui:field="terminateButton" width="90" height="22" text="{locale.terminateInstanceButton}"
-						addStyleNames="{style.floatLeft}"></f:ImageButton>
+						addStyleNames="{style.floatLeft}" imageResource="{resource.ec2Terminate}"
+						disabledImageResource="{resource.ec2TerminateDisabled}"></f:ImageButton>
 					<f:ImageButton ui:field="rebootButton" width="90" height="22" text="{locale.rebootInstanceButton}"
-						addStyleNames="{style.floatLeft}"></f:ImageButton>
+						addStyleNames="{style.floatLeft}" imageResource="{resource.ec2Reboot}"
+						disabledImageResource="{resource.ec2RebootDisabled}"></f:ImageButton>
 					<f:ImageButton ui:field="stopButton" width="90" height="22" text="{locale.stopInstanceButton}"
-						addStyleNames="{style.floatLeft}"></f:ImageButton>
+						addStyleNames="{style.floatLeft}" imageResource="{resource.ec2Stop}"
+						disabledImageResource="{resource.ec2StopDisabled}"></f:ImageButton>
 					<f:ImageButton ui:field="startButton" width="90" height="22" text="{locale.startInstanceButton}"
-						addStyleNames="{style.floatLeft}"></f:ImageButton>
+						addStyleNames="{style.floatLeft}" imageResource="{resource.ec2Start}"
+						disabledImageResource="{resource.ec2StartDisabled}"></f:ImageButton>
 				</g:FlowPanel>
 				<f:Border height="85%">
 					<f:layer>
