@@ -35,7 +35,7 @@ public class DocumentPartitioningChangedEvent
    private final Document fDocument;
 
    /** The map of partitionings to changed regions. */
-   private final Map<String, IRegion> fMap = new HashMap<String, IRegion>();
+   private final Map<String, Region> fMap = new HashMap<String, Region>();
 
    /**
     * Creates a new document partitioning changed event for the given document. Initially this event is empty, i.e. does not
@@ -64,9 +64,9 @@ public class DocumentPartitioningChangedEvent
     * @param partitioning the partitioning
     * @return the changed region of the given partitioning or <code>null</code>
     */
-   public IRegion getChangedRegion(String partitioning)
+   public Region getChangedRegion(String partitioning)
    {
-      return (IRegion)fMap.get(partitioning);
+      return (Region)fMap.get(partitioning);
    }
 
    /**
@@ -91,7 +91,7 @@ public class DocumentPartitioningChangedEvent
    public void setPartitionChange(String partitioning, int offset, int length)
    {
       Assert.isNotNull(partitioning);
-      fMap.put(partitioning, new Region(offset, length));
+      fMap.put(partitioning, new RegionImpl(offset, length));
    }
 
    /**
@@ -110,17 +110,17 @@ public class DocumentPartitioningChangedEvent
     * 
     * @return the coverage of this event
     */
-   public IRegion getCoverage()
+   public Region getCoverage()
    {
       if (fMap.isEmpty())
-         return new Region(0, 0);
+         return new RegionImpl(0, 0);
 
       int offset = -1;
       int endOffset = -1;
-      Iterator<IRegion> e = fMap.values().iterator();
+      Iterator<Region> e = fMap.values().iterator();
       while (e.hasNext())
       {
-         IRegion r = e.next();
+         Region r = e.next();
 
          if (offset < 0 || r.getOffset() < offset)
             offset = r.getOffset();
@@ -130,6 +130,6 @@ public class DocumentPartitioningChangedEvent
             endOffset = end;
       }
 
-      return new Region(offset, endOffset - offset);
+      return new RegionImpl(offset, endOffset - offset);
    }
 }

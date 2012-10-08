@@ -650,7 +650,7 @@ public interface Document
     * @return a line description
     * @exception BadLocationException if the line number is invalid in this document
     */
-    IRegion getLineInformation(int line) throws BadLocationException;
+    Region getLineInformation(int line) throws BadLocationException;
 
     /**
     * Returns a description of the line at the given offset.
@@ -661,7 +661,7 @@ public interface Document
     * @return a region describing the line
     * @exception BadLocationException if offset is invalid in this document
     */
-    IRegion getLineInformationOfOffset(int offset) throws BadLocationException;
+    Region getLineInformationOfOffset(int offset) throws BadLocationException;
 
    /**
     * Returns the number of lines in this document

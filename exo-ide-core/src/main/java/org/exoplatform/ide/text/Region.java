@@ -19,61 +19,28 @@
 package org.exoplatform.ide.text;
 
 /**
- * The default implementation of the {@link org.eclipse.jdt.client.text.jface.text.IRegion} interface.
+ * A region describes a certain range in an indexed text store. Text stores are for example documents or strings. A region is
+ * defined by its offset into the text store and its length.
+ * <p>
+ * A region is considered a value object. Its offset and length do not change over time.
+ * <p>
+ * Clients may implement this interface or use the standard implementation {@link RegionImpl}.
+ * </p>
  */
-public class Region implements IRegion
+public interface Region
 {
 
-   /** The region offset */
-   private int fOffset;
-
-   /** The region length */
-   private int fLength;
+   /**
+    * Returns the length of the region.
+    * 
+    * @return the length of the region
+    */
+   int getLength();
 
    /**
-    * Create a new region.
+    * Returns the offset of the region.
     * 
-    * @param offset the offset of the region
-    * @param length the length of the region
+    * @return the offset of the region
     */
-   public Region(int offset, int length)
-   {
-      fOffset = offset;
-      fLength = length;
-   }
-
-   /* @see org.eclipse.jface.text.IRegion#getLength() */
-   public int getLength()
-   {
-      return fLength;
-   }
-
-   /* @see org.eclipse.jface.text.IRegion#getOffset() */
-   public int getOffset()
-   {
-      return fOffset;
-   }
-
-   /* @see java.lang.Object#equals(java.lang.Object) */
-   public boolean equals(Object o)
-   {
-      if (o instanceof IRegion)
-      {
-         IRegion r = (IRegion)o;
-         return r.getOffset() == fOffset && r.getLength() == fLength;
-      }
-      return false;
-   }
-
-   /* @see java.lang.Object#hashCode() */
-   public int hashCode()
-   {
-      return (fOffset << 24) | (fLength << 16);
-   }
-
-   /* @see java.lang.Object#toString() */
-   public String toString()
-   {
-      return "offset: " + fOffset + ", length: " + fLength; //$NON-NLS-1$ //$NON-NLS-2$;
-   }
+   int getOffset();
 }

@@ -167,7 +167,7 @@ abstract class ListLineTracker implements LineTracker
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformationOfOffset(int) */
-   public final IRegion getLineInformationOfOffset(int position) throws BadLocationException
+   public final Region getLineInformationOfOffset(int position) throws BadLocationException
    {
       if (position > fTextLength)
          throw new BadLocationException();
@@ -176,7 +176,7 @@ abstract class ListLineTracker implements LineTracker
       {
          int size = fLines.size();
          if (size == 0)
-            return new Region(0, 0);
+            return new RegionImpl(0, 0);
          Line l = (Line)fLines.get(size - 1);
          return (l.delimiter != null ? new Line(fTextLength, 0) : new Line(fTextLength - l.length, l.length));
       }
@@ -185,7 +185,7 @@ abstract class ListLineTracker implements LineTracker
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformation(int) */
-   public final IRegion getLineInformation(int line) throws BadLocationException
+   public final Region getLineInformation(int line) throws BadLocationException
    {
       int lines = fLines.size();
 

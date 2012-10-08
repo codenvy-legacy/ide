@@ -20,8 +20,8 @@ package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.IRegion;
 import org.exoplatform.ide.text.Region;
+import org.exoplatform.ide.text.RegionImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -175,9 +175,9 @@ public abstract class TextEdit
     * 
     * @return the manipulated region
     */
-   public final IRegion getRegion()
+   public final Region getRegion()
    {
-      return new Region(getOffset(), getLength());
+      return new RegionImpl(getOffset(), getLength());
    }
 
    /**
@@ -457,7 +457,7 @@ public abstract class TextEdit
     * @param edits an array of edits
     * @return the text range spawned by the given array of edits or <code>null</code> if all edits are marked as deleted
     */
-   public static IRegion getCoverage(TextEdit[] edits)
+   public static Region getCoverage(TextEdit[] edits)
    {
       // Assert.isTrue(edits != null && edits.length > 0);
 
@@ -480,7 +480,7 @@ public abstract class TextEdit
       if (edits.length == deleted)
          return null;
 
-      return new Region(offset, end - offset);
+      return new RegionImpl(offset, end - offset);
    }
 
    /**

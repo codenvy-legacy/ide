@@ -16,11 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.texteditor.api.contentassistant;
+package org.exoplatform.ide.texteditor.api.codeassistant;
+
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
 
 /**
- * An <code>ContentAssistant</code> provides support on interactive content completion.
- * The content assistant is a {@link Editor} add-on. Its
+ * An <code>CodeAssistant</code> provides support on interactive content completion.
+ * The content assistant is a {@link TextEditorPartDisplay} add-on. Its
  * purpose is to propose, display, and insert completions of the content
  * of the text viewer's document at the viewer's cursor position. In addition
  * to handle completions, a content assistant can also be requested to provide
@@ -29,17 +32,49 @@ package org.exoplatform.ide.texteditor.api.contentassistant;
  * document offset, a content assistant displays the possible contexts and requests
  * the user to choose the one whose information should be displayed.
  * <p>
- * A content assistant has a list of {@link ContentAssistProcessor}
+ * A content assistant has a list of {@link CodeAssistProcessor}
  * objects each of which is registered for a  particular document content
  * type. The content assistant uses the processors to react on the request
  * of completing documents or presenting context information.
  * </p>
- * 
+ * <p>
+ * The interface can be implemented by clients. By default, clients use
+ * {@link CodeAssistantImpl} as the standard
+ * implementer of this interface.
+ * </p>
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public interface ContentAssistant
+public interface CodeAssistant
 {
+   /**
+    * Installs content assist support on the given text display.
+    *
+    * @param display the text display on which content assist will work
+    */
+   void install(TextEditorPartDisplay display);
 
+   /**
+    * Uninstalls content assist support from the text display it has
+    * previously be installed on.
+    */
+   void uninstall();
+
+   /**
+    * Shows all possible completions of the content at the display's cursor position.
+    *
+    * @return an optional error message if no proposals can be computed
+    */
+   String showPossibleCompletions();
+
+   /**
+    * Returns the code assist processor to be used for the given content type.
+    *
+    * @param contentType the type of the content for which this
+    *        content assistant is to be requested
+    * @return an instance code assist processor or
+    *         <code>null</code> if none exists for the specified content type
+    */
+   CodeAssistProcessor getCodeAssistProcessor(String contentType);
 }

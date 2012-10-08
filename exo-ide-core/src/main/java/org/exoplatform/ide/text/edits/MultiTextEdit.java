@@ -20,7 +20,7 @@ package org.exoplatform.ide.text.edits;
 
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.IRegion;
+import org.exoplatform.ide.text.Region;
 
 import java.util.List;
 
@@ -205,7 +205,7 @@ public class MultiTextEdit extends TextEdit
          return;
       if (hasChildren())
       {
-         IRegion region = getCoverage(getChildren());
+         Region region = getCoverage(getChildren());
          internalSetOffset(region.getOffset());
          internalSetLength(region.getLength());
       }

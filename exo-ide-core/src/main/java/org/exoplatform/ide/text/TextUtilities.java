@@ -563,7 +563,7 @@ public class TextUtilities
     * @return <code>true</code> if the two regions overlap, <code>false</code> otherwise
     * @since 3.0
     */
-   public static boolean overlaps(IRegion left, IRegion right)
+   public static boolean overlaps(Region left, Region right)
    {
 
       if (left == null || right == null)

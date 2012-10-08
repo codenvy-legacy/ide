@@ -19,40 +19,48 @@
 package org.exoplatform.ide.text;
 
 /**
- * Default implementation of {@link org.eclipse.jface.text.ITypedRegion}. A <code>TypedRegion</code> is a value object.
+ * The default implementation of the {@link Region} interface.
  */
-public class TypedRegion extends RegionImpl implements ITypedRegion
+public class RegionImpl implements Region
 {
 
-   /** The region's type */
-   private String fType;
+   /** The region offset */
+   private int fOffset;
+
+   /** The region length */
+   private int fLength;
 
    /**
-    * Creates a typed region based on the given specification.
+    * Create a new region.
     * 
-    * @param offset the region's offset
-    * @param length the region's length
-    * @param type the region's type
+    * @param offset the offset of the region
+    * @param length the length of the region
     */
-   public TypedRegion(int offset, int length, String type)
+   public RegionImpl(int offset, int length)
    {
-      super(offset, length);
-      fType = type;
+      fOffset = offset;
+      fLength = length;
    }
 
-   /* @see org.eclipse.jface.text.ITypedRegion#getType() */
-   public String getType()
+   /* @see org.eclipse.jface.text.IRegion#getLength() */
+   public int getLength()
    {
-      return fType;
+      return fLength;
+   }
+
+   /* @see org.eclipse.jface.text.IRegion#getOffset() */
+   public int getOffset()
+   {
+      return fOffset;
    }
 
    /* @see java.lang.Object#equals(java.lang.Object) */
    public boolean equals(Object o)
    {
-      if (o instanceof TypedRegion)
+      if (o instanceof Region)
       {
-         TypedRegion r = (TypedRegion)o;
-         return super.equals(r) && ((fType == null && r.getType() == null) || fType.equals(r.getType()));
+         Region r = (Region)o;
+         return r.getOffset() == fOffset && r.getLength() == fLength;
       }
       return false;
    }
@@ -60,17 +68,12 @@ public class TypedRegion extends RegionImpl implements ITypedRegion
    /* @see java.lang.Object#hashCode() */
    public int hashCode()
    {
-      int type = fType == null ? 0 : fType.hashCode();
-      return super.hashCode() | type;
+      return (fOffset << 24) | (fLength << 16);
    }
 
-   /*
-    * @see org.eclipse.jface.text.Region#toString()
-    * @since 3.5
-    */
+   /* @see java.lang.Object#toString() */
    public String toString()
    {
-      return fType + " - " + super.toString(); //$NON-NLS-1$
+      return "offset: " + fOffset + ", length: " + fLength; //$NON-NLS-1$ //$NON-NLS-2$;
    }
-
 }

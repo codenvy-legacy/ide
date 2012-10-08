@@ -27,7 +27,7 @@ import org.exoplatform.ide.text.DocumentListener;
 import org.exoplatform.ide.text.DocumentPartitioner;
 import org.exoplatform.ide.text.DocumentPartitioningListener;
 import org.exoplatform.ide.text.PositionUpdater;
-import org.exoplatform.ide.text.IRegion;
+import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.ITypedRegion;
 import org.exoplatform.ide.text.Position;
 
@@ -131,12 +131,12 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
-   public IRegion getLineInformation(int line) throws BadLocationException
+   public Region getLineInformation(int line) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
 
-   public IRegion getLineInformationOfOffset(int offset) throws BadLocationException
+   public Region getLineInformationOfOffset(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }

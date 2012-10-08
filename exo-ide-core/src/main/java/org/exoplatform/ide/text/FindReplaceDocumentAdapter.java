@@ -87,7 +87,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
     * @throws BadLocationException if startOffset is an invalid document offset
     * @throws PatternSyntaxException if a regular expression has invalid syntax
     */
-   public IRegion find(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive,
+   public Region find(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive,
       boolean wholeWord, boolean regExSearch) throws BadLocationException
    {
       Assert.isTrue(!(regExSearch && wholeWord));
@@ -121,7 +121,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
     * @throws IllegalStateException if a REPLACE or REPLACE_FIND operation is not preceded by a successful FIND operation
     * @throws PatternSyntaxException if a regular expression has invalid syntax
     */
-   private IRegion findReplace(final FindReplaceOperationCode operationCode, int startOffset, String findString,
+   private Region findReplace(final FindReplaceOperationCode operationCode, int startOffset, String findString,
       String replaceText, boolean forwardSearch, boolean caseSensitive, boolean wholeWord) throws BadLocationException
    {
       // Validate state
@@ -166,7 +166,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
          {
             MatchResult matchResult = regExp.exec(String.valueOf(this));
             if (matchResult != null && matchResult.getGroupCount() > 0 && !matchResult.getGroup(0).isEmpty())
-               return new Region(matchResult.getIndex(), matchResult.getGroup(0).length());
+               return new RegionImpl(matchResult.getIndex(), matchResult.getGroup(0).length());
             return null;
          }
          // backward search
@@ -190,7 +190,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
             // must set matcher to correct position
             regExp.setLastIndex(index);
             matchResult = regExp.exec(String.valueOf(this));
-            return new Region(index, length);
+            return new RegionImpl(index, length);
          }
          return null;
       }
@@ -212,7 +212,7 @@ public class FindReplaceDocumentAdapter implements CharSequence
     * @see DocumentEvent
     * @see DocumentListener
     */
-   public IRegion replace(String text, boolean regExReplace) throws BadLocationException
+   public Region replace(String text, boolean regExReplace) throws BadLocationException
    {
       // TODO
       // return findReplace(REPLACE, -1, null, text, false, false, false, regExReplace);

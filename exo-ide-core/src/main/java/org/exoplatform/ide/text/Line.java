@@ -22,7 +22,7 @@ package org.exoplatform.ide.text;
  * Describes a line as a particular number of characters beginning at a particular offset, consisting of a particular number of
  * characters, and being closed with a particular line delimiter.
  */
-final class Line implements IRegion
+final class Line implements Region
 {
 
    /** The offset of the line */

@@ -28,7 +28,7 @@ package org.exoplatform.ide.text;
  * Clients may implement this interface or use the standard implementation {@link org.eclipse.jface.text.TypedRegion}.
  * </p>
  */
-public interface ITypedRegion extends IRegion
+public interface ITypedRegion extends Region
 {
 
    /**

@@ -20,7 +20,7 @@ package org.exoplatform.ide.texteditor.api;
 
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.UndoManager;
-import org.exoplatform.ide.texteditor.api.contentassistant.ContentAssistant;
+import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 
@@ -96,7 +96,7 @@ public class TextEditorConfiguration
     * @param display the source viewer to be configured by this configuration
     * @return a content assistant or <code>null</code> if content assist should not be supported
     */
-   public ContentAssistant getContentAssistant(TextEditorPartDisplay display)
+   public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
    {
       return null;
    }

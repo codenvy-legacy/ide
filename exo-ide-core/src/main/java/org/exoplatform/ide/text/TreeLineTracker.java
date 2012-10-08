@@ -1241,7 +1241,7 @@ abstract class TreeLineTracker implements LineTracker
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformationOfOffset(int) */
-   public final IRegion getLineInformationOfOffset(final int offset) throws BadLocationException
+   public final Region getLineInformationOfOffset(final int offset) throws BadLocationException
    {
       // Inline nodeByOffset start as we need both node and offset
       int remaining = offset;
@@ -1270,11 +1270,11 @@ abstract class TreeLineTracker implements LineTracker
          }
       }
       // Inline nodeByOffset end
-      return new Region(lineOffset, node.pureLength());
+      return new RegionImpl(lineOffset, node.pureLength());
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformation(int) */
-   public final IRegion getLineInformation(int line) throws BadLocationException
+   public final Region getLineInformation(int line) throws BadLocationException
    {
       try
       {
@@ -1305,7 +1305,7 @@ abstract class TreeLineTracker implements LineTracker
             }
          }
          // Inline nodeByLine end
-         return new Region(offset, node.pureLength());
+         return new RegionImpl(offset, node.pureLength());
       }
       catch (BadLocationException x)
       {
@@ -1345,7 +1345,7 @@ abstract class TreeLineTracker implements LineTracker
             Node last = node;
             // Inline nodeByLine end
             if (last.length > 0)
-               return new Region(offset + last.length, 0);
+               return new RegionImpl(offset + last.length, 0);
          }
          throw x;
       }

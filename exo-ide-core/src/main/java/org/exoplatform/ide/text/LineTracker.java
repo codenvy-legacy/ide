@@ -117,7 +117,7 @@ public interface LineTracker
     * @return a region describing the line
     * @exception BadLocationException if offset is invalid in this tracker
     */
-   IRegion getLineInformationOfOffset(int offset) throws BadLocationException;
+   Region getLineInformationOfOffset(int offset) throws BadLocationException;
 
    /**
     * Returns a line description of the given line. The description contains the start offset and the length of the line excluding
@@ -127,7 +127,7 @@ public interface LineTracker
     * @return a region describing the line
     * @exception BadLocationException if line is unknown to this tracker
     */
-   IRegion getLineInformation(int line) throws BadLocationException;
+   Region getLineInformation(int line) throws BadLocationException;
 
    /**
     * Informs the line tracker about the specified change in the tracked text.

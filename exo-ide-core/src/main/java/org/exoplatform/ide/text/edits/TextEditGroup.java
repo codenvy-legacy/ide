@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.text.edits;
 
-import org.exoplatform.ide.text.IRegion;
+import org.exoplatform.ide.text.Region;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,7 +153,7 @@ public class TextEditGroup
     * @return the text region covered by this edit group or <code>
     *  null</code> if no edits are managed
     */
-   public IRegion getRegion()
+   public Region getRegion()
    {
       int size = fEdits.size();
       if (size == 0)

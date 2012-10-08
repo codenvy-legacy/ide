@@ -19,7 +19,7 @@
 package org.exoplatform.ide.texteditor.api;
 
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.Region;
+import org.exoplatform.ide.text.RegionImpl;
 
 /**
  * The interface of a document content formatter. The formatter formats ranges
@@ -46,7 +46,7 @@ public interface ContentFormatter
     * @param document the document to be formatted
     * @param region the region within the document to be formatted
     */
-   void format(Document document, Region region);
+   void format(Document document, RegionImpl region);
 
    //TODO
 //   /**

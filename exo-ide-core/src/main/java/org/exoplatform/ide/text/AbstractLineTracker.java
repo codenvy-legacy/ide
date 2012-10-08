@@ -134,14 +134,14 @@ public abstract class AbstractLineTracker implements LineTracker
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformation(int) */
-   public IRegion getLineInformation(int line) throws BadLocationException
+   public Region getLineInformation(int line) throws BadLocationException
    {
       // checkRewriteSession();
       return fDelegate.getLineInformation(line);
    }
 
    /* @see org.eclipse.jface.text.ILineTracker#getLineInformationOfOffset(int) */
-   public IRegion getLineInformationOfOffset(int offset) throws BadLocationException
+   public Region getLineInformationOfOffset(int offset) throws BadLocationException
    {
       // checkRewriteSession();
       return fDelegate.getLineInformationOfOffset(offset);

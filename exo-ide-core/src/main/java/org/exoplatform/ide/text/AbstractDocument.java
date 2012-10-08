@@ -756,7 +756,7 @@ public abstract class AbstractDocument implements Document
    protected void doFireDocumentChanged(DocumentEvent event)
    {
       boolean changed = fDocumentPartitioningChangedEvent != null && !fDocumentPartitioningChangedEvent.isEmpty();
-      IRegion change = changed ? fDocumentPartitioningChangedEvent.getCoverage() : null;
+      Region change = changed ? fDocumentPartitioningChangedEvent.getCoverage() : null;
       doFireDocumentChanged(event, changed, change);
    }
 
@@ -771,7 +771,7 @@ public abstract class AbstractDocument implements Document
     * @since 2.0
     * @deprecated as of 3.0. Use <code>doFireDocumentChanged2(DocumentEvent)</code> instead; this method will be removed.
     */
-   protected void doFireDocumentChanged(DocumentEvent event, boolean firePartitionChange, IRegion partitionChange)
+   protected void doFireDocumentChanged(DocumentEvent event, boolean firePartitionChange, Region partitionChange)
    {
       doFireDocumentChanged2(event);
    }
@@ -976,13 +976,13 @@ public abstract class AbstractDocument implements Document
    }
 
    /* @see org.eclipse.jface.text.IDocument#getLineInformation(int) */
-   public IRegion getLineInformation(int line) throws BadLocationException
+   public Region getLineInformation(int line) throws BadLocationException
    {
       return getTracker().getLineInformation(line);
    }
 
    /* @see org.eclipse.jface.text.IDocument#getLineInformationOfOffset(int) */
-   public IRegion getLineInformationOfOffset(int offset) throws BadLocationException
+   public Region getLineInformationOfOffset(int offset) throws BadLocationException
    {
       return getTracker().getLineInformationOfOffset(offset);
    }
