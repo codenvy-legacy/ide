@@ -38,41 +38,47 @@ public class Login extends AbstractTestModule
 
    private static final String USERNAME = "j_username";
 
-   private static final String PASSWORD = "j_password";   
+   private static final String PASSWORD = "j_password";
+
+   private static final String LOGIN_ONTENANT_BTN = "recoverPassword";
 
    @FindBy(name = USERNAME)
    private WebElement name;
+
+   @FindBy(id = LOGIN_ONTENANT_BTN)
+   private WebElement loginTenantButton;
 
    @FindBy(name = PASSWORD)
    private WebElement password;
 
    private WebElement loginButton;
-   
+
    private WebElement logoutButton;
 
    @FindBy(linkText = "IDE")
    private WebElement cloudIdeAdditionMenu;
-   
+
    public void logout()
    {
-    if (!logoutButton.isDisplayed())
-    {
-       openCloudIdeAdditionMenu();   
-    }
-       
+      if (!logoutButton.isDisplayed())
+      {
+         openCloudIdeAdditionMenu();
+      }
+
       logoutButton.click();
    }
 
    /**
     * Open IDE addition menu where "Logout" is sub-menu item
     */
-   private void openCloudIdeAdditionMenu() {
+   private void openCloudIdeAdditionMenu()
+   {
       if (cloudIdeAdditionMenu != null)
       {
          cloudIdeAdditionMenu.click();
       }
    }
-   
+
    /**
     * @param userName
     * @param password
@@ -83,6 +89,20 @@ public class Login extends AbstractTestModule
       IDE().INPUT.typeToElement(name, userName, true);
       IDE().INPUT.typeToElement(this.password, password, true);
       login();
+      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
+   }
+
+   /**
+    * login on tenant page
+   * @param userName
+   * @param password
+   * @throws Exception
+   */
+   public void tenantLogin(String userName, String password) throws Exception
+   {
+      IDE().INPUT.typeToElement(name, userName, true);
+      IDE().INPUT.typeToElement(this.password, password, true);
+      tenantLogin();
       selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
@@ -114,11 +134,9 @@ public class Login extends AbstractTestModule
     */
    public void waitTenantLoginPage()
    {
-      waitStandaloneLoginPage();
+      waitTenantAllLoginPage();
    }
-   
-   
-   
+
    /**
     * wait login jsp page on cloud-ide
     */
@@ -141,15 +159,45 @@ public class Login extends AbstractTestModule
          }
       });
    }
-   
 
+   /**
+    * wait login jsp page on cloud-ide
+    */
+   public void waitTenantAllLoginPage()
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return name != null && name.isDisplayed() && password != null && password.isDisplayed()
+                  && loginTenantButton != null && loginTenantButton.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   
+   /**
+    * click on button Login
+    */
+   public void tenantLogin()
+   {
+      loginTenantButton.click();
+   }
+   
    /**
     * click on button Login
     */
    public void login()
    {
       loginButton.click();
-
    }
 
    /**
