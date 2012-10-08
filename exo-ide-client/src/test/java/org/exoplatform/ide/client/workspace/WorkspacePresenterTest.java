@@ -30,8 +30,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.client.editor.EditorAgent;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.junit.After;

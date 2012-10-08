@@ -25,12 +25,12 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.client.editor.EditorAgent;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
+import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;

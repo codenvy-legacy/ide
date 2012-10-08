@@ -16,13 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.editor;
+package org.exoplatform.ide.core.editor;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
