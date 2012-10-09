@@ -390,7 +390,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                   int i = 0;
                   for (SolutionStack solutionStack : result)
                   {
-                     values[i] = solutionStack.getName();
+                     values[i] = filteSolutionStackByProjectType(solutionStack.getName());
                      i++;
                   }
                   display.setSolutionStackValues(values);
@@ -407,6 +407,13 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   //For detail see https://jira.exoplatform.org/browse/IDE-1951
+   protected String filteSolutionStackByProjectType(String name)
+   {
+      
+      return name;
    }
 
    /**

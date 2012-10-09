@@ -177,11 +177,21 @@ public class RestCodeAssistantJava
       if (projectId == null)
          throw new InvalidArgumentException("'projectid' parameter is null.");
       if (isClass)
-         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-            + codeAssistant.getClassJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      {
+         String classJavaDoc = codeAssistant.getClassJavaDoc(fqn, projectId, vfsId);
+         if (classJavaDoc == null)
+            classJavaDoc = "JavaDoc not found";
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">" + classJavaDoc
+            + "</body></html>";
+      }
       else
-         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">"
-            + codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId) + "</body></html>";
+      {
+         String memberJavaDoc = codeAssistant.getMemberJavaDoc(fqn, projectId, vfsId);
+         if (memberJavaDoc == null)
+            memberJavaDoc = "JavaDoc not found";
+         return "<html><head></head><body style=\"font-family: monospace;font-size: 12px;\">" + memberJavaDoc
+            + "</body></html>";
+      }
    }
 
    /**
