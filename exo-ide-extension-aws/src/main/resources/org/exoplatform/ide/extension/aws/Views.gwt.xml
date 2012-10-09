@@ -52,8 +52,8 @@
       <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.versions.create.CreateVersionPresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ConfigurationView">
-      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ConfigurationPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationView">
+      <when-type-is class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentView">

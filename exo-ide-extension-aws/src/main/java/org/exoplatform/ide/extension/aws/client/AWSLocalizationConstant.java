@@ -28,7 +28,7 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // Buttons
    @Key("button.create")
    String createButton();
-   
+
    @Key("button.create.bucket")
    String createBucketButton();
 
@@ -463,10 +463,10 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("s3.management.delete.question")
    String s3ManagementDeleteQuestion(String bucket);
-   
+
    @Key("s3.management.delete.title")
    String s3ManagementDeleteTitle();
-   
+
    // EC2 Management View
    @Key("management.ec2.id")
    String managementEC2ViewTitle();
@@ -527,5 +527,57 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("management.ec2.tags")
    String managementEC2Tags();
+
+   // Edit environment configuration
+   @Key("server.tab")
+   String serverTab();
+
+   @Key("loadBalancer.tab")
+   String loadBalancerTab();
+
+   @Key("container.tab")
+   String containerTab();
+
+   @Key("edit.configuration.ec2.instanceType")
+   String editConfigurationEC2InstanceType();
+
+   @Key("edit.configuration.ec2.securityGroups")
+   String editConfigurationEC2SecurityGroups();
+
+   @Key("edit.configuration.keyName")
+   String editConfigurationKeyName();
+
+   @Key("edit.configuration.monitoringInterval")
+   String editConfigurationMonitoringInterval();
+
+   @Key("edit.configuration.imageId")
+   String editConfigurationImageId();
+
+   @Key("edit.configuration.appHealthCheckUrl")
+   String editConfigurationAppHealthCheckUrl();
+
+   @Key("edit.configuration.healthCheckInterval")
+   String editConfigurationHealthCheckInterval();
+
+   @Key("edit.configuration.healthCheckTimeout")
+   String editConfigurationHealthCheckTimeout();
+
+   @Key("edit.configuration.healthyThreshold")
+   String editConfigurationHealthyThreshold();
+
+   @Key("edit.configuration.unhealthyThreshold")
+   String editConfigurationUnhealthyThreshold();
+
+   @Key("edit.configuration.initialJVMHeapSize")
+   String editConfigurationInitialJVMHeapSize();
+
+   @Key("edit.configuration.maximumJVMHeapSize")
+   String editConfigurationMaximumJVMHeapSize();
+
+   @Key("edit.configuration.maxPermSize")
+   String editConfigurationMaxPermSize();
+
+   @Key("edit.configuration.jvmOptions")
+   String editConfigurationJVMOptions();
 
 }
