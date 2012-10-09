@@ -23,12 +23,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -51,21 +52,16 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
- * Presenter for showing environment's configuration.
+ * Presenter for edit environment's configuration.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: ConfigurationPresenter.java Oct 5, 2012 5:59:23 PM azatsarynnyy $
+ * @version $Id: EditConfigurationPresenter.java Oct 5, 2012 5:59:23 PM azatsarynnyy $
  *
  */
-public class ConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
+public class EditConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
    ViewConfigurationHandler, ViewClosedHandler
 {
 
@@ -73,7 +69,39 @@ public class ConfigurationPresenter implements ProjectOpenedHandler, ProjectClos
    {
       HasClickHandlers getOkButton();
 
-      ListGridItem<Entry<String, String>> getApplicationInfoGrid();
+      HasClickHandlers getCancelButton();
+
+      // Server tab
+      HasValue<String> getEC2InstanceTypeField();
+
+      TextFieldItem getEC2SecurityGroupsField();
+
+      TextFieldItem getKeyNameField();
+
+      TextFieldItem getMonitoringIntervalField();
+
+      TextFieldItem getImageIdField();
+
+      // Load Balancer tab
+      TextFieldItem getAppHealthCheckCheckUrlField();
+
+      TextFieldItem getHealthCheckIntervalField();
+
+      TextFieldItem getHealthCheckTimeoutField();
+
+      TextFieldItem getHealthyThresholdField();
+
+      TextFieldItem getUnhealthyThresholdField();
+
+      // Container tab
+      TextFieldItem getInitialJVMHeapSizeField();
+
+      TextFieldItem getMaximumJVMHeapSizeField();
+
+      TextFieldItem getMaxPermSizeField();
+
+      TextFieldItem getJVMOptionsField();
+      
    }
 
    private Display display;
@@ -82,7 +110,7 @@ public class ConfigurationPresenter implements ProjectOpenedHandler, ProjectClos
 
    private VirtualFileSystemInfo vfsInfo;
 
-   public ConfigurationPresenter()
+   public EditConfigurationPresenter()
    {
       IDE.addHandler(ViewConfigurationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -96,7 +124,7 @@ public class ConfigurationPresenter implements ProjectOpenedHandler, ProjectClos
     */
    public void bindDisplay()
    {
-      display.getOkButton().addClickHandler(new ClickHandler()
+      display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
          @Override
@@ -223,19 +251,87 @@ public class ConfigurationPresenter implements ProjectOpenedHandler, ProjectClos
          bindDisplay();
       }
 
-      Map<String, String> map = new HashMap<String, String>();
+//      Map<String, String> map = new HashMap<String, String>();
       for (ConfigurationOption option : envConfiguration.getOptions())
       {
-         map.put(option.getName(), option.getValue());
+         if (option.getNamespace().equals("aws:autoscaling:launchconfiguration"))
+         {
+            if (option.getName().equals("InstanceType"))
+            {
+               display.getEC2InstanceTypeField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("SecurityGroups"))
+            {
+               display.getEC2SecurityGroupsField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("EC2KeyName"))
+            {
+               display.getKeyNameField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("MonitoringInterval"))
+            {
+               display.getMonitoringIntervalField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("ImageId"))
+            {
+               display.getImageIdField().setValue(option.getValue());
+            }
+         }
+         else if (option.getNamespace().equals("aws:elasticbeanstalk:application"))
+         {
+            if (option.getName().equals("Application Healthcheck URL"))
+            {
+               display.getAppHealthCheckCheckUrlField().setValue(option.getValue());
+            }
+         }
+         else if (option.getNamespace().equals("aws:elb:healthcheck"))
+         {
+            if (option.getName().equals("Interval"))
+            {
+               display.getHealthCheckIntervalField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("Timeout"))
+            {
+               display.getHealthCheckTimeoutField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("HealthyThreshold"))
+            {
+               display.getHealthyThresholdField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("UnhealthyThreshold"))
+            {
+               display.getUnhealthyThresholdField().setValue(option.getValue());
+            }
+         }
+         else if (option.getNamespace().equals("aws:elasticbeanstalk:container:tomcat:jvmoptions"))
+         {
+            if (option.getName().equals("Xms"))
+            {
+               display.getInitialJVMHeapSizeField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("Xmx"))
+            {
+               display.getMaximumJVMHeapSizeField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("XX:MaxPermSize"))
+            {
+               display.getMaxPermSizeField().setValue(option.getValue());
+            }
+            else if (option.getName().equals("JVM Options"))
+            {
+               display.getJVMOptionsField().setValue(option.getValue());
+            }
+         }
+//         map.put(option.getName(), option.getValue());
       }
 
-      Iterator<Entry<String, String>> it = map.entrySet().iterator();
-      List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();
-      while (it.hasNext())
-      {
-         valueList.add(it.next());
-      }
-      display.getApplicationInfoGrid().setValue(valueList);
+//      Iterator<Entry<String, String>> it = map.entrySet().iterator();
+//      List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();
+//      while (it.hasNext())
+//      {
+//         valueList.add(it.next());
+//      }
+//      display.getApplicationInfoGrid().setValue(valueList);
    }
 
    /**

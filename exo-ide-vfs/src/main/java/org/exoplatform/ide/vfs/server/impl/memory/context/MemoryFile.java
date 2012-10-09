@@ -88,7 +88,7 @@ public class MemoryFile extends MemoryItem
       final String thisLockToken = lockHolder.get();
       if (lockToken.equals(thisLockToken))
       {
-         lockHolder.set(null);
+         lockHolder.compareAndSet(thisLockToken, null);
          lastModificationDate = System.currentTimeMillis();
       }
       else
