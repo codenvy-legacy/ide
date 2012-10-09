@@ -48,7 +48,7 @@ public class TestPartStackPresenter
    PartStackPresenter.Display display;
 
    @Mock
-   PartStackResources resources;
+   PartStackUIResources resources;
 
    @Mock
    EventBus eventBus;

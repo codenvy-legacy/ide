@@ -62,7 +62,7 @@ public class TestPartAgent
    EventBus eventBus;
 
    @Mock
-   PartStackResources resources;
+   PartStackUIResources resources;
 
    PartAgentPresenter agent;
 

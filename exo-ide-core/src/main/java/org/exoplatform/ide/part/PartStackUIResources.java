@@ -16,30 +16,41 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface PartStackCss extends CssResource
+public interface PartStackUIResources extends ClientBundle
 {
+   public interface PartStackCss extends CssResource
+   {
 
-   @ClassName("ide-PartStack")
-   String idePartStack();
+      @ClassName("ide-PartStack")
+      String idePartStack();
 
-   @ClassName("ide-PartStack-Tab")
-   String idePartStackTab();
+      @ClassName("ide-PartStack-Tab")
+      String idePartStackTab();
 
-   @ClassName("ide-PartStack-Tabs")
-   String idePartStackTabs();
+      @ClassName("ide-PartStack-Tabs")
+      String idePartStackTabs();
 
-   @ClassName("ide-PartStack-Tab-selected")
-   String idePartStackTabSelected();
+      @ClassName("ide-PartStack-Tab-selected")
+      String idePartStackTabSelected();
 
-   @ClassName("ide-PartStack-Content")
-   String idePartStackContent();
+      @ClassName("ide-PartStack-Content")
+      String idePartStackContent();
 
-   @ClassName("ide-PartStack-focused")
-   String idePartStackFocused();
+      @ClassName("ide-PartStack-focused")
+      String idePartStackFocused();
+   }
+   
+   @Source("PartStack.css")
+   PartStackCss partStackCss();
+
+   ImageResource close();
+
 }

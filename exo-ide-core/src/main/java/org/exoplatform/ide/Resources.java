@@ -17,6 +17,7 @@ package org.exoplatform.ide;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 
+import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.texteditor.EditableContentArea;
 import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.renderer.LineNumberRenderer;
@@ -30,7 +31,7 @@ import org.exoplatform.ide.tree.Tree;
 public interface Resources extends
    //    StatusPresenter.Resources,
    Tree.Resources, FileTreeNodeRenderer.Resources, Editor.Resources, LineNumberRenderer.Resources,
-   EditableContentArea.Resources
+   EditableContentArea.Resources, PartStackUIResources
 // TODO: Once we have actual consumers of the Tooltip class, we
 // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,

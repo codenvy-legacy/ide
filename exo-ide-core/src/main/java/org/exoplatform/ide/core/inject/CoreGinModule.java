@@ -43,7 +43,7 @@ import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartStackPresenter;
-import org.exoplatform.ide.part.PartStackResources;
+import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
@@ -66,6 +66,7 @@ public class CoreGinModule extends AbstractGinModule
    {
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
+      bind(Resources.class).in(Singleton.class);
 
       resourcesAPIconfigure();
 
@@ -83,7 +84,6 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
-      bind(Resources.class).in(Singleton.class);
       //XXX for demo use only, remove this
       bind(JavaEditorProvider.class).in(Singleton.class);
    }
@@ -115,7 +115,7 @@ public class CoreGinModule extends AbstractGinModule
       
       bind(PartAgent.class).to(PartAgentPresenter.class).in(Singleton.class);
       // resources: images and css
-      bind(PartStackResources.class).in(Singleton.class);
+      bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
    }
 
    @Provides

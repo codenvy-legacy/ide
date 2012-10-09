@@ -104,7 +104,7 @@ public class PartStackPresenter implements Presenter
     * @param partStackResources
     */
    @Inject
-   public PartStackPresenter(Display display, PartStackResources partStackResources)
+   public PartStackPresenter(Display display, PartStackUIResources partStackResources)
    {
       this.display = display;
       display.setFocusRequstHandler(new FocusRequstHandler()
