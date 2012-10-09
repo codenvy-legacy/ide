@@ -19,12 +19,15 @@ package org.exoplatform.ide.core.expressions;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.core.event.ActivePartChangedEvent;
+import org.exoplatform.ide.core.event.ActivePartChangedHandler;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
+import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.resources.model.Project;
 
 /**
@@ -33,6 +36,7 @@ import org.exoplatform.ide.resources.model.Project;
  */
 public class ExpressionManager
 {
+
    protected final EventBus eventBus;
 
    protected final JsonIntegerMap<Expression> expressions;
@@ -52,26 +56,8 @@ public class ExpressionManager
     */
    protected void bind()
    {
-      eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler()
-      {
-         @Override
-         public void onProjectOpened(ProjectActionEvent event)
-         {
-            calculateProjectConstraintExpressions(event.getProject());
-         }
-
-         @Override
-         public void onProjectDescriptionChanged(ProjectActionEvent event)
-         {
-            calculateProjectConstraintExpressions(event.getProject());
-         }
-
-         @Override
-         public void onProjectClosed(ProjectActionEvent event)
-         {
-            calculateProjectConstraintExpressions(null);
-         }
-      });
+      eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectChangedHandler());
+      eventBus.addHandler(ActivePartChangedEvent.TYPE, new PartChangedHandler());
    }
 
    /**
@@ -83,7 +69,7 @@ public class ExpressionManager
    {
       expressions.put(expression.getId(), expression);
    }
-   
+
    /**
     * Removes {@link Expression} from {@link ExpressionManager}
     * 
@@ -93,7 +79,37 @@ public class ExpressionManager
    {
       expressions.erase(expression.getId());
    }
-      
+
+   /**
+    * Gathers the list of changed {@link ActivePartConstraintExpression}
+    * 
+    * @param project
+    */
+   private void calculateActivePartConstraintExpressions(final PartPresenter activePart)
+   {
+      final JsonIntegerMap<Boolean> changedExpressions = JsonCollections.createIntegerMap();
+      expressions.iterate(new IterationCallback<Expression>()
+      {
+         @Override
+         public void onIteration(int id, Expression expression)
+         {
+            if (expression instanceof ActivePartConstraintExpression)
+            {
+               boolean oldVal = expression.getValue();
+               if (((ActivePartConstraintExpression)expression).onActivePartChanged(activePart) != oldVal)
+               {
+                  // value changed
+                  changedExpressions.put(id, !oldVal);
+               }
+            }
+         }
+      });
+
+      if (!changedExpressions.isEmpty())
+      {
+         fireChangedExpressions(changedExpressions);
+      }
+   }
 
    /**
     * Gathers the list of changed {@link ProjectConstraintExpression}
@@ -134,5 +150,41 @@ public class ExpressionManager
    private void fireChangedExpressions(JsonIntegerMap<Boolean> newValues)
    {
       eventBus.fireEvent(new ExpressionsChangedEvent(newValues));
+   }
+
+   /**
+    * Process {@link ActivePartChangedEvent}
+    */
+   private final class PartChangedHandler implements ActivePartChangedHandler
+   {
+      @Override
+      public void onActivePartChanged(ActivePartChangedEvent event)
+      {
+         calculateActivePartConstraintExpressions(event.getActivePart());
+      }
+   }
+
+   /**
+    * Process {@link ProjectActionEvent}
+    */
+   private final class ProjectChangedHandler implements ProjectActionHandler
+   {
+      @Override
+      public void onProjectOpened(ProjectActionEvent event)
+      {
+         calculateProjectConstraintExpressions(event.getProject());
+      }
+
+      @Override
+      public void onProjectDescriptionChanged(ProjectActionEvent event)
+      {
+         calculateProjectConstraintExpressions(event.getProject());
+      }
+
+      @Override
+      public void onProjectClosed(ProjectActionEvent event)
+      {
+         calculateProjectConstraintExpressions(null);
+      }
    }
 }

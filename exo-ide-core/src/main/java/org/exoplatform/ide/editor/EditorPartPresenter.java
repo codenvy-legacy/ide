@@ -36,6 +36,11 @@ import org.exoplatform.ide.part.PartPresenter;
 public interface EditorPartPresenter extends PartPresenter
 {
 
+   public interface EditorPartCloseHandler
+   {
+      public void onClose(EditorPartPresenter editor);
+   }
+   
    /**
     * Initializes this editor with the given editor site and input.
     * <p>
@@ -71,19 +76,9 @@ public interface EditorPartPresenter extends PartPresenter
    public boolean isDirty();
 
    /**
-    * Returns whether the "Save As" operation is supported by this part.
-    *
-    * @return <code>true</code> if "Save As" is supported, and <code>false</code>
-    *  if not supported
+    * Add EditorPart close handler. 
+    * 
+    * @param closeHandler the instance of CloseHandler
     */
-   public boolean isSaveAsAllowed();
-
-   /**
-    * Returns whether the contents of this part should be saved when the part
-    * is closed.
-    *
-    * @return <code>true</code> if the contents of the part should be saved on
-    *   close, and <code>false</code> if the contents are expendable
-    */
-   public boolean isSaveOnCloseNeeded();
+   public void addCloseHandler(EditorPartCloseHandler closeHandler);
 }

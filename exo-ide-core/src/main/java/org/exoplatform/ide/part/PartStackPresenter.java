@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.inject.Inject;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,10 +25,12 @@ import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.part.PartStackPresenter.Display.TabItem;
+import org.exoplatform.ide.part.PartStackView.FocusRequstHandler;
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
@@ -56,11 +56,16 @@ public class PartStackPresenter implements Presenter
    /** current active part */
    private PartPresenter activePart;
 
-   /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
-   public interface FocusRequstHandler
+   private PartStackEventHandler partStackHandler;
+
+   /** Handles PartStack actions */
+   public interface PartStackEventHandler
    {
       /** PartStack is being clicked and requests Focus */
-      void onRequestFocus();
+      void onActivePartChanged(PartPresenter part);
+
+      /** PartStack is being clicked and requests Focus */
+      void onRequestFocus(PartStackPresenter partStack);
    }
 
    /**
@@ -102,16 +107,28 @@ public class PartStackPresenter implements Presenter
    public PartStackPresenter(Display display, PartStackResources partStackResources)
    {
       this.display = display;
+      display.setFocusRequstHandler(new FocusRequstHandler()
+      {
+         @Override
+         public void onRequestFocus()
+         {
+            // notify partStackHandler
+            if (partStackHandler!=null)
+            {
+               partStackHandler.onRequestFocus(PartStackPresenter.this);
+            }
+         }
+      });
    }
 
    /**
-    * Set Handler that will listen the Focus Requests.
+    * Set Handler that will listen to event when Active part changed
     * 
-    * @param handler
+    * @param partStackHandler
     */
-   public void setFocusRequstHandler(FocusRequstHandler handler)
+   public void setPartStackEventHandler(PartStackEventHandler partStackHandler)
    {
-      display.setFocusRequstHandler(handler);
+      this.partStackHandler = partStackHandler;
    }
 
    /**
@@ -211,6 +228,11 @@ public class PartStackPresenter implements Presenter
          display.setActiveTabButton(parts.indexOf(activePart));
          activePart.go(contentPanel);
       }
+      // notify handler, that part changed
+      if (partStackHandler != null)
+      {
+         partStackHandler.onActivePartChanged(activePart);
+      }
    }
 
    /**
@@ -221,7 +243,7 @@ public class PartStackPresenter implements Presenter
    protected void close(PartPresenter part)
    {
       // may cancel close
-      if (part.close())
+      if (part.onClose())
       {
          int partIndex = parts.indexOf(part);
          display.removeTabButton(partIndex);

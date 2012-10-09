@@ -29,6 +29,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
+import org.exoplatform.ide.api.ui.part.PartAgent;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.core.editor.JavaEditorProvider;
@@ -40,7 +41,7 @@ import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
-import org.exoplatform.ide.part.PartAgent;
+import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackResources;
 import org.exoplatform.ide.part.PartStackView;
@@ -110,7 +111,9 @@ public class CoreGinModule extends AbstractGinModule
       // part agent
       bind(PartStackPresenter.Display.class).to(PartStackView.class);
       bind(PartStackPresenter.class);
-      bind(PartAgent.class).in(Singleton.class);
+      bind(PartAgentPresenter.class).in(Singleton.class);
+      
+      bind(PartAgent.class).to(PartAgentPresenter.class).in(Singleton.class);
       // resources: images and css
       bind(PartStackResources.class).in(Singleton.class);
    }

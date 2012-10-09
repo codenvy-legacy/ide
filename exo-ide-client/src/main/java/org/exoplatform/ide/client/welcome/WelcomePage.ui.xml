@@ -40,7 +40,7 @@
       <br />
       <br />
       <b>Build:</b>
-      week 40
+      week 41
       <br />
       <h3>Latest features intorduced</h3>
       <div class="{style.features}">
@@ -71,7 +71,9 @@
          </ul>
       </div>
       <div class="{style.botleft}">
-      <a href="http://exoplatform.com"><img src="exo.png"/></a>
+         <a href="http://exoplatform.com">
+            <img src="exo.png" />
+         </a>
       </div>
    </div>
 </ui:UiBinder>

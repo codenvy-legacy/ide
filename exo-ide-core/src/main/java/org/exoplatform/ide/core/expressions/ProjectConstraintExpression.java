@@ -19,6 +19,7 @@ package org.exoplatform.ide.core.expressions;
 import org.exoplatform.ide.resources.model.Project;
 
 /**
+ * Handles the event when Current Project changed
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */

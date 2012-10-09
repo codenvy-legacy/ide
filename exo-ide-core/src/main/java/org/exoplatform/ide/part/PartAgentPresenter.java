@@ -16,97 +16,74 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.api.ui.part.PartAgent;
+import org.exoplatform.ide.core.event.ActivePartChangedEvent;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.part.PartStackPresenter.FocusRequstHandler;
+import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 
 /**
+ * Part Agent manages all the Part Stack available in application. It is responsible for granting a 
+ * focus for a stack when it requests it and responsible for showing a part. It fires event when 
+ * Active Part changes also (have a look at {@link ActivePartChangedEvent})
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class PartAgent
+public class PartAgentPresenter implements PartAgent
 {
 
    private final JsonStringMap<PartStackPresenter> partStacks = JsonCollections.createStringMap();
 
    private PartStackPresenter activePartStack;
 
-   /**
-    *
-    */
-   private final class PartStackFocusRequstHandler implements FocusRequstHandler
-   {
-      private final PartStackPresenter partStack;
+   private final PartStackEventHandler partStackHandler = new ActivePartChangedHandler();
 
+   private final EventBus eventBus;
+
+   /** Handles PartStack Events */
+   private final class ActivePartChangedHandler implements PartStackEventHandler
+   {
       /**
-       * @param partStack
-       */
-      public PartStackFocusRequstHandler(PartStackPresenter partStack)
+      * {@inheritDoc}
+      */
+      @Override
+      public void onActivePartChanged(PartPresenter part)
       {
-         this.partStack = partStack;
+         // fire event, active part changed
+         eventBus.fireEvent(new ActivePartChangedEvent(part));
       }
 
       @Override
-      public void onRequestFocus()
+      public void onRequestFocus(PartStackPresenter partStack)
       {
          setActivePartStack(partStack);
       }
    }
 
    /**
-    * Defines Part's position on the Screen
-    */
-   public enum PartStackType {
-      /** 
-       * Contains navigation parts. Designed to navigate
-       * by project, types, classes and any other entities.
-       * Usually placed on the LEFT side of the IDE.
-       */
-      NAVIGATION,
-      /** 
-       * Contains informative parts. Designed to display
-       * the state of the application, project or processes.
-       * Usually placed on the BOTTOM side of the IDE.
-       */
-      INFORMATION,
-      /** 
-       * Contains editing parts. Designed to provide an
-       * ability to edit any resources or settings. 
-       * Usually placed in the CENTRAL part of the IDE.
-       */
-      EDITING,
-      /** 
-       * Contains tooling parts. Designed to provide handy
-       * features and utilities, access to other services 
-       * or any other features that are out of other PartType
-       * scopes.  
-       * Usually placed on the RIGHT side of the IDE.
-       */
-      TOOLING
-   }
-
-   /**
-    * 
+    * Instantiates PartAgent with provided factory and event bus
     */
    @Inject
-   public PartAgent(Provider<PartStackPresenter> partStackProvider)
+   public PartAgentPresenter(Provider<PartStackPresenter> partStackProvider, EventBus eventBus)
    {
+      this.eventBus = eventBus;
       for (PartStackType partStackType : PartStackType.values())
       {
          PartStackPresenter partStack = partStackProvider.get();
-         partStack.setFocusRequstHandler(new PartStackFocusRequstHandler(partStack));
+         partStack.setPartStackEventHandler(partStackHandler);
          partStacks.put(partStackType.toString(), partStack);
       }
    }
 
    /**
-    * Activate given part
-    * 
-    * @param part
+    * {@inheritDoc}
     */
+   @Override
    public void setActivePart(PartPresenter part)
    {
       PartStackPresenter destPartStack = findPartStackByPart(part);
@@ -117,7 +94,11 @@ public class PartAgent
       }
    }
 
-   public void setActivePartStack(PartStackPresenter partStack)
+   /**
+    * Activate given Part Stack
+    * @param partStack
+    */
+   protected void setActivePartStack(PartStackPresenter partStack)
    {
       // nothing to do
       if (activePartStack == partStack || partStack == null)
@@ -136,11 +117,9 @@ public class PartAgent
    }
 
    /**
-    * Add new Part
-    * 
-    * @param part
-    * @param type
-    */
+   * {@inheritDoc}
+   */
+   @Override
    public void addPart(PartPresenter part, PartStackType type)
    {
       PartStackPresenter destPartStack = partStacks.get(type.toString());
@@ -149,12 +128,23 @@ public class PartAgent
    }
 
    /**
+    * Expose PartStack of selected Type into given container
+    * 
+    * @param type
+    * @param container
+    */
+   public void go(PartStackType type, HasWidgets container)
+   {
+      getPartStack(type).go(container);
+   }
+
+   /**
     * Get PartStack by Type
     * 
     * @param type
     * @return
     */
-   public PartStackPresenter getPartStack(PartStackType type)
+   protected PartStackPresenter getPartStack(PartStackType type)
    {
       return partStacks.get(type.toString());
    }

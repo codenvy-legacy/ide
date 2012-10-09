@@ -18,44 +18,44 @@ package org.exoplatform.ide.core.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.json.JsonIntegerMap;
+import org.exoplatform.ide.part.PartPresenter;
 
 /**
  * Event that notifies of changed Core Expressions
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ExpressionsChangedEvent extends GwtEvent<ExpressionsChangedHandler>
+public class ActivePartChangedEvent extends GwtEvent<ActivePartChangedHandler>
 {
-   public static Type<ExpressionsChangedHandler> TYPE = new Type<ExpressionsChangedHandler>();
+   public static Type<ActivePartChangedHandler> TYPE = new Type<ActivePartChangedHandler>();
 
-   private final JsonIntegerMap<Boolean> expressions;
+   private final PartPresenter activePart;
 
    /**
     * @param expressions the map of ID's and current values
     */
-   public ExpressionsChangedEvent(JsonIntegerMap<Boolean> expressions)
+   public ActivePartChangedEvent(PartPresenter activePart)
    {
-      this.expressions = expressions;
+      this.activePart = activePart;
    }
 
    @Override
-   public Type<ExpressionsChangedHandler> getAssociatedType()
+   public Type<ActivePartChangedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    /**
-    * @return the map, having identifier of the expressions and their new values
+    * @return instance of Active Part
     */
-   public JsonIntegerMap<Boolean> getChangedExpressions()
+   public PartPresenter getActivePart()
    {
-      return expressions;
+      return activePart;
    }
 
    @Override
-   protected void dispatch(ExpressionsChangedHandler handler)
+   protected void dispatch(ActivePartChangedHandler handler)
    {
-      handler.onExpressionsChanged(this);
+      handler.onActivePartChanged(this);
    }
 }

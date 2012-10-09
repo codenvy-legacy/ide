@@ -22,15 +22,17 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.part.PartAgent;
+import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
+import org.exoplatform.ide.editor.EditorPartPresenter.EditorPartCloseHandler;
 import org.exoplatform.ide.editor.EditorProvider;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.part.PartAgent;
-import org.exoplatform.ide.part.PartAgent.PartStackType;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.util.loging.Log;
@@ -43,7 +45,19 @@ import org.exoplatform.ide.util.loging.Log;
 public class EditorAgent
 {
 
-   private JsonStringMap<EditorPartPresenter> openedEditors;
+   private final JsonStringMap<EditorPartPresenter> openedEditors;
+
+   /**
+    * Used to notify {@link EditorAgent} that editor has closed
+    */
+   private final EditorPartCloseHandler editorClosed = new EditorPartCloseHandler()
+   {
+      @Override
+      public void onClose(EditorPartPresenter editor)
+      {
+         editorClosed(editor);
+      }
+   };
 
    /**
     * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -110,18 +124,19 @@ public class EditorAgent
 
    public void openEditor(final File file)
    {
-//      if (openedEditors.containsKey(file.getId()))
-//      {
-//         partAgent.setActivePart(openedEditors.get(file.getId()));
-//      }
-//      else
-//      {
+      if (openedEditors.containsKey(file.getId()))
+      {
+         partAgent.setActivePart(openedEditors.get(file.getId()));
+      }
+      else
+      {
          FileType fileType = provider.getFileType(file);
          EditorProvider editorProvider = editorRegistry.getDefaultEditor(fileType);
          EditorPartPresenter editor = editorProvider.getEditor();
          try
          {
             editor.init(new EditorInputImpl(file));
+            editor.addCloseHandler(editorClosed);
          }
          catch (EditorInitException e)
          {
@@ -130,6 +145,24 @@ public class EditorAgent
          partAgent.addPart(editor, PartStackType.EDITING);
          openedEditors.put(file.getId(), editor);
       }
-//   }
+   }
+
+   /**
+    * @param target
+    */
+   protected void editorClosed(EditorPartPresenter editor)
+   {
+      JsonArray<String> keys = openedEditors.getKeys();
+      for (int i = 0; i < keys.size(); i++)
+      {
+         String fileId = keys.get(i);
+         // same instance
+         if (openedEditors.get(fileId) == editor)
+         {
+            openedEditors.remove(fileId);
+            return;
+         }
+      }
+   }
 
 }

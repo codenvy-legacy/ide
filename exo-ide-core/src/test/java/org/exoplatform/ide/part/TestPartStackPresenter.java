@@ -23,8 +23,9 @@ import static org.mockito.Mockito.*;
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.part.PartStackPresenter.FocusRequstHandler;
+import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,8 +50,14 @@ public class TestPartStackPresenter
    @Mock
    PartStackResources resources;
 
+   @Mock
+   EventBus eventBus;
+
    @InjectMocks
    PartStackPresenter stack;
+
+   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+   PartPresenter part;
 
    @Before
    public void disarm()
@@ -79,11 +86,14 @@ public class TestPartStackPresenter
    }
 
    @Test
-   public void shoudDelegateFocusHandlerToDisplay()
+   public void shoudNotifyPartChanged()
    {
-      FocusRequstHandler handler = mock(PartStackPresenter.FocusRequstHandler.class);
-      stack.setFocusRequstHandler(handler);
-      verify(display).setFocusRequstHandler(eq(handler));
+      PartStackPresenter.PartStackEventHandler handler = mock(PartStackPresenter.PartStackEventHandler.class);
+      stack.setPartStackEventHandler(handler);
+
+      stack.addPart(part);
+
+      verify(handler).onActivePartChanged(eq(part));
    }
 
    @Test
@@ -127,6 +137,7 @@ public class TestPartStackPresenter
       assertEquals("shoud activate part2", part2, stack.getActivePart());
    }
 
+   
    @Test
    public void shoudSetActivatePart()
    {
@@ -137,5 +148,43 @@ public class TestPartStackPresenter
       stack.addPart(part2);
       stack.setActivePart(part);
       assertEquals("shoud activate part", part, stack.getActivePart());
+   }
+
+   @Test
+   public void shoudNotifyActivatePart()
+   {
+      PartStackEventHandler handler = mock(PartStackEventHandler.class);
+
+      PartPresenter part = mock(PartPresenter.class);
+      PartPresenter part2 = mock(PartPresenter.class);
+      
+      when(part.onClose()).thenReturn(true);
+      when(part2.onClose()).thenReturn(true);
+      
+      stack.setPartStackEventHandler(handler);
+      
+      reset(handler);
+      stack.addPart(part);
+      verify(handler).onActivePartChanged(eq(part));
+      
+      reset(handler);
+      // check another activated
+      stack.addPart(part2);
+      verify(handler).onActivePartChanged(eq(part2));
+      
+      reset(handler);
+      // check first activated
+      stack.setActivePart(part);
+      verify(handler).onActivePartChanged(eq(part));
+      
+      reset(handler);
+      // imitate close, second should activate
+      stack.close(part);
+      verify(handler).onActivePartChanged(eq(part2));
+      
+      reset(handler);
+      // imitate close of the last one, active must be null
+      stack.close(part2);
+      verify(handler).onActivePartChanged((PartPresenter)isNull());
    }
 }

@@ -16,13 +16,7 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.googlecode.gwt.test.GwtTestWithMockito;
-import com.googlecode.gwt.test.utils.events.Browser;
 
 import org.junit.Test;
 
@@ -47,12 +41,12 @@ public class ProjectExplorerViewTest extends GwtTestWithMockito
    @Test
    public void shouldReactOnDoubleClick()
    {
-//      ProjectExpolorerView view = new ProjectExpolorerView();
-//      DoubleClickHandler clickHandler = mock(DoubleClickHandler.class);
-//      view.getTree().addDoubleClickHandler(clickHandler);
-//      Browser.dblClick(view.cellTree);
-//      // verify that double click event generated
-//      verify(clickHandler).onDoubleClick((DoubleClickEvent)any());
+      //      ProjectExpolorerView view = new ProjectExpolorerView();
+      //      DoubleClickHandler clickHandler = mock(DoubleClickHandler.class);
+      //      view.getTree().addDoubleClickHandler(clickHandler);
+      //      Browser.dblClick(view.cellTree);
+      //      // verify that double click event generated
+      //      verify(clickHandler).onDoubleClick((DoubleClickEvent)any());
    }
 
    @Test

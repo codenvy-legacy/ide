@@ -35,15 +35,22 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.part.PartStackPresenter.FocusRequstHandler;
 
 /**
+ * PartStack view class. Implements UI that manages Parts organized in a Tab-like widget.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public class PartStackView extends Composite implements PartStackPresenter.Display
 {
 
+   /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
+   public interface FocusRequstHandler
+   {
+      /** PartStack is being clicked and requests Focus */
+      void onRequestFocus();
+   }
+   
    private TabButton activeTab;
 
    // panels

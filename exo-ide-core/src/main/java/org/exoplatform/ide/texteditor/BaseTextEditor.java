@@ -29,6 +29,8 @@ import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
@@ -48,6 +50,8 @@ public class BaseTextEditor implements TextEditorPartPresenter
    protected final DocumentProvider documentProvider;
 
    protected EditorInput input;
+
+   private final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
 
    /**
     * @param documentProvider 
@@ -104,26 +108,6 @@ public class BaseTextEditor implements TextEditorPartPresenter
     */
    @Override
    public boolean isDirty()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#isSaveAsAllowed()
-    */
-   @Override
-   public boolean isSaveAsAllowed()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#isSaveOnCloseNeeded()
-    */
-   @Override
-   public boolean isSaveOnCloseNeeded()
    {
       // TODO Auto-generated method stub
       return false;
@@ -205,12 +189,22 @@ public class BaseTextEditor implements TextEditorPartPresenter
    }
 
    /**
-    * @see org.exoplatform.ide.part.PartPresenter#close()
+    * @see org.exoplatform.ide.part.PartPresenter#onClose()
     */
    @Override
-   public boolean close()
+   public boolean onClose()
    {
-      return true;
+      boolean allowClose = true;
+
+      if (allowClose)
+      {
+         for (int i = 0; i < closeHandlers.size(); i++)
+         {
+            EditorPartCloseHandler handler = closeHandlers.get(i);
+            handler.onClose(this);
+         }
+      }
+      return allowClose;
    }
 
    /**
@@ -220,6 +214,28 @@ public class BaseTextEditor implements TextEditorPartPresenter
    public void go(HasWidgets container)
    {
       container.add(getWidget());
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public void onOpen()
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public void addCloseHandler(EditorPartCloseHandler closeHandler)
+   {
+      if (!closeHandlers.contains(closeHandler))
+      {
+         closeHandlers.add(closeHandler);
+      }
    }
 
 }
