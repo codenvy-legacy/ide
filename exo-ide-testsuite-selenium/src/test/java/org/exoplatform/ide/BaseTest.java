@@ -220,11 +220,16 @@ public abstract class BaseTest
                selenium().selectFrame("relative=top");
             }
          }
+
          else if (isRunIdeAsStandalone())
          {
-            //            standaloneLogin(USER_NAME, USER_PASSWORD);
             IDE.LOGIN.waitStandaloneLogin();
             IDE.LOGIN.standaloneLogin(USER_NAME, USER_PASSWORD);
+         }
+         else if (isRunIdeAsTenant())
+         {
+            IDE.LOGIN.waitTenantAllLoginPage();
+            IDE.LOGIN.tenantLogin(USER_NAME, USER_PASSWORD);
          }
       }
       catch (Exception e)
@@ -609,16 +614,21 @@ public abstract class BaseTest
       return false;
    }
 
+   protected static boolean isRunIdeAsTenant()
+   {
+      return !isRunIdeAsStandalone()&&!isRunIdeAsShell();
+   }
+   
    protected static boolean isRunIdeAsStandalone()
    {
-      return !isRunIdeAsShell();
+      return IDE_SETTINGS.getString("ide.host").contains("localhost");
    }
 
    protected static boolean isRunIdeAsShell()
    {
       return Boolean.valueOf(IDE_SETTINGS.getString("ide.run.in.shell"));
    }
-
+ 
    protected boolean isRunTestUnderWindowsOS()
    {
       return selenium().getEval("/Win/.test(navigator.platform)").equals("true");
