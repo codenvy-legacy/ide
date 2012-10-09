@@ -6,7 +6,7 @@ Type {{help}} command and press *Enter* key to see the all command list with des
 
 1. General operations refer to virtual file system, project and job management.
 
-2. {{appcfg}} commands refer to configure of current application
+2. {{appcfg}} commands refer to configure of applications deployed to Google Application Engine
 
 3. {{git}} commands refer to operations with GIT version control system. 
 
@@ -45,10 +45,12 @@ h1. Virtual file system operations
 
 Commands below are aimed to perform file eXo IDE file system operations. 
 {tip}Use slash symbol as the path separator and around path consist of space symbols in double quotes.{tip}
-h2. Concatenate files and print on the console
+
+h2. Get list of files and folders
 {screen}
-cat <file>...
+ls <directory>
 {screen}
+*ls* displays info about current directory by default.
 
 h2. Changes the current folder
 {screen}
@@ -58,12 +60,6 @@ cd <directory>
 To go to root directory of workspace, use command *"cd /"*.
 To go to another project, use command *"cd /<another-project-name>"*.
 
-h2. Get list of files and folders
-{screen}
-ls <directory>
-{screen}
-*ls* displays info about current directory by default.
-
 h2. Create new directory
 {screen}
 mkdir <directory>...
@@ -72,6 +68,11 @@ mkdir <directory>...
 h2. Print current directory path
 {screen}
 pwd
+{screen}
+
+h2. Concatenate files and print on the console
+{screen}
+cat <file>...
 {screen}
 
 h2. Remove file or directory
@@ -166,4 +167,272 @@ git remote rm <name-of-remote>
 {screen}
 
 All remote-tracking branches and configuration settings for the remote are removed.
+
+
+h1. Get info about own applications deployed to Google Application Engine and configure them
+You can use this command to configuration and static files for your application, to manage datastore indexes and download log data.
+These commands should be launched only from root folder of application deployed to Google Application Engine, and after successful login to it from IDE application. 
+More information about Google Application Engine configuration can be found at the https://developers.google.com/appengine/docs/java/ and https://developers.google.com/appengine/docs/python
+
+h2. Display info about current application resource limits
+{screen}
+appcfg resource_limits_info
+{screen}
+
+For example:
+{code}
+{
+    "max_blob_size" : 32000000,
+    "max_file_size" : 32000000,
+    "max_file_count" : 10000,
+    "max_total_file_size" : 1073741824,
+    "max_files_to_clone" : 1000
+}
+{code}
+
+h2. Backends Config
+App Engine Backends are instances of your application that are exempt from request deadlines and have access to more memory and CPU than normal instances. They are designed for applications that need faster performance, large amounts of addressable memory, and continuous or long-running background processes. 
+Backends are configured using either backends.xml or backends.yaml. You can list each backend and specify its properties, such as the number of instances, the memory and CPU class, whether it is public or private, and other options. Backends share the servlets defined in web.xml with the main application version.
+
+??? You can place your backends in a separate application root directory if you want to avoid sharing code or handlers, or simply mark the relevant handlers with login: admin.
+
+More details can be found here [Java Backends Configuration|https://developers.google.com/appengine/docs/java/config/backends?hl=uk].
+
+h2. Create or update an app version
+{screen}
+appcfg update [-w/--war <bin>]
+{screen}
+
+h2.  Rollback an in-progress update
+{screen}
+appcfg rollback
+{screen}
+
+h3. List all backends
+{screen}
+appcfg backends
+{screen}
+
+h3. Roll back all in-progress update
+{screen}
+appcfg backends rollback
+{screen}
+
+h3. Update all backend
+{screen}
+appcfg backends update
+{screen}
+
+h3. Configure the specified backend
+{screen}
+appcfg backend configure <backend_name>
+{screen}
+
+h3. Update the specified backend
+{screen}
+appcfg backend update <backend_name>
+{screen}
+
+h3. Set start/stop state of the specified backend.
+{screen}
+appcfg backend set_state <backend_name> [-s/--state start/stop]
+{screen}
+
+h3. Roll back a previously in-progress update
+{screen}
+appcfg backend rollback
+{screeb}
+
+h3.  Delete the specified backend
+{screen}
+appcfg backend delete <backend_name>
+{screen}
+
+h2. Scheduled Tasks
+A cron.xml file in the WEB-INF directory of your application (alongside appengine-web.xml) controls cron for your Java application, as it is described here [Scheduled Tasks With Cron for Java|https://developers.google.com/appengine/docs/java/config/cron?hl=uk]
+
+h3. Displays times for the next several runs of each cron job
+{screen}
+appcfg cron_info
+{screen}
+
+h3. Update application cron jobs based on cron.xml
+{screen}
+appcfg update_cron
+{screen}
+
+h2. Get application's logs in Apache common log format
+{screen}
+appcfg request_logs -d/--days <number_of_days> -s/--severity <severity>
+{screen}
+
+Here:
+* --num_days: The number of days of log data to retrieve, ending on the current date at midnight UTC. A value of 0 retrieves all available logs.
+* --severity: The minimum log level for the log messages to retrieve. The value is a number corresponding to the log level: CRITICAL, ERROR, WARNING, INFO, DEBUG.
+
+
+h2. Upload configuration of DoS protection for an app
+The App Engine Denial of Service (DoS) Protection Service enables you to protect your application from running out of quota when subjected to denial of service attacks or similar forms of abuse. You can blacklist IP addresses or subnets, and requests routed from those addresses or subnets will be dropped before your application code is called. No resource allocations, billed or otherwise, are consumed for these requests.
+A dos.xml file in the WEB-INF directory of your application (alongside appengine-web.xml) configures DoS Protection Service blacklists for your application. See example here [DoS Protection Service for Java|https://developers.google.com/appengine/docs/java/config/dos?hl=uk].
+To save changes use next command:
+{screen}
+appcfg update_dos
+{screen}
+
+h2. Update page speed.
+
+You can add a pagespeed section to your application configuration. You can find example of configuration here [Custom PageSpeed Configuration|https://developers.google.com/appengine/docs/java/config/appconfig?hl=en#pagespeed]
+
+Use next command to involve new pagespeed configuration:
+{screen}
+appcfg update_pagespeed
+{screen}
+
+h2. Task Queue Config
+Java applications define task queues in a configuration file called queue.xml. This file is stored in the application's WEB-INF directory as it describe here [Java Task Queue Configuration|https://developers.google.com/appengine/docs/java/config/queue?hl=uk]
+To update application task queue definitions use command:
+{screen}
+appcfg update_queues
+{screen}
+
+h2. Index Config
+The App Engine datastore uses indexes for every query your application makes. You specify configuration for datastore indexes in WEB-INF/datastore-indexes.xml, in your app's war/ directory as it is described here [https://developers.google.com/appengine/docs/java/config/indexconfig?hl=uk|Java Datastore Index Configuration]
+
+h3. Update application indexes
+{screen}
+appcfg update_indexes
+{screen}
+
+h3. Delete unused indexes from application
+{screen}
+appcfg vacuum_indexes
+{screen}
+
+
+h1. Operations with Cloud Foundry PaaS
+
+You must be logged in to Cloud Foundry by using command "PaaS > CloudFoundry > Switch Account" before managing your account. 
+Application name can be omitted if you call command from root 
+
+h2. Preview and Change Cloud Foundry server URL
+
+h3. Preview Cloud Foundry server URL
+Preview current Cloud Foundry server URL:
+{screen}
+vmc target
+{screen}
+
+Get list of known URLs
+{screen}
+vmc targets
+{screen}
+
+h3. Change Cloud Foundry server URL
+{screen}
+vmc set-target <server-url>
+{screen}
+Parameter <server-url> is URL of another CloudFoundry server API. Default value is http://api.cloudfoundry.com.
+
+h2. Login to Cloud Foundry
+{screen}
+vmc login -e/--email <email> -p/--passwd <password>
+{screen}
+
+h2. Get Cloud Foundry system and account information
+{screen}
+vmc info
+{screen}
+
+h2. List deployed applications on Cloud Foundry
+{screen}
+vmc apps
+{screen}
+Example of output:
+{code}
+test@cloud-ide.com:Spring1$ vmc apps
+[
+    {
+        "name" : "NewProject",
+        "resources" : {
+            "memory" : 1000,
+            "disk" : 2048
+        },
+        "debug" : null,
+        "state" : "STOPPED",
+        "env" : [],
+        "version" : "1f2f4dd4115bf79d12ef893997cb40efc6dafeef-4",
+        "services" : [],
+        "uris" : [
+            "test_cloud-ide_newproject1.cloudfoundry.com"
+        ],
+        "staging" : {
+            "stack" : "java",
+            "model" : "spring"
+        },
+        "instances" : 2,
+        "runningInstances" : 0,
+        "meta" : {
+            "debug" : null,
+            "version" : 30,
+            "created" : 1349691106,
+            "console" : null
+        }
+    }
+]
+{code}
+
+h2. Start Cloud Foundry application
+{screen}
+vmc start [application-name]
+{screen}
+Application status will be displayed after the successful start.
+
+h2. Restart Cloud Foundry application
+{screen}
+vmc restart [application-name]
+{screen}
+Application status will be displayed after the successful restart.
+
+h2. Stop Cloud Foundry application
+{screen}
+vmc stop [application-name]
+{screen}
+
+h2.  Delete Cloud Foundry application
+{screen}
+vmc delete <application-name> [-d/--delete-services]
+{screen}
+Use "-d" or "--delete-services" option to delete services bounded to application.
+
+
+h2. Display resource usage for the Cloud Foundry application
+You should call launch this command from root folder of target Cloud Foundry project
+{screen}
+vmc stats [application-name]
+{screen}
+
+You will see something like the follow:
+{code}
+{
+    "0" : {
+        "name" : "Spring1",
+        "state" : "RUNNING",
+        "host" : "172.35.30.1",
+        "port" : 6590,
+        "uptime" : "0d:0h:1m:57s",
+        "uris" : [
+            "023851732_spring1.cloudfoundry.com"
+        ],
+        "cpu" : 2.3,
+        "mem" : 101,
+        "disk" : 9,
+        "cpuCores" : 4,
+        "memLimit" : 512,
+        "diskLimit" : 2048
+    }
+}
+{code}
+
+
+
 
