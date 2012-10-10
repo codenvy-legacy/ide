@@ -100,6 +100,8 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
 
    private final String TERMINATE = AWSExtension.LOCALIZATION_CONSTANT.terminateButton();
 
+   private final String LOGS = AWSExtension.LOCALIZATION_CONSTANT.logsButton();
+
    private Column<EnvironmentInfo, String> configurationColumn;
 
    private Column<EnvironmentInfo, String> restartColumn;
@@ -107,6 +109,8 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    private Column<EnvironmentInfo, String> rebuildColumn;
 
    private Column<EnvironmentInfo, String> terminateColumn;
+
+   private Column<EnvironmentInfo, String> logsColumn;
 
    public EnvironmentsGrid()
    {
@@ -220,6 +224,16 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
+      logsColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
+      {
+
+         @Override
+         public String getValue(EnvironmentInfo environmentInfo)
+         {
+            return LOGS;
+         }
+      };
+
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
       getCellTable().setColumnWidth(solutionStackColumn, "130px");
@@ -232,13 +246,14 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
       getCellTable().addColumn(restartColumn, RESTART);
       getCellTable().addColumn(rebuildColumn, REBUILD);
       getCellTable().addColumn(terminateColumn, TERMINATE);
+      getCellTable().addColumn(logsColumn, LOGS);
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addViewConfigurationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addEditConfigurationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addViewConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
+   public void addEditConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
       configurationColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {
@@ -289,6 +304,22 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    public void addTerminateHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
       terminateColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
+      {
+         @Override
+         public void update(int index, EnvironmentInfo environmentInfo, String value)
+         {
+            handler.onSelection(new SelectionEventImpl(environmentInfo));
+         }
+      });
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addLogsHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    */
+   @Override
+   public void addLogsHandler(final SelectionHandler<EnvironmentInfo> handler)
+   {
+      logsColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {
          @Override
          public void update(int index, EnvironmentInfo environmentInfo, String value)

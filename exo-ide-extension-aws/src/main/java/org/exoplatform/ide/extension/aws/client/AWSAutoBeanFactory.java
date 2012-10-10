@@ -36,9 +36,11 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.Event;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.S3Item;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.ec2.ImagesList;
@@ -106,6 +108,13 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link ConfigurationOptionRestriction}
     */
    AutoBean<ConfigurationOptionRestriction> configurationOptionRestriction();
+
+   /**
+    * A factory method for SolutionStackConfigurationOptionsRequest bean.
+    * 
+    * @return an {@link AutoBean} of type {@link SolutionStackConfigurationOptionsRequest}
+    */
+   AutoBean<SolutionStackConfigurationOptionsRequest> solutionStackConfigurationOptionsRequest();
 
    /**
     * A factory method for S3 item bean.
@@ -207,4 +216,11 @@ public interface AWSAutoBeanFactory extends AutoBeanFactory
    AutoBean<InstanceInfo> instanceInfo();
 
    AutoBean<NewS3Object> newS3Object();
+
+   /**
+    * A factory method for an instance log bean.
+    * 
+    * @return an {@link AutoBean} of type {@link InstanceLog}
+    */
+   AutoBean<InstanceLog> instanceLog();
 }

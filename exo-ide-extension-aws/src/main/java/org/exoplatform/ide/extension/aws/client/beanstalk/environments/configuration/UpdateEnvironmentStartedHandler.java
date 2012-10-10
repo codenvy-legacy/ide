@@ -18,19 +18,20 @@
  */
 package org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
- * Handler for {@link ViewConfigurationEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: ViewConfigurationHandler.java Oct 5, 2012 1:20:00 PM azatsarynnyy $
+ * @version $Id: UpdateEnvironmentStartedHandler.java Oct 1, 2012 4:47:04 PM azatsarynnyy $
  *
  */
-public interface ViewConfigurationHandler extends EventHandler
+public interface UpdateEnvironmentStartedHandler
 {
    /**
-    * @param event
+    * Perform actions, when update environment is started.
+    * 
+    * @param environmentInfo
     */
-   void onViewConfiguration(ViewConfigurationEvent event);
+   void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo);
 }

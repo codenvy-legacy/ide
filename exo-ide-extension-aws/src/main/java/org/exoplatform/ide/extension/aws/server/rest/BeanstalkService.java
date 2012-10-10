@@ -103,7 +103,8 @@ public class BeanstalkService
    }
 
    @Path("system/solution-stacks/options")
-   @GET
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
    public List<ConfigurationOptionInfo> listSolutionStackConfigurationOptions(
       SolutionStackConfigurationOptionsRequest params) throws AWSException

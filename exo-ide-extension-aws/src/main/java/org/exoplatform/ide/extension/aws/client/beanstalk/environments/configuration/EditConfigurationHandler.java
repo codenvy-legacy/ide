@@ -16,27 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environments;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration;
 
-import com.google.gwt.event.logical.shared.SelectionHandler;
-
-import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link EditConfigurationEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: HasEnvironmentActions.java Sep 28, 2012 4:57:58 PM azatsarynnyy $
+ * @version $Id: EditConfigurationHandler.java Oct 5, 2012 1:20:00 PM azatsarynnyy $
  *
  */
-public interface HasEnvironmentActions
+public interface EditConfigurationHandler extends EventHandler
 {
-   void addEditConfigurationHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addRestartHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addTerminateHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addRebuildHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addLogsHandler(SelectionHandler<EnvironmentInfo> handler);
+   /**
+    * @param event
+    */
+   void onEditConfiguration(EditConfigurationEvent event);
 }

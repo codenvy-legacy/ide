@@ -27,7 +27,7 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
 {
    private static final String ID = "ideManageApplicationView";
 
-   private static final int WIDTH = 930;
+   private static final int WIDTH = 995;
 
    private static final int HEIGHT = 360;
 
@@ -211,4 +211,5 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    {
       return environmentTabPain.getEnvironmentsGrid();
    }
+
 }

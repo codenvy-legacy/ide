@@ -566,6 +566,9 @@ public class MemoryFileSystem implements VirtualFileSystem
       templates.put(Link.REL_ITEM_BY_PATH, //
          new Link(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
 
+      templates.put(Link.REL_TREE, //
+         new Link(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));
+
       templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]"), //
             Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));

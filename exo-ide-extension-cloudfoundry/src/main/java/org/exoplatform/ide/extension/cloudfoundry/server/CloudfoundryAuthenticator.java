@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -134,7 +135,7 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
-      Writer w = new JsonHelper.FastStrWriter();
+      Writer w = new StringWriter();
       credentials.writeTo(w);
       writeFile(vfs, getConfigParent(vfs), "vmc_token", w.toString());
    }
@@ -161,23 +162,23 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
       return cloudFoundry;
    }
 
-   private void writeFile(VirtualFileSystem vfs, Folder parent, String file, String data) throws VirtualFileSystemException, IOException
+   private void writeFile(VirtualFileSystem vfs, Folder parent, String file, String data) throws VirtualFileSystemException
    {
       try
       {
-         Item credentialsFile =
+         Item fileItem =
             vfs.getItemByPath(parent.getPath() + '/' + file, null, PropertyFilter.NONE_FILTER);
          InputStream newContent = new ByteArrayInputStream(data.getBytes());
-         vfs.updateContent(credentialsFile.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
+         vfs.updateContent(fileItem.getId(), MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
       catch (ItemNotFoundException e)
       {
          InputStream content = new ByteArrayInputStream(data.getBytes());
-         Item credentialsFile = vfs.createFile(parent.getId(), file, MediaType.TEXT_PLAIN_TYPE, content);
-         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
+         Item fileItem = vfs.createFile(parent.getId(), file, MediaType.TEXT_PLAIN_TYPE, content);
+         List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(1);
          String user = ConversationState.getCurrent().getIdentity().getUserId();
          acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
-         vfs.updateACL(credentialsFile.getId(), acl, true, null);
+         vfs.updateACL(fileItem.getId(), acl, true, null);
       }
    }
 }

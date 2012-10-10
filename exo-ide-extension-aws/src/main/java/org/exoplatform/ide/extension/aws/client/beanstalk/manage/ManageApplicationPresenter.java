@@ -37,8 +37,10 @@ import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -52,12 +54,14 @@ import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsInfoListUnmarshaller;
+import org.exoplatform.ide.extension.aws.client.beanstalk.EnvironmentsLogListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ViewConfigurationEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.UpdateEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentEvent;
@@ -78,6 +82,7 @@ import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -201,6 +206,47 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
 
    // Environments
 
+   private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler = new UpdateEnvironmentStartedHandler()
+   {
+
+      @Override
+      public void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo)
+      {
+         if (environmentInfo == null)
+         {
+            return;
+         }
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentLaunching(environmentInfo
+            .getName()), Type.INFO));
+         RequestStatusHandler environmentStatusHandler =
+            new EnvironmentRequestStatusHandler(
+               AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentLaunching(environmentInfo.getName()),
+               AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentSuccess(environmentInfo.getName()));
+         JobManager.get().showJobSeparated();
+         new EnvironmentStatusChecker(vfs, project, environmentInfo, false, environmentStatusHandler).startChecking();
+      }
+   };
+
+   private RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler = new RebuildEnvironmentStartedHandler()
+   {
+
+      @Override
+      public void onRebuildEnvironmentStarted(EnvironmentInfo environmentInfo)
+      {
+         if (environmentInfo == null)
+         {
+            return;
+         }
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentLaunching(environmentInfo
+            .getName()), Type.INFO));
+         RequestStatusHandler environmentStatusHandler =
+            new EnvironmentRequestStatusHandler(
+               AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentLaunching(environmentInfo.getName()),
+               AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentSuccess(environmentInfo.getName()));
+         new EnvironmentStatusChecker(vfs, project, environmentInfo, false, environmentStatusHandler).startChecking();
+      }
+   };
+
    private TerminateEnvironmentStartedHandler terminateEnvironmentStartedHandler =
       new TerminateEnvironmentStartedHandler()
       {
@@ -223,25 +269,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       };
 
-   private RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler = new RebuildEnvironmentStartedHandler()
-   {
-
-      @Override
-      public void onRebuildEnvironmentStarted(EnvironmentInfo environmentInfo)
-      {
-         if (environmentInfo == null)
-         {
-            return;
-         }
-         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentLaunching(environmentInfo
-            .getName()), Type.INFO));
-         RequestStatusHandler environmentStatusHandler =
-            new EnvironmentRequestStatusHandler(
-               AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentLaunching(environmentInfo.getName()),
-               AWSExtension.LOCALIZATION_CONSTANT.rebuildEnvironmentSuccess(environmentInfo.getName()));
-         new EnvironmentStatusChecker(vfs, project, environmentInfo, false, environmentStatusHandler).startChecking();
-      }
-   };
+   // Versions
 
    private DeployVersionStartedHandler deployVersionStartedHandler = new DeployVersionStartedHandler()
    {
@@ -262,8 +290,6 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          new EnvironmentStatusChecker(vfs, project, environmentInfo, false, environmentStatusHandler).startChecking();
       }
    };
-
-   // Versions
 
    private VersionDeletedHandler versionDeletedHandler = new VersionDeletedHandler()
    {
@@ -357,7 +383,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addViewConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentActions().addEditConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
@@ -365,7 +391,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          {
             if (event.getSelectedItem() != null)
             {
-               IDE.fireEvent(new ViewConfigurationEvent(event.getSelectedItem().getName()));
+               IDE.fireEvent(new EditConfigurationEvent(event.getSelectedItem(), updateEnvironmentStartedHandler));
             }
          }
       });
@@ -397,6 +423,19 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          public void onSelection(SelectionEvent<EnvironmentInfo> event)
          {
             IDE.fireEvent(new TerminateEnvironmentEvent(event.getSelectedItem(), terminateEnvironmentStartedHandler));
+         }
+      });
+
+      display.getEnvironmentActions().addLogsHandler(new SelectionHandler<EnvironmentInfo>()
+      {
+
+         @Override
+         public void onSelection(SelectionEvent<EnvironmentInfo> event)
+         {
+            if (event.getSelectedItem() != null)
+            {
+               getLogs(event.getSelectedItem());
+            }
          }
       });
 
@@ -636,6 +675,82 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Get the environment logs.
+    * 
+    * @param environment {@link EnvironmentInfo}
+    */
+   private void getLogs(final EnvironmentInfo environment)
+   {
+      try
+      {
+         BeanstalkClientService.getInstance().getEnvironmentLogs(environment.getId(),
+            new AwsAsyncRequestCallback<List<InstanceLog>>(new EnvironmentsLogListUnmarshaller(), new LoggedInHandler()
+            {
+
+               @Override
+               public void onLoggedIn()
+               {
+                  getLogs(environment);
+               }
+            })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.logsEnvironmentFailed(environment.getName());
+                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                  {
+                     message += "<br>" + ((ServerException)exception).getMessage();
+                  }
+                  Dialogs.getInstance().showError(message);
+               }
+
+               @Override
+               protected void onSuccess(List<InstanceLog> result)
+               {
+                  if (result.size() == 0)
+                  {
+                     Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.logsPreparing());
+                     return;
+                  }
+
+                  StringBuffer message = new StringBuffer();
+                  for (InstanceLog instanceLog : result)
+                  {
+                     message.append(getUrl(instanceLog)).append("\n");
+                  }
+                  IDE.fireEvent(new OutputEvent(message.toString(), OutputMessage.Type.INFO));
+                  Dialogs.getInstance().showInfo(AWSExtension.LOCALIZATION_CONSTANT.seeOutputForLinkToLog());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Returns formatted URL.
+    * 
+    * @param instanceLog {@link InstanceLog}
+    * @return formatted URL
+    */
+   private String getUrl(InstanceLog instanceLog)
+   {
+      String logUrl = instanceLog.getLogUrl();
+      if (!logUrl.startsWith("http"))
+      {
+         logUrl = "http://" + logUrl;
+      }
+      logUrl =
+         "<a href=\"" + logUrl + "\" target=\"_blank\">"
+            + AWSExtension.LOCALIZATION_CONSTANT.viewLogFromInstance(instanceLog.getInstanceId()) + "</a>";
+      return logUrl;
    }
 
    /**

@@ -42,8 +42,10 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentReque
 import org.exoplatform.ide.extension.aws.shared.beanstalk.DeleteApplicationVersionRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 
@@ -94,6 +96,8 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    private static final String ENVIRONMENTS = BASE_URL + "/environments";
 
    private static final String ENVIRONMENTS_CONFIGURATION = BASE_URL + "/environments/configuration";
+
+   private static final String ENVIRONMENT_LOGS = BASE_URL + "/environments/logs/";
 
    private static final String VERSIONS = BASE_URL + "/apps/versions";
 
@@ -162,18 +166,20 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getSolutionStackConfigurationOptions(java.lang.String,
-    *      org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getSolutionStackConfigurationOptions(
+    *       org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getSolutionStackConfigurationOptions(String solutionStack,
+   public void getSolutionStackConfigurationOptions(SolutionStackConfigurationOptionsRequest request,
       AsyncRequestCallback<List<ConfigurationOptionInfo>> callback) throws RequestException
    {
-      StringBuilder url = new StringBuilder(restServiceContext);
-      url.append(SOLUTION_STACK_OPTIONS).append("?solution_stack=").append(solutionStack);
+      String url = restServiceContext + SOLUTION_STACK_OPTIONS;
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.GET, url.toString()).loader(loader)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    /**
@@ -395,6 +401,20 @@ public class BeanstalkClientServiceImpl extends BeanstalkClientService
       AsyncRequest.build(RequestBuilder.POST, url.toString()).loader(loader)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService#getEnvironmentLogs(java.lang.String,
+    *       org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void getEnvironmentLogs(String environmentId, AsyncRequestCallback<List<InstanceLog>> callback)
+      throws RequestException
+   {
+      String url = restServiceContext + ENVIRONMENT_LOGS + environmentId;
+
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+         .send(callback);
    }
 
    /**
