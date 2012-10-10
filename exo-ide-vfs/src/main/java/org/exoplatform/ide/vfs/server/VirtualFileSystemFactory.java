@@ -51,12 +51,19 @@ public class VirtualFileSystemFactory
    @Inject
    private EventListenerList listeners;
 
+   @Inject
+   RequestValidator requestValidator;
+
    @Context
    private Providers providers;
+
+   @Context
+   javax.servlet.http.HttpServletRequest request;
 
    @Path("{vfsId}")
    public VirtualFileSystem getFileSystem(@PathParam("vfsId") String vfsId) throws VirtualFileSystemException
    {
+      validateRequest();
       VirtualFileSystemProvider provider = registry.getProvider(vfsId);
       return provider.newInstance(getContext(), listeners);
    }
@@ -65,6 +72,7 @@ public class VirtualFileSystemFactory
    @Produces(MediaType.APPLICATION_JSON)
    public Collection<VirtualFileSystemInfo> getAvailableFileSystems() throws VirtualFileSystemException
    {
+      validateRequest();
       Collection<VirtualFileSystemProvider> vfsProviders = registry.getRegisteredProviders();
       List<VirtualFileSystemInfo> result = new ArrayList<VirtualFileSystemInfo>(vfsProviders.size());
       RequestContext context = getContext();
@@ -74,6 +82,14 @@ public class VirtualFileSystemFactory
          result.add(fs.getInfo());
       }
       return result;
+   }
+
+   private void validateRequest()
+   {
+      if (requestValidator != null)
+      {
+         requestValidator.validate(request);
+      }
    }
 
    protected RequestContext getContext()
