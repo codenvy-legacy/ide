@@ -179,11 +179,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("InstanceType", event.getValue());
-            }
+            addOptionToListForSave("InstanceType", event.getValue());
          }
       });
 
@@ -193,11 +189,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("SecurityGroups", event.getValue());
-            }
+            addOptionToListForSave("SecurityGroups", event.getValue());
          }
       });
 
@@ -207,11 +199,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("EC2KeyName", event.getValue());
-            }
+            addOptionToListForSave("EC2KeyName", event.getValue());
          }
       });
 
@@ -221,11 +209,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("MonitoringInterval", event.getValue());
-            }
+            addOptionToListForSave("MonitoringInterval", event.getValue());
          }
       });
 
@@ -235,11 +219,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("ImageId", event.getValue());
-            }
+            addOptionToListForSave("ImageId", event.getValue());
          }
       });
 
@@ -249,11 +229,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("Application Healthcheck URL", event.getValue());
-            }
+            addOptionToListForSave("Application Healthcheck URL", event.getValue());
          }
       });
 
@@ -263,11 +239,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("Interval", event.getValue());
-            }
+            addOptionToListForSave("Interval", event.getValue());
          }
       });
 
@@ -277,11 +249,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("Timeout", event.getValue());
-            }
+            addOptionToListForSave("Timeout", event.getValue());
          }
       });
 
@@ -291,11 +259,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("HealthyThreshold", event.getValue());
-            }
+            addOptionToListForSave("HealthyThreshold", event.getValue());
          }
       });
 
@@ -305,11 +269,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("UnhealthyThreshold", event.getValue());
-            }
+            addOptionToListForSave("UnhealthyThreshold", event.getValue());
          }
       });
 
@@ -319,11 +279,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("Xms", event.getValue());
-            }
+            addOptionToListForSave("Xms", event.getValue());
          }
       });
 
@@ -333,11 +289,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("Xmx", event.getValue());
-            }
+            addOptionToListForSave("Xmx", event.getValue());
          }
       });
 
@@ -347,11 +299,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("XX:MaxPermSize", event.getValue());
-            }
+            addOptionToListForSave("XX:MaxPermSize", event.getValue());
          }
       });
 
@@ -361,20 +309,22 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
-            if (event.getSource() != null)
-            {
-               addToOptionsListToSave("JVM Options", event.getValue());
-            }
+            addOptionToListForSave("JVM Options", event.getValue());
          }
       });
 
    }
 
-   private void addToOptionsListToSave(String optionName, String newValue)
+   /**
+    * Add modified configuration option to list for save.
+    * 
+    * @param optionName the name of {@link ConfigurationOption} which is modified
+    * @param optionValue the new value of {@link ConfigurationOption} which is modified
+    */
+   private void addOptionToListForSave(String optionName, String optionValue)
    {
       ConfigurationOption configurationOption = modifiedOptionsMap.get(optionName);
-      configurationOption.setValue(newValue);
+      configurationOption.setValue(optionValue);
       int optionIndex = modifiedOptionsList.indexOf(configurationOption);
       if (optionIndex == -1)
       {
@@ -392,11 +342,11 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       environmentInfo = event.getEnvironment();
       if (environmentInfo != null)
       {
-         getConfigurationOptions(environmentInfo);
+         getConfigurationOptions();
       }
    }
 
-   private void getConfigurationOptions(final EnvironmentInfo environmentInfo)
+   private void getConfigurationOptions()
    {
       SolutionStackConfigurationOptionsRequest request =
          AWSExtension.AUTO_BEAN_FACTORY.solutionStackConfigurationOptionsRequest().as();
@@ -412,7 +362,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                   @Override
                   public void onLoggedIn()
                   {
-                     getConfigurationOptions(environmentInfo);
+                     getConfigurationOptions();
                   }
                })
             {
@@ -420,19 +370,16 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                @Override
                protected void processFail(Throwable exception)
                {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.getEnvironmentConfigurationFailed();
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
-                  {
-                     message += "<br>" + ((ServerException)exception).getMessage();
-                  }
-                  Dialogs.getInstance().showError(message);
+                  // If get the list of ConfigurationOptionInfo is fail then show the view anyway.
+                  // In this case, drop-down lists will have only one value (current).
+                  getConfigurationsList();
                }
 
                @Override
                protected void onSuccess(List<ConfigurationOptionInfo> result)
                {
                   configurationOptionInfoList = result;
-                  getConfigurationList(environmentInfo);
+                  getConfigurationsList();
                }
             });
       }
@@ -442,7 +389,10 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       }
    }
 
-   private void getConfigurationList(final EnvironmentInfo environmentInfo)
+   /**
+    * Get the list of environment configurations.
+    */
+   private void getConfigurationsList()
    {
       ConfigurationRequest configurationRequest = AWSExtension.AUTO_BEAN_FACTORY.configurationRequest().as();
       configurationRequest.setEnvironmentName(environmentInfo.getName());
@@ -455,63 +405,23 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                @Override
                public void onLoggedIn()
                {
-                  getConfigurationList(environmentInfo);
+                  getConfigurationsList();
                }
             })
             {
                @Override
                protected void onSuccess(List<Configuration> result)
                {
+                  // TODO make possible to edit several configuration templates
                   if (result.size() > 0)
                   {
-                     showEnvConfiguration(result.get(0));
+                     showConfiguration(result.get(0));
                   }
-               }
-
-               @Override
-               protected void processFail(Throwable exception)
-               {
-                  String message = AWSExtension.LOCALIZATION_CONSTANT.getEnvironmentConfigurationFailed();
-                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                  else
                   {
-                     message += "<br>" + ((ServerException)exception).getMessage();
+                     String message = AWSExtension.LOCALIZATION_CONSTANT.getEnvironmentConfigurationFailed();
+                     Dialogs.getInstance().showError(message);
                   }
-                  Dialogs.getInstance().showError(message);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void getEnvConfiguration(final String environmentName)
-   {
-      ConfigurationRequest configurationRequest = AWSExtension.AUTO_BEAN_FACTORY.configurationRequest().as();
-      configurationRequest.setApplicationName(openedProject.getName());
-      configurationRequest.setEnvironmentName(environmentName);
-      try
-      {
-         AutoBean<Configuration> autoBean = AWSExtension.AUTO_BEAN_FACTORY.configuration();
-         BeanstalkClientService.getInstance().getConfigurationTemplate(
-            vfsInfo.getId(),
-            openedProject.getId(),
-            configurationRequest,
-            new AwsAsyncRequestCallback<Configuration>(new AutoBeanUnmarshaller<Configuration>(autoBean),
-               new LoggedInHandler()
-               {
-                  @Override
-                  public void onLoggedIn()
-                  {
-                     getEnvConfiguration(environmentName);
-                  }
-               })
-            {
-               @Override
-               protected void onSuccess(Configuration result)
-               {
-                  showEnvConfiguration(result);
                }
 
                @Override
@@ -537,111 +447,112 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
     * 
     * @param envConfiguration {@link Configuration}
     */
-   private void showEnvConfiguration(Configuration envConfiguration)
+   private void showConfiguration(Configuration envConfiguration)
    {
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
-         bindDisplay();
       }
 
-      modifiedOptionsMap = new HashMap<String, ConfigurationOption>();
       modifiedOptionsList = new ArrayList<ConfigurationOption>();
+      modifiedOptionsMap = new HashMap<String, ConfigurationOption>();
       for (ConfigurationOption option : envConfiguration.getOptions())
       {
-         if (option.getNamespace().equals("aws:autoscaling:launchconfiguration"))
-         {
-            if (option.getName().equals("InstanceType"))
-            {
-               display.setEC2InstanceTypeValues(new String[]{option.getValue()}, option.getValue());
-               // fill value options
-               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
-               {
-                  if (optionInfo.getName().equals("InstanceType"))
-                  {
-                     List<String> valueOptionsList = optionInfo.getValueOptions();
-                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
-                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
-                  }
-               }
-            }
-            else if (option.getName().equals("SecurityGroups"))
-            {
-               display.getEC2SecurityGroupsField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("EC2KeyName"))
-            {
-               display.getKeyNameField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("MonitoringInterval"))
-            {
-               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
-               {
-                  if (optionInfo.getName().equals("MonitoringInterval"))
-                  {
-                     List<String> valueOptionsList = optionInfo.getValueOptions();
-                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
-                     display.setMonitoringIntervalValues(valueOptions, option.getValue());
-                  }
-               }
-               //display.setMonitoringIntervalValues(new String[]{option.getValue()}, option.getValue());
-               //display.getMonitoringIntervalField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("ImageId"))
-            {
-               display.getImageIdField().setValue(option.getValue());
-            }
-         }
-         else if (option.getNamespace().equals("aws:elasticbeanstalk:application"))
-         {
-            if (option.getName().equals("Application Healthcheck URL"))
-            {
-               display.getAppHealthCheckCheckUrlField().setValue(option.getValue());
-            }
-         }
-         else if (option.getNamespace().equals("aws:elb:healthcheck"))
-         {
-            if (option.getName().equals("Interval"))
-            {
-               display.getHealthCheckIntervalField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("Timeout"))
-            {
-               display.getHealthCheckTimeoutField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("HealthyThreshold"))
-            {
-               display.getHealthyThresholdField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("UnhealthyThreshold"))
-            {
-               display.getUnhealthyThresholdField().setValue(option.getValue());
-            }
-         }
-         else if (option.getNamespace().equals("aws:elasticbeanstalk:container:tomcat:jvmoptions"))
-         {
-            if (option.getName().equals("Xms"))
-            {
-               display.getInitialJVMHeapSizeField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("Xmx"))
-            {
-               display.getMaximumJVMHeapSizeField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("XX:MaxPermSize"))
-            {
-               display.getMaxPermSizeField().setValue(option.getValue());
-            }
-            else if (option.getName().equals("JVM Options"))
-            {
-               display.getJVMOptionsField().setValue(option.getValue());
-            }
-         }
          modifiedOptionsMap.put(option.getName(), option);
+
+         if (option.getName().equals("InstanceType"))
+         {
+            String[] valueOptions = getValueOptionsForConfigurationOption(option);
+            display.setEC2InstanceTypeValues(valueOptions, option.getValue());
+         }
+         else if (option.getName().equals("SecurityGroups"))
+         {
+            display.getEC2SecurityGroupsField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("EC2KeyName"))
+         {
+            display.getKeyNameField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("MonitoringInterval"))
+         {
+            String[] valueOptions = getValueOptionsForConfigurationOption(option);
+            display.setMonitoringIntervalValues(valueOptions, option.getValue());
+         }
+         else if (option.getName().equals("ImageId"))
+         {
+            display.getImageIdField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("Application Healthcheck URL"))
+         {
+            display.getAppHealthCheckCheckUrlField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("Interval"))
+         {
+            display.getHealthCheckIntervalField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("Timeout"))
+         {
+            display.getHealthCheckTimeoutField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("HealthyThreshold"))
+         {
+            display.getHealthyThresholdField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("UnhealthyThreshold"))
+         {
+            display.getUnhealthyThresholdField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("Xms"))
+         {
+            display.getInitialJVMHeapSizeField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("Xmx"))
+         {
+            display.getMaximumJVMHeapSizeField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("XX:MaxPermSize"))
+         {
+            display.getMaxPermSizeField().setValue(option.getValue(), false);
+         }
+         else if (option.getName().equals("JVM Options"))
+         {
+            display.getJVMOptionsField().setValue(option.getValue(), false);
+         }
       }
+
+      // bind Display after settings field values to avoid invoking ValueChangeHandler of fields
+      bindDisplay();
    }
 
+   /**
+    * Returns array of value options for the specified {@link ConfigurationOption}.
+    * 
+    * @param option the {@link ConfigurationOption}
+    * @return array of value options
+    */
+   private String[] getValueOptionsForConfigurationOption(ConfigurationOption option)
+   {
+      if (configurationOptionInfoList == null)
+      {
+         return new String[]{option.getValue()};
+      }
+
+      for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
+      {
+         if (optionInfo.getName().equals(option.getName()))
+         {
+            List<String> valueOptionsList = optionInfo.getValueOptions();
+            return valueOptionsList.toArray(new String[valueOptionsList.size()]);
+         }
+      }
+
+      return new String[]{option.getValue()};
+   }
+
+   /**
+    * Save the modified configuration.
+    */
    private void applyConfiguration()
    {
       UpdateEnvironmentRequest updateEnvironmentRequest =
