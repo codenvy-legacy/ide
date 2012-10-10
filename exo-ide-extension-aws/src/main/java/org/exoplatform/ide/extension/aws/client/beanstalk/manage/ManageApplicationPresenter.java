@@ -37,6 +37,7 @@ import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -60,6 +61,7 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.environments.Environme
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationEvent;
+import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.UpdateEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.rebuild.RebuildEnvironmentEvent;
@@ -203,6 +205,27 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
    };
 
    // Environments
+
+   private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler = new UpdateEnvironmentStartedHandler()
+   {
+
+      @Override
+      public void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo)
+      {
+         if (environmentInfo == null)
+         {
+            return;
+         }
+         IDE.fireEvent(new OutputEvent(AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentLaunching(environmentInfo
+            .getName()), Type.INFO));
+         RequestStatusHandler environmentStatusHandler =
+            new EnvironmentRequestStatusHandler(
+               AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentLaunching(environmentInfo.getName()),
+               AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentSuccess(environmentInfo.getName()));
+         JobManager.get().showJobSeparated();
+         new EnvironmentStatusChecker(vfs, project, environmentInfo, false, environmentStatusHandler).startChecking();
+      }
+   };
 
    private RebuildEnvironmentStartedHandler rebuildEnvironmentStartedHandler = new RebuildEnvironmentStartedHandler()
    {
@@ -360,7 +383,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addViewConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentActions().addEditConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
@@ -368,7 +391,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          {
             if (event.getSelectedItem() != null)
             {
-               IDE.fireEvent(new EditConfigurationEvent(event.getSelectedItem()));
+               IDE.fireEvent(new EditConfigurationEvent(event.getSelectedItem(), updateEnvironmentStartedHandler));
             }
          }
       });

@@ -130,12 +130,14 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
     */
    private List<ConfigurationOptionInfo> configurationOptionInfoList;
 
-   private Map<String, ConfigurationOption> modifiedOptionsMap = new HashMap<String, ConfigurationOption>();
+   private Map<String, ConfigurationOption> modifiedOptionsMap;
 
    /**
     * List of modified configuration options to save.
     */
-   private List<ConfigurationOption> modifiedOptionsList = new ArrayList<ConfigurationOption>();
+   private List<ConfigurationOption> modifiedOptionsList;
+
+   private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler;
 
    public EditConfigurationPresenter()
    {
@@ -177,18 +179,137 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
             if (event.getSource() != null)
             {
                addToOptionsListToSave("InstanceType", event.getValue());
             }
+         }
+      });
 
-//            for (ConfigurationOption option : modifiedOptionsList)
-//            {
-//               if (option.getName().equals("InstanceType"))
-//               {
-//                  option.setValue(event.getValue());
-//               }
-//            }
+      display.getEC2SecurityGroupsField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("SecurityGroups", event.getValue());
+            }
+         }
+      });
+
+      display.getKeyNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("EC2KeyName", event.getValue());
+            }
+         }
+      });
+
+      display.getMonitoringIntervalField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("MonitoringInterval", event.getValue());
+            }
+         }
+      });
+
+      display.getImageIdField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("ImageId", event.getValue());
+            }
+         }
+      });
+
+      display.getAppHealthCheckCheckUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("Application Healthcheck URL", event.getValue());
+            }
+         }
+      });
+
+      display.getHealthCheckIntervalField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("Interval", event.getValue());
+            }
+         }
+      });
+
+      display.getHealthCheckTimeoutField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("Timeout", event.getValue());
+            }
+         }
+      });
+
+      display.getHealthyThresholdField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("HealthyThreshold", event.getValue());
+            }
+         }
+      });
+
+      display.getUnhealthyThresholdField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("UnhealthyThreshold", event.getValue());
+            }
          }
       });
 
@@ -198,18 +319,53 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
             if (event.getSource() != null)
             {
                addToOptionsListToSave("Xms", event.getValue());
             }
+         }
+      });
 
-//            for (ConfigurationOption option : modifiedOptionsList)
-//            {
-//               if (option.getName().equals("Xms"))
-//               {
-//                  option.setValue(event.getValue());
-//               }
-//            }
+      display.getMaximumJVMHeapSizeField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("Xmx", event.getValue());
+            }
+         }
+      });
+
+      display.getMaxPermSizeField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("XX:MaxPermSize", event.getValue());
+            }
+         }
+      });
+
+      display.getJVMOptionsField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            // check event source to avoid concurrent modification of modifiedOptionsMap from method showEnvConfiguration()
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("JVM Options", event.getValue());
+            }
          }
       });
 
@@ -232,6 +388,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
    @Override
    public void onEditConfiguration(EditConfigurationEvent event)
    {
+      this.updateEnvironmentStartedHandler = event.getUpdateEnvironmentStartedHandler();
       environmentInfo = event.getEnvironment();
       if (environmentInfo != null)
       {
@@ -390,6 +547,8 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          bindDisplay();
       }
 
+      modifiedOptionsMap = new HashMap<String, ConfigurationOption>();
+      modifiedOptionsList = new ArrayList<ConfigurationOption>();
       for (ConfigurationOption option : envConfiguration.getOptions())
       {
          if (option.getNamespace().equals("aws:autoscaling:launchconfiguration"))
@@ -398,15 +557,15 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
             {
                display.setEC2InstanceTypeValues(new String[]{option.getValue()}, option.getValue());
                // fill value options
-//               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
-//               {
-//                  if (optionInfo.getName().equals("InstanceType"))
-//                  {
-//                     List<String> valueOptionsList = optionInfo.getValueOptions();
-//                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
-//                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
-//                  }
-//               }
+               //               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
+               //               {
+               //                  if (optionInfo.getName().equals("InstanceType"))
+               //                  {
+               //                     List<String> valueOptionsList = optionInfo.getValueOptions();
+               //                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
+               //                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
+               //                  }
+               //               }
             }
             else if (option.getName().equals("SecurityGroups"))
             {
@@ -507,10 +666,10 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                   {
                      IDE.getInstance().closeView(display.asView().getId());
                   }
-//                  if (deployVersionStartedHandler != null)
-//                  {
-//                     deployVersionStartedHandler.onDeployVersionStarted(environments.get(environmentId));
-//                  }
+                  if (updateEnvironmentStartedHandler != null)
+                  {
+                     updateEnvironmentStartedHandler.onUpdateEnvironmentStarted(environmentInfo);
+                  }
                }
 
                @Override
