@@ -73,6 +73,10 @@
                <g:Label text="{locale.launchEnvironmentSolutionStack}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
                <f:SelectItem ui:field="solutionStackField" width="69%" height="22px" addStyleNames="{style.right}"></f:SelectItem>
             </g:FlowPanel>
+            <g:FlowPanel width="100%" height="30px">
+               <g:Label text="{locale.launchEnvironmentVersions}" addStyleNames="{style.labelH} {style.middle}" width="30%"></g:Label>
+               <f:SelectItem ui:field="versionsField" width="69%" height="22px" addStyleNames="{style.right}"></f:SelectItem>
+            </g:FlowPanel>
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">

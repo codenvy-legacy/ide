@@ -237,6 +237,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("launch.environment.solution.stack")
    String launchEnvironmentSolutionStack();
 
+   @Key("launch.environment.versions")
+   String launchEnvironmentVersions();
+
    @Key("launch.environment.launch")
    String launchEnvironmentLaunch();
 
