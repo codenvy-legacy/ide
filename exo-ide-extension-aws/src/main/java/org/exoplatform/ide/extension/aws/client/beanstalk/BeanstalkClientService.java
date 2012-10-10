@@ -32,8 +32,10 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateApplicationVersi
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EventsList;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ListEventsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateApplicationRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 
@@ -90,11 +92,11 @@ public abstract class BeanstalkClientService
    /**
     * Returns configuration options of the solution stack.
     * 
-    * @param solutionStack
+    * @param request
     * @param callback
     * @throws RequestException
     */
-   public abstract void getSolutionStackConfigurationOptions(String solutionStack,
+   public abstract void getSolutionStackConfigurationOptions(SolutionStackConfigurationOptionsRequest request,
       AsyncRequestCallback<List<ConfigurationOptionInfo>> callback) throws RequestException;
 
    /**
@@ -253,6 +255,16 @@ public abstract class BeanstalkClientService
     */
    public abstract void updateEnvironment(String environmentId, UpdateEnvironmentRequest updateEnvironmentRequest,
       AsyncRequestCallback<EnvironmentInfo> callback) throws RequestException;
+
+   /**
+    * Returns the list of web servers startup logs for a specified environment.
+    * 
+    * @param environmentId
+    * @param callback
+    * @throws RequestException
+    */
+   public abstract void getEnvironmentLogs(String environmentId, AsyncRequestCallback<List<InstanceLog>> callback)
+      throws RequestException;
 
    /**
     * Returns the list of application versions.

@@ -61,7 +61,7 @@ public class EditConfigurationView extends ViewImpl implements EditConfiguration
    /**
     * OK button.
     */
-   //@UiField
+   @UiField
    ImageButton okButton;
 
    /**
@@ -126,6 +126,15 @@ public class EditConfigurationView extends ViewImpl implements EditConfiguration
    }
 
    /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationPresenter.Display#setEC2InstanceTypeValues(java.lang.String[], java.lang.String)
+    */
+   @Override
+   public void setEC2InstanceTypeValues(String[] values, String selected)
+   {
+      serverTabPain.setEC2InstanceTypeValues(values, selected);
+   }
+
+   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationPresenter.Display#getEC2SecurityGroupsField()
     */
    @Override
@@ -147,9 +156,18 @@ public class EditConfigurationView extends ViewImpl implements EditConfiguration
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationPresenter.Display#getMonitoringIntervalField()
     */
    @Override
-   public TextFieldItem getMonitoringIntervalField()
+   public HasValue<String> getMonitoringIntervalField()
    {
       return serverTabPain.getMonitoringIntervalField();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationPresenter.Display#setMonitoringIntervalValues(java.lang.String[], java.lang.String)
+    */
+   @Override
+   public void setMonitoringIntervalValues(String[] values, String selectedValue)
+   {
+      serverTabPain.setMonitoringIntervalValues(values, selectedValue);
    }
 
    /**

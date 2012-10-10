@@ -22,6 +22,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -34,6 +36,8 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -44,15 +48,21 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
-import org.exoplatform.ide.extension.aws.client.beanstalk.ConfigurationListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOption;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationOptionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ConfigurationRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStackConfigurationOptionsRequest;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentRequest;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Presenter for edit environment's configuration.
@@ -62,7 +72,7 @@ import java.util.List;
  *
  */
 public class EditConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   ViewConfigurationHandler, ViewClosedHandler
+   EditConfigurationHandler, ViewClosedHandler
 {
 
    interface Display extends IsView
@@ -74,11 +84,15 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       // Server tab
       HasValue<String> getEC2InstanceTypeField();
 
+      void setEC2InstanceTypeValues(String[] values, String selectedValue);
+
       TextFieldItem getEC2SecurityGroupsField();
 
       TextFieldItem getKeyNameField();
 
-      TextFieldItem getMonitoringIntervalField();
+      HasValue<String> getMonitoringIntervalField();
+
+      void setMonitoringIntervalValues(String[] values, String selectedValue);
 
       TextFieldItem getImageIdField();
 
@@ -101,7 +115,6 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       TextFieldItem getMaxPermSizeField();
 
       TextFieldItem getJVMOptionsField();
-      
    }
 
    private Display display;
@@ -110,9 +123,23 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
 
    private VirtualFileSystemInfo vfsInfo;
 
+   private EnvironmentInfo environmentInfo;
+
+   /**
+    * List of information about configuration options.
+    */
+   private List<ConfigurationOptionInfo> configurationOptionInfoList;
+
+   private Map<String, ConfigurationOption> modifiedOptionsMap = new HashMap<String, ConfigurationOption>();
+
+   /**
+    * List of modified configuration options to save.
+    */
+   private List<ConfigurationOption> modifiedOptionsList = new ArrayList<ConfigurationOption>();
+
    public EditConfigurationPresenter()
    {
-      IDE.addHandler(ViewConfigurationEvent.TYPE, this);
+      IDE.addHandler(EditConfigurationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
@@ -124,6 +151,16 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
     */
    public void bindDisplay()
    {
+      display.getOkButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            applyConfiguration();
+         }
+      });
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
@@ -133,24 +170,126 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
+
+      display.getEC2InstanceTypeField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("InstanceType", event.getValue());
+            }
+
+//            for (ConfigurationOption option : modifiedOptionsList)
+//            {
+//               if (option.getName().equals("InstanceType"))
+//               {
+//                  option.setValue(event.getValue());
+//               }
+//            }
+         }
+      });
+
+      display.getInitialJVMHeapSizeField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            if (event.getSource() != null)
+            {
+               addToOptionsListToSave("Xms", event.getValue());
+            }
+
+//            for (ConfigurationOption option : modifiedOptionsList)
+//            {
+//               if (option.getName().equals("Xms"))
+//               {
+//                  option.setValue(event.getValue());
+//               }
+//            }
+         }
+      });
+
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ViewConfigurationHandler#onViewConfiguration(org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.ViewConfigurationEvent)
-    */
-   @Override
-   public void onViewConfiguration(ViewConfigurationEvent event)
+   private void addToOptionsListToSave(String optionName, String newValue)
    {
-      if (event.getEnvironmentName() != null)
+      ConfigurationOption configurationOption = modifiedOptionsMap.get(optionName);
+      configurationOption.setValue(newValue);
+      int optionIndex = modifiedOptionsList.indexOf(configurationOption);
+      if (optionIndex == -1)
       {
-         getConfigurationList(event.getEnvironmentName());
+         modifiedOptionsList.add(configurationOption);
       }
    }
 
-   private void getConfigurationList(final String environmentName)
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationHandler#onEditConfiguration(org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationEvent)
+    */
+   @Override
+   public void onEditConfiguration(EditConfigurationEvent event)
+   {
+      environmentInfo = event.getEnvironment();
+      if (environmentInfo != null)
+      {
+         //getConfigurationOptions(event.getEnvironment());
+         getConfigurationList(environmentInfo);
+      }
+   }
+
+   private void getConfigurationOptions(final EnvironmentInfo environmentInfo)
+   {
+      SolutionStackConfigurationOptionsRequest request =
+         AWSExtension.AUTO_BEAN_FACTORY.solutionStackConfigurationOptionsRequest().as();
+      request.setSolutionStackName(environmentInfo.getSolutionStackName());
+      try
+      {
+         BeanstalkClientService.getInstance().getSolutionStackConfigurationOptions(
+            request,
+            new AwsAsyncRequestCallback<List<ConfigurationOptionInfo>>(new ConfigurationOptionInfoListUnmarshaller(),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getConfigurationOptions(environmentInfo);
+                  }
+               })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+                  String message = AWSExtension.LOCALIZATION_CONSTANT.getEnvironmentConfigurationFailed();
+                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                  {
+                     message += "<br>" + ((ServerException)exception).getMessage();
+                  }
+                  Dialogs.getInstance().showError(message);
+               }
+
+               @Override
+               protected void onSuccess(List<ConfigurationOptionInfo> result)
+               {
+                  configurationOptionInfoList = result;
+                  getConfigurationList(environmentInfo);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void getConfigurationList(final EnvironmentInfo environmentInfo)
    {
       ConfigurationRequest configurationRequest = AWSExtension.AUTO_BEAN_FACTORY.configurationRequest().as();
-      configurationRequest.setEnvironmentName(environmentName);
+      configurationRequest.setEnvironmentName(environmentInfo.getName());
       try
       {
          BeanstalkClientService.getInstance().getEnvironmentConfigurations(vfsInfo.getId(), openedProject.getId(),
@@ -160,7 +299,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                @Override
                public void onLoggedIn()
                {
-                  getConfigurationList(environmentName);
+                  getConfigurationList(environmentInfo);
                }
             })
             {
@@ -251,14 +390,23 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
          bindDisplay();
       }
 
-//      Map<String, String> map = new HashMap<String, String>();
       for (ConfigurationOption option : envConfiguration.getOptions())
       {
          if (option.getNamespace().equals("aws:autoscaling:launchconfiguration"))
          {
             if (option.getName().equals("InstanceType"))
             {
-               display.getEC2InstanceTypeField().setValue(option.getValue());
+               display.setEC2InstanceTypeValues(new String[]{option.getValue()}, option.getValue());
+               // fill value options
+//               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
+//               {
+//                  if (optionInfo.getName().equals("InstanceType"))
+//                  {
+//                     List<String> valueOptionsList = optionInfo.getValueOptions();
+//                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
+//                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
+//                  }
+//               }
             }
             else if (option.getName().equals("SecurityGroups"))
             {
@@ -270,7 +418,8 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
             }
             else if (option.getName().equals("MonitoringInterval"))
             {
-               display.getMonitoringIntervalField().setValue(option.getValue());
+               display.setMonitoringIntervalValues(new String[]{option.getValue()}, option.getValue());
+               //display.getMonitoringIntervalField().setValue(option.getValue());
             }
             else if (option.getName().equals("ImageId"))
             {
@@ -322,16 +471,66 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
                display.getJVMOptionsField().setValue(option.getValue());
             }
          }
-//         map.put(option.getName(), option.getValue());
+         modifiedOptionsMap.put(option.getName(), option);
       }
+   }
 
-//      Iterator<Entry<String, String>> it = map.entrySet().iterator();
-//      List<Entry<String, String>> valueList = new ArrayList<Map.Entry<String, String>>();
-//      while (it.hasNext())
-//      {
-//         valueList.add(it.next());
-//      }
-//      display.getApplicationInfoGrid().setValue(valueList);
+   private void applyConfiguration()
+   {
+      UpdateEnvironmentRequest updateEnvironmentRequest =
+         AWSExtension.AUTO_BEAN_FACTORY.updateEnvironmentRequest().as();
+      updateEnvironmentRequest.setOptions(modifiedOptionsList);
+
+      AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
+
+      try
+      {
+         BeanstalkClientService.getInstance().updateEnvironment(
+            environmentInfo.getId(),
+            updateEnvironmentRequest,
+            new AwsAsyncRequestCallback<EnvironmentInfo>(new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     applyConfiguration();
+                  }
+               })
+            {
+
+               @Override
+               protected void onSuccess(EnvironmentInfo result)
+               {
+                  if (display != null)
+                  {
+                     IDE.getInstance().closeView(display.asView().getId());
+                  }
+//                  if (deployVersionStartedHandler != null)
+//                  {
+//                     deployVersionStartedHandler.onDeployVersionStarted(environments.get(environmentId));
+//                  }
+               }
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+                  String message =
+                     AWSExtension.LOCALIZATION_CONSTANT.updateEnvironmentConfigurationFailed(environmentInfo.getName());
+                  if (exception instanceof ServerException && ((ServerException)exception).getMessage() != null)
+                  {
+                     message += "<br>" + ((ServerException)exception).getMessage();
+                  }
+                  IDE.fireEvent(new OutputEvent(message, Type.ERROR));
+                  Dialogs.getInstance().showError(message);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

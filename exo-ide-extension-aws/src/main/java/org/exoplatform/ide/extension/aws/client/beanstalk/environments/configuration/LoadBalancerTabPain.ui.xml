@@ -65,14 +65,7 @@
       	background-color: #FFFFFF !important;
       	color: #000000 !important;
       }
-      
-      .actions {
-      	border-top: 1px solid #DBDFE5;
-      	padding-top: 10px;
-      	margin-top: 10px;
-      }
    </ui:style>
-
 
    <f:Border>
       <f:layer>
@@ -81,27 +74,27 @@
             </g:Label>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationAppHealthCheckUrl}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="appHealthCheckUrlField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="appHealthCheckUrlField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationHealthCheckInterval}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="healthCheckIntervalField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="healthCheckIntervalField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationHealthCheckTimeout}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="healthCheckTimeoutField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="healthCheckTimeoutField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationHealthyThreshold}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="healthyThresholdField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="healthyThresholdField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationUnhealthyThreshold}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="unhealthyThresholdField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="unhealthyThresholdField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
          </g:FlowPanel>

@@ -62,6 +62,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("button.terminate")
    String terminateButton();
 
+   @Key("button.logs")
+   String logsButton();
+
    @Key("button.close")
    String closeButton();
 
@@ -116,6 +119,15 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
 
    @Key("validationErrorEnvNameHyphen")
    String validationErrorEnvNameHyphen();
+
+   @Key("seeOutputForLinkToLog")
+   String seeOutputForLinkToLog();
+
+   @Key("viewLogFromInstance")
+   String viewLogFromInstance(String instanceId);
+
+   @Key("logsPreparing")
+   String logsPreparing();
 
    // Controls
    @Key("button.properties")
@@ -428,6 +440,10 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("rebuild.environment.success")
    String rebuildEnvironmentSuccess(String name);
 
+   // Get Logs
+   @Key("logs.environment.failed")
+   String logsEnvironmentFailed(String name);
+
    // Update Environment
    @Key("update.environment.launching")
    String updateEnvironmentLaunching(String environment);
@@ -529,6 +545,9 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String managementEC2Tags();
 
    // Edit environment configuration
+   @Key("update.environment.configuration.failed")
+   String updateEnvironmentConfigurationFailed(String name);
+
    @Key("server.tab")
    String serverTab();
 

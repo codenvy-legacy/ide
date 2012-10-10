@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
+import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 
 /**
@@ -53,7 +54,7 @@ public class ServerTabPain extends Composite
    private static final String IMAGE_ID_FIELD_ID = "ideServerTabPainImageIdField";
 
    @UiField
-   TextInput ec2InstanceTypeField;
+   SelectItem ec2InstanceTypeField;
 
    @UiField
    TextInput ec2SecurityGroupsField;
@@ -62,7 +63,7 @@ public class ServerTabPain extends Composite
    TextInput keyNameField;
 
    @UiField
-   TextInput monitoringIntervalField;
+   SelectItem monitoringIntervalField;
 
    @UiField
    TextInput imageIdField;
@@ -87,6 +88,17 @@ public class ServerTabPain extends Composite
    }
 
    /**
+    * Set new value map and select the <code>selected</code> value.
+    * 
+    * @param values the list of values
+    * @param selected the selected value
+    */
+   public void setEC2InstanceTypeValues(String[] values, String selected)
+   {
+      ec2InstanceTypeField.setValueMap(values, selected);
+   }
+
+   /**
     * @return the ec2SecurityGroupsField
     */
    public TextInput getEC2SecurityGroupsField()
@@ -105,9 +117,20 @@ public class ServerTabPain extends Composite
    /**
     * @return the monitoringIntervalField
     */
-   public TextInput getMonitoringIntervalField()
+   public HasValue<String> getMonitoringIntervalField()
    {
       return monitoringIntervalField;
+   }
+
+   /**
+    * Set new value map and select the <code>selected</code> value.
+    * 
+    * @param values the list of values
+    * @param selected the selected value
+    */
+   public void setMonitoringIntervalValues(String[] values, String selected)
+   {
+      monitoringIntervalField.setValueMap(values, selected);
    }
 
    /**

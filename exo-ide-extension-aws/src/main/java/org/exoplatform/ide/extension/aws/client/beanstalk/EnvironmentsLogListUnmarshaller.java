@@ -27,20 +27,19 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
-import org.exoplatform.ide.extension.aws.shared.beanstalk.Configuration;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.InstanceLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
+ * @version $Id: Sep 18, 2012 10:33:01 AM anya $
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: ConfigurationListUnmarshaller.java Oct 8, 2012 10:22:32 AM azatsarynnyy $
- *
  */
-public class ConfigurationListUnmarshaller implements Unmarshallable<List<Configuration>>
+public class EnvironmentsLogListUnmarshaller implements Unmarshallable<List<InstanceLog>>
 {
-   private List<Configuration> configurationList = new ArrayList<Configuration>();
+   private List<InstanceLog> logList = new ArrayList<InstanceLog>();
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
@@ -64,9 +63,9 @@ public class ConfigurationListUnmarshaller implements Unmarshallable<List<Config
       {
          String payload = value.get(i).isObject().toString();
 
-         AutoBean<Configuration> configurationBean =
-            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, Configuration.class, payload);
-         configurationList.add(configurationBean.as());
+         AutoBean<InstanceLog> applicationVersionInfoBean =
+            AutoBeanCodex.decode(AWSExtension.AUTO_BEAN_FACTORY, InstanceLog.class, payload);
+         logList.add(applicationVersionInfoBean.as());
       }
    }
 
@@ -74,8 +73,8 @@ public class ConfigurationListUnmarshaller implements Unmarshallable<List<Config
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
     */
    @Override
-   public List<Configuration> getPayload()
+   public List<InstanceLog> getPayload()
    {
-      return configurationList;
+      return logList;
    }
 }

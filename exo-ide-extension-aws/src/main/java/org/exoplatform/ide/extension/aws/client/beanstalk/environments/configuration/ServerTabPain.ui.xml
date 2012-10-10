@@ -55,41 +55,34 @@
       	background-color: #FFFFFF !important;
       	color: #000000 !important;
       }
-      
-      .actions {
-      	border-top: 1px solid #DBDFE5;
-      	padding-top: 10px;
-      	margin-top: 10px;
-      }
    </ui:style>
-
 
    <f:Border>
       <f:layer>
          <g:FlowPanel styleName="{style.padding}">
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationEC2InstanceType}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="ec2InstanceTypeField" width="60%" height="22px" enabled="false"
-               addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
+               <f:SelectItem ui:field="ec2InstanceTypeField" width="60%" height="22px"
+               addStyleNames="{style.left} {style.space}"></f:SelectItem>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationEC2SecurityGroups}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="ec2SecurityGroupsField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="ec2SecurityGroupsField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationKeyName}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="keyNameField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="keyNameField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationMonitoringInterval}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="monitoringIntervalField" width="60%" height="22px" enabled="false"
-               addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
+               <f:SelectItem ui:field="monitoringIntervalField" width="60%" height="22px"
+               addStyleNames="{style.left} {style.space}"></f:SelectItem>
             </g:FlowPanel>
             <g:FlowPanel width="100%" height="30px">
                <g:Label text="{locale.editConfigurationImageId}" addStyleNames="{style.labelH} {style.middle}" width="35%"></g:Label>
-               <f:TextInput ui:field="imageIdField" width="60%" height="22px" enabled="false"
+               <f:TextInput ui:field="imageIdField" width="60%" height="22px"
                addStyleNames="{style.textinput} {style.left} {style.space}"></f:TextInput>
             </g:FlowPanel>
          </g:FlowPanel>

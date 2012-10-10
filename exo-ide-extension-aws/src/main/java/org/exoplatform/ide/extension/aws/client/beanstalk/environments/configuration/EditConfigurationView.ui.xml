@@ -5,16 +5,26 @@
    <ui:with field='locale' type='org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant' />
    <ui:style>
       .center {
-      	margin: auto;
+         margin: auto;
+         margin-left: auto;
+		 margin-right: auto;
+      }
+      .floatLeft {
+         float: left;
       }
    </ui:style>
+
    <f:Border margin="15" borderColor="transparent">
       <f:layer top="0" bottom="37">
          <t:TabPanel ui:field="configurationTabPanel"></t:TabPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
-         <g:FlowPanel>
-            <f:ImageButton ui:field="cancelButton" imageName="cancel" width="90px" height="22px" text="{locale.closeButton}" styleName="{style.center}"></f:ImageButton>
+         <g:FlowPanel width="190px" styleName="{style.center}">
+         	<f:ImageButton ui:field="okButton" imageName="ok" width="90px" height="22px"
+            	text="{locale.okButton}" styleName="{style.floatLeft}"></f:ImageButton>
+         	<g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
+            <f:ImageButton ui:field="cancelButton" imageName="cancel" width="90px" height="22px"
+            	text="{locale.closeButton}" styleName="{style.floatLeft}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
    </f:Border>
