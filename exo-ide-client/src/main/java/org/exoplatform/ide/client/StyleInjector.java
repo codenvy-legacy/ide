@@ -39,7 +39,7 @@ public class StyleInjector
    {
       this.resources = resources;
    }
-   
+
    public void inject()
    {
       resources.appCss().ensureInjected();
@@ -51,5 +51,6 @@ public class StyleInjector
       resources.workspaceEditorCss().ensureInjected();
       resources.workspaceEditorCursorCss().ensureInjected();
       resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
+      resources.partStackCss().ensureInjected();
    }
 }

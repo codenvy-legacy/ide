@@ -14,43 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.core.event;
+package org.exoplatform.ide.core.expressions;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.part.PartPresenter;
 
 /**
- * Handles ResourceChangedEvent
- * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ * Handles the event when Active Part changed
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface ResourceChangedHandler extends EventHandler
+public interface ActivePartConstraintExpression extends Expression
 {
-   /**
-    * Resource created
-    * 
-    * @param event
-    */
-   void onResourceCreated(ResourceChangedEvent event);
 
    /**
-    * Resource deleted
-    * 
-    * @param event
+    * @param part new Active Part instance
+    * @return new value of the expression
     */
-   void onResourceDeleted(ResourceChangedEvent event);
-
-   /**
-    * Resource renamed
-    * 
-    * @param event
-    */
-   void onResourceRenamed(ResourceChangedEvent event);
-   
-   /**
-    * Resource moved
-    * 
-    * @param event
-    */
-   void onResourceMoved(ResourceChangedEvent event);
+   public boolean onActivePartChanged(PartPresenter part);
 
 }

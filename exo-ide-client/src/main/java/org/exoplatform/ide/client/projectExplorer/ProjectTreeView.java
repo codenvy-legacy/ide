@@ -27,13 +27,6 @@ public class ProjectTreeView implements Display, IsWidget
       tree = Tree.create(resources);
    }
 
-   @Override
-   public String getSelectedFileName()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
    /**
    * {@inheritDoc}
    */

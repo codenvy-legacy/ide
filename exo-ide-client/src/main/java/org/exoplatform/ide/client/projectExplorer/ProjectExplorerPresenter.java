@@ -45,8 +45,6 @@ public class ProjectExplorerPresenter implements PartPresenter
 
    public interface Display extends IsWidget
    {
-      String getSelectedFileName();
-
       void registerListener(Listener listener);
 
       void setItems(Resource resource);
@@ -165,9 +163,19 @@ public class ProjectExplorerPresenter implements PartPresenter
     * {@inheritDoc}
     */
    @Override
-   public boolean close()
+   public boolean onClose()
    {
       return false;
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onOpen()
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }

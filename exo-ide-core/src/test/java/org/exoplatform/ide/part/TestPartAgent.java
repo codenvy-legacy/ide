@@ -19,16 +19,22 @@ package org.exoplatform.ide.part;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.inject.Provider;
 
-import org.exoplatform.ide.part.PartAgent.PartStackType;
+import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.core.event.ActivePartChangedEvent;
+import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 /**
  * 
@@ -53,9 +59,12 @@ public class TestPartAgent
    Provider<PartStackPresenter> provider;
 
    @Mock
-   PartStackResources resources;
+   EventBus eventBus;
 
-   PartAgent agent;
+   @Mock
+   PartStackUIResources resources;
+
+   PartAgentPresenter agent;
 
    private PartStackPresenter editStack;
 
@@ -66,7 +75,7 @@ public class TestPartAgent
       GWTMockUtilities.disarm();
       when(provider.get()).thenReturn(mock(PartStackPresenter.class), mock(PartStackPresenter.class),
          mock(PartStackPresenter.class), mock(PartStackPresenter.class));
-      agent = new PartAgent(provider);
+      agent = new PartAgentPresenter(provider, eventBus);
       editStack = agent.getPartStack(TYPE);
    }
 
@@ -125,6 +134,40 @@ public class TestPartAgent
       agent.setActivePart(part);
       verify(editStack).setActivePart(eq(part));
       verify(editStack).setFocus(eq(true));
+   }
+
+   @Test
+   public void shoudFireEventonChangePart()
+   {
+      final PartPresenter part = mock(PartPresenter.class);
+      PartStackPresenter partStack = mock(PartStackPresenter.class);
+
+      when(provider.get()).thenReturn(partStack);
+
+      // immediately call onActivePartChanged when handler is set
+      doAnswer(new Answer<Object>()
+      {
+         int count = 0;
+
+         @Override
+         public Object answer(InvocationOnMock invocation) throws Throwable
+         {
+            // notify part changed only once
+            if (count == 0)
+            {
+               PartStackEventHandler handler = (PartStackEventHandler)invocation.getArguments()[0];
+               handler.onActivePartChanged(part);
+            }
+            count++;
+            return null;
+         }
+      }).when(partStack).setPartStackEventHandler((PartStackEventHandler)any());
+
+      // create Part Agent
+      agent = new PartAgentPresenter(provider, eventBus);
+
+      // verify Event fired
+      verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
    }
 
 }

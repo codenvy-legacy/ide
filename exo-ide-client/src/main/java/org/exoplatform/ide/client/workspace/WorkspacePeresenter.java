@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -32,13 +33,14 @@ import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
+import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
-import org.exoplatform.ide.part.PartAgent;
-import org.exoplatform.ide.part.PartAgent.PartStackType;
-import org.exoplatform.ide.part.PartStackPresenter;
+import org.exoplatform.ide.part.PartAgentPresenter;
+import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
@@ -79,14 +81,14 @@ public class WorkspacePeresenter implements Presenter
 
    private final MainMenuPresenter menuPresenter;
 
-   private final PartAgent partAgent;
+   private final PartAgentPresenter partAgent;
 
    private final EditorAgent editorAgent;
 
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgent partAgent)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent)
 
    {
       super();
@@ -98,13 +100,24 @@ public class WorkspacePeresenter implements Presenter
       this.partAgent = partAgent;
 
       // FOR DEMO
+      // REGISTRE EXPRESSIONS
+      NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
+      expressionManager.registerExpression(noProjectOpenedExpression);
+
+      EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
+      expressionManager.registerExpression(editorActiveExpression);
+      
+      
+      // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
 
-      NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
-      expressionManager.registerExpression(noProjectOpenedExpression);
+      // CREATE DYNAMIC MENU CONTENT
       menuPresenter.addMenuItem("File/Create Demo Content", null, new CreadDemoContentCommand(resourceManager), null,
          noProjectOpenedExpression);
+      
+      menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
+      menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
       ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
       expressionManager.registerExpression(projectOpenedExpression);
@@ -116,7 +129,7 @@ public class WorkspacePeresenter implements Presenter
       //XXX DEMO
 
       partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
-      partAgent.addPart(projectExpolorerPresenter,PartStackType.NAVIGATION);
+      partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
    }
 
    /**
@@ -129,11 +142,8 @@ public class WorkspacePeresenter implements Presenter
       // Expose Project Explorer into Tools Panel
       menuPresenter.go(display.getMenuPanel());
 
-      PartStackPresenter navigationStack = partAgent.getPartStack(PartStackType.NAVIGATION);
-      navigationStack.go(display.getLeftPanel());
-
-      PartStackPresenter editoStack = partAgent.getPartStack(PartStackType.EDITING);
-      editoStack.go(display.getCenterPanel());
+      partAgent.go(PartStackType.NAVIGATION, display.getLeftPanel());
+      partAgent.go(PartStackType.EDITING, display.getCenterPanel());
 
       container.add(display.asWidget());
    }
@@ -178,12 +188,24 @@ public class WorkspacePeresenter implements Presenter
       });
    }
 
-   protected void openFile(File file)
+   // FOR DEMO:
+   private final class EditorActiveExpression extends AbstractExpression implements ActivePartConstraintExpression
    {
-      // Calling display.getCenterPanel.cler() violates the Law of Demeter
-//      editorPresenter.openFile(file);
-//      partAgent.addPart(editorPresenter, PartStackType.EDITING);
-      //editorPresenter.go(display.getCenterPanel());
+      public EditorActiveExpression()
+      {
+         super(false);
+      }
+
+      /**
+      * {@inheritDoc}
+      */
+      @Override
+      public boolean onActivePartChanged(PartPresenter part)
+      {
+         value = (part instanceof EditorPartPresenter);
+         return value;
+      }
+
    }
 
    // FOR DEMO:

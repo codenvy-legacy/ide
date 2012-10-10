@@ -33,11 +33,18 @@ public interface PartPresenter extends Presenter
    public String getTitle();
 
    /**
+    * This method is called when Part is opened. 
+    * Note: this method is NOT called when part gets focused. It is called when new tab in
+    * PartStack created. 
+    */
+   public void onOpen();
+
+   /**
     * This method is called when part is going to be closed. Part itself can deny
     * blocking, by returning false, i.e. when document is being edited and accidently 
     * close button pressed.
     * 
     * @return allow close
     */
-   public boolean close();
+   public boolean onClose();
 }

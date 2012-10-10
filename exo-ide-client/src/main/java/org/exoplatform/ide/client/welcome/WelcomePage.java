@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import org.exoplatform.ide.part.PartPresenter;
 
 /**
+ * Simple Welcome Page
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
@@ -60,9 +61,17 @@ public class WelcomePage extends UIObject implements PartPresenter
    * {@inheritDoc}
    */
    @Override
-   public boolean close()
+   public boolean onClose()
    {
       return false;
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onOpen()
+   {
    }
 
 }

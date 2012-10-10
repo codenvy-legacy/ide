@@ -35,15 +35,22 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.part.PartStackPresenter.FocusRequstHandler;
 
 /**
+ * PartStack view class. Implements UI that manages Parts organized in a Tab-like widget.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public class PartStackView extends Composite implements PartStackPresenter.Display
 {
 
+   /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
+   public interface FocusRequstHandler
+   {
+      /** PartStack is being clicked and requests Focus */
+      void onRequestFocus();
+   }
+   
    private TabButton activeTab;
 
    // panels
@@ -65,26 +72,24 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
 
    private FocusRequstHandler displayHandler;
 
-   private final PartStackResources resources;
+   private final PartStackUIResources resources;
 
    /**
     * Create View
     * @param partStackResources 
     */
    @Inject
-   public PartStackView(PartStackResources partStackResources)
+   public PartStackView(PartStackUIResources partStackResources)
    {
-      // TODO: make it elsewhere
-      partStackResources.partStackCSS().ensureInjected();
       this.resources = partStackResources;
       parent = new DockLayoutPanel(Unit.PX);
       initWidget(parent);
 
-      parent.setStyleName(resources.partStackCSS().idePartStack());
+      parent.setStyleName(resources.partStackCss().idePartStack());
       tabsPanel = new FlowPanel();
-      tabsPanel.setStyleName(resources.partStackCSS().idePartStackTabs());
+      tabsPanel.setStyleName(resources.partStackCss().idePartStackTabs());
       contentPanel = new SimplePanel();
-      contentPanel.setStyleName(resources.partStackCSS().idePartStackContent());
+      contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
 
       parent.addNorth(tabsPanel, 26);
       parent.add(contentPanel);
@@ -134,13 +139,13 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
    {
       if (activeTab != null)
       {
-         activeTab.removeStyleName(resources.partStackCSS().idePartStackTabSelected());
+         activeTab.removeStyleName(resources.partStackCss().idePartStackTabSelected());
       }
 
       if (index >= 0 && index < tabs.size())
       {
          activeTab = tabs.get(index);
-         activeTab.addStyleName(resources.partStackCSS().idePartStackTabSelected());
+         activeTab.addStyleName(resources.partStackCss().idePartStackTabSelected());
       }
    }
 
@@ -170,12 +175,12 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
       // if focused already, then remove DOM handler
       if (focused)
       {
-         parent.addStyleName(resources.partStackCSS().idePartStackFocused());
+         parent.addStyleName(resources.partStackCss().idePartStackFocused());
          removeFocusRequestHandler();
       }
       else
       {
-         parent.removeStyleName(resources.partStackCSS().idePartStackFocused());
+         parent.removeStyleName(resources.partStackCss().idePartStackFocused());
          addFocusRequestHandler();
       }
    }
@@ -216,7 +221,7 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
       {
          tabItem = new FlowPanel();
          initWidget(tabItem);
-         this.setStyleName(resources.partStackCSS().idePartStackTab());
+         this.setStyleName(resources.partStackCss().idePartStackTab());
          tabItemTittle = new InlineLabel(title);
          tabItem.add(tabItemTittle);
          if (closable)
