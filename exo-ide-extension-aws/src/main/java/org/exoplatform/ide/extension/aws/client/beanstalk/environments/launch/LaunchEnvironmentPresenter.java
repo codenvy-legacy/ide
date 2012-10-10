@@ -41,13 +41,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
+import org.exoplatform.ide.extension.aws.client.beanstalk.ApplicationVersionListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.beanstalk.BeanstalkClientService;
 import org.exoplatform.ide.extension.aws.client.beanstalk.SolutionStackListUnmarshaller;
 import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.CreateEnvironmentRequest;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.SolutionStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,6 +70,10 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
 
       void setSolutionStackValues(String[] values);
 
+      HasValue<String> getVersionField();
+
+      void setVersionValues(String[] values, String selectedValue);
+
       HasClickHandlers getLaunchButton();
 
       HasClickHandlers getCancelButton();
@@ -79,8 +86,6 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
    private Display display;
 
    private String applicationName;
-
-   private String versionLabel;
 
    private String projectId;
 
@@ -148,7 +153,6 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
       this.projectId = event.getProjectId();
       this.vfsId = event.getVfsId();
       this.applicationName = event.getApplicationName();
-      this.versionLabel = event.getVersionLabel();
       this.launchEnvironmentStartedHandler = event.getEnvironmentCreatedHandler();
 
       if (display == null)
@@ -160,6 +164,7 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
       display.enableLaunchButton(false);
       display.focusInEnvNameField();
       getSolutionStacks();
+      getVersions(event.getVersionLabel());
    }
 
    private void getSolutionStacks()
@@ -179,14 +184,14 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
                @Override
                protected void onSuccess(List<SolutionStack> result)
                {
-                  String[] values = new String[result.size()];
-                  int i = 0;
+                  List<String> values = new ArrayList<String>();
                   for (SolutionStack solutionStack : result)
                   {
-                     values[i] = solutionStack.getName();
-                     i++;
+                     //For detail see https://jira.exoplatform.org/browse/IDE-1951
+                     if (solutionStack.getPermittedFileTypes().contains("war"))
+                        values.add(solutionStack.getName());
                   }
-                  display.setSolutionStackValues(values);
+                  display.setSolutionStackValues(values.toArray(new String[values.size()]));
                }
 
                @Override
@@ -202,13 +207,61 @@ public class LaunchEnvironmentPresenter implements LaunchEnvironmentHandler, Vie
       }
    }
 
+   /**
+    * Get application versions.
+    */
+   private void getVersions(final String selectedVersionLabel)
+   {
+      try
+      {
+         BeanstalkClientService.getInstance().getVersions(
+            vfsId,
+            projectId,
+            new AwsAsyncRequestCallback<List<ApplicationVersionInfo>>(new ApplicationVersionListUnmarshaller(),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getVersions(selectedVersionLabel);
+                  }
+               })
+            {
+
+               @Override
+               protected void processFail(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+
+               @Override
+               protected void onSuccess(List<ApplicationVersionInfo> result)
+               {
+                  String[] values = new String[result.size()];
+                  int i = 0;
+                  for (ApplicationVersionInfo version : result)
+                  {
+                     values[i] = version.getVersionLabel();
+                     i++;
+                  }
+                  display.setVersionValues(values, selectedVersionLabel);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    public void launchEnvironment()
    {
       final String environmentName = display.getEnvNameField().getValue();
       CreateEnvironmentRequest createEnvironmentRequest =
          AWSExtension.AUTO_BEAN_FACTORY.createEnvironmentRequest().as();
       createEnvironmentRequest.setApplicationName(applicationName);
-      createEnvironmentRequest.setVersionLabel(versionLabel);
+      createEnvironmentRequest.setVersionLabel(display.getVersionField().getValue());
       createEnvironmentRequest.setDescription(display.getEnvDescriptionField().getValue());
       createEnvironmentRequest.setEnvironmentName(environmentName);
       createEnvironmentRequest.setSolutionStackName(display.getSolutionStackField().getValue());
