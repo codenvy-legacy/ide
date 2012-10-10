@@ -31,7 +31,7 @@ import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.ViewportModel.Edge;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.ScheduledCommandExecutor;
+import org.exoplatform.ide.util.executor.ScheduledCommandExecutor;
 import org.exoplatform.ide.util.loging.Log;
 
 import java.util.EnumSet;

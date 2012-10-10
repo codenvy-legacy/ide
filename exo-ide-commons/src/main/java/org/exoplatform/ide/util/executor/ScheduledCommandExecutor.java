@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.executor;
 
 import com.google.gwt.core.client.Scheduler;
 

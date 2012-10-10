@@ -21,12 +21,12 @@ import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.Spacer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.texteditor.selection.SelectionModel.MoveAction;
-import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.SortedList;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
 import org.exoplatform.ide.util.input.CharCodeWithModifiers;
 import org.exoplatform.ide.util.input.KeyCodeMap;
 import org.exoplatform.ide.util.input.ModifierKeys;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 import java.util.Random;
 

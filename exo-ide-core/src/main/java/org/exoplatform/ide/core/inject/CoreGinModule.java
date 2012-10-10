@@ -49,7 +49,7 @@ import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
  *

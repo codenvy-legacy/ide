@@ -22,8 +22,8 @@ import elemental.html.Element;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.anchor.Anchor;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.SortedList;
+import org.exoplatform.ide.util.dom.Elements;
 
 /*
  * TODO: Knowledge about what lines the spacer is logically linked

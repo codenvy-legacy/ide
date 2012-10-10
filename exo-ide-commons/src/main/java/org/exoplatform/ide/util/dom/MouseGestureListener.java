@@ -22,7 +22,6 @@ import elemental.events.MouseEvent;
 import elemental.html.Element;
 
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.dom.eventcapture.MouseCaptureListener;
 
 /**
  * An {@link EventListener} implementation that parses the low-level events and

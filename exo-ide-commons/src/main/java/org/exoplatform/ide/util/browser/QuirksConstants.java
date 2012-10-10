@@ -15,7 +15,8 @@
  *
  */
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.browser;
+
 
 import com.google.gwt.core.client.GWT;
 

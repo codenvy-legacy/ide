@@ -23,7 +23,7 @@ import org.exoplatform.ide.texteditor.input.DefaultActionExecutor;
 import org.exoplatform.ide.texteditor.input.InputScheme;
 import org.exoplatform.ide.texteditor.input.Shortcut;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Implementation of some common textual actions.

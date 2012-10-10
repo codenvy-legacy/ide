@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor.input;
 
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Abstract Shortcut class. Override event function to implement a callback.

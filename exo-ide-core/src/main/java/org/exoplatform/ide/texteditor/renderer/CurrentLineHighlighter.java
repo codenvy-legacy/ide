@@ -25,8 +25,8 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerRegistrar;
+import org.exoplatform.ide.util.dom.Elements;
 
 import elemental.html.Element;
 

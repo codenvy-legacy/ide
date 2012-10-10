@@ -36,10 +36,10 @@ import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.util.AnimationController;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEventImpl;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.MouseGestureListener;
+import org.exoplatform.ide.util.input.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEventImpl;
 
 /**
  * A tree widget that is capable of rendering any tree data structure whose node

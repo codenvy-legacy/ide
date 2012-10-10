@@ -17,7 +17,7 @@ package org.exoplatform.ide.tree;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.tree.Tree.Css;
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 
 //import com.google.collide.client.util.logging.Log;

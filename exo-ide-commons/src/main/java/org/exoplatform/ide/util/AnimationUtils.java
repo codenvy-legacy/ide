@@ -14,6 +14,8 @@
 
 package org.exoplatform.ide.util;
 
+import org.exoplatform.ide.util.browser.UserAgent;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 

@@ -15,12 +15,12 @@
  *
  */
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.input;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
-import org.exoplatform.ide.util.SignalEvent.KeySignalType;
+import org.exoplatform.ide.util.input.SignalEvent.KeySignalType;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;

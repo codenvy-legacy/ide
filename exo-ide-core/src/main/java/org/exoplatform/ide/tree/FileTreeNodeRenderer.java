@@ -27,7 +27,7 @@ import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * Renderer for nodes in the file tree.

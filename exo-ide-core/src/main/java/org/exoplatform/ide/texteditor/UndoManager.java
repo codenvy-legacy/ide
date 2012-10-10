@@ -25,7 +25,7 @@ import org.exoplatform.ide.text.undo.DocumentUndoListener;
 import org.exoplatform.ide.text.undo.DocumentUndoManager;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ public class UndoManager
    {
 
       /**
-       * @see org.exoplatform.ide.texteditor.api.KeyListener#onKeyPress(org.exoplatform.ide.util.SignalEvent)
+       * @see org.exoplatform.ide.texteditor.api.KeyListener#onKeyPress(org.exoplatform.ide.util.input.SignalEvent)
        */
       @Override
       public boolean onKeyPress(SignalEvent event)

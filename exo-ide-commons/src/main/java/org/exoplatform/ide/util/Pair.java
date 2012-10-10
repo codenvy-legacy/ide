@@ -197,7 +197,7 @@ public class Pair<A, B> implements Serializable
       if (object instanceof Pair)
       {
          Pair<?, ?> that = (Pair<?, ?>)object;
-         return Objects.equal(this.first, that.first) && Objects.equal(this.second, that.second);
+         return equal(this.first, that.first) && equal(this.second, that.second);
       }
       return false;
    }
@@ -226,5 +226,22 @@ public class Pair<A, B> implements Serializable
       return "(" + first + ", " + second + ")";
    }
 
+   /**
+    * Determines whether two possibly-null objects are equal. Returns:
+    *
+    * <ul>
+    * <li>{@code true} if {@code a} and {@code b} are both null.
+    * <li>{@code true} if {@code a} and {@code b} are both non-null and they are
+    *     equal according to {@link Object#equals(Object)}.
+    * <li>{@code false} in all other situations.
+    * </ul>
+    *
+    * <p>This assumes that any non-null objects passed to this function conform
+    * to the {@code equals()} contract.
+    */
+   private boolean equal( Object a, Object b) {
+     return a == b || (a != null && a.equals(b));
+   }
+   
    private static final long serialVersionUID = 747826592375603043L;
 }

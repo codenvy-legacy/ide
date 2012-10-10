@@ -21,7 +21,7 @@ import elemental.html.Element;
 
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * The main content area on the CodePerspective.

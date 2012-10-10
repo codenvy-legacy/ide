@@ -18,9 +18,9 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.ListenerRegistrar;
 
 /**

@@ -40,17 +40,17 @@ import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
-import org.exoplatform.ide.util.Executor;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.RemoverManager;
 import org.exoplatform.ide.util.TextUtils;
 import org.exoplatform.ide.util.dom.DomUtils;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.DomUtils.Offset;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.util.dom.MouseGestureListener;
+import org.exoplatform.ide.util.executor.Executor;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still

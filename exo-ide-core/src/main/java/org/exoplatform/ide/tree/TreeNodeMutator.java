@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.tree;
 
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 import com.google.gwt.resources.client.CssResource;
 

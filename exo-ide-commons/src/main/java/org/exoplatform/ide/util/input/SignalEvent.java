@@ -14,12 +14,13 @@
  * limitations under the License.
  *
  */
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.input;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
+
+import org.exoplatform.ide.util.browser.UserAgent;
 
 /**
  * Attempts to bring sanity to the incredibly complex and inconsistent world of

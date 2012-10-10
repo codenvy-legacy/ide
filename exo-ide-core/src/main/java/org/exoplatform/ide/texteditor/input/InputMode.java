@@ -18,10 +18,10 @@ import elemental.events.Event;
 import elemental.js.util.JsArrayOfInt;
 import elemental.js.util.JsMapFromIntTo;
 
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEventUtils;
 import org.exoplatform.ide.util.input.CharCodeWithModifiers;
 import org.exoplatform.ide.util.input.KeyCodeMap;
+import org.exoplatform.ide.util.input.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEventUtils;
 
 /**
  * Class that represents an editor mode for handling input, such as vi's insert

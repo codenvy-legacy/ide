@@ -15,7 +15,6 @@
 package org.exoplatform.ide.util.input;
 
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.util.SignalEvent;
 
 // TODO: Add method that builds textual representation.
 /**

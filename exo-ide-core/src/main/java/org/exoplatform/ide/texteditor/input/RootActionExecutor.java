@@ -16,7 +16,7 @@ package org.exoplatform.ide.texteditor.input;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Implementation of proxy that delegated execution to a list of executors.

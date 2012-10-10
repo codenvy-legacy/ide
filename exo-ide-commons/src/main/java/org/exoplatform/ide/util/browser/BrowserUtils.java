@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.browser;
 
+
+import org.exoplatform.ide.util.StringUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;

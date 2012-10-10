@@ -16,7 +16,7 @@ package org.exoplatform.ide.texteditor.input;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Default implementation that executed actions placed in map.

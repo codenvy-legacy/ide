@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util.dom.eventcapture;
+package org.exoplatform.ide.util.dom;
 
 import elemental.events.Event;
 import elemental.events.EventListener;

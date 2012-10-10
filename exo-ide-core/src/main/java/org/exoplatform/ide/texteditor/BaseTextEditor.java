@@ -35,7 +35,7 @@ import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -27,8 +27,8 @@ import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerRegistrar;
+import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * A renderer for the line numbers in the left gutter.
