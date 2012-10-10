@@ -93,7 +93,12 @@ public class FolderModel extends org.exoplatform.ide.vfs.shared.Folder implement
          (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+
+      if (itemObject.get("links").isNull() == null)
+      {
+         links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));         
+      }      
+      
       this.persisted = true;
    }
 

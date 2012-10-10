@@ -635,6 +635,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
       templates.put(Link.REL_ITEM_BY_PATH, //
          new Link(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
+      
+      templates.put(Link.REL_TREE, //
+         new Link(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));      
 
       templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]"), //
@@ -2120,8 +2123,8 @@ public class JcrFileSystem implements VirtualFileSystem
       links.put(Link.REL_CHILDREN, //
          new Link(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
 
-      links.put(Link.REL_TREE, //
-         new Link(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
+//      links.put(Link.REL_TREE, //
+//         new Link(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
          new Link(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));

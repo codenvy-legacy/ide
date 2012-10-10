@@ -42,6 +42,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class provide communication with server side of VirtualFileSystem via REST.
@@ -155,6 +156,21 @@ public class VirtualFileSystem
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
          .loader(emptyLoader).send(callback);
    }
+   
+   /**
+    * Get tree of items starts from specified folder.
+    * 
+    * @param folderId folder's id
+    * @throws RequestException 
+    */
+   //public void getTree(String folderId, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
+   public void getTree(Folder folder, AsyncRequestCallback<Folder> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", folder.getId());
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
+   }  
 
    /**
     * Create new folder.
