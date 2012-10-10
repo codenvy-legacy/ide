@@ -19,10 +19,10 @@
 package org.exoplatform.ide.vfs.server.impl.memory;
 
 import org.everrest.core.impl.ContainerResponse;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;

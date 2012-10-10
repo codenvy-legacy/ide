@@ -20,10 +20,10 @@ package org.exoplatform.ide.vfs.server.impl.memory.context;
 
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

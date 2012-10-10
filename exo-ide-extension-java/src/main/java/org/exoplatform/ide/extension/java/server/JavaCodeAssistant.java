@@ -35,7 +35,6 @@ import org.exoplatform.ide.extension.java.server.parser.JavaTypeToTypeInfoConver
 import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderFilter;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderScanner;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -48,6 +47,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.util.ArrayList;
 import java.util.List;

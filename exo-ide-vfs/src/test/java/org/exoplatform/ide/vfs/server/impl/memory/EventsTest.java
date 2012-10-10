@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.server.impl.memory;
 
 import org.everrest.core.impl.ContainerResponse;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
@@ -28,6 +27,7 @@ import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

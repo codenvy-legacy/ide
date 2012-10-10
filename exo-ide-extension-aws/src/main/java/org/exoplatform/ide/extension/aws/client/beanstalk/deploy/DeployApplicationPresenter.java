@@ -43,6 +43,7 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.AWSLocalizationConstant;
 import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
@@ -386,14 +387,14 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(List<SolutionStack> result)
                {
-                  String[] values = new String[result.size()];
-                  int i = 0;
+                  List<String> values = new ArrayList<String>();
                   for (SolutionStack solutionStack : result)
                   {
-                     values[i] = filteSolutionStackByProjectType(solutionStack.getName());
-                     i++;
+                     //For detail see https://jira.exoplatform.org/browse/IDE-1951
+                     if (solutionStack.getPermittedFileTypes().contains("war"))
+                        values.add(solutionStack.getName());
                   }
-                  display.setSolutionStackValues(values);
+                  display.setSolutionStackValues(values.toArray(new String[values.size()]));
                }
 
                @Override
@@ -407,13 +408,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   //For detail see https://jira.exoplatform.org/browse/IDE-1951
-   protected String filteSolutionStackByProjectType(String name)
-   {
-      
-      return name;
    }
 
    /**
