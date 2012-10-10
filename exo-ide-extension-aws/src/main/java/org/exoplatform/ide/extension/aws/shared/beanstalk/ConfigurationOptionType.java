@@ -28,7 +28,9 @@ public enum ConfigurationOptionType
 {
    Boolean("Boolean"),
    Scalar("Scalar"),
-   List("List");
+   List("List"),
+   KeyValueList("KeyValueList"),
+   CommaSeparatedList("CommaSeparatedList");
 
    private final String value;
 

@@ -392,8 +392,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       environmentInfo = event.getEnvironment();
       if (environmentInfo != null)
       {
-         //getConfigurationOptions(event.getEnvironment());
-         getConfigurationList(environmentInfo);
+         getConfigurationOptions(environmentInfo);
       }
    }
 
@@ -557,15 +556,15 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
             {
                display.setEC2InstanceTypeValues(new String[]{option.getValue()}, option.getValue());
                // fill value options
-               //               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
-               //               {
-               //                  if (optionInfo.getName().equals("InstanceType"))
-               //                  {
-               //                     List<String> valueOptionsList = optionInfo.getValueOptions();
-               //                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
-               //                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
-               //                  }
-               //               }
+               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
+               {
+                  if (optionInfo.getName().equals("InstanceType"))
+                  {
+                     List<String> valueOptionsList = optionInfo.getValueOptions();
+                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
+                     display.setEC2InstanceTypeValues(valueOptions, option.getValue());
+                  }
+               }
             }
             else if (option.getName().equals("SecurityGroups"))
             {
@@ -577,7 +576,16 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
             }
             else if (option.getName().equals("MonitoringInterval"))
             {
-               display.setMonitoringIntervalValues(new String[]{option.getValue()}, option.getValue());
+               for (ConfigurationOptionInfo optionInfo : configurationOptionInfoList)
+               {
+                  if (optionInfo.getName().equals("MonitoringInterval"))
+                  {
+                     List<String> valueOptionsList = optionInfo.getValueOptions();
+                     String[] valueOptions = valueOptionsList.toArray(new String[valueOptionsList.size()]);
+                     display.setMonitoringIntervalValues(valueOptions, option.getValue());
+                  }
+               }
+               //display.setMonitoringIntervalValues(new String[]{option.getValue()}, option.getValue());
                //display.getMonitoringIntervalField().setValue(option.getValue());
             }
             else if (option.getName().equals("ImageId"))
