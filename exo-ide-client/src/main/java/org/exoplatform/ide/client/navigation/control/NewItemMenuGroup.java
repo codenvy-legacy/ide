@@ -30,6 +30,7 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS .
@@ -92,7 +93,9 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay ||
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof PackageExplorerPresenter.Display)
       {
          setEnabled(event.getView().isViewVisible());
       }

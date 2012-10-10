@@ -28,7 +28,6 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
-
 public interface IDEImageBundle extends ClientBundle
 {
 
@@ -372,27 +371,91 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource createProjectTemplateDisabled();
 
    /*
-    * Project
+    * Project Explorer
     */
-
-   @Source("bundled-images/projects/project-explorer.png")
+   @Source("bundled-images/project-explorer.png")
    ImageResource projectExplorer();
 
-   @Source("bundled-images/projects/project-explorer-disabled.png")
+   @Source("bundled-images/project-explorer-disabled.png")
    ImageResource projectExplorerDisabled();
 
+   /*
+    * Package Explorer
+    */
+   @Source("package-explorer/package-explorer.png")
+   ImageResource packageExplorer();
+
+   @Source("package-explorer/package-explorer-disabled.png")
+   ImageResource packageExplorerDisabled();
+   
+   
+   @Source("package-explorer/expand-all.png")
+   ImageResource expandAll();
+   
+   @Source("package-explorer/expand-all-disabled.png")
+   ImageResource expandAllDisabled();
+
+   @Source("package-explorer/collapse-all.png")
+   ImageResource collapseAll();
+   
+   @Source("package-explorer/collapse-all-disabled.png")
+   ImageResource collapseAllDisabled();
+
+   @Source("package-explorer/package.png")
+   ImageResource packageFolder();
+   
+   @Source("package-explorer/package-disabled.png")
+   ImageResource packageFolderDisabled();
+
+   @Source("package-explorer/empty-package.png")
+   ImageResource packageEmptyFolder();
+
+   @Source("package-explorer/empty-package-disabled.png")
+   ImageResource packageEmptyFolderDisabled();
+
+   @Source("package-explorer/jar-references.png")
+   ImageResource jarReferences();
+   
+   @Source("package-explorer/jar-references-disabled.png")
+   ImageResource jarReferencesDisabled();
+
+   @Source("package-explorer/single-jar-reference.png")
+   ImageResource jarReference();
+   
+   @Source("package-explorer/single-jar-reference-disabled.png")
+   ImageResource jarReferenceDisabled();
+
+   
+   
+   @Source("package-explorer/resource-directory.png")
+   ImageResource resourceDirectory();
+   
+   @Source("package-explorer/resource-directory-disabled.png")
+   ImageResource resourceDirectoryDisabled();
+   
+      
+
+   /*
+    * Open Project
+    */
    @Source("bundled-images/projects/open-project.png")
    ImageResource openProject();
 
    @Source("bundled-images/projects/open-project-disabled.png")
    ImageResource openProjectDisabled();
 
+   /*
+    * Project Opened
+    */
    @Source("bundled-images/projects/project-opened.png")
    ImageResource projectOpened();
 
    @Source("bundled-images/projects/project-opened-disabled.png")
    ImageResource projectOpenedDisabled();
 
+   /*
+    * PAAS
+    */
    @Source("bundled-images/projects/paas.png")
    ImageResource paas();
 

@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.createfolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -32,14 +35,11 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -133,7 +133,7 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
 
       if (event.getView() instanceof NavigatorDisplay ||
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof ProjectExplorerPresenter.Display)
+               event.getView() instanceof PackageExplorerPresenter.Display)
       {
          browserPanelSelected = true;
       }
@@ -148,7 +148,9 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay ||
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof PackageExplorerPresenter.Display)
       {
          browserPanelSelected = true;
       }

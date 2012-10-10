@@ -56,6 +56,10 @@ public abstract class JSONDeserializer<O>
       {
          if (json == null)
             return null;
+         
+         if (json.isNull() != null)
+            return null;
+         
          JSONString jsonString = json.isString();
          if (jsonString == null)
             return null;
@@ -170,11 +174,12 @@ public abstract class JSONDeserializer<O>
          JSONObject jsonObject = json.isObject();
          if (jsonObject == null)
             return null;
+
          return new Link( //
-            STRING_DESERIALIZER.toObject(jsonObject.get("href")), //
-            STRING_DESERIALIZER.toObject(jsonObject.get("rel")), //
-            STRING_DESERIALIZER.toObject(jsonObject.get("type")) //
-         );
+               STRING_DESERIALIZER.toObject(jsonObject.get("href")), //
+               STRING_DESERIALIZER.toObject(jsonObject.get("rel")), //
+               STRING_DESERIALIZER.toObject(jsonObject.get("type")) //
+            );
       }
 
       @Override
