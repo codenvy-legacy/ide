@@ -160,7 +160,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
       {
          public void onSubmit(SubmitEvent event)
          {
-            IDELoader.getInstance().show();
+            IDELoader.show();
          }
       });
 
@@ -251,7 +251,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
    private void submitComplete(String uploadServiceResponse)
    {
-      IDELoader.getInstance().hide();
+      IDELoader.hide();
 
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {

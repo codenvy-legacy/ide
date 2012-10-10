@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
@@ -63,7 +64,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
-      // new ProjectExplorerPresenter();
+      new PackageExplorerPresenter();
 
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());
@@ -89,7 +90,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    {
       if (TemplateService.getInstance() == null)
       {
-         new TemplateServiceImpl(IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
+         new TemplateServiceImpl(IDELoader.get(), event.getConfiguration().getRegistryURL() + "/"
             + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
       }
    }

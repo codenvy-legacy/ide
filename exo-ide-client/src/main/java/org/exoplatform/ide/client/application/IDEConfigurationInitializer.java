@@ -88,7 +88,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    public void loadConfiguration()
    {
-      new IDEConfigurationLoader(IDE.eventBus(), IDELoader.getInstance())
+      new IDEConfigurationLoader(IDE.eventBus(), IDELoader.get())
          .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>(new IDEConfigurationUnmarshaller(
             new IDEInitializationConfiguration(), new JSONObject(IDEConfigurationLoader.getAppConfig())))
          {
@@ -109,7 +109,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      {
                         throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("registryURL"));
                      }
-                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
+                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.get(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
                      
                      initialOpenedProject = applicationSettings.getValueAsString("opened-project");
@@ -234,7 +234,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    private void initServices()
    {
-      IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
+      IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.get()));
 
       /*
        * Updating top menu

@@ -89,7 +89,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
       new HotKeyManager(controls, applicationSettings);
-      new GoogleContactsServiceImpl(IDELoader.getInstance(), applicationConfiguration.getContext());
+      new GoogleContactsServiceImpl(IDELoader.get(), applicationConfiguration.getContext());
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

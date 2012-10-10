@@ -27,19 +27,42 @@ import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
  * @version $
  */
 
-public class IDELoader extends GWTLoader
+public class IDELoader
 {
 
-   private static IDELoader loader;
+   private static GWTLoader loader;
 
-   public static IDELoader getInstance()
+   public static GWTLoader get()
    {
       if (loader == null)
       {
-         loader = new IDELoader();
+         loader = new GWTLoader()
+         {
+         };
       }
 
       return loader;
+   }
+
+   public static GWTLoader getInstance()
+   {
+      return get();
+   }
+
+   public static void show()
+   {
+      get().show();
+   }
+
+   public static void show(String message)
+   {
+      get().setMessage(message);
+      get().show();
+   }
+
+   public static void hide()
+   {
+      get().hide();
    }
 
 }

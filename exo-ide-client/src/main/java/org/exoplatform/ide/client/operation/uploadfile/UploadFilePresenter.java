@@ -302,12 +302,12 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
    protected void submit(SubmitEvent event)
    {
-      IDELoader.getInstance().show();
+      IDELoader.show();
    }
 
    private void submitComplete(String uploadServiceResponse)
    {
-      IDELoader.getInstance().hide();
+      IDELoader.hide();
 
       if (uploadServiceResponse == null || uploadServiceResponse.isEmpty())
       {

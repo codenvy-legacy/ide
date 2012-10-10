@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -33,11 +35,8 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -113,8 +112,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
    {
       View activeView = event.getView();
 
-      browserPanelSelected =
-         (activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay || activeView instanceof ProjectExplorerPresenter.Display);
+      browserPanelSelected = activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay;
       updateState();
    }
 
