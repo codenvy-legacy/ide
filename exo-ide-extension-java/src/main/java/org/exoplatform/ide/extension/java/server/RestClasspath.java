@@ -21,11 +21,11 @@ package org.exoplatform.ide.extension.java.server;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.extension.maven.server.BuilderException;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.IOException;
 import java.util.Timer;

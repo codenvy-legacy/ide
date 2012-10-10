@@ -101,6 +101,7 @@ public class ProjectResolver
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
    public static final String AWS = "Amazon Web Services";
+   
 
    public static List<String> deprecatedTypes = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, EXO_APP, PHP, RAILS,
       SERVLET_JSP, SPRING, STATIC_WEB);

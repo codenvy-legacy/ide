@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -29,6 +28,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -433,7 +433,7 @@ public class FolderData extends ItemData
 
    /**
     * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getProperties(javax.jcr.Node,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Override
    @SuppressWarnings("rawtypes")

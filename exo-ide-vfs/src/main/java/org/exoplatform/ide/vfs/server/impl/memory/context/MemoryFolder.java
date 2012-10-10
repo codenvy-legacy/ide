@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -27,6 +26,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeExcepti
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
