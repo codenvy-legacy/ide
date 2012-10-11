@@ -86,7 +86,7 @@ public class PythonApplication implements GenericApplication
       DosYamlReader dosYamlReader = new DosYamlReader(appDirPath);
       dosXml = dosYamlReader.parse();
 
-      indexesXml = readIndexYaml(getPath() + "index.yaml");
+      indexesXml = readIndexYaml(getPath() + "/index.yaml");
 
       BackendsYamlReader backendsYaml = new BackendsYamlReader(appDirPath);
       backendsXml = backendsYaml.parse();
