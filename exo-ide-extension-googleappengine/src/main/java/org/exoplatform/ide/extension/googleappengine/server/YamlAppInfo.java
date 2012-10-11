@@ -25,7 +25,6 @@ import com.google.apphosting.utils.config.AppEngineConfigException;
 
 import java.io.Reader;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +37,15 @@ import java.util.Map;
 public class YamlAppInfo
 {
    // https://developers.google.com/appengine/docs/python/config/appconfig#Skipping_Files
-   // TODO Check does it work. Seems adding this in configuration does not prevent SDK to send such files.
-   private static List DEFAULT_SKIP_FILES = Arrays.asList(
-      "^(.*/)?#.*#",
-      "^(.*/)?.*~",
-      "^(.*/)?.*\\.py[co]",
-      "^(.*/)?.*/RCS/.*",
-      "^(.*/)?\\..*",
-      "^(.*/)?\\.project", // IDE project file
-      "^(.*/)?.*\\.bak"
-   );
+//   private static List DEFAULT_SKIP_FILES = Arrays.asList(
+//      "^(.*/)?#.*#",
+//      "^(.*/)?.*~",
+//      "^(.*/)?.*\\.py[co]",
+//      "^(.*/)?.*/RCS/.*",
+//      "^(.*/)?\\..*",
+//      "^(.*/)?\\.project", // IDE project file
+//      "^(.*/)?.*\\.bak"
+//   );
 
    public String application;
    public String version;
@@ -59,7 +57,7 @@ public class YamlAppInfo
    public List libraries;
    public List inbound_services;
    public String default_expiration;
-   public List skip_files;
+//   public List skip_files;
    //   public Object nobuild_files;
    public String derived_file_type;
    public Map admin_console;
@@ -85,10 +83,10 @@ public class YamlAppInfo
 
    public String toYaml()
    {
-      if (skip_files == null)
-      {
-         skip_files = DEFAULT_SKIP_FILES;
-      }
+//      if (skip_files == null)
+//      {
+//         skip_files = DEFAULT_SKIP_FILES;
+//      }
       try
       {
          StringWriter buf = new StringWriter();
@@ -117,7 +115,7 @@ public class YamlAppInfo
          ", libraries=" + libraries +
          ", inbound_services=" + inbound_services +
          ", default_expiration='" + default_expiration + '\'' +
-         ", skip_files=" + skip_files +
+//         ", skip_files=" + skip_files +
          ", derived_file_type='" + derived_file_type + '\'' +
          ", admin_console=" + admin_console +
          ", error_handlers=" + error_handlers +
