@@ -34,11 +34,16 @@ import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.TextListener;
+import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.documentparser.DocumentParser;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
+import org.exoplatform.ide.texteditor.input.ActionExecutor;
+import org.exoplatform.ide.texteditor.input.CommonActions;
 import org.exoplatform.ide.texteditor.input.InputController;
+import org.exoplatform.ide.texteditor.input.InputScheme;
+import org.exoplatform.ide.texteditor.input.RootActionExecutor;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.renderer.CurrentLineHighlighter;
@@ -54,6 +59,7 @@ import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import org.exoplatform.ide.util.CssUtils;
 import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
+import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.UserActivityManager;
@@ -251,12 +257,13 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private final UserActivityManager userActivityManager;
 
+   private CodeAssistant codeAssistant;
+
    public Editor(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
       this.resources = resources;
       this.userActivityManager = userActivityManager;
-      editorFontDimensionsCalculator =
-         FontDimensionsCalculator.get(resources.workspaceEditorCss().editorFont());
+      editorFontDimensionsCalculator = FontDimensionsCalculator.get(resources.workspaceEditorCss().editorFont());
       renderTimeExecutor = new RenderTimeExecutor();
       LineDimensionsCalculator lineDimensions = LineDimensionsCalculator.create(editorFontDimensionsCalculator);
 
@@ -269,16 +276,14 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
       focusManager = new FocusManager(buffer, input.getInputElement());
 
-      Gutter leftGutter =
-         createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
+      Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
 
       editorDocumentMutator = new EditorTextStoreMutator(this);
       mouseHoverManager = new MouseHoverManager(this);
 
       editorActivityManager =
-         new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(),
-            getKeyListenerRegistrar());
+         new EditorActivityManager(userActivityManager, buffer.getScrollListenerRegistrar(), getKeyListenerRegistrar());
 
       // TODO: instantiate input from here
       input.initializeFromEditor(this, editorDocumentMutator);
@@ -511,8 +516,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       viewport = ViewportModel.create(textStore, selection, buffer);
       input.handleDocumentChanged(textStore, selection, viewport);
       renderer =
-         Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this,
-            resources, renderTimeExecutor);
+         Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
+            renderTimeExecutor);
       if (editorUndoManager != null)
          editorUndoManager.connect(this);
 
@@ -659,6 +664,28 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       setUndoManager(configuration.getUndoManager(this));
       LineDimensionsUtils.setTabSpaceEquivalence(configuration.getTabWidth(this));
       parser = configuration.getParser(this);
+      RootActionExecutor actionExecutor = getInput().getActionExecutor();
+      actionExecutor.addDelegate(TextActions.INSTANCE);
+      codeAssistant = configuration.getContentAssistant(this);
+
+      if (codeAssistant != null)
+      {
+         codeAssistant.install(this);
+         actionExecutor.addDelegate(new ActionExecutor()
+         {
+
+            @Override
+            public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
+            {
+               if (CommonActions.RUN_CODE_ASSISTANT.equals(actionName))
+               {
+                  codeAssistant.showPossibleCompletions();
+                  return true;
+               }
+               return false;
+            }
+         });
+      }
    }
 
    /**
@@ -673,7 +700,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
          SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
             resources.workspaceEditorCss());
       addLineRenderer(syntaxHighlighter.getRenderer());
-//      Autoindenter.create(documentParser, this);
+      //      Autoindenter.create(documentParser, this);
    }
 
 }

@@ -17,15 +17,22 @@ package org.exoplatform.ide.texteditor.input;
 /**
  * Constants that define common actions.
  */
-public class CommonActions {
+public class CommonActions
+{
 
-  // TODO: 1) Refactor: extract common actions from default scheme.
-  // TODO: 2) Create action class = name + desctiption.
-  // TODO: 3) Make key-action binding configurable.
+   // TODO: 1) Refactor: extract common actions from default scheme.
+   // TODO: 2) Create action class = name + desctiption.
+   // TODO: 3) Make key-action binding configurable.
 
-  public static final String TOGGLE_COMMENT = "toggle-comment";
-  public static final String GOTO_DEFINITION = "goto-definition";
-  public static final String GOTO_SOURCE = "goto-source";
-  public static final String SPLIT_LINE = "split-line";
-  public static final String START_NEW_LINE = "start-new-line";
+   public static final String TOGGLE_COMMENT = "toggle-comment";
+
+   public static final String GOTO_DEFINITION = "goto-definition";
+
+   public static final String GOTO_SOURCE = "goto-source";
+
+   public static final String SPLIT_LINE = "split-line";
+
+   public static final String START_NEW_LINE = "start-new-line";
+   
+   public static final String RUN_CODE_ASSISTANT = "run-code-assistant";
 }

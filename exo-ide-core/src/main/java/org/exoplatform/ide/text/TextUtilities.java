@@ -19,6 +19,7 @@
 package org.exoplatform.ide.text;
 
 import org.exoplatform.ide.runtime.Assert;
+import org.exoplatform.ide.util.loging.Log;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -366,7 +367,6 @@ public class TextUtilities
     * @param document the document
     * @param partitioners the map containing the partitioners to be connected (key type: {@link String}, value type:
     *           {@link DocumentPartitioner})
-    * @since 3.0
     */
    public static void addDocumentPartitioners(Document document, Map<String, DocumentPartitioner> partitioners)
    {
@@ -399,7 +399,6 @@ public class TextUtilities
     *           <code>offset</code> over a closed partition starting at <code>offset</code>
     * @return the content type at the given offset of the document
     * @throws BadLocationException if offset is invalid in the document
-    * @since 3.0
     */
    public static String getContentType(Document document, String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException
@@ -426,7 +425,6 @@ public class TextUtilities
     *           <code>offset</code> over a closed partition starting at <code>offset</code>
     * @return the content type at the given offset of this viewer's input document
     * @throws BadLocationException if offset is invalid in the given document
-    * @since 3.0
     */
    public static ITypedRegion getPartition(Document document, String partitioning, int offset,
       boolean preferOpenPartitions) throws BadLocationException
@@ -452,7 +450,6 @@ public class TextUtilities
     * @param includeZeroLengthPartitions whether to include zero-length partitions
     * @return the partitioning for the given region of the given document for the given partitioning name
     * @throws BadLocationException if the given region is invalid for the given document
-    * @since 3.0
     */
    public static ITypedRegion[] computePartitioning(Document document, String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException
@@ -515,7 +512,6 @@ public class TextUtilities
     * 
     * @param document the document
     * @return the document's default line delimiter
-    * @since 3.0
     */
    public static String getDefaultLineDelimiter(Document document)
    {
@@ -561,7 +557,6 @@ public class TextUtilities
     * @param left the left region
     * @param right the right region
     * @return <code>true</code> if the two regions overlap, <code>false</code> otherwise
-    * @since 3.0
     */
    public static boolean overlaps(Region left, Region right)
    {
@@ -590,7 +585,6 @@ public class TextUtilities
     * 
     * @param array the string array to be copied
     * @return a copy of the given string array or <code>null</code> when <code>array</code> is <code>null</code>
-    * @since 3.1
     */
    public static String[] copy(String[] array)
    {
@@ -608,7 +602,6 @@ public class TextUtilities
     * 
     * @param array the integer array to be copied
     * @return a copy of the given integer array or <code>null</code> when <code>array</code> is <code>null</code>
-    * @since 3.1
     */
    public static int[] copy(int[] array)
    {
@@ -619,5 +612,26 @@ public class TextUtilities
          return copy;
       }
       return null;
+   }
+   
+   /**
+    * Return document offset by cursor position(line, column) 
+    * @param document the document to offset
+    * @param line the cursor line
+    * @param column the cursor column
+    * @return offset of cursor or <code>-1</code> if BadLocationException occurs
+    */
+   public static int getOffset(Document document, int line, int column)
+   {
+      try
+      {
+         int lineOffset = document.getLineOffset(line);
+         return lineOffset + column;
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(TextUtilities.class, e);
+         return -1;
+      }
    }
 }

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Element;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.store.TextStoreMutator;
+import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
@@ -121,6 +122,8 @@ public interface TextEditorPartDisplay
    Renderer getRenderer();
 
    SelectionModel getSelection();
+   
+   Buffer getBuffer();
 
 
 }

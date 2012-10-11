@@ -213,15 +213,15 @@ public class DefaultScheme extends InputScheme
        * ACTION+SPACE - prevent the default browser behavior because the document is
        * saved automatically.
        */
-      defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, ' ')
-      {
-         @Override
-         public boolean event(InputScheme scheme, SignalEvent event)
-         {
-            // not prevent ACTION+SPACE
-            return false;
-         }
-      });
+//      defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, ' ')
+//      {
+//         @Override
+//         public boolean event(InputScheme scheme, SignalEvent event)
+//         {
+//            // not prevent ACTION+SPACE
+//            return false;
+//         }
+//      });
 
       /**
        * ACTION+A - select all text in the current document.
@@ -242,23 +242,10 @@ public class DefaultScheme extends InputScheme
       defaultMode.bindAction(CommonActions.GOTO_SOURCE, ModifierKeys.NONE, KeyCodeMap.F4);
       defaultMode.bindAction(CommonActions.SPLIT_LINE, ModifierKeys.ACTION, KeyCodeMap.ENTER);
       defaultMode.bindAction(CommonActions.START_NEW_LINE, ModifierKeys.SHIFT, KeyCodeMap.ENTER);
+      defaultMode.bindAction(CommonActions.RUN_CODE_ASSISTANT, ModifierKeys.ACTION, ' ');
 
       // Single / multi-line comment / uncomment.
       defaultMode.bindAction(CommonActions.TOGGLE_COMMENT, ModifierKeys.ACTION, 47);
-      //    defaultMode.addShortcut(new StreamShortcut("/*\n")
-      //   {
-      //      
-      //      @Override
-      //      public boolean event(InputScheme scheme, SignalEvent event)
-      //      {
-      //         // TODO Auto-generated method stub
-      //         Line line = scheme.getInputController().getSelection().getCursorLine();
-      //         int column = scheme.getInputController().getSelection().getCursorColumn();
-      //         scheme.getInputController().getEditorDocumentMutator().insertText(line, column, "*\n*/");
-      //         return false;
-      //      }
-      //   });
-
       // Multi-line indenting and dedenting.
 
       /**

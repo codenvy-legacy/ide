@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.core.editor.css;
 
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
 import org.exoplatform.ide.texteditor.parser.CmParser;
 import org.exoplatform.ide.texteditor.parser.CodeMirror2;
 
@@ -41,5 +44,16 @@ public class CssEditorConfiguration extends TextEditorConfiguration
       CmParser parser = CodeMirror2.getParserForMime("text/css");
       parser.setNameAndFactory("css", new CssTokenFactory());
       return parser;
+   }
+   
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorConfiguration#getContentAssistant(org.exoplatform.ide.texteditor.api.TextEditorPartDisplay)
+    */
+   @Override
+   public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
+   {
+      CodeAssistantImpl codeAssistant = new CodeAssistantImpl();
+      codeAssistant.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor());
+      return codeAssistant;
    }
 }

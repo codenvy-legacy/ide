@@ -22,11 +22,14 @@ import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.edits.DeleteEdit;
 import org.exoplatform.ide.text.edits.InsertEdit;
+import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
+import org.exoplatform.ide.text.store.util.LineUtils;
 import org.exoplatform.ide.texteditor.api.BeforeTextListener;
 import org.exoplatform.ide.texteditor.api.TextListener;
+import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
@@ -116,13 +119,36 @@ public class EditorTextStoreMutator implements TextStoreMutator
       {
          return null;
       }
+      TextChange textChange = null;
+      SelectionModel selection = editor.getSelection();
+      if (canReplaceSelection && selection.hasSelection())
+      {
+         Position[] selectionRange = selection.getSelectionRange(true);
+         Line beginLine = selectionRange[0].getLine();
+         int beginLineNumber = selectionRange[0].getLineNumber();
+         int beginColumn = selectionRange[0].getColumn();
+         String textToDelete =
+            LineUtils.getText(beginLine, beginColumn, selectionRange[1].getLine(), selectionRange[1].getColumn());
+         textChange = deleteText(beginLine, beginLineNumber, beginColumn, textToDelete.length());
+
+         // The insertion should go where the selection was
+         line = beginLine;
+         lineNumber = beginLineNumber;
+         column = beginColumn;
+      }
+      
+      if (text.length() == 0)
+      {
+         return textChange;
+      }
+      
       Document document = editor.getDocument();
       try
       {
          int lineOffset = document.getLineOffset(lineNumber);
          InsertEdit insert = new InsertEdit(lineOffset + column, text);
          insert.apply(document);
-         TextChange textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
+         textChange = TextChange.createInsertion(line, lineNumber, column, line, lineNumber, text);
          dispatchTextChange(textChange);
 
       }
