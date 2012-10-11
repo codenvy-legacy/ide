@@ -24,11 +24,11 @@ import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.everrest.groovy.SourceFile;
 import org.everrest.groovy.SourceFolder;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.IOException;
 import java.io.InputStream;

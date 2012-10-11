@@ -25,7 +25,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: ViewConfigurationEvent.java Oct 5, 2012 1:17:17 PM azatsarynnyy $
+ * @version $Id: EditConfigurationEvent.java Oct 5, 2012 1:17:17 PM azatsarynnyy $
  *
  */
 public class EditConfigurationEvent extends GwtEvent<EditConfigurationHandler>
@@ -37,9 +37,13 @@ public class EditConfigurationEvent extends GwtEvent<EditConfigurationHandler>
 
    private EnvironmentInfo environment;
 
-   public EditConfigurationEvent(EnvironmentInfo environment)
+   private UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler;
+
+   public EditConfigurationEvent(EnvironmentInfo environment,
+      UpdateEnvironmentStartedHandler updateEnvironmentStartedHandler)
    {
       this.environment = environment;
+      this.updateEnvironmentStartedHandler = updateEnvironmentStartedHandler;
    }
 
    /**
@@ -68,6 +72,14 @@ public class EditConfigurationEvent extends GwtEvent<EditConfigurationHandler>
    public EnvironmentInfo getEnvironment()
    {
       return environment;
+   }
+
+   /**
+    * @return the updateEnvironmentStartedHandler
+    */
+   public UpdateEnvironmentStartedHandler getUpdateEnvironmentStartedHandler()
+   {
+      return updateEnvironmentStartedHandler;
    }
 
 }

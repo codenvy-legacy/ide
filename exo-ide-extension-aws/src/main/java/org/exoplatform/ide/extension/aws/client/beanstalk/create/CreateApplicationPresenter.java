@@ -69,6 +69,7 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -383,14 +384,14 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
                @Override
                protected void onSuccess(List<SolutionStack> result)
                {
-                  String[] values = new String[result.size()];
-                  int i = 0;
+                  List<String> values = new ArrayList<String>();
                   for (SolutionStack solutionStack : result)
                   {
-                     values[i] = solutionStack.getName();
-                     i++;
+                     //For detail see https://jira.exoplatform.org/browse/IDE-1951
+                     if (solutionStack.getPermittedFileTypes().contains("war"))
+                        values.add(solutionStack.getName());
                   }
-                  display.setSolutionStackValues(values);
+                  display.setSolutionStackValues(values.toArray(new String[values.size()]));
                }
 
                @Override

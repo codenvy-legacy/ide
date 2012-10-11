@@ -6,13 +6,13 @@ Type {{help}} command and press *Enter* key to see the all command list with des
 
 1. General operations refer to virtual file system, project and job management.
 
-2. {{appcfg}} commands refer to configure of applications deployed to Google Application Engine
+2. {{git}} commands refer to operations with GIT version control system. 
 
-3. {{git}} commands refer to operations with GIT version control system. 
+3. {{jcr}} commands refer to operations with JCR - inbuild eXo IDE repository.
 
-4. {{jcr}} commands refer to operations with JCR - inbuild eXo IDE repository.
+4. {{vmc}} commands refer to operations with CloudFoundry PaaS. 
 
-5. {{vmc}} commands refer to operations with CloudFoundry PaaS. 
+5. {{appcfg}} commands refer to configure of applications deployed to Google Application Engine.
 
 You can also view the command usage information by using {{-h}} key after the command name. For example: to learn more about {{jcr mixin}} command, type {{jcr mixin}} {{-h}} and press Enter. The following message will appear:
 
@@ -44,7 +44,7 @@ To clear shell screen use command *clear*.
 h1. Virtual file system operations
 
 Commands below are aimed to perform file eXo IDE file system operations. 
-{tip}Use slash symbol as the path separator and around path consist of space symbols in double quotes.{tip}
+{tip}Use slash symbol as the path separator and around path which consists of space symbols in double quotes.{tip}
 
 h2. Get list of files and folders
 {screen}
@@ -112,7 +112,9 @@ h1. Operations with GIT version control system
 Git commands can be invoke from project's root directory only.
 
 h2. Initialize new GIT repository
+{screen}
 git init
+{screen}
 
 h2. Get status of working directory
 {screen}
@@ -138,14 +140,14 @@ h2. Add file contents to the index.
 git add <file>...
 {screen}
 
-The command *git add* stages a file. If a file is untracked, "git add" converts that file’s status to tracked. When "git add" is used on a directory name, or with no specified file/directory than all of the files and subdirectories beneath it are staged recursively.
+The command *git add* stages a file. If a file is untracked, *git add* converts that file’s status to tracked. When *git add* is used on a directory name, or without file/directory, than all of the files and subdirectories beneath it are staged recursively.
 
 h2. Record changes to a repository
 {screen}
 git commit -m/--message "<message>"
 {screen}
 
-After successful commit Shell displays name of branch and hash of commit, for example:
+After successful commit _Shell_ displays name of branch and hash of commit, for example:
 {code}
 [master 0930f24d44d2ebc73180a0415bff22488015d6fc] 
 {code}
@@ -158,7 +160,7 @@ git remote list
 
 h3. Add reference to remote repository
 {screen}
-git remote add --name/-n [NAME] --url/-u [URL]
+git remote add --name/-n <name-of-remote> --url/-u <url-of-remote>
 {screen}
 
 h3. Remove the remote repository reference from project
@@ -166,153 +168,12 @@ h3. Remove the remote repository reference from project
 git remote rm <name-of-remote>
 {screen}
 
-All remote-tracking branches and configuration settings for the remote are removed.
-
-
-h1. Get info about own applications deployed to Google Application Engine and configure them
-You can use this command to configuration and static files for your application, to manage datastore indexes and download log data.
-These commands should be launched only from root folder of application deployed to Google Application Engine, and after successful login to it from IDE application. 
-More information about Google Application Engine configuration can be found at the https://developers.google.com/appengine/docs/java/ and https://developers.google.com/appengine/docs/python
-
-h2. Display info about current application resource limits
-{screen}
-appcfg resource_limits_info
-{screen}
-
-For example:
-{code}
-{
-    "max_blob_size" : 32000000,
-    "max_file_size" : 32000000,
-    "max_file_count" : 10000,
-    "max_total_file_size" : 1073741824,
-    "max_files_to_clone" : 1000
-}
-{code}
-
-h2. Backends Config
-App Engine Backends are instances of your application that are exempt from request deadlines and have access to more memory and CPU than normal instances. They are designed for applications that need faster performance, large amounts of addressable memory, and continuous or long-running background processes. 
-Backends are configured using either backends.xml or backends.yaml. You can list each backend and specify its properties, such as the number of instances, the memory and CPU class, whether it is public or private, and other options. Backends share the servlets defined in web.xml with the main application version.
-
-??? You can place your backends in a separate application root directory if you want to avoid sharing code or handlers, or simply mark the relevant handlers with login: admin.
-
-More details can be found here [Java Backends Configuration|https://developers.google.com/appengine/docs/java/config/backends?hl=uk].
-
-h2. Create or update an app version
-{screen}
-appcfg update [-w/--war <bin>]
-{screen}
-
-h2.  Rollback an in-progress update
-{screen}
-appcfg rollback
-{screen}
-
-h3. List all backends
-{screen}
-appcfg backends
-{screen}
-
-h3. Roll back all in-progress update
-{screen}
-appcfg backends rollback
-{screen}
-
-h3. Update all backend
-{screen}
-appcfg backends update
-{screen}
-
-h3. Configure the specified backend
-{screen}
-appcfg backend configure <backend_name>
-{screen}
-
-h3. Update the specified backend
-{screen}
-appcfg backend update <backend_name>
-{screen}
-
-h3. Set start/stop state of the specified backend.
-{screen}
-appcfg backend set_state <backend_name> [-s/--state start/stop]
-{screen}
-
-h3. Roll back a previously in-progress update
-{screen}
-appcfg backend rollback
-{screeb}
-
-h3.  Delete the specified backend
-{screen}
-appcfg backend delete <backend_name>
-{screen}
-
-h2. Scheduled Tasks
-A cron.xml file in the WEB-INF directory of your application (alongside appengine-web.xml) controls cron for your Java application, as it is described here [Scheduled Tasks With Cron for Java|https://developers.google.com/appengine/docs/java/config/cron?hl=uk]
-
-h3. Displays times for the next several runs of each cron job
-{screen}
-appcfg cron_info
-{screen}
-
-h3. Update application cron jobs based on cron.xml
-{screen}
-appcfg update_cron
-{screen}
-
-h2. Get application's logs in Apache common log format
-{screen}
-appcfg request_logs -d/--days <number_of_days> -s/--severity <severity>
-{screen}
-
-Here:
-* --num_days: The number of days of log data to retrieve, ending on the current date at midnight UTC. A value of 0 retrieves all available logs.
-* --severity: The minimum log level for the log messages to retrieve. The value is a number corresponding to the log level: CRITICAL, ERROR, WARNING, INFO, DEBUG.
-
-
-h2. Upload configuration of DoS protection for an app
-The App Engine Denial of Service (DoS) Protection Service enables you to protect your application from running out of quota when subjected to denial of service attacks or similar forms of abuse. You can blacklist IP addresses or subnets, and requests routed from those addresses or subnets will be dropped before your application code is called. No resource allocations, billed or otherwise, are consumed for these requests.
-A dos.xml file in the WEB-INF directory of your application (alongside appengine-web.xml) configures DoS Protection Service blacklists for your application. See example here [DoS Protection Service for Java|https://developers.google.com/appengine/docs/java/config/dos?hl=uk].
-To save changes use next command:
-{screen}
-appcfg update_dos
-{screen}
-
-h2. Update page speed.
-
-You can add a pagespeed section to your application configuration. You can find example of configuration here [Custom PageSpeed Configuration|https://developers.google.com/appengine/docs/java/config/appconfig?hl=en#pagespeed]
-
-Use next command to involve new pagespeed configuration:
-{screen}
-appcfg update_pagespeed
-{screen}
-
-h2. Task Queue Config
-Java applications define task queues in a configuration file called queue.xml. This file is stored in the application's WEB-INF directory as it describe here [Java Task Queue Configuration|https://developers.google.com/appengine/docs/java/config/queue?hl=uk]
-To update application task queue definitions use command:
-{screen}
-appcfg update_queues
-{screen}
-
-h2. Index Config
-The App Engine datastore uses indexes for every query your application makes. You specify configuration for datastore indexes in WEB-INF/datastore-indexes.xml, in your app's war/ directory as it is described here [https://developers.google.com/appengine/docs/java/config/indexconfig?hl=uk|Java Datastore Index Configuration]
-
-h3. Update application indexes
-{screen}
-appcfg update_indexes
-{screen}
-
-h3. Delete unused indexes from application
-{screen}
-appcfg vacuum_indexes
-{screen}
+All remote-tracking branches and configuration settings for the remote are being removed.
 
 
 h1. Operations with Cloud Foundry PaaS
 
-You must be logged in to Cloud Foundry by using command "PaaS > CloudFoundry > Switch Account" before managing your account. 
-Application name can be omitted if you call command from root 
+You must login to Cloud Foundry by using command *PaaS > CloudFoundry > Switch Account* before managing your account. 
 
 h2. Preview and Change Cloud Foundry server URL
 
@@ -322,7 +183,7 @@ Preview current Cloud Foundry server URL:
 vmc target
 {screen}
 
-Get list of known URLs
+Get list of known URLs:
 {screen}
 vmc targets
 {screen}
@@ -331,7 +192,7 @@ h3. Change Cloud Foundry server URL
 {screen}
 vmc set-target <server-url>
 {screen}
-Parameter <server-url> is URL of another CloudFoundry server API. Default value is http://api.cloudfoundry.com.
+Parameter *server-url* is URL of another CloudFoundry server API. Default URL is http://api.cloudfoundry.com.
 
 h2. Login to Cloud Foundry
 {screen}
@@ -343,7 +204,7 @@ h2. Get Cloud Foundry system and account information
 vmc info
 {screen}
 
-h2. List deployed applications on Cloud Foundry
+h2. List of deployed applications
 {screen}
 vmc apps
 {screen}
@@ -387,6 +248,8 @@ vmc start [application-name]
 {screen}
 Application status will be displayed after the successful start.
 
+{tip}"application-name" parameter can be omitted if you call command from root directory of project.{tip}
+
 h2. Restart Cloud Foundry application
 {screen}
 vmc restart [application-name]
@@ -400,9 +263,9 @@ vmc stop [application-name]
 
 h2.  Delete Cloud Foundry application
 {screen}
-vmc delete <application-name> [-d/--delete-services]
+vmc delete [application-name] [-d/--delete-services]
 {screen}
-Use "-d" or "--delete-services" option to delete services bounded to application.
+Use *-d* or *"--delete-services"* option to delete services bounded to application.
 
 
 h2. Display resource usage for the Cloud Foundry application
@@ -413,6 +276,7 @@ vmc stats [application-name]
 
 You will see something like the follow:
 {code}
+test@cloud-ide.com:Spring1$ vmc stats
 {
     "0" : {
         "name" : "Spring1",
@@ -433,6 +297,138 @@ You will see something like the follow:
 }
 {code}
 
+h1. Get info about applications deployed to Google Application Engine and configure they
+
+Firstly you should login to Google Application Engine by using command *PaaS > Google App Engine > Login*. Then you will be able to use this commands to configuration and static files for your application, to manage datastore indexes and download log data, etc.
+These commands should be launched only from root directory of application, created in Google Application Engine before. 
+More information about Google Application Engine configuration can be found at the https://developers.google.com/appengine/docs/java/ and https://developers.google.com/appengine/docs/python .
+
+h2. Display info about current application resource limits
+{screen}
+appcfg resource_limits_info
+{screen}
+
+For example:
+{code}
+test@cloud-ide.com:Spring1$ vmc resource_limits_info
+{
+    "max_blob_size" : 32000000,
+    "max_file_size" : 32000000,
+    "max_file_count" : 10000,
+    "max_total_file_size" : 1073741824,
+    "max_files_to_clone" : 1000
+}
+{code}
+
+h2. Create or update an app version
+{screen}
+appcfg update [-w/--war <bin>]
+{screen}
+
+h2.  Rollback an in-progress update
+{screen}
+appcfg rollback
+{screen}
+
+h2. Backends Config
+App Engine Backends are instances of your application that are exempt from request deadlines and have access to more memory and CPU than normal instances.  Backends are configured using either *backends.xml* or *backends.yaml*. More details can be found here "[Java Backends Configuration|https://developers.google.com/appengine/docs/java/config/backends]" or here "[Python Backends Configuration|https://developers.google.com/appengine/docs/python/config/backends]".
+
+h3. List all backends
+{screen}
+appcfg backends
+{screen}
+
+h3. Roll back all in-progress update
+{screen}
+appcfg backends rollback
+{screen}
+
+h3. Update all backend
+{screen}
+appcfg backends update
+{screen}
+
+h3. Configure backend
+{screen}
+appcfg backend configure <backend_name>
+{screen}
+
+h3. Update backend
+{screen}
+appcfg backend update <backend_name>
+{screen}
+
+h3. Set start/stop state of backend.
+{screen}
+appcfg backend set_state <backend_name> [-s/--state start/stop]
+{screen}
+
+h3. Roll back a previously in-progress update
+{screen}
+appcfg backend rollback
+{screen}
+
+h3.  Delete the specified backend
+{screen}
+appcfg backend delete <backend_name>
+{screen}
+
+h2. Scheduled Tasks
+A *cron.xml* file in the WEB-INF directory of your application (alongside appengine-web.xml) controls cron for your Java application, as it is described here "[Scheduled Tasks With Cron for Java|https://developers.google.com/appengine/docs/java/config/cron]". 
+Use file *cron.yaml* file in the root directory for the same purposes for your Python application according to document "[Scheduled Tasks With Cron for Python|https://developers.google.com/appengine/docs/python/config/cron]".
+
+h3. Displays times for the next several runs of each cron job
+{screen}
+appcfg cron_info
+{screen}
+
+h3. Update application cron jobs based on cron.xml
+{screen}
+appcfg update_cron
+{screen}
+
+h2. Get application's logs in Apache common log format
+{screen}
+appcfg request_logs -d/--days <number_of_days> -s/--severity <severity>
+{screen}
+Here:
+* *<number_of_days>*: the number of days of log data to retrieve, ending on the current date at midnight UTC. A value of 0 retrieves all available logs.
+* *<severity>*: the minimum log level for the log messages to retrieve. The value is a number corresponding to the log level: CRITICAL, ERROR, WARNING, INFO, DEBUG.
 
 
+h2. Upload configuration of DoS protection for an app
+The App Engine _Denial of Service (DoS) Protection Service_ enables you to protect your application from running out of quota when subjected to denial of service attacks or similar forms of abuse. A *dos.xml* file in the WEB-INF directory of Java application (alongside appengine-web.xml) configures DoS Protection Service blacklists for your application. See example here "[DoS Protection Service for Java|https://developers.google.com/appengine/docs/java/config/dos]". Use file *dos.yaml* for the same purposes in Python application as it described here "[DoS Protection Service for Python|https://developers.google.com/appengine/docs/python/config/dos]".
+To save changes call next command:
+{screen}
+appcfg update_dos
+{screen}
 
+
+h2. Update page speed
+
+You can add a pagespeed section to your application configuration. See example of configuration here "[Java Custom PageSpeed Configuration|https://developers.google.com/appengine/docs/java/config/appconfig#pagespeed]" or here "[Python Custom PageSpeed Configuration|https://developers.google.com/appengine/docs/python/config/appconfig#pagespeed]".
+
+Use next command to involve new pagespeed configuration:
+{screen}
+appcfg update_pagespeed
+{screen}
+
+h2. Task Queue Config
+Java applications define task queues in a configuration file called *queue.xml*, in the your application's WEB-INF directory as it describe here [Java Task Queue Configuration|https://developers.google.com/appengine/docs/java/config/queue] whereas Python applications - in *queue.yaml* file in the root directory according to the document "[Python Task Queue Configuration|https://developers.google.com/appengine/docs/python/config/queue]".
+To update application task queue definitions use command:
+{screen}
+appcfg update_queues
+{screen}
+
+h2. Index Config
+The App Engine datastore uses indexes for every query your application makes. For Java Application you should specify configuration for datastore indexes in *WEB-INF/datastore-indexes.xml*, in your app's war/ directory as it is described here "[Java Datastore Index Configuration|https://developers.google.com/appengine/docs/java/config/indexconfig]", whereas for Python Application - in *index.yaml* file in the root directory according to the document "[Index Configuration|https://developers.google.com/appengine/docs/python/datastore/indexes#Index_Configuration]".
+
+h3. Update application indexes
+{screen}
+appcfg update_indexes
+{screen}
+
+h3. Delete unused indexes from application
+{screen}
+appcfg vacuum_indexes
+{screen}

@@ -20,7 +20,6 @@ package org.exoplatform.ide.testframework.server;
 
 import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -39,6 +38,7 @@ import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.IOException;
@@ -148,7 +148,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Override
    public Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter)

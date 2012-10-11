@@ -16,27 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.aws.client.beanstalk.environments;
-
-import com.google.gwt.event.logical.shared.SelectionHandler;
+package org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration;
 
 import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
 
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
- * @version $Id: HasEnvironmentActions.java Sep 28, 2012 4:57:58 PM azatsarynnyy $
+ * @version $Id: UpdateEnvironmentStartedHandler.java Oct 1, 2012 4:47:04 PM azatsarynnyy $
  *
  */
-public interface HasEnvironmentActions
+public interface UpdateEnvironmentStartedHandler
 {
-   void addEditConfigurationHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addRestartHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addTerminateHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addRebuildHandler(SelectionHandler<EnvironmentInfo> handler);
-
-   void addLogsHandler(SelectionHandler<EnvironmentInfo> handler);
+   /**
+    * Perform actions, when update environment is started.
+    * 
+    * @param environmentInfo
+    */
+   void onUpdateEnvironmentStarted(EnvironmentInfo environmentInfo);
 }

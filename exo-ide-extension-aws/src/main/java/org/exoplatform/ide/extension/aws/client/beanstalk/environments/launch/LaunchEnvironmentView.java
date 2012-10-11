@@ -53,6 +53,8 @@ public class LaunchEnvironmentView extends ViewImpl implements LaunchEnvironment
 
    private static final String SOLUTION_STACK_FIELD_ID = "ideLaunchEnvironmentViewSolutionStackField";
 
+   private static final String VERSIONS_FIELD_ID = "ideLaunchEnvironmentViewVersionsField";
+
    private static final String LAUNCH_BUTTON_ID = "ideLaunchEnvironmentViewLaunchButton";
 
    private static final String CANCEL_BUTTON_ID = "ideLaunchEnvironmentViewCancelButton";
@@ -73,6 +75,9 @@ public class LaunchEnvironmentView extends ViewImpl implements LaunchEnvironment
    SelectItem solutionStackField;
 
    @UiField
+   SelectItem versionsField;
+
+   @UiField
    ImageButton launchButton;
 
    @UiField
@@ -86,6 +91,7 @@ public class LaunchEnvironmentView extends ViewImpl implements LaunchEnvironment
       envNameField.setName(ENV_NAME_FIELD_ID);
       envDescriptionField.setName(ENV_DESCRIPTION_FIELD_ID);
       solutionStackField.setName(SOLUTION_STACK_FIELD_ID);
+      versionsField.setName(VERSIONS_FIELD_ID);
       launchButton.setButtonId(LAUNCH_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -160,5 +166,23 @@ public class LaunchEnvironmentView extends ViewImpl implements LaunchEnvironment
    public void focusInEnvNameField()
    {
       envNameField.setFocus(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentPresenter.Display#getVersionField()
+    */
+   @Override
+   public HasValue<String> getVersionField()
+   {
+      return versionsField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentPresenter.Display#setVersionValues(java.lang.String[], java.lang.String)
+    */
+   @Override
+   public void setVersionValues(String[] values, String selectedValue)
+   {
+      versionsField.setValueMap(values, selectedValue);
    }
 }

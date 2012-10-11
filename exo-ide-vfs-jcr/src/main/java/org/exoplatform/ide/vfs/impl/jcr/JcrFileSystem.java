@@ -29,7 +29,6 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ItemNodeImpl;
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -56,6 +55,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -414,7 +414,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String, int, int, String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("children/{id}")
    @Override
@@ -684,7 +684,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItem(java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("item/{id}")
    @Override
@@ -705,7 +705,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("itembypath/{path:.*}")
    @Override
@@ -766,7 +766,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String, int, int,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("version-history/{id}")
    @Override
@@ -930,7 +930,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap, int, int,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
    @Override

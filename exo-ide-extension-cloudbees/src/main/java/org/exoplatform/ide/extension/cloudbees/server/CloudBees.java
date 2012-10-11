@@ -34,7 +34,6 @@ import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -44,6 +43,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 

@@ -250,10 +250,10 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addViewConfigurationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addEditConfigurationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
     */
    @Override
-   public void addViewConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
+   public void addEditConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
    {
       configurationColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
       {

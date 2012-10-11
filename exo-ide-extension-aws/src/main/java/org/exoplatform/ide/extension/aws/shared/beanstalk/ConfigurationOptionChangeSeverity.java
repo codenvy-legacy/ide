@@ -36,7 +36,9 @@ public enum ConfigurationOptionChangeSeverity
     * The environment is entirely restarted. All AWS resources are deleted and recreated, and the environment is
     * unavailable during the process.
     */
-   RestartEnvironment("RestartEnvironment");
+   RestartEnvironment("RestartEnvironment"),
+
+   Unknown("Unknown");
 
    private final String value;
 

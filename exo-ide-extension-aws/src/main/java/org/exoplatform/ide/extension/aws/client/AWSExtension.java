@@ -118,9 +118,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public static boolean canBeDeployedToBeanstalk(ProjectModel project)
    {
       ProjectType projectType = ProjectType.fromValue(project.getProjectType());
-      if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType)
-         || ProjectResolver.getProjectTypesByLanguage(Language.PYTHON).contains(projectType)
-         || ProjectResolver.getProjectTypesByLanguage(Language.PHP).contains(projectType))
+      if (ProjectResolver.getProjectTypesByLanguage(Language.JAVA).contains(projectType))
       {
          return true;
       }

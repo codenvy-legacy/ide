@@ -28,7 +28,6 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.ItemNodeImpl;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -60,6 +59,7 @@ import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 
