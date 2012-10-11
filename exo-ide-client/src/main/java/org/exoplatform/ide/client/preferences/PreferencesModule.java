@@ -73,7 +73,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
       Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
       Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
-      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
+//      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
 
       new AutocompletionHandler();
       new AboutIDEPresenter();
