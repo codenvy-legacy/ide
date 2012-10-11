@@ -182,9 +182,13 @@ public class EnvironmentStatusChecker
    private void outputEvents()
    {
       ListEventsRequest listEventsRequest = AWSExtension.AUTO_BEAN_FACTORY.listEventsRequest().as();
-      // application name detects by vfs and projectId
+      // application name will be detected by vfs and projectId
       //listEventsRequest.setApplicationName(application.getName());
-      listEventsRequest.setVersionLabel(environmentToCheck.getVersionLabel());
+
+      // Only first received event has versionLabel property.
+      // All subsequent events do not have versionLabel property.
+      //listEventsRequest.setVersionLabel(environmentToCheck.getVersionLabel());
+
       listEventsRequest.setEnvironmentId(environmentToCheck.getId());
       listEventsRequest.setStartTime(lastReceivedEventTime);
       AutoBean<EventsList> eventsListAutoBean = AWSExtension.AUTO_BEAN_FACTORY.eventList();
