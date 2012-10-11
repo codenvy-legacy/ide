@@ -356,7 +356,7 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
                @Override
                protected void onSuccess(NewS3Object result)
                {
-                  Dialogs.getInstance().showInfo(result.getS3Bucket() + result.getVersionId());
+                  refresh();
 
                }
 
