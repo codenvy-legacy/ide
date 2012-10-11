@@ -565,16 +565,16 @@ public class S3Manager implements ProjectOpenedHandler, ProjectClosedHandler, Vf
 
    private void showError(Throwable exception)
    {
-      AWSError awsError = new AWSError(exception.getMessage());
-      if (awsError.getAwsErrorMessage() != null)
-      {
-         Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
-            awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
-      }
-      else
-      {
+//      AWSError awsError = new AWSError(exception.getMessage());
+//      if (awsError.getAwsErrorMessage() != null)
+//      {
+//         Dialogs.getInstance().showError(awsError.getAwsService() + " (" + awsError.getStatusCode() + ")",
+//            awsError.getAwsErrorCode() + " : " + awsError.getAwsErrorMessage());
+//      }
+//      else
+//      {
          Dialogs.getInstance().showError(exception.getMessage());
-      }
+//      }
    }
 
    @Override
