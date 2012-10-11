@@ -23,7 +23,7 @@ import elemental.html.Element;
 import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * A presenter and anchor renderer for a cursor.

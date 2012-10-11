@@ -16,8 +16,7 @@ package org.exoplatform.ide.util.input;
 
 import elemental.events.KeyboardEvent;
 
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
 
 /**
  * Modifier key constants, safe to be ORed together.

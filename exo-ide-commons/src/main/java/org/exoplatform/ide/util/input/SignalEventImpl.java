@@ -15,13 +15,15 @@
  *
  */
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.input;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.json.js.Jso;
-import org.exoplatform.ide.util.SignalKeyLogic.OperatingSystem;
-import org.exoplatform.ide.util.SignalKeyLogic.UserAgentType;
+import org.exoplatform.ide.util.browser.QuirksConstants;
+import org.exoplatform.ide.util.browser.UserAgent;
+import org.exoplatform.ide.util.input.SignalKeyLogic.OperatingSystem;
+import org.exoplatform.ide.util.input.SignalKeyLogic.UserAgentType;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;

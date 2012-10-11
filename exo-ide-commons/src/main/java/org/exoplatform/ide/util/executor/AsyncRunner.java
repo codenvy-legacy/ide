@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.executor;
 
 import com.google.gwt.core.client.JavaScriptObject;
-
 import elemental.events.EventListener;
 import elemental.html.Document.Event;
 import elemental.js.events.JsEvent;
+
+import org.exoplatform.ide.util.dom.Elements;
 
 /*
  * TODO: Make a scheduler so there's only one event listener for
@@ -97,7 +98,7 @@ public abstract class AsyncRunner implements Runnable {
 
   private native void scheduleJs() /*-{
     // This is more responsive than setTimeout(0)
-    $wnd.postMessage(this.@org.exoplatform.ide.util.AsyncRunner::messageName, this.
-        @org.exoplatform.ide.util.AsyncRunner::targetOrigin);
+    $wnd.postMessage(this.@org.exoplatform.ide.util.executor.AsyncRunner::messageName, this.
+        @org.exoplatform.ide.util.executor.AsyncRunner::targetOrigin);
   }-*/;
 }

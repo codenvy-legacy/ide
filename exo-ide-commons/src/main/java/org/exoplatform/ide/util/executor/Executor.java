@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util.dom.eventcapture;
+package org.exoplatform.ide.util.executor;
 
 /**
- * Interface defining a handle to an object for releasing Capture.
+ * Mimics {@code java.util.concurrent.Executor} (which isn't available in GWT).
  */
-interface CaptureReleaser {
-  void release();
+public interface Executor {
+
+  public final static Executor SYNC_EXECUTOR = new Executor() {
+    @Override
+    public void execute(Runnable command) {
+      command.run();
+    }
+  };
+
+  void execute(Runnable command);
 }

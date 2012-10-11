@@ -17,7 +17,7 @@ package org.exoplatform.ide.tree;
 import org.exoplatform.ide.tree.Tree.Css;
 import org.exoplatform.ide.util.AnimationController;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 
 import elemental.css.CSSStyleDeclaration;

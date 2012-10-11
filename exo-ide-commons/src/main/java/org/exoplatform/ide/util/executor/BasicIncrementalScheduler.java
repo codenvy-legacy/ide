@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
-
-import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.UserActivityManager.UserActivityListener;
-import org.exoplatform.ide.util.loging.Log;
+package org.exoplatform.ide.util.executor;
 
 import com.google.gwt.core.client.Duration;
+
+import org.exoplatform.ide.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.util.executor.UserActivityManager.UserActivityListener;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
  * A scheduler that can incrementally run a task.

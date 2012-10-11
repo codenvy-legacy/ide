@@ -32,9 +32,9 @@ import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.ViewportModel.Edge;
 import org.exoplatform.ide.texteditor.renderer.Renderer.LineLifecycleListener;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.util.dom.Elements;
 
 import java.util.EnumSet;
 

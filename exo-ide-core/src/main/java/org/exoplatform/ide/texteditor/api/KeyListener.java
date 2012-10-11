@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.texteditor.api;
 
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * A listener that is called when the user presses a key.

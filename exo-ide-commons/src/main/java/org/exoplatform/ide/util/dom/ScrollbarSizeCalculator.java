@@ -17,7 +17,6 @@ package org.exoplatform.ide.util.dom;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import org.exoplatform.ide.util.Elements;
 
 /**
  * A class that computes and caches the width of a vertical scrollbar and height

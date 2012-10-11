@@ -21,7 +21,7 @@ import elemental.html.Element;
 
 import org.exoplatform.ide.json.js.Jso;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
 
 /*
  * We want to behave as close to native scrolling as possible, but still prevent

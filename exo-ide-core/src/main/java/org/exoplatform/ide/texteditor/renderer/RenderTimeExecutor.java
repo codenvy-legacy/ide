@@ -16,7 +16,7 @@ package org.exoplatform.ide.texteditor.renderer;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.util.Executor;
+import org.exoplatform.ide.util.executor.Executor;
 
 /**
  * An executor that will defer the commands given to {@link #execute(Runnable)}

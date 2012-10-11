@@ -15,9 +15,9 @@
 package org.exoplatform.ide.texteditor.input;
 
 import org.exoplatform.ide.texteditor.ViewportModel;
-import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.input.KeyCodeMap;
 import org.exoplatform.ide.util.input.ModifierKeys;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * An input scheme to support the editor's read-only mode.

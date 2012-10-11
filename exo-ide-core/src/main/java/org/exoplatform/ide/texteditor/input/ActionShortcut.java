@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.texteditor.input;
 
-import org.exoplatform.ide.util.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Implementation that delegates execution to action executor.

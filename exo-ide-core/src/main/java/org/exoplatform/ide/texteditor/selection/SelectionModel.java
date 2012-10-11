@@ -40,11 +40,11 @@ import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.util.browser.UserAgent;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.StringUtils;
 import org.exoplatform.ide.util.TextUtils;
 import org.exoplatform.ide.util.UnicodeUtils;
-import org.exoplatform.ide.util.UserAgent;
 
 // TODO: this class is getting huge, time to split responsibilities
 /**

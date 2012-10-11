@@ -57,14 +57,14 @@ import org.exoplatform.ide.texteditor.selection.SelectionManager;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
+import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
  * The presenter for the editor.

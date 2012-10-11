@@ -20,8 +20,8 @@ import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.executor.UserActivityManager;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * A class that listens to editor events to update the user activity manager on

@@ -14,7 +14,7 @@
 
 package org.exoplatform.ide.common;
 
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
 
 /**
  * Constants that we can use in CssResource expressions.

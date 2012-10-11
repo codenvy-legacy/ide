@@ -17,8 +17,8 @@ package org.exoplatform.ide.texteditor.linedimensions;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.StringUtils;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 

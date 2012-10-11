@@ -12,19 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.dom;
 
 /**
- * Mimics {@code java.util.concurrent.Executor} (which isn't available in GWT).
+ * Interface defining a handle to an object for releasing Capture.
  */
-public interface Executor {
-
-  public final static Executor SYNC_EXECUTOR = new Executor() {
-    @Override
-    public void execute(Runnable command) {
-      command.run();
-    }
-  };
-
-  void execute(Runnable command);
+interface CaptureReleaser {
+  void release();
 }

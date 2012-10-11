@@ -19,7 +19,7 @@ import elemental.canvas.CanvasRenderingContext2D;
 import elemental.canvas.TextMetrics;
 import elemental.html.CanvasElement;
 
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 
 /**

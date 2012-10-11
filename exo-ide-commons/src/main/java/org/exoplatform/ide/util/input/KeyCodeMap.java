@@ -17,9 +17,8 @@ package org.exoplatform.ide.util.input;
 import elemental.events.KeyboardEvent.KeyCode;
 import elemental.js.util.JsArrayOfInt;
 
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEvent.KeySignalType;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
+import org.exoplatform.ide.util.input.SignalEvent.KeySignalType;
 
 
 /**

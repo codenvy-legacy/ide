@@ -28,8 +28,8 @@ import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * Manages mouse hover events, optionally when a key modifier combination is

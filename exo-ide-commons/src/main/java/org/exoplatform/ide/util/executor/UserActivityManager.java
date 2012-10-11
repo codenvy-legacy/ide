@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.executor;
 
+import org.exoplatform.ide.util.ListenerManager;
+import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 
 import com.google.gwt.user.client.Timer;

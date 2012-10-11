@@ -26,13 +26,13 @@ import org.exoplatform.ide.text.store.anchor.AnchorManager;
 import org.exoplatform.ide.text.store.anchor.AnchorType;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.parser.Token;
-import org.exoplatform.ide.util.BasicIncrementalScheduler;
-import org.exoplatform.ide.util.IncrementalScheduler;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.executor.BasicIncrementalScheduler;
+import org.exoplatform.ide.util.executor.IncrementalScheduler;
+import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
  * Parser for a document that delegates to CodeMirror.

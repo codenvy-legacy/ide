@@ -22,8 +22,7 @@ import elemental.html.ClientRect;
 import elemental.html.DivElement;
 import elemental.html.Element;
 
-import org.exoplatform.ide.util.Elements;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
 
 /**
  * Utility methods for DOM manipulation.

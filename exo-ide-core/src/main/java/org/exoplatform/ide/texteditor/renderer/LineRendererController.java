@@ -24,9 +24,9 @@ import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.SortedList;
 import org.exoplatform.ide.util.StringUtils;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.loging.Log;
 
 /**

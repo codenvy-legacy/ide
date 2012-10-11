@@ -24,7 +24,6 @@ import elemental.html.Element;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.util.CssUtils;
-import org.exoplatform.ide.util.Elements;
 
 /**
  * A class that computes the height and width of a character.

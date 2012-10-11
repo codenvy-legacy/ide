@@ -15,7 +15,7 @@
  *
  */
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.browser;
 
 
 /**

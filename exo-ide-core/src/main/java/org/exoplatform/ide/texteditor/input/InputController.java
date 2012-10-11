@@ -35,14 +35,14 @@ import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
-import org.exoplatform.ide.util.Elements;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEventUtils;
 import org.exoplatform.ide.util.TextUtils;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.util.browser.UserAgent;
+import org.exoplatform.ide.util.dom.Elements;
+import org.exoplatform.ide.util.input.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEventUtils;
 import org.exoplatform.ide.util.loging.Log;
 
 /**

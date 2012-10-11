@@ -16,7 +16,7 @@ package org.exoplatform.ide.texteditor.parser;
 
 import com.google.gwt.resources.client.ClientBundle.Source;
 
-import org.exoplatform.ide.util.Elements;
+import org.exoplatform.ide.util.dom.Elements;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;

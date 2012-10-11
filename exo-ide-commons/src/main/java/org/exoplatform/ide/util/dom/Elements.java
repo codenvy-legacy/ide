@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.util;
+package org.exoplatform.ide.util.dom;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -45,6 +45,7 @@ import elemental.js.html.JsElement;
 import elemental.ranges.Range;
 
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.util.StringUtils;
 
 /**
  * Simple utility class for shortening frequent calls to Elemental libraries.
