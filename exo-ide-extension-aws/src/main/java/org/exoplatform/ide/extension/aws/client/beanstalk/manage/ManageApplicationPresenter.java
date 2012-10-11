@@ -59,7 +59,6 @@ import org.exoplatform.ide.extension.aws.client.beanstalk.environments.Environme
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentInfoChangedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentRequestStatusHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentStatusChecker;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.EditConfigurationEvent;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.configuration.UpdateEnvironmentStartedHandler;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.launch.LaunchEnvironmentEvent;
@@ -132,10 +131,24 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
 
       void selectEnvironmentTab();
 
+      HasClickHandlers getConfigurationButton();
+
+      HasClickHandlers getRestartButton();
+
+      HasClickHandlers getRebuildButton();
+
+      HasClickHandlers getTerminateButton();
+
+      HasClickHandlers getGetLogsButton();
+
       ListGridItem<EnvironmentInfo> getEnvironmentGrid();
 
-      HasEnvironmentActions getEnvironmentActions();
-
+      /**
+       * Change the enable state of the all buttons on Environment tab.
+       * 
+       * @param isEnable enabled or not
+       */
+      void setAllEnvironmentButtonsEnableState(boolean isEnable);
    }
 
    /**
@@ -156,6 +169,11 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
     * Time of last received event.
     */
    protected long lastReceivedEventTime;
+
+   /**
+    * Environment which is currently selected.
+    */
+   private EnvironmentInfo selectedEnvironment;
 
    // General
 
@@ -383,58 +401,78 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          }
       });
 
-      display.getEnvironmentActions().addEditConfigurationHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getEnvironmentGrid().addSelectionHandler(new SelectionHandler<EnvironmentInfo>()
       {
 
          @Override
          public void onSelection(SelectionEvent<EnvironmentInfo> event)
          {
-            if (event.getSelectedItem() != null)
+            selectedEnvironment = event.getSelectedItem();
+            display.setAllEnvironmentButtonsEnableState(true);
+         }
+      });
+
+      display.getConfigurationButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (selectedEnvironment != null)
             {
-               IDE.fireEvent(new EditConfigurationEvent(event.getSelectedItem(), updateEnvironmentStartedHandler));
+               IDE.fireEvent(new EditConfigurationEvent(selectedEnvironment, updateEnvironmentStartedHandler));
             }
          }
       });
 
-      display.getEnvironmentActions().addRestartHandler(new SelectionHandler<EnvironmentInfo>()
+      display.getRestartButton().addClickHandler(new ClickHandler()
       {
 
          @Override
-         public void onSelection(SelectionEvent<EnvironmentInfo> event)
+         public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new RestartAppServerEvent(event.getSelectedItem()));
-         }
-      });
-
-      display.getEnvironmentActions().addRebuildHandler(new SelectionHandler<EnvironmentInfo>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<EnvironmentInfo> event)
-         {
-            IDE.fireEvent(new RebuildEnvironmentEvent(event.getSelectedItem(), rebuildEnvironmentStartedHandler));
-         }
-      });
-
-      display.getEnvironmentActions().addTerminateHandler(new SelectionHandler<EnvironmentInfo>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<EnvironmentInfo> event)
-         {
-            IDE.fireEvent(new TerminateEnvironmentEvent(event.getSelectedItem(), terminateEnvironmentStartedHandler));
-         }
-      });
-
-      display.getEnvironmentActions().addLogsHandler(new SelectionHandler<EnvironmentInfo>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<EnvironmentInfo> event)
-         {
-            if (event.getSelectedItem() != null)
+            if (selectedEnvironment != null)
             {
-               getLogs(event.getSelectedItem());
+               IDE.fireEvent(new RestartAppServerEvent(selectedEnvironment));
+            }
+         }
+      });
+
+      display.getRebuildButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (selectedEnvironment != null)
+            {
+               IDE.fireEvent(new RebuildEnvironmentEvent(selectedEnvironment, rebuildEnvironmentStartedHandler));
+            }
+         }
+      });
+
+      display.getTerminateButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (selectedEnvironment != null)
+            {
+               IDE.fireEvent(new TerminateEnvironmentEvent(selectedEnvironment, terminateEnvironmentStartedHandler));
+            }
+         }
+      });
+
+      display.getGetLogsButton().addClickHandler(new ClickHandler()
+      {
+
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            if (selectedEnvironment != null)
+            {
+               getLogs(selectedEnvironment);
             }
          }
       });
@@ -592,6 +630,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
          applicationInfo.getDescription() != null ? applicationInfo.getDescription() : "");
       display.getCreateDateField().setValue(new Date(applicationInfo.getCreated()).toString());
       display.getUpdatedDateField().setValue(new Date(applicationInfo.getUpdated()).toString());
+      display.setAllEnvironmentButtonsEnableState(false);
 
       getVersions();
       getEnvironments();

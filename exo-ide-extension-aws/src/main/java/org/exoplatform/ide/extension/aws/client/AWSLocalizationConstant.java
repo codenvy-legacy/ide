@@ -547,6 +547,21 @@ public interface AWSLocalizationConstant extends com.google.gwt.i18n.client.Mess
    @Key("management.ec2.tags")
    String managementEC2Tags();
 
+   @Key("edit.environment.prompt")
+   String editEnvironmentPrompt();
+
+   @Key("restart.environment.prompt")
+   String restartEnvironmentPrompt();
+
+   @Key("rebuild.environment.prompt")
+   String rebuildEnvironmentPrompt();
+
+   @Key("terminate.environment.prompt")
+   String terminateEnvironmentPrompt();
+
+   @Key("log.environment.prompt")
+   String logEnvironmentPrompt();
+
    // Edit environment configuration
    @Key("update.environment.configuration.failed")
    String updateEnvironmentConfigurationFailed(String name);

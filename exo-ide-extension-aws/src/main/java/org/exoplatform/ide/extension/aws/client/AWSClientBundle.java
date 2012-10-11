@@ -153,4 +153,34 @@ public interface AWSClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/aws/client/images/ec2_terminate_Disabled.png")
    ImageResource ec2TerminateDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_edit.png")
+   ImageResource environmentEdit();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_edit_Disabled.png")
+   ImageResource environmentEditDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_restart.png")
+   ImageResource environmentRestart();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_restart_Disabled.png")
+   ImageResource environmentRestartDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_rebuild.png")
+   ImageResource environmentRebuild();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_rebuild_Disabled.png")
+   ImageResource environmentRebuildDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_terminate.png")
+   ImageResource environmentTerminate();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_terminate_Disabled.png")
+   ImageResource environmentTerminateDisabled();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_logs.png")
+   ImageResource environmentLogs();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/environment_logs_Disabled.png")
+   ImageResource environmentLogsDisabled();
 }
