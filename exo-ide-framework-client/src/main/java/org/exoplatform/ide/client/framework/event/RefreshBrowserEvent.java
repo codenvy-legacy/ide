@@ -72,7 +72,13 @@ public class RefreshBrowserEvent extends GwtEvent<RefreshBrowserHandler>
 
    public List<Folder> getFolders()
    {
-      return folders;
+      ArrayList<Folder> folderList = new ArrayList<Folder>();
+      if (folders != null)
+      {
+         folderList.addAll(folders);
+      }
+      
+      return folderList;
    }
 
    public Item getItemToSelect()
