@@ -343,7 +343,7 @@ public class EnvironmentInfoImpl implements EnvironmentInfo
          ", templateName='" + templateName + '\'' +
          ", description='" + description + '\'' +
          ", endpointUrl='" + endpointUrl + '\'' +
-         ", cNAME='" + cNAME + '\'' +
+         ", cname='" + cNAME + '\'' +
          ", created=" + created +
          ", updated=" + updated +
          ", status=" + status +

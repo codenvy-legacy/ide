@@ -287,7 +287,7 @@ public class EnvironmentStatusChecker
     */
    private String getAppUrl(EnvironmentInfo env)
    {
-	  String appUrl = env.getCNAME();
+	  String appUrl = env.getCname();
 	  if (appUrl == null)
 	  {
 		  appUrl = env.getEndpointUrl();
