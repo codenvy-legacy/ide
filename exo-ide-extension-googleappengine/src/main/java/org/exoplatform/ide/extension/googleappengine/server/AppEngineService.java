@@ -251,14 +251,14 @@ public class AppEngineService
          getUserId(/*security*/));
    }
 
-   @GET
-   @Path("pagespeed/update")
-   public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                               @Context SecurityContext security) throws Exception
-   {
-      client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(/*security*/));
-   }
+//   @GET
+//   @Path("pagespeed/update")
+//   public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+//                               @Context SecurityContext security) throws Exception
+//   {
+//      client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
+//         getUserId(/*security*/));
+//   }
 
    @GET
    @Path("queues/update")

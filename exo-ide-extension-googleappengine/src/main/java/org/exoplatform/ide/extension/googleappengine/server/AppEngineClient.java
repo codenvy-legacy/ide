@@ -366,20 +366,20 @@ public class AppEngineClient
       }
    }
 
-   public void updatePagespeed(VirtualFileSystem vfs,
-                               String projectId,
-                               String userId) throws IOException, VirtualFileSystemException
-   {
-      IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
-      try
-      {
-         admin.updatePagespeed();
-      }
-      finally
-      {
-         admin.getApplication().cleanStagingDirectory();
-      }
-   }
+//   public void updatePagespeed(VirtualFileSystem vfs,
+//                               String projectId,
+//                               String userId) throws IOException, VirtualFileSystemException
+//   {
+//      IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
+//      try
+//      {
+//         admin.updatePagespeed();
+//      }
+//      finally
+//      {
+//         admin.getApplication().cleanStagingDirectory();
+//      }
+//   }
 
    public void updateQueues(VirtualFileSystem vfs,
                             String projectId,

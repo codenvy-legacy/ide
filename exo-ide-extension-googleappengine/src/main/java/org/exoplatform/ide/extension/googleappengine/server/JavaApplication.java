@@ -65,6 +65,18 @@ public class JavaApplication implements GenericApplication
    }
 
    @Override
+   public String getSourceLanguage()
+   {
+      return "Java";
+   }
+
+   @Override
+   public String getServer()
+   {
+      return null; // ???
+   }
+
+   @Override
    public boolean isPrecompilationEnabled()
    {
       return delegate.isPrecompilationEnabled();
