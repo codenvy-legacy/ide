@@ -81,7 +81,7 @@ public class EC2ManagerView extends ViewImpl implements EC2Manager.Display
 
    public EC2ManagerView()
    {
-      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.managementEC2ViewTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, AWSExtension.LOCALIZATION_CONSTANT.managementEC2ViewTitle(), null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
       closeButton.setButtonId(CLOSE_BUTTON_ID);
    }

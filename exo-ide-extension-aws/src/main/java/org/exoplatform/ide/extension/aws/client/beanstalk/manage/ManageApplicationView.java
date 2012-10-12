@@ -1,12 +1,11 @@
 package org.exoplatform.ide.extension.aws.client.beanstalk.manage;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -17,7 +16,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.aws.client.AWSClientBundle;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
 import org.exoplatform.ide.extension.aws.client.beanstalk.environments.EnvironmentsTabPain;
-import org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.HasVersionActions;
 import org.exoplatform.ide.extension.aws.client.beanstalk.versions.VersionsTabPain;
 import org.exoplatform.ide.extension.aws.shared.beanstalk.ApplicationVersionInfo;
@@ -195,21 +193,66 @@ public class ManageApplicationView extends ViewImpl implements ManageApplication
    }
 
    /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getEnvironmentActions()
-    */
-   @Override
-   public HasEnvironmentActions getEnvironmentActions()
-   {
-      return environmentTabPain.getEnvironmentsGrid();
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getEnvironmentGrid()
     */
    @Override
    public ListGridItem<EnvironmentInfo> getEnvironmentGrid()
    {
       return environmentTabPain.getEnvironmentsGrid();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getConfigurationButton()
+    */
+   @Override
+   public HasClickHandlers getConfigurationButton()
+   {
+      return environmentTabPain.getConfigurationButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getRestartButton()
+    */
+   @Override
+   public HasClickHandlers getRestartButton()
+   {
+      return environmentTabPain.getRestartButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getRebuildButton()
+    */
+   @Override
+   public HasClickHandlers getRebuildButton()
+   {
+      return environmentTabPain.getRebuildButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getTerminateButton()
+    */
+   @Override
+   public HasClickHandlers getTerminateButton()
+   {
+      return environmentTabPain.getTerminateButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#getGetLogsButton()
+    */
+   @Override
+   public HasClickHandlers getGetLogsButton()
+   {
+      return environmentTabPain.getLogsButton();
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.aws.client.beanstalk.manage.ManageApplicationPresenter.Display#setAllEnvironmentButtonsEnableState(boolean)
+    */
+   @Override
+   public void setAllEnvironmentButtonsEnableState(boolean isEnable)
+   {
+      environmentTabPain.setAllEnvironmentButtonsEnableState(isEnable);
    }
 
 }

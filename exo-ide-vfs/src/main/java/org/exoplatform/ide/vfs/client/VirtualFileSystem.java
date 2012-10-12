@@ -158,19 +158,34 @@ public class VirtualFileSystem
    }
    
    /**
-    * Get tree of items starts from specified folder.
+    * Get project tree.
     * 
-    * @param folderId folder's id
-    * @throws RequestException 
+    * @param project
+    * @param callback
+    * @throws RequestException
     */
-   //public void getTree(String folderId, AsyncRequestCallback<ItemWrapper> callback) throws RequestException
-   public void getTree(Folder folder, AsyncRequestCallback<Folder> callback) throws RequestException
+   public void getProjectTree(ProjectModel project, AsyncRequestCallback<ProjectModel> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", project.getId());
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
+   }
+   
+   /**
+    * Get folder tree.
+    * 
+    * @param folder
+    * @param callback
+    * @throws RequestException
+    */
+   public void getFolderTree(FolderModel folder, AsyncRequestCallback<FolderModel> callback) throws RequestException
    {
       String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
       url = URL.decode(url).replace("[id]", folder.getId());
       url += "?" + "propertyFilter=" + PropertyFilter.ALL;
-      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
-   }  
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);      
+   }
 
    /**
     * Create new folder.

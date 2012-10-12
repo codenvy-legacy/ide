@@ -19,11 +19,7 @@
 package org.exoplatform.ide.extension.aws.client.beanstalk.environments;
 
 import com.google.gwt.cell.client.AbstractSafeHtmlCell;
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.SafeHtmlRenderer;
@@ -38,7 +34,7 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.EnvironmentInfo;
  * @version $Id: Sep 20, 2012 12:28:23 PM anya $
  * 
  */
-public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEnvironmentActions
+public class EnvironmentsGrid extends ListGrid<EnvironmentInfo>
 {
    public class LinkCell extends AbstractSafeHtmlCell<String>
    {
@@ -91,26 +87,6 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
    private final String HEALTH = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridHealth();
 
    private final String URL = AWSExtension.LOCALIZATION_CONSTANT.environmentsGridUrl();
-
-   private final String VIEW_CONFIGURATION = AWSExtension.LOCALIZATION_CONSTANT.viewConfigurationButton();
-
-   private final String RESTART = AWSExtension.LOCALIZATION_CONSTANT.restartButton();
-
-   private final String REBUILD = AWSExtension.LOCALIZATION_CONSTANT.rebuildButton();
-
-   private final String TERMINATE = AWSExtension.LOCALIZATION_CONSTANT.terminateButton();
-
-   private final String LOGS = AWSExtension.LOCALIZATION_CONSTANT.logsButton();
-
-   private Column<EnvironmentInfo, String> configurationColumn;
-
-   private Column<EnvironmentInfo, String> restartColumn;
-
-   private Column<EnvironmentInfo, String> rebuildColumn;
-
-   private Column<EnvironmentInfo, String> terminateColumn;
-
-   private Column<EnvironmentInfo, String> logsColumn;
 
    public EnvironmentsGrid()
    {
@@ -184,160 +160,12 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo> implements HasEn
          }
       };
 
-      configurationColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return VIEW_CONFIGURATION;
-         }
-      };
-
-      restartColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return RESTART;
-         }
-      };
-
-      rebuildColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return REBUILD;
-         }
-      };
-
-      terminateColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return TERMINATE;
-         }
-      };
-
-      logsColumn = new Column<EnvironmentInfo, String>(new ButtonCell())
-      {
-
-         @Override
-         public String getValue(EnvironmentInfo environmentInfo)
-         {
-            return LOGS;
-         }
-      };
-
       getCellTable().addColumn(nameColumn, NAME);
       getCellTable().addColumn(solutionStackColumn, SOLUTION_STACK);
-      getCellTable().setColumnWidth(solutionStackColumn, "130px");
       getCellTable().addColumn(appVersionColumn, VERSION);
       getCellTable().addColumn(statusColumn, STATUS);
       getCellTable().addColumn(healthColumn, HEALTH);
       getCellTable().addColumn(urlColumn, URL);
-      getCellTable().setColumnWidth(urlColumn, "130px");
-      getCellTable().addColumn(configurationColumn, VIEW_CONFIGURATION);
-      getCellTable().addColumn(restartColumn, RESTART);
-      getCellTable().addColumn(rebuildColumn, REBUILD);
-      getCellTable().addColumn(terminateColumn, TERMINATE);
-      getCellTable().addColumn(logsColumn, LOGS);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addEditConfigurationHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addEditConfigurationHandler(final SelectionHandler<EnvironmentInfo> handler)
-   {
-      configurationColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-      {
-         @Override
-         public void update(int index, EnvironmentInfo environmentInfo, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(environmentInfo));
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addRestartHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addRestartHandler(final SelectionHandler<EnvironmentInfo> handler)
-   {
-      restartColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-      {
-         @Override
-         public void update(int index, EnvironmentInfo environmentInfo, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(environmentInfo));
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addRebuildHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addRebuildHandler(final SelectionHandler<EnvironmentInfo> handler)
-   {
-      rebuildColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-      {
-         @Override
-         public void update(int index, EnvironmentInfo environmentInfo, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(environmentInfo));
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addTerminateHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addTerminateHandler(final SelectionHandler<EnvironmentInfo> handler)
-   {
-      terminateColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-      {
-         @Override
-         public void update(int index, EnvironmentInfo environmentInfo, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(environmentInfo));
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.aws.client.beanstalk.environments.HasEnvironmentActions#addLogsHandler(com.google.gwt.event.logical.shared.SelectionHandler)
-    */
-   @Override
-   public void addLogsHandler(final SelectionHandler<EnvironmentInfo> handler)
-   {
-      logsColumn.setFieldUpdater(new FieldUpdater<EnvironmentInfo, String>()
-      {
-         @Override
-         public void update(int index, EnvironmentInfo environmentInfo, String value)
-         {
-            handler.onSelection(new SelectionEventImpl(environmentInfo));
-         }
-      });
-   }
-
-   private class SelectionEventImpl extends SelectionEvent<EnvironmentInfo>
-   {
-      /**
-       * @param selectedItem
-       */
-      protected SelectionEventImpl(EnvironmentInfo selectedItem)
-      {
-         super(selectedItem);
-      }
    }
 
    /**

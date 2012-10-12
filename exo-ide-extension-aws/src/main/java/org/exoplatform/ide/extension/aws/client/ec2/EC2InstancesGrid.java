@@ -145,6 +145,7 @@ public class EC2InstancesGrid extends ListGrid<InstanceInfo>
       };
 
       getCellTable().addColumn(instanceIdCol, "Instance");
+      getCellTable().setColumnWidth(launchTimeCol, 30, Unit.PCT);
       getCellTable().addColumn(imageIdCol, "AMI ID");
       getCellTable().addColumn(rootDeviceCol, "Root Device");
       getCellTable().addColumn(imageTypeCol, "Type");
