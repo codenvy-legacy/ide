@@ -25,10 +25,16 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -37,7 +43,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
  */
 @RolesAllowed({"administrators", "developers"})
 public class ShowPackageExplorerControl extends SimpleControl implements IDEControl, VfsChangedHandler,
-   ViewOpenedHandler, ViewClosedHandler
+   ViewOpenedHandler, ViewClosedHandler, ProjectClosedHandler,  ProjectOpenedHandler
 {
 
    public static final String ID = "Window/Show View/Package Explorer";
@@ -53,6 +59,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.packageExplorer(), IDEImageBundle.INSTANCE.packageExplorerDisabled());
       setEvent(new ShowPackageExplorerEvent());
+      setEnabled(false);
    }
 
    @Override
@@ -61,6 +68,8 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    @Override
@@ -93,6 +102,36 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       if (event.getView() instanceof PackageExplorerPresenter.Display)
       {
          setSelected(true);
+      }
+   }
+   
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      setEnabled(false);
+   }
+
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      String projectType = event.getProject().getProjectType();
+      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
+      {
+         setEnabled(true);
+      }
+      else 
+      {
+         setEnabled(false);
       }
    }
 

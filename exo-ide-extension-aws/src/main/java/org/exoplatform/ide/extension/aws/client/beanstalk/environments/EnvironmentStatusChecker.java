@@ -132,6 +132,11 @@ public class EnvironmentStatusChecker
       @Override
       public void run()
       {
+    	 if (showEvents)
+         {
+            outputEvents();
+         }
+
          AutoBean<EnvironmentInfo> autoBean = AWSExtension.AUTO_BEAN_FACTORY.environmentInfo();
          AutoBeanUnmarshaller<EnvironmentInfo> unmarshaller = new AutoBeanUnmarshaller<EnvironmentInfo>(autoBean);
          try
@@ -167,11 +172,6 @@ public class EnvironmentStatusChecker
          catch (RequestException e)
          {
             IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-
-         if (showEvents)
-         {
-            outputEvents();
          }
       }
    };
@@ -287,7 +287,11 @@ public class EnvironmentStatusChecker
     */
    private String getAppUrl(EnvironmentInfo env)
    {
-      String appUrl = env.getEndpointUrl();
+	  String appUrl = env.getCNAME();
+	  if (appUrl == null)
+	  {
+		  appUrl = env.getEndpointUrl();
+	  }
       if (!appUrl.startsWith("http"))
       {
          appUrl = "http://" + appUrl;
