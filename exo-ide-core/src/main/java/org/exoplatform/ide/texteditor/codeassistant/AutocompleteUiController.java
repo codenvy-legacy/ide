@@ -14,40 +14,31 @@
 
 package org.exoplatform.ide.texteditor.codeassistant;
 
-import com.google.gwt.user.client.ui.FocusPanel;
-
-import com.google.gwt.cell.client.AbstractCell;
-import com.google.gwt.cell.client.Cell;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.SingleSelectionModel;
-import elemental.events.Event;
-import elemental.events.EventListener;
+import elemental.css.CSSStyleDeclaration;
+import elemental.dom.Node;
+import elemental.html.ClientRect;
 import elemental.html.Element;
+import elemental.html.TableCellElement;
+import elemental.html.TableElement;
 
+import org.exoplatform.ide.core.editor.css.CompletionType;
+import org.exoplatform.ide.core.editor.css.CssCompletionProposal;
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.runtime.Assert;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.text.store.anchor.ReadOnlyAnchor;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEventUtils;
-import org.exoplatform.ide.util.UserAgent;
+import org.exoplatform.ide.ui.list.SimpleList;
+import org.exoplatform.ide.ui.list.SimpleList.View;
+import org.exoplatform.ide.ui.menu.AutoHideController;
+import org.exoplatform.ide.util.CssUtils;
 import org.exoplatform.ide.util.dom.DomUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
+import org.exoplatform.ide.util.dom.Elements;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * A controller for managing the UI for showing autocomplete proposals.
@@ -56,7 +47,7 @@ import java.util.Collections;
 public class AutocompleteUiController implements AutocompleteBox
 {
 
-   public interface Resources extends ClientBundle
+   public interface Resources extends SimpleList.Resources
    {
       @Source("AutocompleteComponent.css")
       Css autocompleteComponentCss();
@@ -81,25 +72,85 @@ public class AutocompleteUiController implements AutocompleteBox
       int maxHeight();
    }
 
-   //  private static final AutocompleteProposal CAPPED_INDICATOR = new AutocompleteProposal("");
+   private static final CompletionProposal CAPPED_INDICATOR = new CssCompletionProposal("", CompletionType.NONE);
 
-   private final Cell<CompletionProposal> proposalCell = new AbstractCell<CompletionProposal>()
-   {
-
-      @Override
-      public void render(com.google.gwt.cell.client.Cell.Context context, CompletionProposal value, SafeHtmlBuilder sb)
+   private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
+      new SimpleList.ListItemRenderer<CompletionProposal>()
       {
-         sb.appendHtmlConstant(value.getDisplayString());
-      }
-   };
+         @Override
+         public void render(Element itemElement, CompletionProposal itemData)
+         {
+            TableCellElement icon = Elements.createTDElement(css.proposalIcon());
+            TableCellElement label = Elements.createTDElement(css.proposalLabel());
+            TableCellElement group = Elements.createTDElement(css.proposalGroup());
 
-   private final CellList<CompletionProposal> list;
+            if (itemData != CAPPED_INDICATOR)
+            {
+               icon.appendChild((Node)itemData.getImage().getElement());
+               label.setInnerHTML(itemData.getDisplayString());
+               //group.setTextContent(itemData.getPath().getPathString());
+            }
+            else
+            {
+               label.setTextContent("Type for more results");
+               label.addClassName(css.cappedProposalLabel());
+            }
+            itemElement.appendChild(icon);
+            itemElement.appendChild(label);
+            itemElement.appendChild(group);
+         }
+
+         @Override
+         public Element createElement()
+         {
+            return Elements.createTRElement();
+         }
+      };
+
+   private final SimpleList.ListEventDelegate<CompletionProposal> listDelegate =
+      new SimpleList.ListEventDelegate<CompletionProposal>()
+      {
+         @Override
+         public void onListItemClicked(Element itemElement, CompletionProposal itemData)
+         {
+            Assert.isNotNull(delegate);
+            if (itemData == CAPPED_INDICATOR)
+            {
+               return;
+            }
+            list.getSelectionModel().setSelectedItem(itemData);
+         }
+
+         @Override
+         public void onListItemDoubleClicked(Element listItemBase, CompletionProposal itemData)
+         {
+            Assert.isNotNull(delegate);
+            if (itemData == CAPPED_INDICATOR)
+            {
+               return;
+            }
+            delegate.onSelect(itemData);
+         }
+      };
+
+   private final AutoHideController autoHideController;
+
+   private final Css css;
+
+   private final SimpleList<CompletionProposal> list;
 
    private Events delegate;
 
    private final TextEditorPartDisplay editor;
 
-   private final PopupPanel popup;
+   private final Element box;
+
+   private final Element container;
+
+   private final Element hint;
+
+   /** Will be non-null when the popup is showing */
+   private ReadOnlyAnchor anchor;
 
    /**
     * True to force the layout above the anchor, false to layout below. This
@@ -108,86 +159,40 @@ public class AutocompleteUiController implements AutocompleteBox
     */
    private boolean positionAbove;
 
-   private SingleSelectionModel<CompletionProposal> selectionModel = new SingleSelectionModel<CompletionProposal>();
-
-   /**
-    * The currently displayed proposals. This may contain more proposals than actually shown since we
-    * cap the maximum number of visible proposals. This will be null if the UI is not showing.
-    */
-   private JsonArray<CompletionProposal> proposals;
-
-   private ListDataProvider<CompletionProposal> provider;
-
-   public AutocompleteUiController(TextEditorPartDisplay editor)
+   public AutocompleteUiController(TextEditorPartDisplay editor, Resources res)
    {
       this.editor = editor;
-      popup = new PopupPanel(true);
-      popup.setSize("200px", "100px");
-      list = new CellList<CompletionProposal>(proposalCell);
-      list.setSelectionModel(selectionModel);
-      list.setEmptyListWidget(new Label("No proposal"));
-      list.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-      provider = new ListDataProvider<CompletionProposal>();
-      provider.addDataDisplay(list);
-      ScrollPanel scrollPanel = new ScrollPanel();
-      scrollPanel.add(list);
-      popup.add(scrollPanel);
-      addKeyboardHandlers((Element)popup.getElement());
-      
-   }
+      this.css = res.autocompleteComponentCss();
 
-   /**
-    * @param element
-    */
-   private void addKeyboardHandlers(Element element)
-   {
-      EventListener listener = new EventListener()
-      {
-         
-         @Override
-         public void handleEvent(Event evt)
-         {
-            SignalEvent signalEvent = SignalEventUtils.create(evt);
-            if(signalEvent == null)
-               return;
-            processEvent(signalEvent);
-            evt.preventDefault();
-            evt.stopPropagation();
-            evt.stopImmediatePropagation();
-         }
-      };
-//      if(UserAgent.isFirefox())
-//      {
-       element.addEventListener(Event.KEYPRESS, listener, false);
-//      }
-//      else
-//      {
-//         element.addEventListener(Event.KEYDOWN, listener, false);
-//      }
-   }
+      box = Elements.createDivElement();
+      // Prevent our mouse events from going to the editor
+      DomUtils.stopMousePropagation(box);
 
-   /**
-    * @param signalEvent
-    */
-   private void processEvent(SignalEvent signalEvent)
-   {
-//      if ((signalEvent.getKeyCode() == KeyCodes.KEY_TAB) || (signalEvent.getKeyCode() == KeyCodes.KEY_ENTER))
-//      {
-//         delegate.onSelect(selectionModel.getSelectedObject());
-//         return;
-//      }
-//
-//      if (signalEvent.getKeyCode() == KeyCodes.KEY_ESCAPE)
-//      {
-//         delegate.onCancel();
-//      }
-      consumeKeySignal(new SignalEventEssence(signalEvent));
+      TableElement tableElement = Elements.createTableElement();
+      tableElement.setClassName(css.items());
+
+      container = Elements.createDivElement(css.container());
+      DomUtils.preventExcessiveScrollingPropagation(container);
+      container.appendChild(tableElement);
+      box.appendChild(container);
+
+      hint = Elements.createDivElement(css.hint());
+      CssUtils.setDisplayVisibility2(hint, false);
+      box.appendChild(hint);
+
+      list =
+         SimpleList.create((View)box, container, tableElement, res.defaultSimpleListCss(), listItemRenderer,
+            listDelegate);
+
+      autoHideController = AutoHideController.create(box);
+      autoHideController.setCaptureOutsideClickOnClose(false);
+      autoHideController.setDelay(-1);
    }
 
    @Override
    public boolean isShowing()
    {
-      return popup.isShowing();
+      return autoHideController.isShowing();
    }
 
    @Override
@@ -198,7 +203,7 @@ public class AutocompleteUiController implements AutocompleteBox
 
       if ((signal.keyCode == KeyCodes.KEY_TAB) || (signal.keyCode == KeyCodes.KEY_ENTER))
       {
-         delegate.onSelect(selectionModel.getSelectedObject());
+         delegate.onSelect(list.getSelectionModel().getSelectedItem());
          return true;
       }
 
@@ -213,33 +218,28 @@ public class AutocompleteUiController implements AutocompleteBox
          return false;
       }
 
-      int index = proposals.indexOf(selectionModel.getSelectedObject());
       if ((signal.keyCode == KeyCodes.KEY_DOWN))
       {
-         if (index == proposals.size() - 1)
+         if (list.getSelectionModel().getSelectedIndex() == list.getSelectionModel().size() - 1)
          {
-            selectionModel.setSelected(proposals.get(0), true);
-            ensureProposalVisible(0);
+            list.getSelectionModel().setSelectedItem(0);
          }
          else
          {
-            selectionModel.setSelected(proposals.get(++index), true);
-            ensureProposalVisible(index);
+            list.getSelectionModel().selectNext();
          }
          return true;
       }
 
       if (signal.keyCode == KeyCodes.KEY_UP)
       {
-         if (index == 0)
+         if (list.getSelectionModel().getSelectedIndex() == 0)
          {
-            selectionModel.setSelected(proposals.get(proposals.size() - 1), true);
-            ensureProposalVisible(proposals.size() - 1);
+            list.getSelectionModel().setSelectedItem(list.getSelectionModel().size() - 1);
          }
          else
          {
-            selectionModel.setSelected(proposals.get(--index), true);
-            ensureProposalVisible(index);
+            list.getSelectionModel().selectPrevious();
          }
          return true;
       }
@@ -250,25 +250,19 @@ public class AutocompleteUiController implements AutocompleteBox
          return true;
       }
 
-      //      if (signal.keyCode == KeyCodes.KEY_PAGEUP)
-      //      {
-      //         list.getSelectionModel().selectPreviousPage();
-      //         return true;
-      //      }
-      //
-      //      if (signal.keyCode == KeyCodes.KEY_PAGEDOWN)
-      //      {
-      //         list.getSelectionModel().selectNextPage();
-      //         return true;
-      //      }
+      if (signal.keyCode == KeyCodes.KEY_PAGEUP)
+      {
+         list.getSelectionModel().selectPreviousPage();
+         return true;
+      }
+
+      if (signal.keyCode == KeyCodes.KEY_PAGEDOWN)
+      {
+         list.getSelectionModel().selectNextPage();
+         return true;
+      }
 
       return false;
-   }
-
-   private void ensureProposalVisible(int index)
-   {
-      com.google.gwt.dom.client.Element element = list.getRowElement(index);
-      element.scrollIntoView();
    }
 
    @Override
@@ -280,13 +274,17 @@ public class AutocompleteUiController implements AutocompleteBox
    @Override
    public void dismiss()
    {
-      boolean hadFocus = DomUtils.isElementOrChildFocused((Element)popup.getElement());
-      popup.hide();
+      boolean hadFocus = list.hasFocus();
+      autoHideController.hide();
 
-      proposals = null;
+      if (anchor != null)
+      {
+         editor.getBuffer().removeAnchoredElement(anchor, autoHideController.getView().getElement());
+         anchor = null;
+      }
+
 
       FocusManager focusManager = editor.getFocusManager();
-
       if (hadFocus && !focusManager.hasFocus())
       {
          focusManager.focus();
@@ -296,82 +294,48 @@ public class AutocompleteUiController implements AutocompleteBox
    @Override
    public void positionAndShow(CompletionProposal[] items)
    {
+      this.anchor = editor.getSelection().getCursorAnchor();
+
+      boolean showingFromHidden = !autoHideController.isShowing();
+      if (showingFromHidden)
+      {
+         list.getSelectionModel().clearSelection();
+      }
+
+      final JsonArray<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal> create();
+      String hintText = null;//items.getHint();
       if (items != null && items.length != 0)
       {
-         this.proposals = JsonCollections.createArray(items);
-         provider.setList(Arrays.asList(items));
-         list.setPageSize(items.length);
-         selectionModel.setSelected(items[0], true);
+         for (int i = 0; i < items.length; i++)
+         {
+            itemsToDisplay.add(items[i]);
+         }
       }
       else
       {
-         proposals = JsonCollections.createArray();
-         provider.setList(Collections.<CompletionProposal> emptyList());
+         hintText = "No proposals";
       }
-      //      this.anchor = editor.getSelection().getCursorAnchor();
+      list.render(itemsToDisplay);
 
-      boolean showingFromHidden = !popup.isShowing();
-      //      if (showingFromHidden)
-      //      {
-      //         list.getSelectionModel().clearSelection();
-      //      }
-
-      //      final JsonArray<CompletionProposal> itemsToDisplay = JsoArray.<CompletionProposal> create();
-      //      if (items.length <= MAX_COMPLETIONS_TO_SHOW)
-      //      {
-      //         //itemsToDisplay = items;
-      //         for (int i = 0; i < items.length; i++)
-      //         {
-      //            itemsToDisplay.add(items[i]);
-      //         }
-      //      }
-      //      else
-      //      {
-      //         for (int i = 0; i < MAX_COMPLETIONS_TO_SHOW; i++)
-      //         {
-      //            itemsToDisplay.add(items[i]);
-      //         }
-      //         //itemsToDisplay = items.getItems().slice(0, MAX_COMPLETIONS_TO_SHOW);
-      //         //itemsToDisplay.add(CAPPED_INDICATOR);
-      //      }
-
-      //      if (list.getSelectionModel().getSelectedItem() == null)
-      //      {
-      //         list.getSelectionModel().setSelectedItem(0);
-      //      }
-
-      //      String hintText = null;//items.getHint();
-      //      if (hintText == null)
-      //      {
-      //         hint.setTextContent("");
-      //         CssUtils.setDisplayVisibility2(hint, false);
-      //      }
-      //      else
-      //      {
-      //         hint.setTextContent(hintText);
-      //         CssUtils.setDisplayVisibility2(hint, true);
-      //      }
-      Editor e = (Editor)editor;
-      com.google.gwt.user.client.Element element =
-         (com.google.gwt.user.client.Element)e.getBuffer().getView().getElement();
-      final int cursorY =
-         e.getBuffer().convertLineNumberToY(editor.getSelection().getCursorLineNumber()) + element.getAbsoluteTop()
-            + e.getBuffer().getEditorLineHeight();
-      final int cursorX =
-         e.getBuffer().convertColumnToX(editor.getSelection().getCursorLine(), editor.getSelection().getCursorColumn())
-            + element.getAbsoluteLeft();
-      popup.setPopupPositionAndShow(new PositionCallback()
+      if (list.getSelectionModel().getSelectedItem() == null)
       {
+         list.getSelectionModel().setSelectedItem(0);
+      }
 
-         @Override
-         public void setPosition(int offsetWidth, int offsetHeight)
-         {
-            //TODO calculation of position
-            popup.setPopupPosition(cursorX, cursorY);
-         }
-      });
+      if (hintText == null)
+      {
+         hint.setTextContent("");
+         CssUtils.setDisplayVisibility2(hint, false);
+      }
+      else
+      {
+         hint.setTextContent(hintText);
+         CssUtils.setDisplayVisibility2(hint, true);
+      }
 
-      //      editor.getBuffer().addAnchoredElement(anchor, box);
+      autoHideController.show();
+
+      editor.getBuffer().addAnchoredElement(anchor, box);
 
       ensureRootElementWillBeOnScreen(showingFromHidden);
    }
@@ -379,59 +343,59 @@ public class AutocompleteUiController implements AutocompleteBox
    private void ensureRootElementWillBeOnScreen(boolean showingFromHidden)
    {
       // Remove any max-heights so we can get its desired height
-      //      container.getStyle().removeProperty("max-height");
-      //      ClientRect bounds = ((Element)popup.getElement()).getBoundingClientRect();
-      //      int height = (int)bounds.getHeight();
-      //      int delta = height - (int)container.getBoundingClientRect().getHeight();
-      //
-      //      ClientRect bufferBounds = editor.getBuffer().getBoundingClientRect();
-      //      int lineHeight = editor.getBuffer().getEditorLineHeight();
-      //      int lineTop = (int)bounds.getTop() - CssUtils.parsePixels(box.getStyle().getMarginTop());
-      //
-      //      int spaceAbove = lineTop - (int)bufferBounds.getTop();
-      //      int spaceBelow = (int)bufferBounds.getBottom() - lineTop - lineHeight;
-      //
-      //      if (showingFromHidden)
-      //      {
-      //         // If it was already showing, we don't adjust the positioning.
-      //         positionAbove = spaceAbove >= css.maxHeight() && spaceBelow < css.maxHeight();
-      //      }
-      //
-      //      // Get available height.
-      //      int maxHeight = positionAbove ? spaceAbove : spaceBelow;
-      //
-      //      // Restrict to specified height.
-      //      maxHeight = Math.min(maxHeight, css.maxHeight());
-      //
-      //      // Fit to content size.
-      //      maxHeight = Math.min(maxHeight, height);
-      //
-      //      container.getStyle().setProperty("max-height", (maxHeight - delta) + CSSStyleDeclaration.Unit.PX);
-      //
-      //      int marginTop = positionAbove ? -maxHeight : lineHeight;
-      //      box.getStyle().setMarginTop(marginTop, CSSStyleDeclaration.Unit.PX);
-      //
-      //      if (showingFromHidden)
-      //      {
-      //         // Adjust the box horizontal position if it's out of the editor's right bound.
-      //         // If box was already showing, we don't adjust the horizontal positioning to avoid flickering.
-      //         int editorScrollLeft = editor.getBuffer().getScrollLeft();
-      //         int boxLeftPosition = CssUtils.parsePixels(box.getStyle().getLeft()) - editorScrollLeft;
-      //         int boxWidth = (int)bounds.getWidth();
-      //         int editorWidth = editor.getBuffer().getWidth();
-      //         int boxRightOffset = 8; // need for better visibility
-      //         if ((boxLeftPosition + boxWidth) > editorWidth - boxRightOffset)
-      //         {
-      //            if (editorWidth > boxWidth)
-      //            {
-      //               box.getStyle().setLeft(editorWidth + editorScrollLeft - boxWidth - boxRightOffset,
-      //                  CSSStyleDeclaration.Unit.PX);
-      //            }
-      //         }
-      //      }
+      container.getStyle().removeProperty("max-height");
+      ClientRect bounds = box.getBoundingClientRect();
+      int height = (int)bounds.getHeight();
+      int delta = height - (int)container.getBoundingClientRect().getHeight();
+
+      ClientRect bufferBounds = editor.getBuffer().getBoundingClientRect();
+      int lineHeight = editor.getBuffer().getEditorLineHeight();
+      int lineTop = (int)bounds.getTop() - CssUtils.parsePixels(box.getStyle().getMarginTop());
+
+      int spaceAbove = lineTop - (int)bufferBounds.getTop();
+      int spaceBelow = (int)bufferBounds.getBottom() - lineTop - lineHeight;
+
+      if (showingFromHidden)
+      {
+         // If it was already showing, we don't adjust the positioning.
+         positionAbove = spaceAbove >= css.maxHeight() && spaceBelow < css.maxHeight();
+      }
+
+      // Get available height.
+      int maxHeight = positionAbove ? spaceAbove : spaceBelow;
+
+      // Restrict to specified height.
+      maxHeight = Math.min(maxHeight, css.maxHeight());
+
+      // Fit to content size.
+      maxHeight = Math.min(maxHeight, height);
+
+      container.getStyle().setProperty("max-height", (maxHeight - delta) + CSSStyleDeclaration.Unit.PX);
+
+      int marginTop = positionAbove ? -maxHeight : lineHeight;
+      box.getStyle().setMarginTop(marginTop, CSSStyleDeclaration.Unit.PX);
+
+      if (showingFromHidden)
+      {
+         // Adjust the box horizontal position if it's out of the editor's right bound.
+         // If box was already showing, we don't adjust the horizontal positioning to avoid flickering.
+         int editorScrollLeft = editor.getBuffer().getScrollLeft();
+         int boxLeftPosition = CssUtils.parsePixels(box.getStyle().getLeft()) - editorScrollLeft;
+         int boxWidth = (int)bounds.getWidth();
+         int editorWidth = editor.getBuffer().getWidth();
+         int boxRightOffset = 8; // need for better visibility
+         if ((boxLeftPosition + boxWidth) > editorWidth - boxRightOffset)
+         {
+            if (editorWidth > boxWidth)
+            {
+               box.getStyle().setLeft(editorWidth + editorScrollLeft - boxWidth - boxRightOffset,
+                  CSSStyleDeclaration.Unit.PX);
+            }
+         }
+      }
    }
 
-   CellList<CompletionProposal> getList()
+   SimpleList<CompletionProposal> getList()
    {
       return list;
    }

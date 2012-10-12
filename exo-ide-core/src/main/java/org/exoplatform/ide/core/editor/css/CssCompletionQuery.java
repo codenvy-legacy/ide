@@ -21,7 +21,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 
 /**
- * A completion query for a CSS autocompletion. Processes the relevant context
+ * A completion query for a CSS code assistant. Processes the relevant context
  * in the document.
  *
  */
@@ -156,7 +156,7 @@ public class CssCompletionQuery
       }
       else if (textBefore.endsWith("{"))
       {
-         completionType = CompletionType.CLASS;
+         completionType = CompletionType.PROPERTY;
          return;
       }
 

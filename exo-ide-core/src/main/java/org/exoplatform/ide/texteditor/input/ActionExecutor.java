@@ -16,11 +16,11 @@ package org.exoplatform.ide.texteditor.input;
 
 import org.exoplatform.ide.util.input.SignalEvent;
 
-
 /**
  * Interface used to resolve and execute action.
  */
-public interface ActionExecutor {
+public interface ActionExecutor
+{
 
-  boolean execute(String actionName, InputScheme scheme, SignalEvent event);
+   boolean execute(String actionName, InputScheme scheme, SignalEvent event);
 }

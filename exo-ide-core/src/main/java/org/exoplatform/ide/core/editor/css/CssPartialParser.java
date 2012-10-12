@@ -26,7 +26,7 @@ import elemental.js.util.JsMapFromStringToBoolean;
 
 /**
  * Based on the complete property list for CSS2, this partial parser parses
- * already existing values and proposes autocompletions for the slot where the
+ * already existing values and proposes code assistant for the slot where the
  * cursor currently is.
  *
  */
@@ -2600,7 +2600,7 @@ public class CssPartialParser
 					'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
 					'silver', 'teal', 'white', 'yellow',
 					'rgb(<number>, <number>, <number>)',
-					'rgb(<percentage>, <percentage>, <percentage>', '#rgb',
+					'rgb(<percentage>, <percentage>, <percentage>)', '#rgb',
 					'#rrggbb' ],
 			'<uri>' : [ '<uri>' ],
 			'<length>' : [ '<number>em', '<number>ex', '<number>in',

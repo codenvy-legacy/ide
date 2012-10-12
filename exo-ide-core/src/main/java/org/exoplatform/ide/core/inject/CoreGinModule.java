@@ -16,12 +16,10 @@
  */
 package org.exoplatform.ide.core.inject;
 
-import com.google.inject.name.Named;
-
-import com.google.inject.Provides;
-
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -34,6 +32,8 @@ import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.core.editor.JavaEditorProvider;
 import org.exoplatform.ide.core.editor.ResourceDocumentProvider;
+import org.exoplatform.ide.core.editor.css.CssEditorProvider;
+import org.exoplatform.ide.core.editor.css.CssResources;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorProvider;
@@ -86,6 +86,8 @@ public class CoreGinModule extends AbstractGinModule
       bind(UserActivityManager.class).in(Singleton.class);
       //XXX for demo use only, remove this
       bind(JavaEditorProvider.class).in(Singleton.class);
+      bind(CssEditorProvider.class).in(Singleton.class);
+      bind(CssResources.class).in(Singleton.class);
    }
 
    /**

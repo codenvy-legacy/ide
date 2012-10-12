@@ -35,6 +35,17 @@ import org.exoplatform.ide.texteditor.parser.CodeMirror2;
 public class CssEditorConfiguration extends TextEditorConfiguration
 {
 
+   private CssResources resourcess;
+
+   /**
+    * @param resourcess
+    */
+   public CssEditorConfiguration(CssResources resourcess)
+   {
+      super();
+      this.resourcess = resourcess;
+   }
+
    /**
     * @see org.exoplatform.ide.texteditor.api.TextEditorConfiguration#getParser()
     */
@@ -45,7 +56,7 @@ public class CssEditorConfiguration extends TextEditorConfiguration
       parser.setNameAndFactory("css", new CssTokenFactory());
       return parser;
    }
-   
+
    /**
     * @see org.exoplatform.ide.texteditor.api.TextEditorConfiguration#getContentAssistant(org.exoplatform.ide.texteditor.api.TextEditorPartDisplay)
     */
@@ -53,7 +64,7 @@ public class CssEditorConfiguration extends TextEditorConfiguration
    public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
    {
       CodeAssistantImpl codeAssistant = new CodeAssistantImpl();
-      codeAssistant.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor());
+      codeAssistant.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, new CssCodeAssistantProcessor(resourcess));
       return codeAssistant;
    }
 }

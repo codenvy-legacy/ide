@@ -28,6 +28,7 @@ import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.util.AbstractTrie;
 
 /**
+ * Implementation of {@link CodeAssistProcessor} for Css files.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -39,12 +40,22 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
 
    private CssCompletionQuery completionQuery;
 
+   private CssResources resourcess;
+
+   /**
+    * @param resourcess
+    */
+   public CssCodeAssistantProcessor(CssResources resourcess)
+   {
+      super();
+      this.resourcess = resourcess;
+   }
+
    /**
     * Creates a completion query from the position of the caret and the editor.
     * The completion query contains the string to complete and the type of
-    * autocompletion.
+    * code assistant.
     *
-    * TODO: take care of quoted '{' and '}'
     */
    CssCompletionQuery updateOrCreateQuery(CssCompletionQuery completionQuery, Position cursor)
    {
@@ -75,7 +86,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
              * Don't include the newline character; it is irrelevant for
              * autocompletion.
              */
-            text = line.getText().trim();
+            text = line.getText();//.trim();
          }
 
          textBefore = text + textBefore;
@@ -85,7 +96,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
          // Either we have only a } or the } appears after {
          if (lastOpen < lastClose)
          {
-            return completionQuery;
+            return new CssCompletionQuery(textBefore, "");
          }
          else if ((lastOpen == -1) && (lastClose == -1))
          {
@@ -105,7 +116,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
                completionQuery.setCompletionType(CompletionType.NONE);
                return completionQuery;
             }
-         }
+         } 
       }
 
       parsingLineWithCursor = true;
@@ -188,7 +199,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
       {
          return null;
       }
-      InvocationContext context = new InvocationContext(triggeringString, offset);
+      InvocationContext context = new InvocationContext(triggeringString, offset, resourcess, display);
       switch (completionQuery.getCompletionType())
       {
          case PROPERTY :
@@ -198,9 +209,6 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
             return jsToArray(autocompletions, context);
 
          case VALUE :
-            //            return new AutocompleteProposals(SyntaxType.CSS, triggeringString, CssPartialParser.getInstance()
-            //               .getAutocompletions(completionQuery.getProperty(), completionQuery.getValuesBefore(), triggeringString,
-            //                  completionQuery.getValuesAfter()));
             JsoArray<CssCompletionProposal> jsoArray =
                CssPartialParser.getInstance().getAutocompletions(completionQuery.getProperty(),
                   completionQuery.getValuesBefore(), triggeringString, completionQuery.getValuesAfter());
@@ -244,7 +252,6 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
    @Override
    public String getErrorMessage()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.core.editor.css;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -27,13 +26,14 @@ import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.RegionImpl;
-import org.exoplatform.ide.text.edits.InsertEdit;
 import org.exoplatform.ide.text.edits.MalformedTreeException;
 import org.exoplatform.ide.text.edits.ReplaceEdit;
+import org.exoplatform.ide.texteditor.api.TextEditorOperations;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
+ * {@link CompletionProposal} implementation for Css code assistant.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -44,10 +44,6 @@ public class CssCompletionProposal implements CompletionProposal
    private static final String PROPERTY_TERMINATOR = ";";
 
    private static final String PROPERTY_SEPARATOR = ": ";
-
-   private static final String CLASS_SEPARATOR = "{\n  \n}";
-
-   private static final int CLASS_JUMPLENGTH = 4;
 
    private final String name;
 
@@ -80,6 +76,8 @@ public class CssCompletionProposal implements CompletionProposal
       try
       {
          e.apply(document);
+         if(type == CompletionType.PROPERTY)
+            context.getEditor().doOperation(TextEditorOperations.CODEASSIST_PROPOSALS);
       }
       catch (MalformedTreeException e1)
       {
@@ -161,8 +159,10 @@ public class CssCompletionProposal implements CompletionProposal
    @Override
    public Image getImage()
    {
-      // TODO Auto-generated method stub
-      return null;
+      Image image = new Image();
+      if(type == CompletionType.PROPERTY)
+         image.setResource(context.getResources().property());
+      return image;
    }
 
    /**
@@ -191,7 +191,6 @@ public class CssCompletionProposal implements CompletionProposal
    @Override
    public char[] getTriggerCharacters()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -201,8 +200,7 @@ public class CssCompletionProposal implements CompletionProposal
    @Override
    public boolean isAutoInsertable()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
    }
 
    /**

@@ -32,6 +32,7 @@ import org.exoplatform.ide.texteditor.api.BeforeTextListener;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
+import org.exoplatform.ide.texteditor.api.TextEditorOperations;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
@@ -58,13 +59,13 @@ import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.texteditor.syntaxhighlighter.SyntaxHighlighter;
 import org.exoplatform.ide.util.CssUtils;
 import org.exoplatform.ide.util.ListenerManager;
-import org.exoplatform.ide.util.SignalEvent;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator;
 import org.exoplatform.ide.util.dom.FontDimensionsCalculator.FontDimensions;
 import org.exoplatform.ide.util.executor.UserActivityManager;
+import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * The presenter for the editor.
@@ -700,7 +701,37 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
          SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
             resources.workspaceEditorCss());
       addLineRenderer(syntaxHighlighter.getRenderer());
-      //      Autoindenter.create(documentParser, this);
+//            Autoindenter.create(documentParser, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#canDoOperation(int)
+    */
+   @Override
+   public boolean canDoOperation(int operation)
+   {
+      if(TextEditorOperations.CODEASSIST_PROPOSALS == operation && codeAssistant != null)
+      {
+         return true;
+      }
+      // TODO implement all code in TextEditorOperations
+      return false;
+   }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#doOperation(int)
+    */
+   @Override
+   public void doOperation(int operation)
+   {
+      if(TextEditorOperations.CODEASSIST_PROPOSALS == operation)
+      {
+         if(codeAssistant != null)
+         {
+            codeAssistant.showPossibleCompletions();
+         }
+      }
+      // TODO implement all code in TextEditorOperations
    }
 
 }

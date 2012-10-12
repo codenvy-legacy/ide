@@ -25,9 +25,10 @@ import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
-import org.exoplatform.ide.util.UserActivityManager;
+import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
+ * EditorProvider for Css file type
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -41,17 +42,21 @@ public class CssEditorProvider implements EditorProvider
 
    private final UserActivityManager activityManager;
 
+   private final CssResources cssRes;
+
    /**
     * @param documentProvider
     * @param resources
     * @param activityManager
     */
    @Inject
-   public CssEditorProvider(DocumentProvider documentProvider, Resources resources, UserActivityManager activityManager)
+   public CssEditorProvider(DocumentProvider documentProvider, Resources resources, CssResources cssRes,
+      UserActivityManager activityManager)
    {
       super();
       this.documentProvider = documentProvider;
       this.resources = resources;
+      this.cssRes = cssRes;
       this.activityManager = activityManager;
    }
 
@@ -61,7 +66,7 @@ public class CssEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new BaseTextEditor(resources, activityManager, documentProvider, new CssEditorConfiguration());
+      return new BaseTextEditor(resources, activityManager, documentProvider, new CssEditorConfiguration(cssRes));
    }
 
 }

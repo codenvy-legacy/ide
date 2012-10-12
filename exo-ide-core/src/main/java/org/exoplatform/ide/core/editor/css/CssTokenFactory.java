@@ -22,31 +22,31 @@ import org.exoplatform.ide.texteditor.api.parser.TokenType;
 /**
  * Token factory for CSS; uses information from {@link CssState}.
  */
-public class CssTokenFactory implements TokenFactory<CssState> {
+public class CssTokenFactory implements TokenFactory<CssState>
+{
 
-  @Override
-  public void push(String stylePrefix, CssState state, String tokenType, String tokenValue,
-      JsonArray<Token> tokens) {
-    tokens.add(createToken(stylePrefix, state, tokenType, tokenValue));
-  }
+   @Override
+   public void push(String stylePrefix, CssState state, String tokenType, String tokenValue, JsonArray<Token> tokens)
+   {
+      tokens.add(createToken(stylePrefix, state, tokenType, tokenValue));
+   }
 
-  /**
-   * Create new {@link CssToken} for the given parameters.
-   *
-   * <p>This method is shared with {@link HtmlTokenFactory} in order to create
-   * tokens of class {@link CssToken} for internal style sheets.
-   *
-   * @param stylePrefix a.k.a. mode, in this case expected to be "css"
-   * @param state CSS parser state at the time when the token was parsed
-   * @param tokenType token type
-   * @param tokenValue token value
-   * @return newly created {@link CssToken}.
-   */
-  static CssToken createToken(String stylePrefix, CssState state, String tokenType,
-      String tokenValue) {
-    JsonArray<String> stack = state.getStack();
-    String context = (stack != null && stack.size() > 0) ? stack.peek() : null;
-    return new CssToken(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue,
-        context);
-  }
+   /**
+    * Create new {@link CssToken} for the given parameters.
+    *
+    * <p>This method is shared with {@link HtmlTokenFactory} in order to create
+    * tokens of class {@link CssToken} for internal style sheets.
+    *
+    * @param stylePrefix a.k.a. mode, in this case expected to be "css"
+    * @param state CSS parser state at the time when the token was parsed
+    * @param tokenType token type
+    * @param tokenValue token value
+    * @return newly created {@link CssToken}.
+    */
+   static CssToken createToken(String stylePrefix, CssState state, String tokenType, String tokenValue)
+   {
+      JsonArray<String> stack = state.getStack();
+      String context = (stack != null && stack.size() > 0) ? stack.peek() : null;
+      return new CssToken(stylePrefix, TokenType.resolveTokenType(tokenType, tokenValue), tokenValue, context);
+   }
 }

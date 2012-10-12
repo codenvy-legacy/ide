@@ -13,8 +13,8 @@
 // limitations under the License.
 package org.exoplatform.ide.texteditor.codeassistant;
 
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEvent.KeySignalType;
+import org.exoplatform.ide.util.input.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent.KeySignalType;
 
 /**
  * Immutable holder of essential properties of

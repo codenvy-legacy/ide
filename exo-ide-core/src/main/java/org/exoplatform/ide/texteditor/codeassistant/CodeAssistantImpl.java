@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.texteditor.codeassistant;
 
+import com.google.gwt.core.client.GWT;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -41,10 +43,11 @@ import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.texteditor.codeassistant.AutocompleteBox.Events;
+import org.exoplatform.ide.texteditor.codeassistant.AutocompleteUiController.Resources;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
-import org.exoplatform.ide.util.SignalEvent;
-import org.exoplatform.ide.util.SignalEvent.KeySignalType;
 import org.exoplatform.ide.util.input.KeyCodeMap;
+import org.exoplatform.ide.util.input.SignalEvent;
+import org.exoplatform.ide.util.input.SignalEvent.KeySignalType;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
@@ -92,6 +95,11 @@ public class CodeAssistantImpl implements CodeAssistant
          {
             return true;
          }
+         if (box.isShowing())
+         {
+            scheduleRequestCodeassistant();
+            return false;
+         }
          if (event.getKeySignalType() == KeySignalType.INPUT)
          {
             int letter = KeyCodeMap.getKeyFromEvent(event);
@@ -120,6 +128,9 @@ public class CodeAssistantImpl implements CodeAssistant
 
    private Remover keyListenerRemover;
 
+   //TODO inject this
+   private Resources res = GWT.create(Resources.class);
+
    /**
     * 
     */
@@ -127,6 +138,8 @@ public class CodeAssistantImpl implements CodeAssistant
    {
       processors = JsonCollections.createStringMap();
       partitioning = Document.DEFAULT_PARTITIONING;
+      res.defaultSimpleListCss().ensureInjected();
+      res.autocompleteComponentCss().ensureInjected();
    }
 
    /**
@@ -134,6 +147,8 @@ public class CodeAssistantImpl implements CodeAssistant
     */
    private void applyProposal(CompletionProposal proposal)
    {
+      if (proposal == null)
+         return;
       UndoManager undoManager = textEditor.getEditorDocumentMutator().getUndoManager();
       if (undoManager != null)
          undoManager.beginCompoundChange();
@@ -217,7 +232,7 @@ public class CodeAssistantImpl implements CodeAssistant
    public void install(TextEditorPartDisplay display)
    {
       this.textEditor = display;
-      box = new AutocompleteUiController(display);
+      box = new AutocompleteUiController(display, res);
       keyListenerRemover = display.getKeyListenerRegistrar().add(keyListener);
       box.setDelegate(events);
       display.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener);
@@ -247,6 +262,14 @@ public class CodeAssistantImpl implements CodeAssistant
             if (offset > 0)
             {
                CompletionProposal[] proposals = computeCompletionProposals(textEditor, offset);
+               if (!box.isShowing())
+               {
+                  if (proposals != null && proposals.length == 1 && proposals[0].isAutoInsertable())
+                  {
+                     applyProposal(proposals[0]);
+                     return;
+                  }
+               }
                box.positionAndShow(proposals);
             }
          }

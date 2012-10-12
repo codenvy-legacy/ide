@@ -14,7 +14,7 @@
 package org.exoplatform.ide.core.editor.css;
 
 /**
- * An enumeration of css types of autocompletions.
+ * An enumeration of css types of code assistant.
  *
  */
 public enum CompletionType {
