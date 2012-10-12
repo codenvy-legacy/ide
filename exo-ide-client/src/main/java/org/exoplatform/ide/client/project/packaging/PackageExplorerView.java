@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.packaging;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -80,15 +82,21 @@ public class PackageExplorerView extends ViewImpl implements
       return treeGrid;
    }
 
-   @Override
-   public void selectItem(Object item)
-   {
-   }
+//   @Override
+//   public void selectItem(Object item)
+//   {
+//   }
 
    @Override
    public Object getSelectedObject()
    {
       return treeGrid.getSelectedObject();
+   }
+
+   @Override
+   public void goToItem(List<Object> itemList)
+   {
+      treeGrid.goToItem(itemList);
    }
 
 }
