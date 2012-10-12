@@ -59,6 +59,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.packageExplorer(), IDEImageBundle.INSTANCE.packageExplorerDisabled());
       setEvent(new ShowPackageExplorerEvent());
+      setEnabled(false);
    }
 
    @Override
@@ -67,6 +68,8 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    @Override
@@ -112,6 +115,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       setEnabled(false);
    }
 
+
    /**
     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */
@@ -122,7 +126,13 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
          || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
          || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
+      {
          setEnabled(true);
+      }
+      else 
+      {
+         setEnabled(false);
+      }
    }
 
 }
