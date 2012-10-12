@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.client.project.packaging;
 
+import javax.imageio.ImageReader;
+
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.project.packaging.model.DependencyItem;
 import org.exoplatform.ide.client.project.packaging.model.DependencyListItem;
 import org.exoplatform.ide.client.project.packaging.model.PackageItem;
@@ -31,6 +34,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -342,7 +346,10 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       if (item instanceof ProjectItem)
       {
          ProjectItem projectItem = (ProjectItem)item;
-         nodeIcon = new TreeIcon(IDEImageBundle.INSTANCE.projectOpened());
+         //nodeIcon = new TreeIcon(IDEImageBundle.INSTANCE.projectOpened());
+         ImageResource imageResource = ProjectResolver.getImageForProject(projectItem.getProject().getProjectType());
+         nodeIcon = new TreeIcon(imageResource);
+         //nodeIcon = ProjectResolver.getImageForProject(((ProjectModel)item).getProjectType());
          nodeName = projectItem.getProject().getName();
       }
       else if (item instanceof ResourceDirectoryItem)

@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -108,7 +109,9 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    public void onViewActivated(ViewActivatedEvent event)
    {
       activeView = event.getView();
-      navigatorSelected = activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay;
+      navigatorSelected = activeView instanceof NavigatorDisplay || 
+               activeView instanceof ProjectExplorerDisplay ||
+               activeView instanceof PackageExplorerPresenter.Display;
       updateState();
    }
 

@@ -47,8 +47,9 @@ import org.exoplatform.ide.client.project.packaging.model.PackageItem;
 import org.exoplatform.ide.client.project.packaging.model.ProjectItem;
 import org.exoplatform.ide.client.project.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -62,6 +63,7 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -88,10 +90,15 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       TreeGridItem<Object> getBrowserTree();
 
       void selectItem(Object item);
-      
+
       Object getSelectedObject();
-      
+
    }
+
+   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .workspaceReceiveChildrenError();
+
+   private static final String UPDATING_PROJECT_STRUCTURE_MESSAGE = "Updating project structure...";
 
    private Display display;
 
@@ -100,6 +107,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    private ProjectModel openedProject;
 
    private ProjectItem projectItem;
+
+   private Item selectedItem;
 
    public PackageExplorerPresenter()
    {
@@ -112,7 +121,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      
+
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
    }
@@ -160,7 +169,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             }
          }
       });
-      
+
       display.getBrowserTree().addSelectionHandler(new SelectionHandler<Object>()
       {
          @Override
@@ -171,7 +180,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                @Override
                public void execute()
                {
-                  Item selectedItem = null;
                   Object selectedObject = display.getSelectedObject();
                   if (selectedObject instanceof ProjectItem)
                   {
@@ -185,14 +193,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                   {
                      selectedItem = ((PackageItem)selectedObject).getPackageFolder();
                   }
-                  
+                  else if (selectedObject instanceof FolderModel)
+                  {
+                     selectedItem = (FolderModel)selectedObject;
+                  }
+                  else if (selectedObject instanceof FileModel)
+                  {
+                     selectedItem = (FileModel)selectedObject;
+                  }
+                  else
+                  {
+                     selectedItem = null;
+                  }
+
                   if (selectedItem != null)
                   {
-                     if (selectedItem instanceof ItemContext)
-                     {
-                        ((ItemContext)selectedItem).setProject(openedProject);
-                     }
-                     
                      List<Item> selectedItems = new ArrayList<Item>();
                      selectedItems.add(selectedItem);
                      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
@@ -201,7 +216,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             });
          }
       });
-      
+
    }
 
    @Override
@@ -273,11 +288,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
             try
             {
-               TreeUnmarshaller unmarshaller = new TreeUnmarshaller(openedProject);
-               AsyncRequestCallback<Folder> callback = new AsyncRequestCallback<Folder>(unmarshaller)
+               ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(openedProject);
+               AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
                {
                   @Override
-                  protected void onSuccess(Folder result)
+                  protected void onSuccess(ProjectModel result)
                   {
                      IDELoader.hide();
                      projectTreeReceived();
@@ -292,7 +307,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                   }
                };
 
-               VirtualFileSystem.getInstance().getTree(openedProject, callback);
+               VirtualFileSystem.getInstance().getProjectTree(openedProject, callback);
             }
             catch (Exception e)
             {
@@ -319,27 +334,197 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
    }
 
+   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
+
+   private Item itemToSelect;
+
    @Override
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
+      if (display == null)
+      {
+         return;
+      }
+      
 //      System.out.println("on refresh browser");
-//      
-//      List<Folder> folders = event.getFolders();
-//      for (Folder folder : folders)
+
+//      if (event.getFolders() != null)
 //      {
-//         System.out.println("folder > " + folder.getPath());
+//         System.out.println("folders is not null");
+//         System.out.println("folders size > " + event.getFolders().size());
 //      }
-//      
-//      if (event.getItemToSelect() != null)
+//      else
 //      {
-//         System.out.println("item to select > " + event.getItemToSelect().getPath());
+//         System.out.println("folders not initialized");
 //      }
-         
+
+      if (event.getFolders() != null)
+      {
+         foldersToRefresh = event.getFolders();
+      }
+      else
+      {
+         foldersToRefresh = new ArrayList<Folder>();
+
+         if (selectedItem != null)
+         {
+            if (selectedItem instanceof FileModel)
+            {
+               foldersToRefresh.add(((FileModel)selectedItem).getParent());
+            }
+            else if (selectedItem instanceof Folder)
+            {
+               foldersToRefresh.add((Folder)selectedItem);
+            }
+         }
+      }
+
+      itemToSelect = event.getItemToSelect();
+
+//      System.out.println("scheduling...................");
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateFolders();
+         }
+      });
+   }
+
+   private void updateFolders()
+   {
+//      System.out.println("PackageExplorerPresenter.updateFolders()");
+//      System.out.println("folders to refresh size > " + foldersToRefresh.size());
+
+      if (foldersToRefresh.size() == 0)
+      {
+         if (itemToSelect != null)
+         {
+            // select item in the tree
+         }
+
+         return;
+      }
+
+      final Folder folder = foldersToRefresh.get(0);
+      foldersToRefresh.remove(0);
+
+      //      treeParser.updateFolder(folder, new FolderUpdateCompleteListener()
+      //      {
+      //         @Override
+      //         public void onUpdateComplete(Object item)
+      //         {
+      //            System.out.println(">>>> ON Folder update complete");
+      //            
+      //            if (item != null)
+      //            {
+      //               System.out.println("item is not null. updating tree");
+      //               display.getBrowserTree().setValue(item);
+      //               
+      //               Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      //               {
+      //                  @Override
+      //                  public void execute()
+      //                  {
+      //                     updateFolders();
+      //                  }
+      //               });
+      //               
+      //            }
+      //         }
+      //      });
+
+//      refreshFolderProperties(folder);
+      try
+      {
+         //display.changeFolderIcon(folder, true);
+         IDELoader.show(UPDATING_PROJECT_STRUCTURE_MESSAGE);
+
+//         System.out.println("get folder content > " + folder.getPath());
+
+         VirtualFileSystem.getInstance().getChildren(folder,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDELoader.hide();
+
+                  itemToSelect = null;
+                  foldersToRefresh.clear();
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+               }
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  IDELoader.hide();
+
+                  folderContentReceived(folder, result);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDELoader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   //   /**
+   //    * Refresh folder's properties.
+   //    * 
+   //    * @param folder
+   //    */
+   //   private void refreshFolderProperties(final Folder folder)
+   //   {
+   //      try
+   //      {
+   //         VirtualFileSystem.getInstance().getItemById(folder.getId(),
+   //            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+   //            {
+   //               @Override
+   //               protected void onSuccess(ItemWrapper result)
+   //               {
+   //                  folder.getProperties().clear();
+   //                  folder.getProperties().addAll(result.getItem().getProperties());
+   //               }
+   //
+   //               protected void onFailure(Throwable exception)
+   //               {
+   //               }
+   //            });
+   //      }
+   //      catch (RequestException e)
+   //      {
+   //      }
+   //   }
+
+   private void folderContentReceived(Folder folder, List<Item> children)
+   {
+//      System.out.println("received content of folder > " + folder.getPath());
+      Object folderItem = treeParser.updateFolderStructure(folder, children);
+
+      if (folderItem == null)
+      {
+         return;
+      }
+
+      // refresh tree if folder's tree node is opened
+      display.getBrowserTree().setValue(folderItem);
+
    }
 
    @Override
    public void onSelectItem(SelectItemEvent event)
    {
+      if (display == null)
+      {
+         return;
+      }
+      
 //      System.out.println("on select item");
 //      System.out.println("item href > " + event.getItemHref());
    }

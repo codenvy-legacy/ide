@@ -25,6 +25,10 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -32,9 +36,10 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
  * 
  */
 @RolesAllowed({"administrators", "developers"})
-public class ShowPackageExplorerControl extends SimpleControl implements IDEControl, VfsChangedHandler
+public class ShowPackageExplorerControl extends SimpleControl implements IDEControl, VfsChangedHandler,
+   ViewOpenedHandler, ViewClosedHandler
 {
-   
+
    public static final String ID = "Window/Show View/Package Explorer";
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.packageExplorerControlTitle();
@@ -47,13 +52,15 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(IDEImageBundle.INSTANCE.packageExplorer(), IDEImageBundle.INSTANCE.packageExplorerDisabled());
-      setEvent(new ShowPackageExplorerEvent());      
+      setEvent(new ShowPackageExplorerEvent());
    }
 
    @Override
    public void initialize()
    {
-      IDE.addHandler(VfsChangedEvent.TYPE, this);      
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ViewOpenedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -68,6 +75,24 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       {
          setEnabled(false);
          setVisible(false);
+      }
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof PackageExplorerPresenter.Display)
+      {
+         setSelected(false);
+      }
+   }
+
+   @Override
+   public void onViewOpened(ViewOpenedEvent event)
+   {
+      if (event.getView() instanceof PackageExplorerPresenter.Display)
+      {
+         setSelected(true);
       }
    }
 

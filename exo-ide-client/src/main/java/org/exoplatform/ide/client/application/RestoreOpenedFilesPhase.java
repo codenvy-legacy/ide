@@ -27,7 +27,6 @@ import java.util.Map;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
@@ -277,8 +276,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 
    private void openFilesInEditor()
    {
-      IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
-
       isRestoringOpenedFiles = true;
       filesToOpen = new ArrayList<String>(openedFiles.keySet());
       openNextFileInEditor();

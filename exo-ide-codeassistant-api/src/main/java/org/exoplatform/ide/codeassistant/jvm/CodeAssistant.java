@@ -397,11 +397,17 @@ public abstract class CodeAssistant
    {
       List<TypeInfo> searchResult =
          storage.getTypesInfoByNamePrefix(namePrefix, getProjectDependencys(projectId, vfsId));
-      List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
       List<TypeInfo> result = new ArrayList<TypeInfo>();
-      if (list != null)
+      try
       {
-         result.addAll(list);
+         List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
+         if (list != null)
+         {
+            result.addAll(list);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
       }
       if (searchResult != null)
       {
@@ -423,11 +429,17 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<String> packages = storage.getPackages(prefix, getProjectDependencys(projectId, vfsId));
-      List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
       List<String> result = new ArrayList<String>();
-      if (packagesFromProject != null)
+      try
       {
-         result.addAll(packagesFromProject);
+         List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
+         if (packagesFromProject != null)
+         {
+            result.addAll(packagesFromProject);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
       }
 
       if (packages != null)
@@ -450,11 +462,18 @@ public abstract class CodeAssistant
       VirtualFileSystemException
    {
       List<String> packages = storage.getAllPackages(getProjectDependencys(projectId, vfsId));
-      List<String> packagesFromProject = getAllPackagesFromProject(projectId, vfsId);
       List<String> result = new ArrayList<String>();
-      if (packagesFromProject != null)
+      try
       {
-         result.addAll(packagesFromProject);
+         List<String> packagesFromProject = getAllPackagesFromProject(projectId, vfsId);
+         if (packagesFromProject != null)
+         {
+            result.addAll(packagesFromProject);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+
       }
 
       if (packages != null)
@@ -473,7 +492,8 @@ public abstract class CodeAssistant
     * @throws VirtualFileSystemException 
     * @throws CodeAssistantException 
     */
-   protected abstract List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException;
+   protected abstract List<String> getAllPackagesFromProject(String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Return sets of Strings, associated with the package names

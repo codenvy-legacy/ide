@@ -39,7 +39,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.aws.client.AWSExtension;
+import org.exoplatform.ide.extension.aws.client.AwsAsyncRequestCallback;
 import org.exoplatform.ide.extension.aws.client.ec2.stop.StopInstanceEvent;
+import org.exoplatform.ide.extension.aws.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.aws.shared.ec2.InstanceInfo;
 
 import java.util.ArrayList;
@@ -222,7 +224,16 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
       {
          List<InstanceInfo> instanceList = new ArrayList<InstanceInfo>();
          EC2ClientService.getInstance().getInstances(
-            new AsyncRequestCallback<List<InstanceInfo>>(new InstanceListUnmarshaller(instanceList))
+            new AwsAsyncRequestCallback<List<InstanceInfo>>(new InstanceListUnmarshaller(instanceList),
+               new LoggedInHandler()
+               {
+
+                  @Override
+                  public void onLoggedIn()
+                  {
+                     getInstances();
+                  }
+               })
             {
 
                @Override
@@ -236,7 +247,7 @@ public class EC2Manager implements ViewClosedHandler, ShowEC2ManagerHandler
                }
 
                @Override
-               protected void onFailure(Throwable exception)
+               protected void processFail(Throwable exception)
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
