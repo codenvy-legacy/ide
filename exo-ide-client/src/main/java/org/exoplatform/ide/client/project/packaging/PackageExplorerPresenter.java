@@ -260,6 +260,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       if (!isProjectAcceptable())
       {
+         IDE.getInstance().closeView(display.asView().getId());
          return;
       }
 
