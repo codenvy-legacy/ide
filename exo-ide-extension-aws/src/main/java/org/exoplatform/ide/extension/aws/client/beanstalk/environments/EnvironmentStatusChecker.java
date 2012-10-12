@@ -287,7 +287,11 @@ public class EnvironmentStatusChecker
     */
    private String getAppUrl(EnvironmentInfo env)
    {
-      String appUrl = env.getEndpointUrl();
+	  String appUrl = env.getCNAME();
+	  if (appUrl == null)
+	  {
+		  appUrl = env.getEndpointUrl();
+	  }
       if (!appUrl.startsWith("http"))
       {
          appUrl = "http://" + appUrl;
