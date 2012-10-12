@@ -47,6 +47,7 @@ import org.exoplatform.ide.texteditor.input.InputScheme;
 import org.exoplatform.ide.texteditor.input.RootActionExecutor;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
+import org.exoplatform.ide.texteditor.parenmatch.ParenMatchHighlighter;
 import org.exoplatform.ide.texteditor.renderer.CurrentLineHighlighter;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.RenderTimeExecutor;
@@ -120,7 +121,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    /**
     * ClientBundle for the editor.
     */
-   public interface Resources extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources
+   public interface Resources extends Buffer.Resources, CursorView.Resources, SelectionLineRenderer.Resources,
+      ParenMatchHighlighter.Resources
    {
       @Source({"Editor.css", "constants.css"})
       Css workspaceEditorCss();
@@ -541,6 +543,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       //        selection,
       //        editorDocumentMutator);
       localCursorController = LocalCursorController.create(resources, focusManager, selection, buffer, this);
+      ParenMatchHighlighter.create(textStore, getViewport(), textStore.getAnchorManager(), getView().getResources(),
+         getRenderer(), getSelection());
       createSyntaxHighligter(parser);
       new CurrentLineHighlighter(buffer, selection, resources);
 
@@ -701,7 +705,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
          SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,
             resources.workspaceEditorCss());
       addLineRenderer(syntaxHighlighter.getRenderer());
-//            Autoindenter.create(documentParser, this);
+      //            Autoindenter.create(documentParser, this);
    }
 
    /**
@@ -710,7 +714,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    @Override
    public boolean canDoOperation(int operation)
    {
-      if(TextEditorOperations.CODEASSIST_PROPOSALS == operation && codeAssistant != null)
+      if (TextEditorOperations.CODEASSIST_PROPOSALS == operation && codeAssistant != null)
       {
          return true;
       }
@@ -724,9 +728,9 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    @Override
    public void doOperation(int operation)
    {
-      if(TextEditorOperations.CODEASSIST_PROPOSALS == operation)
+      if (TextEditorOperations.CODEASSIST_PROPOSALS == operation)
       {
-         if(codeAssistant != null)
+         if (codeAssistant != null)
          {
             codeAssistant.showPossibleCompletions();
          }

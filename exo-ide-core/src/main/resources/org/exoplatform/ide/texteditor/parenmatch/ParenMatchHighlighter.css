@@ -1,0 +1,21 @@
+
+.match {
+  box-shadow:  0 0 1px #868686 inset;
+  -moz-box-shadow: 0 0 1px #868686 inset;
+  -webkit-box-shadow: 0 0 1px #868686 inset;
+}
+
+.animationEnabled .match {
+  -moz-transition-duration: 0.10s;
+  -moz-transition-timing-function: ease-in;
+  -moz-transition-property: top, left, bottom, right, height, width;
+  -webkit-transition-duration: 0.10s;
+  -webkit-transition-timing-function: ease-in;
+  -webkit-transition-property: top, left, bottom, right, height, width;
+  transition-duration: 0.10s;
+  transition-timing-function: ease-in;
+  transition-property: top, left, bottom, right, height, width;
+}
+
+.scrollable {
+}

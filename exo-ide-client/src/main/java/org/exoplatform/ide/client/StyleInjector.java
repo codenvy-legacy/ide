@@ -52,5 +52,6 @@ public class StyleInjector
       resources.workspaceEditorCursorCss().ensureInjected();
       resources.workspaceNavigationFileTreeNodeRendererCss().ensureInjected();
       resources.partStackCss().ensureInjected();
+      resources.parenMatchHighlighterCss().ensureInjected();
    }
 }
