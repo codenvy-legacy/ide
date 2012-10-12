@@ -213,15 +213,15 @@ public class DefaultScheme extends InputScheme
        * ACTION+SPACE - prevent the default browser behavior because the document is
        * saved automatically.
        */
-//      defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, ' ')
-//      {
-//         @Override
-//         public boolean event(InputScheme scheme, SignalEvent event)
-//         {
-//            // not prevent ACTION+SPACE
-//            return false;
-//         }
-//      });
+      //      defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, ' ')
+      //      {
+      //         @Override
+      //         public boolean event(InputScheme scheme, SignalEvent event)
+      //         {
+      //            // not prevent ACTION+SPACE
+      //            return false;
+      //         }
+      //      });
 
       /**
        * ACTION+A - select all text in the current document.
@@ -242,7 +242,8 @@ public class DefaultScheme extends InputScheme
       defaultMode.bindAction(CommonActions.GOTO_SOURCE, ModifierKeys.NONE, KeyCodeMap.F4);
       defaultMode.bindAction(CommonActions.SPLIT_LINE, ModifierKeys.ACTION, KeyCodeMap.ENTER);
       defaultMode.bindAction(CommonActions.START_NEW_LINE, ModifierKeys.SHIFT, KeyCodeMap.ENTER);
-      defaultMode.bindAction(CommonActions.RUN_CODE_ASSISTANT, ModifierKeys.ACTION, ' ');
+      int mod = UserAgent.isMac() ? ModifierKeys.CTRL : ModifierKeys.ACTION;
+      defaultMode.bindAction(CommonActions.RUN_CODE_ASSISTANT, mod, ' ');
 
       // Single / multi-line comment / uncomment.
       defaultMode.bindAction(CommonActions.TOGGLE_COMMENT, ModifierKeys.ACTION, 47);
