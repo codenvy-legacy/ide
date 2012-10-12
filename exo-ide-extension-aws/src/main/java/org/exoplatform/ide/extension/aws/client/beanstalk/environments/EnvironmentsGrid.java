@@ -152,11 +152,15 @@ public class EnvironmentsGrid extends ListGrid<EnvironmentInfo>
          @Override
          public String getValue(EnvironmentInfo environmentInfo)
          {
-            if (environmentInfo.getEndpointUrl() == null)
+        	if (environmentInfo.getCNAME() != null)
             {
-               return "";
+               return environmentInfo.getCNAME();
             }
-            return environmentInfo.getEndpointUrl();
+            if (environmentInfo.getEndpointUrl() != null)
+            {
+               return environmentInfo.getEndpointUrl();
+            }
+            return "";
          }
       };
 
