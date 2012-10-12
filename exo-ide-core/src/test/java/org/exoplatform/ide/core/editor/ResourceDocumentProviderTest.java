@@ -77,6 +77,7 @@ public class ResourceDocumentProviderTest
       verify(project).getContent(eq(file), Mockito.<AsyncCallback<File>> any());
    }
 
+   @SuppressWarnings("unchecked")
    @Test
    public void shuldCallCallback()
    {
@@ -89,6 +90,7 @@ public class ResourceDocumentProviderTest
    /**
     * @return
     */
+   @SuppressWarnings("unchecked")
    private Answer<?> createServerResponse()
    {
       Answer<?> responseEmulator = new Answer<Object>()

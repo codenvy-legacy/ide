@@ -30,9 +30,9 @@
    <div class="{style.welcome}">
       <h2>Welcome to eXo IDE 2</h2>
       <small>
-         * Please note, if Your name is not Benjamin, Gennady, Tyler, Vitaly
+         * Please note, if Your name is not Benjamin, Gennady, Tyler, Mark
          <br />
-         Andrey, Evgen or Nikolay, then probably
+         Vitaly, Andrey, Evgen or Nikolay, then probably
          <br />
          <b>YOU ARE NOT ALLOWED TO BE HERE :)</b>
       </small>
@@ -68,6 +68,11 @@
                <b>Editor API : </b>
                Syntax highlighting
             </li>
+            <li>
+               <b>Editor API : </b>
+               Code Assistant API (demo with CSS Code Completion)
+            </li>
+            
          </ul>
       </div>
       <div class="{style.botleft}">
