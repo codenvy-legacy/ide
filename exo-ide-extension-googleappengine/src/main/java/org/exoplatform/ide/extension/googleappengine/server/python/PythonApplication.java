@@ -182,6 +182,18 @@ public class PythonApplication implements GenericApplication
    }
 
    @Override
+   public String getSourceLanguage()
+   {
+      return "Python";
+   }
+
+   @Override
+   public String getServer()
+   {
+      return null; // ???
+   }
+
+   @Override
    public boolean isPrecompilationEnabled()
    {
       // ???
