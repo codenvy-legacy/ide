@@ -22,8 +22,8 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -40,7 +40,7 @@ import com.google.gwt.json.client.JSONValue;
  * @version $
  * 
  */
-public class TreeUnmarshaller implements Unmarshallable<Folder>
+public class FolderTreeUnmarshaller implements Unmarshallable<FolderModel>
 {
 
    private static final String CHILDREN = "children";
@@ -50,12 +50,15 @@ public class TreeUnmarshaller implements Unmarshallable<Folder>
    private static final String MIME_TYPE = "mimeType";
 
    private static final String ITEM = "item";
-   
-   private final Folder folder;
 
-   public TreeUnmarshaller(Folder folder)
+   private final FolderModel folder;
+   
+   private final ProjectModel parentProject;
+
+   public FolderTreeUnmarshaller(FolderModel folder, ProjectModel parentProject)
    {
       this.folder = folder;
+      this.parentProject = parentProject;
    }
 
    /**
@@ -68,22 +71,43 @@ public class TreeUnmarshaller implements Unmarshallable<Folder>
       {
          JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
          ItemList<Item> children = getChildren(object.get(CHILDREN));
+         folder.setChildren(children);
+         setProjectAndParent(children, folder);
 
-         if (folder instanceof FolderModel)
-         {
-            ((FolderModel)folder).setChildren(children);
-         }
-         else if (folder instanceof ProjectModel)
-         {
-            ((ProjectModel)folder).setChildren(children);
-         }
+         //         if (folder instanceof FolderModel)
+         //         {
+         //            ((FolderModel)folder).setChildren(children);
+         //         }
+         //         else if (folder instanceof ProjectModel)
+         //         {
+         //            ((ProjectModel)folder).setChildren(children);
+         //         }
       }
       catch (Exception exc)
       {
          exc.printStackTrace();
-         
          //String message = "Can't parse item " + response.getText();
          throw new UnmarshallerException("Can't parse JSON response.");
+      }
+   }
+   
+   private void setProjectAndParent(ItemList<Item> items, FolderModel parentFolder)
+   {
+      for (Item item : items.getItems())
+      {
+//         System.out.println("traverse item > " + item.getPath());
+         
+         if (item instanceof ItemContext)
+         {
+            ((ItemContext)item).setProject(parentProject);
+            ((ItemContext)item).setParent(parentFolder);
+         }
+         
+         if (item instanceof FolderModel)
+         {
+            FolderModel folder = (FolderModel)item;
+            setProjectAndParent(folder.getChildren(), folder);
+         }
       }
    }
 
@@ -103,18 +127,18 @@ public class TreeUnmarshaller implements Unmarshallable<Folder>
          JSONObject itemObject = itemsArray.get(i).isObject();
 
          JSONObject item = itemObject.get(ITEM).isObject();
-         
+
          String mimeType = null;
          if (item.get(MIME_TYPE).isString() != null)
             mimeType = item.get(MIME_TYPE).isString().stringValue();
 
          ItemType type = null;
-         
+
          if (item.get(TYPE).isNull() == null)
          {
             type = ItemType.valueOf(item.get(TYPE).isString().stringValue());
          }
-         
+
          if (ItemType.PROJECT == type)
          {
             if (Project.PROJECT_MIME_TYPE.equals(mimeType))
@@ -141,9 +165,9 @@ public class TreeUnmarshaller implements Unmarshallable<Folder>
    }
 
    @Override
-   public Folder getPayload()
+   public FolderModel getPayload()
    {
-      return this.folder;
+      return folder;
    }
 
 }

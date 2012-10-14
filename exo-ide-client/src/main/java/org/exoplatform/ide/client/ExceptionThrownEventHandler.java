@@ -18,11 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.http.client.RequestException;
-
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler;
 import org.exoplatform.gwtframework.commons.exception.ServerDisconnectedException;
@@ -32,8 +27,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -42,39 +39,20 @@ import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler;
  * @version $
  */
 
-public class ExceptionThrownEventHandler implements ExceptionThrownHandler, EnableStandartErrorsHandlingHandler
+public class ExceptionThrownEventHandler implements ExceptionThrownHandler
 {
-
-   private boolean showErrors = true;
 
    private static final String EXIT_CODE = "X-Exit-Code";
 
    public ExceptionThrownEventHandler()
    {
       IDE.addHandler(ExceptionThrownEvent.TYPE, this);
-      IDE.addHandler(EnableStandartErrorsHandlingEvent.TYPE, this);
    }
 
    /**
     * @see org.exoplatform.gwtframework.commons.exception.ExceptionThrownHandler#onError(org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent)
     */
    public void onError(ExceptionThrownEvent event)
-   {
-      if (showErrors)
-      {
-         handleEvent(event);
-      }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.event.EnableStandartErrorsHandlingHandler#onEnableStandartErrorsHandling(org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent)
-    */
-   public void onEnableStandartErrorsHandling(EnableStandartErrorsHandlingEvent event)
-   {
-      showErrors = event.isEnable();
-   }
-
-   private void handleEvent(ExceptionThrownEvent event)
    {
       Log.info("IDEExceptionThrownEventHandler.IDEExceptionThrownEventHandler()");
 

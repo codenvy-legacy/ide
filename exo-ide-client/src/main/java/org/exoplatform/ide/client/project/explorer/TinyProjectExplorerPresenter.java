@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -474,7 +473,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-                  IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
 
                @Override
@@ -885,10 +883,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      if (!display.asView().isViewVisible())
-      {
-         display.asView().activate();
-      }
+//      if (!display.asView().isViewVisible())
+//      {
+//         display.asView().activate();
+//      }
 
       if (display.selectItem(editorActiveFile.getId()))
       {

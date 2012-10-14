@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -114,7 +115,9 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
       View activeView = event.getView();
 
       navigatorSelected =
-         activeView instanceof NavigatorDisplay || activeView instanceof ProjectExplorerDisplay;
+         activeView instanceof NavigatorDisplay ||
+         activeView instanceof ProjectExplorerDisplay ||
+         activeView instanceof PackageExplorerPresenter.Display;
 
       updateState();
    }

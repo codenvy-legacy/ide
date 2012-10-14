@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -220,6 +221,13 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
       }
 
       if (event.getView() instanceof ProjectExplorerDisplay)
+      {
+         setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
+         setVisible(true);
+         return;
+      }
+
+      if (event.getView() instanceof PackageExplorerPresenter.Display)
       {
          setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
          setVisible(true);

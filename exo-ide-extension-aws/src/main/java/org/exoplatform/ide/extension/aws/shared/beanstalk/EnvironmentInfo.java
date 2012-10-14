@@ -56,9 +56,9 @@ public interface EnvironmentInfo
 
    void setEndpointUrl(String endpointURL);
 
-   String getCNAME();
+   String getCname();
 
-   void setCNAME(String cNAME);
+   void setCname(String cNAME);
 
    long getCreated();
 

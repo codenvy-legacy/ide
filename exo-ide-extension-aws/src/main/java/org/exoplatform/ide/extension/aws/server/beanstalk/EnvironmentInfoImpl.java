@@ -272,13 +272,13 @@ public class EnvironmentInfoImpl implements EnvironmentInfo
    }
 
    @Override
-   public String getCNAME()
+   public String getCname()
    {
       return cNAME;
    }
 
    @Override
-   public void setCNAME(String cNAME)
+   public void setCname(String cNAME)
    {
       this.cNAME = cNAME;
    }
@@ -343,7 +343,7 @@ public class EnvironmentInfoImpl implements EnvironmentInfo
          ", templateName='" + templateName + '\'' +
          ", description='" + description + '\'' +
          ", endpointUrl='" + endpointUrl + '\'' +
-         ", cNAME='" + cNAME + '\'' +
+         ", cname='" + cNAME + '\'' +
          ", created=" + created +
          ", updated=" + updated +
          ", status=" + status +

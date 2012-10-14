@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
@@ -36,11 +37,11 @@ public class PackageItem
 
    private String resourceDirectory;
 
-   private Folder packageFolder;
+   private FolderModel packageFolder;
 
    private List<FileModel> files = new ArrayList<FileModel>();
 
-   public PackageItem(String packageName, String resourceDirectory, Folder packageFolder)
+   public PackageItem(String packageName, String resourceDirectory, FolderModel packageFolder)
    {
       this.packageName = packageName;
       this.resourceDirectory = resourceDirectory;
@@ -57,12 +58,12 @@ public class PackageItem
       this.packageName = packageName;
    }
 
-   public Folder getPackageFolder()
+   public FolderModel getPackageFolder()
    {
       return packageFolder;
    }
 
-   public void setPackageFolder(Folder packageFolder)
+   public void setPackageFolder(FolderModel packageFolder)
    {
       this.packageFolder = packageFolder;
    }

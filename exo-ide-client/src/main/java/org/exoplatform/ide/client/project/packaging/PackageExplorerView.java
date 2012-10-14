@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.client.project.packaging;
 
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -51,8 +52,8 @@ public class PackageExplorerView extends ViewImpl implements
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.packageExplorerViewTitle();
 
-   @UiField
-   IconButton linkWithEditorButton;
+//   @UiField
+//   IconButton linkWithEditorButton;
 
    @UiField
    //ItemTree treeGrid;
@@ -81,15 +82,21 @@ public class PackageExplorerView extends ViewImpl implements
       return treeGrid;
    }
 
-   @Override
-   public void selectItem(Object item)
-   {
-   }
+//   @Override
+//   public void selectItem(Object item)
+//   {
+//   }
 
    @Override
    public Object getSelectedObject()
    {
       return treeGrid.getSelectedObject();
+   }
+
+   @Override
+   public void goToItem(List<Object> itemList)
+   {
+      treeGrid.goToItem(itemList);
    }
 
 }

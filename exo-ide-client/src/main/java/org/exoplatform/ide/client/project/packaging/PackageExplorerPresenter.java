@@ -37,20 +37,21 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.project.packaging.ProjectTreeParser.ParsingCompleteListener;
 import org.exoplatform.ide.client.project.packaging.model.PackageItem;
 import org.exoplatform.ide.client.project.packaging.model.ProjectItem;
 import org.exoplatform.ide.client.project.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.GWT;
@@ -87,19 +88,28 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
        */
       TreeGridItem<Object> getBrowserTree();
 
-      void selectItem(Object item);
-      
       Object getSelectedObject();
-      
+
+      void goToItem(List<Object> itemList);
+
    }
 
-   private Display display;
+   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .workspaceReceiveChildrenError();
 
-   //private ProjectModel project;
+   private static final String UPDATING_PROJECT_STRUCTURE_MESSAGE = "Updating project structure...";
+
+   private Display display;
 
    private ProjectModel openedProject;
 
    private ProjectItem projectItem;
+
+   private Item selectedItem;
+
+   private Item itemToSelect;
+
+   ProjectTreeParser treeParser;
 
    public PackageExplorerPresenter()
    {
@@ -112,7 +122,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      
+
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
    }
@@ -122,6 +132,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (display == null)
       {
+         if (!isProjectAcceptable())
+         {
+            return;
+         }
+
          display = GWT.create(Display.class);
          bindDisplay();
          IDE.getInstance().openView(display.asView());
@@ -140,10 +155,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          public void onOpen(OpenEvent<Object> event)
          {
             Object itemToOpen = event.getTarget();
-            if (!(itemToOpen instanceof ProjectItem))
-            {
-               display.getBrowserTree().setValue(itemToOpen);
-            }
+            display.getBrowserTree().setValue(itemToOpen);
          }
       });
 
@@ -160,7 +172,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             }
          }
       });
-      
+
       display.getBrowserTree().addSelectionHandler(new SelectionHandler<Object>()
       {
          @Override
@@ -171,7 +183,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                @Override
                public void execute()
                {
-                  Item selectedItem = null;
                   Object selectedObject = display.getSelectedObject();
                   if (selectedObject instanceof ProjectItem)
                   {
@@ -185,14 +196,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                   {
                      selectedItem = ((PackageItem)selectedObject).getPackageFolder();
                   }
-                  
+                  else if (selectedObject instanceof FolderModel)
+                  {
+                     selectedItem = (FolderModel)selectedObject;
+                  }
+                  else if (selectedObject instanceof FileModel)
+                  {
+                     selectedItem = (FileModel)selectedObject;
+                  }
+                  else
+                  {
+                     selectedItem = null;
+                  }
+
                   if (selectedItem != null)
                   {
-                     if (selectedItem instanceof ItemContext)
-                     {
-                        ((ItemContext)selectedItem).setProject(openedProject);
-                     }
-                     
                      List<Item> selectedItems = new ArrayList<Item>();
                      selectedItems.add(selectedItem);
                      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
@@ -201,7 +219,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             });
          }
       });
-      
+
    }
 
    @Override
@@ -214,7 +232,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             @Override
             public void execute()
             {
-               loadProjectStructure();
+               openProject();
             }
          });
       }
@@ -240,7 +258,26 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      loadProjectStructure();
+      if (!isProjectAcceptable())
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+         return;
+      }
+
+      openProject();
+   }
+
+   private boolean isProjectAcceptable()
+   {
+      String projectType = openedProject.getProjectType();
+      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
+      {
+         return true;
+      }
+
+      return false;
    }
 
    @Override
@@ -258,12 +295,19 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       display.setPackageExplorerTreeVisible(false);
    }
 
-   private void loadProjectStructure()
+   private void openProject()
    {
       projectItem = new ProjectItem(openedProject);
       display.setPackageExplorerTreeVisible(true);
       display.getBrowserTree().setValue(projectItem);
 
+      itemToSelect = openedProject;
+
+      updateProjectTree();
+   }
+
+   private void updateProjectTree()
+   {
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -273,11 +317,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
             try
             {
-               TreeUnmarshaller unmarshaller = new TreeUnmarshaller(openedProject);
-               AsyncRequestCallback<Folder> callback = new AsyncRequestCallback<Folder>(unmarshaller)
+               ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(openedProject);
+               AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
                {
                   @Override
-                  protected void onSuccess(Folder result)
+                  protected void onSuccess(ProjectModel result)
                   {
                      IDELoader.hide();
                      projectTreeReceived();
@@ -292,7 +336,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                   }
                };
 
-               VirtualFileSystem.getInstance().getTree(openedProject, callback);
+               VirtualFileSystem.getInstance().getProjectTree(openedProject, callback);
             }
             catch (Exception e)
             {
@@ -303,8 +347,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
    }
 
-   ProjectTreeParser treeParser;
-
    private void projectTreeReceived()
    {
       treeParser = new ProjectTreeParser(openedProject, projectItem);
@@ -313,8 +355,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          @Override
          public void onParseComplete()
          {
+            display.getBrowserTree().setValue(null);
             display.getBrowserTree().setValue(projectItem);
-            display.selectItem(projectItem);
+            navigateToItem(itemToSelect);
          }
       });
    }
@@ -322,26 +365,56 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
-//      System.out.println("on refresh browser");
-//      
-//      List<Folder> folders = event.getFolders();
-//      for (Folder folder : folders)
-//      {
-//         System.out.println("folder > " + folder.getPath());
-//      }
-//      
-//      if (event.getItemToSelect() != null)
-//      {
-//         System.out.println("item to select > " + event.getItemToSelect().getPath());
-//      }
-         
+      if (display == null)
+      {
+         return;
+      }
+
+      itemToSelect = event.getItemToSelect();
+      if (itemToSelect == null)
+      {
+         itemToSelect = selectedItem;
+      }
+
+      if (itemToSelect == null)
+      {
+         itemToSelect = event.getFolders().get(0);
+      }
+
+      if (itemToSelect == null)
+      {
+         itemToSelect = openedProject;
+      }
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateProjectTree();
+         }
+      });
+
    }
 
    @Override
    public void onSelectItem(SelectItemEvent event)
    {
-//      System.out.println("on select item");
-//      System.out.println("item href > " + event.getItemHref());
+      if (display == null)
+      {
+         return;
+      }
+   }
+
+   private void navigateToItem(Item itemToNavigate)
+   {
+      if (itemToNavigate == null)
+      {
+         itemToNavigate = openedProject;
+      }
+
+      List<Object> itemList = treeParser.getItemList(itemToNavigate);
+      display.goToItem(itemList);
    }
 
 }
