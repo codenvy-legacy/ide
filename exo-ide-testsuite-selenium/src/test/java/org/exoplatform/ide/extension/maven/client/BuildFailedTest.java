@@ -60,6 +60,7 @@ public class BuildFailedTest extends BaseTest
       }
       catch (Exception e)
       {
+         e.printStackTrace();
       }
    }
 

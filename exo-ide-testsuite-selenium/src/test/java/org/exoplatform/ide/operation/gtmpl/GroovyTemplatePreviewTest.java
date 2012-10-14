@@ -67,18 +67,18 @@ public class GroovyTemplatePreviewTest extends BaseTest
       {
       }
    }
-//
-//   @AfterClass
-//   public static void tearDown()
-//   {
-//      try
-//      {
-//        // VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-//      }
-//      catch (IOException e)
-//      {
-//      }
-//   }
+
+   @AfterClass
+   public static void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
 
    @Test
    public void testGtmplPreview() throws Exception
