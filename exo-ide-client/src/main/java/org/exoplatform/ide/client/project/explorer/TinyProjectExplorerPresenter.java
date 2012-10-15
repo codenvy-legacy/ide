@@ -883,10 +883,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      if (!display.asView().isViewVisible())
-      {
-         display.asView().activate();
-      }
+//      if (!display.asView().isViewVisible())
+//      {
+//         display.asView().activate();
+//      }
 
       if (display.selectItem(editorActiveFile.getId()))
       {

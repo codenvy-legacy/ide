@@ -174,7 +174,7 @@ public abstract class JSONDeserializer<O>
          JSONObject jsonObject = json.isObject();
          if (jsonObject == null)
             return null;
-
+         
          return new Link( //
                STRING_DESERIALIZER.toObject(jsonObject.get("href")), //
                STRING_DESERIALIZER.toObject(jsonObject.get("rel")), //

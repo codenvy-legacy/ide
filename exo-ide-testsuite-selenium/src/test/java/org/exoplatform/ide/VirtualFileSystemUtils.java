@@ -351,45 +351,45 @@ public class VirtualFileSystemUtils
    }
 
    /**
-    * Import project zip to IDE
-    * 
-    * @param projectName name of the project
-    * @param zipPath local path to project zip
-    * @return map of the Link, related to created project
-    * @throws IOException
-    */
-   public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
-   {
+   * Import project zip to IDE
+   *
+   * @param projectName name of the project
+   * @param zipPath local path to project zip
+   * @return map of the Link, related to created project
+   * @throws IOException
+   */
+      public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
+      {
 
-      HttpURLConnection connection = null;
-      try
-      {
-         Map<String, Link> folderLiks = createFolder(projectName);
-         Link href = folderLiks.get(Link.REL_IMPORT);
-         if (href == null)
-            throw new RuntimeException("Folder not created or 'import' relation not found.");
-         URL url = new URL(href.getHref());
-         connection = Utils.getConnection(url);
-         connection.setRequestMethod("POST");
-         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
-         connection.setDoOutput(true);
-         OutputStream outputStream = connection.getOutputStream();
-         File f = new File(zipPath);
-         FileInputStream inputStream = new FileInputStream(f);
-         IOUtils.copy(inputStream, outputStream);
-         inputStream.close();
-         outputStream.close();
-         connection.getResponseCode();
-         return folderLiks;
-      }
-      finally
-      {
-         if (connection != null)
+         HttpURLConnection connection = null;
+         try
          {
-            connection.disconnect();
+            Map<String, Link> folderLiks = createFolder(projectName);
+            Link href = folderLiks.get(Link.REL_IMPORT);
+            if (href == null)
+               throw new RuntimeException("Folder not created or 'import' relation not found.");
+            URL url = new URL(href.getHref());
+            connection = Utils.getConnection(url);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
+            connection.setDoOutput(true);
+            OutputStream outputStream = connection.getOutputStream();
+            File f = new File(zipPath);
+            FileInputStream inputStream = new FileInputStream(f);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+            connection.getResponseCode();
+            return folderLiks;
+         }
+         finally
+         {
+            if (connection != null)
+            {
+               connection.disconnect();
+            }
          }
       }
-   }
 
    /**
     * Create folder in root.
@@ -423,12 +423,15 @@ public class VirtualFileSystemUtils
       }
       catch (JsonException e)
       {
+         e.printStackTrace();
       }
       catch (SecurityException e)
       {
+         e.printStackTrace();
       }
       catch (NoSuchFieldException e)
       {
+         e.printStackTrace();
       }
       finally
       {
@@ -482,6 +485,7 @@ public class VirtualFileSystemUtils
          connection = Utils.getConnection(url);
          connection.setRequestMethod("GET");
          JsonParser parser = new JsonParser();
+         System.out.println("VirtualFileSystemUtils.initVFS()" + connection.getResponseCode());
          parser.parse(connection.getInputStream());
          connection.getInputStream().close();
          vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
@@ -492,6 +496,7 @@ public class VirtualFileSystemUtils
       }
       catch (JsonException e)
       {
+         e.printStackTrace();
       }
       catch (SecurityException e)
       {
