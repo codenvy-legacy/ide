@@ -16,32 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client;
+package org.exoplatform.ide.java.client.inject;
 
-import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
-import org.exoplatform.ide.resources.FileType;
 
+import com.google.gwt.inject.client.AbstractGinModule;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaExtension
+public class JavaGinModule extends AbstractGinModule
 {
-   
+
    /**
-    * 
+    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
     */
-   @Inject
-   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider)
+   @Override
+   protected void configure()
    {
-      FileType javaFile = new FileType(null, "application/java", "java");
-      editorRegistry.register(javaFile, javaEditorProvider);
-      resourceProvider.registerFileType(javaFile);
+      bind(JavaEditorProvider.class).in(Singleton.class);
    }
+
 }

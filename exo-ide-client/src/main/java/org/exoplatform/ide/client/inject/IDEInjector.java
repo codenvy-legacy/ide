@@ -21,6 +21,7 @@ import com.google.gwt.inject.client.Ginjector;
 
 import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.core.inject.CoreGinModule;
+import org.exoplatform.ide.java.client.inject.JavaGinModule;
 
 /**
  * Interface for GIN Injector, that provides access to the top level
@@ -32,7 +33,7 @@ import org.exoplatform.ide.core.inject.CoreGinModule;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-@GinModules({IDEClientModule.class,CoreGinModule.class})
+@GinModules({IDEClientModule.class,CoreGinModule.class, JavaGinModule.class})
 public interface IDEInjector extends Ginjector
 {
    BootstrapController getBootstrapController();

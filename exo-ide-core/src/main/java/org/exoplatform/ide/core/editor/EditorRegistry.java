@@ -41,16 +41,13 @@ public class EditorRegistry
 
    @Inject
    public EditorRegistry(@Named("defaulEditor") EditorProvider defaultProvider,
-      @Named("defaultFileType") FileType defaultFile, JavaEditorProvider javaEditorProvider,
+      @Named("defaultFileType") FileType defaultFile,
       ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider)
    {
       super();
       registry = JsonCollections.createIntegerMap();
       register(defaultFile, defaultProvider);
       //XXX for demo only
-      FileType javaFile = new FileType(null, "application/java", "java");
-      register(javaFile, javaEditorProvider);
-      resourceProvider.registerFileType(javaFile);
       FileType cssFile = new FileType(null, "text/css", "css");
       register(cssFile, cssEditorProvider);
       resourceProvider.registerFileType(cssFile);

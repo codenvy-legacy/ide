@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.core.editor;
+package org.exoplatform.ide.java.client.editor;
 
 import com.google.inject.Inject;
 
