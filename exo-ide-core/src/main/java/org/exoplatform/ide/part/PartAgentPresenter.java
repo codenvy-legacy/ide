@@ -54,8 +54,7 @@ public class PartAgentPresenter implements PartAgent
       @Override
       public void onActivePartChanged(PartPresenter part)
       {
-         // fire event, active part changed
-         eventBus.fireEvent(new ActivePartChangedEvent(part));
+         activePartChanged(part);
       }
 
       @Override
@@ -78,6 +77,15 @@ public class PartAgentPresenter implements PartAgent
          partStack.setPartStackEventHandler(partStackHandler);
          partStacks.put(partStackType.toString(), partStack);
       }
+   }
+
+   /**
+    * @param part
+    */
+   public void activePartChanged(PartPresenter part)
+   {
+      // fire event, active part changed
+      eventBus.fireEvent(new ActivePartChangedEvent(part));
    }
 
    /**
@@ -114,6 +122,8 @@ public class PartAgentPresenter implements PartAgent
       // set part focused
       activePartStack = partStack;
       activePartStack.setFocus(true);
+      
+      activePartChanged(activePartStack.getActivePart());
    }
 
    /**

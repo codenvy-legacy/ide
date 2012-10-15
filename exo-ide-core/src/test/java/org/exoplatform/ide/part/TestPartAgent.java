@@ -169,5 +169,29 @@ public class TestPartAgent
       // verify Event fired
       verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
    }
+   
+   @Test
+   public void shoudFireEventonChangePartStack()
+   {
+      final PartPresenter part1 = mock(PartPresenter.class);
+      final PartPresenter part2 = mock(PartPresenter.class);
+
+      when(provider.get()).thenReturn(mock(PartStackPresenter.class), mock(PartStackPresenter.class),
+         mock(PartStackPresenter.class), mock(PartStackPresenter.class));
+
+      // create Part Agent
+      agent = new PartAgentPresenter(provider, eventBus);
+
+      PartStackPresenter partStack1 = agent.getPartStack(TYPE);
+      
+      agent.addPart(part1, TYPE);
+      agent.addPart(part2, SECOND_TYPE);
+      // part2 and partStack2 are active now
+      reset(eventBus);
+      agent.setActivePartStack(partStack1); // focus requested
+      
+      // verify New Event generated
+      verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
+   }
 
 }
