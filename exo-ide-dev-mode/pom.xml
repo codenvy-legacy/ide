@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M12-SNAPSHOT</version>
+      <version>1.2.0-M13-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-mode</artifactId>
@@ -321,8 +321,7 @@
                      <tasks>
                         <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
                            buildNumber = ${buildNumber}
-                           buildTime
-                           =${timestamp}
+                           buildTime = ${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
                   </configuration>
