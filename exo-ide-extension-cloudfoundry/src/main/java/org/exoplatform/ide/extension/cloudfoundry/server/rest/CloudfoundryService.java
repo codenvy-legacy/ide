@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;

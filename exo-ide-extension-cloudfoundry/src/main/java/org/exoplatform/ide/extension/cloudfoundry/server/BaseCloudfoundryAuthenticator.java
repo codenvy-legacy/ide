@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.server;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
