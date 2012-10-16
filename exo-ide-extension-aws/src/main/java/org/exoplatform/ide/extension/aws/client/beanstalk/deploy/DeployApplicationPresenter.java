@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -144,6 +145,31 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
+      // TODO using validate() method may be more correctly
+      // Check App name
+      String appName = display.getNameField().getValue();
+      if (appName == null || appName.length() == 0)
+      {
+         Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+            AWSExtension.LOCALIZATION_CONSTANT.validationErrorSpecifyAppName());
+         return;
+      }
+
+      // Check Env. name
+      String envName = display.getEnvNameField().getValue();
+      if (envName == null || envName.length() < 4 || envName.length() > 23)
+      {
+         Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+            AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameLength());
+         return;
+      }
+      else if (envName.startsWith("-") || envName.endsWith("-"))
+      {
+         Dialogs.getInstance().showError(AWSExtension.LOCALIZATION_CONSTANT.validationErrorTitile(),
+            AWSExtension.LOCALIZATION_CONSTANT.validationErrorEnvNameHyphen());
+         return;
+      }
+
       this.deployResultHandler = deployResultHandler;
       createProject(projectTemplate);
    }
