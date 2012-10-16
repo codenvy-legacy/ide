@@ -40,7 +40,7 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -84,7 +84,7 @@ import static org.exoplatform.ide.commons.FileUtils.*;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
-import static org.exoplatform.ide.helper.JsonHelper.*;
+import static org.exoplatform.ide.commons.JsonHelper.*;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
