@@ -60,9 +60,8 @@ public class BuilderService
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for build
-    * @param webSocketSessionId
-    *    identifier of the WebSocket session which will be used for sending the status of build job
-    *    or empty string if an automatic status checking is not required
+    * @param useWebSocket
+    *    if <code>true</code> - result status of build job will be sent via WebSocket 
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to

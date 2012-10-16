@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.jenkins.server;
 
-import static org.exoplatform.ide.helper.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
-import static org.exoplatform.ide.helper.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;

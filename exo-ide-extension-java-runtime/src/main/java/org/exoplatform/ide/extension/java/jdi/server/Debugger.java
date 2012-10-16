@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import static org.exoplatform.ide.helper.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
