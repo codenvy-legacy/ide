@@ -23,7 +23,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
-import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
+import org.exoplatform.ide.operation.edit.GroovyTypeValidationAndFixingTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,7 +44,7 @@ public class CodeOutLineGroovyTemplateTest extends BaseTest
 
    private final static String FILE_NAME = "GroovyTemplateCodeOutline.gtmpl";
 
-   private final static String PROJECT = JavaTypeValidationAndFixingTest.class.getSimpleName();
+   private final static String PROJECT = CodeOutLineGroovyTemplateTest.class.getSimpleName();
 
    private OutlineTreeHelper outlineTreeHelper;
 

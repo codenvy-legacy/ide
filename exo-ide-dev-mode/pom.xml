@@ -321,8 +321,7 @@
                      <tasks>
                         <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
                            buildNumber = ${buildNumber}
-                           buildTime
-                           =${timestamp}
+                           buildTime = ${timestamp}
                            version = ${project.version}</echo>
                      </tasks>
                   </configuration>
