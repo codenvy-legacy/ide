@@ -30,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({GoToLineTest.class, FormatOfTextInTheContentPanelTest.class, UndoRedoEditingInCodeEditorTest.class,
    DeleteCurrentLineTest.class, UndoRedoEditingInWysiwygEditorTest.class, EditFileInWysiwygEditorTest.class,
-   FindReplaceTest.class, JavaTypeValidationAndFixingTest.class})
+   FindReplaceTest.class, GroovyTypeValidationAndFixingTest.class})
 public class EditTestSuite
 {
 
