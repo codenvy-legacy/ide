@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceIm
 import org.exoplatform.ide.extension.java.jdi.server.model.DebugApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
