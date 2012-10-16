@@ -148,7 +148,7 @@ public class CloudfoundryService
       int mem;
       try
       {
-         mem = Integer.parseInt(params.get("mem"));
+         mem = Integer.parseInt(params.get("memory"));
       }
       catch (NumberFormatException e)
       {
