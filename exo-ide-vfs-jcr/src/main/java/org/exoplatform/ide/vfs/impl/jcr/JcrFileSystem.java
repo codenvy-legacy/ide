@@ -27,9 +27,8 @@ import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
+import org.exoplatform.ide.vfs.server.ItemNodeImpl;
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -49,11 +48,14 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenBean;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
@@ -98,9 +100,11 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
@@ -312,7 +316,7 @@ public class JcrFileSystem implements VirtualFileSystem
    public Project createProject(@PathParam("parentId") String parentId, //
                                 @QueryParam("name") String name, //
                                 @QueryParam("type") String type, //
-                                List<ConvertibleProperty> properties //
+                                List<Property> properties //
    ) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -332,13 +336,13 @@ public class JcrFileSystem implements VirtualFileSystem
          }
          if (properties == null)
          {
-            properties = new ArrayList<ConvertibleProperty>(2);
+            properties = new ArrayList<Property>(2);
          }
          if (type != null)
          {
-            properties.add(new ConvertibleProperty("vfs:projectType", type));
+            properties.add(new Property("vfs:projectType", type));
          }
-         properties.add(new ConvertibleProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+         properties.add(new Property("vfs:mimeType", Project.PROJECT_MIME_TYPE));
 
          FolderData newProject = ((FolderData)parentData).createFolder(name, //
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
@@ -410,7 +414,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getChildren(java.lang.String, int, int, String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("children/{id}")
    @Override
@@ -484,6 +488,50 @@ public class JcrFileSystem implements VirtualFileSystem
          session.logout();
       }
    }
+
+   @GET
+   @Path("tree/{id}")
+   @Produces({MediaType.APPLICATION_JSON})
+   public ItemNode getTree(@PathParam("id") String folderId,
+                           @DefaultValue("-1") @QueryParam("depth") int depth,
+                           @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
+      throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      Session session = session();
+      try
+      {
+         ItemData data = getItemData(session, folderId);
+         if (!(ItemType.FOLDER == data.getType() || ItemType.PROJECT == data.getType()))
+         {
+            throw new InvalidArgumentException("Unable get tree. Item " + data.getName()
+               + " is not a folder or project. ");
+         }
+         return new ItemNodeImpl(fromItemData(data, propertyFilter), getTreeLevel(data, depth, propertyFilter));
+      }
+      finally
+      {
+         session.logout();
+      }
+   }
+
+   private List<ItemNode> getTreeLevel(ItemData data, int depth, PropertyFilter propertyFilter)
+      throws VirtualFileSystemException
+   {
+      if (depth == 0 || data.getType() == ItemType.FILE)
+      {
+         return null;
+      }
+      FolderData folder = (FolderData)data;
+      LazyIterator<ItemData> children = folder.getChildren(null);
+      List<ItemNode> level = new ArrayList<ItemNode>();
+      while (children.hasNext())
+      {
+         ItemData c = children.next();
+         level.add(new ItemNodeImpl(fromItemData(c, propertyFilter), getTreeLevel(c, depth - 1, propertyFilter)));
+      }
+      return level;
+   }
+
 
    /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getContent(java.lang.String) */
    @Path("content/{id}")
@@ -587,6 +635,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
       templates.put(Link.REL_ITEM_BY_PATH, //
          new Link(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
+      
+      templates.put(Link.REL_TREE, //
+         new Link(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));      
 
       templates.put(Link.REL_CREATE_FILE, //
          new Link(createURI("file", "[parentId]", "name", "[name]"), //
@@ -633,7 +684,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItem(java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("item/{id}")
    @Override
@@ -654,7 +705,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("itembypath/{path:.*}")
    @Override
@@ -715,7 +766,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getVersions(java.lang.String, int, int,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Path("version-history/{id}")
    @Override
@@ -879,7 +930,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#search(javax.ws.rs.core.MultivaluedMap, int, int,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
    @Override
@@ -1195,7 +1246,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("item/{id}")
    @Override
    public Item updateItem(@PathParam("id") String id, //
-                          List<ConvertibleProperty> properties, //
+                          List<Property> properties, //
                           @QueryParam("lockToken") String lockToken //
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -1207,14 +1258,14 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             String[] removeMixinTypes = null;
             String[] addMixinTypes = null;
-            for (ConvertibleProperty property : properties)
+            for (Property property : properties)
             {
                if ("vfs:mimeType".equals(property.getName()))
                {
-                  MediaType[] value = property.valueToArray(MediaType[].class);
-                  if (value != null && value.length > 0)
+                  List<String> value = property.getValue();
+                  if (!(value == null || value.isEmpty()))
                   {
-                     MediaType newMediaType = value[0];
+                     MediaType newMediaType = MediaType.valueOf(value.get(0));
                      MediaType currentMediaType = data.getMediaType();
                      if (!compareMediaTypeIgnoreParameters(currentMediaType, newMediaType))
                      {
@@ -1418,13 +1469,6 @@ public class JcrFileSystem implements VirtualFileSystem
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
-                  MediaType mediaType = child.getMediaType();
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
                current = (FolderData)child;
             }
@@ -1434,17 +1478,10 @@ public class JcrFileSystem implements VirtualFileSystem
             {
                if (!current.hasChild(name))
                {
-                  ItemData child = current.createFolder(name, //
+                  current.createFolder(name, //
                      mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
                      mediaType2NodeTypeResolver.getFolderMixins((String)null), //
                      null);
-                  MediaType mediaType = child.getMediaType();
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
             }
             else if (".project".equals(name))
@@ -1456,19 +1493,13 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
-               notifyListeners(new ChangeEvent(this, //
-                  current.getId(), //
-                  current.getPath(), //
-                  mediaType != null ? mediaType.toString() : null, //
-                  ChangeEvent.ChangeType.RENAMED)
-               );
-               List<ConvertibleProperty> properties;
+               List<Property> properties;
                try
                {
                   JsonParser jp = new JsonParser();
                   jp.parse(noCloseZip);
-                  ConvertibleProperty[] array =
-                     (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
+                  Property[] array =
+                     (Property[])ObjectBuilder.createArray(Property[].class, jp.getJsonObject());
                   properties = Arrays.asList(array);
                }
                catch (JsonException e)
@@ -1478,12 +1509,6 @@ public class JcrFileSystem implements VirtualFileSystem
                if (properties.size() > 0)
                {
                   current.updateProperties(properties, null, null, null);
-                  notifyListeners(new ChangeEvent(this, //
-                     current.getId(), //
-                     current.getPath(), //
-                     mediaType != null ? mediaType.toString() : null, //
-                     ChangeEvent.ChangeType.PROPERTIES_UPDATED)
-                  );
                }
             }
             else
@@ -1492,29 +1517,17 @@ public class JcrFileSystem implements VirtualFileSystem
                if (child != null && overwrite && ItemType.FILE == child.getType())
                {
                   ((FileData)child).setContent(noCloseZip, child.getMediaType(), null);
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     child.getMediaType().toString(), //
-                     ChangeEvent.ChangeType.CONTENT_UPDATED)
-                  );
                }
                else
                {
                   final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
-                  child = current.createFile(name, //
+                  current.createFile(name, //
                      mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
                      mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
                      mediaType, //
                      mediaType2NodeTypeResolver.getFileMixins(mediaType), //
                      null, //
                      noCloseZip);
-                  notifyListeners(new ChangeEvent(this, //
-                     child.getId(), //
-                     child.getPath(), //
-                     child.getMediaType().toString(), //
-                     ChangeEvent.ChangeType.CREATED)
-                  );
                }
             }
             zip.closeEntry();
@@ -1943,8 +1956,8 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
          }
-         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
-         properties.add(new ConvertibleProperty("vfs:lastUpdateTime", "0"));
+         List<Property> properties = new ArrayList<Property>(1);
+         properties.add(new Property("vfs:lastUpdateTime", "0"));
          projectData.updateProperties(properties, null, null, null);
       }
       finally
@@ -1955,7 +1968,8 @@ public class JcrFileSystem implements VirtualFileSystem
 
    @Path("watch/stop/{projectId}")
    @Override
-   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws ItemNotFoundException,
+      InvalidArgumentException, VirtualFileSystemException
    {
       if (listeners != null)
       {
@@ -1964,7 +1978,8 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             ItemData projectData = getItemData(session, projectId);
             if (ItemType.PROJECT != projectData.getType() // Do not check listeners if not a project.
-               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData), new ProjectUpdateListener(projectId)))
+               || !listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData),
+               new ProjectUpdateListener(projectId)))
             {
                throw new InvalidArgumentException("'" + projectData.getName() + "' is not under watching. ");
             }
@@ -2014,8 +2029,14 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   private Item fromItemData(ItemData data, PropertyFilter propertyFilter) throws PermissionDeniedException,
-      VirtualFileSystemException
+   private Item fromItemData(ItemData data, PropertyFilter propertyFilter)
+      throws PermissionDeniedException, VirtualFileSystemException
+   {
+      return fromItemData(data, propertyFilter, true);
+   }
+
+   private Item fromItemData(ItemData data, PropertyFilter propertyFilter, boolean addLinks)
+      throws PermissionDeniedException, VirtualFileSystemException
    {
       if (data.getType() == ItemType.FILE)
       {
@@ -2023,7 +2044,7 @@ public class JcrFileSystem implements VirtualFileSystem
          return new File(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getParentId(),
             fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(), fileData
             .getMediaType().toString(), fileData.getContentLength(), fileData.isLocked(),
-            fileData.getProperties(propertyFilter), createFileLinks(fileData));
+            fileData.getProperties(propertyFilter), addLinks ? createFileLinks(fileData) : null);
       }
 
       if (data.getType() == ItemType.PROJECT)
@@ -2032,13 +2053,14 @@ public class JcrFileSystem implements VirtualFileSystem
          MediaType mediaType = projectData.getMediaType();
          return new Project(projectData.getId(), projectData.getName(), mediaType == null ? Project.FOLDER_MIME_TYPE
             : mediaType.toString(), projectData.getPath(), projectData.getParentId(), projectData.getCreationDate(),
-            projectData.getProperties(propertyFilter), createProjectLinks(projectData), projectData.getProjectType());
+            projectData.getProperties(propertyFilter), addLinks ? createProjectLinks(projectData) : null,
+            projectData.getProjectType());
       }
 
       MediaType mediaType = data.getMediaType();
       return new Folder(data.getId(), data.getName(), mediaType == null ? null : mediaType.toString(), data.getPath(),
          data.getParentId(), data.getCreationDate(), data.getProperties(propertyFilter),
-         createFolderLinks((FolderData)data));
+         addLinks ? createFolderLinks((FolderData)data) : null);
    }
 
    private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
@@ -2100,6 +2122,9 @@ public class JcrFileSystem implements VirtualFileSystem
 
       links.put(Link.REL_CHILDREN, //
          new Link(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
+
+//      links.put(Link.REL_TREE, //
+//         new Link(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
 
       links.put(Link.REL_CREATE_FOLDER, //
          new Link(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));

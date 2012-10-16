@@ -302,12 +302,12 @@ public class OpenLocalFilePresenter implements OpenLocalFileHandler, ViewClosedH
 
    protected void submit(SubmitEvent event)
    {
-      IDELoader.getInstance().show();
+      IDELoader.show();
    }
 
    private void submitComplete(String uploadServiceResponse)
    {
-      IDELoader.getInstance().hide();
+      IDELoader.hide();
 
       String responseOk = checkResponseOk(uploadServiceResponse);
       if (responseOk != null)

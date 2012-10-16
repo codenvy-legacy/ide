@@ -21,7 +21,6 @@ package org.eclipse.jdt.quickfix;
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
 import org.eclipse.jdt.client.JavaCodeController;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.compiler.IProblem;
@@ -35,6 +34,7 @@ import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.junit.Assert;
@@ -103,7 +103,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
             .append(expectedProposals).append('\n');
          for (int i = 0; i < proposals.size(); i++)
          {
-            ICompletionProposal curr = (ICompletionProposal)proposals.get(i);
+            CompletionProposal curr = (CompletionProposal)proposals.get(i);
             buf.append(" - ").append(curr.getDisplayString()).append('\n');
             if (curr instanceof CUCorrectionProposal)
             {
@@ -130,7 +130,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
    {
       for (int i = 0; i < proposals.size(); i++)
       {
-         ICompletionProposal proposal = (ICompletionProposal)proposals.get(i);
+         CompletionProposal proposal = (CompletionProposal)proposals.get(i);
          String name = proposal.getDisplayString();
          if (name == null || name.length() == 0 || name.charAt(0) == '!' || name.indexOf("{0}") != -1
             || name.indexOf("{1}") != -1)
@@ -246,13 +246,13 @@ public abstract class QuickFixTest extends GwtTestWithMockito
       Assert.assertTrue(findProposalByName(proposalName, actualProposals) == null);
    }
 
-   protected static ICompletionProposal findProposalByName(String name, List proposals)
+   protected static CompletionProposal findProposalByName(String name, List proposals)
    {
       for (int i = 0; i < proposals.size(); i++)
       {
          Object curr = proposals.get(i);
-         if (curr instanceof ICompletionProposal && name.equals(((ICompletionProposal)curr).getDisplayString()))
-            return (ICompletionProposal)curr;
+         if (curr instanceof CompletionProposal && name.equals(((CompletionProposal)curr).getDisplayString()))
+            return (CompletionProposal)curr;
       }
       return null;
    }

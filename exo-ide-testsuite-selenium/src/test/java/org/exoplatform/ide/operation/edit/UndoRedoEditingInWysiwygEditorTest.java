@@ -31,6 +31,7 @@ import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,6 +74,18 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       }
    }
 
+   @After
+   public void closeFile()
+   {
+      try
+      {
+         IDE.EDITOR.forcedClosureFile(1);
+      }
+      catch (Exception e)
+      {
+      }
+   }
+
    @AfterClass
    public static void tearDown()
    {
@@ -86,7 +99,7 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
    }
 
    @Test
-   public void undoRedoEditingInWysiwydEditor() throws Exception
+   public void undoRedoEditingInWysiwydEditorFromEditMenu() throws Exception
    {
 
       //step 1 open project and walidation error marks 
@@ -97,310 +110,66 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE);
 
       IDE.EDITOR.clickDesignButton();
-
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "1");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.ENTER.toString());
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "2");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, Keys.ENTER.toString());
-      IDE.CK_EDITOR.typeTextIntoCkEditor(0, "3");
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1\n" + "2\n" + "3");
-      Thread.sleep(3000);
-      
-      
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1\n" + "2");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "1,");
+      //delay for emulation of the user input
+      Thread.sleep(1000);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "2,");
+      //delay for emulation of the user input
+      Thread.sleep(1000);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "3");
+      //delay for emulation of the user input
+      Thread.sleep(1000);
+      assertEquals("1," + "2," + "3", IDE.CK_EDITOR.getTextFromCKEditor(1));
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(0), "1");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "");
 
-      Thread.sleep(10000);
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
 
-      /* final String htmlFile = "testHtmlFile.html";
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
 
-      final String googleGadgetFile = "testGadgetFile.xml";
+   }
 
-      final String FolderName = UndoRedoEditingInWysiwygEditorTest.class.getSimpleName();
+   @Test
+   public void undoRedoEditingFromShortKeys() throws Exception
+   {
 
-      final String URL =
-         BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/" + FolderName + "/";
+      //step 1 open project and walidation error marks 
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE);
 
-      IDE.WORKSPACE.waitForRootItem();
-      VirtualFileSystemUtils.mkcol(URL);
-
-      //step 1
-      IDE.WORKSPACE.waitForRootItem();
-      checkNoFileOpened();
-
-      //step 2
-      IDE.WORKSPACE.selectRootItem();
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.REFRESH);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      //create new html file
-
-      IDE.WORKSPACE.selectItem(URL);
-
-      createSaveAndCloseFile(MenuCommands.New.HTML_FILE, htmlFile, 0);
-      //open with WYSIWYG editor and make default
-      IDE.WORKSPACE.doubleClickOnFile(URL + htmlFile);
-      IDE.EDITOR.clickDesignButton();
-      assertTrue(IDE.CK_EDITOR.isCkEditorOpened(0));
-
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
-      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
-      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
-
-      //steps 3-5
-      //select iframe in first tab
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String defaultText = selenium().getText("//body/");
-      assertEquals("", defaultText);
-
-      //type text
-      selenium().typeKeys("//body/", "1");
-      selenium().keyDown("//body/", "\\13");
-      selenium().keyUp("//body/", "\\13");
-      selenium().typeKeys("//body/", "2");
-      selenium().keyDown("//body/", "\\13");
-      selenium().keyUp("//body/", "\\13");
-      selenium().typeKeys("//body[@class='cke_show_borders']/", "3");
-      final String typedText = selenium().getText("//body/");
-      assertEquals("1\n2\n3", typedText);
-
-      IDE.selectMainFrame();
-
-      //step 6
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-      //select iframe in first tab
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      assertEquals("1\n2", revertedText);
-
-      //step 7
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().controlKeyUp();
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().controlKeyUp();
-      final String revertedText2 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-
-      assertEquals("1", revertedText2);
-
-      //step 8
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
-
-      //get and check text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText3 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      assertEquals("", revertedText3);
-
-      //step 9
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().controlKeyUp();
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Z));
-      selenium().controlKeyUp();
-      //get text
-      final String revertedText4 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("", revertedText4);
-
-      //step 10
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.REDO_TYPING);
-      //Thread.sleep(TestConstants.SLEEP);
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.REDO_TYPING);
-      //Thread.sleep(TestConstants.SLEEP);
-      //get and check text
-
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      assertEquals("1", restoredText);
-
-      //step 11
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
-
-      //get and check text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText2 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      assertEquals("1\n2", restoredText2);
-
-      //step 12
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().controlKeyUp();
-      //Thread.sleep(TestConstants.SLEEP);
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().controlKeyUp();
-      //get text
-      final String restoredText3 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2\n3", restoredText3);
-
-      //step 13
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      //click ctrl+Y
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().controlKeyUp();
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().controlKeyUp();
-      //get text
-      final String restoredText4 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2\n3", restoredText4);
-
-      //step 14
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-
-      //check text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText5 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      assertEquals("1\n2", revertedText5);
-
-      //step 15
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      //IDE.EDITOR.selectIFrameWithEditor(0);
-      //type text
-      selenium().typeKeys("//body/", "a");
-      IDE.selectMainFrame();
-
-      //step 16
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      //click ctrl+Y
-      selenium().controlKeyDown();
-      selenium().keyDown("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().keyUp("//", String.valueOf(java.awt.event.KeyEvent.VK_Y));
-      selenium().controlKeyUp();
-      //get text
-      final String restoredText5 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2a", restoredText5);
-
-      //step 17
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-      //get text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText6 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2", revertedText6);
-
-      //step 18
-      saveCurrentFile();
-
-      //step 19
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.REDO_TYPING);
-      //get text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String restoredText6 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2a", restoredText6);
-
-      //step 20
-      IDE.TOOLBAR.runCommand(MenuCommands.Edit.UNDO_TYPING);
-      //get text
-      IDE.EDITOR.selectIFrameWithEditor(0);
-      final String revertedText7 = selenium().getText("//body/");
-      IDE.selectMainFrame();
-      //check text
-      assertEquals("1\n2", revertedText7);
-
-      //step 21
-      createSaveAndCloseFile(MenuCommands.New.OPENSOCIAL_GADGET_FILE, googleGadgetFile, 1);
-      Thread.sleep(TestConstants.SLEEP / 3);
-
-      //open with WYSIWYG editor
-      IDE.WORKSPACE.doubleClickOnFile(URL + googleGadgetFile);
       IDE.EDITOR.clickDesignButton();
 
-      //step 22
-      //changed content
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "1,");
+      //delay for emulation of the user input
+      Thread.sleep(500);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "2,");
+      //delay for emulation of the user input
+      Thread.sleep(500);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "3");
+      //delay for emulation of the user input
+      Thread.sleep(500);
 
-      IDE.EDITOR.selectIFrameWithEditor(1);
-      selenium().typeKeys("//body/", "1111 ");
-      IDE.selectMainFrame();
+      assertEquals("1," + "2," + "3", IDE.CK_EDITOR.getTextFromCKEditor(1));
 
-      //step 23
-      //select tab with html file
-      IDE.EDITOR.selectTab(0);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
 
-      //step 24
-      //select tab with google gadget file
-      IDE.EDITOR.selectTab(1);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "");
 
-      //step 25
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(1);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
 
-      //step 26
-      //     //TODO must be set id in upload mime type form 
-      //     String filePath =
-      //         "src/test/resources/org/exoplatform/ide/operation/edit/undoRedoEditingInWysiwygEditorTest/Example.html";
-      //      uploadFile(MenuCommands.File.OPEN_LOCAL_FILE, filePath, MimeType.TEXT_HTML);
-      //      //Thread.SLEEP/3(TestConstants.SLEEP/3);
-      //      checkCkEditorOpened(1);
-      //
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.UNDO, true);
-      //      IDE.TOOLBAR.assertButtonEnabled(ToolbarCommands.Editor.REDO, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, true);
-      //      IDE.MENU.checkCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, true);
-
-      //step 27
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + htmlFile, false);
-
-      //TODO may be remove after fix ask dialog after reopen file
-      if (selenium().isElementPresent("exoAskDialog"))
-      {
-         selenium().click("exoAskDialogYesButton");
-         waitForElementNotPresent("exoAskDialog");
-      }
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(0);
-      IDE.WORKSPACE.selectItem(URL + htmlFile);
-      IDE.NAVIGATION.deleteSelectedItems();
-
-      IDE.NAVIGATION.openFileFromNavigationTreeWithCodeEditor(URL + googleGadgetFile, false);
-
-      saveCurrentFile();
-      IDE.EDITOR.closeFile(0);
-
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.UNDO, false);
-      IDE.TOOLBAR.assertButtonExistAtLeft(ToolbarCommands.Editor.REDO, false);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING, false);
-      IDE.MENU.checkCommandVisibility(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING, false);
-
-      IDE.WORKSPACE.selectItem(URL + googleGadgetFile);
-      IDE.NAVIGATION.deleteSelectedItems();*/
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
 
    }
 

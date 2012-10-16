@@ -30,11 +30,14 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
@@ -141,7 +144,7 @@ public class MockVFS implements VirtualFileSystem
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces({MediaType.APPLICATION_JSON})
    public Project createProject(@PathParam("parentId") String parentId, @QueryParam("name") String name,
-                                @QueryParam("type") String type, List<ConvertibleProperty> properties) throws ItemNotFoundException,
+                                @QueryParam("type") String type, List<Property> properties) throws ItemNotFoundException,
       InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException
    {
       return new Project(UUID.randomUUID().toString(), name, Folder.FOLDER_MIME_TYPE, "/path", parentId,
@@ -185,6 +188,12 @@ public class MockVFS implements VirtualFileSystem
       ItemList<Item> itemList = new ItemList<Item>(items);
       itemList.setNumItems(items.size());
       return itemList;
+   }
+
+   @Override
+   public ItemNode getTree(String folderId, int depth, PropertyFilter propertyFilter) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    @Override
@@ -396,7 +405,7 @@ public class MockVFS implements VirtualFileSystem
    @Override
    @Path("item/{id:.*}")
    public Item updateItem(@PathParam("id") String id, //
-                          List<ConvertibleProperty> properties, //
+                          List<Property> properties, //
                           @QueryParam("lockToken") String lockToken) throws ItemNotFoundException, LockException,
       PermissionDeniedException, VirtualFileSystemException
    {

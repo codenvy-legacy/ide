@@ -107,7 +107,20 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       parentId = itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
-      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+
+      try
+      {
+         if (itemObject.get("links").isNull() == null)
+         {
+            links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+         }
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         System.out.println("Invalid JSON. " + itemObject.toString());
+      }
+
       versionId = itemObject.get("versionId").isString().stringValue();
       length = (long)itemObject.get("length").isNumber().doubleValue();
       lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();

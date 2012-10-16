@@ -23,7 +23,6 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.utils.ExoConfigurationHelper;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
@@ -36,6 +35,7 @@ import org.exoplatform.ide.vfs.server.observation.PathFilter;
 import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -62,7 +62,7 @@ public class PomListener implements Startable
 
    private final BuilderClient client;
 
-   private Timer timer = new Timer();
+   private Timer timer = new Timer(true);
 
    private final CodeAssistantStorageClient storageClient;
 
@@ -133,6 +133,7 @@ public class PomListener implements Startable
    @Override
    public void stop()
    {
+      timer.cancel();
    }
 
 }

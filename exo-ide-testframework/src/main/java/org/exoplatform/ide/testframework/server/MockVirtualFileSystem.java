@@ -20,8 +20,6 @@ package org.exoplatform.ide.testframework.server;
 
 import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -34,10 +32,13 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Project createProject(String parentId, String name, String type, List<ConvertibleProperty> properties)
+   public Project createProject(String parentId, String name, String type, List<Property> properties)
       throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
@@ -106,6 +107,12 @@ public class MockVirtualFileSystem implements VirtualFileSystem
       InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;
+   }
+
+   @Override
+   public ItemNode getTree(String folderId, int depth, PropertyFilter propertyFilter) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
+   {
+      return null;  //To change body of implemented methods use File | Settings | File Templates.
    }
 
    @Override
@@ -141,7 +148,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
 
    /**
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem#getItemByPath(java.lang.String, java.lang.String,
-    *      org.exoplatform.ide.vfs.server.PropertyFilter)
+    *      org.exoplatform.ide.vfs.shared.PropertyFilter)
     */
    @Override
    public Item getItemByPath(String path, String versionId, PropertyFilter propertyFilter)
@@ -220,7 +227,7 @@ public class MockVirtualFileSystem implements VirtualFileSystem
    }
 
    @Override
-   public Item updateItem(String id, List<ConvertibleProperty> properties, String lockToken)
+   public Item updateItem(String id, List<Property> properties, String lockToken)
       throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       return null;

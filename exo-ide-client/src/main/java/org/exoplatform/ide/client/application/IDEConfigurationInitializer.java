@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.json.client.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -42,17 +41,18 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationUnmarshaller;
-import org.exoplatform.ide.client.model.configuration.IDEInitializationConfiguration;
-import org.exoplatform.ide.client.model.settings.Settings;
-import org.exoplatform.ide.client.model.settings.SettingsService;
-import org.exoplatform.ide.client.model.settings.SettingsServiceImpl;
+import org.exoplatform.ide.client.model.IDEConfigurationLoader;
+import org.exoplatform.ide.client.model.IDEConfigurationUnmarshaller;
+import org.exoplatform.ide.client.model.IDEInitializationConfiguration;
+import org.exoplatform.ide.client.model.Settings;
+import org.exoplatform.ide.client.model.SettingsService;
+import org.exoplatform.ide.client.model.SettingsServiceImpl;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -88,7 +88,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    public void loadConfiguration()
    {
-      new IDEConfigurationLoader(IDE.eventBus(), IDELoader.getInstance())
+      new IDEConfigurationLoader(IDE.eventBus(), IDELoader.get())
          .loadConfiguration(new AsyncRequestCallback<IDEInitializationConfiguration>(new IDEConfigurationUnmarshaller(
             new IDEInitializationConfiguration(), new JSONObject(IDEConfigurationLoader.getAppConfig())))
          {
@@ -109,7 +109,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                      {
                         throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("registryURL"));
                      }
-                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.getInstance(), applicationConfiguration.getContext());
+                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.get(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
                      
                      initialOpenedProject = applicationSettings.getValueAsString("opened-project");
@@ -234,7 +234,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
    private void initServices()
    {
-      IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.getInstance()));
+      IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.get()));
 
       /*
        * Updating top menu

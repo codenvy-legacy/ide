@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-    <parent>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M11-SNAPSHOT</version>
-   </parent>
-   <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-dev-resources</artifactId>
-   <name>eXo IDE :: Dev Resources</name>
-   <description>Development Resources for eXo IDE</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.exoplatform.ide</groupId>
+		<artifactId>exo-ide-parent</artifactId>
+		<version>1.2.0-M12-SNAPSHOT</version>
+	</parent>
+	<groupId>org.exoplatform.ide</groupId>
+	<artifactId>exo-ide-dev-resources</artifactId>
+	<name>eXo IDE :: Dev Resources</name>
+	<description>Development Resources for eXo IDE</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>id</id>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<tasks>
+							    <copy file="${basedir}/src/main/resources/eclipse/exo-ide-dev-mode.launch" tofile="${project.build.directory}/exo-ide-dev-mode.launch"/>
+					            <replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="M2_REPO" value="${settings.localRepository}"/>
+					            <replace file="${project.build.directory}/exo-ide-dev-mode.launch" token="PARENT_PROJECT" value="${project.parent.basedir}"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

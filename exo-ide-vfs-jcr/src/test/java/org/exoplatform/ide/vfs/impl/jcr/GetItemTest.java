@@ -131,7 +131,7 @@ public class GetItemTest extends JcrFileSystemTest
       Map<String, List> m = new HashMap<String, List>(properties.size());
       for (Property p : properties)
          m.put(p.getName(), p.getValue());
-      assertEquals(6, m.size());
+      assertTrue(m.size() >= 6);
       assertTrue(m.containsKey("MyProperty01"));
       assertTrue(m.containsKey("MyProperty02"));
       assertTrue(m.containsKey("MyProperty03"));

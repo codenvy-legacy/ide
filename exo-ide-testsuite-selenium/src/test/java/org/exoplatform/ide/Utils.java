@@ -56,6 +56,7 @@ public class Utils
       login();
 
       HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+      connection.setRequestProperty("Referer", url.toString());
       connection.setAllowUserInteraction(false);
       return connection;
    }

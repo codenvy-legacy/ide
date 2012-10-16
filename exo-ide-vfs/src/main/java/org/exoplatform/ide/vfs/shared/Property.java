@@ -25,13 +25,13 @@ import java.util.List;
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: Property.java 79579 2012-02-17 13:27:25Z andrew00x $
  */
-public abstract class Property<V>
+public class Property
 {
    protected String name;
 
-   protected List<V> value;
+   protected List<String> value;
 
-   public Property(String name, List<V> value)
+   public Property(String name, List<String> value)
    {
       this.name = name;
       this.value = value;
@@ -42,7 +42,7 @@ public abstract class Property<V>
     * <p/>
     * <pre>
     * V val = ...;
-    * List&lt;V&gt; l = new ArrayList&lt;V&gt;(1);
+    * List&lt;String&gt; l = new ArrayList&lt;String&gt;(1);
     * l.add(val);
     * new Property(&quot;MyName&quot;, l) {
     * };
@@ -51,12 +51,12 @@ public abstract class Property<V>
     * @param name the name of property
     * @param value the value. If <code>value == null</code> it means no value
     */
-   public Property(String name, V value)
+   public Property(String name, String value)
    {
       this.name = name;
       if (value != null)
       {
-         this.value = new ArrayList<V>(1);
+         this.value = new ArrayList<String>(1);
          this.value.add(value);
       }
    }
@@ -75,15 +75,15 @@ public abstract class Property<V>
       this.name = name;
    }
 
-   // NOTE getter and setter for value must be overridden.
-   // Need this for correct work of JSON tool on server side. Implementation of such
-   // methods here make impossible to determine type via reflection.
+   public List<String> getValue()
+   {
+      return value;
+   }
 
-   public abstract List<V> getValue();
-
-   public abstract void setValue(List<V> value);
-
-   // ==================================================
+   public void setValue(List<String> value)
+   {
+      this.value = value;
+   }
 
    /** @see java.lang.Object#toString() */
    @Override

@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -152,7 +153,9 @@ public class SaveFileAsControl extends SimpleControl implements IDEControl, Edit
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay || 
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof PackageExplorerPresenter.Display)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateState();

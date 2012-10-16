@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.client.util.logging.Log;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -30,7 +32,6 @@ import org.eclipse.jdt.client.codeassistant.FillArgumentNamesCompletionProposalC
 import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
@@ -232,10 +233,11 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       }
       catch (Exception ex)
       {
-         String st = ex.getClass().getName() + ": " + ex.getMessage();
-         for (StackTraceElement ste : ex.getStackTrace())
-            st += "\n" + ste.toString();
-         IDE.fireEvent(new OutputEvent(st, Type.ERROR));
+//         String st = ex.getClass().getName() + ": " + ex.getMessage();
+//         for (StackTraceElement ste : ex.getStackTrace())
+//            st += "\n" + ste.toString();
+//         IDE.fireEvent(new OutputEvent(st, Type.ERROR));
+         Log.error(getClass(), ex);
       }
       return new IJavaCompletionProposal[0];
    }
@@ -346,7 +348,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
-   public void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(org.exoplatform.ide.editor.api.contentassist.CompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {

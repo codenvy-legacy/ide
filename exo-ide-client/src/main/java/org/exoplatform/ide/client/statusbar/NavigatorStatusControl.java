@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
@@ -45,15 +46,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Created by The eXo Platform SAS .
@@ -220,13 +220,14 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
          return;
       }
 
-      if (event.getView() instanceof ProjectExplorerPresenter.Display) {
+      if (event.getView() instanceof ProjectExplorerDisplay)
+      {
          setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
          setVisible(true);
          return;
       }
-      
-      if (event.getView() instanceof ProjectExplorerDisplay)
+
+      if (event.getView() instanceof PackageExplorerPresenter.Display)
       {
          setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
          setVisible(true);

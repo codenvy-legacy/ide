@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M11-SNAPSHOT</version>
+      <version>1.2.0-M12-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-jdt-core</artifactId>
    <packaging>jar</packaging>
@@ -28,6 +28,17 @@
             <exclusion>
                <artifactId>gwt-dev</artifactId>
                <groupId>com.google.gwt</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javassist</groupId>
+               <artifactId>javassist</artifactId>
             </exclusion>
          </exclusions>
       </dependency>

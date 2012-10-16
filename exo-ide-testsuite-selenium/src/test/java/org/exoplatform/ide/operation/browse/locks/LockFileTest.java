@@ -145,7 +145,7 @@ public class LockFileTest extends LockFileAbstract
       //TODO after fix issue IDE-1473 ucommit code unlock XML file and check state button ()
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNLOCK_FILE);
       IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-     
+
       assertTrue(IDE.LOCK_FILE.isLockCommandActive());
       IDE.MENU.clickOnLockLayer();
       IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
@@ -163,7 +163,10 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.waitTabNotPresent(1);
 
-      //step 8 reopen Html File and check lock     
+      //step 8 reopen Html File and check lock 
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
+      //this delay needed for correct update content in folder on staging.
+      Thread.sleep(500);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
       checkAllLockButtonIsActive();
@@ -187,7 +190,7 @@ public class LockFileTest extends LockFileAbstract
 
    }
 
-   @Test
+    @Test
    public void testLockFileStaysAfterRefresh() throws Exception
    {
       //step one refresh an open project

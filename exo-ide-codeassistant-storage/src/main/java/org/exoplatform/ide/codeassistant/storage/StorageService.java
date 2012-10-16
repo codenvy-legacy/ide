@@ -50,6 +50,8 @@ public class StorageService implements CodeAssistantStorage
 {
 
    private final int DEFAULT_RESULT_LIMIT = 200;
+   
+   private final int DEFAULT_PACKAGE_RESULT_LIMIT = 15000;
 
    private final LuceneQueryExecutor queryExecutor;
 
@@ -179,6 +181,16 @@ public class StorageService implements CodeAssistantStorage
    {
       return queryExecutor.executeQuery(new PackageExtractor(), IndexType.PACKAGE,
          and(prefix(DataIndexFields.PACKAGE, packagePrefix), inArtifacts(dependencys)), DEFAULT_RESULT_LIMIT, 0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAllPackages(java.util.Set)
+    */
+   @Override
+   public List<String> getAllPackages(Set<String> dependencys) throws CodeAssistantException
+   {
+      return queryExecutor.executeQuery(new PackageExtractor(), IndexType.PACKAGE,
+         inArtifacts(dependencys), DEFAULT_PACKAGE_RESULT_LIMIT, 0);
    }
 
 }

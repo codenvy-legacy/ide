@@ -18,19 +18,20 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.editor.Buffer.ContextMenuListener;
-
-import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
-
-import com.google.collide.client.editor.FocusManager.FocusListener;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
+import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
+import com.google.collide.client.code.popup.EditorPopupController.Remover;
+import com.google.collide.client.editor.Buffer.ContextMenuListener;
+import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
+import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
-import com.google.collide.client.util.PathUtil;
+import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
@@ -42,11 +43,13 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.editor.api.EditorCapability;
 import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
@@ -59,20 +62,23 @@ import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
 import org.exoplatform.ide.editor.marking.Markable;
 import org.exoplatform.ide.editor.marking.Marker;
 import org.exoplatform.ide.editor.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class CollabEditor extends Widget implements Editor, Markable
+public class CollabEditor extends Widget implements Editor, Markable, RequiresResize
 {
 
    protected final EditorBundle editorBundle;
@@ -88,10 +94,12 @@ public class CollabEditor extends Widget implements Editor, Markable
    protected NotificationManager notificationManager;
 
    protected DocumentAdaptor documentAdaptor;
-   
+
    private HoverPresenter hoverPresenter;
 
    private boolean initialized;
+
+   private ContentAssistant contentAssistant;
 
    private final class TextListenerImpl implements TextListener
    {
@@ -114,7 +122,8 @@ public class CollabEditor extends Widget implements Editor, Markable
       id = "CollabEditor - " + hashCode();
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
-            EditorErrorListener.NOOP_ERROR_RECEIVER);
+            EditorErrorListener.NOOP_ERROR_RECEIVER, this);
+      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
       //editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
@@ -128,15 +137,15 @@ public class CollabEditor extends Widget implements Editor, Markable
       documentAdaptor = new DocumentAdaptor();
       editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
       {
-         
+
          @Override
          public void onFocusChange(boolean hasFocus)
          {
             if (hasFocus)
-            fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
+               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
          }
       });
-      
+
    }
 
    /**
@@ -195,7 +204,7 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       document = new org.exoplatform.ide.editor.text.Document(text);
       document.addDocumentListener(documentAdaptor);
-      hoverPresenter = new HoverPresenter(this,editor, document);
+      hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
@@ -206,20 +215,20 @@ public class CollabEditor extends Widget implements Editor, Markable
             Document editorDocument = Document.createFromString(text);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
-            editorBundle.setDocument(editorDocument, new PathUtil("test.java"), "");
+            editorBundle.setDocument(editorDocument, mimeType, "");
             documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {
-               
+
                @Override
                public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
                {
-                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() +1 , column +1));
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() + 1, column + 1));
                }
             });
             editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
             {
-               
+
                @Override
                public void onContextMenu(int x, int y)
                {
@@ -247,13 +256,13 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       switch (capability)
       {
-         case AUTOCOMPLETION:
-         case OUTLINE:
-         case VALIDATION:
-         case FIND_AND_REPLACE:
-         case DELETE_LINES:
-         case FORMAT_SOURCE:
-         case SET_CURSOR_POSITION:
+         case AUTOCOMPLETION :
+         case OUTLINE :
+         case VALIDATION :
+         case FIND_AND_REPLACE :
+         case DELETE_LINES :
+         case FORMAT_SOURCE :
+         case SET_CURSOR_POSITION :
             return true;
 
          default :
@@ -328,26 +337,6 @@ public class CollabEditor extends Widget implements Editor, Markable
          editor.getEditorDocumentMutator().deleteText(currentLine1, 0, currentLine1.length());
          rowsCountToDelete--;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#findAndSelect(java.lang.String, boolean)
-    */
-   @Override
-   public boolean findAndSelect(String find, boolean caseSensitive)
-   {
-      editor.getSearchModel().setQuery(find);
-      return false;
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceFoundedText(java.lang.String, java.lang.String, boolean)
-    */
-   @Override
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
-   {
-      editor.getSearchModel().setQuery(find);
-      editor.getSearchModel().getMatchManager().replaceMatch(replace);
    }
 
    /**
@@ -685,12 +674,168 @@ public class CollabEditor extends Widget implements Editor, Markable
    {
       return hoverPresenter;
    }
-   
+
    /**
     * @return the editorBundle
     */
    public EditorBundle getEditorBundle()
    {
       return editorBundle;
+   }
+
+   /**
+    * @return
+    */
+   public ContentAssistant getCodeassistant()
+   {
+      return contentAssistant;
+   }
+
+   private String searchQuery;
+
+   private boolean caseSensitive;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    */
+   public void search(String query, boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback)
+   {
+      if (searchCompleteCallback == null)
+      {
+         return;
+      }
+
+      if (query == null || query.isEmpty())
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               searchCompleteCallback.onSearchComplete(false);
+            }
+         });
+
+         return;
+      }
+
+      if (searchQuery == null || !searchQuery.equals(query) || this.caseSensitive != caseSensitive)
+      {
+         searchQuery = query;
+         this.caseSensitive = caseSensitive;
+
+         editor.getSearchModel().setQuery(query, caseSensitive, new SearchProgressListener()
+         {
+            @Override
+            public void onSearchProgress()
+            {
+            }
+
+            @Override
+            public void onSearchDone()
+            {
+               Scheduler.get().scheduleDeferred(new ScheduledCommand()
+               {
+                  @Override
+                  public void execute()
+                  {
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
+                     searchCompleteCallback.onSearchComplete(matches > 0);
+                  }
+               });
+            }
+
+            @Override
+            public void onSearchBegin()
+            {
+            }
+         });
+      }
+      else
+      {
+         editor.getSearchModel().getMatchManager().selectNextMatch();
+
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               if (editor.getSelection().hasSelection())
+               {
+                  searchCompleteCallback.onSearchComplete(true);
+               }
+               else
+               {
+                  searchCompleteCallback.onSearchComplete(false);
+               }
+            }
+         });
+
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    */
+   @Override
+   public void replaceMatch(String replacement)
+   {
+      if (editor.getSelection().hasSelection())
+      {
+         //editor.getSearchModel().getMatchManager().replaceMatch(replacement)
+         editor.getSearchModel().getMatchManager().replaceMatch(replacement);
+      }
+   }
+
+   public Remover showPopup(IRegion region, Element content)
+   {
+      try
+      {
+         int line = document.getLineOfOffset(region.getOffset());
+         LineInfo findLine = editor.getDocument().getLineFinder().findLine(line);
+         int lineOffset = document.getLineOffset(line);
+         int startColumn = region.getOffset() - lineOffset;
+         return editorBundle.getEditorPopupController().showPopup(findLine, startColumn,
+            startColumn + region.getLength(), null, new RendererImpl(content), null, VerticalAlign.BOTTOM, true, 200);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
+      return null;
+   }
+
+   private final class RendererImpl implements PopupRenderer
+   {
+
+      private final Element element;
+
+      /**
+       * 
+       */
+      public RendererImpl(Element element)
+      {
+         this.element = element;
+
+      }
+
+      /**
+       * @see com.google.collide.client.code.popup.EditorPopupController.PopupRenderer#renderDom()
+       */
+      @Override
+      public elemental.html.Element renderDom()
+      {
+         return (elemental.html.Element)element;
+      }
+
+   }
+
+   /**
+    * @see com.google.gwt.user.client.ui.RequiresResize#onResize()
+    */
+   @Override
+   public void onResize()
+   {
+      editor.getBuffer().onResize();
    }
 }

@@ -71,7 +71,7 @@ public class UsingKeyboardTest extends BaseTest
     * 
     * @throws Exception
     */
-      @Test
+   @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -79,23 +79,24 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
+      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT + "/" + TEST_SUBFOLDER, Keys.ARROW_UP.toString());
+      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_RIGHT.toString() + Keys.ARROW_DOWN);
+      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_RIGHT.toString());
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
 
       // test keyboard with opened Content Panel
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
       // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
-      IDE.PROJECT.EXPLORER.typeKeys(Keys.ARROW_UP.toString() + Keys.ARROW_LEFT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
-
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.closeFile(1);
    }
 
    /**
@@ -115,17 +116,20 @@ public class UsingKeyboardTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
       IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
-      
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER + "/" + TEST_FILE);
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       Thread.sleep(2000);
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
       IDE.SEARCH_RESULT.waitOpened();
       assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE));
 
-      IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + TEST_FILE);
-      IDE.SEARCH_RESULT.typeKeys(Keys.UP.toString());
-      Thread.sleep(TestConstants.REDRAW_PERIOD * 4);
-      
+      //move with keys in search three
+      IDE.SEARCH_RESULT.selectItem(PROJECT);
+      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_DOWN.toString());
+      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_UP.toString());
+      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
+
       //for GOOGLE CHROME method IDE.SEARCH_RESULT.typeKeys(Keys.ARROW_LEFT.toString());
       // does not work in Chrome browser
       if (IDE_SETTINGS.getString("selenium.browser.commad").equals("GOOGLE_CHROME"))
@@ -133,13 +137,13 @@ public class UsingKeyboardTest extends BaseTest
          new Actions(driver).sendKeys(Keys.ARROW_LEFT).build().perform();
       }
       else
-      IDE.SEARCH_RESULT.typeKeys(Keys.ARROW_LEFT.toString());
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+         Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertFalse(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
-
+      //expand search item, select search element and check select
       IDE.SEARCH_RESULT.selectItem(PROJECT);
-      IDE.SEARCH_RESULT.typeKeys(Keys.RIGHT.toString());
-      IDE.SEARCH_RESULT.typeKeys(Keys.DOWN.toString());
+      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.RIGHT.toString());
+      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.DOWN.toString());
+      IDE.SEARCH_RESULT.waitItemIsSelected(IDE.SEARCH_RESULT.getWebElem(PROJECT + "/" + TEST_FILE));
       assertTrue(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
    }
 

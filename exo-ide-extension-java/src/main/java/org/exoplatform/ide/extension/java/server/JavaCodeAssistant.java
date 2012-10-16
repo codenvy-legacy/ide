@@ -35,7 +35,6 @@ import org.exoplatform.ide.extension.java.server.parser.JavaTypeToTypeInfoConver
 import org.exoplatform.ide.extension.java.server.parser.VfsClassLibrary;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderFilter;
 import org.exoplatform.ide.extension.java.server.parser.scanner.FolderScanner;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -48,6 +47,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -395,6 +395,32 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          substring = substring.replaceAll("/", ".");
          if (substring.startsWith(prefix))
             pakages.add(substring);
+      }
+      return pakages;
+   }
+
+   /**
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+
+      Project project = getProject(projectId, vfs);
+      Folder sourceFolder = getSourceFolder(vfs, project);
+
+      FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
+      scanner.addFilter(new FolderFilter());
+      List<Item> list = scanner.scan();
+      List<String> pakages = new ArrayList<String>();
+      String sourcePath = sourceFolder.getPath();
+      for (Item i : list)
+      {
+         String substring = i.getPath().substring(sourcePath.length() + 1);
+         pakages.add(substring.replaceAll("/", "."));
       }
       return pakages;
    }

@@ -129,7 +129,7 @@ public class AppEngineProjectPresenter extends GoogleAppEnginePresenter implemen
    private Display display;
 
    private Backend selectedBackend;
-
+   
    public AppEngineProjectPresenter()
    {
       IDE.getInstance().addControl(new AppEngineProjectControl());

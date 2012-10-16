@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.samples.client.oauth;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -27,9 +25,11 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -73,12 +73,13 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
          @Override
          public void onClick(ClickEvent event)
          {
-            int clientHeight = Window.getClientHeight();
-            int clientWidth = Window.getClientWidth();
-            loginWithGitHubAccount(getAuthorizationContext() + "/ide/oauth/authenticate" + "?oauth_provider=github"
-               + "&mode=federated_login" + "&scope=user&scope=repo" + "&redirect_after_login="
-               + getAuthorizationPageURL(),//
-               getAuthorizationPageURL(), 980, 500, clientWidth, clientHeight);
+            String authUrl = Utils.getAuthorizationContext()//
+               + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"//
+               + "&scope=user&scope=repo&redirect_after_login="//
+               + Utils.getAuthorizationPageURL();
+            JsPopUpOAuthWindow authWindow =
+               new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
+            authWindow.loginWithOAuth();
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
@@ -97,74 +98,6 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
          IDE.getInstance().openView(display.asView());
       }
    }
-
-   private native String getAuthorizationPageURL() /*-{
-                                                   return $wnd.authorizationPageURL;
-                                                   }-*/;
-
-   private native String getAuthorizationContext() /*-{
-                                                   return $wnd.authorizationContext;
-                                                   }-*/;
-
-   public static native void loginWithGitHubAccount(String authUrl, String redirectAfterLogin, int popupWindowWidth,
-      int popupWindowHeight, int clientWidth, int clientHeight) /*-{
-                                                                function Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight) {
-                                                                this.authUrl = authUrl;
-                                                                this.redirectAfterLogin = redirectAfterLogin;
-                                                                this.popupWindowWidth = popupWindowWidth;
-                                                                this.popupWindowHeight = popupWindowHeight;
-
-                                                                var popup_close_handler = function() {
-                                                                if (!popupWindow || popupWindow.closed)
-                                                                {
-                                                                //console.log("closed popup")
-                                                                popupWindow = null;
-                                                                if (popupCloseHandlerIntervalId)
-                                                                {
-                                                                window.clearInterval(popupCloseHandlerIntervalId);
-                                                                //console.log("stop interval " + popupCloseHandlerIntervalId);
-                                                                }
-                                                                }
-                                                                else
-                                                                {
-                                                                var href;
-                                                                try
-                                                                {
-                                                                href = popupWindow.location.href;
-                                                                }
-                                                                catch (error)
-                                                                {}
-
-                                                                if (href
-                                                                && (popupWindow.location.pathname == redirectAfterLogin
-                                                                || popupWindow.location.pathname == "/IDE/Application.html"
-                                                                || popupWindow.location.pathname.match("j_security_check$")
-                                                                ))
-                                                                {
-                                                                //console.log(href);
-                                                                popupWindow.close();
-                                                                popupWindow = null;
-                                                                if (popupCloseHandlerIntervalId)
-                                                                {
-                                                                window.clearInterval(popupCloseHandlerIntervalId);
-                                                                //console.log("stop interval " + popupCloseHandlerIntervalId);
-                                                                }
-                                                                window.location.replace(href);
-                                                                }
-                                                                }
-                                                                }
-
-                                                                this.open_window = function() {
-                                                                var x = Math.max(0, Math.round(clientWidth / 2) - Math.round(this.popupWindowWidth / 2));
-                                                                var y = Math.max(0, Math.round(clientHeight / 2) - Math.round(this.popupWindowHeight / 2));
-                                                                popupWindow = window.open(this.authUrl, 'popup', 'width=' + this.popupWindowWidth + ',height=' + this.popupWindowHeight + ',left=' + x + ',top=' + y);
-                                                                popupCloseHandlerIntervalId = window.setInterval(popup_close_handler, 100);
-                                                                }
-                                                                }
-
-                                                                var popup = new Popup(authUrl, redirectAfterLogin, popupWindowWidth, popupWindowHeight);
-                                                                popup.open_window();
-                                                                }-*/;
 
    /**
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)

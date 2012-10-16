@@ -54,9 +54,12 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
       IDE.STATUSBAR.waitCursorPositionAt("19 : 1");
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_UP);
+      Thread.sleep(500);
       assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_DOWN);
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
+      IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark("SumController.java");
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 26).trim());
    }
 }

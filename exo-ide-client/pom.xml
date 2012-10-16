@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M11-SNAPSHOT</version>
+      <version>1.2.0-M12-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-client</artifactId>
    <name>eXo IDE :: Client</name>
@@ -401,6 +401,11 @@
             <dependency>
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-extension-python-runtime</artifactId>
+            </dependency>
+
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-extension-aws</artifactId>
             </dependency>
 
             <dependency>
@@ -806,6 +811,9 @@
                      <port>8080</port>
 
                      <logLevel>INFO</logLevel>
+                     <!--
+                     <bindAddress>0.0.0.0</bindAddress>
+                     -->
                      <hostedWebapp>${basedir}/target/war</hostedWebapp>
                      <skipTests>${gwt.test.skip}</skipTests>
                      <!-- <port>${gwt.port}</port> -->

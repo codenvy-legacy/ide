@@ -47,7 +47,7 @@ public class SearchLoadFileTest extends BaseTest
 
    private final static String restFileName = "Example.groovy";
 
-   private final static String gadgetFileName = "gadget.xml";
+   private final static String gadgetFileName = "googlegadgettst.gadget";
 
    private final String gadgetFileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n"
       + "<ModulePrefs title=\"Hello World!\" />\n" + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world!\n"
@@ -57,7 +57,7 @@ public class SearchLoadFileTest extends BaseTest
 
    static String pathToGadget = "src/test/resources/org/exoplatform/ide/search/Example.grs";
 
-   static String pathToGroovy = "src/test/resources/org/exoplatform/ide/search/gadget.xml";
+   static String pathToGroovy = "src/test/resources/org/exoplatform/ide/search/googlegadgettst.gadget";
 
    @BeforeClass
    public static void setUp()
@@ -82,7 +82,6 @@ public class SearchLoadFileTest extends BaseTest
     * @throws Exception
     */
    @Test
-   //TODO after fix IDE-1483, IDE-1484  test should be complete
    public void testLoadFoundFile() throws Exception
    {
       //step 1 open project an folders, search groovy and check result
@@ -118,12 +117,13 @@ public class SearchLoadFileTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
       IDE.EDITOR.closeFile(0);
+      //refresh browser if browser in not refresh, reproduce problem in IDE-1632
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.LOADER.waitClosed();
       IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + gadgetFileName);
-
-      Thread.sleep(3000);
-
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
    }
 
    private void chekButtonState() throws Exception

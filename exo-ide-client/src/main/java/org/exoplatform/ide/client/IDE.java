@@ -18,11 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -52,7 +49,6 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
-import org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsControl;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -64,8 +60,8 @@ import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.navigation.NavigationModule;
+import org.exoplatform.ide.client.outline.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
-import org.exoplatform.ide.client.outline.ui.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
@@ -74,8 +70,11 @@ import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Created by The eXo Platform SAS .

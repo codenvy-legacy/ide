@@ -30,7 +30,9 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
+import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.IdeLocalizationConstant;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -82,7 +84,7 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
    @UiField
    IconButton linkWithEditorButton;
 
-   private static final String TITLE = "Project Explorer";
+   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerViewTitle();
 
    public TinyProjectExplorerView()
    {

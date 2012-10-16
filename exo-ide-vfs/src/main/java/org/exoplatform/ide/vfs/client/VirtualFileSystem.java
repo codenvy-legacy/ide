@@ -32,18 +32,17 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashMap;
 import java.util.List;
-
-import javax.ws.rs.PathParam;
+import java.util.Map;
 
 /**
  * Class provide communication with server side of VirtualFileSystem via REST.
@@ -156,6 +155,36 @@ public class VirtualFileSystem
       String param = "propertyFilter=" + PropertyFilter.ALL+"& itemType=" + itemType.name();
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
          .loader(emptyLoader).send(callback);
+   }
+   
+   /**
+    * Get project tree.
+    * 
+    * @param project
+    * @param callback
+    * @throws RequestException
+    */
+   public void getProjectTree(ProjectModel project, AsyncRequestCallback<ProjectModel> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", project.getId());
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
+   }
+   
+   /**
+    * Get folder tree.
+    * 
+    * @param folder
+    * @param callback
+    * @throws RequestException
+    */
+   public void getFolderTree(FolderModel folder, AsyncRequestCallback<FolderModel> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", folder.getId());
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);      
    }
 
    /**

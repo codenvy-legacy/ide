@@ -103,7 +103,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
       else
       {
          selectedItem = event.getSelectedItems().get(0);
-         selectedProject = ((ItemContext)selectedItem).getProject();
+         //selectedProject = ((ItemContext)selectedItem).getProject();
          updateControlState();
       }
    }
@@ -163,7 +163,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onFolderRefreshed(FolderRefreshedEvent event)
    {
-      selectedProject = ((ItemContext)event.getFolder()).getProject();
+      //selectedProject = ((ItemContext)event.getFolder()).getProject();
       updateControlState();
    }
 
@@ -175,12 +175,12 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          return;
       }
 
-      if (selectedProject == null && isProjectExplorerVisible)
+      if (selectedProject == null || !isProjectExplorerVisible)
       {
          setVisible(false);
          return;
       }
-
+      
       if (selectedItem == null
          || (isWorkspaceSelected(selectedItem.getId()) || !isProjectSelected((ItemContext)selectedItem)))
       {
@@ -215,7 +215,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      selectedProject = event.getProject();
+      selectedProject = null;
       updateControlState();
    }
 

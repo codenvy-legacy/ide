@@ -49,6 +49,7 @@ import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
 import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
 import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
@@ -329,7 +330,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          }         
       } catch (Exception e) {
          Window.alert("Exception > " + e.getMessage());
-         System.out.println("error >>>>>>>>>>>>>>>>>>>>>>>>>>>");
          e.printStackTrace();
       }      
    }
@@ -1171,60 +1171,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 		{
 			editor.setLineContent(lastLineHandler, "\n");
 		}
-   }-*/;
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#findAndSelect(java.lang.String, boolean)
-    */
-   @Override
-   public native boolean findAndSelect(String find, boolean caseSensitive)
-   /*-{
-		var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
-		if (editor == null)
-		{
-			return;
-		}
-
-		var isFound = false;
-		var cursor = editor.getSearchCursor(find, true, !caseSensitive); // getSearchCursor(string, atCursor, caseFold) -> cursor
-		if (isFound = cursor.findNext())
-		{
-			cursor.select();
-		}
-
-		return isFound;
-   }-*/;
-
-   /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceFoundedText(java.lang.String, java.lang.String, boolean)
-    */
-   @Override
-   public void replaceFoundedText(String find, String replace, boolean caseSensitive)
-   {
-      replaceFoundedText(editorObject, find, replace, caseSensitive);
-   }
-
-   private native void replaceFoundedText(JavaScriptObject editor, String find, String replace, boolean caseSensitive)
-   /*-{
-		if (editor == null)
-		{
-			return;
-		}
-		
-		var selected = editor.selection();
-
-		if (!caseSensitive)
-		{
-			selected = selected.toLowerCase();
-			find = find.toLowerCase();
-		}
-
-		if (selected == find)
-		{
-			editor.replaceSelection(replace);
-		}
-
-		editor.focus();
    }-*/;
 
    /**
@@ -2152,5 +2098,60 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
       for(Marker m : problems)
          markProblem(m);
    }
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    */
+   @Override
+   public void search(final String query, final boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback)
+   {
+      if (searchCompleteCallback == null)
+      {
+         return;
+      }
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            boolean found = searchNative(query, caseSensitive);
+            searchCompleteCallback.onSearchComplete(found);
+         }
+      });
+   }
+   
+   private native boolean searchNative(String query, boolean caseSensitive)
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor == null)
+      {
+         return;
+      }
+
+      var found = false;
+      var cursor = editor.getSearchCursor(query, true, !caseSensitive); // getSearchCursor(string, atCursor, caseFold) -> cursor
+      if (found = cursor.findNext())
+      {
+         cursor.select();
+      }
+
+      return found;
+   }-*/;
+
+   /**
+    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    */
+   @Override
+   public native void replaceMatch(String replacement)
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.codemirror.CodeMirror::editorObject;
+      if (editor == null)
+      {
+         return;
+      }
+      
+      editor.replaceSelection(replacement);
+   }-*/;
    
 }

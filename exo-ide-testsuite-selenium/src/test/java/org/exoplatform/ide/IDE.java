@@ -84,8 +84,9 @@ import org.exoplatform.ide.core.ProjectsMenu;
 import org.exoplatform.ide.core.DeployForm;
 import org.exoplatform.ide.core.PaasAuthorization;
 import org.exoplatform.ide.core.JavaEditor;
-import org.exoplatform.ide.operation.java.SelectAllFromEditMenuTest;
-
+import org.exoplatform.ide.core.Preferences;
+import org.exoplatform.ide.core.Ssh;
+import org.exoplatform.ide.core.Formatter;
 
 /**
  * 
@@ -179,7 +180,7 @@ public class IDE
    public Rename RENAME;
 
    public org.exoplatform.ide.git.core.GIT GIT;
-   
+
    public org.exoplatform.paas.core.Paas PAAS;
 
    public Project PROJECT;
@@ -223,18 +224,24 @@ public class IDE
    public PopupDialogsBrowser POPUP;
 
    public ContextMenu CONTEXT_MENU;
-  
+
    public Debuger DEBUGER;
-   
+
    public OrginizeImport ORGINIZEIMPORT;
-   
+
    public ProjectsMenu PROJECTMENU;
-   
+
    public DeployForm DEPLOY;
-   
+
    public PaasAuthorization PAASAUTORIZATION;
-   
+
    public JavaEditor JAVAEDITOR;
+
+   public Preferences PREFERENCES;
+
+   public Ssh SSH;
+   
+   public Formatter FORMATTER;
 
    public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
    {
@@ -302,7 +309,11 @@ public class IDE
       PROJECTMENU = PageFactory.initElements(driver, ProjectsMenu.class);
       DEPLOY = PageFactory.initElements(driver, DeployForm.class);
       PAASAUTORIZATION = PageFactory.initElements(driver, PaasAuthorization.class);
-      JAVAEDITOR = PageFactory.initElements (driver,JavaEditor.class);
+      JAVAEDITOR = PageFactory.initElements(driver, JavaEditor.class);
+      PREFERENCES = PageFactory.initElements(driver, Preferences.class);
+      SSH = PageFactory.initElements(driver, Ssh.class);
+      FORMATTER = PageFactory.initElements(driver, Formatter.class);
+      
    }
 
    public Selenium getSelenium()

@@ -26,7 +26,6 @@ import org.exoplatform.ide.codeassistant.jvm.bean.ShortTypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -36,6 +35,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -256,6 +256,16 @@ public class GroovyCodeAssistant extends CodeAssistant
    protected List<String> getPackagesByPrefixFromProject(String prefix, String projectId, String vfsId)
    {
       // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getAllPackagesFromProject(String projectId, String vfsId)
+   {
+      // not used in Groovy code assistant, so always return null
       return null;
    }
 }

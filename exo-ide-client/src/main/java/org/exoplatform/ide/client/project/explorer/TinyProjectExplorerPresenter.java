@@ -18,27 +18,15 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.event.EnableStandartErrorsHandlingEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -89,7 +77,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
@@ -116,14 +104,25 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -299,7 +298,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
     * 
     * Handling item selected event from browser
     * 
-    * @param item
     */
    protected void onItemSelected()
    {
@@ -475,7 +473,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
                   itemToSelect = null;
                   foldersToRefresh.clear();
                   IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-                  IDE.fireEvent(new EnableStandartErrorsHandlingEvent());
                }
 
                @Override
@@ -553,7 +550,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    /**
     * Select chosen item in browser.
     * 
-    * @see org.exoplatform.ide.client.browser.event.SelectItemHandler#onSelectItem(org.exoplatform.ide.client.browser.event.SelectItemEvent)
     */
    public void onSelectItem(SelectItemEvent event)
    {
@@ -565,9 +561,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       display.selectItem(event.getItemHref());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedHandler#onItemUnlocked(org.exoplatform.ide.client.framework.vfs.event.ItemUnlockedEvent)
-    */
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
       Item item = event.getItem();
@@ -594,9 +587,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
@@ -893,10 +883,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      if (!display.asView().isViewVisible())
-      {
-         display.asView().activate();
-      }
+//      if (!display.asView().isViewVisible())
+//      {
+//         display.asView().activate();
+//      }
 
       if (display.selectItem(editorActiveFile.getId()))
       {
@@ -1239,7 +1229,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    private void setTargets(ProjectModel project)
    {
       ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new StringProperty(ProjectProperties.TARGET.value(), targets));
+      project.getProperties().add(new Property(ProjectProperties.TARGET.value(), targets));
 
       try
       {

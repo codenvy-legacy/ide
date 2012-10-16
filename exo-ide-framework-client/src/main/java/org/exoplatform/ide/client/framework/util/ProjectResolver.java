@@ -100,6 +100,9 @@ public class ProjectResolver
    @Deprecated
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
+   public static final String AWS = "Amazon Web Services";
+   
+
    public static List<String> deprecatedTypes = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, EXO_APP, PHP, RAILS,
       SERVLET_JSP, SPRING, STATIC_WEB);
    
@@ -116,6 +119,7 @@ public class ProjectResolver
          types.put(UNDEFINED, IconImageBundle.INSTANCE.defaultProject());
          types.put(APP_ENGINE_JAVA, IconImageBundle.INSTANCE.gaeJavaProject());
          types.put(APP_ENGINE_PYTHON, IconImageBundle.INSTANCE.gaePythonProject());
+         types.put(AWS, IconImageBundle.INSTANCE.awsProject());
 
          projectImages.put(ProjectType.JAVA, IconImageBundle.INSTANCE.javaProject());
          projectImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject());
@@ -127,9 +131,10 @@ public class ProjectResolver
          projectImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject());
          projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
          projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
+         projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
       }
 
-      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING));
+      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));

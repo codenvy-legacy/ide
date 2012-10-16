@@ -298,7 +298,8 @@ public class SearchMatchManager {
 
     editorDocumentMutator.insertText(selection.getCursorLine(), selection.getCursorLineNumber(),
         selection.getCursorColumn(), replacement, true);
-    selectNextMatch();
+    //selectNextMatch();
     return true;
   }
+
 }

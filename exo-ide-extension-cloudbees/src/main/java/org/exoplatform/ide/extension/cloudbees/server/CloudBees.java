@@ -34,8 +34,6 @@ import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
 import org.exoplatform.ide.extension.jenkins.server.JenkinsClient;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -44,6 +42,8 @@ import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
 
@@ -669,8 +669,8 @@ public class CloudBees extends JenkinsClient
    private void writeApplicationId(VirtualFileSystem vfs, String projectId, String appId)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("cloudbees-application", appId);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("cloudbees-application", appId);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }

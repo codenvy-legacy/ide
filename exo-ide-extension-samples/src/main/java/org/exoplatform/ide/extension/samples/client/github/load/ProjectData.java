@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.extension.samples.client.github.load;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -25,7 +28,7 @@ package org.exoplatform.ide.extension.samples.client.github.load;
  */
 public class ProjectData
 {
-   
+
    private String name;
 
    private String description;
@@ -37,12 +40,15 @@ public class ProjectData
     */
    private String repositoryUrl;
 
-   public ProjectData(String name, String description, String type, String repositoryUrl)
+   private List<String> targets;
+
+   public ProjectData(String name, String description, String type, List<String> targets, String repositoryUrl)
    {
       this.name = name;
       this.description = description;
       this.type = type;
       this.repositoryUrl = repositoryUrl;
+      this.targets = targets;
    }
 
    /**
@@ -100,4 +106,31 @@ public class ProjectData
       this.type = type;
    }
 
+   /**
+    * @return the targets
+    */
+   public List<String> getTargets()
+   {
+      if (targets == null)
+      {
+         targets = new ArrayList<String>();
+      }
+      return targets;
+   }
+
+   /**
+    * @param targets the targets to set
+    */
+   public void setTargets(List<String> targets)
+   {
+      this.targets = targets;
+   }
+
+   /**
+    * @param description the description to set
+    */
+   public void setDescription(String description)
+   {
+      this.description = description;
+   }
 }

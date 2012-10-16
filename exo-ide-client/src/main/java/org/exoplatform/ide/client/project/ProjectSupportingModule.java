@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -28,19 +26,22 @@ import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedS
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
-import org.exoplatform.ide.client.model.configuration.IDEConfigurationLoader;
+import org.exoplatform.ide.client.model.IDEConfigurationLoader;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
+import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
+
+import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -63,7 +64,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
-      // new ProjectExplorerPresenter();
+      new PackageExplorerPresenter();
 
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());
@@ -89,7 +90,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
    {
       if (TemplateService.getInstance() == null)
       {
-         new TemplateServiceImpl(IDELoader.getInstance(), event.getConfiguration().getRegistryURL() + "/"
+         new TemplateServiceImpl(IDELoader.get(), event.getConfiguration().getRegistryURL() + "/"
             + "exo:applications" + "/" + IDEConfigurationLoader.APPLICATION_NAME, event.getConfiguration().getContext());
       }
    }

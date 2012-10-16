@@ -33,8 +33,6 @@ import org.exoplatform.ide.Template;
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -46,6 +44,8 @@ import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -66,7 +66,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -472,9 +471,8 @@ public class TemplatesRestService
                JsonParser jp = new JsonParser();
                prjDescrStream = zip.getInputStream(entry);
                jp.parse(prjDescrStream);
-               ConvertibleProperty[] array =
-                  (ConvertibleProperty[])ObjectBuilder.createArray(ConvertibleProperty[].class, jp.getJsonObject());
-               List<ConvertibleProperty> properties = Arrays.asList(array);
+               Property[] array = (Property[])ObjectBuilder.createArray(Property[].class, jp.getJsonObject());
+               List<Property> properties = Arrays.asList(array);
                String name = f.getName();
                name = name.substring(0, name.lastIndexOf(".zip"));
                projectTemplateList.add(createTemplateFromMethaData(properties, name));
@@ -496,12 +494,12 @@ public class TemplatesRestService
       return projectTemplateList;
    }
 
-   private ProjectTemplate createTemplateFromMethaData(List<ConvertibleProperty> properties, String templateName)
+   private ProjectTemplate createTemplateFromMethaData(List<Property> properties, String templateName)
    {
       ProjectTemplate template = new ProjectTemplate();
       template.setDefault(true);
       template.setName(templateName);
-      for (ConvertibleProperty prop : properties)
+      for (Property prop : properties)
       {
          String name = prop.getName();
          if ("vfs:projectType".equals(name))
@@ -658,8 +656,7 @@ public class TemplatesRestService
    /**
     * Check is user configuration folder exists. If doesn't exist, than create it.
     * 
-    * @param vfs2
-    * @throws RepositoryException
+    * @param vfs
     * @throws VirtualFileSystemException
     */
    private void checkConfigNode(VirtualFileSystem vfs) throws VirtualFileSystemException

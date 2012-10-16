@@ -19,7 +19,8 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:c="urn:import:org.exoplatform.gwtframework.ui.client.component"
 	xmlns:n="urn:import:org.exoplatform.ide.client.framework.ui"

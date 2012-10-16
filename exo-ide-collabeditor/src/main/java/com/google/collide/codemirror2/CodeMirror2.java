@@ -14,10 +14,8 @@
 
 package com.google.collide.codemirror2;
 
-import com.google.gwt.core.client.GWT;
-
-import com.google.collide.client.util.PathUtil;
 import com.google.common.base.Preconditions;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
@@ -43,8 +41,8 @@ public class CodeMirror2 {
     return resources.base().getText() + resources.parser().getText();
   }
 
-  public static Parser getParser(PathUtil path) {
-    SyntaxType type = SyntaxType.syntaxTypeByFilePath(path);
+  public static Parser getParser(String mimeType) {
+    SyntaxType type = SyntaxType.syntaxTypeByMimeType(mimeType);
     CmParser parser = getParserForMime(type.getMimeType());
     Preconditions.checkNotNull(parser);
     parser.setType(type);

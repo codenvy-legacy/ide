@@ -34,6 +34,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.ide.vfs.shared.Property;
 
 import java.io.File;
 import java.io.IOException;
@@ -179,8 +180,8 @@ public class HerokuService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         ConvertibleProperty p = new ConvertibleProperty("heroku-application", Collections.<String> emptyList());
-         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         Property p = new Property("heroku-application", Collections.<String> emptyList());
+         List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
       }
@@ -220,8 +221,8 @@ public class HerokuService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
-         List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+         Property p = new Property("heroku-application", application.get("name"));
+         List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
       }
@@ -292,8 +293,8 @@ public class HerokuService
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
       // Update VFS properties. Need it to uniform client.
-      ConvertibleProperty p = new ConvertibleProperty("heroku-application", application.get("name"));
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("heroku-application", application.get("name"));
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
 

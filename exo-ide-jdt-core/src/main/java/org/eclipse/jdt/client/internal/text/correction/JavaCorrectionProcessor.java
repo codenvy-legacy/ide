@@ -19,7 +19,6 @@
 package org.eclipse.jdt.client.internal.text.correction;
 
 import org.eclipse.jdt.client.codeassistant.CompletionProposalComparator;
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
@@ -31,6 +30,7 @@ import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.MultiStatus;
 import org.eclipse.jdt.client.runtime.Status;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class JavaCorrectionProcessor
    /*
     * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
     */
-   public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext)
+   public CompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext)
       throws CoreException
    {
 
@@ -88,14 +88,14 @@ public class JavaCorrectionProcessor
       //
       //      fErrorMessage= null;
 
-      ICompletionProposal[] res = null;
+      CompletionProposal[] res = null;
       if (context != null)
       {
          ArrayList<IJavaCompletionProposal> proposals = new ArrayList<IJavaCompletionProposal>(10);
          IStatus status =
             collectProposals(context, true, !quickAssistContext.isUpdatedOffset(),
                quickAssistContext.getProblemsAtOffset(), proposals);
-         res = proposals.toArray(new ICompletionProposal[proposals.size()]);
+         res = proposals.toArray(new CompletionProposal[proposals.size()]);
          if (!status.isOK())
          {
             throw new CoreException(status);
@@ -107,7 +107,7 @@ public class JavaCorrectionProcessor
 
       if (res == null || res.length == 0)
       {
-         return new ICompletionProposal[0];// { new ChangeCorrectionProposal(CorrectionMessages.NoCorrectionProposal_description, new NullChange(""), 0, null) }; //$NON-NLS-1$
+         return new CompletionProposal[0];// { new ChangeCorrectionProposal(CorrectionMessages.NoCorrectionProposal_description, new NullChange(""), 0, null) }; //$NON-NLS-1$
       }
       if (res.length > 1)
       {

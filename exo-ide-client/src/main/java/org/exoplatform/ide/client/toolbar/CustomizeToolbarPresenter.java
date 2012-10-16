@@ -46,7 +46,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.toolbar.ToolbarItem.Type;
 
 import java.util.ArrayList;
@@ -151,7 +151,7 @@ public class CustomizeToolbarPresenter implements ControlsUpdatedHandler, Applic
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(CustomizeToolbarEvent.TYPE, this);
 
-    //TODO  IDE.getInstance().addControl(new CustomizeToolbarCommand());
+      //TODO IDE.getInstance().addControl(new CustomizeToolbarCommand());
    }
 
    @Override

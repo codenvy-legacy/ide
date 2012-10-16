@@ -81,7 +81,7 @@
       <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.outline.ui.OutlineView">
+   <replace-with class="org.exoplatform.ide.client.outline.OutlineView">
       <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
    </replace-with>
 
@@ -213,12 +213,12 @@
       <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.explorer.ProjectExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter.Display" />
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView">
       <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.project.packaging.PackageExplorerView">
+      <when-type-is class="org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display" />
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">

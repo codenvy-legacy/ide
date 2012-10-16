@@ -36,6 +36,8 @@ import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -747,8 +749,8 @@ public abstract class JenkinsClient
    private void writeJenkinsJobName(VirtualFileSystem vfs, String projectId, String jobName)
       throws VirtualFileSystemException
    {
-      ConvertibleProperty p = new ConvertibleProperty("jenkins-job", jobName);
-      List<ConvertibleProperty> properties = new ArrayList<ConvertibleProperty>(1);
+      Property p = new Property("jenkins-job", jobName);
+      List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
    }

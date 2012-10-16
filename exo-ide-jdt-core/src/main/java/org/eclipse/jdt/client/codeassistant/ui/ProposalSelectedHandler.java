@@ -18,7 +18,7 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
+import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 
 /**
  * Created by The eXo Platform SAS.
@@ -29,7 +29,7 @@ import org.eclipse.jdt.client.codeassistant.api.ICompletionProposal;
 public interface ProposalSelectedHandler
 {
 
-   void onTokenSelected(ICompletionProposal proposal, boolean editorHasFocus);
+   void onTokenSelected(CompletionProposal proposal, boolean editorHasFocus);
 
    void onCancelAutoComplete(boolean editorHasFocus);
 

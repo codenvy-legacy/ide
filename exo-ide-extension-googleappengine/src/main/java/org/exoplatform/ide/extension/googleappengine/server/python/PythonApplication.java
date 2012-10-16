@@ -86,7 +86,7 @@ public class PythonApplication implements GenericApplication
       DosYamlReader dosYamlReader = new DosYamlReader(appDirPath);
       dosXml = dosYamlReader.parse();
 
-      indexesXml = readIndexYaml(getPath() + "index.yaml");
+      indexesXml = readIndexYaml(getPath() + "/index.yaml");
 
       BackendsYamlReader backendsYaml = new BackendsYamlReader(appDirPath);
       backendsXml = backendsYaml.parse();
@@ -179,6 +179,18 @@ public class PythonApplication implements GenericApplication
    public String getVersion()
    {
       return appInfo.version;
+   }
+
+   @Override
+   public String getSourceLanguage()
+   {
+      return "Python";
+   }
+
+   @Override
+   public String getServer()
+   {
+      return null; // ???
    }
 
    @Override

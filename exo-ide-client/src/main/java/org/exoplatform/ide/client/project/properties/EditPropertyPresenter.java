@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +175,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
          }
       }
 
-      Property property = new StringProperty(propertyName, propertyValue);
+      Property property = new Property(propertyName, propertyValue);
       propertyList.add(property);
    }
 
@@ -206,7 +205,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
             return;
          }
 
-         property = new StringProperty(name, value);
+         property = new Property(name, value);
          propertyList.add(property);
       }
       else
@@ -224,7 +223,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
             }
 
             property.setValue(null);
-            Property newProperty = new StringProperty(name, value);
+            Property newProperty = new Property(name, value);
             propertyList.add(newProperty);
          }
          else

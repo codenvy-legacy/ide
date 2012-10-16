@@ -44,7 +44,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.model.settings.SettingsService;
+import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceHandler;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
@@ -123,8 +123,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
    public SelectWorkspacePresenter()
    {
-     //TODO IDE.getInstance().addControl(new SelectWorkspaceControl());
-
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(SelectWorkspaceEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);

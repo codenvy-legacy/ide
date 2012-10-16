@@ -9,7 +9,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M11-SNAPSHOT</version>
+      <version>1.2.0-M12-SNAPSHOT</version>
    </parent>
 
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -223,6 +223,11 @@
                <artifactId>exo-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-extension-aws</artifactId>
       </dependency>
 
       <dependency>

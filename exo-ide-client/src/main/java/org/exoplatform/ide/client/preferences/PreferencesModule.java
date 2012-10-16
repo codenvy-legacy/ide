@@ -73,7 +73,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
 
       Preferences.get().addPreferenceItem(new ToolbarPreferenceItem(new CustomizeToolbarPresenter()));
       Preferences.get().addPreferenceItem(new HotKeysPreferenceItem(new CustomizeHotKeysPresenter()));
-      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
+//      Preferences.get().addPreferenceItem(new WorkspacePreferenceItem(new SelectWorkspacePresenter()));
 
       new AutocompletionHandler();
       new AboutIDEPresenter();
@@ -89,7 +89,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
       new HotKeyManager(controls, applicationSettings);
-      new GoogleContactsServiceImpl(IDELoader.getInstance(), applicationConfiguration.getContext());
+      new GoogleContactsServiceImpl(IDELoader.get(), applicationConfiguration.getContext());
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

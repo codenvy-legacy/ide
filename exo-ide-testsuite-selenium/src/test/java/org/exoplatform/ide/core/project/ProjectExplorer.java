@@ -118,6 +118,11 @@ public class ProjectExplorer extends AbstractTestModule
       return Locators.TREE_PREFIX + itemId;
    }
 
+   /**
+    * wait content in Project tree
+    * @param path
+    * @throws Exception
+    */
    public void waitForItem(final String path) throws Exception
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -139,6 +144,10 @@ public class ProjectExplorer extends AbstractTestModule
       });
    }
 
+   /** wait content in project (name file or folder)
+    * @param gridItem
+    * @throws Exception
+    */
    public void waitForItemInProjectList(final String gridItem) throws Exception
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -149,7 +158,8 @@ public class ProjectExplorer extends AbstractTestModule
          {
             try
             {
-               WebElement item = driver().findElement(By.xpath(String.format(Locators.PROJECT_LIST_GRID_ITEM, gridItem)));
+               WebElement item =
+                  driver().findElement(By.xpath(String.format(Locators.PROJECT_LIST_GRID_ITEM, gridItem)));
                return item != null && item.isDisplayed();
             }
             catch (Exception e)
@@ -160,6 +170,11 @@ public class ProjectExplorer extends AbstractTestModule
       });
    }
 
+   /**
+    * wait  disappear item in project tree
+    * @param path
+    * @throws Exception
+    */
    public void waitForItemNotPresent(final String path) throws Exception
    {
       new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
@@ -172,6 +187,32 @@ public class ProjectExplorer extends AbstractTestModule
             {
                driver().findElement(By.id(getItemId(path)));
                return false;
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait disappear progressor image on select folder
+    * @param path
+    * @throws Exception
+    */
+   public void waitUpdateContentInFolder(final String path) throws Exception
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               String stateImgProgessor = getImageAttributeFromContent(path);
+               return stateImgProgessor.startsWith("url(\"data:image/png;");
             }
             catch (Exception e)
             {
@@ -210,8 +251,7 @@ public class ProjectExplorer extends AbstractTestModule
     */
    public void selectItem(String path) throws Exception
    {
-      WebElement item = driver().findElement(By.id(getItemId(path)));
-      new Actions(driver()).moveToElement(item, 1, 1).click().perform();
+      driver().findElement(By.id(getItemId(path))).click();
    }
 
    /**
@@ -324,6 +364,18 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
+    * send your keys commands to item in project explorer
+    * @param keys
+    * @param item
+    * @throws Exception
+    */
+   public void typeKeysToItem(String item, String keys) throws Exception
+   {
+      WebElement elem = driver().findElement(By.id(getItemId(item)));
+      elem.sendKeys(keys);
+   }
+
+   /**
     * click on tab with name of the project
     * 
     * @param nameProject
@@ -370,6 +422,18 @@ public class ProjectExplorer extends AbstractTestModule
    public void openContextMenu()
    {
       new Actions(driver()).contextClick(view);
+   }
+
+   /**
+    * get image attribute and return string 
+    * from current folder 
+    * @throws Exception 
+    */
+   public String getImageAttributeFromContent(String path) throws Exception
+   {
+      WebElement imgElem =
+         driver().findElement(By.xpath("//div[@id='" + getItemId(path) + "']" + "/table/tbody/tr/td[2]//img"));
+      return imgElem.getCssValue("background");
    }
 
 }

@@ -27,9 +27,9 @@ import org.everrest.core.impl.ContainerResponse;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Ignore;
 import org.junit.Test;
 

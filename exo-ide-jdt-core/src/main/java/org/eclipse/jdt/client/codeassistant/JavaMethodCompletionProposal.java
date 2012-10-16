@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
-import org.eclipse.jdt.client.codeassistant.api.IContextInformation;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
+import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.IDocument;
 import org.exoplatform.ide.editor.text.TextUtilities;
@@ -88,7 +88,7 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal
    }
 
    @Override
-   protected IContextInformation computeContextInformation()
+   protected ContextInformation computeContextInformation()
    {
       // no context information for METHOD_NAME_REF proposals (e.g. for static imports)
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=94654

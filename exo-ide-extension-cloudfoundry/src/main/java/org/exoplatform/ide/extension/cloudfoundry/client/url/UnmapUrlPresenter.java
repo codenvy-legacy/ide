@@ -44,6 +44,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -84,6 +85,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private String urlToMap;
 
+   private boolean isBindingChanged = false;
+
    public UnmapUrlPresenter()
    {
       IDE.addHandler(UnmapUrlEvent.TYPE, this);
@@ -96,19 +99,10 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
       display.getMapUrlField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            String value = display.getMapUrlField().getValue();
-            if (value == null || value.isEmpty())
-            {
-               display.enableMapUrlButton(false);
-            }
-            else
-            {
-               display.enableMapUrlButton(true);
-            }
+            display.enableMapUrlButton((event.getValue() != null && !event.getValue().isEmpty()));
          }
       });
 
@@ -180,6 +174,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
                @Override
                protected void onSuccess(String result)
                {
+                  isBindingChanged = true;
                   String registeredUrl = url;
                   if (!url.startsWith("http"))
                   {
@@ -237,6 +232,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
                @Override
                protected void onSuccess(Object result)
                {
+                  isBindingChanged = true;
                   registeredUrls.remove(url);
                   display.getRegisteredUrlsGrid().setValue(registeredUrls);
                   String unmappedUrl = url;
@@ -279,6 +275,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
    @Override
    public void onUnmapUrl(UnmapUrlEvent event)
    {
+      isBindingChanged = false;
       if (makeSelectionCheck())
       {
          getAppRegisteredUrls();
@@ -322,6 +319,11 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
       if (event.getView() instanceof Display)
       {
          display = null;
+         if (isBindingChanged)
+         {
+            String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+         }
       }
    }
 
@@ -332,6 +334,7 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
          display = GWT.create(Display.class);
          bindDisplay(registeredUrls);
          IDE.getInstance().openView(display.asView());
+         display.enableMapUrlButton(false);
       }
    }
 

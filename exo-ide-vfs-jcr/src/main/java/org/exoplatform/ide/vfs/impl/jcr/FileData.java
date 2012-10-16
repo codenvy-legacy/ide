@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -30,6 +28,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -556,7 +555,7 @@ class FileData extends ItemData
    }
 
    @Override
-   final void updateProperties(List<ConvertibleProperty> properties, String[] addMixinTypes, String[] removeMixinTypes,
+   final void updateProperties(List<Property> properties, String[] addMixinTypes, String[] removeMixinTypes,
                                String lockToken) throws ConstraintException, LockException, PermissionDeniedException,
       VirtualFileSystemException
    {
@@ -594,7 +593,7 @@ class FileData extends ItemData
          Map<String, PropertyDefinition> ntFilePropertyDefinitions = null;
          Map<String, PropertyDefinition> ntResourcePropertyDefinitions = null;
          Node contentNode = node.getNode("jcr:content");
-         for (ConvertibleProperty property : properties)
+         for (Property property : properties)
          {
             // Since properties from nt:file and nt:resource are merged
             // in method getProperties(Node, PropertyFilter) here we need to determine

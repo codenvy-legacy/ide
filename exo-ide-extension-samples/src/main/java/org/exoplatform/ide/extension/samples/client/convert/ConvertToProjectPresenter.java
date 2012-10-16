@@ -60,7 +60,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -476,8 +476,8 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
    protected void convert(final Item item)
    {
       String projectType = display.getProjectType().getValue();
-      item.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      item.getProperties().add(new StringProperty("vfs:projectType", projectType));
+      item.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      item.getProperties().add(new Property("vfs:projectType", projectType));
       try
       {
          VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>()

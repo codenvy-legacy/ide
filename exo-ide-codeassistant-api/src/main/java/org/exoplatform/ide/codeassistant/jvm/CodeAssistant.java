@@ -26,7 +26,6 @@ import org.exoplatform.ide.codeassistant.jvm.bean.TypeInfoBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -34,10 +33,10 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -398,13 +397,19 @@ public abstract class CodeAssistant
    {
       List<TypeInfo> searchResult =
          storage.getTypesInfoByNamePrefix(namePrefix, getProjectDependencys(projectId, vfsId));
-      List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
       List<TypeInfo> result = new ArrayList<TypeInfo>();
-      if (list != null)
+      try
       {
-         result.addAll(list);
+         List<TypeInfo> list = getTypeInfoByNamePrefixFromProject(namePrefix, projectId, vfsId);
+         if (list != null)
+         {
+            result.addAll(list);
+         }
       }
-         if(searchResult != null)
+      catch (ItemNotFoundException e)
+      {
+      }
+      if (searchResult != null)
       {
          result.addAll(searchResult);
       }
@@ -424,11 +429,17 @@ public abstract class CodeAssistant
       throws CodeAssistantException, VirtualFileSystemException
    {
       List<String> packages = storage.getPackages(prefix, getProjectDependencys(projectId, vfsId));
-      List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
       List<String> result = new ArrayList<String>();
-      if (packagesFromProject != null)
+      try
       {
-         result.addAll(packagesFromProject);
+         List<String> packagesFromProject = getPackagesByPrefixFromProject(prefix, projectId, vfsId);
+         if (packagesFromProject != null)
+         {
+            result.addAll(packagesFromProject);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
       }
 
       if (packages != null)
@@ -438,6 +449,51 @@ public abstract class CodeAssistant
       }
       return result;
    }
+
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param projectId Id of current project
+    * @param vfsId Id of current project
+    * @return {@link List} of package names
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   public List<String> getAllPackages(String projectId, String vfsId) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      List<String> packages = storage.getAllPackages(getProjectDependencys(projectId, vfsId));
+      List<String> result = new ArrayList<String>();
+      try
+      {
+         List<String> packagesFromProject = getAllPackagesFromProject(projectId, vfsId);
+         if (packagesFromProject != null)
+         {
+            result.addAll(packagesFromProject);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+
+      }
+
+      if (packages != null)
+      {
+         result.addAll(packages);
+
+      }
+      return result;
+   }
+
+   /**
+    *  Return sets of Strings, associated with the package names
+    * @param projectId Id of current project
+    * @param vfsId Id of current project
+    * @return {@link List} of package names
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    */
+   protected abstract List<String> getAllPackagesFromProject(String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
 
    /**
     * Return sets of Strings, associated with the package names

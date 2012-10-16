@@ -93,14 +93,14 @@ public class LocksByUserTest extends LockFileAbstract
       //step 2 lock file an logout
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      String contentEditor=IDE.EDITOR.getTextFromCodeEditor(0);
+      String contentEditor = IDE.EDITOR.getTextFromCodeEditor(0);
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
       checkAllUnlockStateButtons();
       IDE.LOGIN.logout();
 
-      //step 3 login as invite user, open an check lock project 
+      //step 3 login as invite user, open and check lock project 
       IDE.LOGIN.waitTenantLoginPage();
       IDE.LOGIN.loginAsUser();
 
@@ -109,28 +109,34 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.WELCOME_PAGE.close();
       IDE.WELCOME_PAGE.waitClose();
 
+      // open project as invite user
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-
+      //check lock icons
+      IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.LOCK_FILE.isLockIconOnTabView(0);
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
 
-      //TODO Here failed but after fix issue IDE-1476 should be pass
-     // checkAllUnlockStateButtons();
+      //change content and close file
       IDE.GOTOLINE.goToLine(1);
       IDE.EDITOR.deleteFileContent(0);
       IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
-      assertEquals(contentEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE);
-
-//      IDE.LOADER.waitClosed();
-//      IDE.WARNING_DIALOG.waitOpened();
-//      IDE.WARNING_DIALOG.getWarningMessage().contains("423 Locked");
-//      IDE.WARNING_DIALOG.clickOk();
-//      IDE.WARNING_DIALOG.waitClosed();
+      assertEquals("Change in locked file", IDE.EDITOR.getTextFromCodeEditor(0));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+      IDE.EDITOR.closeFile(0);
+      //ask dialog sholudn't appearance
+      assertFalse(IDE.ASK_DIALOG.isOpened());
+      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+      //reopen file and check. Content should be is not changed 
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      assertEquals(contentEditor, IDE.EDITOR.getTextFromCodeEditor(1));
+      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
    }
 
    /**

@@ -161,7 +161,9 @@ public class CopyFileTest extends BaseTest
       /*
        * Check files content
        */
+      IDE.EDITOR.selectTab(1);
       assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.selectTab(2);
       assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(2));
    }
 

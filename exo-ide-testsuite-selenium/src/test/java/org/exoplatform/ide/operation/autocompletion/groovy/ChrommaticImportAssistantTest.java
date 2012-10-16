@@ -63,7 +63,10 @@ public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.waitForImportAssistForOpened();
 
       IDE.CODEASSISTANT.selectImportProposal("Base64");
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import com.sun.net.httpserver.Base64"));
+      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(2);
+      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(3);
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
+      
    }
 
 }

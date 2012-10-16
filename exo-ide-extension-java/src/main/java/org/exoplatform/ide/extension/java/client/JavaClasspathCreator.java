@@ -51,12 +51,14 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
 
    static
    {
+      //TODO move this class to JDT extension and use SupportedProjects interface to remove this hardcode
       projectTypes.add(ProjectResolver.SERVLET_JSP);
       projectTypes.add(ProjectResolver.SPRING);
       projectTypes.add(ProjectResolver.APP_ENGINE_JAVA);
       projectTypes.add(ProjectType.JAVA.value());
       projectTypes.add(ProjectType.SPRING.value());
       projectTypes.add(ProjectType.JSP.value());
+      projectTypes.add(ProjectType.AWS.value());
    }
 
    /**

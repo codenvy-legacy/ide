@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client.create;
 
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -33,6 +35,18 @@ public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
     * Type, used to register the event.
     */
    public static final GwtEvent.Type<CreateApplicationHandler> TYPE = new GwtEvent.Type<CreateApplicationHandler>();
+
+   private ProjectModel project;
+
+   public CreateApplicationEvent()
+   {
+      this.project = null;
+   }
+
+   public CreateApplicationEvent(ProjectModel project)
+   {
+      this.project = project;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -52,4 +66,11 @@ public class CreateApplicationEvent extends GwtEvent<CreateApplicationHandler>
       handler.onCreateApplication(this);
    }
 
+   /**
+    * @return the project
+    */
+   public ProjectModel getProject()
+   {
+      return project;
+   }
 }

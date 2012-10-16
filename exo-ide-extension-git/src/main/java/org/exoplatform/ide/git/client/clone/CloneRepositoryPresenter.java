@@ -54,7 +54,7 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.StringProperty;
+import org.exoplatform.ide.vfs.shared.Property;
 
 /**
  * Presenter for Clone Repository View.
@@ -338,8 +338,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    protected void convertFolderToProject(FolderModel folder, String projectType)
    {
-      folder.getProperties().add(new StringProperty("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folder.getProperties().add(new StringProperty("vfs:projectType", projectType));
+      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folder.getProperties().add(new Property("vfs:projectType", projectType));
       ProjectModel project = new ProjectModel();
       ItemWrapper item = new ItemWrapper(project);
       ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
