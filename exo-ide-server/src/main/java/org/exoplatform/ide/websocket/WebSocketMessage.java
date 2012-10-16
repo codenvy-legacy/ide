@@ -22,7 +22,7 @@ package org.exoplatform.ide.websocket;
  * Class represents the WebSocket message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketCallMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WebSocketMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
  *
  */
 public class WebSocketMessage

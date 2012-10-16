@@ -47,7 +47,7 @@ import java.util.Set;
  * messages to channel and to calling remote methods.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: EventSubscriber.java Jul 30, 2012 9:24:42 AM azatsarynnyy $
+ * @version $Id: MessageBus.java Jul 30, 2012 9:24:42 AM azatsarynnyy $
  *
  */
 public class MessageBus implements WebSocketMessageHandler
@@ -125,20 +125,20 @@ public class MessageBus implements WebSocketMessageHandler
       {
          return;
       }
-      String eventType = null;
+      String messageType = null;
       if (!jsonObject.containsKey("type"))
       {
          return;
       }
-      eventType = jsonObject.get("type").isString().stringValue();
+      messageType = jsonObject.get("type").isString().stringValue();
 
-      if (Type.WELCOME.name().equals(eventType))
+      if (Type.WELCOME.name().equals(messageType))
       {
          WebSocketWelcomeMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketWelcomeMessage.class, eventMessage).as();
          WebSocket.getInstance().getSession().setId(message.getSessionId());
       }
-      else if (Type.EVENT.name().equals(eventType))
+      else if (Type.EVENT.name().equals(messageType))
       {
          WebSocketEventMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketEventMessage.class, eventMessage).as();
@@ -153,7 +153,7 @@ public class MessageBus implements WebSocketMessageHandler
             }
          }
       }
-      else if (Type.CALL_RESULT.name().equals(eventType))
+      else if (Type.CALL_RESULT.name().equals(messageType))
       {
          WebSocketCallResultMessage message =
             AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketCallResultMessage.class, eventMessage).as();

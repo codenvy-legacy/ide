@@ -19,14 +19,14 @@
 package org.exoplatform.ide.websocket;
 
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 
 /**
  * Class represents the WebSocket message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketCallMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WebSocketPublishMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
  *
  */
 public class WebSocketPublishMessage

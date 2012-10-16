@@ -22,8 +22,8 @@ import org.apache.catalina.websocket.MessageInbound;
 import org.apache.catalina.websocket.WsOutbound;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.websocket.WebSocketMessage.Type;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -118,7 +118,7 @@ public class MessageBroker
    /**
     * Map of the session identifier to the queued messages that were sent with errors.
     */
-   private Map<String, CopyOnWriteArrayList<WebSocketMessage>> notSendedMessageQueue =
+   private Map<String, CopyOnWriteArrayList<WebSocketMessage>> notSendedMessagesQueue =
       new ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketMessage>>();
 
    /**
@@ -134,7 +134,7 @@ public class MessageBroker
          return;
       }
 
-      String type = null;
+      String messageType = null;
       JsonValue jsonValue = null;
       try
       {
@@ -147,29 +147,29 @@ public class MessageBroker
 
       if (jsonValue != null && jsonValue.isObject())
       {
-         type = jsonValue.getElement("type").getStringValue();
+         messageType = jsonValue.getElement("type").getStringValue();
       }
       else
       {
          return;
       }
 
-      if (Type.SUBSCRIBE.name().equals(type))
+      if (Type.SUBSCRIBE.name().equals(messageType))
       {
          WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
          subscribe(sessionId, webSocketMessage.getChannel());
       }
-      else if (Type.UNSUBSCRIBE.name().equals(type))
+      else if (Type.UNSUBSCRIBE.name().equals(messageType))
       {
          WebSocketSubscribeMessage webSocketMessage = new WebSocketSubscribeMessage(message);
          unsubscribe(sessionId, webSocketMessage.getChannel());
       }
-      else if (Type.PUBLISH.name().equals(type))
+      else if (Type.PUBLISH.name().equals(messageType))
       {
          WebSocketPublishMessage webSocketMessage = new WebSocketPublishMessage(message);
          publish(webSocketMessage.getChannel(), webSocketMessage.getPayload(), null, sessionId);
       }
-      else if (Type.CALL.name().equals(type))
+      else if (Type.CALL.name().equals(messageType))
       {
          WebSocketCallMessage webSocketMessage = new WebSocketCallMessage(message);
          call(sessionId, webSocketMessage.getCallId(), webSocketMessage.getPayload());
@@ -183,7 +183,7 @@ public class MessageBroker
     */
    public void checkNotSendedMessages(String sessionId)
    {
-      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+      List<WebSocketMessage> messageList = notSendedMessagesQueue.get(sessionId);
       if (messageList != null)
       {
          for (WebSocketMessage message : messageList)
@@ -191,7 +191,7 @@ public class MessageBroker
             messageList.remove(message);
             if (messageList.isEmpty())
             {
-               notSendedMessageQueue.remove(messageList);
+               notSendedMessagesQueue.remove(messageList);
             }
             send(sessionId, message);
          }
@@ -205,10 +205,10 @@ public class MessageBroker
     */
    void clearNotSendedMessageQueue(String sessionId)
    {
-      List<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+      List<WebSocketMessage> messageList = notSendedMessagesQueue.get(sessionId);
       if (messageList != null)
       {
-         notSendedMessageQueue.remove(sessionId);
+         notSendedMessagesQueue.remove(sessionId);
       }
    }
 
@@ -359,7 +359,7 @@ public class MessageBroker
       }
       catch (Exception e)
       {
-         CopyOnWriteArrayList<WebSocketMessage> messageList = notSendedMessageQueue.get(sessionId);
+         CopyOnWriteArrayList<WebSocketMessage> messageList = notSendedMessagesQueue.get(sessionId);
          if (messageList != null)
          {
             messageList.add(message);
@@ -368,7 +368,7 @@ public class MessageBroker
          {
             messageList = new CopyOnWriteArrayList<WebSocketMessage>();
             messageList.add(message);
-            notSendedMessageQueue.put(sessionId, messageList);
+            notSendedMessagesQueue.put(sessionId, messageList);
          }
       }
    }

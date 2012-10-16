@@ -117,6 +117,12 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private PaaS selectedPaaS;
 
+   private RequestStatusHandler cloneStatusHandler;
+
+   private ProjectModel project;
+
+   private FolderModel PROJECT_ROOT_FOLDER;
+
    private DeployResultHandler deployResultHandler = new DeployResultHandler()
    {
       @Override
@@ -328,6 +334,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                @Override
                protected void onSuccess(FolderModel result)
                {
+                  PROJECT_ROOT_FOLDER = result;
                   cloneFolder(data, result);
                }
 
@@ -367,7 +374,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null, useWebSocket,
             new AsyncRequestCallback<RepoInfo>()
             {
                @Override
@@ -392,6 +399,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             });
       }
       catch (RequestException e)
+      {
+         handleError(e);
+      }
+      catch (WebSocketException e)
       {
          handleError(e);
       }
@@ -439,6 +450,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Perform actions on project repository was cloned successfully.
+    */
+   private void onRepositoryCloned()
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      convertToProject(PROJECT_ROOT_FOLDER);
    }
 
    private void handleError(Throwable t)

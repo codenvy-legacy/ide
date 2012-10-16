@@ -236,7 +236,6 @@ public class WebSocket
          catch (WebSocketException e)
          {
             // nothing to do
-            //IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
    };

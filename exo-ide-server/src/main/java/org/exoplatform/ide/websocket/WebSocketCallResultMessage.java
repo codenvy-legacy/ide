@@ -24,7 +24,7 @@ package org.exoplatform.ide.websocket;
  * for a Remote Procedure Call and contains the result of call.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketEventMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WebSocketCallResultMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
  *
  */
 public class WebSocketCallResultMessage extends WebSocketMessage

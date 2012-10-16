@@ -52,14 +52,14 @@ public class SessionManager
       new ConcurrentHashMap<String, CopyOnWriteArraySet<MessageInbound>>();
 
    /**
-    * Map of the WebSocket session identifier to the {@link TimerTask} to kill the disconnected WebSocket session.
-    */
-   private Map<String, TimerTask> invalidationTimerTasks = new ConcurrentHashMap<String, TimerTask>();
-
-   /**
     * Timer used for killing disconnected WebSocket sessions.
     */
    private Timer invalidationTimer = new Timer();
+
+   /**
+    * Map of the WebSocket session identifier to the {@link TimerTask} to kill the disconnected WebSocket session.
+    */
+   private Map<String, TimerTask> invalidationTimerTasks = new ConcurrentHashMap<String, TimerTask>();
 
    /**
     * Determines how long a disconnected session should be held in memory, in seconds.

@@ -25,7 +25,7 @@ import com.google.web.bindery.autobean.shared.Splittable;
  * Interface represents the WebSocket event message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WebSocketEventMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
 public interface WebSocketEventMessage extends WebSocketMessage

@@ -63,6 +63,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;

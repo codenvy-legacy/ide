@@ -25,7 +25,6 @@ import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
 import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;

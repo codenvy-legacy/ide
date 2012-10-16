@@ -24,8 +24,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
-import org.exoplatform.ide.vfs.server.ConvertibleProperty;
-import org.exoplatform.ide.vfs.server.PropertyFilter;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;

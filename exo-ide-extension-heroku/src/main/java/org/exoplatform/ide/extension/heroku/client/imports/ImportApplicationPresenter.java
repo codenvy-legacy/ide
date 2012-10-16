@@ -243,7 +243,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       FolderModel parent = (FolderModel)vfs.getRoot();
       FolderModel model = new FolderModel();
       model.setName(display.getProjectName().getValue());
-//      model.setProjectType(ProjectResolver.RAILS);
+      //      model.setProjectType(ProjectResolver.RAILS);
       model.setParent(parent);
 
       final boolean deployPublicKey = display.getDeployPublicKey().getValue();
@@ -298,7 +298,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null, useWebSocket,
             new AsyncRequestCallback<RepoInfo>()
             {
                @Override
@@ -361,8 +361,10 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    private void updateProperties()
    {
       project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("heroku-application", herokuApplication));
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
+      project.getProperties().add(
+         new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties()
+         .add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {

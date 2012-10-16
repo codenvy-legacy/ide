@@ -19,8 +19,8 @@
 package org.exoplatform.ide.websocket;
 
 import org.everrest.core.impl.provider.json.JsonValue;
-import org.exoplatform.ide.helper.JsonHelper;
-import org.exoplatform.ide.helper.ParsingResponseException;
+import org.exoplatform.ide.commons.JsonHelper;
+import org.exoplatform.ide.commons.ParsingResponseException;
 
 /**
  * Class represents the WebSocket message for a Remote Procedure Call.

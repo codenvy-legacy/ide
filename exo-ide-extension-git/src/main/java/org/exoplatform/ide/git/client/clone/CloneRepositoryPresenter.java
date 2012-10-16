@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -52,6 +51,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -130,6 +130,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    private Display display;
 
    private static final String DEFAULT_REPO_NAME = "origin";
+
+   private FolderModel PROJECT_ROOT_FOLDER;
 
    private RequestStatusHandler statusHandler;
 
@@ -238,6 +240,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(FolderModel result)
                {
+                  PROJECT_ROOT_FOLDER = result;
                   cloneRepository(remoteUri, remoteName, result, projectType);
                }
 
@@ -262,12 +265,12 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       }
    }
 
-
    /**
     * Get the necessary parameters values and call the clone repository method.
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
    {
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       RepoInfo repoInfo = new RepoInfo();
       RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
       try
@@ -283,7 +286,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
-         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName, useWebSocket,
             new AsyncRequestCallback<RepoInfo>(unmarshaller)
             {
 
@@ -445,7 +448,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          statusHandler.requestFinished(project.getId());
 
          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-         convertFolderToProject(folder, projectType);
+         convertFolderToProject(PROJECT_ROOT_FOLDER, display.getProjectType().getValue());
          //TODO: not good, comment temporary need found other may 
          // for inviting collaborators 
          // showInvitation(result.getRemoteUri());
