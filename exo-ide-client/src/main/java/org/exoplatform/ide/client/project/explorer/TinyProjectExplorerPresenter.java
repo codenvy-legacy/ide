@@ -512,8 +512,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          ((ProjectModel)folder).getChildren().getItems().addAll(result);
       }
 
-      IDE.fireEvent(new FolderRefreshedEvent(folder));
-
       // TODO if will be some value - display system items or not, then add check here:
       List<Item> children =
          (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
@@ -522,6 +520,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       Collections.sort(children, comparator);
 
       display.getBrowserTree().setValue(folder);
+      IDE.fireEvent(new FolderRefreshedEvent(folder));
       display.changeFolderIcon(folder, false);
       // display.asView().setViewVisible();
 
