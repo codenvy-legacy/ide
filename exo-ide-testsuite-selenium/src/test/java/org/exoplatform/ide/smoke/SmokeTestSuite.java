@@ -24,7 +24,7 @@ import org.exoplatform.ide.git.InitRepositoryTest;
 import org.exoplatform.ide.git.PushTest;
 import org.exoplatform.ide.operation.autocompletion.java.JavaCodeAssistantTest;
 import org.exoplatform.ide.operation.cutcopy.CopyFoldersAndFilesTest;
-import org.exoplatform.ide.operation.edit.JavaTypeValidationAndFixingTest;
+import org.exoplatform.ide.operation.edit.GroovyTypeValidationAndFixingTest;
 import org.exoplatform.ide.operation.edit.outline.CodeOutLineJavaTest;
 import org.exoplatform.ide.operation.file.CreatingAndSavingAsNewFileTest;
 import org.exoplatform.ide.operation.restservice.RESTServiceDeployUndeployTest;
@@ -41,7 +41,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CopyFoldersAndFilesTest.class, CreatingAndSavingAsNewFileTest.class, JavaCodeAssistantTest.class,
-   CodeOutLineJavaTest.class, JavaTypeValidationAndFixingTest.class, InitRepositoryTest.class, AddTest.class,
+   CodeOutLineJavaTest.class, GroovyTypeValidationAndFixingTest.class, InitRepositoryTest.class, AddTest.class,
    PushTest.class, RESTServiceDeployUndeployTest.class, BuildSuccessedTest.class, UploadingZippedFolderTest.class })
 public class SmokeTestSuite
 {

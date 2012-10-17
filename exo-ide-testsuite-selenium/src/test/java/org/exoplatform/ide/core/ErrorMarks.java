@@ -52,23 +52,24 @@ public class ErrorMarks extends AbstractTestModule
 
       String FQN_PREFIX = "//div[@id='ideAssistImportDeclarationForm']//div[text()='%s']";
 
+      String MARKER_EDITOR_LOCATOR = "//div[@panel-id='editor' and @view-id='editor-%s' ]//iframe";
    }
 
-   //   @FindBy(id = Locators.FIND_RESULT_LABEL_ID)
-   //   private WebElement resultLabel;
-
+   /** wait appearance of the error in editor 
+    * @param numEditor
+    * @param numLine
+    */
    public void waitLineNumberAppearance(final int numLine)
    {
       (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver d)
-         {
-            WebElement line = driver().findElement(By.xpath(String.format(Locators.LINE_NUMBERS_CLASS, numLine)));
+         {  WebElement line = driver().findElement(By.xpath(String.format(Locators.LINE_NUMBERS_CLASS, numLine)));
             return line != null && line.isDisplayed();
          }
-      });
 
+      });
    }
 
    /**
@@ -331,6 +332,17 @@ public class ErrorMarks extends AbstractTestModule
          //delay for emulation of the user input
          Thread.sleep(TestConstants.REDRAW_PERIOD);
       }
+   }
+
+   /**
+    * select iframe with error markers panel
+    * @param numEditor
+    */
+   public void selectIframeWitErrorMarks(int numEditor)
+   {
+      WebElement frameWithMarkers =
+         driver().findElement(By.xpath(String.format(Locators.MARKER_EDITOR_LOCATOR, numEditor)));
+      driver().switchTo().frame(frameWithMarkers);
    }
 
 }

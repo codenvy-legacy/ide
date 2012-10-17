@@ -40,14 +40,14 @@ import java.util.Map;
  * @version $Id: Dec 6, 2010 $
  *
  */
-public class JavaTypeValidationAndFixingTest extends BaseTest
+public class GroovyTypeValidationAndFixingTest extends BaseTest
 {
 
    private final static String SERVICE_FILE_NAME = "java-type-validation-and-fixing.groovy";
 
    private final static String TEMPLATE_FILE_NAME = "java-type-validation-and-fixing.gtmpl";
 
-   private final static String PROJECT = JavaTypeValidationAndFixingTest.class.getSimpleName();
+   private final static String PROJECT = GroovyTypeValidationAndFixingTest.class.getSimpleName();
 
    private final static String ERROR_10_SERVICE_FILE =
       "ManyToOne' cannot be resolved to a type; 'Mandatory' cannot be resolved to a type; ";
@@ -94,12 +94,16 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SERVICE_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + SERVICE_FILE_NAME);
       //wait last number of string
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitLineNumberAppearance(43);
+      IDE.selectMainFrame();
       // test  error marks after open test file
       firstTestErrorMarks();
 
       //step 2 click on mark in 16 string-position, fix error and check changes
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.clickOnErorMarker(16);
+      IDE.selectMainFrame();
       IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
       IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
       IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
@@ -119,12 +123,15 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       // add test text
       IDE.EDITOR.typeTextIntoEditor(0, "Integer1 d \n" + "@POST \n"
          + "public Base64 hello(@PathParam(\"name\") Base64 name) {}");
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(3);
       testAfterClearAndTypeNewCode();
 
       //step 4 fix third error and check states in code and
       // marker-position
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.clickOnErorMarker(3);
+      IDE.selectMainFrame();
       IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
       IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
       IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
@@ -145,21 +152,27 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEMPLATE_FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEMPLATE_FILE_NAME);
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(12);
 
       checkErrorMarkerAfterFirsOpeningInGtmpl();
 
       //step 2 click on error-marker 11 fix error in code
       // and check changes
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.clickOnErorMarker(11);
+      IDE.selectMainFrame();
       IDE.ERROR_MARKS.waitDeclarationFormOpen("Base64");
       IDE.ERROR_MARKS.downMoveCursorInDeclForm(10);
 
       IDE.ERROR_MARKS.waitFqnDeclarationIsAppear("-java.util.prefs");
       IDE.ERROR_MARKS.selectAndInsertFqn("-java.util.prefs");
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(11);
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(14);
+      IDE.selectMainFrame();
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith("<%\n" + "  import java.util.prefs.Base64\n" + "%>\n"));
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(12));
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(13));
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(9));
@@ -185,6 +198,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(17));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(19));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(21));
+      IDE.selectMainFrame();
    }
 
    /**
@@ -194,12 +208,14 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
    private void testAfterFixFileWithNewCode() throws Exception
    {
       assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith("import java.util.prefs.Base64\n"));
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(1);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(1));
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(2);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(2));
       IDE.ERROR_MARKS.waitErrorMarkerIsAppear(3);
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(3));
+      IDE.selectMainFrame();
    }
 
    /**
@@ -212,6 +228,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertEquals(
          "'Base64' cannot be resolved to a type; 'PathParam' cannot be resolved to a type; 'Base64' cannot be resolved to a type; ",
          IDE.ERROR_MARKS.getTextFromErorMarker(3));
+      IDE.selectMainFrame();
    }
 
    /**
@@ -221,6 +238,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
     */
    private void firstTestErrorMarks() throws InterruptedException
    {
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(4));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(6));
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(7));
@@ -232,6 +250,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertEquals(ERROR_17_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(17));
       assertEquals(ERROR_39_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(39));
       assertEquals(ERROR_41_SERVICE_FILE, IDE.ERROR_MARKS.getTextFromErorMarker(41));
+      IDE.selectMainFrame();
    }
 
    /**
@@ -240,6 +259,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
     */
    private void testAfterFixFirstError() throws InterruptedException
    {
+      IDE.ERROR_MARKS.selectIframeWitErrorMarks(0);
       IDE.ERROR_MARKS.waitChangesInErrorMarker(
          "'PathParam' cannot be resolved to a type; 'ExoLogger' cannot be resolved to a type; ", 17);
 
@@ -251,6 +271,7 @@ public class JavaTypeValidationAndFixingTest extends BaseTest
       assertFalse(IDE.ERROR_MARKS.isErrorMarkerShow(37));
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(40));
       assertTrue(IDE.ERROR_MARKS.isErrorMarkerShow(42));
+      IDE.selectMainFrame();
    }
 
    @AfterClass
