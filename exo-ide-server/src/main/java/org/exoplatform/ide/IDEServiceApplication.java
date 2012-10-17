@@ -20,7 +20,6 @@ package org.exoplatform.ide;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
@@ -29,7 +28,6 @@ import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-import org.exoplatform.services.jcr.RepositoryService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,7 +48,7 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(RepositoryService repositoryService, VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
+   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
       InitParams initParams)
    {
       String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
@@ -59,7 +57,6 @@ public class IDEServiceApplication extends Application
       String config = ExoConfigurationHelper.readValueParam(initParams, "config");
       String templateConfig = ExoConfigurationHelper.readValueParam(initParams, "template-config");
 
-      objects.add(new RepositoryDiscoveryService(repositoryService, entryPoint, discoverable));
       objects.add(new UploadServiceExceptionMapper());
       objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry, eventListenerList));

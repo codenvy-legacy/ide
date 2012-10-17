@@ -23,6 +23,7 @@ import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.tools.DummySecurityContext;
 import org.everrest.test.mock.MockPrincipal;
+import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -42,6 +43,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
@@ -57,7 +59,7 @@ public class ProjectTemplateTest extends BaseTest
 
    private VirtualFileSystem vfs;
 
-   protected final String BASE_URI = "http://localhost";
+   protected final String BASE_URI = "http://localhost.com:8080";
 
    @Before
    public void setUp() throws Exception
@@ -95,7 +97,7 @@ public class ProjectTemplateTest extends BaseTest
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      ContainerResponse cres = launcher.service("GET", "/ide/templates/project/list", "", headers, null, null, ctx);
+      ContainerResponse cres = launcher.service("GET", "/ide/templates/project/list", BASE_URI, headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
       List<ProjectTemplate> templates = (List<ProjectTemplate>)cres.getEntity();
@@ -109,6 +111,7 @@ public class ProjectTemplateTest extends BaseTest
    @Test
    public void testCreateProjectFromTempalte() throws Exception
    {
+      String prj = UUID.randomUUID().toString();
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
       securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
@@ -117,12 +120,16 @@ public class ProjectTemplateTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       String rootId = vfs.getInfo().getRoot().getId();
       ContainerResponse cres =
-         launcher.service("POST", "/ide/templates/project/create?vfsid=dev-monit&name=testProj&parentId=" + rootId
+         launcher.service("POST", BASE_URI + "/ide/templates/project/create?vfsid=dev-monit&name=" +  prj +"&parentId=" + rootId
             + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Item item = (Item)cres.getEntity();
       Assert.assertTrue(item instanceof Project);
       Project p = (Project)item;
       Assert.assertEquals("spring", p.getProjectType());
+      String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
+      Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
+      Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
+     
    }
 }

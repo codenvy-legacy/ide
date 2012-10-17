@@ -83,6 +83,7 @@ public class ConfigurationServiceTest extends BaseTest
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       ContainerResponse cres = launcher.service("GET", "/ide/configuration/init", "", headers, null, null, ctx);
+      System.err.println(cres.getEntity());
       Assert.assertEquals(200, cres.getStatus());
 
       Assert.assertNotNull(cres.getEntity());

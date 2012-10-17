@@ -21,18 +21,13 @@ package org.exoplatform.ide;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.CredentialsImpl;
-import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
-import org.exoplatform.services.jcr.impl.core.SessionImpl;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.everrest.test.mock.MockHttpServletRequest;
+import org.exoplatform.services.security.Authenticator;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
-import org.junit.After;
+import org.exoplatform.services.security.PasswordCredential;
+import org.exoplatform.services.security.UsernameCredential;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +35,9 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -57,44 +52,28 @@ import javax.ws.rs.core.MultivaluedMap;
 public class LoopbackContentServiceTest extends BaseTest
 {
 
-   private static Log log = ExoLogger.getLogger(LoopbackContentServiceTest.class);
-
-   private static String WORKSPACE = "dev-monit";
-
-   private SessionImpl session;
-
-   private RepositoryImpl repository;
-
-   private CredentialsImpl credentials;
-
-   private RepositoryService repositoryService;
-
-   private MultivaluedMap<String, String> headers;
 
    @Before
    public void setUp() throws Exception
    {
       super.setUp();
-      credentials = new CredentialsImpl("root", "exo".toCharArray());
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-      repository = (RepositoryImpl)repositoryService.getDefaultRepository();
-      session = (SessionImpl)repository.login(credentials, WORKSPACE);
-      SessionProviderService sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
-      Assert.assertNotNull(sessionProviderService);
-
-      sessionProviderService
-         .setSessionProvider(null, new SessionProvider(new ConversationState(new Identity("admin"))));
-
-      headers = new MultivaluedMapImpl();
-      headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
-
+      Authenticator authr = (Authenticator)container.getComponentInstanceOfType(Authenticator.class);
+      String validUser =
+         authr.validateUser(new Credential[]{new UsernameCredential("root"), new PasswordCredential("exo")});
+      Identity id = authr.createIdentity(validUser);
+      Set<String> roles = new HashSet<String>();
+      roles.add("users");
+      roles.add("administrators");
+      id.setRoles(roles);
+      ConversationState s = new ConversationState(id);
+      ConversationState.setCurrent(s);
    }
 
    @Test
    public void uploadFile() throws Exception
    {
-      session.save();
+      MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
+      headers.putSingle("content-type", "multipart/form-data; boundary=-----abcdef");
       EnvironmentContext ctx = new EnvironmentContext();
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       PrintWriter w = new PrintWriter(out);
@@ -115,7 +94,8 @@ public class LoopbackContentServiceTest extends BaseTest
       byte[] data = out.toByteArray();
 
       HttpServletRequest httpRequest =
-         new MockHttpServletRequest(new ByteArrayInputStream(data), data.length, "POST", headers);
+         new MockHttpServletRequest("http://localhost/ide/loopbackcontent", new ByteArrayInputStream(data),
+            data.length, "POST", headers);
       ctx.put(HttpServletRequest.class, httpRequest);
 
       ContainerResponse response =
@@ -125,43 +105,6 @@ public class LoopbackContentServiceTest extends BaseTest
       Assert.assertTrue(response.getEntity() instanceof String);
       String text = (String)response.getEntity();
       Assert.assertEquals("<filecontent>test+file+content%0A</filecontent>", text);
-      session.refresh(false);
-   }
-
-   @After
-   public void tearDown() throws Exception
-   {
-
-      if (session != null)
-      {
-         try
-         {
-            session.refresh(false);
-            Node rootNode = session.getRootNode();
-            if (rootNode.hasNodes())
-            {
-               // clean test root
-               for (NodeIterator children = rootNode.getNodes(); children.hasNext();)
-               {
-                  Node node = children.nextNode();
-                  if (!node.getPath().startsWith("/jcr:system") && !node.getPath().startsWith("/exo:registry"))
-                  {
-                     node.remove();
-                  }
-               }
-               session.save();
-            }
-         }
-         catch (Exception e)
-         {
-            log.error("tearDown() ERROR " + getClass().getName() + " " + e, e);
-         }
-         finally
-         {
-            session.logout();
-         }
-      }
-
    }
 
 }

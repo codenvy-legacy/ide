@@ -125,7 +125,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       String projectType = event.getProject().getProjectType();
       if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
          || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
+         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType) || ProjectType.JAR.value().equals(projectType))
       {
          setEnabled(true);
       }
