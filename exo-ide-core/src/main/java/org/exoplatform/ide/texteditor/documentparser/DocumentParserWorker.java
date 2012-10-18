@@ -162,20 +162,6 @@ class DocumentParserWorker
       return line != null;
    }
 
-   private void debugPrintTokens(JsonArray<Token> tokens)
-   {
-      StringBuilder buffer = new StringBuilder();
-      for (Token token : tokens.asIterable())
-      {
-         if (TokenType.NEWLINE != token.getType())
-         {
-            buffer.append("[").append(token.getValue()).append("|").append(token.getType()).append("|")
-               .append(token.getMode()).append("]");
-         }
-      }
-      Log.warn(getClass(), buffer.toString());
-   }
-
    /**
     * @return the parsed tokens, or {@code null} if the line could not be parsed
     *         because there isn't a snapshot and it's not the first line

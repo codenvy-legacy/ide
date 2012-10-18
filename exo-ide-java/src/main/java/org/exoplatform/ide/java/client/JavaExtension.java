@@ -22,8 +22,13 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
+import org.exoplatform.ide.java.client.templates.ContextTypeRegistry;
+import org.exoplatform.ide.java.client.templates.TemplateStore;
 import org.exoplatform.ide.resources.FileType;
+
+import java.util.HashMap;
 
 
 /**
@@ -43,5 +48,50 @@ public class JavaExtension
       FileType javaFile = new FileType(null, "application/java", "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
+   }
+
+   /**
+    * @return
+    */
+   public static JavaExtension get()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @return
+    */
+   public HashMap<String, String> getOptions()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @return
+    */
+   public TemplateStore getTemplateStore()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @return
+    */
+   public ContextTypeRegistry getTemplateContextRegistry()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @return
+    */
+   public ContentAssistHistory getContentAssistHistory()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

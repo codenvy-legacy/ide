@@ -579,9 +579,9 @@ public abstract class TextEdit
       internalToString(buffer, indent);
       if (fChildren != null)
       {
-         for (Iterator iterator = fChildren.iterator(); iterator.hasNext();)
+         for (Iterator<TextEdit> iterator = fChildren.iterator(); iterator.hasNext();)
          {
-            TextEdit child = (TextEdit)iterator.next();
+            TextEdit child = iterator.next();
             buffer.append('\n');
             child.toStringWithChildren(buffer, indent + 1);
          }
@@ -690,10 +690,10 @@ public abstract class TextEdit
    {
       if (fChildren == null)
          return;
-      Iterator iterator = fChildren.iterator();
+      Iterator<TextEdit> iterator = fChildren.iterator();
       while (iterator.hasNext())
       {
-         TextEdit curr = (TextEdit)iterator.next();
+         TextEdit curr = iterator.next();
          curr.accept(visitor);
       }
    }
@@ -780,12 +780,12 @@ public abstract class TextEdit
       fLength = length;
    }
 
-   List internalGetChildren()
+   List<TextEdit> internalGetChildren()
    {
       return fChildren;
    }
 
-   void internalSetChildren(List children)
+   void internalSetChildren(List<TextEdit> children)
    {
       fChildren = children;
    }
@@ -799,7 +799,7 @@ public abstract class TextEdit
          throw new MalformedTreeException(this, child, "Range of child edit lies outside of parent edit"); //$NON-NLS-1$
       if (fChildren == null)
       {
-         fChildren = new ArrayList(2);
+         fChildren = new ArrayList<TextEdit>(2);
       }
       int index = computeInsertionIndex(child);
       fChildren.add(index, child);
@@ -885,7 +885,7 @@ public abstract class TextEdit
     * 
     * @return the number of indirect move or copy target edit children
     */
-   int traverseConsistencyCheck(TextEditProcessor processor, Document document, List sourceEdits)
+   int traverseConsistencyCheck(TextEditProcessor processor, Document document, List<List<TextEdit>> sourceEdits)
    {
       int result = 0;
       if (fChildren != null)
@@ -977,9 +977,9 @@ public abstract class TextEdit
       if (fChildren != null)
       {
          boolean childDelete = delete || deleteChildren();
-         for (Iterator iter = fChildren.iterator(); iter.hasNext();)
+         for (Iterator<TextEdit> iter = fChildren.iterator(); iter.hasNext();)
          {
-            TextEdit child = (TextEdit)iter.next();
+            TextEdit child = iter.next();
             accumulatedDelta = child.traverseRegionUpdating(processor, document, accumulatedDelta, childDelete);
             childRegionUpdated();
          }
@@ -1016,9 +1016,9 @@ public abstract class TextEdit
       adjustOffset(delta);
       if (fChildren != null)
       {
-         for (Iterator iter = fChildren.iterator(); iter.hasNext();)
+         for (Iterator<TextEdit> iter = fChildren.iterator(); iter.hasNext();)
          {
-            ((TextEdit)iter.next()).internalMoveTree(delta);
+            iter.next().internalMoveTree(delta);
          }
       }
    }
@@ -1028,10 +1028,9 @@ public abstract class TextEdit
       markAsDeleted();
       if (fChildren != null)
       {
-         for (Iterator iter = fChildren.iterator(); iter.hasNext();)
+         for (Iterator<TextEdit> iter = fChildren.iterator(); iter.hasNext();)
          {
-            TextEdit child = (TextEdit)iter.next();
-            child.deleteTree();
+            iter.next().deleteTree();
          }
       }
    }
