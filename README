@@ -46,5 +46,9 @@ For launch with Eclipse GWT plugin
 4. Mouse Rigth button click on the project in Eclipse.
    - select "Google-> Web Toolkit" item configure this project.
 5. In Eclipse main menu File->Import->Run/Debug->Launch Configuration in PopUp select file exo-ide-dev-resources/target/exo-ide-dev-mode.launch
+Note: If you want to use WebSockets, do as follows:
+      Import and use launcher from exo-ide-dev-resources/target/exo-ide-dev-mode-noserver.launch.
+      Build module 'exo-ide-packaging-standalone-tomcat' and run Tomcat (/exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin/.catalina run).
+      Copy file hosted.html from /exo-ide-dev-mode/target/war/IDE to /exo-ide-packaging-standalone-tomcat/target/tomcat-ide/webapps/IDE.
+
 6. Run As -> Web Application -> Run in pop select WAR directory exo-ide-dev-mode/target/war
-   
