@@ -51,7 +51,6 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -270,7 +269,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       RepoInfo repoInfo = new RepoInfo();
       RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
       try
@@ -280,8 +278,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            statusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
-            statusHandler.requestInProgress(project.getId());
+            statusHandler = new CloneRequestStatusHandler(PROJECT_ROOT_FOLDER.getName(), remoteUri);
+            statusHandler.requestInProgress(PROJECT_ROOT_FOLDER.getId());
             ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
@@ -310,8 +308,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                   if (useWebSocket)
                   {
                      ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-                     ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-                     statusHandler.requestError(project.getId(), exception);
+                     statusHandler.requestError(PROJECT_ROOT_FOLDER.getId(), exception);
                   }
                }
             });
@@ -444,8 +441,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-         statusHandler.requestFinished(project.getId());
+         statusHandler.requestFinished(PROJECT_ROOT_FOLDER.getId());
 
          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
          convertFolderToProject(PROJECT_ROOT_FOLDER, display.getProjectType().getValue());
@@ -459,8 +455,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-         statusHandler.requestError(project.getId(), exception);
+         statusHandler.requestError(PROJECT_ROOT_FOLDER.getId(), exception);
          handleError(exception);
       }
    };

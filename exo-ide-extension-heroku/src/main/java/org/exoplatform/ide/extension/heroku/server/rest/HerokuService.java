@@ -30,10 +30,9 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.MessageBroker;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.websocket.MessageBroker;
+import org.exoplatform.ide.websocket.MessageBroker.Channels;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,11 +72,6 @@ public class HerokuService
 
    @Inject
    private MessageBroker messageBroker;
-
-   /**
-    * Exo logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(HerokuService.class);
 
    @QueryParam("vfsid")
    private String vfsId;
@@ -310,6 +304,6 @@ public class HerokuService
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      messageBroker.publish(MessageBroker.Channels.HEROKU_APP_CREATED.toString(), data, e, null);
+      messageBroker.publish(Channels.HEROKU_APP_CREATED.toString(), data, e, null);
    }
 }
