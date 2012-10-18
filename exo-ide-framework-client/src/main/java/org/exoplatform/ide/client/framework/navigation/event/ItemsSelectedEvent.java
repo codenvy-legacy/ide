@@ -23,6 +23,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +62,13 @@ public class ItemsSelectedEvent extends GwtEvent<ItemsSelectedHandler>
 
    public List<Item> getSelectedItems()
    {
-      return selectedItems;
+      List<Item> items = new ArrayList<Item>();
+      if (selectedItems != null)
+      {
+         items.addAll(selectedItems);
+      }
+      
+      return items;
    }
 
    public View getView()

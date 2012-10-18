@@ -126,18 +126,12 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
 
    protected void createFolder()
    {
-      
-      System.out.println("do create folder >>>>>>>>>>");
-      
-      System.out.println("selected item class > " + selectedItems.get(0).getClass().getName());
-      
       final String newFolderName = display.getFolderNameField().getValue();
-      final Folder baseFolder =
-         (selectedItems.get(0) instanceof FileModel) ? ((FileModel)selectedItems.get(0)).getParent()
-            : (Folder)selectedItems.get(0);
+      Item selectedItem = selectedItems.get(0);
+      
+      final Folder baseFolder = (selectedItem instanceof FileModel) ?
+            ((FileModel)selectedItem).getParent() : (Folder)selectedItem;
          
-         System.out.println("base folder > " + baseFolder.getPath());
-
       FolderModel newFolder = new FolderModel();
       newFolder.setName(newFolderName);
       try
@@ -200,7 +194,7 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      this.selectedItems = event.getSelectedItems();
+      selectedItems = event.getSelectedItems();
    }
 
    /**

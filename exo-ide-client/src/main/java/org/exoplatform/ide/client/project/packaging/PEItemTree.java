@@ -20,8 +20,6 @@ package org.exoplatform.ide.client.project.packaging;
 
 import java.util.List;
 
-import javax.imageio.ImageReader;
-
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
@@ -34,7 +32,6 @@ import org.exoplatform.ide.client.project.packaging.model.ProjectItem;
 import org.exoplatform.ide.client.project.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.resources.client.ImageResource;
@@ -57,21 +54,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    private String prefixId;
 
-   //   /**
-   //    * Get all selected items
-   //    * 
-   //    * @return List of selected items
-   //    */
-   //   public List<Object> getSelectedItems()
-   //   {
-   //      List<Item> items = new ArrayList<Item>();
-   //      if (tree.getSelectedItem() != null)
-   //      {
-   //         items.add((Item)tree.getSelectedItem().getUserObject());
-   //      }
-   //      return items;
-   //   }
-
    public Object getSelectedObject()
    {
       return tree.getSelectedItem().getUserObject();
@@ -79,6 +61,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    public boolean selectItem(Object item)
    {
+      
       return false;
    }
 
@@ -99,41 +82,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       }
       
       openTreeNode(value, false);
-      
-//      if (value instanceof ProjectItem)
-//      {
-//         /*
-//          * Create root node if tree has not it.
-//          */
-//         TreeItem rootTreeItem;
-//         if (tree.getItemCount() == 0)
-//         {
-//            rootTreeItem = createTreeNode(value);
-//            tree.addItem(rootTreeItem);
-//         }
-//         else
-//         {
-//            rootTreeItem = tree.getItem(0);
-//         }
-//
-//         addProjectItems((ProjectItem)value, rootTreeItem);
-//      }
-//      else if (value instanceof ResourceDirectoryItem)
-//      {
-//         addResourceDirectoryItems((ResourceDirectoryItem)value);
-//      }
-//      else if (value instanceof DependencyListItem)
-//      {
-//         addDependencyListItems((DependencyListItem)value);
-//      }
-//      else if (value instanceof PackageItem)
-//      {
-//         addPackageItems((PackageItem)value);
-//      }
-//      else if (value instanceof FolderModel)
-//      {
-//         addFolderItems((FolderModel)value);
-//      }
    }
    
    private TreeItem openTreeNode(Object value, boolean open)
@@ -442,10 +390,8 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       if (item instanceof ProjectItem)
       {
          ProjectItem projectItem = (ProjectItem)item;
-         //nodeIcon = new TreeIcon(IDEImageBundle.INSTANCE.projectOpened());
          ImageResource imageResource = ProjectResolver.getImageForProject(projectItem.getProject().getProjectType());
          nodeIcon = new TreeIcon(imageResource);
-         //nodeIcon = ProjectResolver.getImageForProject(((ProjectModel)item).getProjectType());
          nodeName = projectItem.getProject().getName();
       }
       else if (item instanceof ResourceDirectoryItem)
@@ -566,7 +512,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
                   if (item.getUserObject() instanceof FileModel &&
                            ((FileModel)item.getUserObject()).getPath().equals(((FileModel)obj).getPath()))
                   {
-                     item.setSelected(true);
+                     tree.setSelectedItem(item);
                      return;
                   }
                }
@@ -578,7 +524,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             treeItem = openTreeNode(obj, true);
             if (i == itemList.size() - 1)
             {
-               treeItem.setSelected(true);
+               tree.setSelectedItem(treeItem);
             }
          }
       }

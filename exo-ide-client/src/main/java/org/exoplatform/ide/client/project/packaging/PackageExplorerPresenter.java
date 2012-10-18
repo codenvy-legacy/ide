@@ -59,6 +59,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -92,13 +93,40 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       void goToItem(List<Object> itemList);
 
+      /*
+       * Link with Editor
+       */
+
+      /**
+       * Returns Link with Editor button.
+       * 
+       * @return Link with Editor button
+       */
+      HasClickHandlers getLinkWithEditorButton();
+
+      /**
+       * Enables or disables Link with Editor button.
+       * 
+       * @param enabled <b>true</b> makes Link with Editor button enabled, <b>false</b> makes disabled
+       */
+      void setLinkWithEditorButtonEnabled(boolean enabled);
+
+      /**
+       * Adds or removes selection of Link with Editor button.
+       * 
+       * @param selected <b>true</b> makes button selected, <b>false</b> otherwise
+       */
+      void setLinkWithEditorButtonSelected(boolean selected);
+
    }
 
-   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-      .workspaceReceiveChildrenError();
+   private static final String RECEIVE_CHILDREN_ERROR_MSG =
+            org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.workspaceReceiveChildrenError();
 
-   private static final String UPDATING_PROJECT_STRUCTURE_MESSAGE = "Updating project structure...";
-
+   private static final String MESSAGE_LOAD_PROJECT = "Loading project structure...";
+   
+   private static final String MESSAGE_UPDATE_PROJECT = "Updating project structure...";
+   
    private Display display;
 
    private ProjectModel openedProject;
@@ -303,17 +331,17 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       itemToSelect = openedProject;
 
-      updateProjectTree();
+      updateProjectTree(MESSAGE_LOAD_PROJECT);
    }
 
-   private void updateProjectTree()
+   private void updateProjectTree(final String loaderMessage)
    {
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
          public void execute()
          {
-            IDELoader.show("Loading project structure...");
+            IDELoader.show(loaderMessage);
 
             try
             {
@@ -357,7 +385,14 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             display.getBrowserTree().setValue(null);
             display.getBrowserTree().setValue(projectItem);
-            navigateToItem(itemToSelect);
+            
+            if (itemToSelect == null)
+            {
+               itemToSelect = openedProject;
+            }
+
+            List<Object> itemList = treeParser.getItemList(itemToSelect);
+            display.goToItem(itemList);
          }
       });
    }
@@ -369,7 +404,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          return;
       }
-
+      
       itemToSelect = event.getItemToSelect();
       if (itemToSelect == null)
       {
@@ -385,13 +420,13 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          itemToSelect = openedProject;
       }
-
+      
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
          public void execute()
          {
-            updateProjectTree();
+            updateProjectTree(MESSAGE_UPDATE_PROJECT);
          }
       });
 
@@ -404,17 +439,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          return;
       }
-   }
 
-   private void navigateToItem(Item itemToNavigate)
-   {
-      if (itemToNavigate == null)
-      {
-         itemToNavigate = openedProject;
-      }
-
-      List<Object> itemList = treeParser.getItemList(itemToNavigate);
-      display.goToItem(itemList);
+      System.out.println(">> on select item");
+      System.out.println(">> item href > " + event.getItemHref());
    }
 
 }

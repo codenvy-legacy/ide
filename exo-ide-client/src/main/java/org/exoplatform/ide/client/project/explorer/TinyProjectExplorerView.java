@@ -18,21 +18,14 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.IdeLocalizationConstant;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.ItemTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -41,8 +34,14 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Created by The eXo Platform SAS .
