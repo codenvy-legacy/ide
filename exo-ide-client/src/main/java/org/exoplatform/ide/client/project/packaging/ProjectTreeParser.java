@@ -34,9 +34,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.Scheduler;
@@ -304,12 +302,11 @@ public class ProjectTreeParser
       }
 
       // sort files and folders here
+      
 
       // add files and folders to ProjectItem
       projectItem.getFolders().addAll(folders);
       projectItem.getFiles().addAll(files);
-
-      //PackageExplorerLogger.dump(project);
       parseComplete();
    }
 
@@ -344,51 +341,6 @@ public class ProjectTreeParser
       projectItem.getResourceDirectories().add(resourceDirectoryItem);
 
       updatePackagesInResourceDirectory(resourceDirectory, resourceFolder, resourceDirectoryItem);
-
-      //      List<FolderModel> resourceFolders = new ArrayList<FolderModel>();
-      //      resourceFolders.addAll(searchFoldersRecursively(resourceFolder));
-      //      for (FolderModel folder : resourceFolders)
-      //      {
-      //         if (folder.getChildren().getItems().size() == 0 && !resourceFolder.getPath().equals(folder.getPath()))
-      //         {
-      //            // add as empty package
-      //            String packageName = getPackageName(resourceDirectory, folder);
-      //            PackageItem packageItem = new PackageItem(packageName, resourceDirectory, folder);
-      //            resourceDirectoryItem.getPackages().add(packageItem);
-      //         }
-      //         else if (hasFiles(folder.getChildren().getItems()))
-      //         {
-      //            // add files directly to Resource Folder
-      //            if (resourceFolder.getPath().equals(folder.getPath()))
-      //            {
-      //               for (Item i : folder.getChildren().getItems())
-      //               {
-      //                  if (i instanceof FileModel)
-      //                  {                     
-      //                     resourceDirectoryItem.getFiles().add(new FileModel((FileModel)i));
-      //                  }
-      //               }
-      //            }
-      //            else
-      //            {
-      //               String packageName = getPackageName(resourceDirectory, folder);
-      //               PackageItem packageItem = new PackageItem(packageName, resourceDirectory, folder);
-      //               resourceDirectoryItem.getPackages().add(packageItem);
-      //               
-      //               for (Item i : folder.getChildren().getItems())
-      //               {
-      //                  if (i instanceof FileModel)
-      //                  {
-      //                     packageItem.getFiles().add((FileModel)i);
-      //                  }
-      //               }
-      //            }
-      //         }
-      //         else if (hasOnlyFolders(folder.getChildren().getItems()))
-      //         {
-      //            // do not add
-      //         }
-      //      }
    }
 
    private void updatePackagesInResourceDirectory(String resourceDirectory, FolderModel resourceFolder,
@@ -539,202 +491,30 @@ public class ProjectTreeParser
 
       return null;
    }
-
-
-   /*****************************************************************************************
-    * 
-    * DEPRECATED FUNCTIONALITY
-    * 
-    *****************************************************************************************/
-
-   public Object updateFolderStructure(Folder folder, List<Item> children)
-   {
-      // search folder's item
-      // if is resource directory -> reparse all it's packages
-      ResourceDirectoryItem resourceDirectoryItem = refreshIfIsResourceDirectoryItem(folder, children);
-      if (resourceDirectoryItem != null)
-         return resourceDirectoryItem;
-
-      // if is package -> reparse package children only
-      PackageItem packageItem = refreshIfIsPackage(folder, children);
-      if (packageItem != null)
-         return packageItem;
-
-      // if folder is project -> parse whole project structure
-
-      // if one of the resource folder -> parse only resource folder
-
-      return null;
-   }
-
-   /**
-    * Refresh packages in resource directory if folder points to existed resource directory.
-    * 
-    * @param folder
-    * @param children
-    * @return
-    */
-   private ResourceDirectoryItem refreshIfIsResourceDirectoryItem(Folder folder, List<Item> children)
-   {
-      ResourceDirectoryItem resourceDirectoryItem = null; //asResourceDirectory(folder.getPath());
-
-      for (ResourceDirectoryItem rdi : projectItem.getResourceDirectories())
-      {
-         if (rdi.getFolder().getPath().equals(folder.getPath()))
-         {
-            resourceDirectoryItem = rdi;
-            break;
-         }
-      }
-
-      if (resourceDirectoryItem == null)
-      {
-         return null;
-      }
-
-      String resourceDirectoryPathPrefix = getResourceDirectoryPathPrefix(resourceDirectoryItem.getFolder().getPath());
-      if (resourceDirectoryPathPrefix == null)
-      {
-         return null;
-      }
-
-      resourceDirectoryItem.getFolder().getChildren().getItems().clear();
-
-      updatePackagesInResourceDirectory(resourceDirectoryPathPrefix, resourceDirectoryItem.getFolder(),
-         resourceDirectoryItem);
-
-      return resourceDirectoryItem;
-   }
-
-   private String getResourceDirectoryPathPrefix(String resourceDirectoryFullPath)
-   {
-      for (String resDir : getResourceDirectories())
-      {
-         if (resourceDirectoryFullPath.endsWith(resDir))
-         {
-            return resDir;
-         }
-      }
-
-      return null;
-   }
-
-   /**
-    * Refresh package items if <b>folder</b> points to a package.
-    * 
-    * @param folder
-    * @param children
-    * @return
-    */
-   private PackageItem refreshIfIsPackage(Folder folder, List<Item> children)
-   {
-      PackageItem packageItem = asPackage(folder.getPath());
-      if (packageItem == null)
-      {
-         return null;
-      }
-
-//      //System.out.println(">>> FOLDER is PACKAGE DIRECTORY!!!");
-
-      packageItem.getFiles().clear();
-      for (Item item : children)
-      {
-         if (item instanceof ItemContext)
-         {
-            ((ItemContext)item).setParent(packageItem.getPackageFolder());
-            ((ItemContext)item).setProject(project);
-         }
-
-         if (item instanceof FolderModel)
-         {
-//            //System.out.println("FOUNDED SUBFOLDER > " + item.getPath());
-         }
-
-         if (item instanceof FileModel)
-         {
-            packageItem.getFiles().add((FileModel)item);
-         }
-      }
-
-      return packageItem;
-   }
-
-   /**
-    * Returns {@link PackageItem} if path points to a package.
-    * 
-    * @param path
-    * @return
-    */
-   private PackageItem asPackage(String path)
-   {
-      boolean belongToResources = false;
-      for (String resourceDirectory : getResourceDirectories())
-      {
-         String resourceDirectoryPath = project.getPath() + "/" + resourceDirectory + "/";
-//         //System.out.println("resource directory path > " + resourceDirectoryPath);
-         if (path.startsWith(resourceDirectoryPath))
-         {
-            belongToResources = true;
-            break;
-         }
-      }
-
-      if (!belongToResources)
-      {
-//         //System.out.println("FOLDER not is package");
-         return null;
-      }
-
-//      //System.out.println("FOLDER is package");
-
-      for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
-      {
-         for (PackageItem packageItem : resourceDirectoryItem.getPackages())
-         {
-            if (packageItem.getPackageFolder().getPath().equals(path))
-            {
-               return packageItem;
-            }
-         }
-      }
-
-      return null;
-   }
-   
-   
-   
-   
    
    private void searchItemInPackages(List<Object> navigateItems, ResourceDirectoryItem resourceDirectoryItem, Item itemToNavigate)
    {
-      ////System.out.println("> search item in packages");
-      
       // search for item in packages
       for (PackageItem packageItem : resourceDirectoryItem.getPackages())
       {
          if (itemToNavigate.getPath().equals(packageItem.getPackageFolder().getPath()))
          {
-            ////System.out.println("> item is package > " + packageItem.getPackageName());
             navigateItems.add(packageItem);
             return;
          }
          
-         if (itemToNavigate.getPath().startsWith(packageItem.getPackageFolder().getPath() + "/"))
+         if (itemToNavigate.getPath().startsWith(packageItem.getPackageFolder().getPath() + "/") &&
+                  itemToNavigate instanceof FileModel)
          {
-            ////System.out.println("> item IN package > " + packageItem.getPackageName());
             navigateItems.add(packageItem);
-            
             for (FileModel file : packageItem.getFiles())
             {
                if (itemToNavigate.getPath().equals(file.getPath()))
                {
-                  ////System.out.println("> item is file > " + file.getName());
-                  
                   navigateItems.add(file);
                   return;
                }
             }
-
             return;
          }
       }
@@ -744,7 +524,6 @@ public class ProjectTreeParser
       {
          if (itemToNavigate.getPath().equals(file.getPath()))
          {
-            ////System.out.println("> file is > " + file.getName());
             navigateItems.add(file);
             return;
          }
@@ -753,20 +532,16 @@ public class ProjectTreeParser
    
    private boolean searchItemInResourceFolders(List<Object> navigateItems, Item itemToNavigate)
    {
-      ////System.out.println("> searching item in resource directories");
-      
       for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
       {
          if (itemToNavigate.getPath().equals(resourceDirectoryItem.getFolder().getPath()))
          {
-            ////System.out.println("> item is resource directory " + resourceDirectoryItem.getName());
             navigateItems.add(resourceDirectoryItem);
             return true;
          }
          
          if (itemToNavigate.getPath().startsWith(resourceDirectoryItem.getFolder().getPath() + "/"))
          {
-            ////System.out.println("> item is IN resource directory " + resourceDirectoryItem.getName());
             navigateItems.add(resourceDirectoryItem);
             searchItemInPackages(navigateItems, resourceDirectoryItem, itemToNavigate);
             return true;
@@ -786,14 +561,12 @@ public class ProjectTreeParser
             
             if (itemToNavigate.getPath().equals(folder.getPath()))
             {
-               ////System.out.println("> item is folder > " + folder.getPath());
                navigateItems.add(folder);
                return true;
             }
             
             if (itemToNavigate.getPath().startsWith(folder.getPath() + "/"))
             {
-               ////System.out.println("> item is IN folder > " + folder.getPath());
                navigateItems.add(folder);
                searchItemInTreeOfItems(navigateItems, folder.getChildren().getItems(), itemToNavigate);
                return true;
@@ -807,7 +580,6 @@ public class ProjectTreeParser
             FileModel file = (FileModel)item;
             if (itemToNavigate.getPath().equals(file.getPath()))
             {
-               ////System.out.println("> item is file > " + file.getPath());
                navigateItems.add(file);
                return true;
             }
@@ -819,46 +591,24 @@ public class ProjectTreeParser
 
    public List<Object> getItemList(Item itemToNavigate)
    {
-      ////System.out.println("> asking for navigation list");
       List<Object> navigateItems = new ArrayList<Object>();
-      
       if (itemToNavigate.getPath().equals(project.getPath()))
       {
-         ////System.out.println("> item is project");
          navigateItems.add(projectItem);
          return navigateItems;
       }
       
       navigateItems.add(projectItem);
 
-      // if itemToNavigate is Resource folder
       if (searchItemInResourceFolders(navigateItems, itemToNavigate))
       {
-         //System.out.println("> item in resource directory");
          return navigateItems;
       }
       
       List<Item> items = new ArrayList<Item>();
       items.addAll(projectItem.getFolders());
       items.addAll(projectItem.getFiles());
-      
-      // search item in folders
-      if (searchItemInTreeOfItems(navigateItems, items, itemToNavigate))
-      {
-         //System.out.println("> item FOUNDED!!!!!!!!!!!!!!!!!!!!");
-      }
-
-//      // search item in files in the root of project
-//      for (FileModel file : projectItem.getFiles())
-//      {
-//         if (itemToNavigate.getPath().equals(file.getPath()))
-//         {
-//            //System.out.println("> item is file > " + file.getName());
-//            navigateItems.add(file);
-//            return navigateItems;
-//         }
-//      }
-
+      searchItemInTreeOfItems(navigateItems, items, itemToNavigate);
       return navigateItems;
    }
 

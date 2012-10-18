@@ -39,16 +39,12 @@ import org.exoplatform.services.security.Credential;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.PasswordCredential;
 import org.exoplatform.services.security.UsernameCredential;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -113,15 +109,22 @@ public class FileTemplateTest extends BaseTest
    }
 
    @After
-   public void after() throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException,
-      VirtualFileSystemException
+   public void after() throws InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
-      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+      ItemList<Item> children =
+         vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
       for (Item i : children.getItems())
       {
          if (i.getName().equals("ide-home"))
          {
-            vfs.delete(i.getId(), null);
+            try
+            {
+               vfs.delete(i.getId(), null);
+            }
+            catch (ItemNotFoundException e)
+            {
+               // Nothing to do
+            }
             break;
          }
       }

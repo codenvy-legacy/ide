@@ -32,6 +32,7 @@ import org.exoplatform.ide.ProjectTemplate;
 import org.exoplatform.ide.Template;
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.RequestContext;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -65,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -76,6 +78,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Providers;
 
@@ -89,6 +92,10 @@ import javax.ws.rs.ext.Providers;
 @Path("/ide/templates")
 public class TemplatesRestService
 {
+
+   private static final Pattern PATTERN_GROUP_ID = Pattern.compile(".*<groupId>groupId</groupId>.*");
+
+   private static final Pattern PATTERN_ARTIFACT_ID = Pattern.compile(".*<artifactId>artifactId</artifactId>.*");
 
    /**
     * File name filter. Need to filter non "zip" files.
@@ -331,9 +338,12 @@ public class TemplatesRestService
    @POST
    @Path("/project/create")
    @Produces(MediaType.APPLICATION_JSON)
-   public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, @QueryParam("name") String name,
-      @QueryParam("parentId") String parentId, @QueryParam("templateName") String templateName,
-      @Context Providers providers) throws VirtualFileSystemException, IOException
+   public Project createProjectFromTemplate(@QueryParam("vfsid") String vfsId, // 
+      @QueryParam("name") String name, //
+      @QueryParam("parentId") String parentId,// 
+      @QueryParam("templateName") String templateName,//
+      @Context Providers providers, //
+      @Context UriInfo uriInfo) throws VirtualFileSystemException, IOException
    {
       ContextResolver<RequestContext> contextResolver = providers.getContextResolver(RequestContext.class, null);
       RequestContext context = null;
@@ -352,6 +362,38 @@ public class TemplatesRestService
          if (templateStream == null)
             throw new InvalidArgumentException("Can't find " + templateName + ".zip");
          vfs.importZip(projectFolder.getId(), templateStream, true);
+
+         //Goto change Maven groupId & artifactId IDE-1981
+         try
+         {
+            String path2pom = projectFolder.getPath() + "/pom.xml";
+            org.exoplatform.ide.vfs.shared.File pom =
+               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
+            String content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+            String host = uriInfo.getAbsolutePath().getHost();
+            String groupId = null;
+            if (host.contains("."))
+            {
+               String[] split = host.split("\\.");
+               StringBuffer result = new StringBuffer();
+               int j = split.length - 1;
+               while (j > 0)
+               {
+                  result.append(split[j--]).append(".");
+               }
+               result.append(split[0]);
+               groupId = result.toString();
+            }
+            String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+            newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+               new ByteArrayInputStream(newContent.getBytes()), null);
+         }
+         catch (ItemNotFoundException e)
+         {
+            //nothing todo not maven project
+         }
+
       }
       catch (IOException e)
       {
@@ -481,7 +523,8 @@ public class TemplatesRestService
             {
                throw new RuntimeException(e.getMessage(), e);
             }
-            finally {
+            finally
+            {
                if (zip != null)
                   zip.close();
                if (prjDescrStream != null)

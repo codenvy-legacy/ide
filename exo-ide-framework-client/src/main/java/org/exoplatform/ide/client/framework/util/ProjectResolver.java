@@ -134,7 +134,7 @@ public class ProjectResolver
          projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
       }
 
-      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS));
+      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS, ProjectType.JAR));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));

@@ -119,8 +119,12 @@ public class ProjectTreeUnmarshaller implements Unmarshallable<ProjectModel>
          return itemList;
       }
 
+      if (children.isNull() != null)
+      {
+         return itemList;
+      }
+      
       JSONArray itemsArray = children.isArray();
-
       for (int i = 0; i < itemsArray.size(); i++)
       {
          JSONObject itemObject = itemsArray.get(i).isObject();
@@ -141,22 +145,48 @@ public class ProjectTreeUnmarshaller implements Unmarshallable<ProjectModel>
          if (ItemType.PROJECT == type)
          {
             if (Project.PROJECT_MIME_TYPE.equals(mimeType))
-            {
-               ProjectModel project = new ProjectModel(item);
-               itemList.getItems().add(project);
-               project.setChildren(getChildren(itemObject.get(CHILDREN)));
+            {               
+               try
+               {
+                  ProjectModel project = new ProjectModel(item);
+                  itemList.getItems().add(project);
+                  project.setChildren(getChildren(itemObject.get(CHILDREN)));                  
+               }
+               catch (Exception e)
+               {
+                  e.printStackTrace();
+                  System.out.println("Invalid JSON " + item.toString());                  
+               }
+               
             }
          }
          else if (ItemType.FOLDER == type)
          {
-            FolderModel folder = new FolderModel(item);
-            itemList.getItems().add(folder);
-            folder.setChildren(getChildren(itemObject.get(CHILDREN)));
+            try
+            {
+               FolderModel folder = new FolderModel(item);
+               itemList.getItems().add(folder);
+               folder.setChildren(getChildren(itemObject.get(CHILDREN)));               
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+               System.out.println("Invalid JSON " + item.toString());
+            }
          }
          else
          {
-            FileModel file = new FileModel(item);
-            itemList.getItems().add(file);
+            try
+            {
+               FileModel file = new FileModel(item);
+               itemList.getItems().add(file);               
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+               System.out.println("Invalid JSON " + item.toString());
+            }
+            
          }
       }
 

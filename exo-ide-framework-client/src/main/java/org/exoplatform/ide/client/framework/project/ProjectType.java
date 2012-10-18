@@ -29,6 +29,7 @@ public enum ProjectType {
    PHP("PHP"), //
    JSP("Servlet/JSP"), //
    JAVA("Java"), //
+   JAR("Jar"), //
    JAVASCRIPT("JavaScript"), //
    NODE_JS("nodejs"), //
    PYTHON("Python"), //

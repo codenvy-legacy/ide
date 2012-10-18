@@ -27,6 +27,7 @@ import org.exoplatform.ide.conversationstate.IdeUser;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -47,6 +48,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -98,6 +100,20 @@ public class IDEConfigurationService
       this.entryPoint = entryPoint;
       this.discoverable = discoverable;
       this.workspace = workspace;
+      try
+      {
+         Collection<VirtualFileSystemProvider> registeredProviders = vfsRegistry.getRegisteredProviders();
+         for (Iterator iterator = registeredProviders.iterator(); iterator.hasNext();)
+         {
+            VirtualFileSystemProvider virtualFileSystemProvider = (VirtualFileSystemProvider)iterator.next();
+            
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
       if (config != null)
       {
          if (!(config.startsWith("/")))
