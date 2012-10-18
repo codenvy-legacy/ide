@@ -119,8 +119,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private RequestStatusHandler cloneStatusHandler;
 
-   private ProjectModel project;
-
    private FolderModel PROJECT_ROOT_FOLDER;
 
    private DeployResultHandler deployResultHandler = new DeployResultHandler()
@@ -368,8 +366,8 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
-            cloneStatusHandler = new CloneRequestStatusHandler(project.getName(), remoteUri);
-            cloneStatusHandler.requestInProgress(project.getId());
+            cloneStatusHandler = new CloneRequestStatusHandler(data.getName(), remoteUri);
+            cloneStatusHandler.requestInProgress(data.getName());
             ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
@@ -393,7 +391,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
                   if (useWebSocket)
                   {
                      ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-                     cloneStatusHandler.requestError(project.getId(), exception);
+                     cloneStatusHandler.requestError(data.getName(), exception);
                   }
                }
             });
@@ -487,7 +485,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
-         cloneStatusHandler.requestFinished(project.getId());
+         cloneStatusHandler.requestFinished(data.getName());
          onRepositoryCloned();
       }
 
@@ -496,7 +494,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
 
-         cloneStatusHandler.requestError(project.getId(), exception);
+         cloneStatusHandler.requestError(data.getName(), exception);
          handleError(exception);
       }
    };
