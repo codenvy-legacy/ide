@@ -42,6 +42,7 @@ final class Result
 
    /** Time when task was done. */
    private final long time;
+   
 
    /**
     * This value may be sent to the client in Content-Disposition header. It may be useful to prevent some clients (e.g.
@@ -66,6 +67,8 @@ final class Result
       this.fileName = fileName;
       this.time = time;
    }
+   
+  
 
    String getMediaType()
    {
@@ -86,4 +89,5 @@ final class Result
    {
       return time;
    }
+   
 }

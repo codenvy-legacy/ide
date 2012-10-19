@@ -35,6 +35,10 @@
       <param-name>builder.timeout</param-name>
       <param-value>300</param-value>
    </context-param>
+    <context-param>
+      <param-name>builder.publish-repository</param-name>
+      <param-value>../../releases</param-value>
+   </context-param>
    <listener>
       <listener-class>org.everrest.core.servlet.EverrestInitializedListener</listener-class>
    </listener>

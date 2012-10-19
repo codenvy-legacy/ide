@@ -42,6 +42,15 @@ public interface BuilderLocalizationConstant extends Messages
    @Key("control.buildProject.prompt")
    String buildProjectControlPrompt();
 
+   @Key("control.buildAndPublishProject.id")
+   String buildAndPublishProjectControlId();
+   
+   @Key("control.buildAndPublishProject.title")
+   String buildAndPublishProjectControlTitle();
+   
+   @Key("control.buildAndPublishProject.prompt")
+   String buildAndPublishProjectControlPrompt();
+
    /*
     * Messages
     */

@@ -73,6 +73,16 @@ public class Builder
    }
 
    @POST
+   @Path("deploy")
+   @Consumes("application/zip")
+   public Response deploy(@Context UriInfo uriInfo, InputStream data) throws IOException
+   {
+      MavenBuildTask task = tasks.deploy(data);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+   }
+
+   @POST
    @Path("dependencies/list")
    @Consumes("application/zip")
    public Response dependenciesList(@Context UriInfo uriInfo, InputStream data) throws IOException
@@ -209,6 +219,55 @@ public class Builder
                      {
                         builder.header("Content-Disposition", "attachment; filename=\"" + fileName + '"');
                      }
+                     long time = result.getTime();
+                     if (time > 0)
+                     {
+                        builder.lastModified(new Date(time));
+                     }
+                     return builder.build();
+                  }
+               }
+
+               // Job is failed - nothing for download.
+               throw new WebApplicationException(Response.status(404)
+                  .entity("Job failed. There is nothing for download. ").type(MediaType.TEXT_PLAIN).build());
+            }
+            catch (MavenInvocationException e)
+            {
+               throw new WebApplicationException(e);
+            }
+            catch (IOException e)
+            {
+               throw new WebApplicationException(e);
+            }
+         }
+         // Sent location to check status method.
+         final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+      }
+      // Incorrect task ID.
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
+         .type(MediaType.TEXT_PLAIN).build());
+   }
+
+   @GET
+   @Path("result/{buildid}")
+   public Response getResult(@PathParam("buildid") String buildID, @Context UriInfo uriInfo)
+   {
+      MavenBuildTask task = tasks.get(buildID);
+      if (task != null)
+      {
+         if (task.isDone())
+         {
+            try
+            {
+               InvocationResultImpl invocationResult = task.getInvocationResult();
+               if (0 == invocationResult.getExitCode())
+               {
+                  Result result = invocationResult.getResult();
+                  if (result != null)
+                  {
+                     Response.ResponseBuilder builder = Response.ok(result.getStream(), result.getMediaType());
                      long time = result.getTime();
                      if (time > 0)
                      {

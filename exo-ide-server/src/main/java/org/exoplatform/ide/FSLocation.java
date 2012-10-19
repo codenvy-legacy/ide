@@ -19,7 +19,6 @@
 package org.exoplatform.ide;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ide.discovery.RepositoryDiscoveryService;
 import org.exoplatform.services.jcr.RepositoryService;
 
 import javax.jcr.RepositoryException;
@@ -64,6 +63,10 @@ public class FSLocation
       RepositoryService repositoryService =
          (RepositoryService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
             RepositoryService.class);
+
+      IDEConfigurationService configurationService =
+         (IDEConfigurationService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
+            IDEConfigurationService.class);
       String repoName;
       try
       {
@@ -78,7 +81,7 @@ public class FSLocation
          throw new IllegalStateException("Root path may not be null. ");
       if (!localPath.endsWith("/"))
          localPath += "/"; // unix like path only!
-      localPath += repoName + "/" + RepositoryDiscoveryService.getEntryPoint() + url;
+      localPath += repoName + "/" + configurationService.getWorkspace() + url;
       return localPath;
    }
 

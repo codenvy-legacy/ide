@@ -18,35 +18,31 @@
  */
 package org.exoplatform.ide.extension.maven.client.control;
 
-import org.exoplatform.ide.client.framework.control.IDEControl;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientBundle;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 
+
 /**
- * Control for build project by maven builder.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: BuildProjectControl.java Feb 17, 2012 3:51:08 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: BuildAndPublishProjectControl.java Oct 18, 2012 vetal $
+ *
  */
-public class BuildProjectControl extends BuildProjectControlAbstract implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler
+public class BuildAndPublishProjectControl extends BuildProjectControlAbstract
+   
 {
-   public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlId();
+   public static final String ID = BuilderExtension.LOCALIZATION_CONSTANT.buildAndPublishProjectControlId();
 
-   private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlTitle();
+   private static final String TITLE = BuilderExtension.LOCALIZATION_CONSTANT.buildAndPublishProjectControlTitle();
 
-   private static final String PROMPT = BuilderExtension.LOCALIZATION_CONSTANT.buildProjectControlPrompt();
+   private static final String PROMPT = BuilderExtension.LOCALIZATION_CONSTANT.buildAndPublishProjectControlPrompt();
 
-   public BuildProjectControl()
+   public BuildAndPublishProjectControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(BuilderClientBundle.INSTANCE.build(), BuilderClientBundle.INSTANCE.buildDisabled());
-      setEvent(new BuildProjectEvent());
+      setEvent(new BuildProjectEvent(true));
    }
 }

@@ -156,6 +156,29 @@ public class BuilderClient
       URL url = new URL(baseURL + "/builder/maven/build");
       return run(url, vfs.exportZip(projectId));
    }
+   
+   /**
+    * Send request to start new build and deploy artifact.
+    * Build may be started immediately or add in queue.
+    *
+    * @param vfs
+    *    virtual file system
+    * @param projectId
+    *    identifier of project we want to send for build
+    * @return ID of build task. It may be used as parameter for method {@link #status(String)} .
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    if build request was rejected by remote build server
+    * @throws VirtualFileSystemException
+    *    if any error in VFS
+    */
+   public String deploy(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+      VirtualFileSystemException
+   {
+      URL url = new URL(baseURL + "/builder/maven/deploy");
+      return run(url, vfs.exportZip(projectId));
+   }
 
    private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,
       VirtualFileSystemException
@@ -210,7 +233,7 @@ public class BuilderClient
    }
 
    /**
-    * Check status of build.
+    * Get result of build.
     *
     * @param buildID
     *    ID of build need to check
@@ -290,6 +313,53 @@ public class BuilderClient
             }
          }
       }, 0, CHECKING_STATUS_PERIOD);
+   }
+   
+   
+   /**
+    * Check status of build.
+    *
+    * @param buildID
+    *    ID of build need to check
+    * @return string that contains description of current status of build in JSON format. Do nothing with such string
+    *         just re-send result to client
+    * @throws IOException
+    *    if any i/o errors occur
+    * @throws BuilderException
+    *    any other errors related to build server internal state or parameter of client request
+    */
+   public String result(String buildID) throws IOException, BuilderException
+   {
+      URL url = new URL(baseURL + "/builder/maven/result/" + buildID);
+      HttpURLConnection http = null;
+      try
+      {
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         authenticate(http);
+         int responseCode = http.getResponseCode();
+         if (responseCode != 200)
+         {
+            fail(http);
+         }
+
+         InputStream data = http.getInputStream();
+         try
+         {
+            return readBody(data, http.getContentLength());
+         }
+         finally
+         {
+            data.close();
+         }
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
+      }
    }
 
    /**
