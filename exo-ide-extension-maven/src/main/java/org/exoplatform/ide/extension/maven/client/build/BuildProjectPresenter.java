@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
+import com.google.gwt.json.client.JSONObject;
+
+import com.google.gwt.json.client.JSONValue;
+
+import com.google.gwt.json.client.JSONParser;
+
+import com.google.gwt.http.client.RequestBuilder;
+
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,6 +39,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
@@ -46,6 +57,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
+import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
@@ -93,11 +105,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
-   
+
    private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
 
    private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
-
 
    /**
     * Identifier of project we want to send for build.
@@ -149,6 +160,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    public BuildProjectPresenter()
    {
       IDE.getInstance().addControl(new BuildProjectControl());
+      IDE.getInstance().addControl(new BuildAndPublishProjectControl());
 
       IDE.addHandler(BuildProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -183,7 +195,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       statusHandler = new BuildRequestStatusHandler(project.getPath());
 
-      buildApplicationIfNeed();
+      buildApplicationIfNeed(event);
    }
 
    /**
@@ -234,10 +246,64 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
       }
    }
-   
-   
-   private void buildApplicationIfNeed()
+
+   /**
+    * Start the build of project and publish it to public repository.
+    */
+   private void doBuildAndPublish()
    {
+      projectId = project.getId();
+      statusHandler.requestInProgress(projectId);
+
+      try
+      {
+         BuilderClientService.getInstance().buildAndPublish(projectId, vfs.getId(),
+            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  buildID = result.substring(result.lastIndexOf("/") + 1);
+                  setBuildInProgress(true);
+                  showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
+                  display.startAnimation();
+                  previousStatus = null;
+                  refreshBuildStatusTimer.schedule(delay);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  statusHandler.requestError(projectId, exception);
+                  setBuildInProgress(false);
+                  display.stopAnimation();
+                  if (exception instanceof ServerException && exception.getMessage() != null)
+                  {
+                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         setBuildInProgress(false);
+         display.stopAnimation();
+         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
+      }
+   }
+
+   private void buildApplicationIfNeed(BuildProjectEvent event)
+   {
+      //if isPublish true start build & publish process any way
+      if (event.isPublish())
+      {
+         doBuildAndPublish();
+         return;
+      }
       try
       {
          //Going to check is need built project.
@@ -282,7 +348,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
    }
-   
+
    private boolean isProjectChangedAfterLastBuild(ItemWrapper item)
    {
       long buildTime = 0;
@@ -298,7 +364,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
       return buildTime > lastUpdateTime;
    }
-   
+
    private void checkDownloadUrl(final String url)
    {
       try
@@ -333,8 +399,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
    }
-   
-   
 
    private void setBuildInProgress(boolean buildInProgress)
    {
@@ -464,10 +528,44 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          writeBuildInfo(buildStatus);
          startWatchingProjectChanges();
-         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
-            .append("\">here</a>");
-         
-         
+         String url = buildStatus.getDownloadUrl();
+         message.append("\r\nYou can download the build result <a href=\"").append(url).append("\">here</a>");
+         StringBuilder builder = new StringBuilder();
+         try
+         {
+            BuilderClientService.getInstance().result(buildID,
+               new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(builder))
+               {
+
+                  @Override
+                  protected void onSuccess(StringBuilder result)
+                  {
+                     JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
+                     if (json.containsKey("suggestDependency"))
+                     {
+                        String dep = json.get("suggestDependency").isString().stringValue();
+                        //format XML
+                        String res = formatDepXml(dep);
+                        IDE.fireEvent(new OutputEvent("Dependency for your pom:<br><span style=\"color:black;\">" + res
+                           + "</span>", Type.INFO));
+                     }
+
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                    // nothing to do
+                  }
+
+               });
+         }
+         catch (RequestException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+
       }
       else if (buildStatus.getStatus() == Status.FAILED)
       {
@@ -489,8 +587,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
-   
-   
+
    private void writeBuildInfo(BuildStatus buildStatus)
    {
       project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
@@ -519,7 +616,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
 
    }
-   
+
    private void startWatchingProjectChanges()
    {
       try
@@ -535,7 +632,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             @Override
             protected void onFailure(Throwable exception)
             {
-               
+
             }
          });
       }
@@ -634,6 +731,21 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
 
       return true;
+   }
+
+   /**
+    * @param dep
+    * @return
+    */
+   private String formatDepXml(String dep)
+   {
+      String res = new String();
+      res = SafeHtmlUtils.htmlEscape(dep);
+      res = res.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      res = res.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      res = res.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      res = res.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
+      return res;
    }
 
    /**

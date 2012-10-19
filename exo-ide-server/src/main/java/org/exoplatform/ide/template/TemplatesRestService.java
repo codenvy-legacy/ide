@@ -384,6 +384,9 @@ public class TemplatesRestService
                result.append(split[0]);
                groupId = result.toString();
             }
+            else {
+               groupId = host;
+            }
             String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
             newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
             vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),

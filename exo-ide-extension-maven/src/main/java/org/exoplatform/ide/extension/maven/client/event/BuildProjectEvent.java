@@ -36,14 +36,41 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
     */
    private ProjectModel project;
 
+   private final boolean publish;
+   
    public BuildProjectEvent()
    {
-      this.project = null;
+      this(false);
    }
 
+   /**
+    * If <code>publish</code> artifact will be in public repository after build.
+    * By default set to false
+    * @param publish
+    */
+   public BuildProjectEvent(boolean publish)
+   {
+      this(null, publish);
+   }
+
+   /**
+    * @param project
+    */
    public BuildProjectEvent(ProjectModel project)
    {
+      this(project, false);
+   }
+
+   /**
+    * If <code>publish</code> artifact will be in public repository after build.
+    * By default set to false
+    * @param project
+    * @param publish
+    */
+   public BuildProjectEvent(ProjectModel project, boolean publish)
+   {
       this.project = project;
+      this.publish = publish;
    }
 
    /**
@@ -77,5 +104,10 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    public ProjectModel getProject()
    {
       return project;
+   }
+
+   public boolean isPublish()
+   {
+      return publish;
    }
 }

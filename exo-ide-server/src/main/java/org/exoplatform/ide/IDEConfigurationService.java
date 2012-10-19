@@ -181,6 +181,11 @@ public class IDEConfigurationService
    {
       writeSettings(body);
    }
+   
+   public String getWorkspace()
+   {
+      return workspace;
+   }
 
    // ------Implementation---------
 

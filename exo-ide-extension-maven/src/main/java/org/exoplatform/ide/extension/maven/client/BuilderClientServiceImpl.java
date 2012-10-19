@@ -50,6 +50,11 @@ public class BuilderClientServiceImpl extends BuilderClientService
    private static final String BUILD = BASE_URL + "/build";
 
    /**
+    * Build project method's path.
+    */
+   private static final String DEPLOY = BASE_URL + "/deploy";
+
+   /**
     * Cancel building project method's path.
     */
    private static final String CANCEL = BASE_URL + "/cancel";
@@ -59,6 +64,13 @@ public class BuilderClientServiceImpl extends BuilderClientService
     */
    private static final String STATUS = BASE_URL + "/status";
 
+   
+   /**
+    * Get result of build method's path.
+    */
+   private static final String RESULT = BASE_URL + "/result";
+
+   
    /**
     * Get build log method's path.
     */
@@ -94,6 +106,18 @@ public class BuilderClientServiceImpl extends BuilderClientService
       throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
+
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
+         .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   @Override
+   public void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
+   {
+      final String requesrUrl = restServiceContext + DEPLOY;
 
       String params = "vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
@@ -142,9 +166,22 @@ public class BuilderClientServiceImpl extends BuilderClientService
       AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(loader)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
-   
-   
-   public  void  checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
+
+   /**
+    * Get result of previously launched build.
+    * 
+    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#result(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
+   @Override
+   public void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   {
+      final String requestUrl = restServiceContext + RESULT + "/" + buildid;
+      callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
+      AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
+         .send(callback);
+   }
+
+   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + "/ide/maven/check_download_url?url=" + url;
       AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);

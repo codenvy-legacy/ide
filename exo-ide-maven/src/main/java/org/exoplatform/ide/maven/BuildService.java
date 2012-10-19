@@ -18,14 +18,23 @@
  */
 package org.exoplatform.ide.maven;
 
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
+import org.exoplatform.ide.commons.PomUtils;
+import org.exoplatform.ide.commons.PomUtils.Pom;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -54,10 +63,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Build manager.
@@ -72,7 +79,13 @@ public class BuildService
     * Is such parameter is not specified then 'java.io.tmpdir' used.
     */
    public static final String BUILDER_REPOSITORY = "builder.repository";
-
+   
+   /**
+    * Name of configuration parameter that points to the directory where stored build after deploy command.
+    * Is such parameter is not specified then 'java.io.tmpdir' used.
+    */
+   public static final String BUILDER_PUBLISH_REPOSITORY = "builder.publish-repository";
+   
    /**
     * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
     *
@@ -118,6 +131,9 @@ public class BuildService
    /** Maven build goals 'test package'. */
    private static final String[] BUILD_GOALS = new String[]{"test", "package"};
 
+   /** Maven build goals 'test deploy'. */
+   private static final String[] DEPLOY_GOALS = new String[]{"deploy"};
+
    /** Maven compile goals 'compile'. */
    private static final String[] COMPILE_GOALS = new String[]{"compile"};
 
@@ -139,24 +155,29 @@ public class BuildService
    private final ExecutorService pool;
 
    private final ConcurrentMap<String, CacheElement> map;
+
    private final Queue<CacheElement> queue;
 
    private final ScheduledExecutorService cleaner;
+
    private final Queue<File> cleanerQueue;
 
    private final File repository;
+   
+   private String publishRepository;
+
    private final long timeoutMillis;
+
    private final long cleanBuildResultDelayMillis;
 
    public BuildService(Map<String, Object> config)
    {
-      this(
-         getOption(config, BUILDER_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")),
-         getOption(config, BUILDER_TIMEOUT, Integer.class, DEFAULT_BUILDER_TIMEOUT),
-         getOption(config, BUILDER_WORKERS_NUMBER, Integer.class, Runtime.getRuntime().availableProcessors()),
-         getOption(config, BUILDER_QUEUE_SIZE, Integer.class, DEFAULT_BUILDER_QUEUE_SIZE),
-         getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, Integer.class, DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME)
-      );
+      this(getOption(config, BUILDER_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), 
+         getOption(config, BUILDER_PUBLISH_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), getOption(config,
+         BUILDER_TIMEOUT, Integer.class, DEFAULT_BUILDER_TIMEOUT), getOption(config, BUILDER_WORKERS_NUMBER,
+         Integer.class, Runtime.getRuntime().availableProcessors()), getOption(config, BUILDER_QUEUE_SIZE,
+         Integer.class, DEFAULT_BUILDER_QUEUE_SIZE), getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, Integer.class,
+         DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME));
    }
 
    /**
@@ -173,13 +194,14 @@ public class BuildService
     *    the time of keeping the results of build in minutes. After this time result of build
     *    (both artifact and logs) may be removed.
     */
-   protected BuildService(
-      String repository,
-      int timeout,
-      int workerNumber,
-      int buildQueueSize,
+   protected BuildService(String repository, String publishRepository, int timeout, int workerNumber, int buildQueueSize,
       int cleanBuildResultDelay)
    {
+      
+      if (publishRepository == null || publishRepository.isEmpty())
+      {
+         throw new IllegalArgumentException("Publish repository may not be null or empty string. ");
+      }
       if (repository == null || repository.isEmpty())
       {
          throw new IllegalArgumentException("Build repository may not be null or empty string. ");
@@ -198,6 +220,7 @@ public class BuildService
       }
 
       this.repository = new File(repository);
+      this.publishRepository = publishRepository;
       this.timeoutMillis = timeout * 1000; // to milliseconds
       this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
 
@@ -211,13 +234,10 @@ public class BuildService
       cleaner.scheduleAtFixedRate(new CleanTask(), cleanBuildResultDelay, cleanBuildResultDelay, TimeUnit.MINUTES);
 
       //
-      this.pool = new ThreadPoolExecutor(
-         workerNumber,
-         workerNumber,
-         0L,
-         TimeUnit.MILLISECONDS,
-         new LinkedBlockingQueue<Runnable>(buildQueueSize),
-         new ManyBuildTasksPolicy(new ThreadPoolExecutor.AbortPolicy()));
+      this.pool =
+         new ThreadPoolExecutor(workerNumber, workerNumber, 0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(buildQueueSize), new ManyBuildTasksPolicy(
+               new ThreadPoolExecutor.AbortPolicy()));
    }
 
    private static <O> O getOption(Map<String, Object> config, String option, Class<O> type, O defaultValue)
@@ -241,12 +261,25 @@ public class BuildService
     */
    public MavenBuildTask build(InputStream data) throws IOException
    {
-      return addTask(makeProject(data),
-         BUILD_GOALS,
-         null,
-         Collections.<Runnable>emptyList(),
-         Collections.<Runnable>emptyList(),
-         WAR_FILE_GETTER);
+      return addTask(makeProject(data), BUILD_GOALS, null, Collections.<Runnable> emptyList(),
+         Collections.<Runnable> emptyList(), WAR_FILE_GETTER);
+   }
+
+   /**
+    * Start new build.
+    *
+    * @param data
+    *    the zipped maven project for build
+    * @return build task
+    * @throws java.io.IOException
+    *    if i/o error occur when try to unzip project
+    */
+   public MavenBuildTask deploy(InputStream data) throws IOException
+   {
+      Properties properties = new Properties();
+      properties.put("altDeploymentRepository","id::default::file:" + publishRepository); 
+      return addTask(makeProject(data), DEPLOY_GOALS, properties, Collections.<Runnable> emptyList(),
+         Collections.<Runnable> emptyList(), PUBLIC_ARTIFACT_GETTER);
    }
 
    /**
@@ -285,7 +318,7 @@ public class BuildService
                File file = new File(dir, name);
                if (file.isFile())
                {
-                  for (Pattern currentPattern: patterns)
+                  for (Pattern currentPattern : patterns)
                   {
                      if (currentPattern.matcher(name).find())
                      {
@@ -311,12 +344,8 @@ public class BuildService
          };
       }
 
-      return addTask(makeProject(data),
-         COMPILE_GOALS,
-         null,
-         Collections.<Runnable>emptyList(),
-         Collections.<Runnable>emptyList(),
-         new ResultGetter()
+      return addTask(makeProject(data), COMPILE_GOALS, null, Collections.<Runnable> emptyList(),
+         Collections.<Runnable> emptyList(), new ResultGetter()
          {
             @Override
             public Result getResult(File projectDirectory) throws IOException
@@ -324,7 +353,6 @@ public class BuildService
                File target = new File(projectDirectory, "target");
                File classes = new File(target, "classes");
                File zip = new File(target, "classes.zip");
-
                zipDir(classes.getAbsolutePath(), classes, zip, filter);
 
                return new Result(zip, "application/zip", zip.getName(), 0);
@@ -350,12 +378,8 @@ public class BuildService
       Properties properties = new Properties();
       // Save result in file.
       properties.put("outputFile", projectDirectory.getAbsolutePath() + "/dependencies.txt");
-      return addTask(projectDirectory,
-         DEPENDENCIES_LIST_GOALS,
-         properties,
-         Collections.<Runnable>emptyList(),
-         Collections.<Runnable>emptyList(),
-         DEPENDENCIES_LIST_GETTER);
+      return addTask(projectDirectory, DEPENDENCIES_LIST_GOALS, properties, Collections.<Runnable> emptyList(),
+         Collections.<Runnable> emptyList(), DEPENDENCIES_LIST_GETTER);
    }
 
    /**
@@ -381,12 +405,8 @@ public class BuildService
          properties.put("classifier", classifier);
          properties.put("mdep.failOnMissingClassifierArtifact", "false");
       }
-      return addTask(makeProject(data),
-         DEPENDENCIES_COPY_GOALS,
-         properties,
-         Collections.<Runnable>emptyList(),
-         Collections.<Runnable>emptyList(),
-         COPY_DEPENDENCIES_GETTER);
+      return addTask(makeProject(data), DEPENDENCIES_COPY_GOALS, properties, Collections.<Runnable> emptyList(),
+         Collections.<Runnable> emptyList(), COPY_DEPENDENCIES_GETTER);
    }
 
    private File makeProject(InputStream data) throws IOException
@@ -396,12 +416,8 @@ public class BuildService
       return projectDirectory;
    }
 
-   private MavenBuildTask addTask(File projectDirectory,
-                                  String[] goals,
-                                  Properties properties,
-                                  List<Runnable> preBuildTasks,
-                                  List<Runnable> postBuildTasks,
-                                  ResultGetter resultGetter) throws IOException
+   private MavenBuildTask addTask(File projectDirectory, String[] goals, Properties properties,
+      List<Runnable> preBuildTasks, List<Runnable> postBuildTasks, ResultGetter resultGetter) throws IOException
    {
       final MavenInvoker invoker = new MavenInvoker(resultGetter).setTimeout(timeoutMillis);
 
@@ -421,12 +437,9 @@ public class BuildService
       File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
       TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
-      final InvocationRequest request = new DefaultInvocationRequest()
-         .setBaseDirectory(projectDirectory)
-         .setGoals(theGoals)
-         .setOutputHandler(taskLogger)
-         .setErrorHandler(taskLogger)
-         .setProperties(properties);
+      final InvocationRequest request =
+         new DefaultInvocationRequest().setBaseDirectory(projectDirectory).setGoals(theGoals)
+            .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties);
 
       Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
       {
@@ -541,6 +554,8 @@ public class BuildService
 
    private static final ResultGetter WAR_FILE_GETTER = new WarFileGetter();
 
+   private static final ResultGetter PUBLIC_ARTIFACT_GETTER = new PublicArtifactGetter();
+
    private static class WarFileGetter implements ResultGetter
    {
       @Override
@@ -557,6 +572,50 @@ public class BuildService
          if (filtered != null && filtered.length > 0)
          {
             return new Result(filtered[0], "application/zip", filtered[0].getName(), filtered[0].lastModified());
+         }
+         return null;
+      }
+   }
+
+   private static class PublicArtifactGetter implements ResultGetter
+   {
+      @Override
+      public Result getResult(File projectDirectory) throws FileNotFoundException
+      {
+         Pom pom = null;
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         OutputStreamWriter w = new OutputStreamWriter(bout);
+         try
+         {
+            pom = PomUtils.parse(new FileInputStream(projectDirectory + "/pom.xml"));
+            w.write('{');
+            w.write("\"suggestDependency\":\"");
+            w.write(pom.getSuggestDependency());
+            w.write('\"');
+            w.write('}');
+            w.flush();
+            w.close();
+            return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json", 0);
+         }
+         catch (XPathExpressionException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+         catch (ParserConfigurationException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+         catch (SAXException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+         catch (IOException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
          }
          return null;
       }
@@ -657,7 +716,8 @@ public class BuildService
                w.write(']');
                w.flush();
                w.close();
-               return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json", 0);
+               return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json",
+                  0);
             }
             finally
             {
@@ -722,9 +782,11 @@ public class BuildService
    private static final class CacheElement
    {
       private final long expirationTime;
+
       private final int hash;
 
       final String id;
+
       final MavenBuildTask task;
 
       CacheElement(String id, MavenBuildTask task, long expirationTime)

@@ -39,14 +39,32 @@ import org.exoplatform.services.security.UsernameCredential;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -80,7 +98,8 @@ public class ProjectTemplateTest extends BaseTest
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
       vfs = vfsRegistry.getProvider("dev-monit").newInstance(null, null);
 
-      ItemList<Item> children = vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children =
+         vfs.getChildren(vfs.getInfo().getRoot().getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
       for (Item i : children.getItems())
       {
          vfs.delete(i.getId(), null);
@@ -97,7 +116,8 @@ public class ProjectTemplateTest extends BaseTest
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
-      ContainerResponse cres = launcher.service("GET", "/ide/templates/project/list", BASE_URI, headers, null, null, ctx);
+      ContainerResponse cres =
+         launcher.service("GET", "/ide/templates/project/list", BASE_URI, headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Assert.assertNotNull(cres.getEntity());
       List<ProjectTemplate> templates = (List<ProjectTemplate>)cres.getEntity();
@@ -120,8 +140,8 @@ public class ProjectTemplateTest extends BaseTest
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
       String rootId = vfs.getInfo().getRoot().getId();
       ContainerResponse cres =
-         launcher.service("POST", BASE_URI + "/ide/templates/project/create?vfsid=dev-monit&name=" +  prj +"&parentId=" + rootId
-            + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
+         launcher.service("POST", BASE_URI + "/ide/templates/project/create?vfsid=dev-monit&name=" + prj + "&parentId="
+            + rootId + "&templateName=SpringDemoProject", BASE_URI, headers, null, null, ctx);
       Assert.assertEquals(200, cres.getStatus());
       Item item = (Item)cres.getEntity();
       Assert.assertTrue(item instanceof Project);
@@ -130,6 +150,33 @@ public class ProjectTemplateTest extends BaseTest
       String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
       Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
       Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
-     
+
    }
+
+   @Test
+   public void test123() throws ParserConfigurationException, SAXException, IOException
+   {
+      String path = "/home/vetal/eXo/eXoProjects/ide/exo-ide-server/src/test/resources/pom.xml";
+      String groupId = null;
+      try
+      {
+         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+         domFactory.setNamespaceAware(false); // never forget this!
+         DocumentBuilder builder = domFactory.newDocumentBuilder();
+         Document doc = builder.parse(path);
+         
+         XPathFactory factory = XPathFactory.newInstance();
+         XPath xpath = factory.newXPath();
+         XPathExpression expr= xpath.compile("/project/groupId/text()");
+
+         groupId = expr.evaluate(doc);//, XPathConstants.NODESET);
+         
+         System.out.println("ProjectTemplateTest.test123()" + groupId);
+      }
+      catch (XPathExpressionException e)
+      {
+         e.printStackTrace();
+      }
+   }
+   
 }

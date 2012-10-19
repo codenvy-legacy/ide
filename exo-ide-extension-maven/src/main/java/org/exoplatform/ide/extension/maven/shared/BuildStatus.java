@@ -65,4 +65,5 @@ public interface BuildStatus
    String getTime();
 
    void setTime(String time);
+   
 }
