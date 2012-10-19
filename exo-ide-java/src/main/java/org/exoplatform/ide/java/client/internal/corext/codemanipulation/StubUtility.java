@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.internal.corext.codemanipulation;
 
+import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.JavaUIStatus;
 import org.exoplatform.ide.java.client.core.Flags;
@@ -301,8 +302,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelim);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
       context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
 
@@ -473,8 +473,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
 
@@ -606,8 +605,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
       if (!decl.isConstructor())
@@ -706,8 +704,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -730,8 +727,7 @@ public class StubUtility
       }
 
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);
@@ -754,8 +750,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      //TODO
-//      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);

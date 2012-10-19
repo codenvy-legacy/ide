@@ -23,9 +23,26 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
+import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
+import org.exoplatform.ide.java.client.internal.codeassist.impl.AssistOptions;
+import org.exoplatform.ide.java.client.internal.compiler.impl.CompilerOptions;
+import org.exoplatform.ide.java.client.templates.CodeTemplateContextType;
 import org.exoplatform.ide.java.client.templates.ContextTypeRegistry;
+import org.exoplatform.ide.java.client.templates.ElementTypeResolver;
+import org.exoplatform.ide.java.client.templates.ExceptionVariableNameResolver;
+import org.exoplatform.ide.java.client.templates.FieldResolver;
+import org.exoplatform.ide.java.client.templates.ImportsResolver;
+import org.exoplatform.ide.java.client.templates.JavaContextType;
+import org.exoplatform.ide.java.client.templates.JavaDocContextType;
+import org.exoplatform.ide.java.client.templates.LinkResolver;
+import org.exoplatform.ide.java.client.templates.LocalVarResolver;
+import org.exoplatform.ide.java.client.templates.NameResolver;
+import org.exoplatform.ide.java.client.templates.StaticImportResolver;
 import org.exoplatform.ide.java.client.templates.TemplateStore;
+import org.exoplatform.ide.java.client.templates.TypeResolver;
+import org.exoplatform.ide.java.client.templates.TypeVariableResolver;
+import org.exoplatform.ide.java.client.templates.VarResolver;
 import org.exoplatform.ide.resources.FileType;
 
 import java.util.HashMap;
@@ -39,24 +56,59 @@ import java.util.HashMap;
 public class JavaExtension
 {
    
+   private static JavaExtension instance;
+   
+   private HashMap<String, String> options;
+
+   private ContextTypeRegistry codeTemplateContextTypeRegistry;
+
+   private TemplateStore templateStore;
    /**
     * 
     */
    @Inject
    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider)
    {
+      this();
       FileType javaFile = new FileType(null, "application/java", "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
    }
+   
+   /**
+    * For test use only. 
+    */
+   public JavaExtension()
+   {
+      options = new HashMap<String, String>();
+      instance = this;
+      initOptions();
+   }
+   
 
+   private void initOptions()
+   {
+      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      options.put(JavaCore.CORE_ENCODING, "UTF-8");
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      options.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
+      options.put(AssistOptions.OPTION_PerformVisibilityCheck, AssistOptions.ENABLED);
+      options.put(CompilerOptions.OPTION_ReportUnusedLocal, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_TaskTags, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_ReportUnusedPrivateMember, CompilerOptions.WARNING);
+      options.put(CompilerOptions.OPTION_SuppressWarnings, CompilerOptions.DISABLED);
+      options.put(JavaCore.COMPILER_TASK_TAGS, "TODO,FIXME,XXX");
+      options.put(JavaCore.COMPILER_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE, JavaCore.ENABLED);
+      options.put(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, JavaCore.ENABLED);
+      options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
+
+   }
    /**
     * @return
     */
    public static JavaExtension get()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return instance;
    }
 
    /**
@@ -64,8 +116,7 @@ public class JavaExtension
     */
    public HashMap<String, String> getOptions()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return options;
    }
 
    /**
@@ -73,8 +124,9 @@ public class JavaExtension
     */
    public TemplateStore getTemplateStore()
    {
-      // TODO Auto-generated method stub
-      return null;
+      if (templateStore == null)
+         templateStore = new TemplateStore();
+      return templateStore;
    }
 
    /**
@@ -82,8 +134,59 @@ public class JavaExtension
     */
    public ContextTypeRegistry getTemplateContextRegistry()
    {
-      // TODO Auto-generated method stub
-      return null;
+      if (codeTemplateContextTypeRegistry == null)
+      {
+         codeTemplateContextTypeRegistry = new ContextTypeRegistry();
+
+         CodeTemplateContextType.registerContextTypes(codeTemplateContextTypeRegistry);
+         JavaContextType contextTypeAll = new JavaContextType(JavaContextType.ID_ALL);
+
+         contextTypeAll.initializeContextTypeResolvers();
+
+         FieldResolver fieldResolver = new FieldResolver();
+         fieldResolver.setType("field");
+         contextTypeAll.addResolver(fieldResolver);
+
+         LocalVarResolver localVarResolver = new LocalVarResolver();
+         localVarResolver.setType("localVar");
+         contextTypeAll.addResolver(localVarResolver);
+         VarResolver varResolver = new VarResolver();
+         varResolver.setType("var");
+         contextTypeAll.addResolver(varResolver);
+         NameResolver nameResolver = new NameResolver();
+         nameResolver.setType("newName");
+         contextTypeAll.addResolver(nameResolver);
+         TypeResolver typeResolver = new TypeResolver();
+         typeResolver.setType("newType");
+         contextTypeAll.addResolver(typeResolver);
+         ElementTypeResolver elementTypeResolver = new ElementTypeResolver();
+         elementTypeResolver.setType("elemType");
+         contextTypeAll.addResolver(elementTypeResolver);
+         TypeVariableResolver typeVariableResolver = new TypeVariableResolver();
+         typeVariableResolver.setType("argType");
+         contextTypeAll.addResolver(typeVariableResolver);
+         LinkResolver linkResolver = new LinkResolver();
+         linkResolver.setType("link");
+         contextTypeAll.addResolver(linkResolver);
+         ImportsResolver importsResolver = new ImportsResolver();
+         importsResolver.setType("import");
+         StaticImportResolver staticImportResolver = new StaticImportResolver();
+         staticImportResolver.setType("importStatic");
+         contextTypeAll.addResolver(staticImportResolver);
+         ExceptionVariableNameResolver exceptionVariableNameResolver = new ExceptionVariableNameResolver();
+         exceptionVariableNameResolver.setType("exception_variable_name");
+         contextTypeAll.addResolver(exceptionVariableNameResolver);
+         codeTemplateContextTypeRegistry.addContextType(contextTypeAll);
+         codeTemplateContextTypeRegistry.addContextType(new JavaDocContextType());
+         JavaContextType contextTypeMembers = new JavaContextType(JavaContextType.ID_MEMBERS);
+         JavaContextType contextTypeStatements = new JavaContextType(JavaContextType.ID_STATEMENTS);
+         contextTypeMembers.initializeResolvers(contextTypeAll);
+         contextTypeStatements.initializeResolvers(contextTypeAll);
+         codeTemplateContextTypeRegistry.addContextType(contextTypeMembers);
+         codeTemplateContextTypeRegistry.addContextType(contextTypeStatements);
+      }
+
+      return codeTemplateContextTypeRegistry;
    }
 
    /**

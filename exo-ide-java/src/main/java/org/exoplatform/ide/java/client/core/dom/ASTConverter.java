@@ -499,12 +499,12 @@ class ASTConverter
       }
    }
 
-   public MethodDeclaration convert(boolean isInterface,
+   public ASTNode convert(boolean isInterface,
       org.exoplatform.ide.java.client.internal.compiler.ast.AbstractMethodDeclaration methodDeclaration)
    {
       if (methodDeclaration instanceof org.exoplatform.ide.java.client.internal.compiler.ast.AnnotationMethodDeclaration)
       {
-         return (MethodDeclaration)convert((org.exoplatform.ide.java.client.internal.compiler.ast.AnnotationMethodDeclaration)methodDeclaration);
+         return convert((org.exoplatform.ide.java.client.internal.compiler.ast.AnnotationMethodDeclaration)methodDeclaration);
       }
       MethodDeclaration methodDecl = new MethodDeclaration(this.ast);
       setModifiers(methodDecl, methodDeclaration);

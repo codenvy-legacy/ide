@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.java.client;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -35,160 +34,138 @@ public interface JavaClientBundle extends ClientBundle
 //   @Source("org/exoplatform/ide/editor/java/client/styles/java.css")
 //   JavaCss css();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/annotation.gif")
+   @Source("org/exoplatform/ide/java/client/images/annotation.gif")
    ImageResource annotationItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/class.gif")
+   @Source("org/exoplatform/ide/java/client/images/class.gif")
    ImageResource classItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/innerinterface_public.gif")
+   @Source("org/exoplatform/ide/java/client/images/innerinterface_public.gif")
    ImageResource interfaceItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/enum_item.gif")
+   @Source("org/exoplatform/ide/java/client/images/enum_item.gif")
    ImageResource enumItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/default-field.png")
+   @Source("org/exoplatform/ide/java/client/images/default-field.png")
    ImageResource defaultField();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/private-field.png")
+   @Source("org/exoplatform/ide/java/client/images/private-field.png")
    ImageResource privateField();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/protected-field.png")
+   @Source("org/exoplatform/ide/java/client/images/protected-field.png")
    ImageResource protectedField();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/public-field.png")
+   @Source("org/exoplatform/ide/java/client/images/public-field.png")
    ImageResource publicField();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/blank.png")
+   @Source("org/exoplatform/ide/java/client/images/blank.png")
    ImageResource blankImage();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/default-method.png")
+   @Source("org/exoplatform/ide/java/client/images/default-method.png")
    ImageResource defaultMethod();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/private-method.png")
+   @Source("org/exoplatform/ide/java/client/images/private-method.png")
    ImageResource privateMethod();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/protected-method.png")
+   @Source("org/exoplatform/ide/java/client/images/protected-method.png")
    ImageResource protectedMethod();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/public-method.png")
+   @Source("org/exoplatform/ide/java/client/images/public-method.png")
    ImageResource publicMethod();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/package.png")
+   @Source("org/exoplatform/ide/java/client/images/package.png")
    ImageResource packageItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/import.png")
+   @Source("org/exoplatform/ide/java/client/images/import.png")
    ImageResource importItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/imports.png")
+   @Source("org/exoplatform/ide/java/client/images/imports.png")
    ImageResource imports();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/local.png")
+   @Source("org/exoplatform/ide/java/client/images/local.png")
    ImageResource variable();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/row-selected.png")
+   @Source("org/exoplatform/ide/java/client/images/row-selected.png")
    ImageResource itemSelected();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/jsp-tag.png")
+   @Source("org/exoplatform/ide/java/client/images/jsp-tag.png")
    ImageResource jspTagItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/class-private.png")
+   @Source("org/exoplatform/ide/java/client/images/class-private.png")
    ImageResource classPrivateItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/class-protected.png")
+   @Source("org/exoplatform/ide/java/client/images/class-protected.png")
    ImageResource classProtectedItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/class-default.png")
+   @Source("org/exoplatform/ide/java/client/images/class-default.png")
    ImageResource classDefaultItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/clock.png")
+   @Source("org/exoplatform/ide/java/client/images/clock.png")
    ImageResource clockItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/groovy-tag.png")
+   @Source("org/exoplatform/ide/java/client/images/groovy-tag.png")
    ImageResource groovyTagItem();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/java.png")
+   @Source("org/exoplatform/ide/java/client/images/java.png")
    ImageResource java();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/java-disabled.png")
+   @Source("org/exoplatform/ide/java/client/images/java-disabled.png")
    ImageResource javaDisabled();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/newJavaclass_wiz.gif")
+   @Source("org/exoplatform/ide/java/client/images/newJavaclass_wiz.gif")
    ImageResource newClassWizz();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/newJavaclass_wiz_Disabled.gif")
+   @Source("org/exoplatform/ide/java/client/images/newJavaclass_wiz_Disabled.gif")
    ImageResource newClassWizzDisabled();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/outline.png")
+   @Source("org/exoplatform/ide/java/client/images/outline.png")
    ImageResource outline();
    
-   @Source("org/exoplatform/ide/editor/java/client/images/loader.gif")
+   @Source("org/exoplatform/ide/java/client/images/loader.gif")
    ImageResource loader();
    
-   @Source("org/exoplatform/ide/editor/java/client/images/template.png")
+   @Source("org/exoplatform/ide/java/client/images/template.png")
    ImageResource template();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/package_Disabled.png")
+   @Source("org/exoplatform/ide/java/client/images/package_Disabled.png")
    ImageResource packageDisabled();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/breakpoint-current.gif")
+   @Source("org/exoplatform/ide/java/client/images/breakpoint-current.gif")
    ImageResource breakpointCurrent();
 
-   @Source("org/exoplatform/ide/editor/java/client/images/breakpoint.gif")
+   @Source("org/exoplatform/ide/java/client/images/breakpoint.gif")
    ImageResource breakpoint();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_change.gif")
    ImageResource correction_change();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/delete_obj.gif")
    ImageResource delete_obj();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_cast.gif")
    ImageResource correction_cast();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/local.png")
    ImageResource local_var();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_delete_import.gif")
    ImageResource correction_delete_import();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/field_public_obj.gif")
    ImageResource field_public();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/imp_obj.gif")
    ImageResource imp_obj();
 
-   /**
-    * @return
-    */
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/add_obj.gif")
    ImageResource add_obj();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/remove_correction.gif")
    ImageResource remove_correction();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/jexception_obj.gif")
    ImageResource exceptionProp();
-
-   /**
-    * @return
-    */
+   
+   @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/javadoc.gif")
    ImageResource javadoc();
 }

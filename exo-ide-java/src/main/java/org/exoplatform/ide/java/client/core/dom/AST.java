@@ -12,6 +12,7 @@
 package org.exoplatform.ide.java.client.core.dom;
 
 import org.exoplatform.ide.java.client.core.JavaCore;
+import org.exoplatform.ide.java.client.core.util.StringTokenizer;
 import org.exoplatform.ide.java.client.internal.compiler.ClassFileConstants;
 import org.exoplatform.ide.java.client.internal.compiler.parser.Scanner;
 
@@ -1422,17 +1423,18 @@ public final class AST
     * <li>the string has adjacent '.'s</li>
     * <li>the segments between the '.'s are not valid Java identifiers</li>
     * </ul>
-    * @since 3.1
     */
    public Name newName(String qualifiedName)
    {
-      String[] split = qualifiedName.split(".");
+      //TODO rewrite this to avoid using StringTokenizer
+      StringTokenizer t = new StringTokenizer(qualifiedName, ".", true); //$NON-NLS-1$
       Name result = null;
       // balance is # of name tokens - # of period tokens seen so far
       // initially 0; finally 1; should never drop < 0 or > 1
       int balance = 0;
-      for(String s : split)
+      while (t.hasMoreTokens())
       {
+         String s = t.nextToken();
          if (s.indexOf('.') >= 0)
          {
             // this is a delimiter

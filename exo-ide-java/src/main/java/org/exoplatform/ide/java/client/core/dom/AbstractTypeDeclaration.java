@@ -168,7 +168,7 @@ public abstract class AbstractTypeDeclaration extends BodyDeclaration
     * 
     * @return the live list of body declarations (element type: {@link BodyDeclaration})
     */
-   public List<BodyDeclaration> bodyDeclarations()
+   public List bodyDeclarations()
    {
       return this.bodyDeclarations;
    }

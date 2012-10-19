@@ -19,6 +19,7 @@
 package org.exoplatform.ide.java.client;
 
 import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
+import org.exoplatform.ide.resources.model.File;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -28,7 +29,29 @@ import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
 public class JavaCodeController
 {
 
+   private static JavaCodeController instance; 
    //TODO remove this
    public static INameEnvironment NAME_ENVIRONMENT;
+   
+   private File activeFile;
+   /**
+    * @return
+    */
+   public static JavaCodeController get()
+   {
+      if(instance == null)
+      {
+         instance = new JavaCodeController();
+      }
+      return instance;
+   }
+   /**
+    * @return
+    */
+   public File getActiveFile()
+   {
+      return activeFile;
+   }
 
+   
 }
