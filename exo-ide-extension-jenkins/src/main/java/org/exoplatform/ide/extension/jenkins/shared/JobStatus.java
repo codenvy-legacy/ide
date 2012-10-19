@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.jenkins.shared;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 
 /**
- * Build job status.
+ * Interface represents the Jenkins build job status.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: JobStatus.java Mar 15, 2012 4:04:15 PM azatsarynnyy $

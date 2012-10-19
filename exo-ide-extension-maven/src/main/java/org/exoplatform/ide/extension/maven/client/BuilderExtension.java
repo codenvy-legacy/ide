@@ -19,14 +19,12 @@
 package org.exoplatform.ide.extension.maven.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.maven.client.build.BuildProjectPresenter;
-import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 
 /**
  * Maven builder extension entry point.
@@ -37,9 +35,6 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus;
  */
 public class BuilderExtension extends Extension implements InitializeServicesHandler
 {
-   /**
-    * The generator {@link AutoBean} of type {@link BuildStatus}.
-    */
    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
 
    /**

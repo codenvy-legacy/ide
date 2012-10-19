@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.heroku.server.rest;
 
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+
 import org.exoplatform.ide.extension.heroku.server.Heroku;
 import org.exoplatform.ide.extension.heroku.server.HerokuException;
 import org.exoplatform.ide.extension.heroku.server.ParsingResponseException;
@@ -29,12 +31,15 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.websocket.MessageBroker;
+import org.exoplatform.ide.websocket.MessageBroker.Channels;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +69,9 @@ public class HerokuService
 
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
+
+   @Inject
+   private MessageBroker messageBroker;
 
    @QueryParam("vfsid")
    private String vfsId;
@@ -109,21 +117,49 @@ public class HerokuService
    @Path("apps/create")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
-   public Map<String, String> appsCreate(@QueryParam("remote") String remote) throws HerokuException, IOException,
+   public Map<String, String> appsCreate(
+      @QueryParam("remote") final String remote,
+      @QueryParam("usewebsocket") boolean useWebSocket) throws HerokuException, IOException,
       ParsingResponseException, LocalPathResolveException, VirtualFileSystemException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      Map<String, String> application =
-         heroku.createApplication(appName, remote,
-            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+      if (!useWebSocket)
+      {
+         return doAppsCreate(remote);
+      }
+      else
+      {
+         new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               Map<String, String> application = null;
+               try
+               {
+                  application = doAppsCreate(remote);
 
-      // Update VFS properties. Need it to uniform client.
-      Property p = new Property("heroku-application", application.get("name"));
-      List<Property> properties = new ArrayList<Property>(1);
-      properties.add(p);
-      vfs.updateItem(projectId, properties, null);
-
-      return application;
+                  publishWebSocketMessage(toJson(application), null);
+               }
+               catch (VirtualFileSystemException e)
+               {
+                  publishWebSocketMessage(null, e);
+               }
+               catch (HerokuException e)
+               {
+                  publishWebSocketMessage(null, e);
+               }
+               catch (ParsingResponseException e)
+               {
+                  publishWebSocketMessage(null, e);
+               }
+               catch (IOException e)
+               {
+                  publishWebSocketMessage(null, e);
+               }
+            }
+         }.run();
+         return new HashMap<String, String>(0);
+      }
    }
 
    @Path("apps/destroy")
@@ -230,5 +266,44 @@ public class HerokuService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       return heroku.run(appName, (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null,
          command);
+   }
+
+   /**
+    * Creates Heroku application.
+    * 
+    * @param remote name of Git remote repository
+    * @return map that contains application properties
+    * @throws VirtualFileSystemException if any error in VFS
+    * @throws IOException if any i/o errors occur
+    * @throws ParsingResponseException 
+    * @throws HerokuException 
+    */
+   private Map<String, String> doAppsCreate(String remote) throws VirtualFileSystemException, HerokuException, ParsingResponseException, IOException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      Map<String, String> application =
+         heroku.createApplication(appName, remote,
+            (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
+
+      // Update VFS properties. Need it to uniform client.
+      Property p = new Property("heroku-application", application.get("name"));
+      List<Property> properties = new ArrayList<Property>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+
+      return application;
+   }
+
+   /**
+    * Publishes message over WebSocket connection.
+    * 
+    * @param data
+    *    the data to be sent to the client
+    * @param e
+    *    an exception to be sent to the client
+    */
+   private void publishWebSocketMessage(String data, Exception e)
+   {
+      messageBroker.publish(Channels.HEROKU_APP_CREATED.toString(), data, e, null);
    }
 }

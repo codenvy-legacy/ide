@@ -165,7 +165,7 @@ public class BreakpointPropertiesPresenter implements ShowBreakpointPropertiesHa
 
       currentBreakPoint.setCondition(display.getCondition().getValue());
 
-      // delete breakpoint and add this with condition
+      // delete breakpoint and add it with condition
       try
       {
          DebuggerClientService.getInstance().deleteBreakPoint(debuggerInfo.getId(), currentBreakPoint,

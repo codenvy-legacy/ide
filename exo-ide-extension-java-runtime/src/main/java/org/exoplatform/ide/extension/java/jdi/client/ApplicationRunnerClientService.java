@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
-
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -56,27 +57,36 @@ public class ApplicationRunnerClientService
       return instance;
    }
 
-   public void runApplication(String project, String war, AsyncRequestCallback<ApplicationInstance> callback)
-      throws RequestException
+   public void runApplication(String project, String war, boolean useWebSocket,
+      AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
    {
-      String requestUrl = BASE_URL + "/run?war=" + war;
+      RequestStatusHandler statusHandler = null;
+      if (!useWebSocket)
+      {
+         statusHandler = new RunningAppStatusHandler(project);
+      }
 
+      String requestUrl = BASE_URL + "/run?war=" + war + "&usewebsocket=" + useWebSocket;
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, true)
-         .requestStatusHandler(new RunningAppStatusHandler(project))
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
 
-   public void debugApplication(String project, String war, AsyncRequestCallback<DebugApplicationInstance> callback)
-      throws RequestException
+   public void debugApplication(String project, String war, boolean useWebSocket,
+      AsyncRequestCallback<DebugApplicationInstance> callback) throws RequestException
    {
-      String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
+      RequestStatusHandler statusHandler = null;
+      if (!useWebSocket)
+      {
+         statusHandler = new RunningAppStatusHandler(project);
+      }
+
+      String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false" + "&usewebsocket=" + useWebSocket;
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, true)
-         .requestStatusHandler(new RunningAppStatusHandler(project))
+      AsyncRequest.build(RequestBuilder.GET, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }

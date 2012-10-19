@@ -39,7 +39,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new JavaClasspathCreator(IDE.eventBus(), event.getApplicationConfiguration().getContext());
+      new JavaClasspathCreator(event.getApplicationConfiguration().getContext());
    }
 
    /**
@@ -48,7 +48,7 @@ public class JavaExtension extends Extension implements InitializeServicesHandle
    @Override
    public void initialize()
    {
-      IDE.eventBus().addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
    }
 
 }

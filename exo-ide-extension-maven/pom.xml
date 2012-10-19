@@ -37,7 +37,22 @@
          <artifactId>slf4j-log4j12</artifactId>
          <scope>test</scope>
       </dependency>
-      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-server</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>exo.core.component.security.core</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
       <!-- Client side -->
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>

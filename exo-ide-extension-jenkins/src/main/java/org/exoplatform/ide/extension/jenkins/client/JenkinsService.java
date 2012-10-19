@@ -89,15 +89,20 @@ public class JenkinsService
 
    /**
     * Start building job
-    * 
+    *
+    * @param vfsId identifier of the virtual file system
+    * @param projectId identifier of the project we want to send for build
     * @param jobName Name of Job
+    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback
     * @throws RequestException 
     */
-   public void buildJob(String vfsId, String projectId, String jobName, AsyncRequestCallback<Object> callback)
-      throws RequestException
+   public void buildJob(String vfsId, String projectId, String jobName, boolean useWebSocket,
+      AsyncRequestCallback<Object> callback) throws RequestException
    {
-      String url = restContext + JENKINS + "/job/build?name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "name=" + jobName + "&vfsid=" + vfsId + "&projectid=" + projectId + "&usewebsocket=" + useWebSocket;
+
+      String url = restContext + JENKINS + "/job/build?" + params;
       AsyncRequest.build(RequestBuilder.POST, url).loader(loader).send(callback);
    }
 

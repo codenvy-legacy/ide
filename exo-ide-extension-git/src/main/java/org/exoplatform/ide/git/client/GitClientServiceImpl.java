@@ -27,6 +27,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
@@ -165,19 +166,27 @@ public class GitClientServiceImpl extends GitClientService
 
    /**
     * @throws RequestException
-    * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, boolean)
+    * @see org.exoplatform.ide.git.client.GitClientService#init(java.lang.String, java.lang.String, java.lang.String, boolean, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void init(String vfsId, String projectid, String projectName, boolean bare, AsyncRequestCallback<String> callback)
-      throws RequestException
+   public void init(String vfsId, String projectid, String projectName, boolean bare, boolean useWebSocket,
+      AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restServiceContext + INIT;
 
+      boolean async = false;
+      RequestStatusHandler statusHandler = null;
+      if (!useWebSocket)
+      {
+         async = true;
+         statusHandler = new InitRequestStatusHandler(projectName);
+      }
+
       InitRequest initRequest = new InitRequest(projectid, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
-      String params = "vfsid=" + vfsId + "&projectid=" + projectid;
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000)
-         .requestStatusHandler(new InitRequestStatusHandler(projectName)).send(callback);
+      String params = "vfsid=" + vfsId + "&projectid=" + projectid + "&usewebsocket=" + useWebSocket;
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, async).data(marshaller.marshal())
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).delay(2000).requestStatusHandler(statusHandler)
+         .send(callback);
    }
 
    
@@ -187,17 +196,26 @@ public class GitClientServiceImpl extends GitClientService
     */
    @Override
    public void cloneRepository(String vfsId, FolderModel folder, String remoteUri, String remoteName,
-      AsyncRequestCallback<RepoInfo> callback) throws RequestException
+      boolean useWebSocket, AsyncRequestCallback<RepoInfo> callback) throws RequestException
    {
       String url = restServiceContext + CLONE;
+
+      boolean async = false;
+      RequestStatusHandler statusHandler = null;
+      if (!useWebSocket)
+      {
+         async = true;
+         statusHandler = new CloneRequestStatusHandler(folder.getName(), remoteUri);
+      }
+
       CloneRequest cloneRequest = new CloneRequest(remoteUri, folder.getId());
       cloneRequest.setRemoteName(remoteName);
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
-      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId();
+      String params = "vfsid=" + vfsId + "&projectid=" + folder.getId() + "&usewebsocket=" + useWebSocket;
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
-         .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri)).data(marshaller.marshal())
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, async)
+         .requestStatusHandler(statusHandler).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);

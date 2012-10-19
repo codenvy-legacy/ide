@@ -65,6 +65,8 @@ public interface Constants
 
    public static final String BARE = "bare";
 
+   public static final String SESSION_ID = "sessionId";
+
    public static final String FORCE = "force";
 
    public static final String FILES = "files";

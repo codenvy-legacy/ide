@@ -36,6 +36,12 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-websocket-war</artifactId>
+         <version>${project.version}</version>
+         <type>war</type>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-maven</artifactId>
          <version>${project.version}</version>
          <type>war</type>
@@ -340,6 +346,12 @@
          <groupId>org.chromattic</groupId>
          <artifactId>chromattic.dataobject</artifactId>
          <version>${chromattic.version}</version>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.chromattic</groupId>
@@ -604,6 +616,10 @@
                <groupId>javax.faces</groupId>
                <artifactId>jsf-api</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -648,11 +664,21 @@
                <groupId>org.exoplatform.ws</groupId>
                <artifactId>exo.ws.rest.ext</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ws</groupId>
          <artifactId>exo.ws.rest.ext</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>servlet-api</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
 
       <!-- dependency>
@@ -830,6 +856,7 @@
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />   
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />

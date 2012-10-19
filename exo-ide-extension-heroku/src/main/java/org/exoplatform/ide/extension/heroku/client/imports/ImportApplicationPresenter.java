@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +40,11 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -47,6 +53,7 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -112,6 +119,8 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     * Heroku application to import.
     */
    private String herokuApplication;
+
+   private RequestStatusHandler gitCloneStatusHandler;
 
    public ImportApplicationPresenter()
    {
@@ -234,7 +243,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       FolderModel parent = (FolderModel)vfs.getRoot();
       FolderModel model = new FolderModel();
       model.setName(display.getProjectName().getValue());
-//      model.setProjectType(ProjectResolver.RAILS);
+      //      model.setProjectType(ProjectResolver.RAILS);
       model.setParent(parent);
 
       final boolean deployPublicKey = display.getDeployPublicKey().getValue();
@@ -278,23 +287,46 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    {
       try
       {
-         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null,
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            gitCloneStatusHandler = new CloneRequestStatusHandler(project.getName(), gitLocation);
+            gitCloneStatusHandler.requestInProgress(project.getId());
+            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
+
+         GitClientService.getInstance().cloneRepository(vfs.getId(), project, gitLocation, null, useWebSocket,
             new AsyncRequestCallback<RepoInfo>()
             {
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  updateProperties();
+                  if (!useWebSocket)
+                  {
+                     updateProperties();
+                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
+                     gitCloneStatusHandler.requestError(project.getId(), exception);
+                  }
                }
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -329,8 +361,10 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    private void updateProperties()
    {
       project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("heroku-application", herokuApplication));
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
+      project.getProperties().add(
+         new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties()
+         .add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {
@@ -379,4 +413,28 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
          getApplicationInfo(herokuApplication);
       }
    }
+
+   /**
+    * Performs actions after the Git-repository was cloned.
+    */
+   private WebSocketEventHandler repoClonedHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage event)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
+
+         gitCloneStatusHandler.requestFinished(project.getId());
+         updateProperties();
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
+
+         gitCloneStatusHandler.requestError(project.getId(), exception);
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
+      }
+   };
 }

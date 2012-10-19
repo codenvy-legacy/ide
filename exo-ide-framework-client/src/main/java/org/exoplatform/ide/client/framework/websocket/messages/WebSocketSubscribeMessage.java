@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,35 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.project.explorer;
-
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
-
-import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.Item;
-
-import java.util.Set;
-
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
+ * Interface represents the WebSocket message.
  * 
- * Created by The eXo Platform SAS .
- * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: WebSocketSubscribeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-
-public interface ItemTree extends HasSelectionHandlers<Item>, HasDoubleClickHandlers
+public interface WebSocketSubscribeMessage extends WebSocketMessage
 {
-   
-   Set<Item> getSelectedSet();
-   
-   boolean open(Folder folder);
-   
-   void refreshFolder(Folder folder);
-   
-   boolean selectItemByPath(String itemPath);
+   /**
+    * Returns a channel for publishing message.
+    * 
+    * @return channel identifier
+    */
+   String getChannel();
 
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel identifier
+    */
+   void setChannel(String channel);
 }

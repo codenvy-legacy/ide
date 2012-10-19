@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestException;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
@@ -32,8 +32,9 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -42,12 +43,12 @@ import java.util.Set;
  */
 public class JavaClasspathCreator implements ProjectOpenedHandler
 {
-
+   
+   private static final String GENERATE_CLASSPATH_ERROR = "An error occured. Classpath can not be generated.";
+   
    private static final Set<String> projectTypes = new HashSet<String>();
 
    private final String restContext;
-
-   private final HandlerManager eventBus;
 
    static
    {
@@ -64,11 +65,10 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
    /**
     * 
     */
-   public JavaClasspathCreator(HandlerManager eventBus, String restContext)
+   public JavaClasspathCreator(String restContext)
    {
-      this.eventBus = eventBus;
       this.restContext = restContext;
-      eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    /**
@@ -95,7 +95,6 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       {
          AsyncRequest.build(RequestBuilder.POST, url).send(new AsyncRequestCallback<String>()
          {
-
             @Override
             protected void onSuccess(String result)
             {
@@ -104,13 +103,20 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               if (GWT.isScript())
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, GENERATE_CLASSPATH_ERROR));
+               }
+               else
+               {
+                  exception.printStackTrace();                  
+               }               
             }
          });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

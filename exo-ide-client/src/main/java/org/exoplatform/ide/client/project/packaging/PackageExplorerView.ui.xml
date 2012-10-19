@@ -22,7 +22,6 @@
 	<c:Border margin="1">
 		<c:layer>
          <g:LayoutPanel>
-         <!-- 
             <g:layer top="0" height="28px">
                <c:Toolbar height="28px">
                		<c:ToolbarItem rightDocked="true" paddingTop="2" paddingRight="2">
@@ -31,8 +30,6 @@
                </c:Toolbar>
             </g:layer>
             <g:layer top="28px" bottom="0">
-          -->
-            <g:layer top="0px" bottom="0px">
 				<g:ScrollPanel width="100%" height="100%">
 					<g:FlowPanel>
 						<pe:PEItemTree visible="false" styleName="{style.itemsTree}" ui:field="treeGrid" prefixId="navigation-" treeGridId="idePackageExplorerTreeGrid"></pe:PEItemTree>

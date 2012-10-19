@@ -153,30 +153,5 @@ public class ProjectTemplateTest extends BaseTest
 
    }
 
-   @Test
-   public void test123() throws ParserConfigurationException, SAXException, IOException
-   {
-      String path = "/home/vetal/eXo/eXoProjects/ide/exo-ide-server/src/test/resources/pom.xml";
-      String groupId = null;
-      try
-      {
-         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-         domFactory.setNamespaceAware(false); // never forget this!
-         DocumentBuilder builder = domFactory.newDocumentBuilder();
-         Document doc = builder.parse(path);
-         
-         XPathFactory factory = XPathFactory.newInstance();
-         XPath xpath = factory.newXPath();
-         XPathExpression expr= xpath.compile("/project/groupId/text()");
-
-         groupId = expr.evaluate(doc);//, XPathConstants.NODESET);
-         
-         System.out.println("ProjectTemplateTest.test123()" + groupId);
-      }
-      catch (XPathExpressionException e)
-      {
-         e.printStackTrace();
-      }
-   }
    
 }

@@ -51,13 +51,17 @@ public class BuilderService
    private VirtualFileSystemRegistry virtualFileSystemRegistry;
 
    /**
-    * Start new build at remote build server. Job may be started immediately or add in queue. Client should check
-    * location given in response header to current get status of job.
+    * Start new build at remote build server. Job may be started immediately or add in queue.
+    * If WebSocket session identifier was provided then status of job will be sent to client
+    * automatically when job will be finished. Otherwise client should check location given in
+    * response header to current get status of job.
     *
     * @param vfsId
     *    identifier of virtual file system
     * @param projectId
     *    identifier of project we want to send for build
+    * @param useWebSocket
+    *    if <code>true</code> - result status of build job will be sent via WebSocket 
     * @param uriInfo
     *    context info about current request
     * @return response with status 202 if request is accepted. Client get location of resource that it should check to
@@ -74,11 +78,17 @@ public class BuilderService
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
+                         @QueryParam("usewebsocket") boolean useWebSocket, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
       final String buildID = builder.build(vfs, projectId);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
+      if (useWebSocket)
+      {
+         // start checking build status asynchronously
+         builder.startCheckingBuildStatus(buildID);
+      }
       return Response.status(202).location(location).entity(location.toString()).build();
    }
    

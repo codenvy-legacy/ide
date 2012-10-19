@@ -77,7 +77,7 @@ public class BuilderClientServiceImpl extends BuilderClientService
    private static final String LOG = BASE_URL + "/log";
 
    /**
-    * REST service context.
+    * REST-service context.
     */
    private String restServiceContext;
 
@@ -87,7 +87,7 @@ public class BuilderClientServiceImpl extends BuilderClientService
    private Loader loader;
 
    /**
-    * @param restContext rest context
+    * @param restContext REST-service context
     * @param loader loader to show on server request
     */
    public BuilderClientServiceImpl(String restContext, Loader loader)
@@ -100,14 +100,14 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * Start new build.
     * 
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
-      throws RequestException
+   public void build(String projectId, String vfsId, boolean useWebSocket,
+      AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&usewebsocket=" + useWebSocket;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -180,6 +180,13 @@ public class BuilderClientServiceImpl extends BuilderClientService
       AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
+
+
+   /**
+    * Check is URL for download artifact is valid.
+    * 
+    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#checkArtifactUrl(java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    */
 
    public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
    {

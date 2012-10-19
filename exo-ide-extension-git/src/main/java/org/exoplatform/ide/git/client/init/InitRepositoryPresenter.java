@@ -26,16 +26,23 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for Init Repository view.
@@ -78,6 +85,8 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    }
 
    private Display display;
+
+   private RequestStatusHandler statusHandler;
 
    /**
     * @param eventBus
@@ -132,39 +141,91 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
     */
    public void initRepository()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectName = ((ItemContext)selectedItems.get(0)).getProject().getName();
       boolean bare = display.getBareValue().getValue();
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare,
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            statusHandler = new InitRequestStatusHandler(projectName);
+            statusHandler.requestInProgress(projectId);
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
+
+         GitClientService.getInstance().init(vfs.getId(), projectId, projectName, bare, useWebSocket,
             new AsyncRequestCallback<String>()
             {
 
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  if (!useWebSocket)
+                  {
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                     IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  handleError(exception);
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
+                     ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+                     statusHandler.requestError(project.getId(), exception);
+                  }
                }
             });
       }
       catch (RequestException e)
       {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         handleError(e);
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
       }
       IDE.getInstance().closeView(display.asView().getId());
    }
+
+   private void handleError(Throwable e)
+   {
+      String errorMessage =
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+   }
+
+   /**
+    * Performs actions after the Git-repository was initialized.
+    */
+   private WebSocketEventHandler repoInitializedHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage event)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
+
+         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         statusHandler.requestFinished(project.getId());
+         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+         IDE.fireEvent(new RefreshBrowserEvent(project));
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
+
+         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         statusHandler.requestError(project.getId(), exception);
+         handleError(exception);
+      }
+   };
 }

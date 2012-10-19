@@ -21,12 +21,14 @@ package org.exoplatform.ide.client.project.packaging;
 import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -52,23 +54,27 @@ public class PackageExplorerView extends ViewImpl implements
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.packageExplorerViewTitle();
 
-//   @UiField
-//   IconButton linkWithEditorButton;
+   @UiField
+   IconButton linkWithEditorButton;
 
    @UiField
-   //ItemTree treeGrid;
-   //PackageExplorerItemTree treeGrid;
    PEItemTree treeGrid;
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
 
+   /**
+    * 
+    */
    public PackageExplorerView()
    {
       super(ID, ViewType.NAVIGATION, TITLE, new Image(IDEImageBundle.INSTANCE.packageExplorer()));
       add(uiBinder.createAndBindUi(this));
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#setPackageExplorerTreeVisible(boolean)
+    */
    @Override
    public void setPackageExplorerTreeVisible(boolean visible)
    {
@@ -76,27 +82,58 @@ public class PackageExplorerView extends ViewImpl implements
       treeGrid.setVisible(visible);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#getBrowserTree()
+    */
    @Override
    public TreeGridItem<Object> getBrowserTree()
    {
       return treeGrid;
    }
 
-//   @Override
-//   public void selectItem(Object item)
-//   {
-//   }
-
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#getSelectedObject()
+    */
    @Override
    public Object getSelectedObject()
    {
       return treeGrid.getSelectedObject();
    }
 
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#goToItem(java.util.List)
+    */
    @Override
    public void goToItem(List<Object> itemList)
    {
       treeGrid.goToItem(itemList);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#getLinkWithEditorButton()
+    */
+   @Override
+   public HasClickHandlers getLinkWithEditorButton()
+   {
+      return linkWithEditorButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#setLinkWithEditorButtonEnabled(boolean)
+    */
+   @Override
+   public void setLinkWithEditorButtonEnabled(boolean enabled)
+   {
+      linkWithEditorButton.setEnabled(enabled);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display#setLinkWithEditorButtonSelected(boolean)
+    */
+   @Override
+   public void setLinkWithEditorButtonSelected(boolean selected)
+   {
+      linkWithEditorButton.setSelected(selected);
    }
 
 }

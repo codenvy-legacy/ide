@@ -36,8 +36,6 @@ import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -87,7 +85,6 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    @Override
    public void initialize()
    {
-      // IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -103,24 +100,16 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
          setVisible(false);
          return;
       }
+      
       setVisible(true);
 
-      if (!browserPanelSelected)
+      if (!browserPanelSelected || selectedItems.size() != 1)
       {
          setEnabled(false);
          return;
       }
-
-      if (selectedItems.size() == 1
-         && (selectedItems.get(0) instanceof FolderModel ||
-                  selectedItems.get(0) instanceof ProjectModel))
-      {
-         setEnabled(true);
-      }
-      else
-      {
-         setEnabled(false);
-      }
+      
+      setEnabled(true);
    }
 
    /**
@@ -130,35 +119,18 @@ public class CreateFolderControl extends SimpleControl implements IDEControl, It
    public void onItemsSelected(ItemsSelectedEvent event)
    {
       selectedItems = event.getSelectedItems();
-
-      if (event.getView() instanceof NavigatorDisplay ||
+      browserPanelSelected = event.getView() instanceof NavigatorDisplay ||
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerPresenter.Display)
-      {
-         browserPanelSelected = true;
-      }
-      else
-      {
-         browserPanelSelected = false;
-      }
-
+               event.getView() instanceof PackageExplorerPresenter.Display;
       updateState();
    }
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay ||
+      browserPanelSelected = event.getView() instanceof NavigatorDisplay ||
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerPresenter.Display)
-      {
-         browserPanelSelected = true;
-      }
-      else
-      {
-         browserPanelSelected = false;
-      }
-
+               event.getView() instanceof PackageExplorerPresenter.Display;
       updateState();
    }
 

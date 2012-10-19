@@ -68,6 +68,7 @@ import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
+import org.exoplatform.ide.client.websocket.WebSocketHandler;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -180,7 +181,9 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new DocumentationPresenter();
 
       new PreferencesModule();
-      
+
+      new WebSocketHandler();
+
       new IDEDebug();
 
       // initialize extensions
@@ -224,7 +227,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       presenter.closeView(viewId);
    }
-
 
    @Override
    public void openView(View view)

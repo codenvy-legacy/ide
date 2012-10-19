@@ -24,10 +24,12 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -39,6 +41,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -52,6 +59,7 @@ import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.git.client.init.InitRequestStatusHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -107,6 +115,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     * Project for build on Jenkins.
     */
    private ProjectModel project;
+
+   private RequestStatusHandler gitInitStatusHandler;
 
    /**
     *
@@ -256,30 +266,52 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         JenkinsService.get().buildJob(vfs.getId(), project.getId(), jobName, new AsyncRequestCallback<Object>()
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
-            @Override
-            protected void onSuccess(Object result)
+            useWebSocketForCallback = true;
+            ws.messageBus().subscribe(Channels.JENKINS_BUILD_STATUS, jenkinsBuildStatusHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
+
+         JenkinsService.get().buildJob(vfs.getId(), project.getId(), jobName, useWebSocket,
+            new AsyncRequestCallback<Object>()
             {
-               buildInProgress = true;
+               @Override
+               protected void onSuccess(Object result)
+               {
+                  buildInProgress = true;
 
-               showBuildMessage("Building project <b>" + project.getPath() + "</b>");
+                  showBuildMessage("Building project <b>" + project.getPath() + "</b>");
 
-               display.startAnimation();
-               display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
+                  display.startAnimation();
+                  display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
 
-               prevStatus = null;
-               refreshJobStatusTimer.schedule(delay);
-            }
+                  prevStatus = null;
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+                  if (!useWebSocket)
+                  {
+                     refreshJobStatusTimer.schedule(delay);
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, jenkinsBuildStatusHandler);
+                  }
+               }
+            });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -407,34 +439,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
                      if (status.getStatus() == Status.END)
                      {
-                        IDE.fireEvent(new ApplicationBuiltEvent(status));
-
-                        try
-                        {
-                           JenkinsService.get().getJenkinsOutput(
-                              vfs.getId(),
-                              project.getId(),
-                              jobName,
-                              new AsyncRequestCallback<StringBuilder>(
-                                 new StringContentUnmarshaller(new StringBuilder()))
-                              {
-                                 @Override
-                                 protected void onSuccess(StringBuilder result)
-                                 {
-                                    showBuildMessage(result.toString());
-                                 }
-
-                                 @Override
-                                 protected void onFailure(Throwable exception)
-                                 {
-                                    IDE.fireEvent(new ExceptionThrownEvent(exception));
-                                 }
-                              });
-                        }
-                        catch (RequestException e)
-                        {
-                           IDE.fireEvent(new ExceptionThrownEvent(e));
-                        }
+                        onJobFinished(status);
                      }
                      else
                      {
@@ -458,6 +463,39 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    };
 
    /**
+    * Performs actions when job status received.
+    * 
+    * @param status build job status
+    */
+   private void onJobFinished(JobStatus status)
+   {
+      IDE.fireEvent(new ApplicationBuiltEvent(status));
+
+      try
+      {
+         JenkinsService.get().getJenkinsOutput(vfs.getId(), project.getId(), jobName,
+            new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  showBuildMessage(result.toString());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
     * @see org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler#onUserInfoReceived(org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent)
     */
    @Override
@@ -475,34 +513,57 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       try
       {
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
+         boolean useWebSocketForCallback = false;
+         final WebSocket ws = WebSocket.getInstance();
+         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+         {
+            useWebSocketForCallback = true;
+            gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
+            gitInitStatusHandler.requestInProgress(project.getId());
+            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
+         }
+         final boolean useWebSocket = useWebSocketForCallback;
+
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false, useWebSocket,
             new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  IDE.fireEvent(new RefreshBrowserEvent());
-                  createJob();
+                  if (!useWebSocket)
+                  {
+                     showBuildMessage(GitExtension.MESSAGES.initSuccess());
+                     IDE.fireEvent(new RefreshBrowserEvent());
+                     createJob();
+                  }
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.initFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  handleError(exception);
+                  if (useWebSocket)
+                  {
+                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
+                  }
                }
             });
       }
       catch (RequestException e)
       {
-         String errorMessage =
-            (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .initFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         handleError(e);
       }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+   }
+
+   private void handleError(Throwable e)
+   {
+      String errorMessage =
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
 
    private void showBuildMessage(String message)
@@ -533,4 +594,70 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          closed = true;
       }
    }
+
+   /**
+    * Performs actions after Jenkins job status was received.
+    */
+   private WebSocketEventHandler jenkinsBuildStatusHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage event)
+      {
+         JobStatus buildStatus =
+            AutoBeanCodex.decode(JenkinsExtension.AUTO_BEAN_FACTORY, JobStatus.class, event.getPayload()).as();
+
+         updateJobStatus(buildStatus);
+         if (buildStatus.getStatus() == Status.END)
+         {
+            WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, this);
+            onJobFinished(buildStatus);
+         }
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.JENKINS_BUILD_STATUS, this);
+
+         String exceptionMessage = null;
+         if (exception.getMessage() != null && exception.getMessage().length() > 0)
+         {
+            exceptionMessage = exception.getMessage();
+         }
+
+         buildInProgress = false;
+         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+
+         if (exceptionMessage != null)
+         {
+            IDE.fireEvent(new OutputEvent(exceptionMessage, Type.ERROR));
+         }
+      }
+   };
+
+   /**
+    * Performs actions after the Git-repository was initialized.
+    */
+   private WebSocketEventHandler repoInitializedHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage event)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
+
+         gitInitStatusHandler.requestFinished(project.getId());
+         showBuildMessage(GitExtension.MESSAGES.initSuccess());
+         IDE.fireEvent(new RefreshBrowserEvent());
+         createJob();
+      }
+
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
+
+         gitInitStatusHandler.requestError(project.getId(), exception);
+         handleError(exception);
+      }
+   };
 }

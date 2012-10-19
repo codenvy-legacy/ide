@@ -56,12 +56,13 @@ public abstract class BuilderClientService
    /**
     * Start new build.
     * 
-    * @param projectId identifier of project we want to send for build
-    * @param vfsId identifier of virtual file system
+    * @param projectId identifier of the project we want to send for build
+    * @param vfsId identifier of the virtual file system
+    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public abstract void build(String projectId, String vfsId, boolean useWebSocket, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
    
    /**
@@ -88,7 +89,7 @@ public abstract class BuilderClientService
    /**
     * Check current status of previously launched build.
     * 
-    * @param buildid ID of build
+    * @param buildid identifier of build
     * @param callback callback
     * @throws RequestException
     */
@@ -97,7 +98,7 @@ public abstract class BuilderClientService
    /**
     * Get build log.
     * 
-    * @param buildid ID of build
+    * @param buildid identifier of build
     * @param callback callback
     * @throws RequestException
     */
@@ -112,5 +113,13 @@ public abstract class BuilderClientService
     */
    public abstract void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
    
-   public abstract void  checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
+
+   /**
+    * Check is URL for download artifact is valid.
+    * 
+    * @param url URL for checking
+    * @param callback callback
+    * @throws RequestException
+    */
+   public abstract void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException;
 }

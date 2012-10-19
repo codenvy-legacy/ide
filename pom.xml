@@ -46,7 +46,7 @@
       <javax.ws.version>1.0</javax.ws.version>
       <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
-      <tomcat.version>6.0.35</tomcat.version>
+      <tomcat.version>7.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
@@ -482,6 +482,12 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-websocket</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-client-framework</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -905,6 +911,7 @@
 
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>
+      <module>exo-ide-websocket</module>
 
       <module>exo-ide-git-server</module>
       <module>exo-ide-gadget-server</module> 
@@ -912,6 +919,7 @@
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
+      <module>exo-ide-packaging-websocket-war</module>
 
       <!--module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-testsuite-selenium</module>

@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.client.marshaller;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
@@ -48,8 +49,11 @@ public class RepoInfoUnmarshaller implements Unmarshallable<RepoInfo>
    public void unmarshal(Response response) throws UnmarshallerException
    {
       JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-      String stringValue = jsonObject.get("remoteUri").isString().stringValue();
-      repoInfo.setRemoteUri(stringValue);
+      JSONString jsonString = jsonObject.get("remoteUri").isString();
+      if (jsonString != null)
+      {
+         repoInfo.setRemoteUri(jsonString.stringValue());
+      }
       
    }
 
