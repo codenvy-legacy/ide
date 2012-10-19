@@ -712,7 +712,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             useWebSocketForCallback = true;
             runStatusHandler = new RunningAppStatusHandler(project.getName());
             runStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.DEBUG_STARTED, debugStartedHandler);
+            ws.messageBus().subscribe(Channels.DEBUGGER_STARTED, debugStartedHandler);
          }
          final boolean useWebSocket = useWebSocketForCallback;
 
@@ -736,7 +736,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                      + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
                   if (useWebSocket)
                   {
-                     ws.messageBus().unsubscribe(Channels.DEBUG_STARTED, debugStartedHandler);
+                     ws.messageBus().unsubscribe(Channels.DEBUGGER_STARTED, debugStartedHandler);
                      runStatusHandler.requestError(project.getId(), exception);
                   }
                }
@@ -1050,19 +1050,28 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onMessage(WebSocketEventMessage message)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_STARTED.toString(), this);
 
          AutoBean<DebugApplicationInstance> debugApp =
             AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, DebugApplicationInstance.class,
                message.getPayload());
          onDebugStarted(debugApp.as());
          runStatusHandler.requestFinished(project.getId());
+
+         try
+         {
+            WebSocket.getInstance().messageBus().subscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, debugExpireAppsHandler);
+         }
+         catch (WebSocketException e)
+         {
+            // do nothing
+         }
       }
 
       @Override
       public void onError(Exception exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUG_STARTED.toString(), this);
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_STARTED.toString(), this);
 
          exception.printStackTrace();
          IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
@@ -1126,6 +1135,30 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    };
 
+   private WebSocketEventHandler debugExpireAppsHandler = new WebSocketEventHandler()
+   {
+      @Override
+      public void onMessage(WebSocketEventMessage message)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, this);
+
+         String[] apps = new StringArrayUnmarshaller(message.getPayload().getPayload()).unmarshal();
+         for (String appName : apps)
+         {
+            if (runningApp.getName().equals(appName))
+            {
+               IDE.fireEvent(new OutputEvent("Debug session will be expired after 1 minute.\nDo you want to restart the application?"));
+            }
+         }
+      }
+      
+      @Override
+      public void onError(Exception exception)
+      {
+         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, this);
+      }
+   };
+
    /**
     * Deserializes data in JSON format to {@link DebuggerEventList} object.
     * 
@@ -1170,4 +1203,5 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       }
    }
+
 }

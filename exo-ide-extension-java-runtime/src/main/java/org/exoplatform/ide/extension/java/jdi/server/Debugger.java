@@ -87,17 +87,14 @@ public class Debugger implements EventsHandler
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
 
-   /**
-    * Component for sending messages to client over WebSocket connection.
-    */
+   /** Component for sending messages to client over WebSocket connection. */
    private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
       .getComponentInstanceOfType(MessageBroker.class);
 
+   /** Period (in milliseconds) for checking new debugger events. */
    private static final int CHECKING_EVENTS_PERIOD = 1000;
 
-   /**
-    * Timer for checking new debugger events and send it over WebSocket connection.
-    */
+   /** Timer for checking new debugger events and send it over WebSocket connection. */
    private Timer checkEventsTimer = new Timer();
 
    public static Debugger newInstance(String host, int port) throws VMConnectException
