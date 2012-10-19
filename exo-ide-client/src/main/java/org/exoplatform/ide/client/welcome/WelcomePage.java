@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.welcome;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -63,6 +65,26 @@ public class WelcomePage extends AbstractPartPresenter
    public String getTitle()
    {
       return "Welcome";
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleImage()
+    */
+   @Override
+   public ImageResource getTitleImage()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleToolTip()
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

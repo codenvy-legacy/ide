@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -95,7 +97,23 @@ public class PartStackPresenter implements Presenter
 
       /** Set display focus request handler   */
       public void setFocusRequstHandler(FocusRequstHandler handler);
+
+      /** Update Tab */
+      public void updateTabItem(int index, ImageResource icon, String title);
    }
+   
+   private PropertyListener propertyListener = new PropertyListener()
+   {
+      
+      @Override
+      public void propertyChanged(PartPresenter source, int propId)
+      {
+         if(PartPresenter.PROP_TITLE == propId)
+         {
+            updatePartTab(source);
+         }
+      }
+   };
 
    /**
     * 
@@ -119,6 +137,20 @@ public class PartStackPresenter implements Presenter
             }
          }
       });
+   }
+
+   
+   /**
+    * Update part tab, it's may be title, icon or tooltip
+    * @param part
+    */
+   private void updatePartTab(PartPresenter part)
+   {
+      if(!parts.contains(part))
+         throw  new IllegalArgumentException("This part stack not contains: " + part.getTitle());
+      int index = parts.indexOf(part);
+      //TODO support tooltip
+      display.updateTabItem(index, part.getTitleImage(), part.getTitle());
    }
 
    /**
@@ -167,6 +199,7 @@ public class PartStackPresenter implements Presenter
          return;
       }
       parts.add(part);
+      part.addPropertyListener(propertyListener);
       // include close button
       TabItem tabItem = display.addTabButton(null, part.getTitle(), true);
       bindEvents(tabItem, part);
@@ -248,6 +281,7 @@ public class PartStackPresenter implements Presenter
          int partIndex = parts.indexOf(part);
          display.removeTabButton(partIndex);
          parts.remove(part);
+         part.removePropertyListener(propertyListener);
          if (activePart == part)
          {
             //select another part

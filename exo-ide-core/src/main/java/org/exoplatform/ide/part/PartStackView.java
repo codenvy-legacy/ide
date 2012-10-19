@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -204,6 +206,15 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
          focusRequstHandlerRegistration = null;
       }
    }
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void updateTabItem(int index, ImageResource icon, String title)
+   {
+      TabButton tabButton = tabs.get(index);
+      tabButton.tabItemTittle.setText(title);
+   }
 
    /**
     *
@@ -271,4 +282,5 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
          }
       }
    }
+
 }

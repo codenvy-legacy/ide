@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.texteditor;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -27,6 +29,7 @@ import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.DocumentProvider.DocumentCallback;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
@@ -34,8 +37,10 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
@@ -51,8 +56,25 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    protected final DocumentProvider documentProvider;
 
    protected EditorInput input;
+   
+   protected boolean dirtyState;
 
    private final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
+   
+   private final TextListener textListener = new TextListener()
+   {
+      
+      @Override
+      public void onTextChange(TextChange textChange)
+      {
+         if(!dirtyState)
+         {
+            dirtyState = true;
+            firePropertyChange(EditorPartPresenter.PROP_TITLE);
+         }
+         firePropertyChange(EditorPartPresenter.PROP_DIRTY);
+      }
+   };
 
    /**
     * @param documentProvider 
@@ -64,6 +86,7 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       this.documentProvider = documentProvider;
       editor = new Editor(resources, userActivityManager);
       editor.configure(configuration);
+      editor.getTextListenerRegistrar().add(textListener);
    }
 
    /**
@@ -110,8 +133,7 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    @Override
    public boolean isDirty()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return dirtyState;
    }
 
    /**
@@ -186,6 +208,11 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    @Override
    public String getTitle()
    {
+      if(isDirty())
+      {
+         return "*" + input.getName();
+      }
+      else
       return input.getName();
    }
 
@@ -221,22 +248,31 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    * {@inheritDoc}
    */
    @Override
-   public void onOpen()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
    public void addCloseHandler(EditorPartCloseHandler closeHandler)
    {
       if (!closeHandlers.contains(closeHandler))
       {
          closeHandlers.add(closeHandler);
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleImage()
+    */
+   @Override
+   public ImageResource getTitleImage()
+   {
+      return input.getImageResource();
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleToolTip()
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

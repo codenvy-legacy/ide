@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
@@ -26,7 +28,8 @@ import org.exoplatform.ide.presenter.Presenter;
 public interface PartPresenter extends Presenter
 {
    /**
-    * The property id for <code>getTitle</code>
+    * The property id for <code>getTitle</code>, <code>getTitleImage</code>
+     * and <code>getTitleToolTip</code>.
     */
    public static final int PROP_TITLE = 0x001;
 
@@ -36,6 +39,32 @@ public interface PartPresenter extends Presenter
     * @return
     */
    public String getTitle();
+   
+   /**
+    * Returns the title image of this part.  If this value changes 
+    * the part must fire a property listener event with 
+    * <code>PROP_TITLE</code>.
+    * <p>
+    * The title image is usually used to populate the title bar of this part's
+    * visual container.
+    *
+    * @return the title image
+    */
+   public ImageResource getTitleImage();
+
+   /**
+    * Returns the title tool tip text of this part. 
+    * An empty string result indicates no tool tip.
+    * If this value changes the part must fire a property listener event with 
+    * <code>PROP_TITLE</code>.
+    * <p>
+    * The tool tip text is used to populate the title bar of this part's 
+    * visual container.  
+    * </p>
+    *
+    * @return the part title tool tip (not <code>null</code>)
+    */
+   public String getTitleToolTip();
 
    /**
     * This method is called when Part is opened. 

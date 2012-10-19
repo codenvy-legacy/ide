@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -159,23 +161,24 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
       return "Project Explorer";
    }
 
-    /**
+   /**
     * {@inheritDoc}
     */
    @Override
-   public boolean onClose()
-   {
-      return false;
-   }
-
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onOpen()
+   public ImageResource getTitleImage()
    {
       // TODO Auto-generated method stub
-      
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }
