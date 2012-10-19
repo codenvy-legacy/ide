@@ -26,6 +26,11 @@ import org.exoplatform.ide.presenter.Presenter;
 public interface PartPresenter extends Presenter
 {
    /**
+    * The property id for <code>getTitle</code>
+    */
+   public static final int PROP_TITLE = 0x001;
+
+   /**
     * Title of the Part
     * 
     * @return
@@ -47,4 +52,21 @@ public interface PartPresenter extends Presenter
     * @return allow close
     */
    public boolean onClose();
+   
+   /**
+    * Adds a listener for changes to properties of this part.
+    * Has no effect if an identical listener is already registered.
+    *
+    * @param listener a property listener
+    */
+   public void addPropertyListener(PropertyListener listener);
+   
+
+   /**
+    * Removes the given property listener from this part.
+    * Has no effect if an identical listener is not registered.
+    *
+    * @param listener a property listener
+    */
+   public void removePropertyListener(PropertyListener listener);
 }

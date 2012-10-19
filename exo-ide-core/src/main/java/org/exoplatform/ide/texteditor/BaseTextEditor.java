@@ -31,6 +31,7 @@ import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
@@ -42,7 +43,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class BaseTextEditor implements TextEditorPartPresenter
+public class BaseTextEditor extends AbstractPartPresenter implements TextEditorPartPresenter
 {
 
    protected TextEditorPartDisplay editor;

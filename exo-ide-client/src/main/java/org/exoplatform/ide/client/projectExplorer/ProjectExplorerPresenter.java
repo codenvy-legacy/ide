@@ -27,7 +27,7 @@ import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.core.event.ResourceChangedHandler;
-import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
 
@@ -40,7 +40,7 @@ import org.exoplatform.ide.resources.model.Resource;
  *          exo@exoplatform.com
  * Jul 27, 2012  
  */
-public class ProjectExplorerPresenter implements PartPresenter
+public class ProjectExplorerPresenter extends AbstractPartPresenter
 {
 
    public interface Display extends IsWidget
