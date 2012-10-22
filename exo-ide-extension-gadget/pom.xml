@@ -28,6 +28,14 @@
                <groupId>xpp3</groupId>
                <artifactId>xpp3_min</artifactId>
             </exclusion>
+             <exclusion>
+               <groupId>org.apache.tomcat</groupId>
+               <artifactId>el-api</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.apache.tomcat</groupId>
+               <artifactId>jasper-el</artifactId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -44,6 +52,14 @@
             <exclusion>
                <groupId>nu.validator.htmlparser</groupId>
                <artifactId>htmlparser</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.apache.tomcat</groupId>
+               <artifactId>el-api</artifactId>
+            </exclusion>
+             <exclusion>
+               <groupId>org.apache.tomcat</groupId>
+               <artifactId>jasper-el</artifactId>
             </exclusion>
          </exclusions>
       </dependency>

@@ -150,7 +150,6 @@ public class ProjectTemplateTest extends BaseTest
       String pom = StringUtils.toString(vfs.getContent(p.getPath() + "/pom.xml", null).getStream());
       Assert.assertTrue(pom.contains("<artifactId>" + prj + "</artifactId>"));
       Assert.assertTrue(pom.contains("<groupId>com.localhost</groupId>"));
-
    }
 
    

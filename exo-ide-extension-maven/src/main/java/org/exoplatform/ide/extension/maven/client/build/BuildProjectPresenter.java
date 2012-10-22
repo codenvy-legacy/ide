@@ -58,6 +58,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
+import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
 import org.exoplatform.ide.extension.maven.client.control.BuildProjectControl;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectHandler;
@@ -162,7 +163,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    public BuildProjectPresenter()
    {
       IDE.getInstance().addControl(new BuildProjectControl());
-
+      IDE.getInstance().addControl(new BuildAndPublishProjectControl());
+      
       IDE.addHandler(BuildProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
