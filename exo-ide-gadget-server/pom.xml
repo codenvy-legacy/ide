@@ -52,6 +52,9 @@
 								<copy todir="${project.build.directory}/packager-conf/unwar/gadget-server/samplecontainer" overwrite="true">
 									<fileset dir="${basedir}/src/main/resources/containers/samplecontainer" />
 								</copy>
+								<copy todir="${project.build.directory}/packager-conf/unwar/gadget-server/WEB-INF" overwrite="true">
+                           <fileset dir="${basedir}/src/main/webapp" />
+                        </copy>
 							</tasks>
 						</configuration>
 						<goals>
