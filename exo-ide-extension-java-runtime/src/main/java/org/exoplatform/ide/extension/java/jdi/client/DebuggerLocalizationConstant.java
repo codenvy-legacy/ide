@@ -259,7 +259,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("prolong.time.application.title")
    String prolongExpirationTimeTitle();
 
-   @DefaultMessage("Application will be stopped after 1 minute.\nDo you want to prolong the  expiration time by 10 minutes?")
+   @DefaultMessage("Application will be stopped in less than 2 minutes.\nDo you want to prolong the expiration time by 10 minutes?")
    @Key("prolong.time.application.question")
    String prolongExpirationTimeQuestion();
 
