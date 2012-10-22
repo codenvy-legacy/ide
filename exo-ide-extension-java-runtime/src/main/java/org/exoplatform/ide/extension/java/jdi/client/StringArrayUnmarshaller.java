@@ -29,13 +29,24 @@ import com.google.gwt.json.client.JSONString;
  */
 public class StringArrayUnmarshaller
 {
+   /**
+    * The string to unmarshal JSON data.
+    */
    private String payload;
 
+   /**
+    * @param payload the string to unmarshal JSON data
+    */
    public StringArrayUnmarshaller(String payload)
    {
       this.payload = payload;
    }
 
+   /**
+    * Unmarshal JSON data from the specified payload and return the resulting array.
+    * 
+    * @return resulting array
+    */
    public String[] unmarshal()
    {
       JSONArray jsonArray = JSONParser.parseStrict(payload).isArray();

@@ -29,6 +29,7 @@ import java.net.URL;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -48,9 +49,7 @@ public class ApplicationRunnerService
    @Inject
    private ApplicationRunner runner;
 
-   /**
-    * Component for sending message to client over WebSocket connection.
-    */
+   /** Component for sending message to client over WebSocket connection. */
    @Inject
    private MessageBroker messageBroker;
 
@@ -151,6 +150,13 @@ public class ApplicationRunnerService
    public void stopApplication(@QueryParam("name") String name) throws ApplicationRunnerException
    {
       runner.stopApplication(name);
+   }
+
+   @GET
+   @Path("prolong")
+   public void prolongExpirationTime(@QueryParam("name") String name, @QueryParam("time")  long time)
+   {
+      runner.prolongExpirationTime(name, time);
    }
 
    /**

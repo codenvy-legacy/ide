@@ -80,4 +80,14 @@ public interface ApplicationRunner
     * @see ApplicationInstance#getName()
     */
    void stopApplication(String name) throws ApplicationRunnerException;
+
+   /**
+    * Prolong the expiration time of the application.
+    * 
+    * @param name
+    *    name of application
+    * @param time
+    *    time on which is need to prolong the application's expiration time
+    */
+   void prolongExpirationTime(String name, long time);
 }

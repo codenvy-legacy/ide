@@ -18,10 +18,11 @@
  */
 package org.exoplatform.ide.websocket;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+
 import org.apache.catalina.websocket.MessageInbound;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 
 import java.util.Map;
 import java.util.Timer;
@@ -44,6 +45,12 @@ public class SessionManager
     */
    private static MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
       .getComponentInstanceOfType(MessageBroker.class);
+
+   /**
+    * Default timeout for the disconnected WebSocket session (in minutes).
+    * After this time session will be killed automatically.
+    */
+   private static int DEFAULT_DISCONNECTED_SESSION_TIMEOUT = 30;
 
    /**
     * Map of the session identifier to the connections.
@@ -69,7 +76,22 @@ public class SessionManager
    public SessionManager(InitParams initParams)
    {
       this.disconnectedSessionTimeout =
-         Integer.parseInt(readValueParam(initParams, "disconnected-session-timeout")) * 60 * 1000;
+         parseDisconnectedSessionTimeout(readValueParam(initParams, "disconnected-session-timeout")) * 60 * 1000;
+   }
+
+   private static int parseDisconnectedSessionTimeout(String param)
+   {
+      if (param != null)
+      {
+         try
+         {
+            return Integer.parseInt(param);
+         }
+         catch (NumberFormatException ignored)
+         {
+         }
+      }
+      return DEFAULT_DISCONNECTED_SESSION_TIMEOUT;
    }
 
    /**
@@ -164,16 +186,4 @@ public class SessionManager
       return sessionToConnections.get(sessionId);
    }
 
-   private static String readValueParam(InitParams initParams, String paramName)
-   {
-      if (initParams != null)
-      {
-         ValueParam vp = initParams.getValueParam(paramName);
-         if (vp != null)
-         {
-            return vp.getValue();
-         }
-      }
-      return null;
-   }
 }

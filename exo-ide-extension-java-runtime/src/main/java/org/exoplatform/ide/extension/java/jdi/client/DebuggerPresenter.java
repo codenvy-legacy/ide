@@ -37,6 +37,7 @@ import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -134,6 +135,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private ProjectModel project;
 
    private RunningAppStatusHandler runStatusHandler;
+
+   private long DEFAULT_APPLICATION_PROLONG_TIME = 10 * 60 * 1000; // 10 minutes
 
    public interface Display extends IsView
    {
@@ -1043,6 +1046,36 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
+    * Prolong the expiration time of the application.
+    */
+   private void prolongExpirationTime()
+   {
+      try
+      {
+         ApplicationRunnerClientService.getInstance().prolongExpirationTime(runningApp.getName(),
+            DEFAULT_APPLICATION_PROLONG_TIME, new AsyncRequestCallback<Object>()
+            {
+               @Override
+               protected void onSuccess(Object result)
+               {
+                  // nothing to do
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Dialogs.getInstance()
+                     .showError(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeFailed());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         Dialogs.getInstance().showError(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeFailed());
+      }
+   }
+
+   /**
     * Performs actions after the debugger was started.
     */
    private WebSocketEventHandler debugStartedHandler = new WebSocketEventHandler()
@@ -1074,8 +1107,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_STARTED.toString(), this);
 
          exception.printStackTrace();
-         IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed()
-            + " : " + exception.getMessage(), OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.startApplicationFailed() + " : "
+            + exception.getMessage(), OutputMessage.Type.ERROR));
          runStatusHandler.requestError(project.getId(), exception);
       }
    };
@@ -1140,18 +1173,33 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onMessage(WebSocketEventMessage message)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, this);
-
          String[] apps = new StringArrayUnmarshaller(message.getPayload().getPayload()).unmarshal();
          for (String appName : apps)
          {
             if (runningApp.getName().equals(appName))
             {
-               IDE.fireEvent(new OutputEvent("Debug session will be expired after 1 minute.\nDo you want to restart the application?"));
+               Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
+                  DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(),
+                  new BooleanValueReceivedHandler()
+                  {
+                     @Override
+                     public void booleanValueReceived(Boolean value)
+                     {
+                        if (value == true)
+                        {
+                           prolongExpirationTime();
+                        }
+                        else
+                        {
+                           WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, debugExpireAppsHandler);
+                        }
+                     }
+                  });
+               return;
             }
          }
       }
-      
+
       @Override
       public void onError(Exception exception)
       {

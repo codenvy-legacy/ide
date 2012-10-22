@@ -71,8 +71,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
-   /** Period (in milliseconds) for checking applications which will expired soon. */
-   public static final long EXPIRE_SOON_CHECKING_PERIOD = 60 * 1000;
+   /** Delay (in milliseconds) before applications which will be expire soon to be checked. */
+   public static final long EXPIRE_SOON_CHECKING_DELAY = 60 * 1000;
 
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
@@ -263,7 +263,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
 
-         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(), applicationLifetimeMillis - EXPIRE_SOON_CHECKING_PERIOD);
+         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(), applicationLifetimeMillis - EXPIRE_SOON_CHECKING_DELAY);
 
          applications.put(name, new Application(name, target, expired));
          LOG.debug("Start application {} under debug at CF server {}", name, target);
@@ -486,6 +486,18 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
+   @Override
+   public void prolongExpirationTime(String name, long time)
+   {
+      Application application = applications.get(name);
+      if (application != null)
+      {
+         application.expirationTime += time;
+         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(),
+            application.expirationTime - System.currentTimeMillis() - EXPIRE_SOON_CHECKING_DELAY);
+      }
+   }
+
    private enum APPLICATION_TYPE
    {
       JAVA_WEB,
@@ -551,7 +563,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          List<String> expireSoon = new ArrayList<String>();
          for (Application app : applications.values())
          {
-            if (app.expirationTime - System.currentTimeMillis() < EXPIRE_SOON_CHECKING_PERIOD)
+            if (app.expirationTime - System.currentTimeMillis() <= EXPIRE_SOON_CHECKING_DELAY)
             {
                expireSoon.add(app.name);
             }
@@ -567,7 +579,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       final String name;
       final String server;
-      final long expirationTime;
+      long expirationTime;
 
       Application(String name, String server, long expirationTime)
       {
