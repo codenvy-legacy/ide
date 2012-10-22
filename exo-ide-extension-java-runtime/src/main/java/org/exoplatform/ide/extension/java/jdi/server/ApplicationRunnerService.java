@@ -18,16 +18,18 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import static org.exoplatform.ide.helper.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.websocket.MessageBroker;
+import org.exoplatform.ide.websocket.MessageBroker.Channels;
 
 import java.net.URL;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -47,9 +49,7 @@ public class ApplicationRunnerService
    @Inject
    private ApplicationRunner runner;
 
-   /**
-    * Component for sending message to client over WebSocket connection.
-    */
+   /** Component for sending message to client over WebSocket connection. */
    @Inject
    private MessageBroker messageBroker;
 
@@ -117,11 +117,11 @@ public class ApplicationRunnerService
                try
                {
                   DebugApplicationInstance app = doDebugApplication(war, suspend, uriInfo);
-                  publishWebSocketMessage(MessageBroker.Channels.DEBUG_STARTED, toJson(app), null);
+                  publishWebSocketMessage(Channels.DEBUGGER_STARTED, toJson(app), null);
                }
                catch (ApplicationRunnerException e)
                {
-                  publishWebSocketMessage(MessageBroker.Channels.DEBUG_STARTED, null, e);
+                  publishWebSocketMessage(Channels.DEBUGGER_STARTED, null, e);
                }
             }
          }.run();
@@ -152,6 +152,13 @@ public class ApplicationRunnerService
       runner.stopApplication(name);
    }
 
+   @GET
+   @Path("prolong")
+   public void prolongExpirationTime(@QueryParam("name") String name, @QueryParam("time")  long time)
+   {
+      runner.prolongExpirationTime(name, time);
+   }
+
    /**
     * Publishes message over WebSocket connection.
     * 
@@ -160,7 +167,7 @@ public class ApplicationRunnerService
     * @param e
     *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(MessageBroker.Channels channel, String data, Exception e)
+   private void publishWebSocketMessage(Channels channel, String data, Exception e)
    {
       messageBroker.publish(channel.toString(), data, e, null);
    }

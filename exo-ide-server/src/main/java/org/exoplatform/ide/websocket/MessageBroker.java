@@ -54,32 +54,33 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class MessageBroker
 {
-   /**
-    * Enumeration describing the WebSocket message event types.
-    */
+   /** Enumeration describing the WebSocket event types. */
    public enum Channels {
-      /** Channel for message that contains status of the Maven build job. */
+      /** Channel for the messages containing status of the Maven build job. */
       MAVEN_BUILD_STATUS("maven:buildStatus"),
 
-      /** Channel for message that contains status of the Jenkins build job. */
+      /** Channel for the messages containing status of the Jenkins build job. */
       JENKINS_BUILD_STATUS("jenkins:buildStatus"),
 
-      /** Channel for message that contains debugger event. */
-      DEBUGGER_EVENT("debugger:event"),
-
-      /** Channel for message that contains started application instance for debugging. */
-      DEBUG_STARTED("debugger:debugAppStarted"),
-
-      /** Channel for message that contains started application instance. */
+      /** Channel for the messages containing started application instance. */
       APP_STARTED("debugger:appStarted"),
 
-      /** Channel for message that indicates the Git repository has been initialized. */
+      /** Channel for the messages containing started application instance for debugging. */
+      DEBUGGER_STARTED("debugger:debugAppStarted"),
+
+      /** Channel for the messages containing debugger event. */
+      DEBUGGER_EVENT("debugger:event"),
+
+      /** Channel for the messages containing the debugger event. */
+      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps"),
+
+      /** Channel for the messages indicating the Git repository has been initialized. */
       GIT_REPO_INITIALIZED("git:repoInitialized"),
 
-      /** Channel for message that indicates the Git repository has been cloned. */
+      /** Channel for the messages indicating the Git repository has been cloned. */
       GIT_REPO_CLONED("git:repoCloned"),
 
-      /** Channel for message that indicates Heroku application has been created. */
+      /** Channel for the messages indicating Heroku application has been created. */
       HEROKU_APP_CREATED("heroku:appCreated");
 
       private final String eventTypeValue;

@@ -103,4 +103,12 @@ public class ApplicationRunnerClientService
       AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }
 
+   public void prolongExpirationTime(String name, long time, AsyncRequestCallback<Object> callback) throws RequestException
+   {
+      String url = BASE_URL + "/prolong";
+      StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
+
+      AsyncRequest.build(RequestBuilder.GET, url + params.toString()).send(callback);
+   }
+
 }

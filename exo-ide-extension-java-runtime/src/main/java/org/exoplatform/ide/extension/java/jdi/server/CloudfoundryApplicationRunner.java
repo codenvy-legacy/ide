@@ -18,7 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+import static org.exoplatform.ide.commons.FileUtils.copy;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static org.exoplatform.ide.commons.FileUtils.downloadFile;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.NameGenerator.generate;
+import static org.exoplatform.ide.commons.ZipUtils.listEntries;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
@@ -29,8 +41,8 @@ import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceIm
 import org.exoplatform.ide.extension.java.jdi.server.model.DebugApplicationInstanceImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -41,16 +53,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.listEntries;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
@@ -63,6 +71,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
+   /** Delay (in milliseconds) before applications which will be expire soon to be checked. */
+   public static final long EXPIRE_SOON_CHECKING_DELAY = 60 * 1000;
+
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
    private final int applicationLifetime;
@@ -73,6 +84,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
    private final java.io.File appEngineSdk;
+
+   /** Timer for checking expiration time of launched applications. */
+   private final Timer checkExpireSoonAppsTimer;
+
+   /** Component for sending messages to client over WebSocket connection. */
+   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
+      .getComponentInstanceOfType(MessageBroker.class);
 
    public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams)
    {
@@ -107,6 +125,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
+      this.checkExpireSoonAppsTimer = new Timer(true);
 
       java.io.File lib = null;
       try
@@ -243,6 +262,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
+
+         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(), applicationLifetimeMillis - EXPIRE_SOON_CHECKING_DELAY);
 
          applications.put(name, new Application(name, target, expired));
          LOG.debug("Start application {} under debug at CF server {}", name, target);
@@ -465,6 +486,18 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
+   @Override
+   public void prolongExpirationTime(String name, long time)
+   {
+      Application application = applications.get(name);
+      if (application != null)
+      {
+         application.expirationTime += time;
+         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(),
+            application.expirationTime - System.currentTimeMillis() - EXPIRE_SOON_CHECKING_DELAY);
+      }
+   }
+
    private enum APPLICATION_TYPE
    {
       JAVA_WEB,
@@ -522,11 +555,31 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       }
    }
 
+   private class CheckExpireSoonAppsTask extends TimerTask
+   {
+      @Override
+      public void run()
+      {
+         List<String> expireSoon = new ArrayList<String>();
+         for (Application app : applications.values())
+         {
+            if (app.expirationTime - System.currentTimeMillis() <= EXPIRE_SOON_CHECKING_DELAY)
+            {
+               expireSoon.add(app.name);
+            }
+         }
+         if (!expireSoon.isEmpty())
+         {
+            publishWebSocketMessage(toJson(expireSoon), null);
+         }
+      }
+   }
+
    private static class Application
    {
       final String name;
       final String server;
-      final long expirationTime;
+      long expirationTime;
 
       Application(String name, String server, long expirationTime)
       {
@@ -539,5 +592,18 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          return expirationTime < System.currentTimeMillis();
       }
+   }
+
+   /**
+    * Publishes the message over WebSocket connection.
+    * 
+    * @param data
+    *    the data to be sent to the client
+    * @param e
+    *    an exception to be sent to the client
+    */
+   private void publishWebSocketMessage(String data, Exception e)
+   {
+      messageBroker.publish(MessageBroker.Channels.DEBUGGER_EXPIRE_SOON_APPS.toString(), data, e, null);
    }
 }

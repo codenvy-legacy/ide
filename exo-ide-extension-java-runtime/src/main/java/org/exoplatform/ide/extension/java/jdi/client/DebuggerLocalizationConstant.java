@@ -255,6 +255,18 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("no.running.application.message")
    String noRunningApplicationMessage();
 
+   @DefaultMessage("Running time has expired")
+   @Key("prolong.time.application.title")
+   String prolongExpirationTimeTitle();
+
+   @DefaultMessage("Application will be stopped after 1 minute.\nDo you want to prolong the  expiration time by 10 minutes?")
+   @Key("prolong.time.application.question")
+   String prolongExpirationTimeQuestion();
+
+   @DefaultMessage("Failed to prolong expiration time of the application.")
+   @Key("prolong.time.application.failed")
+   String prolongExpirationTimeFailed();
+
    /*************************************************************************
     * Change value view
     *************************************************************************/
