@@ -5,7 +5,15 @@
    <inherits name="elemental.Elemental" />
    <inherits name="org.exoplatform.ide.Commons" />
    <inherits name="com.google.gwt.json.JSON" />
-   <inherits name="com.google.gwt.inject.Inject"/>
+   <inherits name="com.google.gwt.inject.Inject" />
+
+
+   <!-- Generator that builds ExtensionManager from ExtensionDefinition annotations. -->
+   <generate-with class="org.exoplatform.ide.extension.ExtensionManagerGenerator">
+      <when-type-assignable class="org.exoplatform.ide.extension.ExtensionManager" />
+   </generate-with>
+
+
    <source path="ui" />
    <source path="" />
 </module>

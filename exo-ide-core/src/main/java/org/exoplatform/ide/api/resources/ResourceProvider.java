@@ -19,6 +19,7 @@ package org.exoplatform.ide.api.resources;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.ide.core.Component;
+import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
@@ -43,6 +44,7 @@ import org.exoplatform.ide.resources.model.Property;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
+@SDK(title = "Resource API")
 public interface ResourceProvider extends Component
 {
    /**

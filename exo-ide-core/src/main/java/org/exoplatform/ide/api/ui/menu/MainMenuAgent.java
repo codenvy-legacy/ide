@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
@@ -28,6 +29,7 @@ import org.exoplatform.ide.menu.ExtendedCommand;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
+@SDK(title = "UI API:Main menu")
 public interface MainMenuAgent
 {
 
