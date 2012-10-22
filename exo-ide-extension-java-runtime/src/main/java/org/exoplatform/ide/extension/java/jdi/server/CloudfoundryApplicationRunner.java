@@ -583,9 +583,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          return expirationTime < System.currentTimeMillis();
       }
 
-      boolean expiresAfter(long time)
+      boolean expiresAfter(long delay)
       {
-         return expirationTime - System.currentTimeMillis() <= time;
+         return expirationTime - System.currentTimeMillis() <= delay;
       }
    }
 
