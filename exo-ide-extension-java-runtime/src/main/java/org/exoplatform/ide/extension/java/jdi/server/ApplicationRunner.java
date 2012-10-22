@@ -88,6 +88,10 @@ public interface ApplicationRunner
     *    name of application
     * @param time
     *    time on which is need to prolong the application's expiration time
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to prolong the expiration time
+    * @see ApplicationRunnerService#prolongExpirationTime(String, long)
+    * @see ApplicationInstance
     */
-   void prolongExpirationTime(String name, long time);
+   void prolongExpirationTime(String name, long time) throws ApplicationRunnerException;;
 }

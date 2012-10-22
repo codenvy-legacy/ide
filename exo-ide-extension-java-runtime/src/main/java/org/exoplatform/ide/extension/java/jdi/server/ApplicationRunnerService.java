@@ -154,7 +154,7 @@ public class ApplicationRunnerService
 
    @GET
    @Path("prolong")
-   public void prolongExpirationTime(@QueryParam("name") String name, @QueryParam("time")  long time)
+   public void prolongExpirationTime(@QueryParam("name") String name, @QueryParam("time") long time) throws ApplicationRunnerException
    {
       runner.prolongExpirationTime(name, time);
    }
