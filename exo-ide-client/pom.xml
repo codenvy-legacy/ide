@@ -69,6 +69,16 @@
          <artifactId>exo-ide-vfs-jcr</artifactId>
          <scope>runtime</scope>
       </dependency>
+      <!-- Extensions -->
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-java</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ext-demo</artifactId>
+      </dependency>
+      
 
     <!-- fix dependecies in JCR. Used for VFS-JCR -->
             <dependency>
@@ -114,6 +124,7 @@
          </resource>
          <resource>
             <directory>src/main/resources</directory>
+            <filtering>true</filtering>
          </resource>
       </resources>
 
@@ -126,7 +137,6 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
-            <version>2.4.0</version>
             <executions>
                <execution>
                        <configuration>

@@ -16,24 +16,26 @@
  */
 package org.exoplatform.ide.client.welcome;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.UIObject;
 
-import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
  * Simple Welcome Page
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class WelcomePage extends UIObject implements PartPresenter
+public class WelcomePage extends AbstractPartPresenter
 {
 
    private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
+   private Element element;
 
    interface WelcomePageUiBinder extends UiBinder<Element, WelcomePage>
    {
@@ -41,8 +43,7 @@ public class WelcomePage extends UIObject implements PartPresenter
 
    public WelcomePage()
    {
-      setElement(uiBinder.createAndBindUi(this));
-      setTitle("Welcome");
+      element = uiBinder.createAndBindUi(this);
    }
 
    /**
@@ -52,26 +53,38 @@ public class WelcomePage extends UIObject implements PartPresenter
    public void go(HasWidgets container)
    {
       HTML h = new HTML();
-      h.getElement().appendChild(getElement());
+      h.getElement().appendChild(element);
       h.setSize("100%", "100%");
       container.add(h);
    }
 
    /**
-   * {@inheritDoc}
-   */
-   @Override
-   public boolean onClose()
-   {
-      return false;
-   }
-
-    /**
-    * {@inheritDoc}
+    * @see org.exoplatform.ide.part.PartPresenter#getTitle()
     */
    @Override
-   public void onOpen()
+   public String getTitle()
    {
+      return "Welcome";
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleImage()
+    */
+   @Override
+   public ImageResource getTitleImage()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * @see org.exoplatform.ide.part.PartPresenter#getTitleToolTip()
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }

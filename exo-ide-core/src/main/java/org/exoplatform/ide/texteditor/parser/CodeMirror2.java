@@ -14,13 +14,11 @@
 
 package org.exoplatform.ide.texteditor.parser;
 
-import com.google.gwt.resources.client.ClientBundle.Source;
-
-import org.exoplatform.ide.util.dom.Elements;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
+
+import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * Wraps the CodeMirror2 syntax parser modes.
@@ -47,18 +45,6 @@ public class CodeMirror2
       Resources resources = GWT.create(Resources.class);
       Elements.injectJs(resources.base().getText() + resources.parser().getText());
    }
-
-   //   public static Parser getParser(String mimeType)
-   //   {
-   //      SyntaxType type = SyntaxType.syntaxTypeByMimeType(mimeType);
-   //      CmParser parser = getParserForMime(type.getMimeType());
-   //      Assert.isNotNull(parser);
-   //      parser.setType(type);
-   //
-   ////      // TODO: testing no smart indentation to see how it feels
-   ////      parser.setPreventSmartIndent(type != SyntaxType.PY);
-   //      return parser;
-   //   }
 
    public static native CmParser getParserForMime(String mime) /*-{
 		conf = $wnd.CodeMirror.defaults;

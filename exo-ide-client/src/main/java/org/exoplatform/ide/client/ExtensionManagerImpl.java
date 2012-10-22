@@ -44,7 +44,7 @@ public class ExtensionManagerImpl implements ExtensionManager
    @Inject
    public ExtensionManagerImpl(AsyncProvider<DemoExtension> demoExtProvider)
    {
-      extensions.put("ide.ext.demo", new ExtensionDescription("ide.ext.demo", "1.0.0", dependencies, demoExtProvider));
+      //extensions.put("ide.ext.demo", new ExtensionDescription("ide.ext.demo", "1.0.0", dependencies, demoExtProvider));
    }
 
    /**

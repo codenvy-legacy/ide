@@ -479,6 +479,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       return localCursorController;
    }
 
+   @Override
    public ListenerRegistrar<TextListener> getTextListenerRegistrar()
    {
       return editorDocumentMutator.getTextListenerRegistrar();

@@ -40,7 +40,12 @@ public interface EditorPartPresenter extends PartPresenter
    {
       public void onClose(EditorPartPresenter editor);
    }
-   
+
+   /** 
+    * The property id for <code>isDirty</code>.
+    */
+   public static final int PROP_DIRTY = 0x101;
+
    /**
     * Initializes this editor with the given editor site and input.
     * <p>

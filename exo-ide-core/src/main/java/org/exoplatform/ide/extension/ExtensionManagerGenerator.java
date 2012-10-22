@@ -154,7 +154,7 @@ public class ExtensionManagerGenerator extends Generator
       StringBuilder builder = new StringBuilder();
       for (JClassType jClassType : extensions)
       {
-         builder.append(String.format("AsyncProvider<%s> %s,", args))
+         //builder.append(String.format("AsyncProvider<%s> %s,", args))
       }
       return null;
    }

@@ -29,9 +29,9 @@
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
-      <gwt.version>2.5.0-rc1</gwt.version>
+      <gwt.version>2.5.0-rc2</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <gwt.maven.plugin.version>2.5.0-rc1</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.5.0-rc2</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
@@ -169,11 +169,14 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-java</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ext-demo</artifactId>
             <version>${project.version}</version>
          </dependency>
-
-         
                                                                
 
 	<!-- OTHER -->
@@ -443,7 +446,7 @@
    <modules>
       <module>exo-ide-commons</module>
       <module>exo-ide-core</module>
+      <module>exo-ide-java</module>
       <module>exo-ide-client</module>
-      <module>exo-ext-demo</module>
    </modules>
 </project>

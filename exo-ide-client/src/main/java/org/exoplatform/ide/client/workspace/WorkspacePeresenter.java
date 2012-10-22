@@ -37,6 +37,7 @@ import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
 import org.exoplatform.ide.editor.EditorPartPresenter;
+import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
@@ -88,7 +89,7 @@ public class WorkspacePeresenter implements Presenter
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension)
 
    {
       super();

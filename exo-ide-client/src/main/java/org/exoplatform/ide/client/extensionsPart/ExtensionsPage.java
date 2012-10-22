@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.extensionsPart;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.inject.Singleton;
 
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -25,6 +27,7 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.extension.ExtensionDescription;
 import org.exoplatform.ide.extension.ExtensionManager;
 import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.PropertyListener;
 
 /**
  *
@@ -64,12 +67,12 @@ public class ExtensionsPage implements PartPresenter
          if (!extensionDescription.getDependencies().isEmpty())
          {
             builder.append("<ul>");
-            for (String dependency : extensionDescription.getDependencies())
-            {
-               builder.append("<li>");
-               builder.append(dependency);
-               builder.append("</li>");
-            }
+//            for (String dependency : extensionDescription.getDependencies())
+//            {
+//               builder.append("<li>");
+//               builder.append(dependency);
+//               builder.append("</li>");
+//            }
             builder.append("</ul>");
          }
 
@@ -104,6 +107,46 @@ public class ExtensionsPage implements PartPresenter
    public String getTitle()
    {
       return "Extensions";
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ImageResource getTitleImage()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void addPropertyListener(PropertyListener listener)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void removePropertyListener(PropertyListener listener)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }

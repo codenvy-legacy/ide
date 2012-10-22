@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
@@ -27,7 +29,7 @@ import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.core.event.ResourceChangedHandler;
-import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
 
@@ -40,7 +42,7 @@ import org.exoplatform.ide.resources.model.Resource;
  *          exo@exoplatform.com
  * Jul 27, 2012  
  */
-public class ProjectExplorerPresenter implements PartPresenter
+public class ProjectExplorerPresenter extends AbstractPartPresenter
 {
 
    public interface Display extends IsWidget
@@ -159,23 +161,24 @@ public class ProjectExplorerPresenter implements PartPresenter
       return "Project Explorer";
    }
 
-    /**
+   /**
     * {@inheritDoc}
     */
    @Override
-   public boolean onClose()
-   {
-      return false;
-   }
-
-    /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onOpen()
+   public ImageResource getTitleImage()
    {
       // TODO Auto-generated method stub
-      
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getTitleToolTip()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
 }
