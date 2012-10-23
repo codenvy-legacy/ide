@@ -32,16 +32,16 @@ public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 
    public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   private String itemHref;
+   private String itemId;
 
-   public SelectItemEvent(String itemHref)
+   public SelectItemEvent(String itemId)
    {
-      this.itemHref = itemHref;
+      this.itemId = itemId;
    }
 
-   public String getItemHref()
+   public String getItemId()
    {
-      return itemHref;
+      return itemId;
    }
 
    @Override

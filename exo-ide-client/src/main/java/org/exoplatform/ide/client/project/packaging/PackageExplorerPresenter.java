@@ -37,13 +37,11 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.project.packaging.ProjectTreeParser.ParsingCompleteListener;
 import org.exoplatform.ide.client.project.packaging.model.PackageItem;
 import org.exoplatform.ide.client.project.packaging.model.ProjectItem;
@@ -160,10 +158,20 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (display == null)
       {
-         if (!isProjectAcceptable())
+         if (openedProject == null)
          {
             return;
          }
+         
+         if (!ProjectTypes.contains(openedProject))
+         {
+            return;
+         }
+         
+//         if (!isProjectAcceptable())
+//         {
+//            return;
+//         }
 
          display = GWT.create(Display.class);
          bindDisplay();
@@ -286,7 +294,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      if (!isProjectAcceptable())
+      if (!ProjectTypes.contains(openedProject))
+//      if (!isProjectAcceptable())
       {
          IDE.getInstance().closeView(display.asView().getId());
          return;
@@ -295,18 +304,18 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       openProject();
    }
 
-   private boolean isProjectAcceptable()
-   {
-      String projectType = openedProject.getProjectType();
-      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
-      {
-         return true;
-      }
-
-      return false;
-   }
+//   private boolean isProjectAcceptable()
+//   {
+//      String projectType = openedProject.getProjectType();
+//      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+//         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+//         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
+//      {
+//         return true;
+//      }
+//
+//      return false;
+//   }
 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
@@ -441,7 +450,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
 
       System.out.println(">> on select item");
-      System.out.println(">> item href > " + event.getItemHref());
+      System.out.println(">> item ID > " + event.getItemId());
+      
    }
 
 }

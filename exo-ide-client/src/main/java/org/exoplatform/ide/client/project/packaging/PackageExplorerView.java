@@ -70,6 +70,7 @@ public class PackageExplorerView extends ViewImpl implements
    {
       super(ID, ViewType.NAVIGATION, TITLE, new Image(IDEImageBundle.INSTANCE.packageExplorer()));
       add(uiBinder.createAndBindUi(this));
+      setCanShowContextMenu(true);
    }
 
    /**

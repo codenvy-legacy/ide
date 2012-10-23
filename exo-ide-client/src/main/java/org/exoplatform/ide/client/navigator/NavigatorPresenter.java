@@ -470,7 +470,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          return;
       }
 
-      display.selectItem(event.getItemHref());
+      display.selectItem(event.getItemId());
    }
 
    /**
