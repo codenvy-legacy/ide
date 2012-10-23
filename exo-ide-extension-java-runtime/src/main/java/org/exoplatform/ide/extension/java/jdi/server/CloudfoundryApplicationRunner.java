@@ -53,8 +53,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -72,7 +70,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
    /** Delay (in milliseconds) before applications which will be expire soon to be checked. */
-   public static final long EXPIRE_SOON_CHECKING_DELAY = 60 * 1000;
+   public static final long EXPIRE_SOON_CHECKING_DELAY = 2 * 60 * 1000;
 
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
@@ -84,9 +82,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
    private final java.io.File appEngineSdk;
-
-   /** Timer for checking expiration time of launched applications. */
-   private final Timer checkExpireSoonAppsTimer;
 
    /** Component for sending messages to client over WebSocket connection. */
    private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
@@ -125,7 +120,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-      this.checkExpireSoonAppsTimer = new Timer(true);
 
       java.io.File lib = null;
       try
@@ -262,8 +256,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          {
             throw new ApplicationRunnerException("Unable run application in debug mode. ");
          }
-
-         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(), applicationLifetimeMillis - EXPIRE_SOON_CHECKING_DELAY);
 
          applications.put(name, new Application(name, target, expired));
          LOG.debug("Start application {} under debug at CF server {}", name, target);
@@ -487,14 +479,16 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    @Override
-   public void prolongExpirationTime(String name, long time)
+   public void prolongExpirationTime(String name, long time) throws ApplicationRunnerException
    {
       Application application = applications.get(name);
       if (application != null)
       {
          application.expirationTime += time;
-         checkExpireSoonAppsTimer.schedule(new CheckExpireSoonAppsTask(),
-            application.expirationTime - System.currentTimeMillis() - EXPIRE_SOON_CHECKING_DELAY);
+      }
+      else
+      {
+         throw new ApplicationRunnerException("Unable stop application. Application '" + name + "' not found. ");
       }
    }
 
@@ -534,6 +528,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       public void run()
       {
          List<String> stopped = new ArrayList<String>();
+         List<String> expireSoon = new ArrayList<String>();
          for (Application app : applications.values())
          {
             if (app.isExpired())
@@ -549,25 +544,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                // Do not try to stop application twice.
                stopped.add(app.name);
             }
-         }
-         applications.keySet().removeAll(stopped);
-         LOG.debug("{} applications removed. ", stopped.size());
-      }
-   }
-
-   private class CheckExpireSoonAppsTask extends TimerTask
-   {
-      @Override
-      public void run()
-      {
-         List<String> expireSoon = new ArrayList<String>();
-         for (Application app : applications.values())
-         {
-            if (app.expirationTime - System.currentTimeMillis() <= EXPIRE_SOON_CHECKING_DELAY)
+            else if (app.expiresAfter(EXPIRE_SOON_CHECKING_DELAY))
             {
                expireSoon.add(app.name);
             }
          }
+         applications.keySet().removeAll(stopped);
+         LOG.debug("{} applications removed. ", stopped.size());
+
          if (!expireSoon.isEmpty())
          {
             publishWebSocketMessage(toJson(expireSoon), null);
@@ -591,6 +575,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       boolean isExpired()
       {
          return expirationTime < System.currentTimeMillis();
+      }
+
+      boolean expiresAfter(long delay)
+      {
+         return expirationTime - System.currentTimeMillis() <= delay;
       }
    }
 

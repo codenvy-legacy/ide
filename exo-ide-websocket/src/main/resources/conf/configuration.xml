@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (C) 2010 eXo Platform SAS.
+    Copyright (C) 2012 eXo Platform SAS.
 
     This is free software; you can redistribute it and/or modify it
     under the terms of the GNU Lesser General Public License as
@@ -19,22 +19,20 @@
     02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-  version="3.0"
-  metadata-complete="true">
-  <display-name>eXoGadgets</display-name>
-  <servlet>
-    <servlet-name>GateInServlet</servlet-name>
-    <servlet-class>org.gatein.wci.api.GateInServlet</servlet-class>
-    <load-on-startup>0</load-on-startup>
-  </servlet>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
+   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
-  <servlet-mapping>
-    <servlet-name>GateInServlet</servlet-name>
-    <url-pattern>/gateinservlet</url-pattern>
-  </servlet-mapping>
+  <component>
+      <type>org.exoplatform.ide.websocket.MessageBroker</type>
+   </component>
 
-</web-app>
+   <component>
+      <type>org.exoplatform.ide.websocket.SessionManager</type>
+      <init-params>
+         <value-param>
+            <name>disconnected-session-timeout</name>
+            <value>30</value>
+         </value-param>
+      </init-params>
+   </component>
+</configuration>

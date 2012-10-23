@@ -114,12 +114,12 @@ public class BuilderClientServiceImpl extends BuilderClientService
    }
 
    @Override
-   public void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public void buildAndPublish(String projectId, String vfsId, boolean useWebSocket, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException
    {
       final String requesrUrl = restServiceContext + DEPLOY;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&usewebsocket=" + useWebSocket;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
