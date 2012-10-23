@@ -1,0 +1,376 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.jrebel.update;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * This servlet is created for updating remote application. It assumes application that should be updated deployed in
+ * ROOT context and JRebel is configured to listen updates of application folder. At the moment usage of JRebel remote
+ * plugin is difficult for us. It is required to have configuration files (rebel.xml and rebel-remote.xml) for each jar
+ * we want to update without redeploy.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public class UpdateServlet extends HttpServlet
+{
+   private File jrebelDir;
+
+   @Override
+   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+   {
+      if (jrebelDir != null)
+      {
+         File tmpDir = new File(System.getProperty("java.io.tmpdir"), req.getServerName() + System.currentTimeMillis());
+         if (!tmpDir.mkdirs())
+         {
+            throw new IOException("Unable create temporary folder. ");
+         }
+         try
+         {
+            unzip(req.getInputStream(), tmpDir);
+            copy(new File(tmpDir, "WEB-INF/classes"), new File(jrebelDir, "/classpath/classes"), ANY_FILTER);
+            copy(new File(tmpDir, "WEB-INF/lib"), new File(jrebelDir, "/classpath/lib"), ANY_FILTER);
+            File destinationWeb = new File(jrebelDir, "web");
+            copy(tmpDir, destinationWeb, new FilenameFilter()
+            {
+               @Override
+               public boolean accept(File dir, String name)
+               {
+                  return !(dir.getAbsolutePath().endsWith("WEB-INF/classes") || dir.getAbsolutePath().endsWith("WEB-INF/lib"));
+               }
+            });
+         }
+         finally
+         {
+            deleteRecursive(tmpDir);
+         }
+      }
+   }
+
+   @Override
+   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+   {
+      if (jrebelDir != null)
+      {
+         MessageDigest digest;
+         try
+         {
+            digest = MessageDigest.getInstance("MD5");
+         }
+         catch (NoSuchAlgorithmException e)
+         {
+            throw new RuntimeException(e.getMessage(), e);
+         }
+
+         PrintWriter w = resp.getWriter();
+         File resourceDir = new File(jrebelDir, "/classpath/classes");
+         int relFilePathOffset = resourceDir.getAbsolutePath().length() + 1;
+         for (File f : list(resourceDir, ANY_FILTER))
+         {
+            digest.reset();
+            w.printf("%s %s\n", countFileHash(f, digest), f.getAbsolutePath().substring(relFilePathOffset));
+         }
+         w.println();
+         resourceDir = new File(jrebelDir, "/classpath/lib");
+         relFilePathOffset = resourceDir.getAbsolutePath().length() + 1;
+         for (File f : list(resourceDir, ANY_FILTER))
+         {
+            w.printf("%s %s\n", countFileHash(f, digest), f.getAbsolutePath().substring(relFilePathOffset));
+         }
+         w.println();
+         resourceDir = new File(jrebelDir, "/web");
+         relFilePathOffset = resourceDir.getAbsolutePath().length() + 1;
+         for (File f : list(resourceDir, ANY_FILTER))
+         {
+            w.printf("%s %s\n", countFileHash(f, digest), f.getAbsolutePath().substring(relFilePathOffset));
+         }
+         w.flush();
+      }
+   }
+
+   public static String countFileHash(java.io.File file, MessageDigest digest) throws IOException
+   {
+      FileInputStream fis = null;
+      DigestInputStream dis = null;
+      byte[] b = new byte[8192];
+      try
+      {
+         fis = new FileInputStream(file);
+         dis = new DigestInputStream(fis, digest);
+         while (dis.read(b) != -1)
+         {
+         }
+         return toHex(digest.digest());
+      }
+      finally
+      {
+         if (dis != null)
+         {
+            dis.close();
+         }
+         if (fis != null)
+         {
+            fis.close();
+         }
+      }
+   }
+
+   private static final char[] hex = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+      'e', 'f'};
+
+   public static String toHex(byte[] hash)
+   {
+      StringBuilder b = new StringBuilder();
+      for (int i = 0; i < hash.length; i++)
+      {
+         b.append(hex[(hash[i] >> 4) & 0x0f]);
+         b.append(hex[hash[i] & 0x0f]);
+      }
+      return b.toString();
+   }
+
+   public static boolean deleteRecursive(File fileOrDirectory)
+   {
+      if (fileOrDirectory.isDirectory())
+      {
+         File[] list = fileOrDirectory.listFiles();
+         if (list == null)
+         {
+            return false;
+         }
+         for (File f : list)
+         {
+            if (!deleteRecursive(f))
+            {
+               return false;
+            }
+         }
+      }
+      return !fileOrDirectory.exists() || fileOrDirectory.delete();
+   }
+
+   @Override
+   public void init(ServletConfig config) throws ServletException
+   {
+      super.init(config);
+      File app = new File(config.getServletContext().getRealPath("/"));
+      while (!(app == null || "tomcat".equals(app.getName()) || "app".equals(app.getName())))
+      {
+         app = app.getParentFile();
+      }
+      if (app != null)
+      {
+         File jrebelDir = new File(app.getParentFile(), "jrebel");
+         if (jrebelDir.exists())
+         {
+            this.jrebelDir = jrebelDir;
+         }
+      }
+   }
+
+   public static List<File> list(File dir, FilenameFilter filter)
+   {
+      if (!dir.isDirectory())
+      {
+         throw new IllegalArgumentException("Not a directory. ");
+      }
+      List<File> files = new ArrayList<File>();
+      LinkedList<File> q = new LinkedList<File>();
+      q.add(dir);
+      while (!q.isEmpty())
+      {
+         File current = q.pop();
+         File[] list = current.listFiles();
+         if (list != null)
+         {
+            for (File f : list)
+            {
+               if (!filter.accept(current, f.getName()))
+               {
+                  continue;
+               }
+               if (f.isDirectory())
+               {
+                  q.push(f);
+               }
+               else
+               {
+                  files.add(f);
+               }
+            }
+         }
+      }
+      return files;
+   }
+
+   public static void unzip(InputStream in, File targetDir) throws IOException
+   {
+      ZipInputStream zipIn = null;
+      try
+      {
+         zipIn = new ZipInputStream(in);
+         byte[] b = new byte[8192];
+         ZipEntry zipEntry;
+         while ((zipEntry = zipIn.getNextEntry()) != null)
+         {
+            File file = new File(targetDir, zipEntry.getName());
+            if (!zipEntry.isDirectory())
+            {
+               File parent = file.getParentFile();
+               if (!parent.exists())
+               {
+                  parent.mkdirs();
+               }
+               FileOutputStream fos = new FileOutputStream(file);
+               try
+               {
+                  int r;
+                  while ((r = zipIn.read(b)) != -1)
+                  {
+                     fos.write(b, 0, r);
+                  }
+               }
+               finally
+               {
+                  fos.close();
+               }
+            }
+            else
+            {
+               file.mkdirs();
+            }
+            zipIn.closeEntry();
+         }
+      }
+      finally
+      {
+         if (zipIn != null)
+         {
+            zipIn.close();
+         }
+         in.close();
+      }
+   }
+
+   public static final FilenameFilter ANY_FILTER = new FilenameFilter()
+   {
+      @Override
+      public boolean accept(File dir, String name)
+      {
+         return true;
+      }
+   };
+
+   public static void copy(File source, File target, FilenameFilter filter) throws IOException
+   {
+      if (source.isDirectory())
+      {
+         String sourceRoot = source.getAbsolutePath();
+         LinkedList<File> q = new LinkedList<File>();
+         q.add(source);
+         while (!q.isEmpty())
+         {
+            File current = q.pop();
+            File[] list = current.listFiles();
+            if (list != null)
+            {
+               for (File f : list)
+               {
+                  if (!filter.accept(current, f.getName()))
+                  {
+                     continue;
+                  }
+                  File newFile = new File(target, f.getAbsolutePath().substring(sourceRoot.length() + 1));
+                  if (f.isDirectory())
+                  {
+                     if (!(newFile.exists() || newFile.mkdirs()))
+                     {
+                        throw new IOException("Unable create directory: " + newFile.getAbsolutePath());
+                     }
+                     q.push(f);
+                  }
+                  else
+                  {
+                     copyFile(f, newFile);
+                  }
+               }
+            }
+         }
+      }
+      else
+      {
+         File parent = target.getParentFile();
+         if (!(parent.exists() || parent.mkdirs()))
+         {
+            throw new IOException("Unable create directory: " + parent.getAbsolutePath());
+         }
+         copyFile(source, target);
+      }
+   }
+
+   private static void copyFile(File source, File target) throws IOException
+   {
+      FileInputStream in = null;
+      FileOutputStream out = null;
+      byte[] b = new byte[8192];
+      try
+      {
+         in = new FileInputStream(source);
+         out = new FileOutputStream(target);
+         int r;
+         while ((r = in.read(b)) != -1)
+         {
+            out.write(b, 0, r);
+         }
+      }
+      finally
+      {
+         if (in != null)
+         {
+            in.close();
+         }
+         if (out != null)
+         {
+            out.close();
+         }
+      }
+   }
+}

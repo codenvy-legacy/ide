@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -294,6 +296,47 @@ public class FileUtils
          }
       }
       return files;
+   }
+
+   public static String countFileHash(java.io.File file, MessageDigest digest) throws IOException
+   {
+      FileInputStream fis = null;
+      DigestInputStream dis = null;
+      byte[] b = new byte[8192];
+      try
+      {
+         fis = new FileInputStream(file);
+         dis = new DigestInputStream(fis, digest);
+         while (dis.read(b) != -1)
+         {
+         }
+         return toHex(digest.digest());
+      }
+      finally
+      {
+         if (dis != null)
+         {
+            dis.close();
+         }
+         if (fis != null)
+         {
+            fis.close();
+         }
+      }
+   }
+
+   private static final char[] hex = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+      'e', 'f'};
+
+   public static String toHex(byte[] hash)
+   {
+      StringBuilder b = new StringBuilder();
+      for (int i = 0; i < hash.length; i++)
+      {
+         b.append(hex[(hash[i] >> 4) & 0x0f]);
+         b.append(hex[hash[i] & 0x0f]);
+      }
+      return b.toString();
    }
 
    private FileUtils()

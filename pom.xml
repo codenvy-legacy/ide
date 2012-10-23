@@ -701,26 +701,31 @@
             <version>${everrest.version}</version>
          </dependency>
          
-       <dependency>
-         <groupId>com.google.appengine</groupId>
-         <artifactId>appengine-java-sdk</artifactId>
-         <version>${appengine.version}</version>
-         <type>zip</type>
-      </dependency>
-      
-      <dependency>
-         <groupId>com.google.appengine</groupId>
-         <artifactId>appengine-python-sdk</artifactId>
-         <version>${appengine.version}</version>
-         <type>zip</type>
-      </dependency>
-      
-      <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-tools-sdk</artifactId>
-        <version>${appengine.version}</version>
-      </dependency>
+          <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-java-sdk</artifactId>
+            <version>${appengine.version}</version>
+            <type>zip</type>
+         </dependency>
 
+         <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-python-sdk</artifactId>
+            <version>${appengine.version}</version>
+            <type>zip</type>
+         </dependency>
+
+         <dependency>
+           <groupId>com.google.appengine</groupId>
+           <artifactId>appengine-tools-sdk</artifactId>
+           <version>${appengine.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-jrebel-remote</artifactId>
+            <version>${project.version}</version>
+         </dependency>
       </dependencies>
    </dependencyManagement>
    <build>
@@ -930,5 +935,6 @@
       <module>exo-ide-extension-maven</module>
       <module>exo-ide-packaging-maven-builder</module>
       <module>exo-ide-packaging-codeassistant-server</module>
+      <module>exo-ide-jrebel-remote</module>
    </modules>
 </project>
