@@ -20,8 +20,11 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.gwt.user.client.Command;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -48,10 +51,10 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
 {
    private static final String PROJECT = DeletingXmlFileWithNonLatinNameTest.class.getSimpleName();
 
-   private static final String FILE_NAME = "ТестовыйФайл.xml";
-
    private static String XML_CONTENT = "<?xml version='1.0' encoding='UTF-8'?>\n" + "<test>\n"
       + "<settings>param</settings>\n" + "<bean>\n" + "<name>MineBean</name>\n" + "</bean>\n" + "</test>";
+
+   private static String FILE_NAME = "ТестФайл.xml";
 
    @BeforeClass
    public static void setUp()
@@ -59,8 +62,7 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       try
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFile(link, URLEncoder.encode(FILE_NAME, "UTF-8"), MimeType.TEXT_XML, XML_CONTENT);
+
       }
       catch (Exception e)
       {
@@ -79,8 +81,6 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
          e.printStackTrace();
       }
    }
-   
-  
 
    @Test
    public void testDeletingXmlFileWithNonLatinName() throws Exception
@@ -89,14 +89,11 @@ public class DeletingXmlFileWithNonLatinNameTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-       //need a refresh because of no clear reason 
-       //not Latin characters are displayed as "??????" 
-       //and it does not reproduce under actual use 
-     
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
+      IDE.EDITOR.waitTabPresent(1);
+      IDE.EDITOR.saveAs(1, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
-
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FILE_NAME);
 
