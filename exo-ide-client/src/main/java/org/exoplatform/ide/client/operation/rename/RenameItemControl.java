@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -29,16 +32,11 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -63,11 +61,8 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
     * Current workspace's href.
     */
    private VirtualFileSystemInfo vfsInfo = null;
-
-   /**
-    * Current active view.
-    */
-   private View activeView;
+   
+   private boolean navigationViewSelected = false;
 
    /**
     * 
@@ -78,6 +73,7 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       setTitle(TITLE);
       setPrompt(PROMPT);
       //      setDelimiterBefore(true);
+      setShowInContextMenu(true);
       setImages(IDEImageBundle.INSTANCE.rename(), IDEImageBundle.INSTANCE.renameDisabled());
       setEvent(new RenameItemEvent());
    }
@@ -106,26 +102,22 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
       }
       setVisible(true);
 
-      boolean browserActive = activeView instanceof NavigatorDisplay || 
-               activeView instanceof ProjectExplorerDisplay ||
-               activeView instanceof PackageExplorerPresenter.Display;
-      if (!browserActive)
+      if (!navigationViewSelected)
       {
          setEnabled(false);
          setShowInContextMenu(false);
          return;
       }
-
-      if (selectedItems.size() == 1 && !vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
+         
+      setShowInContextMenu(navigationViewSelected);
+      
+      if (selectedItems.size() != 1 || vfsInfo.getRoot().getId().equals(selectedItems.get(0).getId()))
       {
-         setEnabled(true);
-         setShowInContextMenu(selectedItems.get(0) instanceof ProjectModel);
-      }
-      else
-      {
-         setShowInContextMenu(false);
          setEnabled(false);
+         return;
       }
+      
+      setEnabled(true);
    }
 
    /**
@@ -134,7 +126,11 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
+      navigationViewSelected = event.getView() instanceof NavigatorDisplay || 
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof PackageExplorerPresenter.Display;
       selectedItems = event.getSelectedItems();
+
       updateState();
    }
 
@@ -154,7 +150,10 @@ public class RenameItemControl extends SimpleControl implements IDEControl, Item
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      activeView = event.getView();
+      navigationViewSelected = event.getView() instanceof NavigatorDisplay || 
+               event.getView() instanceof ProjectExplorerDisplay ||
+               event.getView() instanceof PackageExplorerPresenter.Display;
+      
       updateState();
    }
 

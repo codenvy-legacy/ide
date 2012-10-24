@@ -557,7 +557,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-      display.selectItem(event.getItemHref());
+      display.selectItem(event.getItemId());
    }
 
    public void onItemUnlocked(ItemUnlockedEvent event)

@@ -57,6 +57,7 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.newFile(), IDEImageBundle.INSTANCE.newFileDisabled());
       setGroupName(GroupNames.NEW);
+      setShowInContextMenu(true);
    }
 
    /**

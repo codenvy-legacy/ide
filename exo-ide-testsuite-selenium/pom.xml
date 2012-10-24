@@ -156,6 +156,7 @@
 										<exclude>**/*NavigateVersionsTest</exclude>
 										<exclude>**/*BaseTest.java</exclude>
 										<exclude>**/*DebugChangeVariable.java</exclude>
+										<exclude>**/*GetItemUrlTest</exclude>
 									</excludes>
 								</configuration>
 							</execution>

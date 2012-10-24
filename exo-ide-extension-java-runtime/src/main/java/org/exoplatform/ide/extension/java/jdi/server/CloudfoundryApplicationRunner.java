@@ -53,8 +53,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,9 +82,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
    private final java.io.File appEngineSdk;
-
-   /** Timer for checking expiration time of launched applications. */
-   private final Timer checkExpireSoonAppsTimer;
 
    /** Component for sending messages to client over WebSocket connection. */
    private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
@@ -125,7 +120,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-      this.checkExpireSoonAppsTimer = new Timer(true);
 
       java.io.File lib = null;
       try

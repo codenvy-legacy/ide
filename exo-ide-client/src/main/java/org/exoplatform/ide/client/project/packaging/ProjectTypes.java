@@ -16,26 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.debug;
+package org.exoplatform.ide.client.project.packaging;
 
-import com.google.gwt.core.client.GWT;
+import java.util.ArrayList;
+
+import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class IDEDebug
+public class ProjectTypes
 {
 
-   public IDEDebug()
-   {
-      if (GWT.isScript())
-      {
-         return;
-      }
+   private static ArrayList<String> projects = new ArrayList<String>();
 
-      //new ShowImagesPresenter();
+   static
+   {
+      projects.add(ProjectResolver.APP_ENGINE_JAVA);
+      projects.add(ProjectResolver.SERVLET_JSP);
+      projects.add(ProjectResolver.SPRING);
+      projects.add(ProjectType.JAVA.value());
+      projects.add(ProjectType.JSP.value());
+      projects.add(ProjectType.AWS.value());
    }
-   
+
+   public static boolean contains(ProjectModel project)
+   {
+      if (project == null)
+      {
+         return false;
+      }
+      
+      return projects.contains(project.getProjectType());
+   }
+
 }
