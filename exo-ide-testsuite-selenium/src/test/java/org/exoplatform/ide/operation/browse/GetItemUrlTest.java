@@ -23,6 +23,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.gwt.editor.client.Editor.Ignore;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -82,6 +84,7 @@ public class GetItemUrlTest extends BaseTest
       }
    }
 
+   @Ignore
    @Test
    public void testGetFilePrivateUrl() throws Exception
    {
