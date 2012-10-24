@@ -426,7 +426,6 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.createProjectTemplate.prompt")
    String createProjectTemplatePromptControl();
 
-   
    @Key("control.projectExplorer.view")
    String projectExplorerViewTitle();
 
@@ -436,17 +435,15 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
 
-   
    @Key("control.packageExplorer.view")
    String packageExplorerViewTitle();
-   
+
    @Key("control.packageExplorer.title")
    String packageExplorerControlTitle();
 
    @Key("control.packageExplorer.prompt")
    String packageExplorerControlPrompt();
-   
-   
+
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();
 
@@ -632,4 +629,17 @@ public interface IdeLocalizationConstant extends Constants
     *************************************************************************/
    @Key("view.inviteGoogleContacts.inviteButton.title")
    String inviteButton();
+
+   /**************************************************************************
+    * UnsupportedBrowserView
+    *************************************************************************/
+   @Key("view.unsupportedBrowser.warning.title")
+   String warningTitle();
+
+   @Key("view.unsupportedBrowser.proposeBrowsers.title")
+   String proposeBrowsersTitile();
+
+   @Key("view.unsupportedBrowser.continueButton.title")
+   String continueButton();
+
 }
