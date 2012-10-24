@@ -41,7 +41,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({AutoCompletionCSSTest.class, //
                AutoCompletionHTMLTest.class,//
-               AutoCompletionJavaScriptDuplicationTest.class,// 
                AutoCompletionJavaScriptNoneCollabEditorTest.class, //
                AutoCompletionXMLTest.class,//
                GroovyObjectCompletionTest.class,//
