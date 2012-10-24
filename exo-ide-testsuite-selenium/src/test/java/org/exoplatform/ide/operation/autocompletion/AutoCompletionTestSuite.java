@@ -42,7 +42,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({AutoCompletionCSSTest.class, //
                AutoCompletionHTMLTest.class,//
                AutoCompletionJavaScriptDuplicationTest.class,// 
-               AutoCompletionJavaScriptTest.class, //
+               AutoCompletionJavaScriptNoneCollabEditorTest.class, //
                AutoCompletionXMLTest.class,//
                GroovyObjectCompletionTest.class,//
                GroovyClassMethodsCompletionTest.class,//

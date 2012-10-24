@@ -31,13 +31,13 @@ import org.openqa.selenium.Keys;
  * @version $Id: $
  * 
  */
-public class AutoCompletionJavaScriptTest extends CodeAssistantBaseTest
+public class AutoCompletionJavaScriptNoneCollabEditorTest extends CodeAssistantBaseTest
 {
 
    @Before
    public void createProject() throws Exception
    {
-      createProject(AutoCompletionJavaScriptTest.class.getSimpleName());
+      createProject(AutoCompletionJavaScriptNoneCollabEditorTest.class.getSimpleName());
       openProject();
    }
 
