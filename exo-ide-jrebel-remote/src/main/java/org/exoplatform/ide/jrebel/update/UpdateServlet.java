@@ -29,6 +29,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -66,21 +67,40 @@ public class UpdateServlet extends HttpServlet
          try
          {
             unzip(req.getInputStream(), tmpDir);
-            copy(new File(tmpDir, "WEB-INF/classes"), new File(jrebelDir, "/classpath/classes"), ANY_FILTER);
-            copy(new File(tmpDir, "WEB-INF/lib"), new File(jrebelDir, "/classpath/lib"), ANY_FILTER);
-            File destinationWeb = new File(jrebelDir, "web");
-            copy(tmpDir, destinationWeb, new FilenameFilter()
+            File classes = new File(jrebelDir, "/classpath/classes");
+            copy(new File(tmpDir, "WEB-INF/classes"), classes, ANY_FILTER);
+            deleteFiles(classes, req.getHeaders("x-exo-classes-delete"));
+            File lib = new File(jrebelDir, "/classpath/lib");
+            copy(new File(tmpDir, "WEB-INF/lib"), lib, ANY_FILTER);
+            deleteFiles(lib, req.getHeaders("x-exo-classes-lib-delete"));
+            File web = new File(jrebelDir, "web");
+            copy(tmpDir, web, new FilenameFilter()
             {
                @Override
                public boolean accept(File dir, String name)
                {
-                  return !(dir.getAbsolutePath().endsWith("WEB-INF/classes") || dir.getAbsolutePath().endsWith("WEB-INF/lib"));
+                  return !(dir.getAbsolutePath().endsWith("WEB-INF/classes")
+                     || dir.getAbsolutePath().endsWith("WEB-INF/lib")
+                     || dir.getAbsolutePath().endsWith("META-INF/maven"));
                }
             });
+            deleteFiles(web, req.getHeaders("x-exo-classes-web-delete"));
          }
          finally
          {
             deleteRecursive(tmpDir);
+         }
+      }
+   }
+
+   private void deleteFiles(File baseDir, Enumeration relPaths)
+   {
+      if (relPaths != null)
+      {
+         while (relPaths.hasMoreElements())
+         {
+            String relPath = (String)relPaths.nextElement();
+            new File(baseDir, relPath).delete();
          }
       }
    }

@@ -49,4 +49,14 @@ public interface ApplicationInstance
    int getLifetime();
 
    void setLifetime(int lifetime);
+
+   // when application started under debug.
+
+   String getDebugHost();
+
+   void setDebugHost(String debugHost);
+
+   int getDebugPort();
+
+   void setDebugPort(int debugPort);
 }

@@ -18,16 +18,13 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
-
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
-import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
-import org.exoplatform.ide.websocket.MessageBroker;
-import org.exoplatform.ide.websocket.MessageBroker.Channels;
 
 import java.net.URL;
+import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -49,89 +46,31 @@ public class ApplicationRunnerService
    @Inject
    private ApplicationRunner runner;
 
-   /** Component for sending message to client over WebSocket connection. */
-   @Inject
-   private MessageBroker messageBroker;
-
    @Path("run")
-   @GET
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public ApplicationInstance runApplication(@QueryParam("war") final URL war,
-                                             @Context final UriInfo uriInfo,
-                                             @QueryParam("usewebsocket") boolean useWebSocket) throws ApplicationRunnerException
+   public ApplicationInstance runApplication(@QueryParam("war") URL war,
+                                             @Context UriInfo uriInfo,
+                                             Map<String, String> params)
+      throws ApplicationRunnerException
    {
-      if (!useWebSocket)
-      {
-         return doRunApplication(war, uriInfo);
-      }
-      else
-      {
-         new Runnable()
-         {
-            @Override
-            public void run()
-            {
-               try
-               {
-                  ApplicationInstance app = doRunApplication(war, uriInfo);
-                  publishWebSocketMessage(MessageBroker.Channels.APP_STARTED, toJson(app), null);
-               }
-               catch (ApplicationRunnerException e)
-               {
-                  publishWebSocketMessage(MessageBroker.Channels.APP_STARTED, null, e);
-               }
-            }
-         }.run();
-         return null;
-      }
-   }
-
-   private ApplicationInstance doRunApplication(URL war, UriInfo uriInfo) throws ApplicationRunnerException
-   {
-      ApplicationInstance app = runner.runApplication(war);
+      ApplicationInstance app = runner.runApplication(war, params);
       app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
          .queryParam("name", app.getName()).build().toString());
       return app;
    }
 
    @Path("debug")
-   @GET
+   @POST
+   @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
-   public DebugApplicationInstance debugApplication(@QueryParam("war") final URL war,
-                                                    @QueryParam("suspend") final boolean suspend,
-                                                    @Context final UriInfo uriInfo,
-                                                    @QueryParam("usewebsocket") boolean useWebSocket) throws ApplicationRunnerException
+   public ApplicationInstance debugApplication(@QueryParam("war") URL war,
+                                                    @QueryParam("suspend") boolean suspend,
+                                                    @Context UriInfo uriInfo,
+                                                    Map<String, String> params) throws ApplicationRunnerException
    {
-      if (!useWebSocket)
-      {
-         return doDebugApplication(war, suspend, uriInfo);
-      }
-      else
-      {
-         new Runnable()
-         {
-            
-            @Override
-            public void run()
-            {
-               try
-               {
-                  DebugApplicationInstance app = doDebugApplication(war, suspend, uriInfo);
-                  publishWebSocketMessage(Channels.DEBUGGER_STARTED, toJson(app), null);
-               }
-               catch (ApplicationRunnerException e)
-               {
-                  publishWebSocketMessage(Channels.DEBUGGER_STARTED, null, e);
-               }
-            }
-         }.run();
-         return null;
-      }
-   }
-
-   private DebugApplicationInstance doDebugApplication(URL war, boolean suspend, UriInfo uriInfo) throws ApplicationRunnerException
-   {
-      DebugApplicationInstance app = runner.debugApplication(war, suspend);
+      ApplicationInstance app = runner.debugApplication(war, suspend, params);
       app.setStopURL(uriInfo.getBaseUriBuilder().path(ApplicationRunnerService.this.getClass(), "stopApplication")
          .queryParam("name", app.getName()).build().toString());
       return app;
@@ -154,21 +93,17 @@ public class ApplicationRunnerService
 
    @GET
    @Path("prolong")
-   public void prolongExpirationTime(@QueryParam("name") String name, @QueryParam("time") long time) throws ApplicationRunnerException
+   public void prolongExpirationTime(@QueryParam("name") String name,
+                                     @QueryParam("time") long time) throws ApplicationRunnerException
    {
       runner.prolongExpirationTime(name, time);
    }
 
-   /**
-    * Publishes message over WebSocket connection.
-    * 
-    * @param data
-    *    the data to be sent to the client
-    * @param e
-    *    an exception to be sent to the client
-    */
-   private void publishWebSocketMessage(Channels channel, String data, Exception e)
+   @Path("update")
+   @GET
+   public void updateApplication(@QueryParam("name") String name,
+                                 @QueryParam("war") URL war) throws ApplicationRunnerException
    {
-      messageBroker.publish(channel.toString(), data, e, null);
+      runner.updateApplication(name, war);
    }
 }

@@ -121,6 +121,20 @@ public class FileUtils
    }
 
    /**
+    * Create temporary directory and use 'java.io.tmpdir' as parent.
+    *
+    * @param prefix
+    *    prefix, may not be <code>null</code> and must be at least three characters long
+    * @return newly create directory
+    * @throws IOException
+    *    if creation of new directory failed
+    */
+   public static File createTempDirectory(String prefix) throws IOException
+   {
+      return createTempDirectory(null, prefix);
+   }
+
+   /**
     * Download file.
     *
     * @param parent
