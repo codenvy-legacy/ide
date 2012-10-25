@@ -21,38 +21,39 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
 import org.exoplatform.ide.core.ComponentException;
 import org.exoplatform.ide.core.ComponentRegistry;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Sep 13, 2012  
+ * Performs initial application startup
+ * 
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class BootstrapController
 {
 
-   WorkspacePeresenter workspacePeresenter;
-
-   ProjectExplorerPresenter projectExpolrerPresenter;
-
+   /**
+    * @param componentRegistry
+    * @param workspacePeresenter
+    * @param styleInjector
+    * @param extensionManager
+    */
    @Inject
    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePeresenter workspacePeresenter,
-      ProjectExplorerPresenter projectExpolorerPresenter, StyleInjector styleInjector)
+      StyleInjector styleInjector, final ExtensionManager extensionManager)
    {
-      this.workspacePeresenter = workspacePeresenter;
-      this.projectExpolrerPresenter = projectExpolorerPresenter;
       styleInjector.inject();
-      
+
       // initialize components
       componentRegistry.start(new Callback<Void, ComponentException>()
       {
          @Override
          public void onSuccess(Void result)
          {
+            // instantiate extensions
+            extensionManager.startExtensions();
             // Start UI
             workspacePeresenter.go(RootLayoutPanel.get());
          }
@@ -63,6 +64,7 @@ public class BootstrapController
             GWT.log("FAILED to start service:" + caught.getComponent());
          }
       });
+
    }
 
 }

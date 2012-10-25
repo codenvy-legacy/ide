@@ -16,53 +16,82 @@
  */
 package org.exoplatform.ide.extension;
 
-import com.google.gwt.inject.client.AsyncProvider;
-
-import java.util.List;
+import org.exoplatform.ide.json.JsonArray;
 
 /**
+ * Provides Extension information:
+ * <ul>
+ * <li>id - unique String id;</li>
+ * <li>version - version of the Extension;</li>
+ * <li>title - brief description of the Extension;</li>
+ * <li>dependencies - the list of required dependencies</li>
+ * </ul>
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class ExtensionDescription<T>
+public class ExtensionDescription
 {
    private final String id;
 
    private final String version;
 
-   private final List<String> dependencies;
+   private final JsonArray<DependencyDescription> dependencies;
 
-   private final AsyncProvider<T> extensionProvider;
+   private final String title;
 
-   public ExtensionDescription(String id, String version, List<String> dependencies, AsyncProvider<T> extensionProvider)
+   /**
+    * Construct {@link ExtensionDescription}
+    * 
+    * @param id
+    * @param version
+    * @param title
+    * @param dependencies
+    */
+   public ExtensionDescription(String id, String version, String title, JsonArray<DependencyDescription> dependencies)
    {
       this.id = id;
       this.version = version;
+      this.title = title;
       this.dependencies = dependencies;
-      this.extensionProvider = extensionProvider;
    }
 
-   public String getName()
+   /**
+    * Get Extension ID
+    * 
+    * @return
+    */
+   public String getId()
    {
       return id;
    }
 
+   /**
+    * Get Extension Version
+    * 
+    * @return
+    */
    public String getVersion()
    {
       return version;
    }
 
-   public List<String> getDependencies()
+   /**
+    * Get Extension title
+    * 
+    * @return the title
+    */
+   public String getTitle()
    {
-      return dependencies;
+      return title;
    }
 
    /**
-    * @return the extensionProvider
+    * Get the list of {@link DependencyDescription}
+    * 
+    * @return
     */
-   public AsyncProvider<T> getExtensionProvider()
+   public JsonArray<DependencyDescription> getDependencies()
    {
-      return extensionProvider;
+      return dependencies;
    }
-
 }

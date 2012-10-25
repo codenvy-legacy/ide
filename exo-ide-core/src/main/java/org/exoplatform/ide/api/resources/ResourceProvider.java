@@ -44,7 +44,7 @@ import org.exoplatform.ide.resources.model.Property;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-@SDK(title = "Resource API")
+@SDK(title = "ide.api.resource")
 public interface ResourceProvider extends Component
 {
    /**

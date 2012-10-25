@@ -16,15 +16,47 @@
  */
 package org.exoplatform.ide.extension;
 
-import java.util.List;
-
 /**
+ * Describes Dependency information of Extension. 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public interface ExtensionManager
+public class DependencyDescription
 {
+   private String id;
 
-   public List<ExtensionDescription> getExtensions();
+   private String version;
+
+   /**
+    * Create {@link DependencyDescription} instance
+    * 
+    * @param id
+    * @param version
+    */
+   public DependencyDescription(String id, String version)
+   {
+      this.id = id;
+      this.version = version;
+   }
+
+   /**
+    * Get required extension id
+    * 
+    * @return
+    */
+   public String getId()
+   {
+      return id;
+   }
+
+   /**
+    * Get version of the used dependency
+    * 
+    * @return
+    */
+   public String getVersion()
+   {
+      return version;
+   }
 
 }

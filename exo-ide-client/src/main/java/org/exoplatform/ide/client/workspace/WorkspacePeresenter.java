@@ -29,6 +29,7 @@ import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
+import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
 import org.exoplatform.ide.core.editor.EditorAgent;
@@ -89,7 +90,7 @@ public class WorkspacePeresenter implements Presenter
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension, ExtensionsPage extensionsPage)
 
    {
       super();
@@ -129,6 +130,7 @@ public class WorkspacePeresenter implements Presenter
 
       //XXX DEMO
 
+      partAgent.addPart(extensionsPage, PartStackType.EDITING);
       partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
       partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
    }

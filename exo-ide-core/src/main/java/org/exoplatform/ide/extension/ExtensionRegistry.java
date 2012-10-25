@@ -16,26 +16,21 @@
  */
 package org.exoplatform.ide.extension;
 
+import org.exoplatform.ide.json.JsonStringMap;
+
 /**
- * Extension Definition annotation. Used to mark class as Extensio and declare it's description
+ * Provides information about Extensions, their description, version and the list of dependencies.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public @interface Extension {
+public interface ExtensionRegistry
+{
 
    /**
-    * @return Extension unique String Id
+    * Returns the map of Extension ID to {@link ExtensionDescription}.
+    * 
+    * @return
     */
-   String id();
-
-   /**
-    * @return Extension version
-    */
-   String version();
-
-   /**
-    * @return Extension brief description
-    */
-   String title();
+   public JsonStringMap<ExtensionDescription> getExtensionDescriptions();
 
 }

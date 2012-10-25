@@ -29,7 +29,7 @@ import org.exoplatform.ide.menu.ExtendedCommand;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-@SDK(title = "UI API:Main menu")
+@SDK(title = "ide.api.ui.menu")
 public interface MainMenuAgent
 {
 

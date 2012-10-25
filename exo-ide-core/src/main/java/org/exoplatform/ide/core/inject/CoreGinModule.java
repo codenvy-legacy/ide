@@ -36,7 +36,7 @@ import org.exoplatform.ide.core.editor.css.CssResources;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorProvider;
-import org.exoplatform.ide.extension.ExtensionManager;
+import org.exoplatform.ide.extension.ExtensionRegistry;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
@@ -67,13 +67,9 @@ public class CoreGinModule extends AbstractGinModule
       bind(EventBus.class).to(SimpleEventBus.class).in(Singleton.class);
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
       bind(Resources.class).in(Singleton.class);
-      
-      
-      
-      // TODO : experiments
-      bind(ExtensionManager.class).in(Singleton.class);
-      
+      bind(ExtensionRegistry.class).in(Singleton.class);
 
+      
       resourcesAPIconfigure();
 
       uiAPIconfigure();

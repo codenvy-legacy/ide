@@ -16,44 +16,53 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.inject.client.AsyncProvider;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 import org.exoplatform.ide.DemoExtension;
 import org.exoplatform.ide.extension.ExtensionDescription;
-import org.exoplatform.ide.extension.ExtensionManager;
-import org.exoplatform.ide.extension.ExtensionManagerGenerator;
-import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.extension.ExtensionRegistry;
 import org.exoplatform.ide.json.JsonStringMap;
 
-import com.google.inject.Inject;
-
-import java.util.List;
-
 /**
- * 
- * EXAMPLE! Doesn't used in IDE. This is a sample class, that 
- * {@link ExtensionManagerGenerator} would generate on compile
- * time.
+ * {@link ExtensionManager} responsible for bringing up Extensions. It uses ExtensionRegistry to acquire 
+ * Extension description and dependencies. 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class ExtensionManagerImpl implements ExtensionManager
+@Singleton
+public class ExtensionManager
 {
-   JsonStringMap<ExtensionDescription> extensions = JsonCollections.createStringMap();
 
+   private final Provider<DemoExtension> demoExt;
+
+   private final ExtensionRegistry extensionRegistry;
+
+   /**
+    * 
+    */
    @Inject
-   public ExtensionManagerImpl(AsyncProvider<DemoExtension> demoExtProvider)
+   public ExtensionManager(final ExtensionRegistry extensionRegistry, final Provider<DemoExtension> demoExt)
    {
-      //extensions.put("ide.ext.demo", new ExtensionDescription("ide.ext.demo", "1.0.0", dependencies, demoExtProvider));
+      this.extensionRegistry = extensionRegistry;
+      this.demoExt = demoExt;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void startExtensions()
+   {
+      demoExt.get();
    }
 
    /**
    * {@inheritDoc}
    */
-   @Override
-   public List<ExtensionDescription> getExtensions()
+   public JsonStringMap<ExtensionDescription> getExtensionDescriptions()
    {
-      return null;
+      return extensionRegistry.getExtensionDescriptions();
    }
 
 }

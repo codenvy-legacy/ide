@@ -17,9 +17,13 @@
 package org.exoplatform.ide.extension;
 
 /**
+ * Describes IDE 2 SDK Component
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public @interface SDK {
+   /**
+    * @return SDK component id
+    */
    String title();
 }

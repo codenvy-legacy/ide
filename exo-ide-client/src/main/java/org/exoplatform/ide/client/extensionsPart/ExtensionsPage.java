@@ -17,15 +17,16 @@
 package org.exoplatform.ide.client.extensionsPart;
 
 import com.google.gwt.resources.client.ImageResource;
-
-import com.google.inject.Singleton;
-
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+import org.exoplatform.ide.client.ExtensionManager;
+import org.exoplatform.ide.extension.DependencyDescription;
 import org.exoplatform.ide.extension.ExtensionDescription;
-import org.exoplatform.ide.extension.ExtensionManager;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.part.PropertyListener;
 
@@ -52,32 +53,44 @@ public class ExtensionsPage implements PartPresenter
    public void go(HasWidgets container)
    {
 
-      StringBuilder builder = new StringBuilder();
+      final StringBuilder builder = new StringBuilder();
 
-      for (ExtensionDescription extensionDescription : manager.getExtensions())
+      manager.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>()
       {
-         builder.append("<div>");
 
-         builder.append("<h3>");
-         builder.append(extensionDescription.getName());
-         builder.append("-");
-         builder.append(extensionDescription.getVersion());
-         builder.append("</h3>");
-
-         if (!extensionDescription.getDependencies().isEmpty())
+         @Override
+         public void onIteration(String key, ExtensionDescription ext)
          {
-            builder.append("<ul>");
-//            for (String dependency : extensionDescription.getDependencies())
-//            {
-//               builder.append("<li>");
-//               builder.append(dependency);
-//               builder.append("</li>");
-//            }
-            builder.append("</ul>");
-         }
+            builder.append("<div>");
 
-         builder.append("</div>");
-      }
+            builder.append("<h3>");
+            builder.append(ext.getId());
+            builder.append("-");
+            builder.append(ext.getVersion());
+            builder.append("</h3>");
+
+            if (!ext.getDependencies().isEmpty())
+            {
+               builder.append("<ul>");
+               JsonArray<DependencyDescription> dependencies = ext.getDependencies();
+
+               for (int i = 0; i < dependencies.size(); i++)
+               {
+                  DependencyDescription dep = dependencies.get(i);
+                  builder.append("<li>");
+                  builder.append(dep.getId());
+                  builder.append(":");
+                  builder.append(dep.getVersion());
+                  builder.append("</li>");
+
+               }
+
+               builder.append("</ul>");
+            }
+
+            builder.append("</div>");
+         }
+      });
 
       HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
       container.add(htmlPanel);
@@ -109,9 +122,9 @@ public class ExtensionsPage implements PartPresenter
       return "Extensions";
    }
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public ImageResource getTitleImage()
    {
@@ -119,9 +132,9 @@ public class ExtensionsPage implements PartPresenter
       return null;
    }
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public String getTitleToolTip()
    {
@@ -129,24 +142,24 @@ public class ExtensionsPage implements PartPresenter
       return null;
    }
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public void addPropertyListener(PropertyListener listener)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public void removePropertyListener(PropertyListener listener)
    {
       // TODO Auto-generated method stub
-      
+
    }
 
 }

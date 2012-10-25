@@ -16,12 +16,14 @@
  */
 package org.exoplatform.ide.api.ui.part;
 
+import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.part.PartPresenter;
 
 /**
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
+@SDK(title = "ide.api.ui.part")
 public interface PartAgent
 {
 
