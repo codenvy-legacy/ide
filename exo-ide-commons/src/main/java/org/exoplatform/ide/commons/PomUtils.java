@@ -151,7 +151,7 @@ public class PomUtils
       {
          StringBuilder builder = new StringBuilder();
          builder.append("<dependency><groupId>").append(groupId).append("</groupId><artifactId>").append(artifactId)
-            .append("</artfifactId><version>").append(version).append("</version>").append("</dependency>");
+            .append("</artifactId><version>").append(version).append("</version>").append("</dependency>");
          return builder.toString();
       }
    }

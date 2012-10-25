@@ -18,20 +18,32 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.everrest.core.impl.provider.json.JsonParser;
+import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
+import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.codeassistant.jvm.bean.TypesListBean;
 import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
+import org.exoplatform.ide.extension.maven.server.BuilderClient;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -59,6 +71,15 @@ public class RestCodeAssistantJava
 
    @Inject
    private JavaCodeAssistant codeAssistant;
+   
+   @Inject
+   private BuilderClient builderClient;
+   
+   @Inject
+   private VirtualFileSystemRegistry vfsRegistry;
+   
+   @Inject
+   private CodeAssistantStorageClient storageClient; 
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
@@ -284,5 +305,37 @@ public class RestCodeAssistantJava
          throw new InvalidArgumentException("'projectid' parameter is null.");
       return codeAssistant.getAllPackages(projectId, vfsId);
    }
+   
+   
+   /**
+    * Get list of all package names in project
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param packagePrefix
+    * @return
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   @GET
+   @Path("/get-packages")
+   @Produces(MediaType.APPLICATION_JSON)
+   public List<String> updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+      throws CodeAssistantException, VirtualFileSystemException
+   {
+      final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+      Timer timer = new Timer(true);
+      
+      
+      final String buildId = builderClient.dependenciesCopy(vfs, projectId, null);
+      new GetDepZipTask(null, project, buildId, builderClient, storageClient); 
+         
+//         (parent, vfs, buildId, buiclient, storageClient, timer, DELAY),
+//         DELAY, DELAY);
+//            
+   }
+   
+   
 
 }

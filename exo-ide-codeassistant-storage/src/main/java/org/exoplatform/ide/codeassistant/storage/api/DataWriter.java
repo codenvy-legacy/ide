@@ -47,5 +47,22 @@ public interface DataWriter
     * @param artifact
     */
    void addJavaDocs(Map<String, String> javaDocs, String artifact);
+   
+   
+   /**
+    * @param typeInfos
+    */
+   void removeTypeInfo(String artifact);
+
+   /**
+    * @param packages
+    */
+   void removePackages(String artifact);
+
+   /**
+    * @param javaDocs
+    * @param artifact
+    */
+   void removeJavaDocs(String artifact);
 
 }

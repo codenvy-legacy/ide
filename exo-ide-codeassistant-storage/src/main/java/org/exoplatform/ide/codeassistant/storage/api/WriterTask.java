@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.codeassistant.storage.api;
 
+import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.Set;
 public class WriterTask
 {
 
-   private String artifact;
+   private Dependency artifact;
 
    private List<TypeInfo> typesInfo;
 
@@ -43,7 +44,7 @@ public class WriterTask
    /**
     * 
     */
-   public WriterTask(String artifact, List<TypeInfo> typesInfo, Set<String> packages)
+   public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages)
    {
       this(artifact, typesInfo, packages, null);
    }
@@ -51,7 +52,7 @@ public class WriterTask
    /**
     * 
     */
-   public WriterTask(String artifact, Map<String, String> javaDock)
+   public WriterTask(Dependency artifact, Map<String, String> javaDock)
    {
       this(artifact, null, null, javaDock);
    }
@@ -62,9 +63,8 @@ public class WriterTask
     * @param packages
     * @param javaDock
     */
-   public WriterTask(String artifact, List<TypeInfo> typesInfo, Set<String> packages, Map<String, String> javaDock)
+   public WriterTask(Dependency artifact, List<TypeInfo> typesInfo, Set<String> packages, Map<String, String> javaDock)
    {
-      super();
       this.artifact = artifact;
       this.typesInfo = typesInfo;
       this.packages = packages;
@@ -74,7 +74,7 @@ public class WriterTask
    /**
     * @return the artifact
     */
-   public String getArtifact()
+   public Dependency getArtifact()
    {
       return artifact;
    }
@@ -82,7 +82,7 @@ public class WriterTask
    /**
     * @param artifact the artifact to set
     */
-   public void setArtifact(String artifact)
+   public void setArtifact(Dependency artifact)
    {
       this.artifact = artifact;
    }

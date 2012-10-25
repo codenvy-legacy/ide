@@ -35,6 +35,7 @@ import java.util.Set;
  * @version $Id:
  *
  */
+
 public class LocalDataWriter implements DataWriter
 {
 
@@ -47,7 +48,6 @@ public class LocalDataWriter implements DataWriter
     */
    public LocalDataWriter(LuceneDataWriter dataWriter)
    {
-      super();
       this.dataWriter = dataWriter;
    }
 
@@ -97,6 +97,48 @@ public class LocalDataWriter implements DataWriter
       {
          LOG.error("Can't save javadock for artifact:" + artifact, e);
       }
+   }
+
+   @Override
+   public void removeTypeInfo(String artifact)
+   {
+      try
+      {
+         dataWriter.removeTypeInfo(artifact);
+      }
+      catch (SaveDataIndexException e)
+      {
+         LOG.error("Can't save type info for artifact:" + artifact, e);
+      }
+      
+   }
+
+   @Override
+   public void removePackages(String artifact)
+   {
+      try
+      {
+         dataWriter.removePackages(artifact);
+      }
+      catch (SaveDataIndexException e)
+      {
+         LOG.error("Can't save packages for artifact:" + artifact, e);
+      }
+      
+   }
+
+   @Override
+   public void removeJavaDocs(String artifact)
+   {
+      try
+      {
+         dataWriter.removeJavaDocs(artifact);
+      }
+      catch (SaveDataIndexException e)
+      {
+         LOG.error("Can't save javadock for artifact:" + artifact, e);
+      }
+      
    }
 
 }

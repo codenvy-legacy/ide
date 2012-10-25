@@ -77,7 +77,7 @@ public class TypeUpdateInvoker implements UpdateInvoker
          for (Dependency dep : dependencies)
          {
             String artifact = dep.toString();
-            if (infoStorage.isArtifactExist(artifact))
+            if (infoStorage.isArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
                continue;
 
             Set<String> packages = new TreeSet<String>();
@@ -89,7 +89,7 @@ public class TypeUpdateInvoker implements UpdateInvoker
                File jarFile = new File(dependencyFolder, jarName);
                List<TypeInfo> typeInfos = JarParser.parse(jarFile);
                packages.addAll(PackageParser.parse(jarFile));
-               writerQueue.put(new WriterTask(artifact, typeInfos, packages));
+               writerQueue.put(new WriterTask(dep, typeInfos, packages));
             }
             catch (IOException e)
             {

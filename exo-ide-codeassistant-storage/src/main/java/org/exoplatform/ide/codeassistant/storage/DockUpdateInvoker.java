@@ -75,7 +75,7 @@ public class DockUpdateInvoker implements UpdateInvoker
          {
 
             String artifact = dep.toString();
-            if (infoStorage.isJavaDockForArtifactExist(artifact))
+            if (infoStorage.isJavaDockForArtifactExist(artifact) && !dep.getVersion().contains("SNAPSHOT"))
                continue;
 
             String jarName = getJarName(dep);
@@ -93,7 +93,7 @@ public class DockUpdateInvoker implements UpdateInvoker
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
                if (!infoStorage.isJavaDockForArtifactExist(artifact))
                {
-                 writerQueue.put(new WriterTask(artifact, javaDocs));
+                 writerQueue.put(new WriterTask(dep, javaDocs));
                }
             }
             catch (InterruptedException e)

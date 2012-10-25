@@ -73,21 +73,41 @@ public class StorageWriter implements Runnable
                LOG.error("Can't get Data Writer", e);
                continue;
             }
+            String artifact = task.getArtifact().toString();
+            String version = task.getArtifact().getVersion();
             try
             {
-               if (task.getTypesInfo() != null && !infoStorage.isArtifactExist(task.getArtifact()))
+               if (task.getTypesInfo() != null)
                {
-                  dataWriter.addTypeInfo(task.getTypesInfo(), task.getArtifact());
-                  dataWriter.addPackages(task.getPackages(), task.getArtifact());
+                  if (!infoStorage.isArtifactExist(artifact))
+                  {
+                     dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
+                     dataWriter.addPackages(task.getPackages(), artifact);
+                  }
+                  else if (version.contains("SNAPSHOT")) // CHeck if it SNAPSHOT version in this case need rewrite index
+                  {
+                     dataWriter.removeTypeInfo(artifact);
+                     dataWriter.removePackages(artifact);
+                     dataWriter.addTypeInfo(task.getTypesInfo(), artifact);
+                     dataWriter.addPackages(task.getPackages(), artifact);
+                  }
                }
-               if (task.getJavaDock() != null && !infoStorage.isJavaDockForArtifactExist(task.getArtifact()))
+               if (task.getJavaDock() != null)
                {
-                  dataWriter.addJavaDocs(task.getJavaDock(), task.getArtifact());
+                  if (!infoStorage.isJavaDockForArtifactExist(artifact))
+                  {
+                     dataWriter.addJavaDocs(task.getJavaDock(), artifact);
+                  }
+                  else if (version.contains("SNAPSHOT"))
+                  {
+                     dataWriter.removeJavaDocs(artifact);
+                     dataWriter.addJavaDocs(task.getJavaDock(), artifact);
+                  }
                }
             }
             catch (Exception e)
             {
-               LOG.error("Can't write artifact: " + task.getArtifact(), e);
+               LOG.error("Can't write artifact: " + artifact, e);
             }
 
          }

@@ -19,11 +19,23 @@
 package org.exoplatform.ide.codeassistant.storage.lucene.writer;
 
 import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.PrefixQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.store.Directory;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.codeassistant.storage.lucene.DataIndexFields;
+import org.exoplatform.ide.codeassistant.storage.lucene.IndexType;
 import org.exoplatform.ide.codeassistant.storage.lucene.LuceneInfoStorage;
 import org.exoplatform.ide.codeassistant.storage.lucene.SaveDataIndexException;
+import org.exoplatform.ide.codeassistant.storage.lucene.delete.CleanUpIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +53,8 @@ public class LuceneDataWriter
    private final Directory indexDirectory;
 
    private final DataIndexer indexer;
+
+   private static final Logger LOG = LoggerFactory.getLogger(LuceneDataWriter.class);
 
    public LuceneDataWriter(LuceneInfoStorage luceneInfoStorage) throws IOException
    {
@@ -87,23 +101,21 @@ public class LuceneDataWriter
    }
 
    /**
-    * Add List of TypeInfo to index.
+    * remove javaDocs to lucene storage.
     * 
-    * @param typeInfos
+    * @param javaDocs
+    *           - Map<fqn, doc>
+    * @param artifact 
     * @throws SaveDataIndexException
     */
-   public void addTypeInfo(List<TypeInfo> typeInfos, String artifact) throws SaveDataIndexException
+   public void removeJavaDocs(String artifact) throws SaveDataIndexException
    {
 
       IndexWriter writer = null;
       try
       {
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         for (TypeInfo typeInfo : typeInfos)
-         {
-            writer.addDocument(indexer.createTypeInfoDocument(typeInfo, artifact));
-         }
-         
+         removeDoc(artifact, IndexType.DOC, DataIndexFields.FQN, writer);
          writer.commit();
       }
       catch (IOException e)
@@ -122,7 +134,79 @@ public class LuceneDataWriter
          }
       }
    }
+
+   /**
+    * Add List of TypeInfo to index.
+    * 
+    * @param typeInfos
+    * @throws SaveDataIndexException
+    */
+   public void addTypeInfo(List<TypeInfo> typeInfos, String artifact) throws SaveDataIndexException
+   {
+
+      IndexWriter writer = null;
+      try
+      {
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         for (TypeInfo typeInfo : typeInfos)
+         {
+            writer.addDocument(indexer.createTypeInfoDocument(typeInfo, artifact));
+         }
+
+         writer.commit();
+      }
+      catch (IOException e)
+      {
+         throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
+      }
+   }
+
    
+   /**
+    * Add List of TypeInfo to index.
+    * 
+    * @param typeInfos
+    * @throws SaveDataIndexException
+    */
+   public void removeTypeInfo(String artifact) throws SaveDataIndexException
+   {
+
+      LOG.info("Delete: TypeInfo for : " + artifact);
+      IndexWriter writer = null;
+      try
+      {
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         removeDoc(artifact, IndexType.JAVA, DataIndexFields.FQN, writer);
+         writer.commit();
+      }
+      catch (IOException e)
+      {
+         throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
+      }
+   }
+
    /**
     * Add packages to index.
     * Packages format:
@@ -145,7 +229,7 @@ public class LuceneDataWriter
       try
       {
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         for(String pack : packages)
+         for (String pack : packages)
          {
             writer.addDocument(indexer.createPackageDocument(pack, artifact));
          }
@@ -166,6 +250,77 @@ public class LuceneDataWriter
             throw new SaveDataIndexException(e.getLocalizedMessage(), e);
          }
       }
+   }
+
+   /**
+    * Remove packages to index.
+    * 
+    * @param packages
+    * @param artifact 
+    * @throws SaveDataIndexException
+    */
+   public void removePackages(String artifact) throws SaveDataIndexException
+   {
+      LOG.info("Delete: Packages  for : " + artifact);
+      IndexWriter writer = null;
+      try
+      {
+         writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+         removeDoc(artifact, IndexType.PACKAGE, DataIndexFields.PACKAGE, writer);
+         writer.commit();
+      }
+      catch (IOException e)
+      {
+         throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+      }
+      finally
+      {
+         try
+         {
+            writer.close();
+         }
+         catch (IOException e)
+         {
+            throw new SaveDataIndexException(e.getLocalizedMessage(), e);
+         }
+      }
+   }
+
+   /**
+    * @param artifact
+    * @param indexType
+    * @param dataField
+    * @param writer
+    * @param pack
+    * @throws CorruptIndexException
+    * @throws IOException
+    */
+   private void removeDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer, String key)
+      throws CorruptIndexException, IOException
+   {
+      Query from = indexType.getQuery();
+      TermQuery termQuery = new TermQuery(new Term(DataIndexFields.ARTIFACT, artifact));
+      BooleanQuery query = new BooleanQuery();
+      query.add(from, Occur.MUST);
+      query.add(termQuery, Occur.MUST);
+      if (key != null && !key.isEmpty())
+        query.add(new PrefixQuery(new Term(dataField, key)), Occur.MUST);
+      writer.deleteDocuments(query);
+   }
+   
+   /**
+    * @param artifact
+    * @param indexType
+    * @param dataField
+    * @param writer
+    * @param pack
+    * @throws CorruptIndexException
+    * @throws IOException
+    */
+   private void removeDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer)
+      throws CorruptIndexException, IOException
+   {
+      removeDoc(artifact, indexType, dataField, writer, null);
    }
 
 }
