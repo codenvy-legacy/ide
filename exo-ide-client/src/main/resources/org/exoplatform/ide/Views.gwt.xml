@@ -256,4 +256,7 @@
       <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display" />
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserView">
+      <when-type-is class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler.Display" />
+   </replace-with>
 </module>

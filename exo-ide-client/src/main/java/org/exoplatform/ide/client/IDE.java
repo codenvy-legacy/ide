@@ -18,8 +18,11 @@
  */
 package org.exoplatform.ide.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
@@ -68,13 +71,11 @@ import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
+import org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -183,6 +184,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new PreferencesModule();
 
       new WebSocketHandler();
+      new UnsupportedBrowserHandler();
 
       new IDEDebug();
 

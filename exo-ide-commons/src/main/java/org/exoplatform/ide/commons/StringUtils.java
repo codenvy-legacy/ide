@@ -33,7 +33,7 @@ public class StringUtils
 
    /**
     * Get the contents of an <code>InputStream</code> as a String
-    * @param strem  the <code>InputStream</code> to read from
+    * @param stream  the <code>InputStream</code> to read from
     * @return the requested String
     * @throws IOException if an I/O error occurs
     */

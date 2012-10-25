@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
+import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
 
 /**
@@ -56,14 +56,14 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
 
    private Display display;
 
-   private final DebugApplicationInstance instance;
+   private final ApplicationInstance instance;
 
    /**
     * Used for subscribe/unsubscribe on receive WebSocket messages.
     */
    private final WebSocketEventHandler debuggerEventHandler; 
 
-   public ReLaunchDebuggerPresenter(DebugApplicationInstance instance, WebSocketEventHandler webSocketSubscriber)
+   public ReLaunchDebuggerPresenter(ApplicationInstance instance, WebSocketEventHandler webSocketSubscriber)
    {
       this.instance = instance;
       this.debuggerEventHandler = webSocketSubscriber;

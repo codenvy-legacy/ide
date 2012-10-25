@@ -18,17 +18,10 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
-import com.google.gwt.user.client.Timer;
-
 import org.exoplatform.gwtframework.ui.client.command.ui.ToolbarBuilder;
 import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.menu.CloseMenuHandler;
 import org.exoplatform.ide.client.editor.EditorView;
-import org.exoplatform.ide.client.framework.contextmenu.ContextMenu;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -44,9 +37,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.client.menu.ContextMenu;
 import org.exoplatform.ide.client.menu.Menu;
 import org.exoplatform.ide.client.menu.RefreshMenuEvent;
 import org.exoplatform.ide.client.menu.RefreshMenuHandler;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.user.client.Timer;
 
 /**
  * Created by The eXo Platform SAS .
@@ -77,56 +77,6 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
    private ControlsRegistration controlsRegistration;
 
    private View activeView;
-
-   private final ContextMenuHandler contextMenuHandler = new ContextMenuHandler()
-   {
-      @Override
-      public void onContextMenu(final ContextMenuEvent event)
-      {
-         if (activeView == null || !activeView.canShowContextMenu())
-         {
-            return;
-         }
-         final int x = event.getNativeEvent().getClientX();
-         final int y = event.getNativeEvent().getClientY();
-
-         if (x < activeView.asWidget().getAbsoluteLeft()
-            || x > (activeView.asWidget().getAbsoluteLeft() + activeView.asWidget().getOffsetWidth())
-            || y < activeView.asWidget().getAbsoluteTop()
-            || y > (activeView.asWidget().getAbsoluteTop() + activeView.asWidget().getOffsetHeight()))
-         {
-            return;
-         }
-
-         event.stopPropagation();
-         event.preventDefault();
-
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-
-            @Override
-            public void execute()
-            {
-               ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, closeHandler);
-            }
-         });
-      }
-   };
-
-   private CloseMenuHandler closeHandler = new CloseMenuHandler()
-   {
-
-      @Override
-      public void onCloseMenu()
-      {
-         if (activeView instanceof EditorView)
-         {
-            ((EditorView)activeView).getEditor().setFocus();
-         }
-         else
-            activeView.asWidget().getElement().focus();
-      }
-   };
 
    public IDEPresenter(Display display, final ControlsRegistration controlsRegistration)
    {
@@ -230,8 +180,57 @@ public class IDEPresenter implements RefreshMenuHandler, ViewOpenedHandler, View
          @Override
          public void execute()
          {
-            ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, closeHandler);
+            ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, popupMenuCloseHandler);
          }
       });
    }
+   
+   private final ContextMenuHandler contextMenuHandler = new ContextMenuHandler()
+   {
+      @Override
+      public void onContextMenu(final ContextMenuEvent event)
+      {
+         if (activeView == null || !activeView.canShowContextMenu())
+         {
+            return;
+         }
+         final int x = event.getNativeEvent().getClientX();
+         final int y = event.getNativeEvent().getClientY();
+
+         if (x < activeView.asWidget().getAbsoluteLeft()
+            || x > (activeView.asWidget().getAbsoluteLeft() + activeView.asWidget().getOffsetWidth())
+            || y < activeView.asWidget().getAbsoluteTop()
+            || y > (activeView.asWidget().getAbsoluteTop() + activeView.asWidget().getOffsetHeight()))
+         {
+            return;
+         }
+
+         event.stopPropagation();
+         event.preventDefault();
+
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               ContextMenu.get().show(controlsRegistration.getRegisteredControls(), x, y, popupMenuCloseHandler);
+            }
+         });
+      }
+   };
+   
+   private CloseMenuHandler popupMenuCloseHandler = new CloseMenuHandler()
+   {
+      @Override
+      public void onCloseMenu()
+      {
+         if (activeView instanceof EditorView)
+         {
+            ((EditorView)activeView).getEditor().setFocus();
+         }
+         else
+            activeView.asWidget().getElement().focus();
+      }
+   };   
+   
 }

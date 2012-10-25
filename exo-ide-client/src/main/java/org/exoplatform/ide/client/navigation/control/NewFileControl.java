@@ -70,6 +70,8 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
       setIcon(icon);
       setEvent(event);
       setEnabled(true);
+      
+      setShowInContextMenu(true);
    }
 
    /**
@@ -89,6 +91,8 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
       setImages(normalIcon, disabledIcon);
       setEvent(event);
       setEnabled(true);
+
+      setShowInContextMenu(true);
    }
 
    /**

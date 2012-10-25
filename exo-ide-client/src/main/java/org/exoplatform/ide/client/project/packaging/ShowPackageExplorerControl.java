@@ -29,12 +29,11 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -51,6 +50,8 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.packageExplorerControlTitle();
 
    private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.packageExplorerControlPrompt();
+   
+   private ProjectModel project;
 
    public ShowPackageExplorerControl()
    {
@@ -71,20 +72,55 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
+   
+//   private boolean isAvailableForProject()
+//   {
+//      if (project == null)
+//      {
+//         return false;
+//      }
+//      
+//      if (ProjectTypes.contains(project.getProjectType()))
+//      {
+//         return true;
+//      }
+//      
+//      String projectType = project.getProjectType();
+//      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) ||
+//               ProjectResolver.SERVLET_JSP.equals(projectType) ||
+//               ProjectResolver.SPRING.equals(projectType) ||
+//               ProjectType.JAVA.value().equals(projectType) ||
+//               ProjectType.JSP.value().equals(projectType) ||
+//               ProjectType.AWS.value().equals(projectType))
+//      {
+//         return true;
+//      }
+//
+//      return false;
+//   }   
 
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
-      if (event.getVfsInfo() != null)
-      {
-         setEnabled(true);
-         setVisible(true);
-      }
-      else
+      if (event.getVfsInfo() == null)
       {
          setEnabled(false);
          setVisible(false);
       }
+      else
+      {
+         setVisible(true);
+      }
+      
+      setEnabled(ProjectTypes.contains(project));
+//      if (isAvailableForProject())
+//      {
+//         setEnabled(true);
+//      }
+//      else
+//      {
+//         setEnabled(false);
+//      }
    }
 
    @Override
@@ -112,6 +148,7 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
+      project = null;
       setEnabled(false);
    }
 
@@ -122,17 +159,9 @@ public class ShowPackageExplorerControl extends SimpleControl implements IDECont
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      String projectType = event.getProject().getProjectType();
-      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType) || ProjectType.JAR.value().equals(projectType))
-      {
-         setEnabled(true);
-      }
-      else 
-      {
-         setEnabled(false);
-      }
+      project = event.getProject();
+      setEnabled(ProjectTypes.contains(project));
+      //setEnabled(isAvailableForProject());
    }
 
 }

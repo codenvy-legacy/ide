@@ -387,6 +387,29 @@ public class Cloudfoundry
                                                     URL war)
       throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
+      return createApplication(server, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
+         vfs, projectId, war, null);
+   }
+
+   /**
+    * Make possible to use additional options when create application. This method is not accessible through REST API directly.
+    */
+   public CloudFoundryApplication createApplication(String server,
+                                                    String app,
+                                                    String framework,
+                                                    String url,
+                                                    int instances,
+                                                    int memory,
+                                                    boolean noStart,
+                                                    String runtime,
+                                                    String command,
+                                                    DebugMode debugMode,
+                                                    VirtualFileSystem vfs,
+                                                    String projectId,
+                                                    URL war,
+                                                    Map<String, String> options)
+      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   {
       if (app == null || app.isEmpty())
       {
          throw new IllegalArgumentException("Application name required. ");
@@ -401,7 +424,7 @@ public class Cloudfoundry
       }
       Credential credential = getCredential(server);
       return createApplication(credential, app, framework, url, instances, memory, noStart, runtime, command, debugMode,
-         vfs, projectId, war);
+         vfs, projectId, war, options);
    }
 
    private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
@@ -418,7 +441,9 @@ public class Cloudfoundry
                                                      DebugMode debugMode,
                                                      VirtualFileSystem vfs,
                                                      String projectId,
-                                                     URL url) throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+                                                     URL url,
+                                                     Map<String, String> options)
+      throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       final long start = System.currentTimeMillis();
       LOG.debug("createApplication START");
@@ -506,7 +531,12 @@ public class Cloudfoundry
             appUrl = app + m.group(4);
          }
 
-         CreateApplication payload = new CreateApplication(app, instances, appUrl, memory, framework.getName(), runtime, command);
+         CreateApplication payload = new CreateApplication(app, instances, appUrl, memory, framework.getName(), runtime,
+            command);
+         if (options != null && !options.isEmpty())
+         {
+            payload.getOptions().putAll(options);
+         }
          String json = postJson(credential.target + "/apps", credential.token, toJson(payload), 302);
          CreateResponse resp = fromJson(json, CreateResponse.class, null);
          appInfo = fromJson(doRequest(resp.getRedirect(), "GET", credential.token, null, null, 200),

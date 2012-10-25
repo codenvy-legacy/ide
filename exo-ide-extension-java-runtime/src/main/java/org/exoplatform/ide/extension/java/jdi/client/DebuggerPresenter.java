@@ -83,7 +83,6 @@ import org.exoplatform.ide.extension.java.jdi.client.ui.RunDebuggerView;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
-import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerInfo;
@@ -626,7 +625,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       return path;
    }
 
-   public void reLaunchDebugger(DebugApplicationInstance debugApplicationInstance)
+   public void reLaunchDebugger(ApplicationInstance debugApplicationInstance)
    {
       ReLaunchDebuggerPresenter runDebuggerPresenter =
          new ReLaunchDebuggerPresenter(debugApplicationInstance, debuggerEventHandler);
@@ -701,11 +700,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void debugApplication(String warUrl)
    {
-      AutoBean<DebugApplicationInstance> debugApplicationInstance =
+      AutoBean<ApplicationInstance> debugApplicationInstance =
          DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
 
-      AutoBeanUnmarshaller<DebugApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshaller<DebugApplicationInstance>(debugApplicationInstance);
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
       try
       {
          boolean useWebSocketForCallback = false;
@@ -720,10 +719,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          final boolean useWebSocket = useWebSocketForCallback;
 
          ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl, useWebSocket,
-            new AsyncRequestCallback<DebugApplicationInstance>(unmarshaller)
+            new AsyncRequestCallback<ApplicationInstance>(unmarshaller)
             {
                @Override
-               protected void onSuccess(DebugApplicationInstance result)
+               protected void onSuccess(ApplicationInstance result)
                {
                   if (!useWebSocket)
                   {
@@ -757,14 +756,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
-   protected void doRunDebugger(final DebugApplicationInstance debugApplicationInstance)
+   protected void doRunDebugger(final ApplicationInstance debugApplicationInstance)
    {
       AutoBean<DebuggerInfo> debuggerInfo = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerInfo.class);
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
          boolean useWebSocketForCallback = false;
-         final WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
@@ -810,7 +809,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       try
       {
          boolean useWebSocketForCallback = false;
-         final WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
@@ -867,7 +866,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       runningApp = app;
    }
 
-   private void onDebugStarted(DebugApplicationInstance result)
+   private void onDebugStarted(ApplicationInstance result)
    {
       String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
       msg +=
@@ -1085,8 +1084,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_STARTED.toString(), this);
 
-         AutoBean<DebugApplicationInstance> debugApp =
-            AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, DebugApplicationInstance.class,
+         AutoBean<ApplicationInstance> debugApp =
+            AutoBeanCodex.decode(DebuggerExtension.AUTO_BEAN_FACTORY, ApplicationInstance.class,
                message.getPayload());
          onDebugStarted(debugApp.as());
          runStatusHandler.requestFinished(project.getId());

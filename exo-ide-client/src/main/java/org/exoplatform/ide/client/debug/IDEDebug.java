@@ -35,7 +35,7 @@ public class IDEDebug
          return;
       }
 
-      new ShowImagesPresenter();
+      //new ShowImagesPresenter();
    }
    
 }

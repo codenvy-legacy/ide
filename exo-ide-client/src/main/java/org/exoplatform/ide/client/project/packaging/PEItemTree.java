@@ -34,8 +34,11 @@ import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -53,6 +56,29 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    private String id;
 
    private String prefixId;
+   
+   public PEItemTree()
+   {
+      sinkEvents(Event.ONCONTEXTMENU);
+   }
+   
+   /**
+    * @see com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user.client.Event)
+    */
+   @Override
+   public void onBrowserEvent(Event event)
+   {
+      if (Event.ONCONTEXTMENU == DOM.eventGetType(event))
+      {
+         NativeEvent nativeEvent =
+            Document.get().createMouseDownEvent(-1, event.getScreenX(), event.getScreenY(), event.getClientX(),
+               event.getClientY(), event.getCtrlKey(), event.getAltKey(), event.getShiftKey(), event.getMetaKey(),
+               NativeEvent.BUTTON_LEFT);
+         DOM.eventGetTarget(event).dispatchEvent(nativeEvent);
+      }
+      super.onBrowserEvent(event);
+   }
+   
 
    public Object getSelectedObject()
    {
@@ -97,6 +123,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          {
             rootTreeItem = createTreeNode(value);
             tree.addItem(rootTreeItem);
+            tree.setSelectedItem(rootTreeItem);
          }
          else
          {

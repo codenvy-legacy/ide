@@ -718,4 +718,13 @@ public interface IDEImageBundle extends ClientBundle
     */
    @Source("org/exoplatform/ide/public/images/github-icon.png")
    ImageResource gitHubIconSmall();
+
+   @Source("org/exoplatform/ide/public/images/browsers/chrome.png")
+   ImageResource chrome();
+
+   @Source("org/exoplatform/ide/public/images/browsers/firefox.png")
+   ImageResource firefox();
+
+   @Source("org/exoplatform/ide/public/images/browsers/safari.png")
+   ImageResource safari();
 }
