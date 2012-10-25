@@ -17,7 +17,7 @@ Compilation eXo IDE:
 
    mvn clean install
 
-For launch eXo IDE 
+For launch eXo IDE:
 go to
   exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin
 
@@ -27,17 +27,17 @@ execute
 
 The address of  deployed IDE is http://localhost:8080/
 
-For launch in GWT DevMode
+For launch in GWT DevMode:
 
-go ot the  
+go to the  
  exo-ide-dev-mode
 execute 
  mvn clean gwt:run
- 
-For launch with Eclipse GWT plugin
-1. Need first time do execute "mvn clean gwt:run" in exo-ide-dev-mode
-2. Import exo-ide-dev-mode project to the Eclipse
-3. Mouse Rigth button click on the project in Eclipse 
+
+For launch with Eclipse GWT plug-in:
+1. Need first time do execute "mvn clean gwt:run" in exo-ide-dev-mode.
+2. Import exo-ide-dev-mode project to the Eclipse.
+3. Mouse Rigth button click on the project in Eclipse
    - select Build Path->Configure Build Path
      In Pop Up:
       - select item exo-ide-dev-mode/src/test/java and remove it
@@ -46,9 +46,23 @@ For launch with Eclipse GWT plugin
 4. Mouse Rigth button click on the project in Eclipse.
    - select "Google-> Web Toolkit" item configure this project.
 5. In Eclipse main menu File->Import->Run/Debug->Launch Configuration in PopUp select file exo-ide-dev-resources/target/exo-ide-dev-mode.launch
-Note: If you want to use WebSockets, do as follows:
-      Import and use launcher from exo-ide-dev-resources/target/exo-ide-dev-mode-noserver.launch.
-      Build module 'exo-ide-packaging-standalone-tomcat' and run Tomcat (/exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin/.catalina run).
-      Copy file hosted.html from /exo-ide-dev-mode/target/war/IDE to /exo-ide-packaging-standalone-tomcat/target/tomcat-ide/webapps/IDE.
+6. Run As -> Web Application -> Run in pop-up select WAR directory exo-ide-dev-mode/target/war
 
-6. Run As -> Web Application -> Run in pop select WAR directory exo-ide-dev-mode/target/war
+For launch with Eclipse GWT plug-in using Tomcat instead of embedded Jetty:
+1. Need first time do execute 'mvn clean gwt:run' in 'exo-ide-dev-mode'.
+2. Execute 'mvn clean install' in 'exo-ide-packaging-standalone-tomcat' and run Tomcat (/exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin/.catalina run).
+3. Copy file hosted.html from /exo-ide-dev-mode/target/war/IDE to /exo-ide-packaging-standalone-tomcat/target/tomcat-ide/webapps/IDE.
+4. Import exo-ide-dev-mode project to the Eclipse.
+5. Mouse Rigth button click on the project in Eclipse
+   - select Build Path->Configure Build Path
+     In Pop Up:
+      - select item exo-ide-dev-mode/src/test/java and remove it
+      - select item exo-ide-dev-mode/src/resources/Exclude and remove it
+      
+6. Mouse Rigth button click on the project in Eclipse.
+   - select "Google-> Web Toolkit" item configure this project.
+7. In Eclipse main menu File->Import->Run/Debug->Launch Configuration in PopUp select file exo-ide-dev-resources/target/exo-ide-dev-mode-noserver.launch
+8. Run As -> Web Application -> Run in pop-up select WAR directory exo-ide-dev-mode/target/war
+Note:
+	Every time when you open 'Run Configurations' dialog, argument '-port 8080' will be disappears from the 'Program arguments'
+	field on the 'Arguments' tab. In this case, you need to add this argument manually.
