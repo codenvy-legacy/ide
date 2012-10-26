@@ -192,7 +192,7 @@ public class MessageBroker
             messageList.remove(message);
             if (messageList.isEmpty())
             {
-               notSendedMessagesQueue.remove(messageList);
+               notSendedMessagesQueue.remove(sessionId);
             }
             send(sessionId, message);
          }
@@ -206,11 +206,7 @@ public class MessageBroker
     */
    void clearNotSendedMessageQueue(String sessionId)
    {
-      List<WebSocketMessage> messageList = notSendedMessagesQueue.get(sessionId);
-      if (messageList != null)
-      {
-         notSendedMessagesQueue.remove(sessionId);
-      }
+      notSendedMessagesQueue.remove(sessionId);
    }
 
    /**
