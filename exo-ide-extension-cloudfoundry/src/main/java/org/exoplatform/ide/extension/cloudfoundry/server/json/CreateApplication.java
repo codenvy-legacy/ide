@@ -46,6 +46,8 @@ public class CreateApplication
    private final String runtime;
    private final String command;
 
+   private Map<String, String> options;
+
    public CreateApplication(String name,
                             int instances,
                             String url,
@@ -105,6 +107,15 @@ public class CreateApplication
       return m;
    }
 
+   public Map<String, String> getOptions()
+   {
+      if (options == null)
+      {
+         options = new HashMap<String, String>();
+      }
+      return options;
+   }
+
    @Override
    public String toString()
    {
@@ -116,6 +127,7 @@ public class CreateApplication
          ", framework='" + framework + '\'' +
          ", runtime='" + runtime + '\'' +
          ", command='" + command + '\'' +
+         ", options=" + options +
          '}';
    }
 }

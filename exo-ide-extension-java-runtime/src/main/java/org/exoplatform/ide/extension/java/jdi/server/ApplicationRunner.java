@@ -19,9 +19,9 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
-import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Java application runner.
@@ -36,13 +36,15 @@ public interface ApplicationRunner
     *
     * @param war
     *    location of .war file. It may be local or remote location
+    * @param params
+    *    optional application params, may be <code>null</code> or empty
     * @return description of deployed application
     * @throws ApplicationRunnerException
     *    if any error occur when try to deploy application
     * @see ApplicationRunnerService#stopApplication(String)
     * @see ApplicationInstance
     */
-   ApplicationInstance runApplication(URL war) throws ApplicationRunnerException;
+   ApplicationInstance runApplication(URL war, Map<String, String> params) throws ApplicationRunnerException;
 
    /**
     * Run Java web application in debug mode.
@@ -51,13 +53,16 @@ public interface ApplicationRunner
     *    location of .war file. It may be local or remote location
     * @param suspend
     *    if <code>true</code> wait on startup for debugger connect
+    * @param params
+    *    optional application params, may be <code>null</code> or empty
     * @return description of deployed application
     * @throws ApplicationRunnerException
     *    if any error occur when try to deploy application
     * @see ApplicationRunnerService#stopApplication(String)
     * @see ApplicationInstance
     */
-   DebugApplicationInstance debugApplication(URL war, boolean suspend) throws ApplicationRunnerException;
+   ApplicationInstance debugApplication(URL war, boolean suspend, Map<String, String> params)
+      throws ApplicationRunnerException;
 
    /**
     * Get application logs.
@@ -83,7 +88,7 @@ public interface ApplicationRunner
 
    /**
     * Prolong the expiration time of the application.
-    * 
+    *
     * @param name
     *    name of application
     * @param time
@@ -93,5 +98,15 @@ public interface ApplicationRunner
     * @see ApplicationRunnerService#prolongExpirationTime(String, long)
     * @see ApplicationInstance
     */
-   void prolongExpirationTime(String name, long time) throws ApplicationRunnerException;;
+   void prolongExpirationTime(String name, long time) throws ApplicationRunnerException;
+
+   /**
+    * Update already deployed Java web application.
+    *
+    * @param war
+    *    location of .war file. It may be local or remote location. File from this location will be used for update.
+    * @throws ApplicationRunnerException
+    *    if any error occur when try to update application
+    */
+   void updateApplication(String name, URL war) throws ApplicationRunnerException;
 }

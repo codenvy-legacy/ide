@@ -29,7 +29,6 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
-import org.exoplatform.ide.extension.java.jdi.shared.DebugApplicationInstance;
 
 /**
  * Created by The eXo Platform SAS.
@@ -69,13 +68,13 @@ public class ApplicationRunnerClientService
       String requestUrl = BASE_URL + "/run?war=" + war + "&usewebsocket=" + useWebSocket;
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }
 
    public void debugApplication(String project, String war, boolean useWebSocket,
-      AsyncRequestCallback<DebugApplicationInstance> callback) throws RequestException
+      AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
    {
       RequestStatusHandler statusHandler = null;
       if (!useWebSocket)
@@ -86,7 +85,7 @@ public class ApplicationRunnerClientService
       String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false" + "&usewebsocket=" + useWebSocket;
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.GET, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
 
    }

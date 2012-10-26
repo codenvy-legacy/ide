@@ -32,6 +32,23 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    private int port = 80;
    private String stopURL;
    private int lifetime = -1;
+   private String debugHost;
+   private int debugPort = -1;
+
+   public ApplicationInstanceImpl(String name,
+                                  String host,
+                                  String stopURL,
+                                  int lifetime,
+                                  String debugHost,
+                                  int debugPort)
+   {
+      this.name = name;
+      this.host = host;
+      this.stopURL = stopURL;
+      this.lifetime = lifetime;
+      this.debugHost = debugHost;
+      this.debugPort = debugPort;
+   }
 
    public ApplicationInstanceImpl(String name, String host, String stopURL, int lifetime)
    {
@@ -113,6 +130,30 @@ public class ApplicationInstanceImpl implements ApplicationInstance
    }
 
    @Override
+   public String getDebugHost()
+   {
+      return debugHost;
+   }
+
+   @Override
+   public void setDebugHost(String debugHost)
+   {
+      this.debugHost = debugHost;
+   }
+
+   @Override
+   public int getDebugPort()
+   {
+      return debugPort;
+   }
+
+   @Override
+   public void setDebugPort(int debugPort)
+   {
+      this.debugPort = debugPort;
+   }
+
+   @Override
    public String toString()
    {
       return "ApplicationInstanceImpl{" +
@@ -121,6 +162,8 @@ public class ApplicationInstanceImpl implements ApplicationInstance
          ", port=" + port +
          ", stopURL='" + stopURL + '\'' +
          ", lifetime=" + lifetime +
+         ", debugHost='" + debugHost + '\'' +
+         ", debugPort=" + debugPort +
          '}';
    }
 }
