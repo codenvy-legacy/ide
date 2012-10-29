@@ -446,6 +446,7 @@
    <modules>
       <module>exo-ide-commons</module>
       <module>exo-ide-core</module>
+      <module>exo-ext-demo</module>
       <module>exo-ide-java</module>
       <module>exo-ide-client</module>
    </modules>
