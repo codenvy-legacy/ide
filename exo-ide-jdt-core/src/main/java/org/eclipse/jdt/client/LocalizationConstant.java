@@ -16,16 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.codeassistant.storage;
+package org.eclipse.jdt.client;
+
+import com.google.gwt.i18n.client.Messages;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: LocalizationConstant.java Oct 26, 2012 vetal $
  *
  */
-public interface UpdateInvoker
+public interface LocalizationConstant extends Messages
 {
+   /*
+    * Controls
+    */
+   @Key("control.updateDependency.id")
+   String updateDependencyControlId();
 
-   public abstract UpdateStorageResult execute();
+   @Key("control.updateDependency.title")
+   String updateDependencyControlTitle();
 
+   @Key("control.updateDependency.prompt")
+   String updateDependencyControlPrompt();
+
+   /*
+    * Messages
+    */
+   @Key("messages.updateDependency.started")
+   String updateDependencyStarted(String project);
+
+   @Key("messages.updateDependency.finished")
+   String updateDependencyFinished(String project);
 }

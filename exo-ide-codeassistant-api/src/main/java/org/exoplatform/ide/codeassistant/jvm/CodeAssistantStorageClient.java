@@ -94,14 +94,51 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
       return defaultValue;
    }
 
-   public void updateTypeIndex(String dependencyList, String zipUrl) throws IOException
+   public String updateTypeIndex(String dependencyList, String zipUrl) throws IOException
    {
-      sendRequest(new URL(baseURL + "/storage/update/type"), dependencyList, zipUrl);
+      return sendRequest(new URL(baseURL + "/storage/update/type"), dependencyList, zipUrl);
    }
 
-   public void updateDockIndex(String dependencyList, String zipUrl) throws IOException
+   public String updateDockIndex(String dependencyList, String zipUrl) throws IOException
    {
-      sendRequest(new URL(baseURL + "/storage/update/dock"), dependencyList, zipUrl);
+      return sendRequest(new URL(baseURL + "/storage/update/dock"), dependencyList, zipUrl);
+   }
+
+   public String status(String statusUrl) throws IOException
+   {
+
+      HttpURLConnection http = null;
+      String response = null;
+      try
+      {
+         URL url = new URL(statusUrl);
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         int responseCode = http.getResponseCode();
+         if (responseCode != 200)
+         {
+            LOG.error("Can't dowload dependency list from: " + statusUrl);
+         }
+         InputStream data = http.getInputStream();
+         response = readBody(data, http.getContentLength());
+      }
+      catch (MalformedURLException e)
+      {
+         LOG.error("Invalid URL", e);
+      }
+      catch (IOException e)
+      {
+         LOG.error("Error", e);
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
+      }
+      return response;
+
    }
 
    /**
@@ -109,34 +146,31 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
     * @param zipUrl
     * @throws IOException 
     */
-   private void sendRequest(URL url, String dependencyList, String zipUrl) throws IOException
+   private String sendRequest(URL url, String dependencyList, String zipUrl) throws IOException
    {
-      try
-      {
 
-         HttpURLConnection http = null;
+      HttpURLConnection http = null;
 
-         http = (HttpURLConnection)url.openConnection();
-         http.setRequestMethod("POST");
-         http.setRequestProperty("content-type", "application/json");
-         http.setDoOutput(true);
-         OutputStreamWriter w = new OutputStreamWriter(http.getOutputStream());
-         w.write("{\"dependencies\":");
-         w.write(dependencyList);
-         w.write(",\"zipUrl\":");
-         w.write("\"" + zipUrl + "\"");
-         w.write("}");
-         w.flush();
-         w.close();
-         http.getResponseCode();
-      }
-      catch (MalformedURLException e)
-      {
-         if (LOG.isDebugEnabled())
-            LOG.debug(e.getMessage(), e);
-      }
-
+      http = (HttpURLConnection)url.openConnection();
+      http.setRequestMethod("POST");
+      http.setRequestProperty("content-type", "application/json");
+      http.setDoOutput(true);
+      OutputStreamWriter w = new OutputStreamWriter(http.getOutputStream());
+      w.write("{\"dependencies\":");
+      w.write(dependencyList);
+      w.write(",\"zipUrl\":");
+      w.write("\"" + zipUrl + "\"");
+      w.write("}");
+      w.flush();
+      w.close();
+      return readBody(http.getInputStream(), http.getContentLength());
    }
+
+   /**
+    * @param dependencys
+    * @param buildStatus  
+    * @return
+    */
 
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAnnotations(java.lang.String, java.util.Set)
@@ -390,7 +424,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
       }
       return null;
    }
-   
+
    /**
     * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorage#getAllPackages(java.util.Set)
     */

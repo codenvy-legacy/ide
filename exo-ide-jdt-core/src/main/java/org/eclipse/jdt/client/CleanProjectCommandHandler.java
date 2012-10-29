@@ -18,18 +18,37 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
+
 import org.eclipse.jdt.client.event.CleanProjectEvent;
 import org.eclipse.jdt.client.event.CleanProjectHandler;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.JobChangeEvent;
+import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
  *
  */
-public class CleanProjectCommandHandler implements CleanProjectHandler
+public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectOpenedHandler, VfsChangedHandler
 {
+
+   private String vfsId;
+
+   private ProjectModel project;
 
    /**
     * 
@@ -37,6 +56,8 @@ public class CleanProjectCommandHandler implements CleanProjectHandler
    public CleanProjectCommandHandler()
    {
       IDE.addHandler(CleanProjectEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -45,9 +66,109 @@ public class CleanProjectCommandHandler implements CleanProjectHandler
    @Override
    public void onCleanProject(CleanProjectEvent event)
    {
+      if (vfsId != null && project != null)
+      {
+         final UpdateDependencyStatusHandler updateDependencyStatusHandler = new UpdateDependencyStatusHandler(project.getName());
+         final String projectId = project.getId();
+         updateDependencyStatusHandler.requestInProgress(projectId);
+         String url =
+            Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId
+               + "&vfsid=" + vfsId;
+         try
+         {
+            AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>()
+            {
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  updateDependencyStatusHandler.requestFinished(projectId);
+                  doClean();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  updateDependencyStatusHandler.requestError(projectId, exception);
+                  exception.printStackTrace();
+               }
+            });
+         }
+         catch (RequestException e)
+         {
+            e.printStackTrace();
+         }
+      }
+   }
+
+   /**
+    * 
+    */
+   private void doClean()
+   {
       TypeInfoStorage.get().clear();
+
       IDE.fireEvent(new ReparseOpenedFilesEvent());
       NameEnvironment.clearFQNBlackList();
    }
 
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfsId = event.getVfsInfo().getId();
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+
+   private class UpdateDependencyStatusHandler implements RequestStatusHandler
+   {
+
+      private String projectName;
+
+      /**
+       * @param projectName project's name
+       */
+      public UpdateDependencyStatusHandler(String projectName)
+      {
+         super();
+         this.projectName = projectName;
+      }
+
+      /**
+       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String)
+       */
+      @Override
+      public void requestInProgress(String id)
+      {
+         Job job = new Job(id, JobStatus.STARTED);
+         job.setStartMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyStarted(projectName));
+         IDE.fireEvent(new JobChangeEvent(job));
+      }
+
+      /**
+       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String)
+       */
+      @Override
+      public void requestFinished(String id)
+      {
+         Job job = new Job(id, JobStatus.FINISHED);
+         job.setFinishMessage(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyFinished(projectName));
+         IDE.fireEvent(new JobChangeEvent(job));
+      }
+
+      /**
+       * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
+       */
+      @Override
+      public void requestError(String id, Throwable exception)
+      {
+         Job job = new Job(id, JobStatus.ERROR);
+         job.setError(exception);
+         IDE.fireEvent(new JobChangeEvent(job));
+      }
+   }
 }

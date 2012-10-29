@@ -18,28 +18,30 @@
  */
 package org.exoplatform.ide.codeassistant.storage;
 
-import org.exoplatform.ide.codeassistant.asm.JarParser;
 import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
-import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
-import org.exoplatform.ide.codeassistant.storage.api.DataWriter;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
 import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -87,6 +89,8 @@ public class UpdateStorageService
    /** Default max size of build queue (200). */
    public static final int DEFAULT_UPDATE_QUEUE_SIZE = 200;
 
+   public static final int DEFAULT_CLEAN_RESULT_DELAY_TIME = 1;
+
    private final ExecutorService pool;
 
    private final File tempFolder;
@@ -98,6 +102,18 @@ public class UpdateStorageService
    private Thread writerThread;
 
    private BlockingQueue<WriterTask> writerQueue;
+
+   private final ScheduledExecutorService cleaner;
+
+   private ConcurrentMap<String, CacheElement> concurrentMap = new ConcurrentHashMap<String, CacheElement>();
+
+   /** task ID generator. */
+   private static final AtomicLong idGenerator = new AtomicLong(1);
+
+   private static String nextTaskID()
+   {
+      return Long.toString(idGenerator.getAndIncrement());
+   }
 
    private static <O> O getOption(Map<String, Object> config, String option, Class<O> type, O defaultValue)
    {
@@ -137,20 +153,24 @@ public class UpdateStorageService
          new ThreadPoolExecutor(workerNumber, workerNumber, 0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>(updateQueueSize), new ThreadPoolExecutor.AbortPolicy());
 
+      this.cleaner = Executors.newSingleThreadScheduledExecutor();
+      cleaner.scheduleAtFixedRate(new CleanTask(), DEFAULT_CLEAN_RESULT_DELAY_TIME, DEFAULT_CLEAN_RESULT_DELAY_TIME,
+         TimeUnit.MINUTES);
+
       writerQueue = new LinkedBlockingQueue<WriterTask>();
       StorageWriter storageWriter = new StorageWriter(writerQueue, infoStorage);
       writerThread = new Thread(storageWriter, "StorageWriter");
       writerThread.start();
    }
 
-   public void updateTypeIndex(List<Dependency> dependencies, InputStream in) throws IOException
+   public UpdateStorageTask updateTypeIndex(List<Dependency> dependencies, InputStream in) throws IOException
    {
-      addTask(new TypeUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
+      return addTask(new TypeUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
    }
 
-   public void updateDockIndex(List<Dependency> dependencies, InputStream in) throws IOException
+   public UpdateStorageTask updateDockIndex(List<Dependency> dependencies, InputStream in) throws IOException
    {
-      addTask(new DockUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
+      return addTask(new DockUpdateInvoker(infoStorage, writerQueue, dependencies, createDependencys(in)));
    }
 
    public void shutdown()
@@ -176,20 +196,37 @@ public class UpdateStorageService
     * @param createDependencys
     * @param dependencies
     */
-   private void addTask(final UpdateInvoker invoker)
+   private UpdateStorageTask addTask(final UpdateInvoker invoker)
    {
-      pool.submit(new Runnable()
+      Future<UpdateStorageResult> future = pool.submit(new Callable<UpdateStorageResult>()
       {
-
          @Override
-         public void run()
+         public UpdateStorageResult call() throws Exception
          {
             TimeOutThread t = new TimeOutThread(timeoutMillis, Thread.currentThread());
             t.start();
-            invoker.execute();
+            UpdateStorageResult result = invoker.execute();
             t.kill();
+            return result;
          }
       });
+      final String nextTaskID = nextTaskID();
+
+      UpdateStorageTask task = new UpdateStorageTask(nextTaskID, future);
+      CacheElement newElement =
+         new CacheElement(nextTaskID, task, System.currentTimeMillis() + DEFAULT_CLEAN_RESULT_DELAY_TIME);
+      concurrentMap.put(nextTaskID, newElement);
+      return task;
+   }
+
+   /**
+    * @param createDependencys
+    * @param dependencies
+    */
+   public UpdateStorageTask getTask(String id)
+   {
+      CacheElement e = concurrentMap.get(id);
+      return e != null ? e.task : null;
    }
 
    /**
@@ -262,6 +299,68 @@ public class UpdateStorageService
       File depFolder = UpdateUtil.makeProjectDirectory(tempFolder);
       UpdateUtil.unzip(in, depFolder);
       return depFolder;
+   }
+
+   /* ====================================================== */
+
+   private class CleanTask implements Runnable
+   {
+      public void run()
+      {
+         Set<String> keySet = concurrentMap.keySet();
+         for (String key : keySet)
+         {
+            CacheElement element = concurrentMap.get(key);
+            if (element.isExpired())
+               concurrentMap.clear();
+         }
+
+      }
+   }
+
+   private static final class CacheElement
+   {
+      private final long expirationTime;
+
+      private final int hash;
+
+      final String id;
+
+      final UpdateStorageTask task;
+
+      CacheElement(String id, UpdateStorageTask task, long expirationTime)
+      {
+         this.id = id;
+         this.task = task;
+         this.expirationTime = expirationTime;
+         this.hash = 7 * 31 + id.hashCode();
+      }
+
+      @Override
+      public boolean equals(Object o)
+      {
+         if (this == o)
+         {
+            return true;
+         }
+         if (o == null || getClass() != o.getClass())
+         {
+            return false;
+         }
+         CacheElement e = (CacheElement)o;
+         return id.equals(e.id);
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return hash;
+      }
+
+      boolean isExpired()
+      {
+         return expirationTime < System.currentTimeMillis();
+      }
    }
 
 }

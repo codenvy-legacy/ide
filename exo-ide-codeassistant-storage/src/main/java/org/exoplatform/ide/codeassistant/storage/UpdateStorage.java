@@ -25,12 +25,20 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST interface for {@link UpdateStorageService}
@@ -49,19 +57,14 @@ public class UpdateStorage
    @Path("update/type")
    @POST
    @Consumes("application/json")
-   public void updateTypeDependecys(Dependencys dependencys)
+   public Response updateTypeDependecys(@Context UriInfo uriInfo, Dependencys dependencys) throws IOException
    {
-      try
-      {
-         InputStream zip = doDownload(dependencys.getZipUrl());
-         storageService.updateTypeIndex(dependencys.getDependencies(), zip);
-      }
-      catch (IOException e)
-      {
-         LOG.error("Can't find dependencys", e);
-      }
+      InputStream zip = doDownload(dependencys.getZipUrl());
+      UpdateStorageTask task = storageService.updateTypeIndex(dependencys.getDependencies(), zip);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
    }
-   
+
    @Path("update/dock")
    @POST
    @Consumes("application/json")
@@ -76,6 +79,43 @@ public class UpdateStorage
       {
          LOG.error("Can't find dependencys", e);
       }
+   }
+
+   @GET
+   @Path("status/{buildid}")
+   public Response status(@PathParam("buildid") String buildID, @Context UriInfo uriInfo)
+   {
+      UpdateStorageTask task = storageService.getTask(buildID);
+      if (task != null)
+      {
+         if (task.isDone())
+         {
+            UpdateStorageResult result = task.getResult();
+            if (task.getResult().getExitCode() == 0)
+            {
+               return Response
+                  .status(200)
+                  .entity(
+                     "{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\"\",\"time\":\""
+                        + Long.toString(System.currentTimeMillis()) + "\"}").type(MediaType.APPLICATION_JSON).build();
+            }
+            else
+            {
+               return Response
+                  .status(200)
+                  .entity(
+                     "{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + ",\"error\":\""
+                        + result.getErroMessage() + "\"}").type(MediaType.APPLICATION_JSON).build();
+            }
+         }
+         else
+         {
+            return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
+         }
+      }
+      // Incorrect task ID.
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
+         .type(MediaType.TEXT_PLAIN).build());
    }
 
    private InputStream doDownload(String downloadURL) throws IOException

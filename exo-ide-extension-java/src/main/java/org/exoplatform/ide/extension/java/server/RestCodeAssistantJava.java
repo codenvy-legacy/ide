@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
+import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
@@ -27,6 +28,8 @@ import org.exoplatform.ide.codeassistant.jvm.shared.JavaType;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypesList;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
+import org.exoplatform.ide.extension.maven.server.BuilderException;
+import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -34,16 +37,19 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -71,15 +77,15 @@ public class RestCodeAssistantJava
 
    @Inject
    private JavaCodeAssistant codeAssistant;
-   
+
    @Inject
    private BuilderClient builderClient;
-   
+
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
-   
+
    @Inject
-   private CodeAssistantStorageClient storageClient; 
+   private CodeAssistantStorageClient storageClient;
 
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
@@ -305,8 +311,7 @@ public class RestCodeAssistantJava
          throw new InvalidArgumentException("'projectid' parameter is null.");
       return codeAssistant.getAllPackages(projectId, vfsId);
    }
-   
-   
+
    /**
     * Get list of all package names in project
     * 
@@ -316,26 +321,183 @@ public class RestCodeAssistantJava
     * @return
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException
+    * @throws BuilderException 
+    * @throws IOException 
+    * @throws JsonException 
     */
    @GET
-   @Path("/get-packages")
+   @Path("/update-dependencies")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
-      throws CodeAssistantException, VirtualFileSystemException
+   public void updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+      throws CodeAssistantException, VirtualFileSystemException, IOException, BuilderException, JsonException
    {
       final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-      Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-      Timer timer = new Timer(true);
-      
-      
-      final String buildId = builderClient.dependenciesCopy(vfs, projectId, null);
-      new GetDepZipTask(null, project, buildId, builderClient, storageClient); 
-         
-//         (parent, vfs, buildId, buiclient, storageClient, timer, DELAY),
-//         DELAY, DELAY);
-//            
+      String buildId = builderClient.dependenciesList(vfs, projectId);
+      String dependencys = null;
+
+      BuildStatus buildStatus = waitBuildTaskFinish(buildId);
+      if (Status.SUCCESSFUL == buildStatus.getStatus())
+      {
+         if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
+         {
+            dependencys = makeRequest(buildStatus.getDownloadUrl());
+         }
+      }
+      else
+         LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
+
+      buildId = builderClient.dependenciesCopy(vfs, projectId, null);
+      buildStatus = waitBuildTaskFinish(buildId);
+      String statusUrl = storageClient.updateTypeIndex(dependencys, buildStatus.getDownloadUrl());
+      waitStorageTaskFinish(statusUrl);
    }
-   
-   
+
+   /**
+    * @param dependencys
+    * @param buildStatus  
+    * @return
+    */
+   private String makeRequest(String requestUrl)
+   {
+      HttpURLConnection http = null;
+      String response = null;
+      try
+      {
+         URL url = new URL(requestUrl);
+         http = (HttpURLConnection)url.openConnection();
+         http.setRequestMethod("GET");
+         int responseCode = http.getResponseCode();
+         if (responseCode != 200)
+         {
+            LOG.error("Can't dowload dependency list from: " + requestUrl);
+         }
+         InputStream data = http.getInputStream();
+         response = readBody(data, http.getContentLength());
+      }
+      catch (MalformedURLException e)
+      {
+         LOG.error("Invalid URL", e);
+      }
+      catch (IOException e)
+      {
+         LOG.error("Error", e);
+      }
+      finally
+      {
+         if (http != null)
+         {
+            http.disconnect();
+         }
+      }
+      return response;
+   }
+
+   /**
+    * @param projectId
+    * @param vfs
+    * @param buildId 
+    * @throws IOException
+    * @throws BuilderException
+    * @throws VirtualFileSystemException
+    * @throws UnsupportedEncodingException
+    * @throws MalformedURLException
+    * @throws JsonException 
+    */
+   private BuildStatus waitBuildTaskFinish(String buildId) throws IOException, BuilderException,
+      VirtualFileSystemException, UnsupportedEncodingException, MalformedURLException, JsonException
+   {
+      String status;
+      BuildStatusBean buildStatus;
+      final int sleepTime = 2000;
+      JsonParser parser = new JsonParser();
+      boolean isDone = false;
+      do
+      {
+         try
+         {
+            Thread.sleep(sleepTime);
+         }
+         catch (InterruptedException ignored)
+         {
+         }
+         status = builderClient.status(buildId);
+         parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
+         buildStatus = ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
+         if (Status.IN_PROGRESS != buildStatus.getStatus())
+         {
+            isDone = true;
+         }
+      }
+      while (!isDone);
+      return buildStatus;
+   }
+
+   /**
+    * @param projectId
+    * @param vfs
+    * @param buildId 
+    * @throws IOException
+    * @throws BuilderException
+    * @throws VirtualFileSystemException
+    * @throws UnsupportedEncodingException
+    * @throws MalformedURLException
+    * @throws JsonException 
+    */
+   private BuildStatus waitStorageTaskFinish(String buildId) throws IOException, BuilderException,
+      VirtualFileSystemException, UnsupportedEncodingException, MalformedURLException, JsonException
+   {
+      String status;
+      BuildStatusBean buildStatus;
+      final int sleepTime = 2000;
+      JsonParser parser = new JsonParser();
+      boolean isDone = false;
+      do
+      {
+         try
+         {
+            Thread.sleep(sleepTime);
+         }
+         catch (InterruptedException ignored)
+         {
+         }
+         status = storageClient.status(buildId);
+         parser.parse(new ByteArrayInputStream(status.getBytes("UTF-8")));
+         buildStatus = ObjectBuilder.createObject(BuildStatusBean.class, parser.getJsonObject());
+         if (Status.IN_PROGRESS != buildStatus.getStatus())
+         {
+            isDone = true;
+         }
+      }
+      while (!isDone);
+      return buildStatus;
+   }
+
+   private String readBody(InputStream input, int contentLength) throws IOException
+   {
+      String body = null;
+      if (contentLength > 0)
+      {
+         byte[] b = new byte[contentLength];
+         int off = 0;
+         int i;
+         while ((i = input.read(b, off, contentLength - off)) > 0)
+         {
+            off += i;
+         }
+         body = new String(b);
+      }
+      else if (contentLength < 0)
+      {
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         byte[] buf = new byte[1024];
+         int i;
+         while ((i = input.read(buf)) != -1)
+         {
+            bout.write(buf, 0, i);
+         }
+         body = bout.toString();
+      }
+      return body;
+   }
 
 }

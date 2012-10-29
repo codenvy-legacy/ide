@@ -72,7 +72,7 @@ public class LuceneDataWriter
     */
    public void addJavaDocs(Map<String, String> javaDocs, String artifact) throws SaveDataIndexException
    {
-
+      LOG.info("Add JavaDoc for : " + artifact);
       IndexWriter writer = null;
       try
       {
@@ -101,7 +101,7 @@ public class LuceneDataWriter
    }
 
    /**
-    * remove javaDocs to lucene storage.
+    * remove javaDocs from Lucene storage.
     * 
     * @param javaDocs
     *           - Map<fqn, doc>
@@ -110,12 +110,12 @@ public class LuceneDataWriter
     */
    public void removeJavaDocs(String artifact) throws SaveDataIndexException
    {
-
+      LOG.info("Delete JavaDoc for : " + artifact);
       IndexWriter writer = null;
       try
       {
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         removeDoc(artifact, IndexType.DOC, DataIndexFields.FQN, writer);
+         removeLuceneDoc(artifact, IndexType.DOC, DataIndexFields.FQN, writer);
          writer.commit();
       }
       catch (IOException e)
@@ -143,7 +143,7 @@ public class LuceneDataWriter
     */
    public void addTypeInfo(List<TypeInfo> typeInfos, String artifact) throws SaveDataIndexException
    {
-
+      LOG.info("Add TypeInfo for : " + artifact);
       IndexWriter writer = null;
       try
       {
@@ -174,20 +174,19 @@ public class LuceneDataWriter
 
    
    /**
-    * Add List of TypeInfo to index.
+    * Remove TypeInfo from index according to artifact.
     * 
     * @param typeInfos
     * @throws SaveDataIndexException
     */
    public void removeTypeInfo(String artifact) throws SaveDataIndexException
    {
-
-      LOG.info("Delete: TypeInfo for : " + artifact);
+      LOG.info("Delete TypeInfo for : " + artifact);
       IndexWriter writer = null;
       try
       {
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         removeDoc(artifact, IndexType.JAVA, DataIndexFields.FQN, writer);
+         removeLuceneDoc(artifact, IndexType.JAVA, DataIndexFields.FQN, writer);
          writer.commit();
       }
       catch (IOException e)
@@ -225,6 +224,7 @@ public class LuceneDataWriter
     */
    public void addPackages(Set<String> packages, String artifact) throws SaveDataIndexException
    {
+      LOG.info("Add Packages  for : " + artifact);
       IndexWriter writer = null;
       try
       {
@@ -253,7 +253,7 @@ public class LuceneDataWriter
    }
 
    /**
-    * Remove packages to index.
+    * Remove packages from index according to artifact.
     * 
     * @param packages
     * @param artifact 
@@ -266,7 +266,7 @@ public class LuceneDataWriter
       try
       {
          writer = new IndexWriter(indexDirectory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         removeDoc(artifact, IndexType.PACKAGE, DataIndexFields.PACKAGE, writer);
+         removeLuceneDoc(artifact, IndexType.PACKAGE, DataIndexFields.PACKAGE, writer);
          writer.commit();
       }
       catch (IOException e)
@@ -286,16 +286,8 @@ public class LuceneDataWriter
       }
    }
 
-   /**
-    * @param artifact
-    * @param indexType
-    * @param dataField
-    * @param writer
-    * @param pack
-    * @throws CorruptIndexException
-    * @throws IOException
-    */
-   private void removeDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer, String key)
+  
+   private void removeLuceneDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer, String key)
       throws CorruptIndexException, IOException
    {
       Query from = indexType.getQuery();
@@ -308,19 +300,10 @@ public class LuceneDataWriter
       writer.deleteDocuments(query);
    }
    
-   /**
-    * @param artifact
-    * @param indexType
-    * @param dataField
-    * @param writer
-    * @param pack
-    * @throws CorruptIndexException
-    * @throws IOException
-    */
-   private void removeDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer)
+   private void removeLuceneDoc(String artifact, IndexType indexType, String dataField, IndexWriter writer)
       throws CorruptIndexException, IOException
    {
-      removeDoc(artifact, indexType, dataField, writer, null);
+      removeLuceneDoc(artifact, indexType, dataField, writer, null);
    }
 
 }

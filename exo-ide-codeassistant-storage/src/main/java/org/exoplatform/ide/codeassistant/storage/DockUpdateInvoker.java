@@ -66,7 +66,7 @@ public class DockUpdateInvoker implements UpdateInvoker
     * @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute()
     */
    @Override
-   public void execute()
+   public UpdateStorageResult execute()
    {
       QDoxJavaDocExtractor javaDocExtractor = new QDoxJavaDocExtractor();
       try
@@ -98,7 +98,6 @@ public class DockUpdateInvoker implements UpdateInvoker
             }
             catch (InterruptedException e)
             {
-               // TODO Auto-generated catch block
                e.printStackTrace();
             }
             finally
@@ -106,10 +105,12 @@ public class DockUpdateInvoker implements UpdateInvoker
                zipStream.close();
             }
          }
+         return new UpdateStorageResult();
       }
       catch (IOException e)
       {
          LOG.error("Can't index javadoc", e);
+         return new UpdateStorageResult(e.getMessage(), 100);
       }
       finally
       {

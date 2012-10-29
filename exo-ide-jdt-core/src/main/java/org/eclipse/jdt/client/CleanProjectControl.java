@@ -48,9 +48,9 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
     */
    public CleanProjectControl()
    {
-      super("Project/Clean");
-      setTitle("Clean...");
-      setPrompt("Clean Project");
+      super(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyControlId());
+      setTitle(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyControlTitle());
+      setPrompt(JdtExtension.LOCALIZATION_CONSTANT.updateDependencyControlPrompt());
       setImages(JdtClientBundle.INSTANCE.clean(), JdtClientBundle.INSTANCE.cleanDisabled());
       setEvent(new CleanProjectEvent());
    }

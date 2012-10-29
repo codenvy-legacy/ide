@@ -18,9 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.json.client.JSONObject;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.NameEnvironment.JSONTypesInfoUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
@@ -102,6 +101,11 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    private static final HoverResources resources = GWT.create(HoverResources.class);
 
    public static final String JAVA_CODE_FORMATTER = "JavaCodeFormatter";
+
+   /**
+    * Localization constants.
+    */
+   public static final LocalizationConstant LOCALIZATION_CONSTANT = GWT.create(LocalizationConstant.class);
 
    private static JdtExtension instance;
 

@@ -70,7 +70,7 @@ public class TypeUpdateInvoker implements UpdateInvoker
     * @see org.exoplatform.ide.codeassistant.storage.UpdateInvoker#execute()
     */
    @Override
-   public void execute()
+   public UpdateStorageResult execute()
    {
       try
       {
@@ -95,18 +95,22 @@ public class TypeUpdateInvoker implements UpdateInvoker
             {
                if (LOG.isDebugEnabled())
                   LOG.debug("Can't open: " + jarName, e);
+               return new UpdateStorageResult(e.getMessage(), 100);
             }
             catch (InterruptedException e)
             {
                if (LOG.isDebugEnabled())
                   LOG.debug("Interrupted:", e);
+               return new UpdateStorageResult(e.getMessage(), 100);
             }
             catch (Exception e)
             {
                if (LOG.isDebugEnabled())
                   LOG.debug("Can't add artifact: " + jarName, e);
+               return new UpdateStorageResult(e.getMessage(), 100);
             }
          }
+         return new UpdateStorageResult();
       }
       finally
       {
