@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -113,7 +114,7 @@ public class MessageBroker
     * Used for publish messages to clients which subscribed
     * to receive messages on a particular channel.
     */
-   private Map<String, CopyOnWriteArraySet<String>> channelToSubscribers =
+   private ConcurrentMap<String, CopyOnWriteArraySet<String>> channelToSubscribers =
       new ConcurrentHashMap<String, CopyOnWriteArraySet<String>>();
 
    /**
@@ -226,17 +227,17 @@ public class MessageBroker
          throw new NullPointerException("Channel name must not be null");
       }
 
-      CopyOnWriteArraySet<String> subscribersSet = channelToSubscribers.get(sessionId);
-      if (subscribersSet != null)
+      CopyOnWriteArraySet<String> subscribersSet = channelToSubscribers.get(channel);
+      if (subscribersSet == null)
       {
-         subscribersSet.add(sessionId);
+         CopyOnWriteArraySet<String> newSubscribersSet = new CopyOnWriteArraySet<String>();
+         subscribersSet = channelToSubscribers.putIfAbsent(channel, newSubscribersSet);
+         if (subscribersSet == null)
+         {
+            subscribersSet = newSubscribersSet;
+         }
       }
-      else
-      {
-         subscribersSet = new CopyOnWriteArraySet<String>();
-         subscribersSet.add(sessionId);
-         channelToSubscribers.put(channel, subscribersSet);
-      }
+      subscribersSet.add(sessionId);
    }
 
    /**
