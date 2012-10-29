@@ -101,7 +101,7 @@
 						addStyleNames="{style.anchor} {style.anchor1}"></g:Anchor>
 					<g:Anchor href="http://www.firefox.com/" text="Mozilla Firefox" target="_blank"
 						addStyleNames="{style.anchor} {style.anchor2}"></g:Anchor>
-					<g:Anchor href="http://www.apple.com/safari/" text="Apple Safari" target="_blank"
+					<g:Anchor href="http://support.apple.com/downloads/#safari" text="Apple Safari" target="_blank"
 						addStyleNames="{style.anchor} {style.anchor3}"></g:Anchor>
 	            </g:FlowPanel>
 			</g:FlowPanel>
