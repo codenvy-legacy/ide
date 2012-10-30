@@ -70,8 +70,6 @@ public class AutocompleteUiController implements AutocompleteBox
       int maxHeight();
    }
 
-   private static final CompletionProposal CAPPED_INDICATOR = null;
-
    private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
       new SimpleList.ListItemRenderer<CompletionProposal>()
       {
@@ -82,17 +80,8 @@ public class AutocompleteUiController implements AutocompleteBox
             TableCellElement label = Elements.createTDElement(css.proposalLabel());
             TableCellElement group = Elements.createTDElement(css.proposalGroup());
 
-            if (itemData != CAPPED_INDICATOR)
-            {
-               icon.appendChild((Node)itemData.getImage().getElement());
-               label.setInnerHTML(itemData.getDisplayString());
-               //group.setTextContent(itemData.getPath().getPathString());
-            }
-            else
-            {
-               label.setTextContent("Type for more results");
-               label.addClassName(css.cappedProposalLabel());
-            }
+            icon.appendChild((Node)itemData.getImage().getElement());
+            label.setInnerHTML(itemData.getDisplayString());
             itemElement.appendChild(icon);
             itemElement.appendChild(label);
             itemElement.appendChild(group);
@@ -112,10 +101,6 @@ public class AutocompleteUiController implements AutocompleteBox
          public void onListItemClicked(Element itemElement, CompletionProposal itemData)
          {
             Assert.isNotNull(delegate);
-            if (itemData == CAPPED_INDICATOR)
-            {
-               return;
-            }
             list.getSelectionModel().setSelectedItem(itemData);
          }
 
@@ -123,10 +108,6 @@ public class AutocompleteUiController implements AutocompleteBox
          public void onListItemDoubleClicked(Element listItemBase, CompletionProposal itemData)
          {
             Assert.isNotNull(delegate);
-            if (itemData == CAPPED_INDICATOR)
-            {
-               return;
-            }
             delegate.onSelect(itemData);
          }
       };
@@ -280,7 +261,6 @@ public class AutocompleteUiController implements AutocompleteBox
          editor.getBuffer().removeAnchoredElement(anchor, autoHideController.getView().getElement());
          anchor = null;
       }
-
 
       FocusManager focusManager = editor.getFocusManager();
       if (hadFocus && !focusManager.hasFocus())
