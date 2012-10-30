@@ -302,6 +302,9 @@ public interface AppfogLocalizationConstant extends Messages
    @Key("create.application.failed")
    String applicationCreationFailed();
 
+   @Key("create.application.error.getting.infras")
+   String errorGettingInfras();
+
    /*
     * StartApplicationPresenter
     */

@@ -49,7 +49,7 @@
    <f:Border margin="15" borderColor="transparent">
       <f:layer>
          <g:FlowPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppServerField}" height="18px"></g:Label>
                </g:west>
@@ -61,7 +61,7 @@
                   <g:FlowPanel></g:FlowPanel>
                </g:east>
             </g:DockLayoutPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="Infra: " height="18px"></g:Label>
                </g:west>
@@ -73,7 +73,7 @@
                   <g:FlowPanel></g:FlowPanel>
                </g:east>
             </g:DockLayoutPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppNameField}" height="18px"></g:Label>
                </g:west>
@@ -84,7 +84,7 @@
                   <g:FlowPanel></g:FlowPanel>
                </g:east>
             </g:DockLayoutPanel>
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppTypeField}" height="18px"></g:Label>
                </g:west>
@@ -100,7 +100,7 @@
                </g:east>
             </g:DockLayoutPanel>
 
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppUrlField}" height="18px"></g:Label>
                </g:west>
@@ -116,7 +116,7 @@
                </g:east>
             </g:DockLayoutPanel>
 
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppInstancesField}" height="18px"></g:Label>
                </g:west>
@@ -128,7 +128,7 @@
                </g:east>
             </g:DockLayoutPanel>
 
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
                   <g:Label text="{locale.createAppMemoryField}" height="18px"></g:Label>
                </g:west>
@@ -140,7 +140,7 @@
                </g:east>
             </g:DockLayoutPanel>
 
-            <g:DockLayoutPanel width="100%" unit="PX" height="10%" addStyleNames="{style.spacing}">
+            <g:DockLayoutPanel width="100%" unit="PX" height="11%" addStyleNames="{style.spacing}">
                <g:west size="140">
                   <g:Label text="{locale.createAppStartAfterCreationField}" height="18px"></g:Label>
                </g:west>

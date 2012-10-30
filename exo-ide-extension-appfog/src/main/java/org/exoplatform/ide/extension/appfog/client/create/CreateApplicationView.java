@@ -46,7 +46,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
 
    private static final int WIDTH = 500;
 
-   private static final int HEIGHT = 400;
+   private static final int HEIGHT = 370;
 
    private static final String CREATE_BUTTON_ID = "ideAppfogAppViewCreateButton";
 

@@ -297,7 +297,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             // if url set automatically, than try to create url using server and name
             if (!display.getUrlCheckItem().getValue())
             {
-               updateUrlField();
                display.enableAutodetectTypeCheckItem(true);
             }
          }
@@ -308,13 +307,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            for (InfraDetail infra : infras)
-            {
-               if (display.getInfraField().getValue().equals(infra.getName()))
-               {
-                  currentInfra = infra;
-               }
-            }
+            currentInfra = findInfraByName(display.getInfraField().getValue());
             updateUrlField();
          }
       });
@@ -530,7 +523,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             vfs.getId(),
             project.getId(),
             warUrl,
-            currentInfra.getInfra(),
+            app.infra,
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, createAppHandler, null,
                app.server)
             {
@@ -702,6 +695,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       String url;
 
+      InfraDetail infra = findInfraByName(display.getInfraField().getValue());
+
       if (display.getUrlCheckItem().getValue())
       {
          url = display.getUrlField().getValue();
@@ -712,7 +707,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       else
       {
-         url = null;
+         url = name + '.' + infra.getBase();
       }
 
       int instances = 0;
@@ -726,9 +721,19 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
       boolean nostart = !display.getIsStartAfterCreationCheckItem().getValue();
 
-      String infra = display.getInfraField().getValue();
+      return new AppData(server, name, type, url, instances, memory, nostart, infra.getInfra());
+   }
 
-      return new AppData(server, name, type, url, instances, memory, nostart, infra);
+   private InfraDetail findInfraByName(String infraName)
+   {
+      for (InfraDetail infra : infras)
+      {
+         if (infraName.equals(infra.getName()))
+         {
+            return infra;
+         }
+      }
+      return null;
    }
 
    /**
@@ -797,7 +802,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      getFrameworks(servers[0]);
                   }
                   display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
-                  updateUrlField();
                }
 
                @Override
@@ -815,38 +819,49 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
    private void getInfras(final String server)
    {
+      LoggedInHandler getInfrasHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn()
+         {
+            getInfras(server);
+         }
+      };
+
       try
       {
          AppfogClientService.getInstance().infras(server, null, null,
-            new AsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()))
+            new AppfogAsyncRequestCallback<List<InfraDetail>>(
+               new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
+               getInfrasHandler,
+               null,
+               server
+            )
             {
                @Override
                protected void onSuccess(List<InfraDetail> result)
                {
-//                  //TODO to finish it
                   if (result.isEmpty())
                   {
-                     display.setInfraValues(new String[]{"Test"});
-                     display.getInfraField().setValue("Test");
+                     IDE.fireEvent(new ExceptionThrownEvent(AppfogExtension.LOCALIZATION_CONSTANT.errorGettingInfras()));
                   }
                   else
                   {
+                     infras = result;
+
                      List<String> infraNames = new ArrayList<String>(result.size());
                      for (InfraDetail infra : result)
                      {
                         infraNames.add(infra.getName());
                      }
+
+                     display.getInfraField().setValue(infraNames.get(0));
                      display.setInfraValues(infraNames.toArray(new String[infraNames.size()]));
                      display.getServerField().setValue(display.getServerField().getValue());
-                     infras = result;
+
+                     currentInfra = infras.get(0);
                   }
                   updateUrlField();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
