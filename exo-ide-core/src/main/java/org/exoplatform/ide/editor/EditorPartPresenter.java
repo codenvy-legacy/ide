@@ -45,6 +45,11 @@ public interface EditorPartPresenter extends PartPresenter
     * The property id for <code>isDirty</code>.
     */
    public static final int PROP_DIRTY = 0x101;
+   
+   /**
+    * The property id for editor input changed.
+    */
+   public static final int PROP_INPUT = 0x102;
 
    /**
     * Initializes this editor with the given editor site and input.

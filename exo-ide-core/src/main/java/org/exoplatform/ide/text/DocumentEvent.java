@@ -25,8 +25,6 @@ import org.exoplatform.ide.runtime.Assert;
  * Specification of changes applied to documents. All changes are represented as replace commands, i.e. specifying a document
  * range whose text gets replaced with different text. In addition to this information, the event also contains the changed
  * document.
- * 
- * @see org.eclipse.Document.text.IDocument
  */
 public class DocumentEvent
 {

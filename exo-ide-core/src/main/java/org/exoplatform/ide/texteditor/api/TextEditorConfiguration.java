@@ -23,6 +23,7 @@ import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
+import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 
 /**
  * This class bundles the configuration space of a editor display. Instances of
@@ -164,6 +165,18 @@ public class TextEditorConfiguration
     * @return the Parser
     */
    public Parser getParser(TextEditorPartDisplay display)
+   {
+      return null;
+   }
+   
+   /**
+    * Returns the reconciler ready to be used with the given source display.
+    * This implementation always returns <code>null</code>.
+    *
+    * @param display the source display to be configured by this configuration
+    * @return a reconciler or <code>null</code> if reconciling should not be supported
+    */
+   public Reconciler getReconciler(TextEditorPartDisplay display) 
    {
       return null;
    }

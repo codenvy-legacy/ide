@@ -28,7 +28,7 @@ import org.exoplatform.ide.text.DocumentPartitioner;
 import org.exoplatform.ide.text.DocumentPartitioningListener;
 import org.exoplatform.ide.text.PositionUpdater;
 import org.exoplatform.ide.text.Region;
-import org.exoplatform.ide.text.ITypedRegion;
+import org.exoplatform.ide.text.TypedRegion;
 import org.exoplatform.ide.text.Position;
 
 class EditDocument implements Document
@@ -71,7 +71,7 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
-   public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException
+   public TypedRegion[] computePartitioning(int offset, int length) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
@@ -166,7 +166,7 @@ class EditDocument implements Document
       throw new UnsupportedOperationException();
    }
 
-   public ITypedRegion getPartition(int offset) throws BadLocationException
+   public TypedRegion getPartition(int offset) throws BadLocationException
    {
       throw new UnsupportedOperationException();
    }
@@ -309,7 +309,7 @@ class EditDocument implements Document
     * @see org.exoplatform.ide.text.Document#getPartition(java.lang.String, int, boolean)
     */
    @Override
-   public ITypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
+   public TypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException, BadPartitioningException
    {
       throw new UnsupportedOperationException();
@@ -319,7 +319,7 @@ class EditDocument implements Document
     * @see org.exoplatform.ide.text.Document#computePartitioning(java.lang.String, int, int, boolean)
     */
    @Override
-   public ITypedRegion[] computePartitioning(String partitioning, int offset, int length,
+   public TypedRegion[] computePartitioning(String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException, BadPartitioningException
    {
       throw new UnsupportedOperationException();

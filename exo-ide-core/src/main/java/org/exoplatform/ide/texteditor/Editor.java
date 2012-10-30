@@ -34,9 +34,11 @@ import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorOperations;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 import org.exoplatform.ide.texteditor.documentparser.DocumentParser;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.LeftGutterManager;
@@ -236,6 +238,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    private LocalCursorController localCursorController;
 
    private final ListenerManager<ReadOnlyListener> readOnlyListenerManager = ListenerManager.create();
+
+   private final ListenerManager<TextInputListener> textInputListenerManager = ListenerManager.create();
 
    private Renderer renderer;
 
@@ -548,6 +552,15 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
          getRenderer(), getSelection());
       createSyntaxHighligter(parser);
       new CurrentLineHighlighter(buffer, selection, resources);
+      textInputListenerManager.dispatch(new Dispatcher<TextInputListener>()
+      {
+
+         @Override
+         public void dispatch(TextInputListener listener)
+         {
+            listener.inputDocumentChanged(null, document);
+         }
+      });
 
    }
 
@@ -673,7 +686,12 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       RootActionExecutor actionExecutor = getInput().getActionExecutor();
       actionExecutor.addDelegate(TextActions.INSTANCE);
       codeAssistant = configuration.getContentAssistant(this);
-
+      Reconciler reconciler = configuration.getReconciler(this);
+      if(reconciler != null)
+      {
+         reconciler.install(this);
+      }
+      
       if (codeAssistant != null)
       {
          codeAssistant.install(this);
@@ -737,6 +755,24 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
          }
       }
       // TODO implement all code in TextEditorOperations
+   }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#addTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
+    */
+   @Override
+   public void addTextInputListener(TextInputListener listener)
+   {
+      textInputListenerManager.add(listener);
+   }
+
+   /**
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#removeTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
+    */
+   @Override
+   public void removeTextInputListener(TextInputListener listener)
+   {
+      textInputListenerManager.remove(listener);
    }
 
 }

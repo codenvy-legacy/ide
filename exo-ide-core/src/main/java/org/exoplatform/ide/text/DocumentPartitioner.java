@@ -139,7 +139,7 @@ public interface DocumentPartitioner
     * @param length the length of the range of interest
     * @return the partitioning of the range
     */
-   ITypedRegion[] computePartitioning(int offset, int length);
+   TypedRegion[] computePartitioning(int offset, int length);
 
    /**
     * Returns the partition containing the given offset of the connected document. There must be a document connected to this
@@ -157,5 +157,5 @@ public interface DocumentPartitioner
     * @param offset the offset for which to determine the partition
     * @return the partition containing the offset
     */
-   ITypedRegion getPartition(int offset);
+   TypedRegion getPartition(int offset);
 }
