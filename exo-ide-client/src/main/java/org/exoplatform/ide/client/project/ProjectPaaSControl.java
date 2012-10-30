@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
- * 
+ *
  */
 public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, FolderRefreshedHandler
@@ -94,7 +94,7 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
 
    /**
     * Check project is deployed to one of the PaaS.
-    * 
+    *
     * @param project project
     * @return {@link Boolean} <code>true</code> if deployed to one of the PaaS
     */
@@ -106,8 +106,9 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
          || project.getPropertyValue("heroku-application") != null
          || project.getPropertyValue("openshift-express-application") != null
          || project.getPropertyValue("cloudfoundry-application") != null
-        /* TODO || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
-         || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())*/
+         || project.getPropertyValue("appfog-application") != null
+         /* TODO || ProjectType.GAE_JAVA.value().equals(project.getProjectType())
+        || ProjectType.GAE_PYTHON.value().equals(project.getProjectType())*/
          || ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
          || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
          || (targets != null && targets.contains("GAE"));

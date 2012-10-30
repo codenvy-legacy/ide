@@ -107,7 +107,7 @@ public class CloudfoundryTest
       // ---
       try
       {
-         cloudfoundry.systemInfo(null); // read server(target) name from authenticator.
+         cloudfoundry.systemInfo(""); // read server(target) name from authenticator.
          fail("CloudfoundryException expected");
       }
       catch (CloudfoundryException e)
@@ -122,7 +122,7 @@ public class CloudfoundryTest
    @Test
    public void testSystemInfo() throws Exception
    {
-      SystemInfo systemInfo = cloudfoundry.systemInfo(null);
+      SystemInfo systemInfo = cloudfoundry.systemInfo("");
       assertEquals(LoginInfo.email, systemInfo.getUser());
       assertNotNull(systemInfo.getUsage());
       assertNotNull(systemInfo.getLimits());
