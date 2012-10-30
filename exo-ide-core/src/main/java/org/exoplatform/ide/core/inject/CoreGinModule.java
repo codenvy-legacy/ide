@@ -31,8 +31,6 @@ import org.exoplatform.ide.api.ui.part.PartAgent;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.core.editor.ResourceDocumentProvider;
-import org.exoplatform.ide.core.editor.css.CssEditorProvider;
-import org.exoplatform.ide.core.editor.css.CssResources;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorProvider;
@@ -86,9 +84,6 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
-      //XXX for demo use only, remove this
-      bind(CssEditorProvider.class).in(Singleton.class);
-      bind(CssResources.class).in(Singleton.class);
    }
 
    /**

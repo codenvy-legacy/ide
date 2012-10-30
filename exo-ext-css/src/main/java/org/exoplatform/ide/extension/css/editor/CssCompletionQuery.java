@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.exoplatform.ide.core.editor.css;
+package org.exoplatform.ide.extension.css.editor;
 
 import org.exoplatform.ide.json.js.JsoArray;
 

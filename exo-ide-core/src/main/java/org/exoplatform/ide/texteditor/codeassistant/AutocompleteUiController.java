@@ -23,8 +23,6 @@ import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import org.exoplatform.ide.core.editor.css.CompletionType;
-import org.exoplatform.ide.core.editor.css.CssCompletionProposal;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.runtime.Assert;
@@ -72,7 +70,7 @@ public class AutocompleteUiController implements AutocompleteBox
       int maxHeight();
    }
 
-   private static final CompletionProposal CAPPED_INDICATOR = new CssCompletionProposal("", CompletionType.NONE);
+   private static final CompletionProposal CAPPED_INDICATOR = null;
 
    private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
       new SimpleList.ListItemRenderer<CompletionProposal>()

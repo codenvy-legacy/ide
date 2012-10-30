@@ -177,7 +177,12 @@
             <artifactId>exo-ext-demo</artifactId>
             <version>${project.version}</version>
          </dependency>
-                                                               
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ext-css</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+                                                                                           
 
 	<!-- OTHER -->
 
@@ -447,6 +452,7 @@
       <module>exo-ide-commons</module>
       <module>exo-ide-core</module>
       <module>exo-ext-demo</module>
+      <module>exo-ext-css</module>
       <module>exo-ide-java</module>
       <module>exo-ide-client</module>
    </modules>

@@ -20,9 +20,12 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.exoplatform.ide.DemoExtension;
 import org.exoplatform.ide.extension.ExtensionDescription;
 import org.exoplatform.ide.extension.ExtensionRegistry;
+import org.exoplatform.ide.extension.css.CssExtension;
+import org.exoplatform.ide.extension.demo.DemoExtension;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 
 /**
@@ -35,7 +38,8 @@ import org.exoplatform.ide.json.JsonStringMap;
 public class ExtensionManager
 {
 
-   private final Provider<DemoExtension> demoExt;
+   @SuppressWarnings("rawtypes")
+   private final JsonArray<Provider> extensions;
 
    private final ExtensionRegistry extensionRegistry;
 
@@ -43,18 +47,26 @@ public class ExtensionManager
     * 
     */
    @Inject
-   public ExtensionManager(final ExtensionRegistry extensionRegistry, final Provider<DemoExtension> demoExt)
+   public ExtensionManager(final ExtensionRegistry extensionRegistry, final Provider<DemoExtension> demoExt, final Provider<CssExtension> cssExt)
    {
+      this.extensions = JsonCollections.createArray();
       this.extensionRegistry = extensionRegistry;
-      this.demoExt = demoExt;
+      this.extensions.add(demoExt);
+      this.extensions.add(cssExt);
    }
 
    /**
     * {@inheritDoc}
     */
+   @SuppressWarnings("rawtypes")
    public void startExtensions()
    {
-      demoExt.get();
+      for (Provider provider : extensions.asIterable())
+      {
+         // this will instantiate extension so it's get enabled
+         // Order of startup is managed by GIN dependency injection framework
+         provider.get();
+      }
    }
 
    /**
