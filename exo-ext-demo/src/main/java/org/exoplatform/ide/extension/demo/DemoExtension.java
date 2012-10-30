@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide;
+package org.exoplatform.ide.extension.demo;
 
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
@@ -28,7 +28,7 @@ import org.exoplatform.ide.extension.Extension;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-@Extension(title = "Demo extension", id = "ide.ext.demo", version = "1.0.0")
+@Extension(title = "Demo extension", id = "ide.ext.demo", version = "2.0.0")
 public class DemoExtension
 {
 

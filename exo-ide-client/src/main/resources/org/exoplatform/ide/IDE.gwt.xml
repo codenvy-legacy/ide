@@ -18,7 +18,8 @@
   <!-- Other module inherits                                      -->
   <inherits name='org.exoplatform.ide.Core' />
   <inherits name='org.exoplatform.ide.java.Java' />
-  <inherits name='org.exoplatform.ide.Demo' />
+  <inherits name='org.exoplatform.ide.extension.demo.Demo' />
+  <inherits name='org.exoplatform.ide.extension.css.Css' />
   
   <stylesheet src="IDE.css"/>
   

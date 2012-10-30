@@ -230,7 +230,8 @@ public class ExtensionRegistryGenerator extends Generator
       for (JType jType : parameterTypes)
       {
          JClassType argType = jType.isClassOrInterface();
-         if (argType != null)
+         if (argType != null
+            && (argType.isAnnotationPresent(SDK.class) || argType.isAnnotationPresent(Extension.class)))
          {
             String id = "";
             String version = "";
