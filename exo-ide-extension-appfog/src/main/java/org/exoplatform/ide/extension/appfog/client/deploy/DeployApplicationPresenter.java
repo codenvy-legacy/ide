@@ -30,6 +30,7 @@ import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -152,17 +153,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          public void onValueChange(ValueChangeEvent<String> event)
          {
             server = display.getServerField().getValue();
-            // if url set automatically, than try to create url using server and name
-            String target = display.getServerField().getValue();
-            String sufix = target.substring(target.indexOf("."));
-            String oldUrl = display.getUrlField().getValue();
-            String prefix = "<name>";
-            if (!oldUrl.isEmpty() && oldUrl.contains("."))
-            {
-               prefix = oldUrl.substring(0, oldUrl.indexOf("."));
-            }
-            String url = prefix + sufix;
-            display.getUrlField().setValue(url);
          }
       });
 
@@ -236,7 +226,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
          // Application will be started after creation (IDE-1618)
          AppfogClientService.getInstance().create(server, name, null, url, 0, 0, false, vfs.getId(),
-            project.getId(), warUrl, currentInfra.getInfra(), //TODO !
+            project.getId(), warUrl, currentInfra.getInfra(),
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, createAppHandler, null, server)
             {
                @Override
@@ -430,8 +420,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
       this.deployResultHandler = deployResultHandler;
-      // TODO validate
-      createProject(projectTemplate);
+      if (display.getInfraField().getValue() == null || display.getInfraField().getValue().isEmpty() || currentInfra == null)
+      {
+         Dialogs.getInstance().showError("Name infrastructure must be not empty.");
+      }
+      else
+      {
+         createProject(projectTemplate);
+      }
    }
 
    private void beforeDeploy()
@@ -533,7 +529,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
    public boolean validate()
    {
       return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
-         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
-//         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
+         && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty()
+         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
    }
 }

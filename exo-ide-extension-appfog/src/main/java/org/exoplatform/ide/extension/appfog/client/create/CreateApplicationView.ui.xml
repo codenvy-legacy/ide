@@ -63,7 +63,7 @@
             </g:DockLayoutPanel>
             <g:DockLayoutPanel width="100%" unit="PX" height="11%">
                <g:west size="140">
-                  <g:Label text="Infra: " height="18px"></g:Label>
+                  <g:Label text="{locale.createAppInfraField}" height="18px"></g:Label>
                </g:west>
                <g:center>
                   <f:ComboBoxField ui:field="infraField" height="20px" pickListHeight="100"

@@ -278,6 +278,9 @@ public interface AppfogLocalizationConstant extends Messages
    @Key("create.application.finished")
    String createApplicationFinished(String project);
 
+   @Key("createApp.field.infra")
+   String createAppInfraField();
+
    /*
     * CreateApplicationPresenter
     */
