@@ -141,8 +141,8 @@ public class BuildService
    /** Maven build goals 'test deploy'. */
    private static final String[] DEPLOY_GOALS = new String[]{"deploy"};
    
-   /** Maven deploy profile '-Preleasesss'. */
-   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
+//   /** Maven deploy profile '-Preleasesss'. */
+//   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
 
 
    /** Maven compile goals 'compile'. */
@@ -298,7 +298,7 @@ public class BuildService
       Properties properties = new Properties();
       properties.put("altDeploymentRepository", "id::default::file:" + publishRepository);
       
-      return addTask(makeProject(data), DEPLOY_GOALS, properties, DEPLOY_PROFILES, Collections.<Runnable> emptyList(),
+      return addTask(makeProject(data), DEPLOY_GOALS, properties,null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), PUBLIC_ARTIFACT_GETTER);
    }
 
