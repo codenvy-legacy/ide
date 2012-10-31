@@ -71,8 +71,8 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
          {
             dirtyState = true;
             firePropertyChange(EditorPartPresenter.PROP_TITLE);
+            firePropertyChange(EditorPartPresenter.PROP_DIRTY);
          }
-         firePropertyChange(EditorPartPresenter.PROP_DIRTY);
       }
    };
 
@@ -102,6 +102,7 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
          public void onDocument(Document document)
          {
             editor.setDocument((DocumentImpl)document);
+            firePropertyChange(PROP_INPUT);
          }
       });
       this.input = input;

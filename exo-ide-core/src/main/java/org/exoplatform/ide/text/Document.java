@@ -173,7 +173,7 @@ public interface Document
     * @exception BadLocationException if offset is invalid in this document
     * @exception BadPartitioningException if partitioning is invalid for this document
     */
-   ITypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
+   TypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions)
       throws BadLocationException, BadPartitioningException;
 
    /**
@@ -195,7 +195,7 @@ public interface Document
     * @exception BadLocationException if the range is invalid in this document$
     * @exception BadPartitioningException if partitioning is invalid for this document
     */
-   ITypedRegion[] computePartitioning(String partitioning, int offset, int length, boolean includeZeroLengthPartitions)
+   TypedRegion[] computePartitioning(String partitioning, int offset, int length, boolean includeZeroLengthPartitions)
       throws BadLocationException, BadPartitioningException;
 
    /**
@@ -525,7 +525,7 @@ public interface Document
     * @return a specification of the partition
     * @exception BadLocationException if offset is invalid in this document
     */
-    ITypedRegion getPartition(int offset) throws BadLocationException;
+    TypedRegion getPartition(int offset) throws BadLocationException;
 
     /**
     * Computes the partitioning of the given document range using the
@@ -544,7 +544,7 @@ public interface Document
     * @return a specification of the range's partitioning
     * @exception BadLocationException if the range is invalid in this document
     */
-    ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException;
+    TypedRegion[] computePartitioning(int offset, int length) throws BadLocationException;
 
     /**
     * Registers the document partitioning listener with the document. After registration

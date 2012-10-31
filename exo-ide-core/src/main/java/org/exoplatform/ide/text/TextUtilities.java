@@ -426,7 +426,7 @@ public class TextUtilities
     * @return the content type at the given offset of this viewer's input document
     * @throws BadLocationException if offset is invalid in the given document
     */
-   public static ITypedRegion getPartition(Document document, String partitioning, int offset,
+   public static TypedRegion getPartition(Document document, String partitioning, int offset,
       boolean preferOpenPartitions) throws BadLocationException
    {
       try
@@ -435,7 +435,7 @@ public class TextUtilities
       }
       catch (BadPartitioningException x)
       {
-         return new TypedRegion(0, document.getLength(), Document.DEFAULT_CONTENT_TYPE);
+         return new TypedRegionImpl(0, document.getLength(), Document.DEFAULT_CONTENT_TYPE);
       }
       //      return document.getPartition(offset);
    }
@@ -451,7 +451,7 @@ public class TextUtilities
     * @return the partitioning for the given region of the given document for the given partitioning name
     * @throws BadLocationException if the given region is invalid for the given document
     */
-   public static ITypedRegion[] computePartitioning(Document document, String partitioning, int offset, int length,
+   public static TypedRegion[] computePartitioning(Document document, String partitioning, int offset, int length,
       boolean includeZeroLengthPartitions) throws BadLocationException
    {
       try
@@ -460,7 +460,7 @@ public class TextUtilities
       }
       catch (BadPartitioningException x)
       {
-         return new ITypedRegion[0];
+         return new TypedRegion[0];
       }
 
       //      return document.computePartitioning(offset, length);

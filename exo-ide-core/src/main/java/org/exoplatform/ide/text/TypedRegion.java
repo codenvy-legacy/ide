@@ -19,58 +19,22 @@
 package org.exoplatform.ide.text;
 
 /**
- * Default implementation of {@link org.eclipse.jface.text.ITypedRegion}. A <code>TypedRegion</code> is a value object.
+ * Describes a region of an indexed text store such as a document or a string. The region consists of offset, length, and type.
+ * The region type is defined as a string.
+ * <p>
+ * A typed region can, e.g., be used to described document partitions.
+ * </p>
+ * <p>
+ * Clients may implement this interface or use the standard implementation {@link org.eclipse.TypedRegionImpl.text.TypedRegion}.
+ * </p>
  */
-public class TypedRegion extends RegionImpl implements ITypedRegion
+public interface TypedRegion extends Region
 {
 
-   /** The region's type */
-   private String fType;
-
    /**
-    * Creates a typed region based on the given specification.
+    * Returns the content type of the region.
     * 
-    * @param offset the region's offset
-    * @param length the region's length
-    * @param type the region's type
+    * @return the content type of the region
     */
-   public TypedRegion(int offset, int length, String type)
-   {
-      super(offset, length);
-      fType = type;
-   }
-
-   /* @see org.eclipse.jface.text.ITypedRegion#getType() */
-   public String getType()
-   {
-      return fType;
-   }
-
-   /* @see java.lang.Object#equals(java.lang.Object) */
-   public boolean equals(Object o)
-   {
-      if (o instanceof TypedRegion)
-      {
-         TypedRegion r = (TypedRegion)o;
-         return super.equals(r) && ((fType == null && r.getType() == null) || fType.equals(r.getType()));
-      }
-      return false;
-   }
-
-   /* @see java.lang.Object#hashCode() */
-   public int hashCode()
-   {
-      int type = fType == null ? 0 : fType.hashCode();
-      return super.hashCode() | type;
-   }
-
-   /*
-    * @see org.eclipse.jface.text.Region#toString()
-    * @since 3.5
-    */
-   public String toString()
-   {
-      return fType + " - " + super.toString(); //$NON-NLS-1$
-   }
-
+   String getType();
 }

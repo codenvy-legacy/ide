@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,25 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.text;
+package org.exoplatform.ide.texteditor.api;
+
+import org.exoplatform.ide.text.Document;
 
 /**
- * Describes a region of an indexed text store such as a document or a string. The region consists of offset, length, and type.
- * The region type is defined as a string.
- * <p>
- * A typed region can, e.g., be used to described document partitions.
- * </p>
- * <p>
- * Clients may implement this interface or use the standard implementation {@link org.eclipse.jface.text.TypedRegion}.
- * </p>
+ * Text input listeners registered with an
+ * {@link TextEditorPartDisplay} are informed if the document
+ * serving as the text viewer's model is replaced.
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
  */
-public interface ITypedRegion extends Region
+public interface TextInputListener
 {
-
    /**
-    * Returns the content type of the region.
-    * 
-    * @return the content type of the region
+    * Called after the input document has been replaced.
+    *
+    * @param oldDocument the text display's previous input document
+    * @param newDocument the text display's new input document
     */
-   String getType();
+   void inputDocumentChanged(Document oldDocument, Document newDocument);
 }

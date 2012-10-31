@@ -132,6 +132,23 @@ public interface TextEditorPartDisplay
     * @param operation the operation code
     */
    void doOperation(int operation);
+   
+   /**
+    * Adds a text input listener to this display. If the listener is already registered
+    * with this display, this call has no effect.
+    *
+    * @param listener the listener to be added
+    */
+   void addTextInputListener(TextInputListener listener);
+   
+   /**
+    * Removes the given listener from this display's set of text input listeners.
+    * If the listener is not registered with this display, this call has
+    * no effect.
+    *
+    * @param listener the listener to be removed
+    */
+   void removeTextInputListener(TextInputListener listener);
 
    //TODO create interfaces for this functions
    FocusManager getFocusManager();

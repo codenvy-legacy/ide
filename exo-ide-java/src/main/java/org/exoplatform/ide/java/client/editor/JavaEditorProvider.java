@@ -60,7 +60,8 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new BaseTextEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration());
+      return new BaseTextEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(
+         activityManager));
    }
 
 }
