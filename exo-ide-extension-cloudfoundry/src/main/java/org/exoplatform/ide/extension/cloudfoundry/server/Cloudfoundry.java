@@ -92,19 +92,29 @@ import static org.exoplatform.ide.commons.JsonHelper.*;
  */
 public class Cloudfoundry
 {
-   private static final class Credential
+   public static final class Credential
    {
-      String target;
-      String token;
+      private String target;
+      private String token;
 
       Credential(String target, String token)
       {
          this.target = target;
          this.token = token;
       }
+
+      public String getTarget()
+      {
+         return target;
+      }
+
+      public String getToken()
+      {
+         return token;
+      }
    }
 
-   private static final Map<String, Framework> FRAMEWORKS;
+   public static final Map<String, Framework> FRAMEWORKS;
 
    private static final int DEFAULT_MEMORY_SIZE = 256;
 
@@ -112,7 +122,7 @@ public class Cloudfoundry
    {
       Map<String, Framework> fm = new HashMap<String, Framework>(12);
       fm.put("rails3", new FrameworkImpl("rails3", "Rails", null, 256, "Rails  Application"));
-      fm.put("spring", new FrameworkImpl("spring", "Spring", null, 512, "Java SpringSource Spring Application"));
+      fm.put("spring", new FrameworkImpl("spring", "Spring", null, 768, "Java SpringSource Spring Application"));
       fm.put("grails", new FrameworkImpl("grails", "Grails", null, 512, "Java SpringSource Grails Application"));
       fm.put("lift", new FrameworkImpl("lift", "Lift", null, 512, "Scala Lift Application"));
       fm.put("java_web", new FrameworkImpl("java_web", "JavaWeb", null, 512, "Java Web Application"));
@@ -251,7 +261,7 @@ public class Cloudfoundry
       return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server));
    }
 
-   private SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
+   public SystemInfo systemInfo(Credential credential) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
       SystemInfoImpl systemInfo = fromJson(
@@ -427,7 +437,7 @@ public class Cloudfoundry
          vfs, projectId, war, options);
    }
 
-   private static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
+   public static final Pattern suggestUrlPattern = Pattern.compile("(http(s)?://)?([^\\.]+)(.*)");
 
    private CloudFoundryApplication createApplication(Credential credential,
                                                      String app,
@@ -779,7 +789,7 @@ public class Cloudfoundry
       return startApplication(credential, app, debug, false);
    }
 
-   private Crashes applicationCrashes(Credential credential, String app) throws IOException, ParsingResponseException, CloudfoundryException
+   public Crashes applicationCrashes(Credential credential, String app) throws IOException, ParsingResponseException, CloudfoundryException
    {
       return fromJson(getJson(credential.target + "/apps/" + app + "/crashes", credential.token, 200), Crashes.class, null);
    }
@@ -1964,7 +1974,7 @@ public class Cloudfoundry
 
    /* ---------------------------------------------------------- */
 
-   private void checkApplicationNumberLimit(SystemResources limits, SystemResources usage)
+   public void checkApplicationNumberLimit(SystemResources limits, SystemResources usage)
    {
       if (limits != null && usage != null && limits.getApps() == usage.getApps())
       {
@@ -1973,7 +1983,7 @@ public class Cloudfoundry
       }
    }
 
-   private void checkAvailableMemory(int instances, int memory, SystemResources limits, SystemResources usage)
+   public void checkAvailableMemory(int instances, int memory, SystemResources limits, SystemResources usage)
    {
       if (limits != null && usage != null //
          && (instances * memory) > (limits.getMemory() - usage.getMemory()))
@@ -1984,7 +1994,7 @@ public class Cloudfoundry
       }
    }
 
-   private void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
+   public void checkApplicationName(Credential credential, String app) throws IOException, ParsingResponseException,
       CloudfoundryException
    {
       try
@@ -2004,7 +2014,7 @@ public class Cloudfoundry
       }
    }
 
-   private Framework getFramework(SystemInfo systemInfo, String frameworkName)
+   public Framework getFramework(SystemInfo systemInfo, String frameworkName)
    {
       Framework framework = systemInfo.getFrameworks().get(frameworkName);
       if (framework != null)
@@ -2015,13 +2025,13 @@ public class Cloudfoundry
          "Unsupported framework '" + frameworkName + "'. List of supported frameworks: " + systemInfo.getFrameworks().keySet());
    }
 
-   private RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
+   public RuntimeInfo getRuntimeInfo(String runtime, Credential credential)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
       return (RuntimeInfo)getRuntimes(credential).get(runtime);
    }
 
-   private Map getRuntimes(Credential credential)
+   public Map getRuntimes(Credential credential)
       throws CloudfoundryException, ParsingResponseException, IOException
    {
       return fromJson(getJson(credential.target + "/info/runtimes", credential.token, 200), Map.class,
@@ -2043,7 +2053,7 @@ public class Cloudfoundry
       throw new IllegalArgumentException("Service '" + name + "' not found. ");
    }
 
-   private Credential getCredential(String server) throws CloudfoundryException, VirtualFileSystemException,
+   public Credential getCredential(String server) throws CloudfoundryException, VirtualFileSystemException,
       IOException
    {
       CloudfoundryCredentials credentials = authenticator.readCredentials();
@@ -2111,9 +2121,9 @@ public class Cloudfoundry
    private static final byte[] CONTENT_DISPOSITION_METHOD = "Content-Disposition: form-data; name=\"_method\"\r\n\r\n".getBytes();
    private static final byte[] CONTENT_DISPOSITION_APPLICATION = "Content-Disposition: form-data; name=\"application\"; filename=\"".getBytes();
    private static final byte[] PUT = "put".getBytes();
-   private static final byte[] CONTENT_TYPE_ZIP = "Content-type: application/zip\r\n\r\n".getBytes();
+   private static final byte[] CONTENT_TYPE_ZIP = "Content-type: application/octet-stream\r\n\r\n".getBytes();
 
-   private void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
+   public void uploadApplication(Credential credential, String app, VirtualFileSystem vfs, String projectId, java.io.File path)
       throws ParsingResponseException, CloudfoundryException, VirtualFileSystemException, IOException
    {
       LOG.debug("uploadApplication START");
@@ -2219,7 +2229,6 @@ public class Cloudfoundry
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod("POST");
          http.setRequestProperty("Authorization", credential.token);
-         http.setRequestProperty("Accept", "*/*");
          final String boundary = "----------" + System.currentTimeMillis();
          http.setRequestProperty("Content-type", "multipart/form-data; boundary=" + boundary);
          http.setDoOutput(true);
@@ -2315,31 +2324,31 @@ public class Cloudfoundry
 
    /* ------------------------- HTTP --------------------------- */
 
-   private String getJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
+   public String getJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
       return doRequest(url, "GET", authToken, null, null, success);
    }
 
-   private String postJson(String url, String authToken, String body, int success) throws CloudfoundryException,
+   public String postJson(String url, String authToken, String body, int success) throws CloudfoundryException,
       IOException, ParsingResponseException
    {
       return doRequest(url, "POST", authToken, body, "application/json", success);
    }
 
-   private String putJson(String url, String authToken, String body, int success) throws CloudfoundryException,
+   public String putJson(String url, String authToken, String body, int success) throws CloudfoundryException,
       IOException, ParsingResponseException
    {
       return doRequest(url, "PUT", authToken, body, "application/json", success);
    }
 
-   private String deleteJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
+   public String deleteJson(String url, String authToken, int success) throws CloudfoundryException, IOException,
       ParsingResponseException
    {
       return doRequest(url, "DELETE", authToken, null, null, success);
    }
 
-   private String doRequest(String url, String method, String authToken, String body, String contentType, int success)
+   public String doRequest(String url, String method, String authToken, String body, String contentType, int success)
       throws CloudfoundryException, IOException
    {
       HttpURLConnection http = null;
@@ -2349,6 +2358,7 @@ public class Cloudfoundry
          http.setInstanceFollowRedirects(false);
          http.setRequestMethod(method);
          http.setRequestProperty("Authorization", authToken);
+         http.setRequestProperty("Accept", "*/*");
          if (!(body == null || body.isEmpty()))
          {
             http.setRequestProperty("Content-type", contentType);
@@ -2395,13 +2405,19 @@ public class Cloudfoundry
 
    /* ---------------------------------------------------------- */
 
-   static CloudfoundryException fault(HttpURLConnection http) throws IOException
+   public static CloudfoundryException fault(HttpURLConnection http) throws IOException
    {
       final int responseCode = http.getResponseCode();
       if (responseCode == 504)
       {
          return new CloudfoundryException(
             504, -1, "Currently the server is overloaded, please try again later", "text/plain");
+      }
+      if (responseCode == 204)
+      {
+         return new CloudfoundryException(
+            204, -1, "No Content", "text/plain"
+         );
       }
       final String contentType = http.getContentType();
       final int length = http.getContentLength();

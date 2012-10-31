@@ -44,7 +44,7 @@ import static org.exoplatform.ide.commons.ZipUtils.unzip;
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class Utils
+public class Utils
 {
    private static final Pattern SPRING1 = Pattern.compile("WEB-INF/lib/spring-core.*\\.jar");
    private static final Pattern SPRING2 = Pattern.compile("WEB-INF/classes/org/springframework/.+");
@@ -92,7 +92,7 @@ class Utils
    }
 
    /** Read the first line from file or <code>null</code> if file not found. */
-   static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException, IOException
+   public static String readFile(VirtualFileSystem vfs, String path) throws VirtualFileSystemException, IOException
    {
       InputStream in = null;
       BufferedReader r = null;
@@ -134,7 +134,7 @@ class Utils
       }
    }
 
-   static String detectFramework(java.io.File path) throws IOException
+   public static String detectFramework(java.io.File path) throws IOException
    {
       if (path.isFile() && WAR_FILTER.accept(path.getName()))
       {
@@ -189,7 +189,7 @@ class Utils
       return "standalone";
    }
 
-   static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException
+   public static String detectFramework(VirtualFileSystem vfs, String projectId) throws VirtualFileSystemException, IOException
    {
       Item project = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
       try
