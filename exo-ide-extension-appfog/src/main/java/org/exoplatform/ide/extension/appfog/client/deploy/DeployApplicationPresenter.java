@@ -422,7 +422,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       this.deployResultHandler = deployResultHandler;
       if (display.getInfraField().getValue() == null || display.getInfraField().getValue().isEmpty() || currentInfra == null)
       {
-         Dialogs.getInstance().showError("Name infrastructure must be not empty.");
+         Dialogs.getInstance().showError("Infrastructure field must be valid and not empty.");
       }
       else
       {
