@@ -46,9 +46,9 @@ public class AppfogServicesUnmarshaller implements Unmarshallable<AppfogServices
 
    private final class Keys
    {
-      public static final String SYSTEM = "system";
+      public static final String SYSTEM = "appfogSystemService";
 
-      public static final String PROVISIONED = "provisioned";
+      public static final String PROVISIONED = "appfogProvisionedService";
    }
 
    public AppfogServicesUnmarshaller()

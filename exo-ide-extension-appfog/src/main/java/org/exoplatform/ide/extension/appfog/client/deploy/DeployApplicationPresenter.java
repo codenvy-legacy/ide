@@ -104,7 +104,9 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
    private String url;
 
-   private String infra;
+   private InfraDetail currentInfra;
+
+   private List<InfraDetail> infras;
 
    /**
     * Public url to war file of application.
@@ -169,7 +171,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            infra = display.getInfraField().getValue();
+            currentInfra = findInfraByName(display.getInfraField().getValue());
+            updateUrlField();
          }
       });
    }
@@ -183,6 +186,24 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          warUrl = event.getBuildStatus().getDownloadUrl();
          createApplication();
       }
+   }
+
+   private InfraDetail findInfraByName(String infraName)
+   {
+      for (InfraDetail infra : infras)
+      {
+         if (infraName.equals(infra.getName()))
+         {
+            return infra;
+         }
+      }
+      return null;
+   }
+
+   private void updateUrlField()
+   {
+      url = display.getNameField().getValue() + '.' + currentInfra.getBase();
+      display.getUrlField().setValue(url);
    }
 
    // ----Implementation------------------------
@@ -215,7 +236,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
          // Application will be started after creation (IDE-1618)
          AppfogClientService.getInstance().create(server, name, null, url, 0, 0, false, vfs.getId(),
-            project.getId(), warUrl, infra, //TODO !
+            project.getId(), warUrl, currentInfra.getInfra(), //TODO !
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, createAppHandler, null, server)
             {
                @Override
@@ -300,10 +321,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                   // values in form fields are changed.
                   name = projectName;
                   server = display.getServerField().getValue();
-                  infra = display.getInfraField().getValue();
-                  String urlSufix = server.substring(server.indexOf("."));
-                  display.getUrlField().setValue(name + urlSufix);
-                  url = display.getUrlField().getValue();
                }
 
                @Override
@@ -319,46 +336,52 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       }
    }
 
-   private void getInfras()
+   private void getInfras(final String server)
    {
+      LoggedInHandler getInfrasHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn()
+         {
+            getInfras(server);
+         }
+      };
+
       try
       {
-         AppfogClientService.getInstance().infras(null, vfs.getId(), project.getId(),
-            new AsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()))
+         AppfogClientService.getInstance().infras(server, null, null,
+            new AppfogAsyncRequestCallback<List<InfraDetail>>(
+               new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
+               getInfrasHandler,
+               null,
+               server
+            )
             {
-
                @Override
                protected void onSuccess(List<InfraDetail> result)
                {
                   if (result.isEmpty())
                   {
-                     display.setInfraValues(new String[]{"Test value"}); //TODO !
-                     display.getInfraField().setValue("Test value");     //TODO !
+                     IDE.fireEvent(new ExceptionThrownEvent(AppfogExtension.LOCALIZATION_CONSTANT.errorGettingInfras()));
                   }
                   else
                   {
-                     InfraDetail[] infras = result.toArray(new InfraDetail[result.size()]);
-                     List<String> infraStrings = new ArrayList<String>(infras.length);
-                     for (InfraDetail infra : infras)
+                     infras = result;
+
+                     List<String> infraNames = new ArrayList<String>(result.size());
+                     for (InfraDetail infra : result)
                      {
-                        infraStrings.add(infra.getName());
+                        infraNames.add(infra.getName());
                      }
 
-                     display.setInfraValues(infraStrings.toArray(new String[infraStrings.size()]));
-                     display.getServerField().setValue(infraStrings.get(0));
-                  }
-                  name = projectName;
-                  server = display.getServerField().getValue();
-                  infra = display.getInfraField().getValue();
-                  String urlSufix = server.substring(server.indexOf("."));
-                  display.getUrlField().setValue(name + urlSufix);
-                  url = display.getUrlField().getValue();
-               }
+                     display.getInfraField().setValue(infraNames.get(0));
+                     display.setInfraValues(infraNames.toArray(new String[infraNames.size()]));
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                     currentInfra = infras.get(0);
+
+                     updateUrlField();
+                     url = display.getUrlField().getValue();
+                  }
                }
             });
       }
@@ -458,7 +481,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       }
       bindDisplay();
       getServers();
-      getInfras();
+      getInfras(server == null ? AppfogExtension.DEFAULT_SERVER : server);
       return display.getView();
    }
 
