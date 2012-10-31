@@ -599,6 +599,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                protected void onSuccess(StringBuilder result)
                {
                   JSONObject json = JSONParser.parseStrict((result.toString())).isObject();
+                  if (json.containsKey("artifactDownloadUrl"))
+                  {
+                     String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
+                     IDE.fireEvent(new OutputEvent("You can download your artifact :<a href=" + artifactUrl + " target=\"_blank\">" + artifactUrl + "</a>", Type.INFO));
+                  }
                   if (json.containsKey("suggestDependency"))
                   {
                      String dep = json.get("suggestDependency").isString().stringValue();
@@ -809,11 +814,14 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private String formatDepXml(String dep)
    {
-      return SafeHtmlUtils.htmlEscape(dep)//
+      
+      String formatStr = SafeHtmlUtils.htmlEscape(dep)//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
-         .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
-         .replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
+         .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      if (formatStr.contains("&lt;type&gt;"))
+         formatStr = formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
    }
 
    /**

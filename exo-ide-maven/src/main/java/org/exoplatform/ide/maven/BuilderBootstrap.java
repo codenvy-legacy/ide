@@ -40,6 +40,8 @@ public class BuilderBootstrap implements ServletContextListener
       config.put(BuildService.BUILDER_REPOSITORY, ctx.getInitParameter(BuildService.BUILDER_REPOSITORY));
       
       config.put(BuildService.BUILDER_PUBLISH_REPOSITORY, ctx.getInitParameter(BuildService.BUILDER_PUBLISH_REPOSITORY));
+      
+      config.put(BuildService.BUILDER_PUBLISH_REPOSITORY_URL, ctx.getInitParameter(BuildService.BUILDER_PUBLISH_REPOSITORY_URL));
 
       config.put(BuildService.BUILDER_TIMEOUT, getNumber(ctx.getInitParameter(BuildService.BUILDER_TIMEOUT)));
 

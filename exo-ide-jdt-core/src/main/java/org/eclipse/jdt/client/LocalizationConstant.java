@@ -47,4 +47,7 @@ public interface LocalizationConstant extends Messages
 
    @Key("messages.updateDependency.finished")
    String updateDependencyFinished(String project);
+   
+   @Key("messages.updateDependency.suggest")
+   String updateDependencySuggest();
 }

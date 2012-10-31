@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.progress.ui;
 
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -27,8 +27,9 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.job.Job;
@@ -52,7 +53,7 @@ public class JobWidget extends Composite
 
    private Image image = new Image();
 
-   private Label message = new Label();
+   private HTML message = new HTML();
 
    /**
     * 
@@ -127,7 +128,7 @@ public class JobWidget extends Composite
             break;
          case ERROR :
             image.setResource(IDEImageBundle.INSTANCE.cancel());
-            message.setText(job.getError().getMessage());
+            message.setHTML(new SafeHtmlBuilder().appendHtmlConstant("<pre>" + job.getError().getMessage() + "</pre>").toSafeHtml());
             message.getElement().getStyle().setColor("#880000");
             break;
       }

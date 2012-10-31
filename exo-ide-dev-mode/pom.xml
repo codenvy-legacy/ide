@@ -147,7 +147,8 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudfoundry</artifactId>
       </dependency>
-
+      
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-heroku</artifactId>

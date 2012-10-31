@@ -33,6 +33,8 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -90,6 +92,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectO
                protected void onFailure(Throwable exception)
                {
                   updateDependencyStatusHandler.requestError(projectId, exception);
+                  IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage()+ "</pre>", Type.ERROR));
                   exception.printStackTrace();
                }
             });

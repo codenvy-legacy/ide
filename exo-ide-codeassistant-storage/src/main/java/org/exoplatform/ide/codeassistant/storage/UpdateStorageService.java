@@ -21,8 +21,6 @@ package org.exoplatform.ide.codeassistant.storage;
 import org.exoplatform.ide.codeassistant.jvm.bean.Dependency;
 import org.exoplatform.ide.codeassistant.storage.api.InfoStorage;
 import org.exoplatform.ide.codeassistant.storage.api.WriterTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +48,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class UpdateStorageService
 {
-
-   private static final Logger LOG = LoggerFactory.getLogger(UpdateStorageService.class);
 
    public static final String INFO_STORAGE = "update.info.storage";
 
@@ -89,7 +85,8 @@ public class UpdateStorageService
    /** Default max size of build queue (200). */
    public static final int DEFAULT_UPDATE_QUEUE_SIZE = 200;
 
-   public static final int DEFAULT_CLEAN_RESULT_DELAY_TIME = 1;
+   /** Default build timeout in minutes (10). After this time update task may be terminated. */
+   public static final int DEFAULT_CLEAN_RESULT_DELAY_TIME = 10;
 
    private final ExecutorService pool;
 
@@ -312,7 +309,10 @@ public class UpdateStorageService
          {
             CacheElement element = concurrentMap.get(key);
             if (element.isExpired())
-               concurrentMap.clear();
+            {
+               element.task.cancel();
+               concurrentMap.remove(key);
+            }
          }
 
       }

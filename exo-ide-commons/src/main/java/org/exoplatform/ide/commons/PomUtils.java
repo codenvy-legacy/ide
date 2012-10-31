@@ -58,7 +58,7 @@ public class PomUtils
       Document doc = builder.parse(stream);
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
-      return new Pom(getVersionId(xpath, doc), getGroupId(xpath, doc), getArtifactId(xpath, doc));
+      return new Pom(getVersionId(xpath, doc), getGroupId(xpath, doc), getArtifactId(xpath, doc), getPackaging(xpath, doc));
    }
 
    /**
@@ -83,6 +83,20 @@ public class PomUtils
    {
       return xpath.compile("/project/artifactId/text()").evaluate(doc);
    }
+   
+   /**
+    * @throws XPathExpressionException
+    */
+   private static String getPackaging(XPath xpath, Document doc) throws XPathExpressionException
+   {
+      String packaging = xpath.compile("/project/packaging/text()").evaluate(doc);
+      if (packaging == null || packaging.isEmpty())
+      {
+         packaging = "jar";//by default Maven set packaging to jar
+      }
+      return packaging;
+   }
+
 
    /**
     * @throws XPathExpressionException
@@ -105,17 +119,35 @@ public class PomUtils
       private final String groupId;
 
       private final String artifactId;
+      
+      private final String packaging;
 
       /**
        * @param version
        * @param groupId
        * @param artifactId
+       * @param packaging
+       */
+      public Pom(String version, String groupId, String artifactId, String packaging)
+      {
+         this.version = version;
+         this.groupId = groupId;
+         this.artifactId = artifactId;
+         this.packaging = packaging;
+      }
+      
+      /**
+       * @param version
+       * @param groupId
+       * @param artifactId
+       * @param packaging
        */
       public Pom(String version, String groupId, String artifactId)
       {
          this.version = version;
          this.groupId = groupId;
          this.artifactId = artifactId;
+         this.packaging = "jar";
       }
 
       /**
@@ -151,7 +183,12 @@ public class PomUtils
       {
          StringBuilder builder = new StringBuilder();
          builder.append("<dependency><groupId>").append(groupId).append("</groupId><artifactId>").append(artifactId)
-            .append("</artifactId><version>").append(version).append("</version>").append("</dependency>");
+            .append("</artifactId><version>").append(version).append("</version>");
+         if (!packaging.equals("jar"))
+         {
+            builder.append("<type>").append(packaging).append("</type>");
+         }
+         builder.append("</dependency>");
          return builder.toString();
       }
    }

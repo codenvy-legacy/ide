@@ -148,8 +148,11 @@ public class Builder
                         .entity("{\"status\":\"FAILED\",\"error\":\"" + cle.getMessage() + "\"}")
                         .type(MediaType.APPLICATION_JSON).build();
                   }
+                  String error = task.getLogger().getLogAsString();
+                  if (error != null)
+                     error = error.replaceAll("\n", "\\\\n");
                   return Response.status(200)
-                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + "}")
+                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + ",\"error\":\"" + error +"\"}")
                      .type(MediaType.APPLICATION_JSON).build();
                }
             }

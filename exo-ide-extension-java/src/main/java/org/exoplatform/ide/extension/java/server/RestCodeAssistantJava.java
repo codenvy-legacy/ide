@@ -61,6 +61,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. In a source code editor autocomplete is
@@ -344,10 +345,24 @@ public class RestCodeAssistantJava
          }
       }
       else
+      {
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+      }
       buildId = builderClient.dependenciesCopy(vfs, projectId, null);
       buildStatus = waitBuildTaskFinish(buildId);
+      if (Status.FAILED == buildStatus.getStatus())
+      {
+         LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+      }
+      buildId = builderClient.dependenciesCopy(vfs, projectId, "sources");
+      buildStatus = waitBuildTaskFinish(buildId);
+      if (Status.FAILED == buildStatus.getStatus())
+      {
+         LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+      }
       String statusUrl = storageClient.updateTypeIndex(dependencys, buildStatus.getDownloadUrl());
       waitStorageTaskFinish(statusUrl);
    }

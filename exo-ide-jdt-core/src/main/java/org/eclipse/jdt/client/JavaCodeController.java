@@ -309,7 +309,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                      .fireEvent(
                         new OutputEvent("Can't build classpath:<br>" + "<pre>" + result.toString() + "</pre>",
                            Type.ERROR));
-                  IDE.eventBus().fireEvent(new OutputEvent("After you fix error, do clean project", Type.INFO));
+                  IDE.eventBus().fireEvent(new OutputEvent(JdtExtension.LOCALIZATION_CONSTANT.updateDependencySuggest(), Type.WARNING));
                }
 
                @Override

@@ -63,6 +63,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -79,13 +80,19 @@ public class BuildService
     * Is such parameter is not specified then 'java.io.tmpdir' used.
     */
    public static final String BUILDER_REPOSITORY = "builder.repository";
-   
+
    /**
     * Name of configuration parameter that points to the directory where stored build after deploy command.
     * Is such parameter is not specified then 'java.io.tmpdir' used.
     */
    public static final String BUILDER_PUBLISH_REPOSITORY = "builder.publish-repository";
-   
+
+   /**
+    * Name of configuration parameter that points to the directory where stored build after deploy command.
+    * Is such parameter is not specified then 'java.io.tmpdir' used.
+    */
+   public static final String BUILDER_PUBLISH_REPOSITORY_URL = "builder.publish-repository-url";
+
    /**
     * Name of configuration parameter that provides build timeout is seconds. After this time build may be terminated.
     *
@@ -133,6 +140,10 @@ public class BuildService
 
    /** Maven build goals 'test deploy'. */
    private static final String[] DEPLOY_GOALS = new String[]{"deploy"};
+   
+   /** Maven deploy profile '-Preleasesss'. */
+   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
+
 
    /** Maven compile goals 'compile'. */
    private static final String[] COMPILE_GOALS = new String[]{"compile"};
@@ -163,8 +174,10 @@ public class BuildService
    private final Queue<File> cleanerQueue;
 
    private final File repository;
-   
+
    private String publishRepository;
+
+   private static String publishRepositoryUrl;
 
    private final long timeoutMillis;
 
@@ -172,12 +185,13 @@ public class BuildService
 
    public BuildService(Map<String, Object> config)
    {
-      this(getOption(config, BUILDER_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), 
-         getOption(config, BUILDER_PUBLISH_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), getOption(config,
-         BUILDER_TIMEOUT, Integer.class, DEFAULT_BUILDER_TIMEOUT), getOption(config, BUILDER_WORKERS_NUMBER,
-         Integer.class, Runtime.getRuntime().availableProcessors()), getOption(config, BUILDER_QUEUE_SIZE,
-         Integer.class, DEFAULT_BUILDER_QUEUE_SIZE), getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, Integer.class,
-         DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME));
+      this(getOption(config, BUILDER_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), //
+         getOption(config, BUILDER_PUBLISH_REPOSITORY, String.class, System.getProperty("java.io.tmpdir")), //
+         getOption(config, BUILDER_PUBLISH_REPOSITORY_URL, String.class, null), //
+         getOption(config, BUILDER_TIMEOUT, Integer.class, DEFAULT_BUILDER_TIMEOUT),//
+         getOption(config, BUILDER_WORKERS_NUMBER, Integer.class, Runtime.getRuntime().availableProcessors()),//
+         getOption(config, BUILDER_QUEUE_SIZE, Integer.class, DEFAULT_BUILDER_QUEUE_SIZE),//
+         getOption(config, BUILDER_CLEAN_RESULT_DELAY_TIME, Integer.class, DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME));
    }
 
    /**
@@ -194,17 +208,21 @@ public class BuildService
     *    the time of keeping the results of build in minutes. After this time result of build
     *    (both artifact and logs) may be removed.
     */
-   protected BuildService(String repository, String publishRepository, int timeout, int workerNumber, int buildQueueSize,
-      int cleanBuildResultDelay)
+   protected BuildService(String repository, String publishRepository, String publishRepositoryUrl, int timeout,
+      int workerNumber, int buildQueueSize, int cleanBuildResultDelay)
    {
-      
+
+      if (repository == null || repository.isEmpty())
+      {
+         throw new IllegalArgumentException("Build repository may not be null or empty string. ");
+      }
       if (publishRepository == null || publishRepository.isEmpty())
       {
          throw new IllegalArgumentException("Publish repository may not be null or empty string. ");
       }
-      if (repository == null || repository.isEmpty())
+      if (publishRepositoryUrl == null || publishRepositoryUrl.isEmpty())
       {
-         throw new IllegalArgumentException("Build repository may not be null or empty string. ");
+         throw new IllegalArgumentException("Publish repository URL may not be null or empty string.");
       }
       if (workerNumber <= 0)
       {
@@ -221,6 +239,7 @@ public class BuildService
 
       this.repository = new File(repository);
       this.publishRepository = publishRepository;
+      this.publishRepositoryUrl = publishRepositoryUrl ;
       this.timeoutMillis = timeout * 1000; // to milliseconds
       this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
 
@@ -261,7 +280,7 @@ public class BuildService
     */
    public MavenBuildTask build(InputStream data) throws IOException
    {
-      return addTask(makeProject(data), BUILD_GOALS, null, Collections.<Runnable> emptyList(),
+      return addTask(makeProject(data), BUILD_GOALS, null, null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), WAR_FILE_GETTER);
    }
 
@@ -277,8 +296,9 @@ public class BuildService
    public MavenBuildTask deploy(InputStream data) throws IOException
    {
       Properties properties = new Properties();
-      properties.put("altDeploymentRepository","id::default::file:" + publishRepository); 
-      return addTask(makeProject(data), DEPLOY_GOALS, properties, Collections.<Runnable> emptyList(),
+      properties.put("altDeploymentRepository", "id::default::file:" + publishRepository);
+      
+      return addTask(makeProject(data), DEPLOY_GOALS, properties, DEPLOY_PROFILES, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), PUBLIC_ARTIFACT_GETTER);
    }
 
@@ -344,7 +364,7 @@ public class BuildService
          };
       }
 
-      return addTask(makeProject(data), COMPILE_GOALS, null, Collections.<Runnable> emptyList(),
+      return addTask(makeProject(data), COMPILE_GOALS, null, null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), new ResultGetter()
          {
             @Override
@@ -378,7 +398,7 @@ public class BuildService
       Properties properties = new Properties();
       // Save result in file.
       properties.put("outputFile", projectDirectory.getAbsolutePath() + "/dependencies.txt");
-      return addTask(projectDirectory, DEPENDENCIES_LIST_GOALS, properties, Collections.<Runnable> emptyList(),
+      return addTask(projectDirectory, DEPENDENCIES_LIST_GOALS, properties, null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), DEPENDENCIES_LIST_GETTER);
    }
 
@@ -405,7 +425,7 @@ public class BuildService
          properties.put("classifier", classifier);
          properties.put("mdep.failOnMissingClassifierArtifact", "false");
       }
-      return addTask(makeProject(data), DEPENDENCIES_COPY_GOALS, properties, Collections.<Runnable> emptyList(),
+      return addTask(makeProject(data), DEPENDENCIES_COPY_GOALS, properties, null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), COPY_DEPENDENCIES_GETTER);
    }
 
@@ -416,7 +436,7 @@ public class BuildService
       return projectDirectory;
    }
 
-   private MavenBuildTask addTask(File projectDirectory, String[] goals, Properties properties,
+   private MavenBuildTask addTask(File projectDirectory, String[] goals, Properties properties, String[] profiles,
       List<Runnable> preBuildTasks, List<Runnable> postBuildTasks, ResultGetter resultGetter) throws IOException
    {
       final MavenInvoker invoker = new MavenInvoker(resultGetter).setTimeout(timeoutMillis);
@@ -433,13 +453,16 @@ public class BuildService
 
       List<String> theGoals = new ArrayList<String>(goals.length);
       Collections.addAll(theGoals, goals);
+      
+      List<String> theProfiles = new ArrayList<String>(profiles.length);
+      Collections.addAll(theProfiles, profiles);
 
       File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
       TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
       final InvocationRequest request =
          new DefaultInvocationRequest().setBaseDirectory(projectDirectory).setGoals(theGoals)
-            .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties);
+            .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties).setProfiles(theProfiles);
 
       Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
       {
@@ -580,7 +603,7 @@ public class BuildService
    private static class PublicArtifactGetter implements ResultGetter
    {
       @Override
-      public Result getResult(File projectDirectory) throws FileNotFoundException
+      public Result getResult(File projectDirectory) throws IOException
       {
          Pom pom = null;
          ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -591,7 +614,10 @@ public class BuildService
             w.write('{');
             w.write("\"suggestDependency\":\"");
             w.write(pom.getSuggestDependency());
-            w.write('\"');
+            w.write("\",\"artifactDownloadUrl\":");
+            w.write('"');
+            w.write(artifactUriBuilder(publishRepositoryUrl, pom));
+            w.write('"');
             w.write('}');
             w.flush();
             w.close();
@@ -599,25 +625,43 @@ public class BuildService
          }
          catch (XPathExpressionException e)
          {
-            // TODO Auto-generated catch block
+            //must never been happened 
             e.printStackTrace();
          }
          catch (ParserConfigurationException e)
          {
-            // TODO Auto-generated catch block
+            //must never been happened
             e.printStackTrace();
          }
          catch (SAXException e)
          {
-            // TODO Auto-generated catch block
+            //must never been happened
             e.printStackTrace();
          }
-         catch (IOException e)
+         finally
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            if (bout != null)
+            {
+               bout.close();
+            }
+            if (w != null)
+            {
+               w.close();
+            }
          }
          return null;
+      }
+      
+      private String artifactUriBuilder(String repositoryUrl, Pom pom)
+      {
+         StringBuilder builder = new StringBuilder(repositoryUrl.endsWith("/") ? repositoryUrl : repositoryUrl + "/");
+         builder.append(pom.getGroupId().replace('.', '/'))
+                .append('/')
+                .append(pom.getArtifactId())
+                .append('/')
+                .append(pom.getVersion());
+         return builder.toString();
+         
       }
    }
 
