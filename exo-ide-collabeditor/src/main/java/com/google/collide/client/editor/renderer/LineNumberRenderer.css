@@ -1,7 +1,7 @@
 .lineNumber {
-  font-family: alternativeFontFamily;
+  font-family: 'Source Code Pro', monospace;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 13px;
   right: 0px;
   position: absolute;
 }
