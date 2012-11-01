@@ -226,9 +226,10 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void startApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String projectId = projectModel.getId();
 
       try
       {
@@ -238,7 +239,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
          AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
             new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
+         AppfogClientService.getInstance().startApplication(null, null, name, server,
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, startLoggedInHandler, null)
             {
                @Override
@@ -299,13 +300,14 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void stopApplication(final String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String projectId = projectModel.getId();
 
       try
       {
-         AppfogClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
+         AppfogClientService.getInstance().stopApplication(null, null, name, server,
             new AppfogAsyncRequestCallback<String>(null, stopLoggedInHandler, null)
             {
                @Override
@@ -367,9 +369,10 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String projectId = projectModel.getId();
 
       try
       {
@@ -379,7 +382,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
          AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
             new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-         AppfogClientService.getInstance().restartApplication(vfs.getId(), projectId, name, null,
+         AppfogClientService.getInstance().restartApplication(null, null, name, server,
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, restartLoggedInHandler, null)
             {
                @Override
@@ -388,7 +391,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                   if (result.getInstances() == result.getRunningInstances())
                   {
                      final String appUris = getAppUrisAsString(result);
-                     String msg = "";
+                     String msg;
                      if (appUris.isEmpty())
                      {
                         msg = AppfogExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
