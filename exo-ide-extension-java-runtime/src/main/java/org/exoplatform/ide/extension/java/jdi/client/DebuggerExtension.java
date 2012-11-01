@@ -36,6 +36,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEve
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateVariableValueInTreeEvent;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.FqnResolverFactory;
 import org.exoplatform.ide.extension.java.jdi.client.fqn.JavaFqnResolver;
@@ -61,6 +62,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.getInstance().addControl(new DebugAppControl());
       IDE.getInstance().addControl(new RunAppControl());
       IDE.getInstance().addControl(new StopAppControl());
+      IDE.getInstance().addControl(new UpdateAppControl());
       IDE.getInstance().addControl(new ShowBreakpointPropertiesControl());
       new LogsHandler();
    }
@@ -87,6 +89,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.addHandler(RunAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(DebugAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(StopAppEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(UpdateAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(AppStopedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(UpdateVariableValueInTreeEvent.TYPE, debuggerPresenter);
 

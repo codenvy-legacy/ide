@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.resources.client.ClientBundle.Source;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -462,6 +464,9 @@ public interface IDEImageBundle extends ClientBundle
    @Source("bundled-images/projects/paas_Disabled.png")
    ImageResource paasDisabled();
 
+   @Source("bundled-images/projects/none-target.png")
+   ImageResource noneTarget();
+
    @Source("bundled-images/projects/project-closed.png")
    ImageResource projectClosed();
 
@@ -727,4 +732,7 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/public/images/browsers/safari.png")
    ImageResource safari();
+
+   @Source("org/exoplatform/ide/public/images/question.png")
+   ImageResource question();
 }

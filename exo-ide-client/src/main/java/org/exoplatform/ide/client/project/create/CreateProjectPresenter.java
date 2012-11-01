@@ -21,6 +21,8 @@ package org.exoplatform.ide.client.project.create;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -29,13 +31,14 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ToggleButton;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -44,7 +47,6 @@ import org.exoplatform.ide.client.framework.event.CreateProjectHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
-import org.exoplatform.ide.client.framework.project.Language;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
@@ -53,16 +55,20 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.project.create.CreateProjectControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -75,11 +81,51 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 {
    interface Display extends IsView
    {
-      void setProjectTypes(List<Object> values);
+      HasValue<String> getNameField();
 
-      SingleSelectionModel<Object> getSingleSelectionModel();
+      HasValue<String> getErrorLabel();
 
-      HasClickHandlers getCancelButton();
+      void setProjectTypes(List<ProjectType> projectTypeList);
+
+      void setTargets(List<PaaS> targetList);
+
+      List<ToggleButton> getProjectTypeButtons();
+
+      List<ToggleButton> getTargetButtons();
+
+      /**
+       * Returns {@link ProjectType} for the appropriate button.
+       * 
+       * @param button {@link ToggleButton}
+       * @return {@link ProjectType}
+       */
+      ProjectType getProjectTypeByButton(ToggleButton button);
+
+      /**
+       * Returns {@link PaaS} for the appropriate button.
+       * 
+       * @param button {@link ToggleButton}
+       * @return {@link PaaS}
+       */
+      PaaS getTargetByButton(ToggleButton button);
+
+      void enableButtonsForSupportedTargets(List<PaaS> list);
+
+      /**
+       * Toggle up all buttons from the <code>buttonsList</code> except the <code>currentButton</code>.
+       * 
+       * @param projectTypeButtonsList list of buttons which shall be toggled down
+       * @param projectTypeButton button to except
+       */
+      void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
+
+      void selectTarget(PaaS target);
+
+      ListGridItem<ProjectTemplate> getTemplatesGrid();
+
+      void selectTemplate(ProjectTemplate projectTemplate);
+
+      HasValue<Boolean> getUseJRebelPlugin();
 
       HasClickHandlers getBackButton();
 
@@ -87,17 +133,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       HasClickHandlers getFinishButton();
 
-      HasValue<String> getNameField();
-
-      HasValue<String> getErrorLabel();
-
-      ListGridItem<PaaS> getTargetGrid();
-
-      ListGridItem<ProjectTemplate> getTemplatesGrid();
-
-      void selectTarget(PaaS target);
-
-      void selectTemplate(ProjectTemplate projectTemplate);
+      HasClickHandlers getCancelButton();
 
       void enableNextButton(boolean enabled);
 
@@ -105,18 +141,18 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       void showCreateProjectStep();
 
-      void showDeployProjectStep();
-
       void showChooseTemlateStep();
+
+      void showDeployProjectStep();
 
       void setDeployView(Composite deployView);
    }
 
    private Display display;
 
-   private boolean isDeployStep = false;
+   private boolean isChooseTemplateStep;
 
-   private boolean isChooseTemplateStep = false;
+   private boolean isDeployStep;
 
    private VirtualFileSystemInfo vfsInfo;
 
@@ -132,6 +168,27 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    private PaaS selectedTarget;
 
+   private final PaaS noneTarget = new NoneTarget();
+
+   /**
+    * Name of the property for using JRebel.
+    */
+   private static final String JREBEL = "jrebel";
+
+   /**
+    * Comparator for ordering project types.
+    */
+   private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
+
+   private class NoneTarget extends PaaS
+   {
+      public NoneTarget()
+      {
+         super("none", "None", new Image(IDEImageBundle.INSTANCE.noneTarget()), new Image(
+            IDEImageBundle.INSTANCE.noneTarget()), new ArrayList<ProjectType>());
+      }
+   }
+
    public CreateProjectPresenter()
    {
       IDE.getInstance().addControl(new CreateProjectControl());
@@ -143,40 +200,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    public void bindDisplay()
    {
-      display.getSingleSelectionModel().addSelectionChangeHandler(new SelectionChangeEvent.Handler()
-      {
-
-         @Override
-         public void onSelectionChange(SelectionChangeEvent event)
-         {
-            if (display.getSingleSelectionModel().getSelectedObject() != null)
-            {
-               if (display.getSingleSelectionModel().getSelectedObject() instanceof ProjectType)
-               {
-                  selectedProjectType = (ProjectType)display.getSingleSelectionModel().getSelectedObject();
-                  List<PaaS> values =
-                     getAvailableTargets((ProjectType)display.getSingleSelectionModel().getSelectedObject());
-                  display.getTargetGrid().setValue(values);
-                  display.selectTarget(values.get(0));
-               }
-               else if (display.getSingleSelectionModel().getSelectedObject() instanceof LanguageItem)
-               {
-                  selectedProjectType = null;
-                  display.getTargetGrid().setValue(new ArrayList<PaaS>());
-               }
-            }
-            else
-            {
-               List<PaaS> values = new ArrayList<PaaS>();
-               values.add(new NoneTarget());
-               display.getTargetGrid().setValue(values);
-               display.selectTarget(values.get(0));
-            }
-            updateButtonState();
-         }
-
-      });
-
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -187,13 +210,14 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       });
 
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>()
       {
 
          @Override
-         public void onClick(ClickEvent event)
+         public void onSelection(SelectionEvent<ProjectTemplate> event)
          {
-            IDE.getInstance().closeView(display.asView().getId());
+            selectedTemplate = event.getSelectedItem();
+            updateButtonState();
          }
       });
 
@@ -213,9 +237,17 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onClick(ClickEvent event)
          {
-            if (!isChooseTemplateStep)
+            if (!isChooseTemplateStep && !isDeployStep)
             {
-               validateProjectName(display.getNameField().getValue());
+               if (selectedProjectType == null)
+               {
+                  Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
+                     org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+               }
+               else
+               {
+                  validateProjectName(display.getNameField().getValue());
+               }
             }
             else
             {
@@ -224,26 +256,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       });
 
-      display.getTargetGrid().addSelectionHandler(new SelectionHandler<PaaS>()
+      display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
          @Override
-         public void onSelection(SelectionEvent<PaaS> event)
+         public void onClick(ClickEvent event)
          {
-            selectedTarget = event.getSelectedItem();
-            availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
-            updateButtonState();
-         }
-      });
-
-      display.getTemplatesGrid().addSelectionHandler(new SelectionHandler<ProjectTemplate>()
-      {
-
-         @Override
-         public void onSelection(SelectionEvent<ProjectTemplate> event)
-         {
-            selectedTemplate = event.getSelectedItem();
-            updateButtonState();
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -261,6 +280,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             {
                createProject(selectedTemplate);
             }
+            else if (selectedProjectType == null)
+            {
+               Dialogs.getInstance().showInfo(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyTitle(),
+                  org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.noTechnologyMessage());
+            }
             else if (availableProjectTemplates.size() == 1)
             {
                createProject(availableProjectTemplates.get(0));
@@ -271,6 +295,41 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             }
          }
       });
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateProjectEvent)
+    */
+   @Override
+   public void onCreateProject(CreateProjectEvent event)
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
+      }
+
+      selectedProjectType = null;
+      availableProjectTemplates.clear();
+
+      display.showCreateProjectStep();
+      isDeployStep = false;
+      isChooseTemplateStep = false;
+      getProjectTemplates();
+      setTargets(IDE.getInstance().getPaaSes());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
    }
 
    /**
@@ -301,42 +360,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       this.vfsInfo = event.getVfsInfo();
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.event.CreateProjectHandler#onCreateProject(org.exoplatform.ide.client.framework.event.CreateProjectEvent)
-    */
-   @Override
-   public void onCreateProject(CreateProjectEvent event)
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
-      display.showCreateProjectStep();
-      isDeployStep = false;
-      isChooseTemplateStep = false;
-      getProjectTemplates();
    }
 
    /**
@@ -354,12 +383,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                protected void onSuccess(List<ProjectTemplate> result)
                {
                   allProjectTemplates = result;
-                  List<Object> tree = formProjectTree(result);
-                  display.setProjectTypes(tree);
-                  if (!tree.isEmpty())
-                  {
-                     display.getSingleSelectionModel().setSelected(tree.get(0), true);
-                  }
+                  List<ProjectType> list = getProjectTypesFromTemplates(result);
+                  setProjectTypes(list);
 
                   if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
                   {
@@ -382,6 +407,100 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
+    * Sets the available project types.
+    * 
+    * @param list a list of the available project types
+    */
+   private void setProjectTypes(List<ProjectType> list)
+   {
+      Collections.sort(list, PROJECT_TYPES_COMPARATOR);
+      display.setProjectTypes(list);
+
+      for (final ToggleButton toggleButton : display.getProjectTypeButtons())
+      {
+         toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+         {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event)
+            {
+               if (event.getValue())
+               {
+                  display.toggleUpAllButtons(display.getProjectTypeButtons(), toggleButton);
+                  selectedProjectType = display.getProjectTypeByButton(toggleButton);
+
+                  display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
+                  display.selectTarget(noneTarget);
+                  updateButtonState();
+               }
+               else
+               {
+                  // do not allow toggle up
+                  toggleButton.setDown(true);
+               }
+            }
+         });
+
+         toggleButton.addFocusHandler(new FocusHandler()
+         {
+            
+            @Override
+            public void onFocus(FocusEvent event)
+            {
+               toggleButton.setFocus(false);
+            }
+         });
+      }
+   }
+
+   /**
+    * Sets the deployment targets.
+    * 
+    * @param targetsList a list of the available deployment targets
+    */
+   private void setTargets(List<PaaS> targetsList)
+   {
+      List<PaaS> list = new ArrayList<PaaS>();
+      list.addAll(targetsList);
+      list.add(noneTarget);
+      display.setTargets(list);
+
+      for (final ToggleButton toggleButton : display.getTargetButtons())
+      {
+         toggleButton.addValueChangeHandler(new ValueChangeHandler<Boolean>()
+         {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event)
+            {
+               if (event.getValue())
+               {
+                  display.toggleUpAllButtons(display.getTargetButtons(), toggleButton);
+                  selectedTarget = display.getTargetByButton(toggleButton);
+                  availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
+                  updateButtonState();
+               }
+               else
+               {
+                  // do not allow toggle up
+                  toggleButton.setDown(true);
+               }
+            }
+         });
+
+         toggleButton.addFocusHandler(new FocusHandler()
+         {
+            
+            @Override
+            public void onFocus(FocusEvent event)
+            {
+               toggleButton.setFocus(false);
+            }
+         });
+      }
+   }
+
+   /**
     * Go to previous step.
     */
    private void goBack()
@@ -389,7 +508,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       if (isDeployStep)
       {
          isDeployStep = false;
-         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1 && !selectedTarget.isProvidesTemplate())
+         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1
+            && !selectedTarget.isProvidesTemplate())
          {
             goToTemplatesStep();
          }
@@ -418,7 +538,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       }
       else
       {
-         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1 && !selectedTarget.isProvidesTemplate())
+         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1
+            && !selectedTarget.isProvidesTemplate())
          {
             goToTemplatesStep();
          }
@@ -481,13 +602,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    /**
     * Get the list of targets, where project with pointed project type can be deployed.
     * 
-    * @param projectType
+    * @param projectType the project type
     * @return {@link List} of {@link PaaS}
     */
    private List<PaaS> getAvailableTargets(ProjectType projectType)
    {
       List<PaaS> values = new ArrayList<PaaS>();
-      values.add(new NoneTarget());
+      values.add(noneTarget);
       for (PaaS paas : IDE.getInstance().getPaaSes())
       {
          if (paas.getSupportedProjectTypes().contains(projectType))
@@ -526,6 +647,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                @Override
                protected void onSuccess(final ProjectModel result)
                {
+                  if (display.getUseJRebelPlugin().getValue() == true)
+                  {
+                     writeUseJRebelProperty(result);
+                  }
+
                   IDELoader.getInstance().hide();
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new ProjectCreatedEvent(result));
@@ -543,6 +669,38 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       {
          IDELoader.getInstance().hide();
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Writes 'jrebel' property to the project properties.
+    * 
+    * @param project {@link ProjectModel}
+    */
+   private void writeUseJRebelProperty(ProjectModel project)
+   {
+      project.getProperties().add(new Property(JREBEL, "true"));
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               // nothing to do
+            }
+
+            @Override
+            protected void onFailure(Throwable ignore)
+            {
+               // ignore this exception
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // ignore this exception
       }
    }
 
@@ -588,52 +746,23 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
-    * Prepare project tree to be displayed, where project types are grouped by language.
+    * Prepare project type list to be displayed.
     * 
     * @param projectTemplates available project templates
     * @return {@link List}
     */
-   private List<Object> formProjectTree(List<ProjectTemplate> projectTemplates)
+   private List<ProjectType> getProjectTypesFromTemplates(List<ProjectTemplate> projectTemplates)
    {
-      List<Object> tree = new ArrayList<Object>();
-
-      // Display project types, that are not included in any language group:
+      List<ProjectType> projectTypes = new ArrayList<ProjectType>();
       for (ProjectTemplate projectTemplate : projectTemplates)
       {
-         boolean found = false;
-         for (Language lang : Language.values())
+         ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
+         if (!projectTypes.contains(projectType))
          {
-            if (ProjectResolver.getProjectTypesByLanguage(lang).contains(
-               ProjectType.fromValue(projectTemplate.getType())))
-            {
-               found = true;
-               break;
-            }
-         }
-         if (!found)
-         {
-            tree.add(ProjectType.fromValue(projectTemplate.getType()));
+            projectTypes.add(projectType);
          }
       }
-
-      for (Language lang : Language.values())
-      {
-         List<ProjectType> types = ProjectResolver.getProjectTypesByLanguage(lang);
-         List<ProjectType> projectTypes = new ArrayList<ProjectType>();
-         for (ProjectTemplate projectTemplate : projectTemplates)
-         {
-            ProjectType projectType = ProjectType.fromValue(projectTemplate.getType());
-            if (types.contains(projectType) && !projectTypes.contains(projectType))
-            {
-               projectTypes.add(projectType);
-            }
-         }
-         if (!projectTypes.isEmpty())
-         {
-            tree.add(new LanguageItem(lang, projectTypes));
-         }
-      }
-      return tree;
+      return projectTypes;
    }
 
    /**
@@ -670,14 +799,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       }
       return templates;
-   }
-
-   private class NoneTarget extends PaaS
-   {
-      public NoneTarget()
-      {
-         super("none", "None", null, null);
-      }
    }
 
    /**
@@ -722,4 +843,5 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       }
 
    }
+
 }

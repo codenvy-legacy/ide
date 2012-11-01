@@ -22,28 +22,35 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellTree;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.SingleSelectionModel;
 
-import org.exoplatform.gwtframework.ui.client.CellTreeResource;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.client.framework.util.ProjectResolver;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -56,11 +63,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    private static final String CREATE_TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
 
-   private static final int HEIGHT = 350;
+   private static final int HEIGHT = 475;
 
-   private static final int WIDTH = 660;
+   private static final int WIDTH = 705;
 
-   private final String PROJECT_TREE_ID = "eXoCreateProjectViewProjectTree";
+   private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
 
    private final String BACK_BUTTON_ID = "eXoCreateNewProjectViewBackButton";
 
@@ -70,16 +77,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    private final String CANCEL_BUTTON_ID = "eXoCreateNewProjectViewCancelButton";
 
-   private final String NAME_FIELD_ID = "eXoCreateNewProjectViewNameField";
-
    private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
 
    interface CreateProjectViewUiBinder extends UiBinder<Widget, CreateProjectView>
    {
    }
-
-   @UiField
-   ImageButton cancelButton;
 
    @UiField
    ImageButton nextButton;
@@ -91,6 +93,15 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    ImageButton finishButton;
 
    @UiField
+   ImageButton cancelButton;
+
+   @UiField
+   Grid projectTypesGrid;
+
+   @UiField
+   Grid targetGrid;
+
+   @UiField
    TextInput projectNameField;
 
    @UiField
@@ -100,44 +111,31 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    ProjectTemplateGrid templatesGrid;
 
    @UiField
-   TargetGrid targetGrid;
+   CheckBox useJRebelPluginField;
 
    @UiField
-   DockLayoutPanel createProjectStep;
-
-   @UiField
-   FlowPanel deployProjectStep;
+   FlowPanel createProjectStep;
 
    @UiField
    DockLayoutPanel chooseTemplateStep;
 
    @UiField
-   ScrollPanel treePanel;
+   FlowPanel deployProjectStep;
 
-   private CellTree.Resources res = GWT.create(CellTreeResource.class);
+   private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
-   private SingleSelectionModel<Object> selectionModel;
+   private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
 
-   private ProjectTypeTreeViewModel projectTypeTreeViewModel;
+   private Map<ToggleButton, ProjectType> projectTypesMap = new HashMap<ToggleButton, ProjectType>();
 
-   private CellTree projectTypeTree;
+   private Map<ToggleButton, PaaS> targetsMap = new HashMap<ToggleButton, PaaS>();
+
+   private Map<PaaS, ToggleButton> paasButtonsMap = new HashMap<PaaS, ToggleButton>();
 
    public CreateProjectView()
    {
       super(ID, ViewType.MODAL, CREATE_TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
-
-      selectionModel = new SingleSelectionModel<Object>();
-      projectTypeTreeViewModel = new ProjectTypeTreeViewModel(selectionModel);
-      projectTypeTree = new CellTree(projectTypeTreeViewModel, null, res);
-
-      // Keyboard is disabled because of the selection problem (when selecting programmatically), if
-      // KeyboardSelectionPolicy.BOUND_TO_SELECTION is set
-      // and because of the focus border, when use KeyboardSelectionPolicy.ENABLED.
-      projectTypeTree.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
-
-      projectTypeTree.getElement().setId(PROJECT_TREE_ID);
-      treePanel.add(projectTypeTree);
 
       backButton.setButtonId(BACK_BUTTON_ID);
       nextButton.setButtonId(NEXT_BUTTON_ID);
@@ -150,7 +148,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -159,7 +157,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getNextButton()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNextButton()
     */
    @Override
    public HasClickHandlers getNextButton()
@@ -168,7 +166,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getFinishButton()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getFinishButton()
     */
    @Override
    public HasClickHandlers getFinishButton()
@@ -177,7 +175,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getNameField()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getNameField()
     */
    @Override
    public HasValue<String> getNameField()
@@ -186,7 +184,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#enableNextButton(boolean)
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableNextButton(boolean)
     */
    @Override
    public void enableNextButton(boolean enabled)
@@ -195,7 +193,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#enableFinishButton(boolean)
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableFinishButton(boolean)
     */
    @Override
    public void enableFinishButton(boolean enabled)
@@ -204,7 +202,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#showCreateProjectStep()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showCreateProjectStep()
     */
    @Override
    public void showCreateProjectStep()
@@ -219,7 +217,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#showDeployProjectStep()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showDeployProjectStep()
     */
    @Override
    public void showDeployProjectStep()
@@ -234,7 +232,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#showChooseTemlateStep()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showChooseTemlateStep()
     */
    @Override
    public void showChooseTemlateStep()
@@ -249,7 +247,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getBackButton()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getBackButton()
     */
    @Override
    public HasClickHandlers getBackButton()
@@ -258,7 +256,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setDeployView(com.google.gwt.user.client.ui.Composite)
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setDeployView(com.google.gwt.user.client.ui.Composite)
     */
    @Override
    public void setDeployView(Composite deployView)
@@ -268,44 +266,133 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getTargetGrid()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setProjectTypes(java.util.List)
     */
    @Override
-   public ListGridItem<PaaS> getTargetGrid()
+   public void setProjectTypes(List<ProjectType> projectTypeList)
    {
-      return targetGrid;
+      projectTypesGrid.setSize("100%", "100%");
+
+      int columnCount = 8;
+      int rowCount = (int)Math.ceil((double)projectTypeList.size() / columnCount);
+      projectTypesGrid.resize(rowCount, columnCount);
+
+      int buttonNum = 0;
+      for (int rowNum = 0; rowNum < rowCount; rowNum++)
+      {
+         if (buttonNum == projectTypeList.size())
+         {
+            break;
+         }
+
+         for (int colNum = 0; colNum < columnCount; colNum++)
+         {
+            if (buttonNum == projectTypeList.size())
+            {
+               break;
+            }
+
+            DockPanel dock = new DockPanel();
+            dock.setSpacing(4);
+            dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+
+            ProjectType projectType = projectTypeList.get(buttonNum++);
+            ToggleButton projectTypeButton = new ToggleButton();
+            Image image = new Image(ProjectResolver.getLargeImageForProject(projectType));
+            if (image != null)
+            {
+               projectTypeButton.getUpFace().setImage(image);
+            }
+            projectTypeButton.setSize("56px", "56px");
+            projectTypeButton.getElement().getStyle().setPropertyPx("borderRadius", 10);
+
+            // TODO
+            String type = projectType.value();
+            if (projectType == ProjectType.JSP)
+            {
+               type = "Java Web Application";
+            }
+            else if (projectType == ProjectType.JAR)
+            {
+               type = "Java Library";
+            }
+
+            HTML titleLabel = new HTML(type);
+            titleLabel.setHeight("36px");
+
+            dock.add(titleLabel, DockPanel.SOUTH);
+            dock.add(projectTypeButton, DockPanel.NORTH);
+
+            projectTypeButtonsList.add(projectTypeButton);
+            projectTypesMap.put(projectTypeButton, projectType);
+            projectTypesGrid.setWidget(rowNum, colNum, dock);
+         }
+      }
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setProjectTypes(java.util.List)
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#setTargets(java.util.List)
     */
    @Override
-   public void setProjectTypes(List<Object> values)
+   public void setTargets(List<PaaS> targetList)
    {
-      projectTypeTreeViewModel.getDataProvider().getList().clear();
-      projectTypeTreeViewModel.getDataProvider().setList(values);
+      targetGrid.setSize("100%", "100%");
+
+      int columnCount = 8;
+      int rowCount = (int)Math.ceil((double)targetList.size() / columnCount);
+      targetGrid.resize(rowCount, columnCount);
+
+      int buttonNum = 0;
+      for (int rowNum = 0; rowNum < rowCount; rowNum++)
+      {
+         if (buttonNum == targetList.size())
+         {
+            break;
+         }
+
+         for (int colNum = 0; colNum < columnCount; colNum++)
+         {
+            if (buttonNum == targetList.size())
+            {
+               break;
+            }
+
+            DockPanel dock = new DockPanel();
+            dock.setSpacing(4);
+            dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
+
+            PaaS target = targetList.get(buttonNum++);
+            ToggleButton targetButton = new ToggleButton();
+            Image targetImageEnabled = target.getImageEnabled();
+            if (targetImageEnabled != null)
+            {
+               targetButton.getUpFace().setImage(targetImageEnabled);
+            }
+            Image targetImageDisabled = target.getImageDisabled();
+            if (targetImageDisabled != null)
+            {
+               targetButton.getUpDisabledFace().setImage(targetImageDisabled);
+            }
+            targetButton.setSize("56px", "56px");
+            targetButton.getElement().getStyle().setPropertyPx("borderRadius", 10);
+            targetButton.setEnabled(false);
+
+            HTML titleLabel = new HTML(target.getTitle());
+            titleLabel.setHeight("36px");
+
+            dock.add(titleLabel, DockPanel.SOUTH);
+            dock.add(targetButton, DockPanel.NORTH);
+
+            targetButtonsList.add(targetButton);
+            targetsMap.put(targetButton, target);
+            paasButtonsMap.put(target, targetButton);
+            targetGrid.setWidget(rowNum, colNum, dock);
+         }
+      }
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getSingleSelectionModel()
-    */
-   @Override
-   public SingleSelectionModel<Object> getSingleSelectionModel()
-   {
-      return selectionModel;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#selectTarget(org.exoplatform.ide.client.framework.paas.recent.PaaS)
-    */
-   @Override
-   public void selectTarget(PaaS target)
-   {
-      targetGrid.selectItem(target);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getTemplatesGrid()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTemplatesGrid()
     */
    @Override
    public ListGridItem<ProjectTemplate> getTemplatesGrid()
@@ -314,7 +401,16 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#selectTemplate(org.exoplatform.ide.client.framework.template.ProjectTemplate)
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getUseJRebelPlugin()
+    */
+   @Override
+   public HasValue<Boolean> getUseJRebelPlugin()
+   {
+      return useJRebelPluginField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTemplate(org.exoplatform.ide.client.framework.template.ProjectTemplate)
     */
    @Override
    public void selectTemplate(ProjectTemplate projectTemplate)
@@ -323,11 +419,98 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
-    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#getErrorLabel()
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getErrorLabel()
     */
    @Override
    public HasValue<String> getErrorLabel()
    {
       return errorLabel;
    }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#toggleUpAllButtons(java.util.List, com.google.gwt.user.client.ui.ToggleButton)
+    */
+   @Override
+   public void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton)
+   {
+      for (ToggleButton button : buttonsList)
+      {
+         if (button != currentButton)
+         {
+            button.setValue(false);
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeButtons()
+    */
+   @Override
+   public List<ToggleButton> getProjectTypeButtons()
+   {
+      return projectTypeButtonsList;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetButtons()
+    */
+   @Override
+   public List<ToggleButton> getTargetButtons()
+   {
+      return targetButtonsList;
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getProjectTypeByButton(com.google.gwt.user.client.ui.ToggleButton)
+    */
+   @Override
+   public ProjectType getProjectTypeByButton(ToggleButton button)
+   {
+      return projectTypesMap.get(button);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getTargetByButton(com.google.gwt.user.client.ui.ToggleButton)
+    */
+   @Override
+   public PaaS getTargetByButton(ToggleButton button)
+   {
+      return targetsMap.get(button);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#enableButtonsForSupportedTargets(java.util.List)
+    */
+   @Override
+   public void enableButtonsForSupportedTargets(List<PaaS> list)
+   {
+      for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet())
+      {
+         if (list.contains(entry.getKey()))
+         {
+            entry.getValue().setEnabled(true);
+         }
+         else
+         {
+            entry.getValue().setEnabled(false);
+         }
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#selectTarget(org.exoplatform.ide.client.framework.paas.PaaS)
+    */
+   @Override
+   public void selectTarget(PaaS target)
+   {
+      for (Entry<PaaS, ToggleButton> entry : paasButtonsMap.entrySet())
+      {
+         entry.getValue().setValue(false);
+         if (entry.getKey() == target)
+         {
+            entry.getValue().setValue(true, true);
+         }
+      }
+   }
+
 }

@@ -46,12 +46,14 @@ public class ProjectResolver
 
    private static Map<ProjectType, ImageResource> projectImages = new HashMap<ProjectType, ImageResource>();
 
+   private static Map<ProjectType, ImageResource> projectLargeImages = new HashMap<ProjectType, ImageResource>();
+
    private static Map<Language, ImageResource> languageImages = new HashMap<Language, ImageResource>();
 
    /**
     * List contains sorted project types.
     */
-   private static List<String> sortedTypes = new ArrayList<String>();
+   private static List<ProjectType> sortedTypes = new ArrayList<ProjectType>();
 
    /**
     * Ruby on Rails
@@ -92,6 +94,7 @@ public class ProjectResolver
    /**
     * Empty Project
     */
+   @Deprecated
    public static final String UNDEFINED = "Undefined";
 
    @Deprecated
@@ -100,12 +103,12 @@ public class ProjectResolver
    @Deprecated
    public static final String APP_ENGINE_PYTHON = "App Engine Python";
 
+   @Deprecated
    public static final String AWS = "Amazon Web Services";
-   
 
    public static List<String> deprecatedTypes = Arrays.asList(APP_ENGINE_JAVA, APP_ENGINE_PYTHON, EXO_APP, PHP, RAILS,
       SERVLET_JSP, SPRING, STATIC_WEB);
-   
+
    static
    {
       if (IconImageBundle.INSTANCE != null)
@@ -132,9 +135,18 @@ public class ProjectResolver
          projectImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject());
          projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
          projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
+
+         projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject56());
+         projectLargeImages.put(ProjectType.JSP, IconImageBundle.INSTANCE.jspProject56());
+         projectLargeImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject56());
+         projectLargeImages.put(ProjectType.JAVASCRIPT, IconImageBundle.INSTANCE.jsProject56());
+         projectLargeImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject56());
+         projectLargeImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject56());
+         projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject56());
       }
 
-      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS, ProjectType.JAR));
+      projectTypes.put(Language.JAVA,
+         Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS, ProjectType.JAR));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
@@ -149,15 +161,13 @@ public class ProjectResolver
       languageImages.put(Language.GROOVY, IconImageBundle.INSTANCE.groovyType());
       languageImages.put(Language.JAVASCRIPT, IconImageBundle.INSTANCE.jsType());
 
-      sortedTypes.add(UNDEFINED);
-      sortedTypes.add(EXO_APP);
-      sortedTypes.add(STATIC_WEB);
-      sortedTypes.add(SERVLET_JSP);
-      sortedTypes.add(PHP);
-      sortedTypes.add(RAILS);
-      sortedTypes.add(SPRING);
-      sortedTypes.add(APP_ENGINE_JAVA);
-      sortedTypes.add(APP_ENGINE_PYTHON);
+      sortedTypes.add(ProjectType.JAR);
+      sortedTypes.add(ProjectType.JSP);
+      sortedTypes.add(ProjectType.SPRING);
+      sortedTypes.add(ProjectType.JAVASCRIPT);
+      sortedTypes.add(ProjectType.RUBY_ON_RAILS);
+      sortedTypes.add(ProjectType.PYTHON);
+      sortedTypes.add(ProjectType.PHP);
    }
 
    public static Set<String> getProjectsTypes()
@@ -168,10 +178,10 @@ public class ProjectResolver
    /**
     * Returns index of project type.
     * 
-    * @param type project type
+    * @param type {@link ProjectType}
     * @return index of project type
     */
-   public static int getIndexOfProjectType(String type)
+   public static int getIndexOfProjectType(ProjectType type)
    {
       if (sortedTypes.contains(type))
       {
@@ -179,7 +189,7 @@ public class ProjectResolver
       }
       else
       {
-         return -1;
+         return 999;
       }
    }
 
@@ -204,6 +214,16 @@ public class ProjectResolver
       if (projectImages.containsKey(type))
       {
          return projectImages.get(type);
+      }
+      else
+         return types.get(UNDEFINED);
+   }
+
+   public static ImageResource getLargeImageForProject(ProjectType type)
+   {
+      if (projectLargeImages.containsKey(type))
+      {
+         return projectLargeImages.get(type);
       }
       else
          return types.get(UNDEFINED);
