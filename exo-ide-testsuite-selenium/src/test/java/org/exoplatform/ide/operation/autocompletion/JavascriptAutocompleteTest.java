@@ -109,7 +109,6 @@ public class JavascriptAutocompleteTest extends BaseTest
       IDE.GOTOLINE.goToLine(36);
       IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "JSON.");
       IDE.JAVAEDITOR.waitJavaDocContainer();
-      System.out.println("<<<<<<<<<<<<<<<<<<:\n" + IDE.JAVAEDITOR.getTextFronJavaDocContainer());
       assertThat(IDE.JAVAEDITOR.getTextFronJavaDocContainer()).contains("parse(str) : Object")
          .contains("valueOf() : Object").contains("stringify(obj) : String");
 
