@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.appfog.client.update;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -37,6 +38,7 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -162,11 +164,15 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void updateMemory(final int memory)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+      final String projectId = projectModel.getId();
 
       try
       {
-         AppfogClientService.getInstance().updateMemory(vfs.getId(), projectId, null, null, memory,
+         AppfogClientService.getInstance().updateMemory(null, null, appName, server, memory,
             new AppfogAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null)
             {
                @Override
@@ -290,13 +296,17 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     */
    private void updateInstances(final String instancesExpression)
    {
+      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
       final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
 
       try
       {
-         AppfogClientService.getInstance().updateInstances(vfs.getId(), projectId, null, null, encodedExp,
+         AppfogClientService.getInstance().updateInstances(null, null, appName, server, encodedExp,
             new AppfogAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null)
             {
                @Override

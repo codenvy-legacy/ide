@@ -45,7 +45,8 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for managing Appfog services.
@@ -205,8 +206,6 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
          {
             unbindService(event.getSelectedItem());
          }
-
-         ;
       });
    }
 
@@ -240,7 +239,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
    }
 
    /**
-    * Get the list of CloudFoundry services (system and provisioned).
+    * Get the list of Appfog services (system and provisioned).
     */
    private void getServices()
    {
@@ -253,7 +252,17 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
                @Override
                protected void onSuccess(AppfogServices result)
                {
-                  display.getProvisionedServicesGrid().setValue(Arrays.asList(result.getAppfogProvisionedService()));
+                  List<AppfogProvisionedService> filteredServices = new ArrayList<AppfogProvisionedService>();
+
+                  for (AppfogProvisionedService service : result.getAppfogProvisionedService())
+                  {
+                     if (service.getInfra().getName().equals(application.getInfra().getName()))
+                     {
+                        filteredServices.add(service);
+                     }
+                  }
+
+                  display.getProvisionedServicesGrid().setValue(filteredServices);
                   display.enableDeleteButton(false);
                }
 

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.appfog.client.services;
 
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.google.gwt.core.client.GWT;
@@ -42,6 +43,9 @@ import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
 import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
+import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
 
@@ -51,7 +55,7 @@ import java.util.LinkedHashMap;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateServicePresenter implements CreateServiceHandler, ViewClosedHandler
+public class CreateServicePresenter extends GitPresenter implements CreateServiceHandler, ViewClosedHandler
 {
    interface Display extends IsView
    {
@@ -185,13 +189,17 @@ public class CreateServicePresenter implements CreateServiceHandler, ViewClosedH
    {
       String name = display.getNameField().getValue();
       String type = display.getSystemServicesField().getValue();
+
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final String infraName = project.getProperty("af-application-infrastructure").getValue().get(0);
+
       try
       {
          AutoBean<AppfogProvisionedService> provisionedService = AppfogExtension.AUTO_BEAN_FACTORY.provisionedService();
          AutoBeanUnmarshaller<AppfogProvisionedService> unmarshaller =
             new AutoBeanUnmarshaller<AppfogProvisionedService>(provisionedService);
 
-         AppfogClientService.getInstance().createService(null, type, name, null, null, null, "aws", //TODO
+         AppfogClientService.getInstance().createService(null, type, name, null, null, null, infraName,
             new AppfogAsyncRequestCallback<AppfogProvisionedService>(unmarshaller, createServiceLoggedInHandler, null)
             {
 

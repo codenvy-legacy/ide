@@ -48,6 +48,7 @@ import org.exoplatform.ide.extension.appfog.client.project.ApplicationInfoChange
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
 
@@ -163,11 +164,14 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private void mapUrl(final String url)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
 
       try
       {
-         AppfogClientService.getInstance().mapUrl(vfs.getId(), projectId, null, null, url,
+         AppfogClientService.getInstance().mapUrl(null, null, appName, server, url,
             new AppfogAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null)
             {
                @Override
@@ -224,10 +228,14 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private void unregisterUrl(final String url)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+
       try
       {
-         AppfogClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
+         AppfogClientService.getInstance().unmapUrl(null, null, appName, server, url,
             new AppfogAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null)
             {
                @Override

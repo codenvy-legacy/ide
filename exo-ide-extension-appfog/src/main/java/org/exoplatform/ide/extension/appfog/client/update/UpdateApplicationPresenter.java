@@ -84,10 +84,15 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    private void updateApplication()
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+
+      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
+      final String projectId = projectModel.getId();
+
       try
       {
-         AppfogClientService.getInstance().updateApplication(vfs.getId(), projectId, null, null, warUrl,
+         AppfogClientService.getInstance().updateApplication(null, null, appName, server, warUrl,
             new AppfogAsyncRequestCallback<String>(null, loggedInHandler, null)
             {
                @Override
