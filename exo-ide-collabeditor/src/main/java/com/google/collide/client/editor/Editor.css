@@ -3,7 +3,7 @@
 .root {
   background-color: white;
   bottom: 0;
-  font-family: monospace;
+  font-family: 'Source Code Pro',monospace;
   font-size: 13px;
   left: 0;
   line-height: editorLineHeight;
@@ -16,7 +16,7 @@
 }
 
 .editorFont, .root {
-  font-family: monospace;
+  font-family: 'Source Code Pro',monospace;
   font-size: 13px;
 }
 

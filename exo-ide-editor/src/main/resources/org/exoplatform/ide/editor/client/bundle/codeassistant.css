@@ -29,7 +29,7 @@
 .exo-autocomplete-description {
 	border: #A7ABB4 1px solid;
 	background-color: #e0e9ee;
-	font-family: monospace;
+	font-family: 'Source Code Pro', monospace;
 	font-size: 10pt;
 	overflow: scroll;
 }
