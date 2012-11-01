@@ -29,7 +29,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
-import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
@@ -62,8 +61,9 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
 
    public static final CloudBeesLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(CloudBeesLocalizationConstant.class);
-   
+
    private static final String ID = "CloudBees";
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
@@ -80,8 +80,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees()), Arrays
-            .asList(ProjectType.JSP),
+         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees56()), new Image(
+            CloudBeesClientBundle.INSTANCE.cloudBees56Disabled()), Arrays.asList(ProjectType.JSP),
             new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
@@ -97,7 +97,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
-     //TODO new CreateAccountPresenter();
+      //TODO new CreateAccountPresenter();
    }
 
    public static boolean canBeDeployedToCB(ProjectModel project)

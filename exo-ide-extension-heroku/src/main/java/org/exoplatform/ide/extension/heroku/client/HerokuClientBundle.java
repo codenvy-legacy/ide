@@ -32,10 +32,10 @@ import com.google.gwt.resources.client.ImageResource;
 public interface HerokuClientBundle extends ClientBundle
 {
    HerokuClientBundle INSTANCE = GWT.<HerokuClientBundle> create(HerokuClientBundle.class);
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_32.png")
    ImageResource herokuLogo();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/buttons/ok.png")
    ImageResource okButton();
 
@@ -78,12 +78,18 @@ public interface HerokuClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_Disabled.png")
    ImageResource herokuDisabled();
 
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_56.png")
+   ImageResource heroku56();
+
+   @Source("org/exoplatform/ide/extension/heroku/images/controls/heroku_56_Disabled.png")
+   ImageResource heroku56Disabled();
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/apps-list.png")
    ImageResource applicationsList();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/apps-list_Disabled.png")
    ImageResource applicationsListDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/heroku/images/controls/addKeys.png")
    ImageResource addKeys();
 

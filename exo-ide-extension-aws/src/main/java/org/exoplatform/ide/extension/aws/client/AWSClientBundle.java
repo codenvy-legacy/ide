@@ -43,6 +43,12 @@ public interface AWSClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_32_Disabled.png")
    ImageResource elasticBeanstalk32Disabled();
 
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_56.png")
+   ImageResource elasticBeanstalk56();
+
+   @Source("org/exoplatform/ide/extension/aws/client/images/Elastic_Beanstalk_56_Disabled.png")
+   ImageResource elasticBeanstalk56Disabled();
+
    @Source("org/exoplatform/ide/extension/aws/client/images/switchAccount.png")
    ImageResource switchAccount();
 
