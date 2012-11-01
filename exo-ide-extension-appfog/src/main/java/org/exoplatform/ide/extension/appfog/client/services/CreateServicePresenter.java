@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.appfog.client.services;
 
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import com.google.gwt.core.client.GWT;

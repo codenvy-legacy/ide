@@ -169,7 +169,7 @@ public class Appfog
       }
       if (server == null || server.isEmpty())
       {
-         throw new IllegalArgumentException("Location of Cloud Foundry server required. ");
+         throw new IllegalArgumentException("Location of Appfog server required. ");
       }
       Cloudfoundry.Credential credential = cf.getCredential(server);
 
@@ -832,12 +832,12 @@ public class Appfog
             throw new IllegalArgumentException("Application name required. ");
          }
          String name = detectApplicationName(vfs, projectId, false);
-         if (!(name == null || name.isEmpty()))
-         {
-            // Working directory may not be used for more then one application.
-            throw new CloudfoundryException(400, "Working directory already contains Appfog application. ",
-               "text/plain");
-         }
+//         if (!(name == null || name.isEmpty()))
+//         {
+//            // Working directory may not be used for more then one application.
+//            throw new CloudfoundryException(400, "Working directory already contains Appfog application. ",
+//               "text/plain");
+//         }
          if (server == null || server.isEmpty())
          {
             throw new IllegalArgumentException("Location of Appfog server required. ");

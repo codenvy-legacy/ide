@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.client;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -95,6 +97,14 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
             {
                msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
             }
+
+            final RegExp duplicateAppNamePattern = RegExp.compile("Application '(.+)' already exists. Use update or delete.");
+            final MatchResult matcher = duplicateAppNamePattern.exec(msg);
+            if (matcher != null)
+            {
+               msg = "Application '" + matcher.getGroup(1) + "' already exist on appfog.";
+            }
+
             Dialogs.getInstance().showError(msg);
             return;
          }
