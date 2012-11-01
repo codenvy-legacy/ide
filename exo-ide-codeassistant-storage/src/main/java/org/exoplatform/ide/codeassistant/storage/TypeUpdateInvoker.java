@@ -82,8 +82,9 @@ public class TypeUpdateInvoker implements UpdateInvoker
 
             Set<String> packages = new TreeSet<String>();
             String jarName = getJarName(dep);
-            if (LOG.isDebugEnabled())
-               LOG.debug("Load info from: " + jarName);
+            
+            LOG.info("Load typeinfo from: " + jarName);
+            
             try
             {
                File jarFile = new File(dependencyFolder, jarName);

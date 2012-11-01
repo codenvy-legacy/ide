@@ -96,9 +96,8 @@
     padding:5px;
     overflow:visible;
     line-height:16px;
-    
-    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-    font-size: 12px;
+    font-family: 'Source Code Pro',monospace;
+    font-size: 13px;
     font-style: normal;
     font-weight: normal;
     cursor: default;

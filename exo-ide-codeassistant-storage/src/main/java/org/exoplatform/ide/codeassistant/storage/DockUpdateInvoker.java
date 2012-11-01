@@ -81,8 +81,7 @@ public class DockUpdateInvoker implements UpdateInvoker
             String jarName = getJarName(dep);
             File jarFile = new File(dependencyFolder, jarName);
 
-            if (LOG.isDebugEnabled())
-               LOG.debug("Load javadoc from: " + jarName);
+            LOG.info("Load javadoc from: " + jarName);
 
             if (!jarFile.exists())
                continue;
@@ -91,10 +90,7 @@ public class DockUpdateInvoker implements UpdateInvoker
             try
             {
                Map<String, String> javaDocs = javaDocExtractor.extractZip(zipStream);
-               if (!infoStorage.isJavaDockForArtifactExist(artifact))
-               {
-                 writerQueue.put(new WriterTask(dep, javaDocs));
-               }
+               writerQueue.put(new WriterTask(dep, javaDocs));
             }
             catch (InterruptedException e)
             {

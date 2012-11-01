@@ -68,17 +68,13 @@ public class UpdateStorage
    @Path("update/dock")
    @POST
    @Consumes("application/json")
-   public void updateJavaDock(Dependencys dependencys)
+   public Response updateJavaDock(@Context UriInfo uriInfo, Dependencys dependencys) throws IOException
    {
-      try
-      {
-         InputStream zip = doDownload(dependencys.getZipUrl());
-         storageService.updateDockIndex(dependencys.getDependencies(), zip);
-      }
-      catch (IOException e)
-      {
-         LOG.error("Can't find dependencys", e);
-      }
+
+      InputStream zip = doDownload(dependencys.getZipUrl());
+      UpdateStorageTask task = storageService.updateDockIndex(dependencys.getDependencies(), zip);
+      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
    }
 
    @GET

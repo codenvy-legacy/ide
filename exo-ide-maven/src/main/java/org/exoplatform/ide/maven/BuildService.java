@@ -139,11 +139,10 @@ public class BuildService
    private static final String[] BUILD_GOALS = new String[]{"test", "package"};
 
    /** Maven build goals 'test deploy'. */
-   private static final String[] DEPLOY_GOALS = new String[]{"deploy"};
-   
-//   /** Maven deploy profile '-Preleasesss'. */
-//   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
+   private static final String[] DEPLOY_GOALS = new String[]{"source:jar", "deploy"};
 
+   //   /** Maven deploy profile '-Preleasesss'. */
+   //   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
 
    /** Maven compile goals 'compile'. */
    private static final String[] COMPILE_GOALS = new String[]{"compile"};
@@ -239,7 +238,7 @@ public class BuildService
 
       this.repository = new File(repository);
       this.publishRepository = publishRepository;
-      this.publishRepositoryUrl = publishRepositoryUrl ;
+      this.publishRepositoryUrl = publishRepositoryUrl;
       this.timeoutMillis = timeout * 1000; // to milliseconds
       this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
 
@@ -297,8 +296,8 @@ public class BuildService
    {
       Properties properties = new Properties();
       properties.put("altDeploymentRepository", "id::default::file:" + publishRepository);
-      
-      return addTask(makeProject(data), DEPLOY_GOALS, properties,null, Collections.<Runnable> emptyList(),
+
+      return addTask(makeProject(data), DEPLOY_GOALS, properties, null, Collections.<Runnable> emptyList(),
          Collections.<Runnable> emptyList(), PUBLIC_ARTIFACT_GETTER);
    }
 
@@ -453,16 +452,21 @@ public class BuildService
 
       List<String> theGoals = new ArrayList<String>(goals.length);
       Collections.addAll(theGoals, goals);
-      
-      List<String> theProfiles = new ArrayList<String>(profiles.length);
-      Collections.addAll(theProfiles, profiles);
+
+      List<String> theProfiles = null;
+      if (profiles != null)
+      {
+         theProfiles = new ArrayList<String>(profiles.length);
+         Collections.addAll(theProfiles, profiles);
+      }
 
       File logFile = new File(projectDirectory.getParentFile(), projectDirectory.getName() + ".log");
       TaskLogger taskLogger = new TaskLogger(logFile/*, new SystemOutHandler()*/);
 
       final InvocationRequest request =
          new DefaultInvocationRequest().setBaseDirectory(projectDirectory).setGoals(theGoals)
-            .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties).setProfiles(theProfiles);
+            .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties)
+            .setProfiles(theProfiles);
 
       Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
       {
@@ -651,17 +655,14 @@ public class BuildService
          }
          return null;
       }
-      
+
       private String artifactUriBuilder(String repositoryUrl, Pom pom)
       {
          StringBuilder builder = new StringBuilder(repositoryUrl.endsWith("/") ? repositoryUrl : repositoryUrl + "/");
-         builder.append(pom.getGroupId().replace('.', '/'))
-                .append('/')
-                .append(pom.getArtifactId())
-                .append('/')
-                .append(pom.getVersion());
+         builder.append(pom.getGroupId().replace('.', '/')).append('/').append(pom.getArtifactId()).append('/')
+            .append(pom.getVersion());
          return builder.toString();
-         
+
       }
    }
 

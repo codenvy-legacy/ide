@@ -356,6 +356,8 @@ public class RestCodeAssistantJava
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
          throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
       }
+      String statusUrl = storageClient.updateTypeIndex(dependencys, buildStatus.getDownloadUrl());
+      waitStorageTaskFinish(statusUrl);
       buildId = builderClient.dependenciesCopy(vfs, projectId, "sources");
       buildStatus = waitBuildTaskFinish(buildId);
       if (Status.FAILED == buildStatus.getStatus())
@@ -363,7 +365,7 @@ public class RestCodeAssistantJava
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
          throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
       }
-      String statusUrl = storageClient.updateTypeIndex(dependencys, buildStatus.getDownloadUrl());
+      statusUrl = storageClient.updateDockIndex(dependencys, buildStatus.getDownloadUrl());
       waitStorageTaskFinish(statusUrl);
    }
 
