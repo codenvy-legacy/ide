@@ -19,6 +19,7 @@
 package org.exoplatform.ide.extension.heroku.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
 

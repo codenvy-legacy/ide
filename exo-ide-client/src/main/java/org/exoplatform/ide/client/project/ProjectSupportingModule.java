@@ -23,7 +23,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyHandler;
 import org.exoplatform.ide.client.framework.template.TemplateService;
@@ -35,7 +35,6 @@ import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
 import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
@@ -64,7 +63,6 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new ShowProjectsPresenter();
 
       new TinyProjectExplorerPresenter();
-      new PackageExplorerPresenter();
 
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());

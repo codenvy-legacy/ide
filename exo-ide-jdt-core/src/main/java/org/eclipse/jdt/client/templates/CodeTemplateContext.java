@@ -11,13 +11,13 @@
 package org.eclipse.jdt.client.templates;
 
 import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.templates.api.Template;
 import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
-import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.editor.runtime.Assert;
 import org.exoplatform.ide.editor.text.BadLocationException;
 import org.exoplatform.ide.editor.text.DefaultLineTracker;
@@ -121,7 +121,7 @@ public class CodeTemplateContext extends TemplateContext
       ProjectModel project = file.getProject();
       String sourcePath =
          project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-            : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+            : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
       String parentPath = file.getPath();
       String packageText = parentPath.substring((project.getPath() + "/" + sourcePath + "/").length());
       if (packageText.isEmpty())

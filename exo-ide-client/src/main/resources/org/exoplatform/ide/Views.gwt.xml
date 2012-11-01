@@ -217,10 +217,6 @@
       <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.packaging.PackageExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter.Display" />
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">
       <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display" />
    </replace-with>
