@@ -112,6 +112,27 @@ public interface IdeTemplateLocalizationConstant extends Messages
    @Key("noProjectTemplateForTarget")
    String noProjectTemplateForTarget(String target);
 
+   @Key("chooseTechnology")
+   String chooseTechnology();
+
+   @Key("choosePaas")
+   String choosePaaS();
+
+   @Key("noTechnologyTitle")
+   String noTechnologyTitle();
+
+   @Key("noTechnologyMessage")
+   String noTechnologyMessage();
+
+   @Key("useJRebelPlugin")
+   String useJRebelPlugin();
+
+   @Key("whatIsJRebel")
+   String whatIsJRebel();
+
+   @Key("zeroturnaround")
+   String zeroturnaround();
+
    /*
     * CreateProjectTemplateForm
     */

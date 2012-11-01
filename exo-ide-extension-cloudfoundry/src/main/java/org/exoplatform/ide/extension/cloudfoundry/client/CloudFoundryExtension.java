@@ -73,9 +73,9 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
     * Default CloudFoundry server.
     */
    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
-   
+
    private static final String ID = "CloudFoundry";
-   
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
     */
@@ -92,9 +92,9 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry()), Arrays
-            .asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING),
-            new DeployApplicationPresenter()));
+         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry56()),
+            new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry56Disabled()), Arrays.asList(ProjectType.JSP,
+               ProjectType.RUBY_ON_RAILS, ProjectType.SPRING), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -117,7 +117,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       new ManageServicesPresenter();
       new CreateServicePresenter();
    }
-   
+
    public static boolean canBeDeployedToCF(ProjectModel project)
    {
       List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());

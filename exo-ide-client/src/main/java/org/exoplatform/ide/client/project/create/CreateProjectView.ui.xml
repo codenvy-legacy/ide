@@ -10,8 +10,15 @@
       	font-size: 12px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       }
+
+      .labelTitle {
+      	font-weight: bold;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	color: #597EAA;
+      }
       
       .error {
+	    font-family: Verdana, Bitstream Vera Sans, sans-serif;
       	font-size: 11px;
       	color: #D21A1A;
       }
@@ -24,9 +31,19 @@
       	float: right;
       	margin-left: 5px;
       }
+
+      .floatLeft {
+      	float: left;
+      }
       
       .rightAlign {
       	margin-left: auto;
+      }
+
+      .question {
+	    font-size: 12px;
+        font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	margin-left: 30px;
       }
       
       .title {
@@ -45,61 +62,65 @@
       	height: 36px;
       	margin-right: 10px;
       }
+
+      .questionImage {
+      	float: left;
+      	width: 16px;
+      	height: 16px;
+      	margin-left: 10px;
+      }
       
       .margin {
       	margin-top: 10px;
       	margin-left: 15px;
       	margin-right: 15px;
       }
+
+      .formLine {
+      	margin-top: 10px;
+      }
+
+      .buttonsGroupTitle {
+      	font-size: 12px;
+      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+      	font-weight: bold;
+      	margin-top: 10px;
+      	margin-bottom: 10px;
+      	color: #597EAA;
+      }
+
+      .line {
+      	border-bottom: 1px solid #DBDFE5;
+	  }
    </ui:style>
+
    <f:Border borderColor="transparent" margin="15">
       <f:layer top="0" bottom="35">
          <g:FlowPanel>
             <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
             </g:FlowPanel>
-            <g:DockLayoutPanel unit="PX" ui:field="createProjectStep" width="100%" height="100%">
-               <g:north size="20">
-                  <f:Label value="{templateLocale.createProjectFromTemplateSelectProject}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
-               </g:north>
-               <g:west size="270">
-                  <f:Border>
-                     <f:layer>
-                        <g:ScrollPanel ui:field="treePanel">
-                        </g:ScrollPanel>
-                     </f:layer>
-                  </f:Border>
-               </g:west>
-               <g:west size="20">
-                  <g:FlowPanel></g:FlowPanel>
-               </g:west>
-               <g:center>
-                  <g:DockLayoutPanel unit="PX">
-                     <g:north size="20">
-                        <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
-                     </g:north>
-                     <g:north size="25">
-                        <f:TextInput ui:field="projectNameField" width="100%" height="22px"></f:TextInput>
-                     </g:north>
-                     <g:north size="20">
-                        <f:Label ui:field="errorLabel" isHTML="true" addStyleNames="{style.label} {style.error}" width="100%"></f:Label>
-                     </g:north>
-                     <g:north size="10">
-                        <g:FlowPanel></g:FlowPanel>
-                     </g:north>
-                     <g:north size="20">
-                        <f:Label value="{templateLocale.createProjectFromTemplateDeployField}" isHTML="true" styleName="{style.label}" width="100%"></f:Label>
-                     </g:north>
-                     <g:center>
-                        <f:Border>
-                           <f:layer>
-                              <e:TargetGrid width="100%" height="100%" ui:field="targetGrid"></e:TargetGrid>
-                           </f:layer>
-                        </f:Border>
-                     </g:center>
-                  </g:DockLayoutPanel>
-               </g:center>
-            </g:DockLayoutPanel>
-            <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="90%" styleName="{style.margin}">
+            <g:FlowPanel ui:field="createProjectStep" width="100%" height="100%">
+               <g:DockLayoutPanel width="100%" unit="PX" height="44px" addStyleNames="{style.formLine} {style.line}">
+                  <g:west size="115">
+                     <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true" styleName="{style.labelTitle}" width="100%"></f:Label>
+                  </g:west>
+                  <g:center>
+                     <f:TextInput ui:field="projectNameField" width="100%" height="22px"></f:TextInput>
+                  </g:center>
+                  <g:south size="20">
+                     <f:Label ui:field="errorLabel" isHTML="true" addStyleNames="{style.error}" width="100%"></f:Label>
+                  </g:south>
+               </g:DockLayoutPanel>
+               <g:FlowPanel addStyleNames="{style.line}">
+                  <g:Label text="{templateLocale.chooseTechnology}" addStyleNames="{style.buttonsGroupTitle}" width="100%"></g:Label>
+                  <g:Grid ui:field="projectTypesGrid" />
+               </g:FlowPanel>
+               <g:FlowPanel addStyleNames="{style.line}">
+                  <g:Label text="{templateLocale.choosePaaS}" addStyleNames="{style.buttonsGroupTitle}" width="100%"></g:Label>
+                  <g:Grid ui:field="targetGrid" />
+               </g:FlowPanel>
+            </g:FlowPanel>
+            <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="100%" styleName="{style.margin}">
                <g:north size="70">
                   <g:FlowPanel styleName="{style.title}">
                      <g:Image resource="{templateResource.template}" styleName="{style.image}"></g:Image>
@@ -113,15 +134,27 @@
                      </f:layer>
                   </f:Border>
                </g:center>
+               <g:south size="30">
+                  <g:FlowPanel>
+                     <f:Label value="{templateLocale.zeroturnaround}" height="36px"></f:Label>
+                  </g:FlowPanel>
+               </g:south>
+               <g:south size="30">
+                  <g:FlowPanel>
+                     <g:CheckBox ui:field="useJRebelPluginField" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
+                     <f:Label value="{templateLocale.useJRebelPlugin}" height="18px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+                     <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}" styleName="{style.questionImage}"></g:Image>
+                  </g:FlowPanel>
+               </g:south>
             </g:DockLayoutPanel>
          </g:FlowPanel>
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel styleName="{style.rightAlign}">
             <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="finishButton" enabled="false" width="90" height="22" text="{locale.finishButton}" imageName="ok"
+            <f:ImageButton ui:field="finishButton" enabled="true" width="90" height="22" text="{locale.finishButton}" imageName="ok"
                addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="nextButton" enabled="false" width="90" height="22" text="{locale.nextButton}" imageName="next"
+            <f:ImageButton ui:field="nextButton" enabled="true" width="90" height="22" text="{locale.nextButton}" imageName="next"
                addStyleNames="{style.floatRight}"></f:ImageButton>
             <f:ImageButton ui:field="backButton" enabled="true" width="90" height="22" text="{locale.backButton}" imageName="back"
                addStyleNames="{style.floatRight}"></f:ImageButton>

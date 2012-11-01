@@ -40,6 +40,12 @@ public interface GAEClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/googleappengine/images/gae_Disabled.png")
    ImageResource googleAppEngineDisabled();
 
+   @Source("org/exoplatform/ide/extension/googleappengine/images/gae56x56.png")
+   ImageResource googleAppEngine56();
+
+   @Source("org/exoplatform/ide/extension/googleappengine/images/gae56x56_Disabled.png")
+   ImageResource googleAppEngine56Disabled();
+
    @Source("org/exoplatform/ide/extension/googleappengine/images/create_app.png")
    ImageResource createApplicationConrtol();
 

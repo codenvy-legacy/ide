@@ -28,7 +28,7 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface AppfogClientBundle extends ClientBundle
 {
-   AppfogClientBundle INSTANCE = GWT.<AppfogClientBundle>create(AppfogClientBundle.class);
+   AppfogClientBundle INSTANCE = GWT.<AppfogClientBundle> create(AppfogClientBundle.class);
 
    @Source("org/exoplatform/ide/extension/appfog/images/appfog_36.png")
    ImageResource appfogLogo();
@@ -98,6 +98,12 @@ public interface AppfogClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/appfog/images/appfog_Disabled.png")
    ImageResource appfogDisabled();
+
+   @Source("org/exoplatform/ide/extension/appfog/images/appfog_56.png")
+   ImageResource appfog56();
+
+   @Source("org/exoplatform/ide/extension/appfog/images/appfog_56_Disabled.png")
+   ImageResource appfog56Disabled();
 
    @Source("org/exoplatform/ide/extension/appfog/images/initializeApp.png")
    ImageResource createApp();

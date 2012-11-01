@@ -56,12 +56,11 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
 {
    public static final AppfogAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(AppfogAutoBeanFactory.class);
 
-   public static final AppfogLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(AppfogLocalizationConstant.class);
+   public static final AppfogLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AppfogLocalizationConstant.class);
 
    public static final String DEFAULT_SERVER = "http://api.appfog.com";
 
-   private static final String ID = "Appfog";
+   private static final String ID = "AppFog";
 
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
@@ -73,10 +72,9 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("Appfog", "Appfog", new Image(AppfogClientBundle.INSTANCE.appfog()), Arrays
-            .asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING),
-            new DeployApplicationPresenter())
-      );
+         new PaaS("AppFog", "AppFog", new Image(AppfogClientBundle.INSTANCE.appfog56()), new Image(
+            AppfogClientBundle.INSTANCE.appfog56Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS,
+            ProjectType.SPRING), new DeployApplicationPresenter()));
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new AppfogControlGroup());

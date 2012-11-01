@@ -43,9 +43,14 @@ public class PaaS
    private String title;
 
    /**
-    * PaaS image.
+    * PaaS image (enabled).
     */
-   private Image image;
+   private Image imageEnabled;
+
+   /**
+    * PaaS image (disabled).
+    */
+   private Image imageDisabled;
 
    /**
     * PaaS provides application's template or not.
@@ -59,22 +64,23 @@ public class PaaS
     */
    private List<ProjectType> supportedProjectTypes = new ArrayList<ProjectType>();
 
-   public PaaS(String id, String title, Image image, List<ProjectType> supportedProjectTypes)
+   public PaaS(String id, String title, Image imageEnabled, Image imageDisabled, List<ProjectType> supportedProjectTypes)
    {
-      this(id, title, image, supportedProjectTypes, null);
+      this(id, title, imageEnabled, imageDisabled, supportedProjectTypes, null);
    }
 
-   public PaaS(String id, String title, Image image, List<ProjectType> supportedProjectTypes, HasPaaSActions paaSActions)
+   public PaaS(String id, String title, Image imageEnabled, Image imageDisabled, List<ProjectType> supportedProjectTypes, HasPaaSActions paaSActions)
    {
-      this(id, title, image, supportedProjectTypes, false, paaSActions);
+      this(id, title, imageEnabled, imageDisabled, supportedProjectTypes, false, paaSActions);
    }
 
-   public PaaS(String id, String title, Image image, List<ProjectType> supportedProjectTypes, boolean needsTemplate,
+   public PaaS(String id, String title, Image imageEnabled, Image imageDisabled, List<ProjectType> supportedProjectTypes, boolean needsTemplate,
       HasPaaSActions paaSActions)
    {
       this.id = id;
       this.title = title;
-      this.image = image;
+      this.imageEnabled = imageEnabled;
+      this.imageDisabled = imageDisabled;
       this.providesTemplate = needsTemplate;
       this.supportedProjectTypes = supportedProjectTypes;
       this.paaSActions = paaSActions;
@@ -113,19 +119,35 @@ public class PaaS
    }
 
    /**
-    * @return the image
+    * @return the enabled image
     */
-   public Image getImage()
+   public Image getImageEnabled()
    {
-      return image;
+      return imageEnabled;
    }
 
    /**
-    * @param image the image to set
+    * @param image the enabled image to set
     */
-   public void setImage(Image image)
+   public void setImageEnabled(Image image)
    {
-      this.image = image;
+      this.imageEnabled = image;
+   }
+
+   /**
+    * @return the enabled image
+    */
+   public Image getImageDisabled()
+   {
+      return imageDisabled;
+   }
+
+   /**
+    * @param image the disabled image to set
+    */
+   public void setImageDisabled(Image image)
+   {
+      this.imageDisabled = image;
    }
 
    /**

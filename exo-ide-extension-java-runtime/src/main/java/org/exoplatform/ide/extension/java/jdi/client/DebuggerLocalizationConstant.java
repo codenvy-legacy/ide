@@ -44,6 +44,18 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @Key("control.stopAppControlId")
    String stopAppControlId();
 
+   @DefaultMessage("Run/Update")
+   @Key("control.updateApp.id")
+   String updateAppControlId();
+
+   @DefaultMessage("Update Application")
+   @Key("control.updateApp.title")
+   String updateAppControlTitle();
+
+   @DefaultMessage("Update Application")
+   @Key("control.updateApp.prompt")
+   String updateAppControlPrompt();
+
    @DefaultMessage("Run/Breakpoint Properties")
    @Key("control.showBreakpointProperties.id")
    String showBreakpointPropertiesControlId();
@@ -234,6 +246,14 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    @DefaultMessage("Application <b>{0}</b> started on {1}")
    @Key("appStarted.uris")
    String applicationStartedOnUrls(String name, String uris);
+
+   @DefaultMessage("Application <b>{0}</b> updated on {1}.")
+   @Key("appUpdated")
+   String applicationUpdated(String name, String uris);
+
+   @DefaultMessage("Update application <b>{0}</b> failed.")
+   @Key("updateAppFailed")
+   String updateApplicationFailed(String name);
 
    @DefaultMessage("Start application failed.")
    @Key("startAppFailed")

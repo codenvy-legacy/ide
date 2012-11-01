@@ -80,9 +80,9 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk()), Arrays
-            .asList(ProjectType.JAVA, ProjectType.SPRING, ProjectType.JSP, ProjectType.AWS),
-            new DeployApplicationPresenter()));
+         new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk56()), new Image(
+            AWSClientBundle.INSTANCE.elasticBeanstalk56Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
+            ProjectType.JSP, ProjectType.AWS), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

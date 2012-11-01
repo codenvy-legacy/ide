@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -40,8 +42,6 @@ import org.exoplatform.ide.client.template.MigrateTemplatesEvent;
 import org.exoplatform.ide.client.template.MigrateTemplatesHandler;
 import org.exoplatform.ide.client.template.TemplatesMigratedCallback;
 import org.exoplatform.ide.client.template.TemplatesMigratedEvent;
-
-import com.google.gwt.http.client.RequestException;
 
 /**
  * Created by The eXo Platform SAS .
