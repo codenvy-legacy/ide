@@ -19,8 +19,8 @@
 package org.exoplatform.ide.client.preferences;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
-import org.exoplatform.ide.client.IDELoader;
 import org.exoplatform.ide.client.about.AboutIDEPresenter;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;

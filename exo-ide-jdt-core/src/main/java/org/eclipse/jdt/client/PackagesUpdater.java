@@ -28,6 +28,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.Timer;
 
+import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.event.PackageCreatedHandler;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -41,7 +42,6 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -204,7 +204,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       ProjectModel project = parentFolder.getProject();
       String sourcePath =
          project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-            : CreateJavaPresenter.DEFAULT_SOURCE_FOLDER;
+            : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
       String path = project.getPath() + "/" + sourcePath;
       String pack = "";
       if (!path.equals(parentFolder.getPath()))

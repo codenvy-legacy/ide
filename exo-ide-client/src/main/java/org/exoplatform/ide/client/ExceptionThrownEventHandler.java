@@ -54,11 +54,7 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler
     */
    public void onError(ExceptionThrownEvent event)
    {
-      Log.info("ExceptionThrownEventHandler.onError()");
-      
-      System.out.println("--------------------------------------------------------------");
-      System.out.println("Exception class name > " + event.getException().getClass().getName());
-      System.out.println("--------------------------------------------------------------");
+      Log.info("ExceptionThrownEventHandler.onError()");      
       
       Throwable error = event.getException();
       Log.info(event.getErrorMessage());

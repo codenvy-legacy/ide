@@ -18,8 +18,9 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jdt.client.NameEnvironment.JSONTypesInfoUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
@@ -27,6 +28,9 @@ import org.eclipse.jdt.client.codeassistant.QualifiedTypeNameHistory;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.FormatterPreferenceItem;
 import org.eclipse.jdt.client.core.formatter.FormatterProfilePresenter;
+import org.eclipse.jdt.client.create.CreateJavaClassControl;
+import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
+import org.eclipse.jdt.client.create.CreatePackageControl;
 import org.eclipse.jdt.client.create.CreatePackagePresenter;
 import org.eclipse.jdt.client.internal.codeassist.impl.AssistOptions;
 import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
@@ -37,6 +41,7 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.OrganizeImportsPr
 import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.outline.QuickOutlinePresenter;
 import org.eclipse.jdt.client.outline.ShowQuickOutlineControl;
+import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -81,9 +86,8 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 import org.exoplatform.ide.editor.java.hover.HoverResources;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -194,6 +198,9 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
    @Override
    public void initialize()
    {
+      IDE.getInstance().addControl(new CreateJavaClassControl());
+      new PackageExplorerPresenter();      
+      
       CodeAssistantClientBundle.INSTANCE.css().ensureInjected();
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
@@ -229,7 +236,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       TypeInfoStorage.get().clear();
       resources.hover().ensureInjected();
       new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
-      new JavadocPresenter(IDE.eventBus(), resources);
+      new JavadocPresenter(IDE.eventBus(), resources);      
    }
 
    /**
@@ -241,6 +248,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       REST_CONTEXT = event.getApplicationConfiguration().getContext();
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance(), IDE.getInstance());
+      new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance(), IDE.getInstance());      
    }
 
    private void loadWellKnownClasses(String[] fqns)

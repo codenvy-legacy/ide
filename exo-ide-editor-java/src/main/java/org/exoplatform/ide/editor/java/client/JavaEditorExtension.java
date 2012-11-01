@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
-import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -32,9 +30,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-import org.exoplatform.ide.editor.java.client.control.NewJavaClassControl;
-import org.exoplatform.ide.editor.java.client.create.CreateJavaPresenter;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+
+import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -56,13 +53,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-
-      IDE.getInstance().addControl(new NewJavaClassControl());
-
       JavaClientBundle.INSTANCE.css().ensureInjected();
-
-//      new CreateJavaClassPresenter();
-      
    }
 
    /**
@@ -75,37 +66,7 @@ public class JavaEditorExtension extends Extension implements InitializeServices
       if (JavaCodeAssistantService.get() == null)
          new JavaCodeAssistantService(event.getApplicationConfiguration().getContext(), event.getLoader());
 
-//      IDE.getInstance().getFileTypeRegistry().addFileType(
-//         new FileType(MimeType.APPLICATION_JAVA, "java", JavaClientBundle.INSTANCE.java()),
-//         new EditorCreator()
-//         {
-//            @Override
-//            public Editor createEditor()
-//            {
-////               return new CodeMirror(MimeType.APPLICATION_JAVA, new CodeMirrorConfiguration()
-////               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-////               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
-////               .setCanBeOutlined(true));
-//                return new JavaEditor(MimeType.APPLICATION_JAVA);
-//            }
-//         });
-//      
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java",
-//            JavaClientBundle.INSTANCE.java(), true, new CodeMirrorConfiguration()
-//               .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-//               .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']").setCanBeOutlined(true),
-//            true));
-      
-//      IDE.getInstance().addEditor(new CodeMirror(MimeType.APPLICATION_JAVA, "CodeMirror Java file editor", "java", 
-//         new CodeMirrorConfiguration()
-//            .setGenericParsers("['parsejava.js', 'tokenizejava.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/javacolors.css']")
-//            .setCanBeOutlined(true)
-//      ));
-      
-      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));
-      new CreateJavaPresenter(IDE.eventBus(),VirtualFileSystem.getInstance(), IDE.getInstance());
+      IDE.fireEvent(new AddCommentsModifierEvent(MimeType.APPLICATION_JAVA, new JavaCommentsModifier()));      
    }
 
    /**
