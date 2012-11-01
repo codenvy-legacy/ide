@@ -498,11 +498,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    /**
+    * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
     * 
-    * 
-    * @param enabledImage
-    * @param disabledImage
-    * @return
+    * @param enabledImage image for enabled button state
+    * @param disabledImage image for disabled button state
+    * @return a {@link ToggleButton}
     */
    private ToggleButton getNewButton(Image enabledImage, Image disabledImage)
    {
@@ -517,6 +517,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       }
       button.setSize("56px", "56px");
       button.getElement().getStyle().setPropertyPx("borderRadius", 10);
+      button.getElement().getStyle().setPropertyPx("outline", 0);
       return button;
    }
 

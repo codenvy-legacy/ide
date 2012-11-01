@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.project.create;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -55,7 +53,6 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.project.create.CreateProjectControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -447,16 +444,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                }
             }
          });
-
-         toggleButton.addFocusHandler(new FocusHandler()
-         {
-
-            @Override
-            public void onFocus(FocusEvent event)
-            {
-               toggleButton.setFocus(false);
-            }
-         });
       }
    }
 
@@ -492,16 +479,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                   // do not allow toggle up
                   toggleButton.setDown(true);
                }
-            }
-         });
-
-         toggleButton.addFocusHandler(new FocusHandler()
-         {
-
-            @Override
-            public void onFocus(FocusEvent event)
-            {
-               toggleButton.setFocus(false);
             }
          });
       }
