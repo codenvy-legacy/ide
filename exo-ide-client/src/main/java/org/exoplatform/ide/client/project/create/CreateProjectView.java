@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -121,6 +123,9 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    @UiField
    FlowPanel deployProjectStep;
+
+   @UiField
+   DockLayoutPanel jRebelPanel;
 
    private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
@@ -281,47 +286,34 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       for (int rowNum = 0; rowNum < rowCount; rowNum++)
       {
          if (buttonNum == projectTypeList.size())
-         {
             break;
-         }
 
          for (int colNum = 0; colNum < columnCount; colNum++)
          {
             if (buttonNum == projectTypeList.size())
-            {
                break;
-            }
 
             DockPanel dock = new DockPanel();
             dock.setSpacing(4);
             dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
             ProjectType projectType = projectTypeList.get(buttonNum++);
-            ToggleButton projectTypeButton = new ToggleButton();
             Image image = new Image(ProjectResolver.getLargeImageForProject(projectType));
-            if (image != null)
-            {
-               projectTypeButton.getUpFace().setImage(image);
-            }
-            projectTypeButton.setSize("56px", "56px");
-            projectTypeButton.getElement().getStyle().setPropertyPx("borderRadius", 10);
+            ToggleButton projectTypeButton = getNewButton(image, null);
 
             // TODO
             String type = projectType.value();
             if (projectType == ProjectType.JSP)
             {
-               type = "Java Web Application";
+               type = "Java Web Application (WAR)";
             }
             else if (projectType == ProjectType.JAR)
             {
-               type = "Java Library";
+               type = "Java Library (JAR)";
             }
 
-            HTML titleLabel = new HTML(type);
-            titleLabel.setHeight("36px");
-
-            dock.add(titleLabel, DockPanel.SOUTH);
             dock.add(projectTypeButton, DockPanel.NORTH);
+            dock.add(getNewButtonLabel(type), DockPanel.SOUTH);
 
             projectTypeButtonsList.add(projectTypeButton);
             projectTypesMap.put(projectTypeButton, projectType);
@@ -346,42 +338,25 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       for (int rowNum = 0; rowNum < rowCount; rowNum++)
       {
          if (buttonNum == targetList.size())
-         {
             break;
-         }
 
          for (int colNum = 0; colNum < columnCount; colNum++)
          {
             if (buttonNum == targetList.size())
-            {
                break;
-            }
 
             DockPanel dock = new DockPanel();
             dock.setSpacing(4);
             dock.setHorizontalAlignment(DockPanel.ALIGN_CENTER);
 
             PaaS target = targetList.get(buttonNum++);
-            ToggleButton targetButton = new ToggleButton();
             Image targetImageEnabled = target.getImageEnabled();
-            if (targetImageEnabled != null)
-            {
-               targetButton.getUpFace().setImage(targetImageEnabled);
-            }
             Image targetImageDisabled = target.getImageDisabled();
-            if (targetImageDisabled != null)
-            {
-               targetButton.getUpDisabledFace().setImage(targetImageDisabled);
-            }
-            targetButton.setSize("56px", "56px");
-            targetButton.getElement().getStyle().setPropertyPx("borderRadius", 10);
+            ToggleButton targetButton = getNewButton(targetImageEnabled, targetImageDisabled);
             targetButton.setEnabled(false);
 
-            HTML titleLabel = new HTML(target.getTitle());
-            titleLabel.setHeight("36px");
-
-            dock.add(titleLabel, DockPanel.SOUTH);
             dock.add(targetButton, DockPanel.NORTH);
+            dock.add(getNewButtonLabel(target.getTitle()), DockPanel.SOUTH);
 
             targetButtonsList.add(targetButton);
             targetsMap.put(targetButton, target);
@@ -511,6 +486,56 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             entry.getValue().setValue(true, true);
          }
       }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#setJRebelPanelVisibility(boolean)
+    */
+   @Override
+   public void setJRebelPanelVisibility(boolean isVisible)
+   {
+      jRebelPanel.setVisible(isVisible);
+   }
+
+   /**
+    * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
+    * 
+    * @param enabledImage image for enabled button state
+    * @param disabledImage image for disabled button state
+    * @return a {@link ToggleButton}
+    */
+   private ToggleButton getNewButton(Image enabledImage, Image disabledImage)
+   {
+      ToggleButton button = new ToggleButton();
+      if (enabledImage != null)
+      {
+         button.getUpFace().setImage(enabledImage);
+      }
+      if (disabledImage != null)
+      {
+         button.getUpDisabledFace().setImage(disabledImage);
+      }
+      button.setSize("56px", "56px");
+      button.getElement().getStyle().setPropertyPx("borderRadius", 10);
+      button.getElement().getStyle().setPropertyPx("outline", 0);
+      return button;
+   }
+
+   /**
+    * Creates an HTML widget with the specified text content and preconfigured style settings.
+    * 
+    * @param label the new widget's text content
+    * @return an HTML widget
+    */
+   private HTML getNewButtonLabel(String label)
+   {
+      HTML titleLabel = new HTML(label);
+      titleLabel.setWidth("65px");
+      titleLabel.setHeight("46px");
+      titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
+      titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
+      titleLabel.getElement().getStyle().setColor("#545454");
+      return titleLabel;
    }
 
 }

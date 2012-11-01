@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
@@ -33,7 +34,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS.
@@ -109,7 +109,7 @@ public class NewItemPopupToolbarControl extends PopupMenuControl implements IDEC
    {
       if (event.getView() instanceof NavigatorDisplay ||
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerPresenter.Display)
+               event.getView() instanceof PackageExplorerDisplay)
       {
          setEnabled(event.getView().isViewVisible());
       }

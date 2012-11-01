@@ -37,10 +37,8 @@
    <inherits name='org.exoplatform.gwtframework.commons.Commons' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.editor.Editor' />
-   <inherits name='org.exoplatform.ide.editor.java.Views' />
    <inherits name='org.exoplatform.ide.codeassistant.jvm.CodeAssistantJvm'/>
    <inherits name='com.google.collide.CollabEditor'/>
-
 
    <source path="client" />
 

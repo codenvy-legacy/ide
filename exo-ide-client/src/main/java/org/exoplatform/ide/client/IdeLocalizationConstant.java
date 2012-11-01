@@ -435,14 +435,6 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
 
-   @Key("control.packageExplorer.view")
-   String packageExplorerViewTitle();
-
-   @Key("control.packageExplorer.title")
-   String packageExplorerControlTitle();
-
-   @Key("control.packageExplorer.prompt")
-   String packageExplorerControlPrompt();
 
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();

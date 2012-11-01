@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.client.navigation.control;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -30,15 +30,15 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.resources.client.ImageResource;
 
 /* 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
@@ -147,7 +147,7 @@ public class NewFileControl extends SimpleControl implements IDEControl, ViewVis
    {
       if (event.getView() instanceof NavigatorDisplay || 
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerPresenter.Display)
+               event.getView() instanceof PackageExplorerDisplay)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();

@@ -12,9 +12,11 @@
       }
 
       .labelTitle {
+	    font-size: 11px;
       	font-weight: bold;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	color: #597EAA;
+      	color: #545454;
+      	margin-top: 4px;
       }
       
       .error {
@@ -76,17 +78,17 @@
       	margin-right: 15px;
       }
 
-      .formLine {
+      .marginTop {
       	margin-top: 10px;
       }
 
       .buttonsGroupTitle {
-      	font-size: 12px;
+      	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
       	font-weight: bold;
       	margin-top: 10px;
       	margin-bottom: 10px;
-      	color: #597EAA;
+      	color: #545454;
       }
 
       .line {
@@ -100,8 +102,8 @@
             <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
             </g:FlowPanel>
             <g:FlowPanel ui:field="createProjectStep" width="100%" height="100%">
-               <g:DockLayoutPanel width="100%" unit="PX" height="44px" addStyleNames="{style.formLine} {style.line}">
-                  <g:west size="115">
+               <g:DockLayoutPanel width="100%" unit="PX" height="44px" addStyleNames="{style.marginTop} {style.line}">
+                  <g:west size="100">
                      <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true" styleName="{style.labelTitle}" width="100%"></f:Label>
                   </g:west>
                   <g:center>
@@ -134,17 +136,24 @@
                      </f:layer>
                   </f:Border>
                </g:center>
-               <g:south size="30">
-                  <g:FlowPanel>
-                     <f:Label value="{templateLocale.zeroturnaround}" height="36px"></f:Label>
-                  </g:FlowPanel>
-               </g:south>
-               <g:south size="30">
-                  <g:FlowPanel>
-                     <g:CheckBox ui:field="useJRebelPluginField" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
-                     <f:Label value="{templateLocale.useJRebelPlugin}" height="18px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
-                     <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}" styleName="{style.questionImage}"></g:Image>
-                  </g:FlowPanel>
+               <g:south size="60">
+	               <g:DockLayoutPanel ui:field="jRebelPanel" styleName="{style.marginTop}">
+	                  <g:west size="71">
+	                     <g:Image resource="{resource.jrebel}" styleName="{style.marginTop}"></g:Image>
+	                  </g:west>
+	                  <g:center>
+	                     <g:FlowPanel>
+	                        <g:CheckBox ui:field="useJRebelPluginField" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
+	                        <f:Label value="{templateLocale.useJRebelPlugin}" height="18px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+	                        <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}" styleName="{style.questionImage}"></g:Image>
+	                     </g:FlowPanel>
+	                  </g:center>
+	                  <g:south size="30">
+                         <g:FlowPanel>
+                            <f:Label value="{templateLocale.zeroturnaround}" height="36px"></f:Label>
+                         </g:FlowPanel>
+	                  </g:south>
+	               </g:DockLayoutPanel>
                </g:south>
             </g:DockLayoutPanel>
          </g:FlowPanel>

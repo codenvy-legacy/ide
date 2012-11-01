@@ -27,10 +27,10 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 
 /**
  * Created by The eXo Platform SAS .
@@ -96,7 +96,7 @@ public class NewItemMenuGroup extends SimpleControl implements IDEControl, VfsCh
    {
       if (event.getView() instanceof NavigatorDisplay ||
                event.getView() instanceof ProjectExplorerDisplay ||
-               event.getView() instanceof PackageExplorerPresenter.Display)
+               event.getView() instanceof PackageExplorerDisplay)
       {
          setEnabled(event.getView().isViewVisible());
       }

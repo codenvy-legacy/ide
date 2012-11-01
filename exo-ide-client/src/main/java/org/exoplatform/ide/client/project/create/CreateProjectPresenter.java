@@ -21,8 +21,6 @@ package org.exoplatform.ide.client.project.create;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -39,7 +37,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
-import org.exoplatform.ide.client.IDELoader;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
@@ -55,7 +53,6 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.project.create.CreateProjectControl;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -120,6 +117,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
 
       void selectTarget(PaaS target);
+
+      void setJRebelPanelVisibility(boolean isVisible);
 
       ListGridItem<ProjectTemplate> getTemplatesGrid();
 
@@ -432,22 +431,17 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                   display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
                   display.selectTarget(noneTarget);
                   updateButtonState();
+
+                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                     display.setJRebelPanelVisibility(true);
+                  else
+                     display.setJRebelPanelVisibility(false);
                }
                else
                {
                   // do not allow toggle up
                   toggleButton.setDown(true);
                }
-            }
-         });
-
-         toggleButton.addFocusHandler(new FocusHandler()
-         {
-            
-            @Override
-            public void onFocus(FocusEvent event)
-            {
-               toggleButton.setFocus(false);
             }
          });
       }
@@ -485,16 +479,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                   // do not allow toggle up
                   toggleButton.setDown(true);
                }
-            }
-         });
-
-         toggleButton.addFocusHandler(new FocusHandler()
-         {
-            
-            @Override
-            public void onFocus(FocusEvent event)
-            {
-               toggleButton.setFocus(false);
             }
          });
       }
@@ -647,7 +631,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                @Override
                protected void onSuccess(final ProjectModel result)
                {
-                  if (display.getUseJRebelPlugin().getValue() == true)
+                  if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                     && display.getUseJRebelPlugin().getValue() == true)
                   {
                      writeUseJRebelProperty(result);
                   }

@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
@@ -46,7 +47,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -227,7 +227,7 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
          return;
       }
 
-      if (event.getView() instanceof PackageExplorerPresenter.Display)
+      if (event.getView() instanceof PackageExplorerDisplay)
       {
          setText(new StatusMessage(currentOpenedProject, event.getSelectedItems().get(0)).getHtml());
          setVisible(true);

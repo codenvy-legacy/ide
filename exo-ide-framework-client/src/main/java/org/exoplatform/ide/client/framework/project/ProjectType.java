@@ -47,7 +47,7 @@ public enum ProjectType {
    private String type;
 
    /**
-    * @param type project's typ name
+    * @param type project's type name
     */
    private ProjectType(String type)
    {

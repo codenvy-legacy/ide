@@ -40,7 +40,16 @@
       <when-type-is class="org.eclipse.jdt.client.create.CreatePackagePresenter.Display" />
    </replace-with>
    
+   <replace-with class="org.eclipse.jdt.client.create.CreateJavaClassView">
+      <when-type-is class="org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display" />
+   </replace-with>
+   
    <replace-with class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterView">
       <when-type-is class="org.eclipse.jdt.client.internal.corext.codemanipulation.AddGetterSetterPresenter.Display" />
    </replace-with>
+   
+   <replace-with class="org.eclipse.jdt.client.packaging.PackageExplorerView">
+      <when-type-is class="org.exoplatform.ide.client.framework.project.PackageExplorerDisplay" />
+   </replace-with>
+   
 </module>

@@ -11,7 +11,6 @@
       <!-- IDE Client Framework -->
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
    <inherits name='org.exoplatform.ide.editor.java.JavaEditorExtension' />
-   
 
    <source path="client" />
    <entry-point class="org.eclipse.jdt.client.JdtExtension" />

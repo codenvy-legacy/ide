@@ -116,5 +116,62 @@ public interface JdtClientBundle extends ClientBundle
 
    @Source("org/eclipse/jdt/client/internal/text/correction/proposals/protected-method.png")
    ImageResource protectedMethod();
+   
+   @Source("org/eclipse/jdt/images/controls/newJavaclass_wiz.gif")
+   ImageResource newClassWizz();
+
+   @Source("org/eclipse/jdt/images/controls/newJavaclass_wiz_Disabled.gif")
+   ImageResource newClassWizzDisabled();
+   
+   /*
+    * Package Explorer
+    */
+   @Source("org/eclipse/jdt/images/package-explorer/package-explorer.png")
+   ImageResource packageExplorer();
+
+   @Source("org/eclipse/jdt/images/package-explorer/package-explorer-disabled.png")
+   ImageResource packageExplorerDisabled();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/expand-all.png")
+   ImageResource expandAll();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/expand-all-disabled.png")
+   ImageResource expandAllDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/collapse-all.png")
+   ImageResource collapseAll();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/collapse-all-disabled.png")
+   ImageResource collapseAllDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/package.png")
+   ImageResource packageFolder();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/package-disabled.png")
+   ImageResource packageFolderDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/empty-package.png")
+   ImageResource packageEmptyFolder();
+
+   @Source("org/eclipse/jdt/images/package-explorer/empty-package-disabled.png")
+   ImageResource packageEmptyFolderDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/jar-references.png")
+   ImageResource jarReferences();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/jar-references-disabled.png")
+   ImageResource jarReferencesDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/single-jar-reference.png")
+   ImageResource jarReference();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/single-jar-reference-disabled.png")
+   ImageResource jarReferenceDisabled();
+
+   @Source("org/eclipse/jdt/images/package-explorer/resource-directory.png")
+   ImageResource resourceDirectory();
+   
+   @Source("org/eclipse/jdt/images/package-explorer/resource-directory-disabled.png")
+   ImageResource resourceDirectoryDisabled();
 
 }

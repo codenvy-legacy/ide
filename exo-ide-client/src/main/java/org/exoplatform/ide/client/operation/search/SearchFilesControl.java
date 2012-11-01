@@ -31,11 +31,11 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.packaging.PackageExplorerPresenter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -117,7 +117,7 @@ public class SearchFilesControl extends SimpleControl implements IDEControl, Ite
       navigatorSelected =
          activeView instanceof NavigatorDisplay ||
          activeView instanceof ProjectExplorerDisplay ||
-         activeView instanceof PackageExplorerPresenter.Display;
+         activeView instanceof PackageExplorerDisplay;
 
       updateState();
    }

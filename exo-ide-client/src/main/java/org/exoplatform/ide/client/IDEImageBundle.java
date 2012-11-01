@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.resources.client.ClientBundle.Source;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -382,62 +380,6 @@ public interface IDEImageBundle extends ClientBundle
    ImageResource projectExplorerDisabled();
 
    /*
-    * Package Explorer
-    */
-   @Source("package-explorer/package-explorer.png")
-   ImageResource packageExplorer();
-
-   @Source("package-explorer/package-explorer-disabled.png")
-   ImageResource packageExplorerDisabled();
-   
-   
-   @Source("package-explorer/expand-all.png")
-   ImageResource expandAll();
-   
-   @Source("package-explorer/expand-all-disabled.png")
-   ImageResource expandAllDisabled();
-
-   @Source("package-explorer/collapse-all.png")
-   ImageResource collapseAll();
-   
-   @Source("package-explorer/collapse-all-disabled.png")
-   ImageResource collapseAllDisabled();
-
-   @Source("package-explorer/package.png")
-   ImageResource packageFolder();
-   
-   @Source("package-explorer/package-disabled.png")
-   ImageResource packageFolderDisabled();
-
-   @Source("package-explorer/empty-package.png")
-   ImageResource packageEmptyFolder();
-
-   @Source("package-explorer/empty-package-disabled.png")
-   ImageResource packageEmptyFolderDisabled();
-
-   @Source("package-explorer/jar-references.png")
-   ImageResource jarReferences();
-   
-   @Source("package-explorer/jar-references-disabled.png")
-   ImageResource jarReferencesDisabled();
-
-   @Source("package-explorer/single-jar-reference.png")
-   ImageResource jarReference();
-   
-   @Source("package-explorer/single-jar-reference-disabled.png")
-   ImageResource jarReferenceDisabled();
-
-   
-   
-   @Source("package-explorer/resource-directory.png")
-   ImageResource resourceDirectory();
-   
-   @Source("package-explorer/resource-directory-disabled.png")
-   ImageResource resourceDirectoryDisabled();
-   
-      
-
-   /*
     * Open Project
     */
    @Source("bundled-images/projects/open-project.png")
@@ -732,6 +674,9 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/public/images/browsers/safari.png")
    ImageResource safari();
+
+   @Source("org/exoplatform/ide/public/images/jrebel.png")
+   ImageResource jrebel();
 
    @Source("org/exoplatform/ide/public/images/question.png")
    ImageResource question();
