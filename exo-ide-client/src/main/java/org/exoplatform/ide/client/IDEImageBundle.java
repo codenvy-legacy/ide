@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.resources.client.ClientBundle.Source;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
@@ -732,6 +730,9 @@ public interface IDEImageBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/public/images/browsers/safari.png")
    ImageResource safari();
+
+   @Source("org/exoplatform/ide/public/images/jrebel.png")
+   ImageResource jrebel();
 
    @Source("org/exoplatform/ide/public/images/question.png")
    ImageResource question();

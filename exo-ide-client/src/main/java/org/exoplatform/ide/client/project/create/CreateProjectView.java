@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -318,7 +320,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             }
 
             HTML titleLabel = new HTML(type);
-            titleLabel.setHeight("36px");
+            titleLabel.setWidth("65px");
+            titleLabel.setHeight("46px");
+            titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
+            titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
+            titleLabel.getElement().getStyle().setColor("#545454");
 
             dock.add(titleLabel, DockPanel.SOUTH);
             dock.add(projectTypeButton, DockPanel.NORTH);
@@ -378,7 +384,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             targetButton.setEnabled(false);
 
             HTML titleLabel = new HTML(target.getTitle());
-            titleLabel.setHeight("36px");
+            titleLabel.setWidth("65px");
+            titleLabel.setHeight("46px");
+            titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
+            titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
+            titleLabel.getElement().getStyle().setColor("#545454");
 
             dock.add(titleLabel, DockPanel.SOUTH);
             dock.add(targetButton, DockPanel.NORTH);
