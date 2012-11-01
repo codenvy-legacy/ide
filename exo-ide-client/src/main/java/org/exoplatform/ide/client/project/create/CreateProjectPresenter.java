@@ -121,6 +121,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       void selectTarget(PaaS target);
 
+      void setJRebelPanelVisibility(boolean isVisible);
+
       ListGridItem<ProjectTemplate> getTemplatesGrid();
 
       void selectTemplate(ProjectTemplate projectTemplate);
@@ -432,6 +434,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                   display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
                   display.selectTarget(noneTarget);
                   updateButtonState();
+
+                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                     display.setJRebelPanelVisibility(true);
+                  else
+                     display.setJRebelPanelVisibility(false);
                }
                else
                {
@@ -443,7 +450,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
          toggleButton.addFocusHandler(new FocusHandler()
          {
-            
+
             @Override
             public void onFocus(FocusEvent event)
             {
@@ -490,7 +497,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
          toggleButton.addFocusHandler(new FocusHandler()
          {
-            
+
             @Override
             public void onFocus(FocusEvent event)
             {
@@ -647,7 +654,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                @Override
                protected void onSuccess(final ProjectModel result)
                {
-                  if (display.getUseJRebelPlugin().getValue() == true)
+                  if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                     && display.getUseJRebelPlugin().getValue() == true)
                   {
                      writeUseJRebelProperty(result);
                   }
