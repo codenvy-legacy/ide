@@ -721,6 +721,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    @Override
    public void onProjectCreated(ProjectModel project)
    {
+      if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+         && display.getUseJRebelPlugin().getValue() == true)
+      {
+         writeUseJRebelProperty(project);
+      }
+
       IDE.fireEvent(new ProjectCreatedEvent(project));
       if (display != null)
       {
