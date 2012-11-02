@@ -266,7 +266,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
    private void writeInfraProperty(ProjectModel project, String infra)
    {
-      project.getProperties().add(new Property("af-application-infrastructure", infra));
+      project.getProperties().add(new Property("appfog-infra", infra));
 
       try
       {
