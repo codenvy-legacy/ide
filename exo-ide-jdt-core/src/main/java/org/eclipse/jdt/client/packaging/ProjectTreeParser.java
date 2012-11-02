@@ -40,6 +40,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -253,9 +254,9 @@ public class ProjectTreeParser
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         //e.printStackTrace();
       }
-
+      
       addProjectDependencies();
    }
 
