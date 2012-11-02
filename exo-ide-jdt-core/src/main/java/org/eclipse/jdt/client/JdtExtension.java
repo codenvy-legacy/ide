@@ -88,6 +88,7 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -414,7 +415,10 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       }
       else
       {
-         options.putAll(formatterProfileManager.getDefault().getSettings());
+         if (formatterProfileManager.getDefault() != null)
+         {
+            options.putAll(formatterProfileManager.getDefault().getSettings());            
+         }
       }
    }
 

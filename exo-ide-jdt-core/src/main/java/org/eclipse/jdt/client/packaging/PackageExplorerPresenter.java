@@ -89,10 +89,19 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
    private Item itemToSelect;
 
-   ProjectTreeParser treeParser;
+   private ProjectTreeParser treeParser;
+   
+   private static PackageExplorerPresenter instance;
+   
+   public static PackageExplorerPresenter getInstance()
+   {
+      return instance;
+   }
 
    public PackageExplorerPresenter()
    {
+      instance = this;
+      
       IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
 
       IDE.addHandler(ShowPackageExplorerEvent.TYPE, this);
@@ -105,6 +114,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
+   }
+   
+   public ProjectItem getProjectItem()
+   {
+      return projectItem;
    }
 
    @Override
@@ -122,11 +136,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             return;
          }
          
-//         if (!isProjectAcceptable())
-//         {
-//            return;
-//         }
-
          display = GWT.create(PackageExplorerDisplay.class);
          bindDisplay();
          IDE.getInstance().openView(display.asView());
@@ -249,7 +258,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
 
       if (!ProjectTypes.contains(openedProject))
-//      if (!isProjectAcceptable())
       {
          IDE.getInstance().closeView(display.asView().getId());
          return;
@@ -257,19 +265,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       openProject();
    }
-
-//   private boolean isProjectAcceptable()
-//   {
-//      String projectType = openedProject.getProjectType();
-//      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-//         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-//         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType))
-//      {
-//         return true;
-//      }
-//
-//      return false;
-//   }
 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
@@ -403,9 +398,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      System.out.println(">> on select item");
-      System.out.println(">> item ID > " + event.getItemId());
-      
+      System.out.println(">> select item " + event.getItemId());
    }
 
 }

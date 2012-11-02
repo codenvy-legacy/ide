@@ -217,8 +217,23 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       deployProjectStep.setVisible(false);
 
       backButton.setVisible(false);
-      finishButton.setVisible(true);
       nextButton.setVisible(true);
+      finishButton.setVisible(true);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showChooseTemlateStep()
+    */
+   @Override
+   public void showChooseTemlateStep()
+   {
+      createProjectStep.setVisible(false);
+      chooseTemplateStep.setVisible(true);
+      deployProjectStep.setVisible(false);
+
+      backButton.setVisible(true);
+      nextButton.setVisible(true);
+      finishButton.setVisible(true);
    }
 
    /**
@@ -232,23 +247,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       deployProjectStep.setVisible(true);
 
       backButton.setVisible(true);
-      finishButton.setVisible(true);
       nextButton.setVisible(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#showChooseTemlateStep()
-    */
-   @Override
-   public void showChooseTemlateStep()
-   {
-      chooseTemplateStep.setVisible(true);
-      createProjectStep.setVisible(false);
-      deployProjectStep.setVisible(false);
-
-      backButton.setVisible(true);
       finishButton.setVisible(true);
-      nextButton.setVisible(true);
    }
 
    /**
@@ -530,7 +530,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    private HTML getNewButtonLabel(String label)
    {
       HTML titleLabel = new HTML(label);
-      titleLabel.setWidth("65px");
+      titleLabel.setWidth("70px");
       titleLabel.setHeight("46px");
       titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
       titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
