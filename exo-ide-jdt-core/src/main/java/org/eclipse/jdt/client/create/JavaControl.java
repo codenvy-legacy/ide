@@ -18,6 +18,9 @@
  */
 package org.eclipse.jdt.client.create;
 
+import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.packaging.model.ProjectItem;
+import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -41,6 +44,7 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
    public JavaControl(String id)
    {
       super(id);
+      setShowInContextMenu(true);
    }
 
    /**
@@ -55,14 +59,17 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
          ProjectModel project = ((ItemContext)item).getProject();
          if (project != null)
          {
-            String sourcePath =
-               project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-                  : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
-            sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
-            if (item.getPath().startsWith(sourcePath))
-               setEnabled(true);
-            else
-               setEnabled(false);
+//            String sourcePath =
+//               project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+//                  : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
+//            sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
+//            if (item.getPath().startsWith(sourcePath))
+//               setEnabled(true);
+//            else
+//               setEnabled(false);
+            
+            boolean enabled = isInResourceDirectory(item);
+            setEnabled(enabled);
          }
          else
             setEnabled(false);
@@ -71,6 +78,25 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
       {
          setEnabled(false);
       }
+   }
+   
+   private boolean isInResourceDirectory(Item item)
+   {
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      if (projectItem == null)
+      {
+         return false;
+      }
+      
+      for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
+      {
+         if (item.getPath().startsWith(resourceDirectory.getFolder().getPath()))
+         {
+            return true;
+         }
+      }
+      
+      return false;
    }
 
    /**
