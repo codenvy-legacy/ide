@@ -232,146 +232,101 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
       return nameField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#setApplicationURLs(java.util.List)
-    */
    @Override
    public void setApplicationURL(String url)
    {
-      url = (url != null && url.startsWith("http://")) ? url : "http://" + url;
+      if (url != null)
+      {
+         url = (url.startsWith("http://")) ? url : "http://" + url;
+      }
       urlField.setHref(url);
       urlField.setText(url);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationModel()
-    */
    @Override
    public HasValue<String> getApplicationModel()
    {
       return modelField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationStack()
-    */
    @Override
    public HasValue<String> getApplicationStack()
    {
       return stackField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationInstances()
-    */
    @Override
    public HasValue<String> getApplicationInstances()
    {
       return instancesField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationMemory()
-    */
    @Override
    public HasValue<String> getApplicationMemory()
    {
       return memoryField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getStartButton()
-    */
    @Override
    public HasClickHandlers getStartButton()
    {
       return startButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getStopButton()
-    */
    @Override
    public HasClickHandlers getStopButton()
    {
       return stopButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getRestartButton()
-    */
    @Override
    public HasClickHandlers getRestartButton()
    {
       return restartButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getEditMemoryButton()
-    */
    @Override
    public HasClickHandlers getEditMemoryButton()
    {
       return editMemoryButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getEditURLButton()
-    */
    @Override
    public HasClickHandlers getEditURLButton()
    {
       return editUrlsButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getEditInstancesButton()
-    */
    @Override
    public HasClickHandlers getEditInstancesButton()
    {
       return editInstancesButton;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#setStartButtonEnabled(boolean)
-    */
    @Override
    public void setStartButtonEnabled(boolean enabled)
    {
       startButton.setEnabled(enabled);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#setStopButtonEnabled(boolean)
-    */
    @Override
    public void setStopButtonEnabled(boolean enabled)
    {
       stopButton.setEnabled(enabled);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#setRestartButtonEnabled(boolean)
-    */
    @Override
    public void setRestartButtonEnabled(boolean enabled)
    {
       restartButton.setEnabled(enabled);
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getApplicationStatus()
-    */
    @Override
    public HasValue<String> getApplicationStatus()
    {
       return statusField;
    }
 
-   /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectPresenter.Display#getServicesButton()
-    */
    @Override
    public HasClickHandlers getServicesButton()
    {
