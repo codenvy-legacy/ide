@@ -205,7 +205,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            updateButtonState();
+            updateNavigationButtonsState();
          }
       });
 
@@ -216,7 +216,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          public void onSelection(SelectionEvent<ProjectTemplate> event)
          {
             selectedTemplate = event.getSelectedItem();
-            updateButtonState();
+            updateNavigationButtonsState();
          }
       });
 
@@ -332,9 +332,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    }
 
    /**
-    * Update the enabled/disabled state of the buttons.
+    * Update the enabled/disabled state of the navigation buttons.
     */
-   private void updateButtonState()
+   private void updateNavigationButtonsState()
    {
       boolean enabled =
          display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
@@ -430,12 +430,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
                   display.enableButtonsForSupportedTargets(getAvailableTargets(selectedProjectType));
                   display.selectTarget(noneTarget);
-                  updateButtonState();
-
-                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
-                     display.setJRebelPanelVisibility(true);
-                  else
-                     display.setJRebelPanelVisibility(false);
+                  updateNavigationButtonsState();
                }
                else
                {
@@ -472,7 +467,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                   display.toggleUpAllButtons(display.getTargetButtons(), toggleButton);
                   selectedTarget = display.getTargetByButton(toggleButton);
                   availableProjectTemplates = getProjectTemplates(selectedProjectType, selectedTarget);
-                  updateButtonState();
+                  updateNavigationButtonsState();
                }
                else
                {
@@ -507,7 +502,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          isChooseTemplateStep = false;
          goToProjectStep();
       }
-      updateButtonState();
+      updateNavigationButtonsState();
    }
 
    /**
@@ -532,7 +527,27 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             goToDeployStep();
          }
       }
-      updateButtonState();
+      updateNavigationButtonsState();
+   }
+
+   /**
+    * Move to project's data step.
+    */
+   private void goToProjectStep()
+   {
+      updateJRebelPanelVisibility();
+      display.showCreateProjectStep();
+   }
+
+   /**
+    * Move to choosing project template step.
+    */
+   private void goToTemplatesStep()
+   {
+      isChooseTemplateStep = true;
+      display.getTemplatesGrid().setValue(availableProjectTemplates);
+      updateJRebelPanelVisibility();
+      display.showChooseTemlateStep();
    }
 
    /**
@@ -550,6 +565,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             currentPaaS = paas;
             if (paas.getPaaSActions() != null)
             {
+               updateJRebelPanelVisibility();
                display.showDeployProjectStep();
                isDeployStep = true;
                display.setDeployView(paas.getPaaSActions().getDeployView(projectName, selectedProjectType));
@@ -563,24 +579,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             return;
          }
       }
-   }
-
-   /**
-    * Move to choosing project template step.
-    */
-   private void goToTemplatesStep()
-   {
-      isChooseTemplateStep = true;
-      display.getTemplatesGrid().setValue(availableProjectTemplates);
-      display.showChooseTemlateStep();
-   }
-
-   /**
-    * Move to project's data step.
-    */
-   private void goToProjectStep()
-   {
-      display.showCreateProjectStep();
    }
 
    /**
@@ -827,6 +825,23 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          IDE.fireEvent(new ExceptionThrownEvent(e, "Searching of projects failed."));
       }
 
+   }
+
+   /**
+    * Set the visibility state of a panel with JRebel setting.
+    */
+   private void updateJRebelPanelVisibility()
+   {
+      if (isChooseTemplateStep
+         || (isDeployStep && availableProjectTemplates != null && availableProjectTemplates.size() == 1))
+      {
+         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+         {
+            display.setJRebelPanelVisibility(true);
+            return;
+         }
+      }
+      display.setJRebelPanelVisibility(false);
    }
 
 }

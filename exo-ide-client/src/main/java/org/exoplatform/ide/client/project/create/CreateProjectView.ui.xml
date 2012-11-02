@@ -82,6 +82,10 @@
       	margin-top: 10px;
       }
 
+      .marginBottom {
+      	margin-bottom: 10px;
+      }
+
       .buttonsGroupTitle {
       	font-size: 11px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -99,8 +103,6 @@
    <f:Border borderColor="transparent" margin="15">
       <f:layer top="0" bottom="35">
          <g:FlowPanel>
-            <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
-            </g:FlowPanel>
             <g:FlowPanel ui:field="createProjectStep" width="100%" height="100%">
                <g:DockLayoutPanel width="100%" unit="PX" height="44px" addStyleNames="{style.marginTop} {style.line}">
                   <g:west size="100">
@@ -122,19 +124,27 @@
                   <g:Grid ui:field="targetGrid" />
                </g:FlowPanel>
             </g:FlowPanel>
-            <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="100%" styleName="{style.margin}">
-               <g:north size="70">
-                  <g:FlowPanel styleName="{style.title}">
-                     <g:Image resource="{templateResource.template}" styleName="{style.image}"></g:Image>
-                     <g:Label text="{templateLocale.createProjectFromTemplateSelectTemplate}" addStyleNames="{style.label} {style.labelAlign}"></g:Label>
-                  </g:FlowPanel>
-               </g:north>
+            <g:DockLayoutPanel width="100%" height="100%">
                <g:center>
-                  <f:Border>
-                     <f:layer>
-                        <e:ProjectTemplateGrid width="100%" height="100%" ui:field="templatesGrid"></e:ProjectTemplateGrid>
-                     </f:layer>
-                  </f:Border>
+                  <g:FlowPanel width="100%" height="100%">
+                     <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="100%" styleName="{style.margin}">
+		                <g:north size="70">
+		                   <g:FlowPanel styleName="{style.title}">
+		                      <g:Image resource="{templateResource.template}" styleName="{style.image}"></g:Image>
+ 		                     <g:Label text="{templateLocale.createProjectFromTemplateSelectTemplate}" addStyleNames="{style.label} {style.labelAlign}"></g:Label>
+		                   </g:FlowPanel>
+		                </g:north>
+		                <g:center>
+		                   <f:Border addStyleNames="{style.marginBottom}">
+		                      <f:layer>
+		                         <e:ProjectTemplateGrid width="100%" height="100%" ui:field="templatesGrid"></e:ProjectTemplateGrid>
+		                      </f:layer>
+		                   </f:Border>
+		                </g:center>
+		             </g:DockLayoutPanel>
+                     <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
+                     </g:FlowPanel>
+                  </g:FlowPanel>
                </g:center>
                <g:south size="60">
 	               <g:DockLayoutPanel ui:field="jRebelPanel" styleName="{style.marginTop}">
@@ -160,7 +170,8 @@
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel styleName="{style.rightAlign}">
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel" addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel"
+               addStyleNames="{style.floatRight}"></f:ImageButton>
             <f:ImageButton ui:field="finishButton" enabled="true" width="90" height="22" text="{locale.finishButton}" imageName="ok"
                addStyleNames="{style.floatRight}"></f:ImageButton>
             <f:ImageButton ui:field="nextButton" enabled="true" width="90" height="22" text="{locale.nextButton}" imageName="next"
