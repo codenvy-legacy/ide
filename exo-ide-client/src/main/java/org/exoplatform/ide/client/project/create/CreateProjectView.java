@@ -530,7 +530,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    private HTML getNewButtonLabel(String label)
    {
       HTML titleLabel = new HTML(label);
-      titleLabel.setWidth("65px");
+      titleLabel.setWidth("70px");
       titleLabel.setHeight("46px");
       titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");
       titleLabel.getElement().getStyle().setFontSize(11, Unit.PX);
