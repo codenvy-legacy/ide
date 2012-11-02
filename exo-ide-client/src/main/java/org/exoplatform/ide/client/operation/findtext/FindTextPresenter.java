@@ -366,6 +366,7 @@ public class FindTextPresenter implements EditorActiveFileChangedHandler, ViewCl
       {
          return;
       }
+
       boolean caseSensitive = display.getCaseSensitiveField().getValue();
 
       editor.search(query, caseSensitive, new SearchCompleteCallback()
