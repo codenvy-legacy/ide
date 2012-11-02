@@ -304,7 +304,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          return;
       }
 
-      if (!display.asView().isActive() && !"ideWorkspaceView".equals(lastNavigatorId))
+      if (!display.asView().isActive() && !display.asView().getId().equals(lastNavigatorId))
       {
          return;
       }
@@ -326,7 +326,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          }
       }
 
-      if (event.getFolders() != null)
+      if (event.getFolders() != null && event.getFolders().size() > 0)
       {
          foldersToRefresh = event.getFolders();
       }
@@ -348,7 +348,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
             }
          }
       }
-
+      
       refreshNextFolder();
    }
 
