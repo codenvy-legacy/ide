@@ -1,2 +1,3 @@
 @def editorLineHeight 15px;
-@def editorFontFamily 'Ubuntu Mono', 'Andale Mono', monospace;
+@def editorFontFamily 'Andale Mono', monospace;
+/* @def editorFontFamily 'Ubuntu Mono', 'Andale Mono', monospace; */
