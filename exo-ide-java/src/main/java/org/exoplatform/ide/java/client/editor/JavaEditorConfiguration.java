@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
+import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.IJavaPartitions;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
@@ -41,8 +41,11 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private UserActivityManager manager;
 
+   private JavaEditor javaEditor;
+
    /**
     * @param manager
+    * @param activrProjectId 
     */
    public JavaEditorConfiguration(UserActivityManager manager)
    {
@@ -69,7 +72,15 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    {
       BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
       ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, new JavaReconcilerStrategy());
+      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, new JavaReconcilerStrategy(javaEditor));
       return reconciler;
+   }
+
+   /**
+    * @param javaEditor
+    */
+   public void setEditor(JavaEditor javaEditor)
+   {
+      this.javaEditor = javaEditor;
    }
 }

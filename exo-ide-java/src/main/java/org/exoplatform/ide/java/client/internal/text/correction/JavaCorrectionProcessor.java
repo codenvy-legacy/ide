@@ -23,12 +23,15 @@ import org.exoplatform.ide.java.client.codeassistant.CompletionProposalComparato
 import org.exoplatform.ide.java.client.codeassistant.api.IProblemLocation;
 import org.exoplatform.ide.java.client.codeassistant.api.JavaCompletionProposal;
 import org.exoplatform.ide.java.client.core.JavaCore;
+import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.JavaAnnotation;
 import org.exoplatform.ide.java.client.quickassist.api.InvocationContext;
 import org.exoplatform.ide.java.client.quickassist.api.QuickAssistProcessor;
 import org.exoplatform.ide.java.client.quickassist.api.QuickFixProcessor;
 import org.exoplatform.ide.runtime.CoreException;
 import org.exoplatform.ide.runtime.IStatus;
 import org.exoplatform.ide.runtime.Status;
+import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
 
@@ -55,7 +58,8 @@ public class JavaCorrectionProcessor
       if (fixProcessor == null)
       {
          fixProcessor = new QuickFixProcessorImpl();
-         assistProcessors = new QuickAssistProcessor[]{new QuickAssistProcessorImpl(), new AdvancedQuickAssistProcessor()};
+         assistProcessors =
+            new QuickAssistProcessor[]{new QuickAssistProcessorImpl(), new AdvancedQuickAssistProcessor()};
       }
    }
 
@@ -88,21 +92,21 @@ public class JavaCorrectionProcessor
       //      fErrorMessage= null;
 
       CompletionProposal[] res = null;
-//      if (context != null)
-//      {
-//         ArrayList<JavaCompletionProposal> proposals = new ArrayList<JavaCompletionProposal>(10);
-//         IStatus status =
-//            collectProposals(context, true, !quickAssistContext.isUpdatedOffset(),
-//               quickAssistContext.getProblemsAtOffset(), proposals);
-//         res = proposals.toArray(new CompletionProposal[proposals.size()]);
-//         if (!status.isOK())
-//         {
-//            throw new CoreException(status);
-//            //            fErrorMessage = status.getMessage();
-//            //            JavaPlugin.log(status);
-//            //TODO;
-//         }
-//      }
+      //      if (context != null)
+      //      {
+      //         ArrayList<JavaCompletionProposal> proposals = new ArrayList<JavaCompletionProposal>(10);
+      //         IStatus status =
+      //            collectProposals(context, true, !quickAssistContext.isUpdatedOffset(),
+      //               quickAssistContext.getProblemsAtOffset(), proposals);
+      //         res = proposals.toArray(new CompletionProposal[proposals.size()]);
+      //         if (!status.isOK())
+      //         {
+      //            throw new CoreException(status);
+      //            //            fErrorMessage = status.getMessage();
+      //            //            JavaPlugin.log(status);
+      //            //TODO;
+      //         }
+      //      }
 
       if (res == null || res.length == 0)
       {
@@ -196,6 +200,24 @@ public class JavaCorrectionProcessor
       return fixProcessor.hasCorrections(annot.getProblemId());
    }
 
+   public static boolean hasCorrections(Annotation annotation)
+   {
+      if (annotation instanceof JavaAnnotation)
+      {
+         JavaAnnotation javaAnnotation = (JavaAnnotation)annotation;
+         int problemId = javaAnnotation.getId();
+         if (problemId != -1)
+         {
+            CompilationUnit cu = javaAnnotation.getCompilationUnit();
+            if (cu != null)
+            {
+               return fixProcessor.hasCorrections(problemId);
+            }
+         }
+      }
+      return false;
+   }
+
    /**
     * @param context
     * @return
@@ -205,10 +227,10 @@ public class JavaCorrectionProcessor
    {
       for (QuickAssistProcessor curr : assistProcessors)
       {
-         if(curr.hasAssists(context))
-          return true;
+         if (curr.hasAssists(context))
+            return true;
       }
-      
+
       return false;
    }
 

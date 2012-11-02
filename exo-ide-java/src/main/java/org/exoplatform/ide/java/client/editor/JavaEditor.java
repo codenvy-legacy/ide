@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
-import com.google.inject.Inject;
-
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
-import org.exoplatform.ide.editor.EditorPartPresenter;
-import org.exoplatform.ide.editor.EditorProvider;
+import org.exoplatform.ide.texteditor.BaseTextEditor;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
@@ -31,35 +28,20 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class JavaEditorProvider implements EditorProvider
+public class JavaEditor extends BaseTextEditor
 {
 
-   private final DocumentProvider documentProvider;
-
-   private final Resources resources;
-
-   private final UserActivityManager activityManager;
-
    /**
-    * @param context
+    * @param resources
+    * @param userActivityManager
     * @param documentProvider
+    * @param configuration
     */
-   @Inject
-   public JavaEditorProvider(Resources resources, UserActivityManager activityManager)
+   public JavaEditor(Resources resources, UserActivityManager userActivityManager, DocumentProvider documentProvider,
+      JavaEditorConfiguration configuration)
    {
-      super();
-      this.resources = resources;
-      this.activityManager = activityManager;
-      this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss());
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorProvider#getEditor()
-    */
-   @Override
-   public EditorPartPresenter getEditor()
-   {
-      return new JavaEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(activityManager));
+      super(resources, userActivityManager, documentProvider, configuration);
+      configuration.setEditor(this);
    }
 
 }

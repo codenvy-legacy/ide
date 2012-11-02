@@ -18,18 +18,26 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
+import com.google.gwt.core.shared.GWT;
+
+import org.exoplatform.ide.editor.TextEditorPartPresenter;
+import org.exoplatform.ide.java.client.JavaAutoBeanFactory;
+import org.exoplatform.ide.java.client.NameEnvironment;
+import org.exoplatform.ide.java.client.core.IProblemRequestor;
 import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTNode;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
-import org.exoplatform.ide.java.client.internal.codeassist.ISearchRequestor;
 import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
-import org.exoplatform.ide.java.client.internal.compiler.env.NameEnvironmentAnswer;
+import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.Region;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.texteditor.api.reconciler.DirtyRegion;
 import org.exoplatform.ide.texteditor.api.reconciler.ReconcilingStrategy;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -40,8 +48,22 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
 {
 
    private Document document;
-   
-   
+
+   private INameEnvironment nameEnvironment;
+
+   private final TextEditorPartPresenter editor;
+
+   private File file;
+
+   /**
+    * @param activeFile 
+    * @param editor 
+    * 
+    */
+   public JavaReconcilerStrategy(TextEditorPartPresenter editor)
+   {
+      this.editor = editor;
+   }
 
    /**
     * {@inheritDoc}
@@ -50,6 +72,10 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
    public void setDocument(Document document)
    {
       this.document = document;
+      file = editor.getEditorInput().getFile();
+      nameEnvironment =
+         new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory> create(JavaAutoBeanFactory.class),
+            "rest");
    }
 
    /**
@@ -66,78 +92,47 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
     */
    private void parse()
    {
-
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
-      parser.setSource(document.get());
-      parser.setKind(ASTParser.K_COMPILATION_UNIT);
-//      parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
-      parser.setResolveBindings(true);
-      parser.setNameEnvironment(new INameEnvironment()
+      AnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+      if (annotationModel == null)
+         return;
+      IProblemRequestor problemRequestor = null;
+      if (annotationModel instanceof IProblemRequestor)
       {
-         
-         @Override
-         public boolean isPackage(char[][] parentPackageName, char[] packageName)
-         {
-            // TODO Auto-generated method stub
-            return false;
-         }
-         
-         @Override
-         public void findTypes(char[] qualifiedName, boolean b, boolean camelCaseMatch, int searchFor,
-            ISearchRequestor requestor)
-         {
-            // TODO Auto-generated method stub
-            
-         }
-         
-         @Override
-         public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-         
-         @Override
-         public NameEnvironmentAnswer findType(char[][] compoundTypeName)
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-         
-         @Override
-         public void findPackages(char[] qualifiedName, ISearchRequestor requestor)
-         {
-            // TODO Auto-generated method stub
-            
-         }
-         
-         @Override
-         public void findExactTypes(char[] missingSimpleName, boolean b, int type, ISearchRequestor storage)
-         {
-            // TODO Auto-generated method stub
-            
-         }
-         
-         @Override
-         public void findConstructorDeclarations(char[] prefix, boolean camelCaseMatch, ISearchRequestor requestor)
-         {
-            // TODO Auto-generated method stub
-            
-         }
-         
-         @Override
-         public void cleanup()
-         {
-            // TODO Auto-generated method stub
-            
-         }
-      });
-      ASTNode ast = parser.createAST();
-      CompilationUnit unit = (CompilationUnit)ast;
-      IProblem[] problems = unit.getProblems();
-      for(IProblem p : problems)
+         problemRequestor = (IProblemRequestor)annotationModel;
+         problemRequestor.beginReporting();
+      }
+      try
       {
-         System.out.println(p);
+         ASTParser parser = ASTParser.newParser(AST.JLS3);
+         parser.setSource(document.get());
+         parser.setKind(ASTParser.K_COMPILATION_UNIT);
+         parser.setUnitName(file.getName().substring(0, file.getName().lastIndexOf('.')));
+         parser.setResolveBindings(true);
+         parser.setNameEnvironment(nameEnvironment);
+         ASTNode ast = parser.createAST();
+         CompilationUnit unit = (CompilationUnit)ast;
+         IProblem[] problems = unit.getProblems();
+         for (IProblem p : problems)
+         {
+            problemRequestor.acceptProblem(p);
+         }
+         IProblem[] tasks = (IProblem[])unit.getProperty("tasks");
+         if (tasks != null)
+         {
+            for (IProblem p : tasks)
+            {
+               problemRequestor.acceptProblem(p);
+            }
+         }
+      }
+      catch (Exception e)
+      {
+         Log.error(getClass(), e);
+      }
+      finally
+      {
+         if (problemRequestor != null)
+            problemRequestor.endReporting();
       }
    }
 

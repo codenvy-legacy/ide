@@ -29,6 +29,7 @@ import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.RegionImpl;
 import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.TypedRegion;
+import org.exoplatform.ide.text.TypedRegionImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.util.executor.BasicIncrementalScheduler;
@@ -205,11 +206,11 @@ public class ReconcilerImpl implements Reconciler
       TypedRegion[] regions = null;
       try
       {
-         regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), offset, length, false);
+         regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), offset, length, true);
       }
       catch (BadLocationException x)
       {
-         regions = new TypedRegion[0];
+         regions = new TypedRegion[]{new TypedRegionImpl(offset, length, Document.DEFAULT_CONTENT_TYPE)};
       }
       return regions;
    }

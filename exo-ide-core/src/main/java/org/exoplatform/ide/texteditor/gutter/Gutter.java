@@ -22,7 +22,6 @@ import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.Editor;
 import org.exoplatform.ide.texteditor.ElementManager;
 import org.exoplatform.ide.texteditor.ViewportModel;
-import org.exoplatform.ide.texteditor.gutter.Gutter.Position;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;

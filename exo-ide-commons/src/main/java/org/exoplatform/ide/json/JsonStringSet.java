@@ -17,34 +17,36 @@ package org.exoplatform.ide.json;
 /**
  * String Set interface.
  */
-public interface JsonStringSet {
+public interface JsonStringSet
+{
 
-  /**
-   * Callback to support iterating through the keys of this set.
-   */
-  public interface IterationCallback {
-    void onIteration(String key);
-  }
+   /**
+    * Callback to support iterating through the keys of this set.
+    */
+   public interface IterationCallback
+   {
+      void onIteration(String key);
+   }
 
-  boolean contains(String key);
+   boolean contains(String key);
 
-  JsonArray<String> getKeys();
+   JsonArray<String> getKeys();
 
-  boolean isEmpty();
+   boolean isEmpty();
 
-  void iterate(IterationCallback callback);
+   void iterate(IterationCallback callback);
 
-  void add(String key);
+   void add(String key);
 
-  void addAll(JsonArray<String> keys);
+   void addAll(JsonArray<String> keys);
 
-  /**
-   * Removes the item with the given key.
-   *
-   * @param key key of the item to be removed from this set, if present
-   * @return <tt>true</tt> if this set contained the specified element
-   */
-  boolean remove(String key);
+   /**
+    * Removes the item with the given key.
+    *
+    * @param key key of the item to be removed from this set, if present
+    * @return <tt>true</tt> if this set contained the specified element
+    */
+   boolean remove(String key);
 
-  void clear();
+   void clear();
 }

@@ -37,6 +37,7 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
@@ -76,6 +77,8 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       }
    };
 
+   protected TextEditorConfiguration configuration;
+   
    /**
     * @param documentProvider 
     * 
@@ -84,8 +87,8 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       this.documentProvider = documentProvider;
+      this.configuration = configuration;
       editor = new Editor(resources, userActivityManager);
-      editor.configure(configuration);
       editor.getTextListenerRegistrar().add(textListener);
    }
 
@@ -93,15 +96,17 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
     * @see org.exoplatform.ide.editor.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.EditorInput)
     */
    @Override
-   public void init(EditorInput input) throws EditorInitException
+   public void init(final EditorInput input) throws EditorInitException
    {
+      editor.configure(configuration);
       documentProvider.getDocument(input, new DocumentCallback()
       {
 
          @Override
          public void onDocument(Document document)
          {
-            editor.setDocument((DocumentImpl)document);
+            AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
+            editor.setDocument((DocumentImpl)document, annotationModel);
             firePropertyChange(PROP_INPUT);
          }
       });
@@ -274,6 +279,15 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public EditorInput getEditorInput()
+   {
+      return input;
    }
 
 }

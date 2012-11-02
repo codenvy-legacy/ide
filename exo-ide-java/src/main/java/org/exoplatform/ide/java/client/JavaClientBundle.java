@@ -168,4 +168,13 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/javadoc.gif")
    ImageResource javadoc();
+
+   @Source("org/exoplatform/ide/java/client/images/mark-error.png")
+   ImageResource markError();
+
+   @Source("org/exoplatform/ide/java/client/images/mark-warning.png")
+   ImageResource markWarning();
+
+   @Source("org/exoplatform/ide/java/client/images/taskmrk.gif")
+   ImageResource taskmrk();
 }

@@ -24,6 +24,7 @@ import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.TextStoreMutator;
@@ -50,6 +51,7 @@ import org.exoplatform.ide.texteditor.input.RootActionExecutor;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.parenmatch.ParenMatchHighlighter;
+import org.exoplatform.ide.texteditor.renderer.AnnotationRenderer;
 import org.exoplatform.ide.texteditor.renderer.CurrentLineHighlighter;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.RenderTimeExecutor;
@@ -118,6 +120,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       String leftGutterBase();
 
       String lineWarning();
+      
+      String lineError();
    }
 
    /**
@@ -266,6 +270,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private CodeAssistant codeAssistant;
 
+   private VerticalRuler verticalRuler;
+
    public Editor(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
       this.resources = resources;
@@ -282,7 +288,10 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       setView(view);
 
       focusManager = new FocusManager(buffer, input.getInputElement());
-
+      
+      Gutter leftNotificationGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutterNotification());
+      verticalRuler = new VerticalRuler(leftNotificationGutter, this);
+      
       Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
 
@@ -773,6 +782,22 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    public void removeTextInputListener(TextInputListener listener)
    {
       textInputListenerManager.remove(listener);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDocument(DocumentImpl document, AnnotationModel annotationModel)
+   {
+      setDocument(document);
+      if(annotationModel != null)
+      {
+         annotationModel.connect(document);
+         verticalRuler.setModel(annotationModel);
+         new AnnotationRenderer(this, annotationModel.getAnnotationDecorations()).setMode(annotationModel);
+         //TODO overview ruler
+      }
    }
 
 }
