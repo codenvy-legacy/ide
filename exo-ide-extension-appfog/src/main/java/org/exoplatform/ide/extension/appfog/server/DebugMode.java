@@ -16,59 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.appfog.shared;
+package org.exoplatform.ide.extension.appfog.server;
 
 /**
+ * Debug mode for starting application under debugging.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public class DebugMode
 {
-   String getName();
+   public static final String DEFAULT_MODE = "run";
 
-   void setName(String name);
+   private String mode = DEFAULT_MODE;
 
-   String getState();
+   public DebugMode(String mode)
+   {
+      this.mode = mode;
+   }
 
-   void setState(String state);
+   public DebugMode()
+   {
+   }
 
-   String getHost();
+   public String getMode()
+   {
+      return mode;
+   }
 
-   void setHost(String host);
-
-   int getPort();
-
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
+   public void setMode(String mode)
+   {
+      this.mode = mode;
+   }
 }

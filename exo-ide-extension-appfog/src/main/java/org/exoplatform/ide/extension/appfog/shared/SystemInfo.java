@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,57 +18,44 @@
  */
 package org.exoplatform.ide.extension.appfog.shared;
 
+import java.util.Map;
+
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public interface SystemInfo
 {
+   SystemResources getUsage();
+
+   void setUsage(SystemResources usage);
+
+   SystemResources getLimits();
+
+   void setLimits(SystemResources limits);
+
+   String getDescription();
+
+   void setDescription(String description);
+
+   String getUser();
+
+   void setUser(String user);
+
+   String getVersion();
+
+   void setVersion(String version);
+
    String getName();
 
    void setName(String name);
 
-   String getState();
+   String getSupport();
 
-   void setState(String state);
+   void setSupport(String support);
 
-   String getHost();
+   Map<String, Framework> getFrameworks();
 
-   void setHost(String host);
-
-   int getPort();
-
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
+   void setFrameworks(Map<String, Framework> frameworks);
 }

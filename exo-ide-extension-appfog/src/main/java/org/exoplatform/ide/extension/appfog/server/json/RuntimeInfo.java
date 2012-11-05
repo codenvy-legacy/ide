@@ -16,59 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.appfog.shared;
+package org.exoplatform.ide.extension.appfog.server.json;
+
+import java.util.Set;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public class RuntimeInfo
 {
-   String getName();
+   private String version;
+   private Set<String> debug_modes;
 
-   void setName(String name);
+   public String getVersion()
+   {
+      return version;
+   }
 
-   String getState();
+   public void setVersion(String version)
+   {
+      this.version = version;
+   }
 
-   void setState(String state);
+   public Set<String> getDebug_modes()
+   {
+      return debug_modes;
+   }
 
-   String getHost();
-
-   void setHost(String host);
-
-   int getPort();
-
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
+   public void setDebug_modes(Set<String> debug_modes)
+   {
+      this.debug_modes = debug_modes;
+   }
 }

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
+import org.exoplatform.ide.extension.appfog.server.json.CreateService;
 import org.exoplatform.ide.extension.appfog.shared.Infra;
-import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateService;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
