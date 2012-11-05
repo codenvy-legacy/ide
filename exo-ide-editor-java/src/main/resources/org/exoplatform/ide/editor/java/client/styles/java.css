@@ -20,7 +20,7 @@
 .exo-autocomplete-list-item-selected
 {
 	background-color: #FFFFFF;
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
     font-size: 10pt;
     border: 0 none;
     padding: 0px;
@@ -29,7 +29,7 @@
 .exo-autocomplete-list-item TBODY TR TD DIV,
 .exo-autocomplete-list-item-selected TBODY TR TD DIV
 {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
     font-size: 10pt;
     border: 0 none;
     padding: 0px;

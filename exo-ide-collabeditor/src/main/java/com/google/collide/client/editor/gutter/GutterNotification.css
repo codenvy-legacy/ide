@@ -96,7 +96,7 @@
     padding:5px;
     overflow:visible;
     line-height:16px;
-    font-family: 'Source Code Pro',monospace;
+    font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
     font-size: 13px;
     font-style: normal;
     font-weight: normal;

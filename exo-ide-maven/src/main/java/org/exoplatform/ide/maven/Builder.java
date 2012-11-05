@@ -65,7 +65,8 @@ public class Builder
    @POST
    @Path("build")
    @Consumes("application/zip")
-   public Response build(@Context UriInfo uriInfo, InputStream data) throws IOException
+   public Response build(@Context UriInfo uriInfo, InputStream data)
+      throws IOException
    {
       MavenBuildTask task = tasks.build(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
@@ -75,7 +76,8 @@ public class Builder
    @POST
    @Path("deploy")
    @Consumes("application/zip")
-   public Response deploy(@Context UriInfo uriInfo, InputStream data) throws IOException
+   public Response deploy(@Context UriInfo uriInfo, InputStream data)
+      throws IOException
    {
       MavenBuildTask task = tasks.deploy(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
@@ -85,7 +87,8 @@ public class Builder
    @POST
    @Path("dependencies/list")
    @Consumes("application/zip")
-   public Response dependenciesList(@Context UriInfo uriInfo, InputStream data) throws IOException
+   public Response dependenciesList(@Context UriInfo uriInfo, InputStream data)
+      throws IOException
    {
       MavenBuildTask task = tasks.dependenciesList(data);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());

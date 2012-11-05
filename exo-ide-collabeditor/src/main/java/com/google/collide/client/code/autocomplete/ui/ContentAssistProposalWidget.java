@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Grid;
 import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
 
 /**
- * @author <a href="mailto:azatsarynnyy@exoplatform.com">Foo Bar</a>
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: AutocompleteProposalWidget.java Sep 11, 2012 3:17:38 PM azatsarynnyy $
  *
  */
