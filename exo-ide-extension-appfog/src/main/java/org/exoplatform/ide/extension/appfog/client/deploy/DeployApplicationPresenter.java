@@ -58,11 +58,9 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,9 +104,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
    private List<InfraDetail> infras;
 
-   /**
-    * Public url to war file of application.
-    */
    private String warUrl;
 
    private String projectName;
@@ -243,7 +238,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
                      }
                   }
                   deployResultHandler.onDeployFinished(true);
-                  writeInfraProperty(project, currentInfra.getInfra());
                   IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
@@ -260,34 +254,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       catch (RequestException e)
       {
          deployResultHandler.onDeployFinished(false);
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void writeInfraProperty(ProjectModel project, String infra)
-   {
-      project.getProperties().add(new Property("appfog-infra", infra));
-
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               //nothing to do, only write property to project and it's all.
-            }
-
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }

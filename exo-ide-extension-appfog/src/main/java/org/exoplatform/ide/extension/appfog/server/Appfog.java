@@ -309,6 +309,7 @@ public class Appfog
          {
             writeApplicationName(vfs, projectId, app);
             writeServerName(vfs, projectId, credential.getTarget());
+            writeInfraName(vfs, projectId, infraType.getInfra().getName());
          }
 
          if (!noStart)
@@ -592,6 +593,7 @@ public class Appfog
       {
          writeApplicationName(vfs, projectId, null);
          writeServerName(vfs, projectId, null);
+         writeInfraName(vfs, projectId, null);
       }
       if (deleteServices)
       {
@@ -915,8 +917,8 @@ public class Appfog
       String server = null;
       if (vfs != null && projectId != null)
       {
-         Item item = vfs.getItem(projectId, PropertyFilter.valueOf("af-target"));
-         server = (String)item.getPropertyValue("af-target");
+         Item item = vfs.getItem(projectId, PropertyFilter.valueOf("appfog-target"));
+         server = (String)item.getPropertyValue("appfog-target");
       }
       if (server == null)
       {
@@ -928,7 +930,7 @@ public class Appfog
    private void writeServerName(VirtualFileSystem vfs, String projectId, String server)
       throws VirtualFileSystemException
    {
-      Property p = new Property("af-target", server);
+      Property p = new Property("appfog-target", server);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -955,6 +957,15 @@ public class Appfog
       throws VirtualFileSystemException
    {
       Property p = new Property("appfog-application", name);
+      List<Property> properties = new ArrayList<Property>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
+   }
+
+   private void writeInfraName(VirtualFileSystem vfs, String projectId, String name)
+      throws VirtualFileSystemException
+   {
+      Property p = new Property("appfog-infra", name);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);

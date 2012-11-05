@@ -49,11 +49,9 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,11 +92,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       HasValue<String> getInfraField();
 
-      /**
-       * Get the checkbox, that indicates is user want to enter custom URL.
-       *
-       * @return
-       */
       HasValue<Boolean> getUrlCheckItem();
 
       HasValue<String> getInstancesField();
@@ -129,11 +122,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       void enableAutodetectTypeCheckItem(boolean enable);
 
-      /**
-       * Set the list of servers to ServerSelectField.
-       *
-       * @param servers
-       */
       void setServerValues(String[] servers);
 
       void setInfraValues(String[] infras);
@@ -558,15 +546,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
                   }
 
-                  //Need in future, if we will create a service we should specified infra for it,
-                  //because if infra will not specified while creating service. it will be created in default infra.
-                  //That's why when we'll binded service and app with different infras it will be failed.
-                  AppfogExtension.updateProperty(
-                     project,
-                     Collections.singletonList(new Property("appfog-infra", app.infra)),
-                     null
-                  );
-
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 
@@ -583,34 +562,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
       }
    }
-
-//   private void writeInfraProperty(ProjectModel project, String infra)
-//   {
-//      project.getProperties().add(new Property("appfog-infra", infra));
-//
-//      try
-//      {
-//         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-//         {
-//
-//            @Override
-//            protected void onSuccess(ItemWrapper result)
-//            {
-//               //nothing to do, only write property to project and it's all.
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable e)
-//            {
-//               IDE.fireEvent(new ExceptionThrownEvent(e));
-//            }
-//         });
-//      }
-//      catch (RequestException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//   }
 
    /**
     * Get the array of application types from list of frameworks.
@@ -702,10 +653,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       String server = display.getServerField().getValue();
       if (server == null || server.isEmpty())
       {
-         // is server is empty, set value to null
-         // it is need for client service
-         // if null, than service will not send this parameter
-         server = null;
+         server = AppfogExtension.DEFAULT_SERVER;
       }
       else if (server.endsWith("/"))
       {
