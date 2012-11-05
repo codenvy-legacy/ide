@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.client;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -42,9 +44,14 @@ import org.exoplatform.ide.extension.appfog.client.start.StartApplicationPresent
 import org.exoplatform.ide.extension.appfog.client.update.UpdateApplicationPresenter;
 import org.exoplatform.ide.extension.appfog.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.appfog.client.url.UnmapUrlPresenter;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Property;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Image;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -101,5 +108,52 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
    {
       List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
       return (targets != null && targets.contains(ID));
+   }
+
+   public static void updateProperty(ProjectModel project, List<Property> toAdd, List<String> toDelete)
+   {
+      if (toAdd != null)
+      {
+         project.getProperties().addAll(toAdd);
+      }
+
+      if (toDelete != null)
+      {
+         List<Property> tempToDelete = new ArrayList<Property>();
+         for (Property prop : project.getProperties())
+         {
+            for (String propToDelete : toDelete)
+            {
+               if (prop.getName().equals(propToDelete))
+               {
+                  tempToDelete.add(prop);
+               }
+            }
+         }
+         project.getProperties().removeAll(tempToDelete);
+      }
+
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               //nothing to do, only write property to project and it's all.
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

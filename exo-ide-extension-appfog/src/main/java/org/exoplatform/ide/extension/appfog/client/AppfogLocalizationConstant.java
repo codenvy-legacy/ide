@@ -554,6 +554,9 @@ public interface AppfogLocalizationConstant extends Messages
    @Key("manage.project.stack")
    String manageProjectStack();
 
+   @Key("manage.project.infra")
+   String manageProjectInfra();
+
    @Key("manage.project.instances")
    String manageProjectInstances();
 

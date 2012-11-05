@@ -739,7 +739,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   @Override
                   public void execute()
                   {
-                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();                     
                      searchCompleteCallback.onSearchComplete(matches > 0);
                   }
                });
@@ -753,13 +753,19 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       }
       else
       {
-         editor.getSearchModel().getMatchManager().selectNextMatch();
+         //editor.getSearchModel().getMatchManager().selectNextMatch();
+         final Position position = editor.getSearchModel().getMatchManager().selectNextMatchToTheEnd();
 
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
             @Override
             public void execute()
             {
+               if (position == null)
+               {
+                  searchCompleteCallback.onSearchComplete(false);
+               }
+               
                if (editor.getSelection().hasSelection())
                {
                   searchCompleteCallback.onSearchComplete(true);

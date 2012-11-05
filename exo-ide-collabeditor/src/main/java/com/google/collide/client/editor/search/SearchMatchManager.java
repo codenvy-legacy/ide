@@ -67,6 +67,48 @@ public class SearchMatchManager {
     Position[] position = selection.getSelectionRange(false);
     return selectNextMatchFromPosition(position[1].getLineInfo(), position[1].getColumn());
   }
+  
+  public Position selectNextMatchToTheEnd()
+  {
+     Position[] position = selection.getSelectionRange(false);
+     return selectNextMatchFromPositionToTheEnd(position[1].getLineInfo(), position[1].getColumn());     
+  }
+  
+  /**
+   * Moves to the next match after the given position (inclusive).
+   *
+   * @returns Position of match or null if no matches are found.
+   */
+  public Position selectNextMatchFromPositionToTheEnd(LineInfo lineInfo, int startColumn) {
+    if (totalMatches == 0 || searchPattern == null || lineInfo == null) {
+      return null;
+    }
+
+    /*
+     * Basic Strategy: loop through lines until we find another match, if we hit
+     * the end start at the top. Until we hit our own line then just select the
+     * first match from index 0 (shouldn't be us).
+     */
+    Line beginLine = lineInfo.line();
+    int column = startColumn;
+    do {
+      if (selectNextMatchOnLine(lineInfo, column, lineInfo.line().length())) {
+        return new Position(lineInfo, selection.getCursorColumn());
+      }
+      if (!lineInfo.moveToNext()) {
+        //lineInfo = document.getFirstLineInfo();
+         return null;
+      }
+      // after first attempt, we always look at start of line
+      column = 0;
+    } while (lineInfo.line() != beginLine);
+
+    // We check to ensure there wasn't another match to wrap to on our own line
+    if (selectNextMatchOnLine(lineInfo, 0, startColumn)) {
+      return new Position(lineInfo, selection.getCursorColumn());
+    }
+    return null;
+  }
 
   /**
    * Moves to the next match after the given position (inclusive).

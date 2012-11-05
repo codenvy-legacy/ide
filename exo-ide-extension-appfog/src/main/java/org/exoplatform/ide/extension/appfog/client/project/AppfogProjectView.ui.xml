@@ -118,6 +118,10 @@
                                     title="{locale.manageProjectEditInstances}"></c:ImageButton>
                   </g:FlowPanel>
                   <g:FlowPanel width="100%" height="23px">
+                     <g:Label text="{locale.manageProjectInfra}" addStyleNames="{style.labelH}" width="20%"></g:Label>
+                     <c:Label ui:field="infraField" addStyleNames="{style.left}"></c:Label>
+                  </g:FlowPanel>
+                  <g:FlowPanel width="100%" height="23px">
                      <g:Label text="{locale.manageProjectStack}" addStyleNames="{style.labelH}" width="20%"></g:Label>
                      <c:Label ui:field="stackField" addStyleNames="{style.left}"></c:Label>
                   </g:FlowPanel>
