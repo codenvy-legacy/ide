@@ -28,7 +28,6 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.exoplatform.ide.commons.PomUtils;
 import org.exoplatform.ide.commons.PomUtils.Pom;
-import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -55,17 +54,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
-
-import javax.ws.rs.core.UriBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Build manager.
@@ -144,9 +139,6 @@ public class BuildService
    //   /** Maven deploy profile '-Preleasesss'. */
    //   private static final String[] DEPLOY_PROFILES = new String[]{"releasesss"};
 
-   /** Maven compile goals 'compile'. */
-   private static final String[] COMPILE_GOALS = new String[]{"compile"};
-
    /** Maven list dependencies goals 'dependency:list'. */
    private static final String[] DEPENDENCIES_LIST_GOALS = new String[]{"dependency:list"};
 
@@ -176,7 +168,7 @@ public class BuildService
 
    private String publishRepository;
 
-   private static String publishRepositoryUrl;
+   private String publishRepositoryUrl;
 
    private final long timeoutMillis;
 
@@ -296,87 +288,8 @@ public class BuildService
    {
       Properties properties = new Properties();
       properties.put("altDeploymentRepository", "id::default::file:" + publishRepository);
-
       return addTask(makeProject(data), DEPLOY_GOALS, properties, null, Collections.<Runnable> emptyList(),
-         Collections.<Runnable> emptyList(), PUBLIC_ARTIFACT_GETTER);
-   }
-
-   /**
-    * Compile current project.
-    *
-    * @param data
-    *    zipped maven project for compile
-    * @param files
-    *    input list files for compile, may be null (if null, task will be pack all compiled class files, otherwise
-    *    given by this param)
-    * @return
-    * @throws IOException
-    *    if i/o error occur when try to unzip project
-    */
-   public MavenBuildTask compile(InputStream data, final String[] files) throws IOException
-   {
-      final FilenameFilter filter;
-
-      if (files != null)
-      {
-         final Pattern[] patterns = new Pattern[files.length];
-         for (int i = 0; i < files.length; i++)
-         {
-            String className = files[i];
-            className = className.substring(className.lastIndexOf('/') + 1, className.lastIndexOf('.'));
-            className += "(\\$.+)?\\.class";
-
-            patterns[i] = Pattern.compile(className);
-         }
-
-         filter = new FilenameFilter()
-         {
-            @Override
-            public boolean accept(File dir, String name)
-            {
-               File file = new File(dir, name);
-               if (file.isFile())
-               {
-                  for (Pattern currentPattern : patterns)
-                  {
-                     if (currentPattern.matcher(name).find())
-                     {
-                        return true;
-                     }
-                  }
-                  return false;
-               }
-               return true;
-            }
-         };
-
-      }
-      else
-      {
-         filter = new FilenameFilter()
-         {
-            @Override
-            public boolean accept(File dir, String name)
-            {
-               return new File(dir, name).isDirectory() || name.endsWith(".class");
-            }
-         };
-      }
-
-      return addTask(makeProject(data), COMPILE_GOALS, null, null, Collections.<Runnable> emptyList(),
-         Collections.<Runnable> emptyList(), new ResultGetter()
-         {
-            @Override
-            public Result getResult(File projectDirectory) throws IOException
-            {
-               File target = new File(projectDirectory, "target");
-               File classes = new File(target, "classes");
-               File zip = new File(target, "classes.zip");
-               zipDir(classes.getAbsolutePath(), classes, zip, filter);
-
-               return new Result(zip, "application/zip", zip.getName(), 0);
-            }
-         });
+         Collections.<Runnable> emptyList(), new PublicArtifactGetter(publishRepositoryUrl));
    }
 
    /**
@@ -468,18 +381,22 @@ public class BuildService
             .setOutputHandler(taskLogger).setErrorHandler(taskLogger).setProperties(properties)
             .setProfiles(theProfiles);
 
-      Future<InvocationResultImpl> f = pool.submit(new Callable<InvocationResultImpl>()
+      final Callable<InvocationResultImpl> callable = new Callable<InvocationResultImpl>()
       {
          @Override
          public InvocationResultImpl call() throws MavenInvocationException
          {
             return invoker.execute(request);
          }
-      });
+      };
+
+      FutureTask<InvocationResultImpl> f = new FutureTask<InvocationResultImpl>(callable);
 
       final String id = nextTaskID();
       MavenBuildTask task = new MavenBuildTask(id, f, projectDirectory, taskLogger);
       addInQueue(id, task, System.currentTimeMillis() + cleanBuildResultDelayMillis);
+
+      pool.execute(f);
 
       return task;
    }
@@ -581,8 +498,6 @@ public class BuildService
 
    private static final ResultGetter WAR_FILE_GETTER = new WarFileGetter();
 
-   private static final ResultGetter PUBLIC_ARTIFACT_GETTER = new PublicArtifactGetter();
-
    private static class WarFileGetter implements ResultGetter
    {
       @Override
@@ -606,54 +521,39 @@ public class BuildService
 
    private static class PublicArtifactGetter implements ResultGetter
    {
+      private final String publishRepositoryUrl;
+
+      private PublicArtifactGetter(String publishRepositoryUrl)
+      {
+         this.publishRepositoryUrl = publishRepositoryUrl;
+      }
+
       @Override
       public Result getResult(File projectDirectory) throws IOException
       {
-         Pom pom = null;
-         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-         OutputStreamWriter w = new OutputStreamWriter(bout);
+         Pom pom;
          try
          {
             pom = PomUtils.parse(new FileInputStream(projectDirectory + "/pom.xml"));
-            w.write('{');
-            w.write("\"suggestDependency\":\"");
-            w.write(pom.getSuggestDependency());
-            w.write("\",\"artifactDownloadUrl\":");
-            w.write('"');
-            w.write(artifactUriBuilder(publishRepositoryUrl, pom));
-            w.write('"');
-            w.write('}');
-            w.flush();
-            w.close();
-            return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json", 0);
          }
-         catch (XPathExpressionException e)
-         {
-            //must never been happened 
-            e.printStackTrace();
-         }
-         catch (ParserConfigurationException e)
+         catch (Exception e)
          {
             //must never been happened
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage(), e);
          }
-         catch (SAXException e)
-         {
-            //must never been happened
-            e.printStackTrace();
-         }
-         finally
-         {
-            if (bout != null)
-            {
-               bout.close();
-            }
-            if (w != null)
-            {
-               w.close();
-            }
-         }
-         return null;
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         OutputStreamWriter w = new OutputStreamWriter(bout);
+         w.write('{');
+         w.write("\"suggestDependency\":\"");
+         w.write(pom.getSuggestDependency());
+         w.write("\",\"artifactDownloadUrl\":");
+         w.write('"');
+         w.write(artifactUriBuilder(publishRepositoryUrl, pom));
+         w.write('"');
+         w.write('}');
+         w.flush();
+         w.close();
+         return new Result(new ByteArrayInputStream(bout.toByteArray()), "application/json", "dependencies.json", 0);
       }
 
       private String artifactUriBuilder(String repositoryUrl, Pom pom)
@@ -662,7 +562,6 @@ public class BuildService
          builder.append(pom.getGroupId().replace('.', '/')).append('/').append(pom.getArtifactId()).append('/')
             .append(pom.getVersion());
          return builder.toString();
-
       }
    }
 
@@ -823,6 +722,8 @@ public class BuildService
          }
       }
    }
+
+   /* ====================================================== */
 
    private static final class CacheElement
    {

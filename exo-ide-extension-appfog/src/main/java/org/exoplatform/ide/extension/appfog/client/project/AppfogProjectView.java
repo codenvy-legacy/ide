@@ -46,7 +46,7 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
 {
    private static final int WIDTH = 600;
 
-   private static final int HEIGHT = 360;
+   private static final int HEIGHT = 385;
 
    private static final String ID = "ideAppfogProjectView";
 
@@ -86,6 +86,8 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
 
    private static final String STACK_FIELD_ID = "ideAppfogProjectViewStackField";
 
+   private static final String INFRA_FIELD_ID = "ideAppfogProjectViewInfraField";
+
    private static final String STATUS_FIELD_ID = "ideAppfogProjectViewStatusField";
 
    private static AppfogProjectViewUiBinder uiBinder = GWT.create(AppfogProjectViewUiBinder.class);
@@ -120,6 +122,9 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
 
    @UiField
    Label modelField;
+
+   @UiField
+   Label infraField;
 
    @UiField
    Label stackField;
@@ -175,6 +180,7 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
       nameField.setName(NAME_FIELD_ID);
       urlField.setName(URL_FIELD_ID);
       modelField.setID(MODEL_FIELD_ID);
+      infraField.setID(INFRA_FIELD_ID);
       stackField.setID(STACK_FIELD_ID);
       instancesField.setName(INSTANCES_FIELD_ID);
       memoryField.setName(MEMORY_FIELD_ID);
@@ -247,6 +253,12 @@ public class AppfogProjectView extends ViewImpl implements AppfogProjectPresente
    public HasValue<String> getApplicationModel()
    {
       return modelField;
+   }
+
+   @Override
+   public HasValue<String> getApplicationInfra()
+   {
+      return infraField;
    }
 
    @Override
