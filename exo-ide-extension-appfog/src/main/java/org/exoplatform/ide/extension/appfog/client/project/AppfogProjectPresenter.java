@@ -90,6 +90,8 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
 
       HasValue<String> getApplicationModel();
 
+      HasValue<String> getApplicationInfra();
+
       HasValue<String> getApplicationStack();
 
       HasValue<String> getApplicationInstances();
@@ -394,6 +396,7 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
       display.getApplicationModel().setValue(String.valueOf(application.getStaging().getModel()));
       display.getApplicationStack().setValue(String.valueOf(application.getStaging().getStack()));
       display.getApplicationStatus().setValue(String.valueOf(application.getState()));
+      display.getApplicationInfra().setValue(String.valueOf(application.getInfra().getProvider()));
 
       if (application.getUris() != null && application.getUris().size() > 0)
       {

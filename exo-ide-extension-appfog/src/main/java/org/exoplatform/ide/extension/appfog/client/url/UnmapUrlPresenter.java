@@ -112,19 +112,22 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
          public void onClick(ClickEvent event)
          {
             urlToMap = display.getMapUrlField().getValue();
-            for (String url : registeredUrls)
+            if (urlToMap != null || !urlToMap.isEmpty())
             {
-               if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
+               for (String url : registeredUrls)
                {
-                  Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
-                  return;
+                  if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
+                  {
+                     Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
+                     return;
+                  }
                }
+               if (urlToMap.startsWith("http://"))
+               {
+                  urlToMap = urlToMap.substring(7);
+               }
+               mapUrl(urlToMap);
             }
-            if (urlToMap.startsWith("http://"))
-            {
-               urlToMap = urlToMap.substring(7);
-            }
-            mapUrl(urlToMap);
          }
       });
 

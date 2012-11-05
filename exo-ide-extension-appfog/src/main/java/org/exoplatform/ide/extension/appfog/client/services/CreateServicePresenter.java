@@ -190,7 +190,7 @@ public class CreateServicePresenter extends GitPresenter implements CreateServic
       String type = display.getSystemServicesField().getValue();
 
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      final String infraName = project.getProperty("af-application-infrastructure").getValue().get(0);
+      final String infraName = project.getProperty("appfog-infra").getValue().get(0);
 
       try
       {

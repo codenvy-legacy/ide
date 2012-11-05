@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.appfog.server;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.appfog.server.json.CreateAppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;

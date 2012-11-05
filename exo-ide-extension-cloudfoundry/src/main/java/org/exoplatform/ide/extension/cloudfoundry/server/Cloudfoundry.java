@@ -125,7 +125,7 @@ public class Cloudfoundry
       fm.put("spring", new FrameworkImpl("spring", "Spring", null, 768, "Java SpringSource Spring Application"));
       fm.put("grails", new FrameworkImpl("grails", "Grails", null, 512, "Java SpringSource Grails Application"));
       fm.put("lift", new FrameworkImpl("lift", "Lift", null, 512, "Scala Lift Application"));
-      fm.put("java_web", new FrameworkImpl("java_web", "JavaWeb", null, 512, "Java Web Application"));
+      fm.put("java_web", new FrameworkImpl("java_web", "JavaWeb", null, 768, "Java Web Application"));
       fm.put("sinatra", new FrameworkImpl("sinatra", "Sinatra", null, 128, "Sinatra Application"));
       fm.put("node", new FrameworkImpl("node", "Node", null, 64, "Node.js Application"));
       fm.put("php", new FrameworkImpl("php", "PHP", null, 128, "PHP Application"));

@@ -561,7 +561,11 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                   //Need in future, if we will create a service we should specified infra for it,
                   //because if infra will not specified while creating service. it will be created in default infra.
                   //That's why when we'll binded service and app with different infras it will be failed.
-                  writeInfraProperty(project, app.infra);
+                  AppfogExtension.updateProperty(
+                     project,
+                     Collections.singletonList(new Property("appfog-infra", app.infra)),
+                     null
+                  );
 
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
@@ -580,33 +584,33 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       }
    }
 
-   private void writeInfraProperty(ProjectModel project, String infra)
-   {
-      project.getProperties().add(new Property("af-application-infrastructure", infra));
-
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               //nothing to do, only write property to project and it's all.
-            }
-
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+//   private void writeInfraProperty(ProjectModel project, String infra)
+//   {
+//      project.getProperties().add(new Property("appfog-infra", infra));
+//
+//      try
+//      {
+//         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+//         {
+//
+//            @Override
+//            protected void onSuccess(ItemWrapper result)
+//            {
+//               //nothing to do, only write property to project and it's all.
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable e)
+//            {
+//               IDE.fireEvent(new ExceptionThrownEvent(e));
+//            }
+//         });
+//      }
+//      catch (RequestException e)
+//      {
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
+//   }
 
    /**
     * Get the array of application types from list of frameworks.
