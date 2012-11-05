@@ -19,5 +19,5 @@
   background: transparent;
   width: 20em;
   color: inherit;
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
 }

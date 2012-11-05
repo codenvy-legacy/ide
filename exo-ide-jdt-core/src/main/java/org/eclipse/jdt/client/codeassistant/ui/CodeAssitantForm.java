@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
+import elemental.events.KeyboardEvent.KeyCode;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -95,7 +97,8 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
 
    private boolean editorHasFocus = true;
 
-   public CodeAssitantForm(int left, int top, CompletionProposal[] items, ProposalSelectedHandler handler)   {
+   public CodeAssitantForm(int left, int top, CompletionProposal[] items, ProposalSelectedHandler handler)
+   {
       this.handler = handler;
 
       resizeHandler = Window.addResizeHandler(this);
@@ -188,7 +191,6 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
 
    private void selectWidget(int i)
    {
-
       Element scroll = scrollPanel.getElement();
       Element item = widgets.get(i).getElement();
       if (i == 0)
@@ -197,7 +199,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
       }
       else if (item.getAbsoluteTop() < scroll.getAbsoluteTop())
       {
-         scroll(scroll, -item.getOffsetHeight());
+         scroll(scroll, item.getAbsoluteTop() - scroll.getAbsoluteTop());
       }
       else if (item.getAbsoluteBottom() + 15 > scroll.getAbsoluteBottom())
       {
@@ -322,6 +324,16 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
                case KeyCodes.KEY_ESCAPE :
                   cancelCodeAssistant();
                   break;
+
+               case KeyCodes.KEY_PAGEDOWN :
+                  event.cancel();
+                  moveSelectionToNextPage();
+                  break;
+
+               case KeyCodes.KEY_PAGEUP :
+                  event.cancel();
+                  moveSelectionToPreviousPage();
+                  break;
             }
          }
       }
@@ -378,7 +390,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#moveSelectionUp()
+    * @see org.eclipse.jdt.client.AssistDisplay#moveSelectionUp()
     */
    @Override
    public void moveSelectionUp()
@@ -398,7 +410,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#moveSelectionDown()
+    * @see org.eclipse.jdt.client.AssistDisplay#moveSelectionDown()
     */
    @Override
    public void moveSelectionDown()
@@ -417,7 +429,50 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#proposalSelected()
+    * @see org.eclipse.jdt.client.AssistDisplay#moveSelectionToPreviousPage()
+    */
+   @Override
+   public void moveSelectionToPreviousPage()
+   {
+      if (selectedWidget == null)
+         return;
+      int i = widgets.indexOf(selectedWidget);
+      if (i > 0)
+      {
+         selectWidget(Math.max(0, i - getPageSize() + 1));
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.AssistDisplay#moveSelectionToNextPage()
+    */
+   @Override
+   public void moveSelectionToNextPage()
+   {
+      if (selectedWidget == null)
+         return;
+      int i = widgets.indexOf(selectedWidget);
+      if (widgets.size() - 1 > i)
+      {
+         selectWidget(Math.min(i + getPageSize() - 1, widgets.size() - 1));
+      }
+   }
+
+   private int getPageSize()
+   {
+      int scrollPanelHeight = scrollPanel.getElement().getOffsetHeight();
+
+      int proposalWidgetHeight = 1;
+      if (widgets.size() > 0)
+      {
+         proposalWidgetHeight = widgets.get(0).getElement().getOffsetHeight();
+      }
+
+      return scrollPanelHeight/proposalWidgetHeight;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.AssistDisplay#proposalSelected()
     */
    @Override
    public void proposalSelected()
@@ -432,7 +487,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#cancelCodeAssistant()
+    * @see org.eclipse.jdt.client.AssistDisplay#cancelCodeAssistant()
     */
    @Override
    public void cancelCodeAssistant()
@@ -444,7 +499,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.codeassistant.api.CodeAssistantDisplay#setNewProposals(org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal[])
+    * @see org.eclipse.jdt.client.AssistDisplay#setNewProposals(org.exoplatform.ide.editor.api.contentassist.CompletionProposal[])
     */
    @Override
    public void setNewProposals(CompletionProposal[] proposals)

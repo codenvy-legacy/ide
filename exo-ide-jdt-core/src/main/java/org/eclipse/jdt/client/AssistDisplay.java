@@ -29,6 +29,10 @@ public interface AssistDisplay extends IsWidget
 
    void moveSelectionDown();
 
+   void moveSelectionToPreviousPage();
+
+   void moveSelectionToNextPage();
+
    void proposalSelected();
 
    void cancelCodeAssistant();
