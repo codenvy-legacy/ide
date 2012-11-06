@@ -19,8 +19,6 @@
 package org.exoplatform.ide.extension.appfog.server;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
-import org.exoplatform.ide.extension.cloudfoundry.server.Utils;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -97,7 +95,7 @@ public class AppfogAuthenticator extends BaseAppfogAuthenticator
    }
 
    @Override
-   public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
+   public AppfogCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
@@ -105,14 +103,14 @@ public class AppfogAuthenticator extends BaseAppfogAuthenticator
       String str = Utils.readFile(vfs, path);
       if (str == null)
       {
-         return new CloudfoundryCredentials();
+         return new AppfogCredentials();
       }
       BufferedReader r = null;
-      CloudfoundryCredentials credentials;
+      AppfogCredentials credentials;
       try
       {
          r = new BufferedReader(new StringReader(str));
-         credentials = CloudfoundryCredentials.readFrom(r);
+         credentials = AppfogCredentials.readFrom(r);
       }
       finally
       {
@@ -132,7 +130,7 @@ public class AppfogAuthenticator extends BaseAppfogAuthenticator
    }
 
    @Override
-   public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
+   public void writeCredentials(AppfogCredentials credentials) throws VirtualFileSystemException, IOException
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Writer w = new StringWriter();

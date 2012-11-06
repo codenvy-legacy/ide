@@ -1,7 +1,7 @@
 
 .Codemirror2Panel
 {
-	font-family: 'Source Code Pro', monospace;
+	font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
 	font-size: 14px;
 	font-weight: 400;
     font-style: normal;

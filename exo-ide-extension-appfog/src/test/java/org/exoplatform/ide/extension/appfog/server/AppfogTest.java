@@ -26,12 +26,9 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
 import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
 import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
 import org.exoplatform.ide.extension.appfog.shared.InfraType;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
-import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
-import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
+import org.exoplatform.ide.extension.appfog.shared.Instance;
+import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
+import org.exoplatform.ide.extension.appfog.shared.SystemResources;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -68,7 +65,7 @@ public class AppfogTest
    public static void init() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new CloudfoundryCredentials());
+      authenticator.setCredentials(new AppfogCredentials());
       authenticator.setUsername(LoginInfo.email);
       authenticator.setPassword(LoginInfo.password);
       authenticator.writeTarget(LoginInfo.target);
@@ -109,17 +106,17 @@ public class AppfogTest
       // --- Emulate invalid security token.
       Auth _authenticator = new Auth();
       _authenticator.writeTarget(LoginInfo.target);
-      CloudfoundryCredentials invalid = new CloudfoundryCredentials();
+      AppfogCredentials invalid = new AppfogCredentials();
       invalid.addToken(LoginInfo.target, authenticator.readCredentials().getToken(LoginInfo.target) + "0x");
-      _authenticator.setCredentials(new CloudfoundryCredentials());
+      _authenticator.setCredentials(new AppfogCredentials());
       appfog = new Appfog(_authenticator);
       // ---
       try
       {
-         appfog.systemInfo(null); // read server(target) name from authenticator.
-         fail("CloudfoundryException expected");
+         appfog.systemInfo(""); // read server(target) name from authenticator.
+         fail("AppfogException expected");
       }
-      catch (CloudfoundryException e)
+      catch (AppfogException e)
       {
          assertEquals(200, e.getExitCode());
          assertEquals(200, e.getResponseStatus()); // anyway 200 HTTP status expected
@@ -132,7 +129,7 @@ public class AppfogTest
    @Test
    public void testSystemInfo() throws Exception
    {
-      SystemInfo systemInfo = appfog.systemInfo(null);
+      SystemInfo systemInfo = appfog.systemInfo("");
       assertEquals(LoginInfo.email, systemInfo.getUser());
       assertNotNull(systemInfo.getUsage());
       assertNotNull(systemInfo.getLimits());
@@ -401,9 +398,9 @@ public class AppfogTest
          {
             // start should be failed because there is no memory for start application any more
             appfog.startApplication(LoginInfo.target, name1, null, null, null);
-            fail("CloudfoundryException expected. ");
+            fail("AppfogException expected. ");
          }
-         catch (CloudfoundryException e)
+         catch (AppfogException e)
          {
             assertEquals(600, e.getExitCode());
             assertTrue(e.getMessage().matches(
@@ -459,7 +456,7 @@ public class AppfogTest
          {
             appfog.restartApplication(LoginInfo.target, name, null, null, null);
          }
-         catch (CloudfoundryException e)
+         catch (AppfogException e)
          {
             assertEquals(400, e.getResponseStatus());
             assertTrue(e.getMessage().matches("Application '.*' already stopped.*"));
@@ -991,7 +988,7 @@ public class AppfogTest
          {
             appfog.bindService(LoginInfo.target, service, appName, null, null);
          }
-         catch (CloudfoundryException e)
+         catch (AppfogException e)
          {
             assertEquals(500, e.getExitCode());
             assertEquals("Service not found", e.getMessage());

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,7 +37,7 @@ public class AppfogLoginTest
    public void setUp() throws Exception
    {
       authenticator = new Auth();
-      authenticator.setCredentials(new CloudfoundryCredentials());
+      authenticator.setCredentials(new AppfogCredentials());
       appfog = new Appfog(authenticator);
    }
 
@@ -70,9 +68,9 @@ public class AppfogLoginTest
       try
       {
          appfog.login(LoginInfo.target, LoginInfo.email, LoginInfo.password + "_wrong");
-         fail("CloudfoundryException expected");
+         fail("AppfogException expected");
       }
-      catch (CloudfoundryException e)
+      catch (AppfogException e)
       {
          assertEquals(200, e.getExitCode());
          assertEquals(403, e.getResponseStatus());

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.extension.appfog.server.rest;
 
-import org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryExceptionMapper;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -37,7 +36,7 @@ public class AppfogServiceApplication extends Application
       classes = new HashSet<Class<?>>(2);
       classes.add(AppfogService.class);
       singletons = new HashSet<Object>(1);
-      singletons.add(new CloudfoundryExceptionMapper());
+      singletons.add(new AppfogExceptionMapper());
    }
 
    /**

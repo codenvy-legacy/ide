@@ -228,7 +228,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    {
       final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
 
-      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
       final String projectId = projectModel.getId();
 
@@ -303,7 +303,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    {
       final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
 
-      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
       final String projectId = projectModel.getId();
 
@@ -373,7 +373,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    {
       final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
 
-      final String server = projectModel.getProperty("af-target").getValue().get(0);
+      final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
       final String projectId = projectModel.getId();
 

@@ -15,7 +15,7 @@
 .hint {
   overflow-x: hidden;
   font-size: 11px;
-  font-family: 'Source Code Pro',monospace;
+  font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
   color: #666;
   background-color: #F7F7F7;
   border-top: solid 1px #ECECEC;
