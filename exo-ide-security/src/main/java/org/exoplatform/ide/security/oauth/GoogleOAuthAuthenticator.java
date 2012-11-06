@@ -38,15 +38,7 @@ import java.util.HashSet;
  */
 public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
 {
-   public GoogleOAuthAuthenticator(InitParams initParams)
-   {
-      this(new MemoryCredentialStore(), createClientSecrets(initParams));
-   }
 
-   public GoogleOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
-   {
-      this(credentialStore, createClientSecrets(initParams));
-   }
 
    protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {

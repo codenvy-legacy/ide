@@ -20,8 +20,8 @@ package org.exoplatform.ide.security.oauth;
 
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.security.login.FederatedLoginList;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -54,7 +54,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/oauth")
 public class OAuthAuthenticationService
 {
-   private static final Log LOG = ExoLogger.getLogger(OAuthAuthenticationService.class);
+   private static final Logger LOG = LoggerFactory.getLogger(OAuthAuthenticationService.class);
 
    private final OAuthAuthenticatorProvider providers;
 
