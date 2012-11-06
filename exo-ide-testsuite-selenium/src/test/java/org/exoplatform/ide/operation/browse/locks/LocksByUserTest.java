@@ -101,8 +101,16 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.LOGIN.logout();
 
       //step 3 login as invite user, open and check lock project 
-      IDE.LOGIN.waitTenantLoginPage();
-      IDE.LOGIN.loginAsUser();
+      if (isRunIdeAsTenant())
+      {
+         IDE.LOGIN.waitTenantLoginPage();
+         IDE.LOGIN.loginAsTenantUser();
+      }
+      else
+      {
+         IDE.LOGIN.waitStandaloneLoginPage();
+         IDE.LOGIN.loginAsStandaloneUser();
+      }
 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.EDITOR.waitTabPresent(0);
@@ -128,6 +136,7 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
       assertEquals("Change in locked file", IDE.EDITOR.getTextFromCodeEditor(0));
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+      Thread.sleep(5000);
       IDE.EDITOR.closeFile(0);
       //ask dialog sholudn't appearance
       assertFalse(IDE.ASK_DIALOG.isOpened());

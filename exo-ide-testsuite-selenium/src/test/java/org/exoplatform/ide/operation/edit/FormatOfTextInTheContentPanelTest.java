@@ -135,7 +135,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       assertEquals(formatingSource, postFormating);
    }
 
-   @Test
+   //@Test
    public void testFormatingJS() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
@@ -159,7 +159,7 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       //for reparce all text in gadget file
       Thread.sleep(1000);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(3);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor(2);
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
       assertEquals(formatingSource, postFormating);
    }

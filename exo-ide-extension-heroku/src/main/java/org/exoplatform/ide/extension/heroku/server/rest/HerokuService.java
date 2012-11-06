@@ -128,7 +128,7 @@ public class HerokuService
       }
       else
       {
-         new Runnable()
+         new Thread(new Runnable()
          {
             @Override
             public void run()
@@ -157,7 +157,7 @@ public class HerokuService
                   publishWebSocketMessage(null, e);
                }
             }
-         }.run();
+         }).start();
          return new HashMap<String, String>(0);
       }
    }

@@ -46,17 +46,7 @@ public class AutoCompletionJavaScriptNoneCollabEditorTest extends CodeAssistantB
       IDE.WELCOME_PAGE.close();
    }
 
-   @Test
-   public void testPlainJS() throws InterruptedException, Exception
-   {
-      closeWelcomePage();
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.JAVASCRIPT_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.js");
-      javaScriptTest();
-     
-   }
-
-   @Test
+    @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
       closeWelcomePage();
@@ -67,9 +57,7 @@ public class AutoCompletionJavaScriptNoneCollabEditorTest extends CodeAssistantB
       IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
       IDE.EDITOR.typeTextIntoEditor(0, "<script>\n\n</script>\n");
       IDE.EDITOR.moveCursorUp(0, 2);
-
       IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
-
       javaScriptTest();
    }
 
