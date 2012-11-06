@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,56 +19,23 @@
 package org.exoplatform.ide.extension.appfog.shared;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * Created by The eXo Platform SAS.
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public interface SystemResources
 {
-   String getName();
 
-   void setName(String name);
+   int getServices();
 
-   String getState();
+   void setServices(int services);
 
-   void setState(String state);
+   int getApps();
 
-   String getHost();
+   void setApps(int apps);
 
-   void setHost(String host);
+   int getMemory();
 
-   int getPort();
+   void setMemory(int memory);
 
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
 }

@@ -469,7 +469,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          bindDisplay(display);
          IDE.getInstance().openView(display.asView());
 
-         WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
          if (ws == null || WebSocket.ReadyState.OPEN != ws.getReadyState())
          {
             checkDebugEventsTimer.scheduleRepeating(3000);
@@ -644,6 +644,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       IDE.getInstance().openView(view.asView());
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -653,13 +656,23 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedHandler#onDebuggerDisconnected(org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent)
+    */
    @Override
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       IDE.getInstance().closeView(display.asView().getId());
-      WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
+      final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
+      if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
+      {
+         ws.messageBus().unsubscribe(Channels.DEBUGGER_EVENT.toString(), debuggerEventHandler);
+      }
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler#onBreakPointsUpdated(org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent)
+    */
    @Override
    public void onBreakPointsUpdated(BreakPointsUpdatedEvent event)
    {
@@ -678,6 +691,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.RunAppHandler#onRunApp(org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent)
+    */
    @Override
    public void onRunApp(RunAppEvent event)
    {
@@ -689,6 +705,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       IDE.fireEvent(new BuildProjectEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler#onDebugApp(org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent)
+    */
    @Override
    public void onDebugApp(DebugAppEvent event)
    {
@@ -714,6 +733,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       IDE.fireEvent(new BuildProjectEvent());
    }
 
+   /**
+    * @see org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler#onProjectBuilt(org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent)
+    */
    @Override
    public void onProjectBuilt(ProjectBuiltEvent event)
    {

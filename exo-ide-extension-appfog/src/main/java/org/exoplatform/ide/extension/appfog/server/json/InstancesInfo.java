@@ -16,59 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.appfog.shared;
+package org.exoplatform.ide.extension.appfog.server.json;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public class InstancesInfo
 {
-   String getName();
+   private InstanceInfo[] instances;
 
-   void setName(String name);
+   public InstanceInfo[] getInstances()
+   {
+      return instances;
+   }
 
-   String getState();
+   public void setInstances(InstanceInfo[] instances)
+   {
+      this.instances = instances;
+   }
 
-   void setState(String state);
-
-   String getHost();
-
-   void setHost(String host);
-
-   int getPort();
-
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
+   @Override
+   public String toString()
+   {
+      return "InstancesInfo{" +
+         "instances=" + (instances == null ? null : Arrays.asList(instances)) +
+         '}';
+   }
 }

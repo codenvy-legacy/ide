@@ -274,7 +274,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       try
       {
          boolean useWebSocketForCallback = false;
-         final WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;
@@ -295,8 +295,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                   {
                      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
                      convertFolderToProject(folder, projectType);
-                     //TODO: not good, comment temporary need found other may 
-                     // for inviting collaborators 
+                     //TODO: not good, comment temporary need found other way 
+                     // for inviting collaborators
                      // showInvitation(result.getRemoteUri());
                   }
                }
@@ -445,8 +445,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
          IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
          convertFolderToProject(PROJECT_ROOT_FOLDER, display.getProjectType().getValue());
-         //TODO: not good, comment temporary need found other may 
-         // for inviting collaborators 
+         //TODO: not good, comment temporary need found other way 
+         // for inviting collaborators
          // showInvitation(result.getRemoteUri());
       }
 

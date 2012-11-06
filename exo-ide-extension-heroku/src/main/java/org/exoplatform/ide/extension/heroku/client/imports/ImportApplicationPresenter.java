@@ -288,7 +288,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       try
       {
          boolean useWebSocketForCallback = false;
-         final WebSocket ws = WebSocket.getInstance();
+         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
          if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
          {
             useWebSocketForCallback = true;

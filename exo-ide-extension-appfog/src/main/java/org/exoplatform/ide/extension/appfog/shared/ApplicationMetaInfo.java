@@ -22,53 +22,21 @@ package org.exoplatform.ide.extension.appfog.shared;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface AppfogApplicationStatistics
+public interface ApplicationMetaInfo
 {
-   String getName();
+   String getDebug();
 
-   void setName(String name);
+   void setDebug(String v);
 
-   String getState();
+   String getConsole();
 
-   void setState(String state);
+   void setConsole(String v);
 
-   String getHost();
+   long getVersion();
 
-   void setHost(String host);
+   void setVersion(long v);
 
-   int getPort();
+   long getCreated();
 
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
-   int getDisk();
-
-   void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
+   void setCreated(long date);
 }

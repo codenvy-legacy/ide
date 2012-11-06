@@ -19,56 +19,39 @@
 package org.exoplatform.ide.extension.appfog.shared;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * Cloud Foundry application resources info.
+ *
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: CloudFoundryApplicationResources.java Mar 16, 2012 2:14:15 PM azatsarynnyy $
+ *
  */
-public interface AppfogApplicationStatistics
+public interface AppfogApplicationResources
 {
-   String getName();
+   /**
+    * Get amount of memory available for application (in MB).
+    *
+    * @return amount of memory.
+    */
+   int getMemory();
 
-   void setName(String name);
+   /**
+    * Set amount of memory available for application (in MB).
+    *
+    * @param memory amount of memory.
+    */
+   void setMemory(int memory);
 
-   String getState();
-
-   void setState(String state);
-
-   String getHost();
-
-   void setHost(String host);
-
-   int getPort();
-
-   void setPort(int port);
-
-   String[] getUris();
-
-   void setUris(String[] uris);
-
-   String getUptime();
-
-   void setUptime(String uptime);
-
-   int getCpuCores();
-
-   void setCpuCores(int cores);
-
-   double getCpu();
-
-   void setCpu(double cpu);
-
-   int getMem();
-
-   void setMem(int mem);
-
+   /**
+    * Get amount disk space available for application (in MB).
+    *
+    * @return amount of disk space.
+    */
    int getDisk();
 
+   /**
+    * Set amount disk space available for application (in MB).
+    *
+    * @param disk amount of disk space.
+    */
    void setDisk(int disk);
-
-   int getMemLimit();
-
-   void setMemLimit(int memLimit);
-
-   int getDiskLimit();
-
-   void setDiskLimit(int diskLimit);
 }

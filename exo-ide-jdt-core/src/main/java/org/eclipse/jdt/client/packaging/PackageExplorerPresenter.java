@@ -208,12 +208,19 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                      selectedItem = null;
                   }
 
+                  List<Item> selectedItems = new ArrayList<Item>();
                   if (selectedItem != null)
                   {
-                     List<Item> selectedItems = new ArrayList<Item>();
                      selectedItems.add(selectedItem);
-                     IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
                   }
+                  IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+                  
+//                  if (selectedItem != null)
+//                  {
+//                     List<Item> selectedItems = new ArrayList<Item>();
+//                     selectedItems.add(selectedItem);
+//                     IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+//                  }
                }
             });
          }
