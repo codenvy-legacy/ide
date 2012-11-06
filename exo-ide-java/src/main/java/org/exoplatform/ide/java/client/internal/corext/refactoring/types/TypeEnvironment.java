@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.internal.corext.refactoring.types;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.core.BindingKey;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.DefaultBindingResolver;
 import org.exoplatform.ide.java.client.core.dom.DefaultBindingResolver.BindingTables;
 import org.exoplatform.ide.java.client.core.dom.ITypeBinding;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.compiler.CompilationResult;
 import org.exoplatform.ide.java.client.internal.compiler.IErrorHandlingPolicy;
 import org.exoplatform.ide.java.client.internal.compiler.ast.CompilationUnitDeclaration;
@@ -312,7 +312,7 @@ public class TypeEnvironment implements TypeConstants
       };
       env =
          new LookupEnvironment(typeRequestor, new CompilerOptions(), problemReporter,
-            JavaCodeController.NAME_ENVIRONMENT);
+            JavaReconcilerStrategy.get().getNameEnvironment());
       TypeBinding knownType = Scope.getBaseType(type.getName().toCharArray());
       TypeBinding boxingType = env.computeBoxingType(knownType);
       boxingType.tagBits |= TagBits.HasMissingType;

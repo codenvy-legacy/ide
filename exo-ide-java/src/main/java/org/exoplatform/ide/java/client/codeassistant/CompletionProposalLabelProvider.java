@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.codeassistant;
 
+import com.google.gwt.user.client.Element;
+
+import com.google.gwt.user.client.DOM;
+
+import com.google.gwt.user.client.ui.Image;
+
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.java.client.JavaClientBundle;
@@ -272,7 +278,6 @@ public class CompletionProposalLabelProvider
    StyledString createMethodProposalLabel(CompletionProposal methodProposal)
    {
       StyledString nameBuffer = new StyledString();
-      nameBuffer.append(getModifiers(methodProposal.getFlags()));
 
       // method name
       nameBuffer.append(methodProposal.getName());
@@ -320,8 +325,8 @@ public class CompletionProposalLabelProvider
    {
       StringBuilder b = new StringBuilder();
       // b.append("<span style=\"position: absolute; height: 10px; font-size: 10px; margin-top: -5px; margin-left: -6px; color=#6d0000;\">S</span>");
-
-      b.append("<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; ");
+      //TODO this is mess, need to rewrite
+      b.append("<span style = \"margin-top: -5px; margin-left: -25px; width: 22px; ");
       b.append("height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">");
       if (Modifier.isAbstract(flags))
          b.append("<font color ='#004e00' style='float: right;'>A</font>");
@@ -375,7 +380,7 @@ public class CompletionProposalLabelProvider
 
    StyledString createOverrideMethodProposalLabel(CompletionProposal methodProposal)
    {
-      StyledString nameBuffer = new StyledString(getModifiers(methodProposal.getFlags()));
+      StyledString nameBuffer = new StyledString();
 
       // method name
       nameBuffer.append(methodProposal.getName());
@@ -466,7 +471,7 @@ public class CompletionProposalLabelProvider
       // enclosing types as qualification
       int qIndex = findSimpleNameStart(fullName);
 
-      StyledString buf = new StyledString(getModifiers(flags));
+      StyledString buf = new StyledString();
       buf.append(new String(fullName, qIndex, fullName.length - qIndex));
       if (qIndex > 0)
       {
@@ -544,7 +549,7 @@ public class CompletionProposalLabelProvider
       if (!isThisPrefix(name))
          name = proposal.getName();
 
-      StyledString buf = new StyledString(getModifiers(proposal.getFlags()));
+      StyledString buf = new StyledString();
       buf.append(name);
       char[] typeName = Signature.getSignatureSimpleName(proposal.getSignature());
       if (typeName.length > 0)
@@ -675,7 +680,7 @@ public class CompletionProposalLabelProvider
     * @param proposal the proposal for which to create an image descriptor
     * @return the created image descriptor, or <code>null</code> if no image is available
     */
-   public ImageResource createImageDescriptor(CompletionProposal proposal)
+   public Image createImageDescriptor(CompletionProposal proposal)
    {
       final int flags = proposal.getFlags();
 
@@ -741,7 +746,8 @@ public class CompletionProposalLabelProvider
 
       if (descriptor == null)
          return null;
-      return descriptor;
+      
+      return new Image(descriptor);
    }
 
    ImageResource createMethodImageDescriptor(CompletionProposal proposal)

@@ -31,8 +31,8 @@ public interface JavaClientBundle extends ClientBundle
 {
    JavaClientBundle INSTANCE = GWT.create(JavaClientBundle.class);
 
-//   @Source("org/exoplatform/ide/editor/java/client/styles/java.css")
-//   JavaCss css();
+   @Source("org/exoplatform/ide/java/client/styles/java.css")
+   JavaCss css();
 
    @Source("org/exoplatform/ide/java/client/images/annotation.gif")
    ImageResource annotationItem();

@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.internal.corext.codemanipulation;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.JavaUIStatus;
 import org.exoplatform.ide.java.client.core.Flags;
@@ -47,6 +46,7 @@ import org.exoplatform.ide.java.client.core.dom.SuperMethodInvocation;
 import org.exoplatform.ide.java.client.core.dom.Type;
 import org.exoplatform.ide.java.client.core.dom.TypeParameter;
 import org.exoplatform.ide.java.client.core.dom.rewrite.ImportRewrite;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.dom.ASTNodes;
 import org.exoplatform.ide.java.client.internal.corext.dom.Bindings;
 import org.exoplatform.ide.java.client.internal.corext.util.Strings;
@@ -302,7 +302,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelim);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
       context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
 
@@ -473,7 +473,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
 
@@ -605,7 +605,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
       if (!decl.isConstructor())
@@ -704,7 +704,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -727,7 +727,7 @@ public class StubUtility
       }
 
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);
@@ -750,7 +750,7 @@ public class StubUtility
          return null;
       }
       CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), lineDelimiter);
-      context.setCompilationUnitVariables(JavaCodeController.get().getActiveFile());
+      context.setCompilationUnitVariables(JavaReconcilerStrategy.get().getFile());
       context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
       context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
       context.setVariable(CodeTemplateContextType.FIELD, fieldName);

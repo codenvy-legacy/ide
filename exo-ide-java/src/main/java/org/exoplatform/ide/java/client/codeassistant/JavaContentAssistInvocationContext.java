@@ -51,6 +51,8 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 
    private IType fType;
 
+   private String vfsId;
+
    /**
     * Creates a new context.
     * 
@@ -65,12 +67,13 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
     * @param compilationUnit
     */
    public JavaContentAssistInvocationContext(CompilationUnit compilationUnit, Document document, int offset,
-      String projectId, String docContext)
+      String projectId, String docContext, String vfsId)
    {
       this(document, offset);
       this.compilationUnit = compilationUnit;
       this.projectId = projectId;
       this.docContext = docContext;
+      this.vfsId = vfsId;
    }
 
    /**
@@ -261,6 +264,14 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
    public String getProjectId()
    {
       return projectId;
+   }
+
+   /**
+    * @return the vfsId
+    */
+   public String getVfsId()
+   {
+      return vfsId;
    }
 
    // /**

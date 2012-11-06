@@ -16,11 +16,11 @@ import static org.mockito.Mockito.when;
 
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.StubUtility;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
 import org.exoplatform.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
@@ -61,14 +61,15 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
 
       new JavaCorrectionProcessor();
       new JavaExtension();
-      JavaCodeController.NAME_ENVIRONMENT =
-         new FileSystem(new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8");
+      new JavaReconcilerStrategy(null, null);
+      GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
+         new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
       when(activeFle.getProject()).thenReturn(project);
       when(activeFle.getName()).thenReturn("TestClass.java");
       when(activeFle.getPath()).thenReturn("/MyProject/src/main/java/my/test/TestClass.java");
       when(project.hasProperty(anyString())).thenReturn(false);
       when(project.getPath()).thenReturn("/MyProject/src/main/java/my/test");
-      GwtReflectionUtils.setPrivateFieldValue(JavaCodeController.get(), "activeFile", activeFle);
+      GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "file", activeFle);
       JavaExtension.get().getOptions().putAll(options);
 
       StubUtility.setCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, "");

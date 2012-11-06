@@ -12,6 +12,7 @@ package org.exoplatform.ide.java.client.templates;
 
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.java.client.templates.api.GlobalTemplateVariables;
@@ -161,9 +162,7 @@ public class TemplateEngine
 
    private Image getImage()
    {
-//      return new Image(JavaClientBundle.INSTANCE.template());
-      //TODO
-      return new Image();
+      return new Image(JavaClientBundle.INSTANCE.template());
    }
 
    // /**

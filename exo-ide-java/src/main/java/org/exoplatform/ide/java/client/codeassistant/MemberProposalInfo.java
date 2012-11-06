@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.codeassistant;
 
+import com.google.gwt.dom.client.Style.Unit;
+
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,16 +35,19 @@ public abstract class MemberProposalInfo extends ProposalInfo
 
    private Frame frame;
 
+   protected final String vfsId;
+
    /**
     * Creates a new proposal info.
     * 
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext)
+   public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
    {
       this.projectId = projectId;
       this.docContext = docContext;
+      this.vfsId = vfsId;
       Assert.isNotNull(proposal);
       this.fProposal = proposal;
    }
@@ -61,6 +66,9 @@ public abstract class MemberProposalInfo extends ProposalInfo
       if (url != null)
       {
          frame = new Frame(url);
+         frame.setSize("100%", "100%");
+         frame.removeStyleName("gwt-Frame");
+         frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
       }
       return frame;
    }

@@ -421,11 +421,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
 
    protected Image computeImage()
    {
-      // TODO
-      // return
-      // JavaPlugin.getImageDescriptorRegistry().get(fInvocationContext.getLabelProvider().createImageDescriptor(fProposal));
-
-      return new Image(fInvocationContext.getLabelProvider().createImageDescriptor(fProposal));
+      return fInvocationContext.getLabelProvider().createImageDescriptor(fProposal);
    }
 
    /**

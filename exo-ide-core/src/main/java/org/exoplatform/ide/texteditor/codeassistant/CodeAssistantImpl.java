@@ -129,7 +129,7 @@ public class CodeAssistantImpl implements CodeAssistant
    private Remover keyListenerRemover;
 
    //TODO inject this
-   private Resources res = GWT.create(Resources.class);
+   private static final Resources res = GWT.create(Resources.class);
 
    /**
     * 
@@ -140,6 +140,7 @@ public class CodeAssistantImpl implements CodeAssistant
       partitioning = Document.DEFAULT_PARTITIONING;
       res.defaultSimpleListCss().ensureInjected();
       res.autocompleteComponentCss().ensureInjected();
+      res.popupCss().ensureInjected();
    }
 
    /**

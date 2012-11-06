@@ -22,7 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
+import com.googlecode.gwt.test.utils.GwtReflectionUtils;
+
 import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
@@ -32,6 +33,7 @@ import org.exoplatform.ide.java.client.core.dom.ITypeBinding;
 import org.exoplatform.ide.java.client.core.dom.TypeDeclaration;
 import org.exoplatform.ide.java.client.core.dom.VariableDeclarationFragment;
 import org.exoplatform.ide.java.client.core.quickfix.TestOptions;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.dom.TypeRules;
 import org.exoplatform.ide.java.emul.FileSystem;
 import org.junit.Before;
@@ -64,8 +66,9 @@ public class TypeRulesTest extends BaseTest
       options.put(JavaCore.COMPILER_PB_UNNECESSARY_TYPE_CHECK, JavaCore.IGNORE);
       options.put(JavaCore.COMPILER_PB_UNUSED_LOCAL, JavaCore.IGNORE);
       options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.IGNORE);
-      JavaCodeController.NAME_ENVIRONMENT = NAME_ENVIRONMENT;
-//      new JdtExtension();
+      new JavaReconcilerStrategy(null, null);
+      GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
+         new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
 //      JdtExtension.get().getOptions().putAll(options);
    }
 

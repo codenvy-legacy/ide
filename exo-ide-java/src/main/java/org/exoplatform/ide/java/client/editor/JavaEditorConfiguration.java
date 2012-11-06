@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
-import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 import org.exoplatform.ide.texteditor.api.reconciler.ReconcilerImpl;
+import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
 import org.exoplatform.ide.texteditor.parser.BasicTokenFactory;
 import org.exoplatform.ide.texteditor.parser.CmParser;
 import org.exoplatform.ide.texteditor.parser.CodeMirror2;
@@ -42,6 +43,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    private UserActivityManager manager;
 
    private JavaEditor javaEditor;
+
+   private JavaCodeAssistProcessor codeAssistProcessor;
 
    /**
     * @param manager
@@ -72,7 +75,8 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    {
       BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
       ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, new JavaReconcilerStrategy(javaEditor));
+      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, new JavaReconcilerStrategy(javaEditor,
+         getOrCreateCodeAssistProcessor()));
       return reconciler;
    }
 
@@ -82,5 +86,27 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    public void setEditor(JavaEditor javaEditor)
    {
       this.javaEditor = javaEditor;
+   }
+
+   private JavaCodeAssistProcessor getOrCreateCodeAssistProcessor()
+   {
+      if (codeAssistProcessor == null)
+      {
+         codeAssistProcessor = new JavaCodeAssistProcessor(
+         //TODO configure doc context
+            "rest/ide/code-assistant/java/class-doc?fqn=");
+      }
+      return codeAssistProcessor;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
+   {
+      CodeAssistantImpl impl = new CodeAssistantImpl();
+      impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
+      return impl;
    }
 }

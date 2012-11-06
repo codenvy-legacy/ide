@@ -13,7 +13,9 @@ package org.exoplatform.ide.java.client.codeassistant;
 import org.exoplatform.ide.java.client.TypeInfoStorage;
 import org.exoplatform.ide.java.client.core.CompletionProposal;
 import org.exoplatform.ide.java.client.core.IJavaElement;
+import org.exoplatform.ide.java.client.core.Signature;
 import org.exoplatform.ide.java.client.internal.corext.util.SignatureUtil;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.
@@ -27,9 +29,9 @@ public final class TypeProposalInfo extends MemberProposalInfo
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public TypeProposalInfo(CompletionProposal proposal, String projectId, String docContext)
+   public TypeProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
    {
-      super(proposal, projectId, docContext);
+      super(proposal, projectId, docContext, vfsId);
    }
 
    /**
@@ -38,10 +40,8 @@ public final class TypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      //TODO
-      return null;
-//      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
-//         + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
+      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
+         + "&vfsid=" + vfsId + "&isclass=true";
 
    }
 

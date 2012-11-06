@@ -20,12 +20,12 @@ package org.exoplatform.ide.java.client.core.quickfix;
 
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.codeassistant.api.IProblemLocation;
 import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
 import org.exoplatform.ide.java.client.internal.text.correction.ICommandAccess;
 import org.exoplatform.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
@@ -286,7 +286,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
       astParser.setResolveBindings(true);
       astParser.setStatementsRecovery(true);
       astParser.setBindingsRecovery(true);
-      astParser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
+      astParser.setNameEnvironment(JavaReconcilerStrategy.get().getNameEnvironment());
       astParser.setUnitName(name);
       return (CompilationUnit)astParser.createAST();
    }

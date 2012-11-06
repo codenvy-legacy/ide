@@ -11,7 +11,6 @@
 
 package org.exoplatform.ide.java.client.internal.corext.codemanipulation;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTNode;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
@@ -71,6 +70,7 @@ import org.exoplatform.ide.java.client.core.dom.VariableDeclarationExpression;
 import org.exoplatform.ide.java.client.core.dom.VariableDeclarationFragment;
 import org.exoplatform.ide.java.client.core.dom.VariableDeclarationStatement;
 import org.exoplatform.ide.java.client.core.dom.WildcardType;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.dom.ASTNodeFactory;
 import org.exoplatform.ide.java.client.internal.corext.dom.ASTNodes;
 import org.exoplatform.ide.java.client.internal.corext.dom.Bindings;
@@ -1384,7 +1384,7 @@ public class ASTResolving
       astParser.setResolveBindings(true);
       astParser.setStatementsRecovery(true);
       astParser.setBindingsRecovery(true);
-      astParser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
+      astParser.setNameEnvironment(JavaReconcilerStrategy.get().getNameEnvironment());
       return (CompilationUnit)astParser.createAST();
    }
 

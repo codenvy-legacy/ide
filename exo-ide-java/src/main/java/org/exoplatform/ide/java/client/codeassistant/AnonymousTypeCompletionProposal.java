@@ -14,7 +14,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.java.client.JavaClientBundle;
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.JavaPreferencesSettings;
 import org.exoplatform.ide.java.client.codeassistant.ui.StyledString;
@@ -42,6 +41,7 @@ import org.exoplatform.ide.java.client.core.dom.rewrite.ListRewrite;
 import org.exoplatform.ide.java.client.core.formatter.CodeFormatter;
 import org.exoplatform.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
 import org.exoplatform.ide.java.client.core.formatter.IndentManipulation;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.StubUtility2;
 import org.exoplatform.ide.java.client.internal.corext.util.CodeFormatterUtil;
@@ -161,7 +161,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal
          parser.setResolveBindings(true);
          parser.setStatementsRecovery(true);
          parser.setSource(workingCopyContents.toString().toCharArray());
-         parser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
+         parser.setNameEnvironment(JavaReconcilerStrategy.get().getNameEnvironment());
 
          CompilationUnit astRoot = (CompilationUnit)parser.createAST();
          ASTNode newType = NodeFinder.perform(astRoot, insertPosition, dummyClassContent.length());

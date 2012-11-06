@@ -25,9 +25,9 @@ public final class MethodProposalInfo extends MemberProposalInfo
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public MethodProposalInfo(CompletionProposal proposal, String projectId, String docContext)
+   public MethodProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
    {
-      super(proposal, projectId, docContext);
+      super(proposal, projectId, docContext, vfsId);
    }
 
    /**
@@ -48,10 +48,7 @@ public final class MethodProposalInfo extends MemberProposalInfo
       String methodSignature =
          Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23" + new String(fProposal.getName())
             + "%40" + method.replaceAll("\\.", "/");
-      //TODO
-      return null;
-//      return docContext + methodSignature + "&projectid=" + projectId + "&vfsid="
-//         + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=false";
+      return docContext + methodSignature + "&projectid=" + projectId + "&vfsid=" + vfsId + "&isclass=false";
    }
 
 }

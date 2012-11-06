@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.java.client.codeassistant.ui;
 
+import org.exoplatform.ide.java.client.JavaClientBundle;
+
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -34,9 +36,9 @@ public class StyledString
 
    }
 
-   public static Styler QUALIFIER_STYLER = null; // new DefaultStyler(JavaClientBundle.INSTANCE.css().fqnStyle());
+   public static Styler QUALIFIER_STYLER =  new DefaultStyler(JavaClientBundle.INSTANCE.css().fqnStyle());
 
-   public static Styler COUNTER_STYLER = null;//new DefaultStyler(JavaClientBundle.INSTANCE.css().counter());
+   public static Styler COUNTER_STYLER = new DefaultStyler(JavaClientBundle.INSTANCE.css().counter());
 
    private StringBuilder builder;
 
