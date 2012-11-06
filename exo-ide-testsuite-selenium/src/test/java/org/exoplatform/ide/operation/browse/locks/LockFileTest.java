@@ -202,8 +202,8 @@ public class LockFileTest extends LockFileAbstract
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + FOLDER_NAME);
+      
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);

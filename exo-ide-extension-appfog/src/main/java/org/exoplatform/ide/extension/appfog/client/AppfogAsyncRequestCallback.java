@@ -43,7 +43,7 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
 
    private String loginUrl;
 
-   private final static String APPFOG_EXIT_CODE = "Cloudfoundry-Exit-Code";
+   private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
 
    public AppfogAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
                                      LoginCanceledHandler loginCanceled)

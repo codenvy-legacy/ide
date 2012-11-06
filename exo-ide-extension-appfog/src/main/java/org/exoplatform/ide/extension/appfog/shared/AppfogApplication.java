@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.extension.appfog.shared;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.ApplicationMetaInfo;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplicationResources;
-import org.exoplatform.ide.extension.cloudfoundry.shared.Staging;
 import java.util.List;
 
 /**
@@ -62,9 +58,9 @@ public interface AppfogApplication
 
    void setEnv(List<String> env);
 
-   CloudFoundryApplicationResources getResources();
+   AppfogApplicationResources getResources();
 
-   void setResources(CloudFoundryApplicationResources resources);
+   void setResources(AppfogApplicationResources resources);
 
    Staging getStaging();
 
