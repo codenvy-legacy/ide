@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.logging.client.ConsoleLogHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -53,6 +54,8 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * Presenter for login view. The view must be pointed in Views.gwt.xml.
@@ -382,7 +385,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                         display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
                         return;
                      }
-                     else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
+                     else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
+                        && serverException.getMessage() != null
+                        && serverException.getMessage().contains("Invalid password"))
                      {
                         display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
                         return;
