@@ -40,17 +40,20 @@ public class Login extends AbstractTestModule
 
    private static final String PASSWORD = "j_password";
 
-   private static final String LOGIN_ONTENANT_BTN = "recoverPassword";
+   private static final String LOGIN_ON_TENANT_BTN = "recoverPassword";
+
+   private static final String LOGIN_STANDALONE = "loginButton";
 
    @FindBy(name = USERNAME)
    private WebElement name;
 
-   @FindBy(id = LOGIN_ONTENANT_BTN)
+   @FindBy(id = LOGIN_ON_TENANT_BTN)
    private WebElement loginTenantButton;
 
    @FindBy(name = PASSWORD)
    private WebElement password;
 
+   @FindBy(id = LOGIN_STANDALONE)
    private WebElement loginButton;
 
    private WebElement logoutButton;
@@ -89,11 +92,10 @@ public class Login extends AbstractTestModule
       IDE().INPUT.typeToElement(name, userName, true);
       IDE().INPUT.typeToElement(this.password, password, true);
       login();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    /**
-    * login on tenant page
+   * login on tenant page
    * @param userName
    * @param password
    * @throws Exception
@@ -103,7 +105,6 @@ public class Login extends AbstractTestModule
       IDE().INPUT.typeToElement(name, userName, true);
       IDE().INPUT.typeToElement(this.password, password, true);
       tenantLogin();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    /**
@@ -183,7 +184,6 @@ public class Login extends AbstractTestModule
       });
    }
 
-   
    /**
     * click on button Login
     */
@@ -191,7 +191,7 @@ public class Login extends AbstractTestModule
    {
       loginTenantButton.click();
    }
-   
+
    /**
     * click on button Login
     */
@@ -204,16 +204,34 @@ public class Login extends AbstractTestModule
     * login as invite user on cloud page
     * @throws Exception 
     */
-   public void loginAsUser() throws Exception
+   public void loginAsTenantUser() throws Exception
    {
-      standaloneLogin(BaseTest.NOT_ROOT_USER_NAME, BaseTest.NOT_ROOT_USER_PASSWORD);
+      tenantLogin(BaseTest.NOT_ROOT_USER_NAME, BaseTest.NOT_ROOT_USER_PASSWORD);
    }
 
    /**
     * login as root user on cloud page
     * @throws Exception 
     */
-   public void loginAsRoot() throws Exception
+   public void loginAsTenantRoot() throws Exception
+   {
+      tenantLogin(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
+   }
+
+   /**
+    * login as invite user on standalone page
+    * @throws Exception 
+    */
+   public void loginAsStandaloneUser() throws Exception
+   {
+      standaloneLogin(BaseTest.NOT_ROOT_USER_NAME, BaseTest.NOT_ROOT_USER_PASSWORD);
+   }
+
+   /**
+    * login as root user on standalone page
+    * @throws Exception 
+    */
+   public void loginAsStandaloneRoot() throws Exception
    {
       standaloneLogin(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
    }

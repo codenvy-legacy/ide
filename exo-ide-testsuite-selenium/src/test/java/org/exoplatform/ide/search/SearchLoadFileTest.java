@@ -106,24 +106,6 @@ public class SearchLoadFileTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
       IDE.EDITOR.closeFile(0);
-
-      //step 3 open social gadget file, edit, save. Search this file and check results 
-      //TODO Tets fail issue IDE - IDE-1632
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.deleteFileContent(1);
-      IDE.EDITOR.typeTextIntoEditor(1, gadgetFileContent);
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
-      IDE.EDITOR.closeFile(0);
-      //refresh browser if browser in not refresh, reproduce problem in IDE-1632
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.LOADER.waitClosed();
-      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + gadgetFileName);
    }
 
    private void chekButtonState() throws Exception

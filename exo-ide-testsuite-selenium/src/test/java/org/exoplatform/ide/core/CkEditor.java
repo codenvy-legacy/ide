@@ -98,6 +98,8 @@ public class CkEditor extends AbstractTestModule
 
       String DESIGN_BUTTON_XPATH = "//div[@view-id='editor-%s']//div[@class='html-face' and text()='Design']";
 
+      String GET_TEXT = "body.cke_show_borders";
+
       String CK_BOLD_TEXT_PREFIX = "body.cke_show_borders>strong";
 
       String CK_BOLDITALIC_TEXT_PREFIX = "body.cke_show_borders>em>strong";
@@ -147,6 +149,31 @@ public class CkEditor extends AbstractTestModule
                WebElement bar =
                   driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_TOOLS_BAR, numEdit)));
                return bar != null && bar.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * wait  text in ck editor
+    * @param text
+    * @param tabIndex
+    */
+   public void waitIsTextPresent(final String text, final int tabIndex)
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return isTextPresent(text, tabIndex);
             }
             catch (Exception e)
             {
@@ -232,6 +259,20 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
+    * return true is text present
+    * @param text
+    */
+   public boolean isTextPresent(String text, int tabIndex)
+   {
+      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      driver().switchTo().frame(ckiframe);
+      String ckText = driver().findElement(By.cssSelector(Locators.GET_TEXT)).getText();
+      IDE().selectMainFrame();
+      return ckText.contains(text);
+
+   }
+
+   /**
     * return true is bold text fragment present
     * @param text
     */
@@ -260,9 +301,9 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * return true is bold text fragment present
-    * @param text
-    */
+   * return true is bold text fragment present
+   * @param text
+   */
    public boolean isBoldTextPresent(String text, int tabIndex)
    {
       WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));

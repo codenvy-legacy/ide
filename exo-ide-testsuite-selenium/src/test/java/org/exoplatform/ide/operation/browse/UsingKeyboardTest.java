@@ -96,7 +96,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_FILE);
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    /**
@@ -195,7 +195,7 @@ public class UsingKeyboardTest extends BaseTest
       IDE.OUTLINE.isItemSelected(5);
       assertEquals("6 : 1", IDE.STATUSBAR.getCursorPosition());
 
-      IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    @After

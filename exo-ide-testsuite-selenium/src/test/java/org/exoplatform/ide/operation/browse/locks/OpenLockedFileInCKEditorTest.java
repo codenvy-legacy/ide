@@ -114,8 +114,16 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.LOGIN.logout();
 
       //step 3 login as invite user, open an check lock project 
-      IDE.LOGIN.waitTenantLoginPage();
-      IDE.LOGIN.loginAsUser();
+      if (isRunIdeAsTenant())
+      {
+         IDE.LOGIN.waitTenantLoginPage();
+         IDE.LOGIN.loginAsTenantUser();
+      }
+      else
+      {
+         IDE.LOGIN.waitStandaloneLoginPage();
+         IDE.LOGIN.loginAsStandaloneUser();
+      }
 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.EDITOR.waitTabPresent(0);
