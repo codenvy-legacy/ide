@@ -19,13 +19,15 @@
 package org.exoplatform.ide.extension.appfog.server.json;
 
 import org.exoplatform.ide.extension.appfog.shared.Infra;
-import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class CreateAppfogApplication extends CreateApplication
+public class CreateAppfogApplication
 {
    /*
     * JSON output:
@@ -44,6 +46,16 @@ public class CreateAppfogApplication extends CreateApplication
     */
    private Infra infra;
 
+   private final String name;
+   private final int instances;
+   private final String url;
+   private final int memory;
+   private final String framework;
+   private final String runtime;
+   private final String command;
+
+   private Map<String, String> options;
+
    public CreateAppfogApplication(String name,
                                   int instances,
                                   String url,
@@ -53,8 +65,55 @@ public class CreateAppfogApplication extends CreateApplication
                                   String command,
                                   Infra infra)
    {
-      super(name, instances, url, memory, framework, runtime, command);
+      this.name = name;
+      this.instances = instances;
+      this.url = url;
+      this.memory = memory;
+      this.framework = framework;
+      this.runtime = runtime;
+      this.command = command;
       this.infra = infra;
+   }
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public int getInstances()
+   {
+      return instances;
+   }
+
+   public String[] getUris()
+   {
+      return new String[]{url};
+   }
+
+   public Map<String, Integer> getResources()
+   {
+      return Collections.singletonMap("memory", memory);
+   }
+
+   public Map<String, String> getStaging()
+   {
+      Map<String, String> m = new HashMap<String, String>(3);
+      m.put("framework", framework);
+      m.put("runtime", runtime);
+      if (!(command == null || command.isEmpty()))
+      {
+         m.put("command", command);
+      }
+      return m;
+   }
+
+   public Map<String, String> getOptions()
+   {
+      if (options == null)
+      {
+         options = new HashMap<String, String>();
+      }
+      return options;
    }
 
    public Infra getInfra()
@@ -65,5 +124,21 @@ public class CreateAppfogApplication extends CreateApplication
    public void setInfra(Infra infra)
    {
       this.infra = infra;
+   }
+
+   @Override
+   public String toString()
+   {
+      return "CreateAppfogApplication{" +
+         "infra=" + infra +
+         ", name='" + name + '\'' +
+         ", instances=" + instances +
+         ", url='" + url + '\'' +
+         ", memory=" + memory +
+         ", framework='" + framework + '\'' +
+         ", runtime='" + runtime + '\'' +
+         ", command='" + command + '\'' +
+         ", options=" + options +
+         '}';
    }
 }

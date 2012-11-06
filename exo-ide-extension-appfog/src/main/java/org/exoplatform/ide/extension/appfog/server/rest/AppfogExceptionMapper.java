@@ -27,7 +27,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @Provider
@@ -60,7 +60,7 @@ public class AppfogExceptionMapper implements ExceptionMapper<AppfogException>
       int exitCode = e.getExitCode();
       if (exitCode != -1)
       {
-         rb.header("Cloudfoundry-Exit-Code", exitCode);
+         rb.header("Appfog-Exit-Code", exitCode);
       }
       return rb.build();
    }

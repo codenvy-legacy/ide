@@ -38,7 +38,7 @@ import java.net.UnknownHostException;
 public abstract class BaseAppfogAuthenticator
 {
    /**
-    * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
+    * Obtain appfog API token and store it somewhere (it is dependent to implementation) for next usage. Token
     * should be used instead of username/password for any request to cloudfoundry service.
     *
     * @param target
@@ -48,7 +48,7 @@ public abstract class BaseAppfogAuthenticator
     * @param password
     *    password
     * @throws org.exoplatform.ide.extension.appfog.server.AppfogException
-    *    if cloudfoundry server return unexpected or error status for request
+    *    if appfog server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
@@ -123,12 +123,12 @@ public abstract class BaseAppfogAuthenticator
    }
 
    /**
-    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work
+    * Remove local saved credentials for remote Appfog server. After logout need login again to be able work
     * with
     * remote server.
     *
     * @param target
-    *    location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
+    *    location of Appfog REST API, e.g. http://api.appfog.com
     * @see #login(String, String, String)
     */
    public final void logout(String target) throws VirtualFileSystemException, IOException

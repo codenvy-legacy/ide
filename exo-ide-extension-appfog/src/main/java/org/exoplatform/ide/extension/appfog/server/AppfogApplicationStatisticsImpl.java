@@ -22,7 +22,7 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplicationStatistics;
 import java.util.Arrays;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class AppfogApplicationStatisticsImpl implements AppfogApplicationStatistics

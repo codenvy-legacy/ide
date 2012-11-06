@@ -22,6 +22,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
@@ -35,6 +37,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
@@ -87,7 +90,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
        *
        * @return {@link HasValue}
        */
-      HasValue<String> getPasswordField();
+      TextFieldItem getPasswordField();
 
       /**
        * Get target select item.
@@ -188,6 +191,18 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          public void onValueChange(ValueChangeEvent<String> event)
          {
             display.enableLoginButton(isFieldsFullFilled());
+         }
+      });
+
+      display.getPasswordField().addKeyUpHandler(new KeyUpHandler()
+      {
+         @Override
+         public void onKeyUp(KeyUpEvent event)
+         {
+            if (event.getNativeKeyCode() == 13 && isFieldsFullFilled())
+            {
+               doLogin();
+            }
          }
       });
 
@@ -321,9 +336,6 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       }
    }
 
-   /**
-    * Perform log in OpenShift.
-    */
    protected void doLogin()
    {
       final String enteredServer = display.getTargetSelectField().getValue();
@@ -366,6 +378,11 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                      }
                      else if (HTTPStatus.OK != serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("Operation not permitted"))
+                     {
+                        display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
+                        return;
+                     }
+                     else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus())
                      {
                         display.getErrorLabelField().setValue(lb.loginViewErrorInvalidUserOrPassword());
                         return;

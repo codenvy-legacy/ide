@@ -24,7 +24,7 @@ import org.exoplatform.ide.extension.appfog.shared.SystemResources;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class SystemInfoImpl implements SystemInfo
