@@ -58,6 +58,16 @@ public class Annotation
    private String text;
 
    /**
+    * Annotation drawing layer.
+    */
+   protected int layer;
+
+   /**
+    * Image associated with this annotation
+    */
+   protected ImageResource image;
+
+   /**
     * Creates a new annotation that is not persistent and type less.
     */
    protected Annotation()
@@ -88,6 +98,22 @@ public class Annotation
    public Annotation(boolean isPersistent)
    {
       this(null, isPersistent, null);
+   }
+
+   /**
+    * Creates a new annotation with the given properties.
+    * @param type the unique name of this annotation type
+    * @param isPersistent <code>true</code> if this annotation is
+    *            persistent, <code>false</code> otherwise
+    * @param text the text associated with this annotation
+    * @param layer annotation draw layer
+    * @param image image associated with this annotation
+    */
+   public Annotation(String type, boolean isPersistent, String text, int layer, ImageResource image)
+   {
+      this(type, isPersistent, text);
+      this.layer = layer;
+      this.image = image;
    }
 
    /**
@@ -162,15 +188,23 @@ public class Annotation
    {
       return text;
    }
-   
+
+   /**
+    * Return image resource for this annotation.
+    * Note: if this method return <code>null</code>, this annotation not draw in left gutter 
+    * @return
+    */
    public ImageResource getImage()
    {
-      //TODO move to image provider
-      return null;
+      return image;
    }
-   
+
+   /**
+    * Return the annotations drawing layer.
+    * @return int starting from 0
+    */
    public int getLayer()
    {
-      return 0;
+      return layer;
    }
 }

@@ -65,7 +65,6 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider
 
       public static final String TASK_ANNOTATION_TYPE = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
 
-      //XXX: To be fully correct these constants should be non-static
       /**
        * The layer in which task problem annotations are located.
        */
@@ -115,8 +114,6 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider
       private static ImageResource fgWarningImage = JavaClientBundle.INSTANCE.markWarning();
 
       private static ImageResource fgErrorImage = JavaClientBundle.INSTANCE.markError();
-
-      private static boolean fgImagesInitialized = false;
 
       private CompilationUnit fCompilationUnit;
 
