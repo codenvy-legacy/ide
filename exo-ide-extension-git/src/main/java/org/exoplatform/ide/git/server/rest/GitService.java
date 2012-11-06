@@ -215,7 +215,7 @@ public class GitService
       }
       else
       {
-         new Runnable()
+         new Thread(new Runnable()
          {
             @Override
             public void run()
@@ -237,7 +237,7 @@ public class GitService
                   publishWebSocketMessage(Channels.GIT_REPO_CLONED, null, e);
                }
             }
-         }.run();
+         }).start();
          return new RepoInfo();
       }
    }
@@ -306,7 +306,7 @@ public class GitService
       }
       else
       {
-         new Runnable()
+         new Thread(new Runnable()
          {
             @Override
             public void run()
@@ -325,7 +325,7 @@ public class GitService
                   publishWebSocketMessage(Channels.GIT_REPO_INITIALIZED, null, e);
                }
             }
-         }.run();
+         }).start();
       }
    }
 
