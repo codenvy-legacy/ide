@@ -244,6 +244,7 @@ public class DefaultScheme extends InputScheme
       defaultMode.bindAction(CommonActions.START_NEW_LINE, ModifierKeys.SHIFT, KeyCodeMap.ENTER);
       int mod = UserAgent.isMac() ? ModifierKeys.CTRL : ModifierKeys.ACTION;
       defaultMode.bindAction(CommonActions.RUN_CODE_ASSISTANT, mod, ' ');
+      defaultMode.bindAction(CommonActions.RUN_QUICK_ASSISTANT, ModifierKeys.ACTION, '1');
 
       // Single / multi-line comment / uncomment.
       defaultMode.bindAction(CommonActions.TOGGLE_COMMENT, ModifierKeys.ACTION, 47);

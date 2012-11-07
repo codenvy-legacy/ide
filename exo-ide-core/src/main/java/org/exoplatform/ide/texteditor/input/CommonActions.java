@@ -35,4 +35,6 @@ public class CommonActions
    public static final String START_NEW_LINE = "start-new-line";
    
    public static final String RUN_CODE_ASSISTANT = "run-code-assistant";
+   
+   public static final String RUN_QUICK_ASSISTANT = "run-quick-assistant";
 }

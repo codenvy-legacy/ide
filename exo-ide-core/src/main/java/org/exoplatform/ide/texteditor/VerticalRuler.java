@@ -18,22 +18,25 @@
  */
 package org.exoplatform.ide.texteditor;
 
-
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import elemental.html.Element;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.mvp.CompositeView;
+import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Position;
 import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.annotation.AnnotationModelEvent;
 import org.exoplatform.ide.text.annotation.AnnotationModelListener;
+import org.exoplatform.ide.texteditor.api.TextEditorOperations;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
+import org.exoplatform.ide.texteditor.gutter.Gutter.ClickListener;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.util.loging.Log;
 
 import java.util.Iterator;
 
@@ -56,9 +59,9 @@ public class VerticalRuler
       {
          update();
       }
-      
+
    }
-   
+
    class Mark extends CompositeView<Annotation>
    {
       /**
@@ -73,13 +76,13 @@ public class VerticalRuler
          getElement().getStyle().setLeft("0px");
          getElement().setTitle(annotation.getText());
       }
-      
+
       public void setTopPosition(int top, String unit)
       {
          getElement().getStyle().setTop(top, unit);
       }
    }
-   
+
    private AnnotationModel model;
 
    private Remover remover;
@@ -87,11 +90,10 @@ public class VerticalRuler
    private final Gutter display;
 
    private final TextEditorPartDisplay editor;
-   
+
    private InternalListener listener;
-   
+
    private JsonArray<Element> elements;
-   
 
    /**
     * @param leftNotificationGutter
@@ -102,6 +104,30 @@ public class VerticalRuler
       this.editor = editor;
       listener = new InternalListener();
       elements = JsonCollections.createArray();
+      display.getClickListenerRegistrar().add(new ClickListener()
+      {
+
+         @Override
+         public void onClick(int y)
+         {
+
+            TextEditorPartDisplay editor = VerticalRuler.this.editor;
+            if (editor.canDoOperation(TextEditorOperations.QUICK_ASSIST))
+            {
+               int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
+               try
+               {
+                  int offset = editor.getDocument().getLineOffset(lineNumber);
+                  editor.getSelection().setCursorPosition(offset);
+                  editor.doOperation(TextEditorOperations.QUICK_ASSIST);
+               }
+               catch (BadLocationException e)
+               {
+                  Log.error(getClass(), e);
+               }
+            }
+         }
+      });
    }
 
    /**
@@ -109,16 +135,16 @@ public class VerticalRuler
     */
    private void update()
    {
-      for(Element e : elements.asIterable())
+      for (Element e : elements.asIterable())
       {
          display.removeUnmanagedElement(e);
       }
       elements.clear();
-      
+
       for (Iterator<Annotation> iterator = model.getAnnotationIterator(); iterator.hasNext();)
       {
          Annotation annotation = iterator.next();
-         if(annotation.getImage() == null)
+         if (annotation.getImage() == null)
             continue;
          Mark m = new Mark(annotation);
          Position position = model.getPosition(annotation);

@@ -174,7 +174,7 @@ public interface TextEditorPartDisplay
    
    Buffer getBuffer();
 
-   public abstract ListenerRegistrar<TextListener> getTextListenerRegistrar();
+   public ListenerRegistrar<TextListener> getTextListenerRegistrar();
 
 
 }

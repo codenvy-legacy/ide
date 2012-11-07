@@ -16,6 +16,7 @@ import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
+import org.exoplatform.ide.java.client.editor.JavaCorrectionAssistant;
 import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.StubUtility;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
@@ -45,7 +46,7 @@ public class AssistQuickFixTest extends QuickFixTest
       HashMap<String, String> options = TestOptions.getDefaultOptions();
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
-      new JavaCorrectionProcessor();
+      new JavaCorrectionProcessor(new JavaCorrectionAssistant(null));
       new JavaExtension();
       new JavaReconcilerStrategy(null, null);
       GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(

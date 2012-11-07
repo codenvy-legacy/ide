@@ -74,14 +74,14 @@ public class CodeAssistantImpl implements CodeAssistant
       @Override
       public void onSelect(CompletionProposal proposal)
       {
-         dismissBox();
+         closeBox();
          applyProposal(proposal);
       }
 
       @Override
       public void onCancel()
       {
-         dismissBox();
+         closeBox();
       }
    };
 
@@ -122,7 +122,7 @@ public class CodeAssistantImpl implements CodeAssistant
       @Override
       public void onScroll(Buffer buffer, int scrollTop)
       {
-         dismissBox();
+         closeBox();
       }
    };
 
@@ -157,7 +157,10 @@ public class CodeAssistantImpl implements CodeAssistant
       {
          proposal.apply(textEditor.getDocument());
          Region selection = proposal.getSelection(textEditor.getDocument());
-         setSelection(textEditor, selection);
+         if (selection != null)
+         {
+            textEditor.getSelection().setSelectedRange(selection.getOffset(), selection.getLength());
+         }
       }
       catch (Exception e)
       {
@@ -194,36 +197,6 @@ public class CodeAssistantImpl implements CodeAssistant
          }
       });
       return buf.toString();
-   }
-
-   /**
-    * @param textEditor
-    * @param selection
-    */
-   private void setSelection(TextEditorPartDisplay textEditor, Region selection)
-   {
-      //TODO move this method to selection model
-      DocumentImpl doc = (DocumentImpl)textEditor.getDocument();
-      DocumentTextStore store = doc.getTextStore();
-      LineFinder lineFinder = store.getLineFinder();
-      try
-      {
-         int lineNumber = doc.getLineOfOffset(selection.getOffset());
-         int lineOffset = doc.getLineOffset(lineNumber);
-         LineInfo first = lineFinder.findLine(lineNumber);
-
-         int cursorPos = selection.getOffset() + selection.getLength();
-         int endineNumber = doc.getLineOfOffset(cursorPos);
-         int endLineOffset = doc.getLineOffset(endineNumber);
-         LineInfo last = lineFinder.findLine(endineNumber);
-         textEditor.getSelection().setSelection(first, selection.getOffset() - lineOffset, last,
-            cursorPos - endLineOffset);
-
-      }
-      catch (BadLocationException e)
-      {
-         Log.error(getClass(), e);
-      }
    }
 
    /**
@@ -335,7 +308,7 @@ public class CodeAssistantImpl implements CodeAssistant
       return null;
    }
 
-   private void dismissBox()
+   protected void closeBox()
    {
       box.dismiss();
    }

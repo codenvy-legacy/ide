@@ -16,8 +16,10 @@ import org.exoplatform.ide.java.client.core.dom.NodeFinder;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.ASTResolving;
 import org.exoplatform.ide.java.client.quickassist.api.InvocationContext;
 import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.codeassistant.TextInvocationContext;
 
-public class AssistContext implements InvocationContext
+public class AssistContext extends TextInvocationContext implements InvocationContext
 {
 
    //	private final ICompilationUnit fCompilationUnit;
@@ -76,8 +78,9 @@ public class AssistContext implements InvocationContext
    /*
     * Constructor for CorrectionContext.
     */
-   public AssistContext(Document document, int offset, int length)
+   public AssistContext(TextEditorPartDisplay textDisplay, Document document, int offset, int length)
    {
+      super(textDisplay, offset, length);
       this.document = document;
       fOffset = offset;
       fLength = length;

@@ -23,6 +23,7 @@ import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 import org.exoplatform.ide.texteditor.api.reconciler.ReconcilerImpl;
 import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
@@ -108,5 +109,14 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       CodeAssistantImpl impl = new CodeAssistantImpl();
       impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
       return impl;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartDisplay display)
+   {
+      return new JavaCorrectionAssistant(javaEditor);
    }
 }

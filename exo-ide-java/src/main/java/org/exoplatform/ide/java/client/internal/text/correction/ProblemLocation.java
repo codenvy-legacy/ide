@@ -17,6 +17,8 @@ import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.ASTNode;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.java.client.core.dom.NodeFinder;
+import org.exoplatform.ide.java.client.editor.CompilationUnitDocumentProvider;
+import org.exoplatform.ide.java.client.editor.JavaAnnotation;
 
 /**
  *
@@ -36,17 +38,19 @@ public class ProblemLocation implements IProblemLocation
 
    private final String fMarkerType;
 
-   //	public ProblemLocation(int offset, int length, IJavaAnnotation annotation) {
-   //		fId= annotation.getId();
-   //		String[] arguments= annotation.getArguments();
-   //		fArguments= arguments != null ? arguments : new String[0];
-   //		fOffset= offset;
-   //		fLength= length;
-   //		fIsError= JavaMarkerAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
-   //
-   //		String markerType= annotation.getMarkerType();
-   //		fMarkerType= markerType != null ? markerType : IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER;
-   //	}
+   public ProblemLocation(int offset, int length, JavaAnnotation annotation)
+   {
+      fId = annotation.getId();
+      String[] arguments = annotation.getArguments();
+      fArguments = arguments != null ? arguments : new String[0];
+      fOffset = offset;
+      fLength = length;
+      fIsError = CompilationUnitDocumentProvider.ProblemAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
+
+      String markerType = annotation.getMarkerType();
+      fMarkerType = markerType != null ? markerType : IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER;
+   }
+
    //
    //	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
    //		fId= id;

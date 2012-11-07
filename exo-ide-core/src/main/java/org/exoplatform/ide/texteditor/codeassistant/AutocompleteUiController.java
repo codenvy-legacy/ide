@@ -209,7 +209,20 @@ public class AutocompleteUiController implements AutocompleteBox
       autoHideController = AutoHideController.create(box);
       autoHideController.setCaptureOutsideClickOnClose(false);
       autoHideController.setDelay(-1);
+      autoHideController.setAutoHideHandler(new AutoHideHandler()
+      {
 
+         @Override
+         public void onShow()
+         {
+         }
+
+         @Override
+         public void onHide()
+         {
+            infoTimer.cancel();
+         }
+      });
       positioner =
          new PositionerBuilder().setPosition(Position.NO_OVERLAP).setVerticalAlign(VerticalAlign.TOP_TOP)
             .setHorizontalAlign(HorizontalAlign.RIGHT).buildAnchorPositioner(box);
@@ -223,8 +236,6 @@ public class AutocompleteUiController implements AutocompleteBox
          @Override
          public void onShow()
          {
-            // TODO Auto-generated method stub
-            
          }
 
          @Override

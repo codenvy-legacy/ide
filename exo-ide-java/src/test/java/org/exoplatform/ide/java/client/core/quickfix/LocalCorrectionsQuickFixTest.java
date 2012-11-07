@@ -20,6 +20,7 @@ import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.java.client.core.formatter.DefaultCodeFormatterConstants;
+import org.exoplatform.ide.java.client.editor.JavaCorrectionAssistant;
 import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.StubUtility;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
@@ -59,7 +60,7 @@ public class LocalCorrectionsQuickFixTest extends QuickFixTest
       options.put(JavaCore.COMPILER_PB_UNCHECKED_TYPE_OPERATION, JavaCore.IGNORE);
       options.put(JavaCore.COMPILER_PB_MISSING_HASHCODE_METHOD, JavaCore.WARNING);
 
-      new JavaCorrectionProcessor();
+      new JavaCorrectionProcessor(new JavaCorrectionAssistant(null));
       new JavaExtension();
       new JavaReconcilerStrategy(null, null);
       GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
