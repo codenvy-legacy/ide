@@ -29,6 +29,8 @@ import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
@@ -88,21 +90,6 @@ public class GoogleContactsClient
       service.setOAuth2Credentials(credentials);
    }
 
-   /**
-    * Returns {@link GoogleContactsClient} instance.
-    *
-    * @return {@link GoogleContactsClient} instance
-    * @throws IOException
-    *    if any i/o errors occur
-    */
-   public static GoogleContactsClient getInstance(OAuthTokenProvider oAuthTokenProvider) throws IOException
-   {
-      if (instance == null)
-      {
-         instance = new GoogleContactsClient(oAuthTokenProvider);
-      }
-      return instance;
-   }
 
    /**
     * Returns contact photo as string encoded in Base64.
