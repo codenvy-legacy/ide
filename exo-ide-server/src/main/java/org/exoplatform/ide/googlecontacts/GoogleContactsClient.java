@@ -29,7 +29,7 @@ import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayOutputStream;
@@ -41,10 +41,9 @@ import java.util.List;
 
 /**
  * Client for Google Contacts Service.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsClient.java Aug 27, 2012 11:36:45 AM azatsarynnyy $
- *
  */
 public class GoogleContactsClient
 {
@@ -75,40 +74,40 @@ public class GoogleContactsClient
 
    /**
     * Constructs new {@link GoogleContactsClient} instance.
-    * 
-    * @param oauth
-    *    OAuth authentication for Google account
+    *
+    * @param oAuthTokenProvider
     * @throws IOException
+    *    OAuth provider with Google account
     *    if any i/o errors occur
     */
-   public GoogleContactsClient(GoogleOAuthAuthenticator oauth) throws IOException
+   public GoogleContactsClient(OAuthTokenProvider oAuthTokenProvider) throws IOException
    {
       service = new ContactsService("exo.ide");
       Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
-      credentials.setAccessToken(oauth.getToken(getUserId()));
+      credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
       service.setOAuth2Credentials(credentials);
    }
 
    /**
     * Returns {@link GoogleContactsClient} instance.
-    * 
+    *
     * @return {@link GoogleContactsClient} instance
     * @throws IOException
     *    if any i/o errors occur
     */
-   public static GoogleContactsClient getInstance(GoogleOAuthAuthenticator oauth) throws IOException
+   public static GoogleContactsClient getInstance(OAuthTokenProvider oAuthTokenProvider) throws IOException
    {
       if (instance == null)
       {
-         instance = new GoogleContactsClient(oauth);
+         instance = new GoogleContactsClient(oAuthTokenProvider);
       }
       return instance;
    }
 
    /**
     * Returns contact photo as string encoded in Base64.
-    * 
-    * @param contactEntry
+    *
+    * @param contact
     *    Google Contact for getting photo
     * @return contact photo in binary format
     * @throws IOException
@@ -128,7 +127,7 @@ public class GoogleContactsClient
 
    /**
     * Returns all user's contacts from Google Contacts Service.
-    * 
+    *
     * @return all user's contacts from Google Contacts Service
     * @throws IOException
     *    if any i/o errors occur
@@ -156,7 +155,7 @@ public class GoogleContactsClient
 
    /**
     * Returns identifier of the user which is logged in.
-    * 
+    *
     * @return user identifier
     */
    private String getUserId()
@@ -166,7 +165,7 @@ public class GoogleContactsClient
 
    /**
     * Returns contact photo in binary format.
-    * 
+    *
     * @param contactEntry
     *    Google Contact for getting photo
     * @return contact photo in binary format

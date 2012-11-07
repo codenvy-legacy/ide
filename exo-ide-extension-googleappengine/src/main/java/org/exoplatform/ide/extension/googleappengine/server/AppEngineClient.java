@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
+import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
+import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
+import static com.google.apphosting.utils.config.BackendsXml.State;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.downloadFile;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+
 import com.google.appengine.tools.admin.AppAdmin;
 import com.google.appengine.tools.admin.AppVersionUpload;
 import com.google.appengine.tools.admin.Application;
@@ -27,10 +34,11 @@ import com.google.appengine.tools.admin.IdeAppAdmin;
 import com.google.appengine.tools.admin.ResourceLimits;
 import com.google.appengine.tools.admin.UpdateListener;
 import com.google.apphosting.utils.config.BackendsXml;
+
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfoImpl;
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -52,29 +60,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
-import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
-import static com.google.apphosting.utils.config.BackendsXml.State;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.downloadFile;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class AppEngineClient
 {
-   private final GoogleOAuthAuthenticator authenticator;
+   private final OAuthTokenProvider oauthTokenProvider;
 
-   public AppEngineClient(GoogleOAuthAuthenticator authenticator)
+   public AppEngineClient(OAuthTokenProvider oauthTokenProvider)
    {
-      this.authenticator = authenticator;
+      this.oauthTokenProvider = oauthTokenProvider;
    }
 
-   public void configureBackend(VirtualFileSystem vfs,
-                                String projectId,
-                                String backendName,
+   public void configureBackend(VirtualFileSystem vfs, String projectId, String backendName,
                                 String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -88,8 +87,7 @@ public class AppEngineClient
       }
    }
 
-   public List<CronEntry> cronInfo(VirtualFileSystem vfs,
-                                   String projectId,
+   public List<CronEntry> cronInfo(VirtualFileSystem vfs, String projectId,
                                    String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -103,9 +101,7 @@ public class AppEngineClient
       }
    }
 
-   public void deleteBackend(VirtualFileSystem vfs,
-                             String projectId,
-                             String backendName,
+   public void deleteBackend(VirtualFileSystem vfs, String projectId, String backendName,
                              String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -119,8 +115,7 @@ public class AppEngineClient
       }
    }
 
-   public Map<String, Long> getResourceLimits(VirtualFileSystem vfs,
-                                              String projectId,
+   public Map<String, Long> getResourceLimits(VirtualFileSystem vfs, String projectId,
                                               String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -141,8 +136,7 @@ public class AppEngineClient
       }
    }
 
-   public List<BackendsXml.Entry> listBackends(VirtualFileSystem vfs,
-                                               String projectId,
+   public List<BackendsXml.Entry> listBackends(VirtualFileSystem vfs, String projectId,
                                                String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -156,10 +150,7 @@ public class AppEngineClient
       }
    }
 
-   public void setBackendState(VirtualFileSystem vfs,
-                               String projectId,
-                               String backendName,
-                               String backendState,
+   public void setBackendState(VirtualFileSystem vfs, String projectId, String backendName, String backendState,
                                String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -173,10 +164,7 @@ public class AppEngineClient
       }
    }
 
-   public Reader requestLogs(VirtualFileSystem vfs,
-                             String projectId,
-                             int numDays,
-                             String logSeverity,
+   public Reader requestLogs(VirtualFileSystem vfs, String projectId, int numDays, String logSeverity,
                              String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -190,8 +178,7 @@ public class AppEngineClient
       }
    }
 
-   public void rollback(VirtualFileSystem vfs,
-                        String projectId,
+   public void rollback(VirtualFileSystem vfs, String projectId,
                         String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -205,9 +192,7 @@ public class AppEngineClient
       }
    }
 
-   public void rollbackBackend(VirtualFileSystem vfs,
-                               String projectId,
-                               String backendName,
+   public void rollbackBackend(VirtualFileSystem vfs, String projectId, String backendName,
                                String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -221,8 +206,7 @@ public class AppEngineClient
       }
    }
 
-   public void rollbackAllBackends(VirtualFileSystem vfs,
-                                   String projectId,
+   public void rollbackAllBackends(VirtualFileSystem vfs, String projectId,
                                    String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -236,17 +220,15 @@ public class AppEngineClient
       }
    }
 
-   public ApplicationInfo update(VirtualFileSystem vfs,
-                                 String projectId,
-                                 URL binaries,
+   public ApplicationInfo update(VirtualFileSystem vfs, String projectId, URL binaries,
                                  String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin;
       if (binaries != null)
       {
          // If binaries provided use it. In this case Java project expected.
-         admin = createApplicationAdmin(new JavaApplication(Application.readApplication(getApplicationBinaries(binaries)
-            .getPath())), userId);
+         admin = createApplicationAdmin(new JavaApplication(Application.readApplication(getApplicationBinaries
+            (binaries).getPath())), userId);
       }
       else
       {
@@ -274,9 +256,7 @@ public class AppEngineClient
       return appDir;
    }
 
-   public void updateBackend(VirtualFileSystem vfs,
-                             String projectId,
-                             String backendName,
+   public void updateBackend(VirtualFileSystem vfs, String projectId, String backendName,
                              String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -290,9 +270,7 @@ public class AppEngineClient
       }
    }
 
-   public void updateBackends(VirtualFileSystem vfs,
-                              String projectId,
-                              List<String> backendNames,
+   public void updateBackends(VirtualFileSystem vfs, String projectId, List<String> backendNames,
                               String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -306,8 +284,7 @@ public class AppEngineClient
       }
    }
 
-   public void updateAllBackends(VirtualFileSystem vfs,
-                                 String projectId,
+   public void updateAllBackends(VirtualFileSystem vfs, String projectId,
                                  String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -321,8 +298,7 @@ public class AppEngineClient
       }
    }
 
-   public void updateCron(VirtualFileSystem vfs,
-                          String projectId,
+   public void updateCron(VirtualFileSystem vfs, String projectId,
                           String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -336,8 +312,7 @@ public class AppEngineClient
       }
    }
 
-   public void updateDos(VirtualFileSystem vfs,
-                         String projectId,
+   public void updateDos(VirtualFileSystem vfs, String projectId,
                          String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -351,8 +326,7 @@ public class AppEngineClient
       }
    }
 
-   public void updateIndexes(VirtualFileSystem vfs,
-                             String projectId,
+   public void updateIndexes(VirtualFileSystem vfs, String projectId,
                              String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -366,23 +340,22 @@ public class AppEngineClient
       }
    }
 
-//   public void updatePagespeed(VirtualFileSystem vfs,
-//                               String projectId,
-//                               String userId) throws IOException, VirtualFileSystemException
-//   {
-//      IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
-//      try
-//      {
-//         admin.updatePagespeed();
-//      }
-//      finally
-//      {
-//         admin.getApplication().cleanStagingDirectory();
-//      }
-//   }
+   //   public void updatePagespeed(VirtualFileSystem vfs,
+   //                               String projectId,
+   //                               String userId) throws IOException, VirtualFileSystemException
+   //   {
+   //      IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
+   //      try
+   //      {
+   //         admin.updatePagespeed();
+   //      }
+   //      finally
+   //      {
+   //         admin.getApplication().cleanStagingDirectory();
+   //      }
+   //   }
 
-   public void updateQueues(VirtualFileSystem vfs,
-                            String projectId,
+   public void updateQueues(VirtualFileSystem vfs, String projectId,
                             String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -396,8 +369,7 @@ public class AppEngineClient
       }
    }
 
-   public void vacuumIndexes(VirtualFileSystem vfs,
-                             String projectId,
+   public void vacuumIndexes(VirtualFileSystem vfs, String projectId,
                              String userId) throws IOException, VirtualFileSystemException
    {
       IdeAppAdmin admin = createApplicationAdmin(vfs, projectId, userId);
@@ -411,36 +383,30 @@ public class AppEngineClient
       }
    }
 
-   private IdeAppAdmin createApplicationAdmin(VirtualFileSystem vfs,
-                                              String projectId,
+   private IdeAppAdmin createApplicationAdmin(VirtualFileSystem vfs, String projectId,
                                               String userId) throws IOException, VirtualFileSystemException
    {
       return createApplicationAdmin(createApplication(vfs, projectId), userId);
    }
 
-   private IdeAppAdmin createApplicationAdmin(GenericApplication application, String userId) throws IOException,
-      VirtualFileSystemException
+   private IdeAppAdmin createApplicationAdmin(GenericApplication application,
+                                              String userId) throws IOException, VirtualFileSystemException
    {
       ConnectOptions options = new ConnectOptions();
       if (userId != null)
       {
-         String token = authenticator.getToken(userId);
+         String token = oauthTokenProvider.getToken("google", userId);
          if (token != null)
          {
             options.setOauthToken(token);
          }
       }
-      return new IdeAppAdmin(
-         options,
-         application,
-         new PrintWriter(DUMMY_WRITER),
-         new ApplicationProcessingOptions(),
-         AppVersionUpload.class
-      );
+      return new IdeAppAdmin(options, application, new PrintWriter(DUMMY_WRITER), new ApplicationProcessingOptions(),
+         AppVersionUpload.class);
    }
 
-   private GenericApplication createApplication(VirtualFileSystem vfs, String projectId)
-      throws VirtualFileSystemException, IOException
+   private GenericApplication createApplication(VirtualFileSystem vfs,
+                                                String projectId) throws VirtualFileSystemException, IOException
    {
       Project project = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
       ProjectType type = getApplicationType(vfs, project);
@@ -448,7 +414,8 @@ public class AppEngineClient
       {
          case JAVA:
          {
-            Folder webApp = (Folder)vfs.getItemByPath(project.createPath("src/main/webapp"), null, PropertyFilter.NONE_FILTER);
+            Folder webApp = (Folder)vfs.getItemByPath(project.createPath("src/main/webapp"), null,
+               PropertyFilter.NONE_FILTER);
             java.io.File appDir = createTempDirectory(null, "ide-appengine");
             unzip(vfs.exportZip(webApp.getId()).getStream(), appDir);
             return new JavaApplication(Application.readApplication(appDir.getAbsolutePath()));
@@ -474,8 +441,8 @@ public class AppEngineClient
       JAVA, PYTHON /*, GO*/
    }
 
-   private ProjectType getApplicationType(VirtualFileSystem vfs, Project project) throws VirtualFileSystemException,
-      IOException
+   private ProjectType getApplicationType(VirtualFileSystem vfs,
+                                          Project project) throws VirtualFileSystemException, IOException
    {
       try
       {

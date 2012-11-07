@@ -20,11 +20,12 @@ package org.exoplatform.ide.extension.googleappengine.server;
 
 import com.google.appengine.tools.admin.CronEntry;
 import com.google.apphosting.utils.config.BackendsXml;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -41,7 +42,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -67,8 +67,10 @@ public class AppEngineService
 
    @Inject
    private AppEngineClient client;
+
    @Inject
-   private GoogleOAuthAuthenticator oauth;
+   private OAuthTokenProvider oauthTokenProvider;
+
    @Inject
    private VirtualFileSystemRegistry vfsRegistry;
 
@@ -81,7 +83,7 @@ public class AppEngineService
       boolean authenticated;
       try
       {
-         authenticated = oauth.getToken(userId) != null;
+         authenticated = oauthTokenProvider.getToken("google", userId) != null;
       }
       catch (IOException e)
       {
@@ -94,10 +96,11 @@ public class AppEngineService
    @GET
    @Path("backend/configure")
    public void configureBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                                @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                                @QueryParam("backend_name") String backendName,
+                                @Context SecurityContext security) throws Exception
    {
-      client.configureBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(/*security*/));
+      client.configureBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+         projectId, backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -106,14 +109,15 @@ public class AppEngineService
    public List<CronEntry> cronInfo(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
                                    @Context SecurityContext security) throws Exception
    {
-      return client.cronInfo(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         getUserId(/*security*/));
+      return client.cronInfo(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+         projectId, getUserId(/*security*/));
    }
 
    @GET
    @Path("backend/delete")
    public void deleteBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                             @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                             @QueryParam("backend_name") String backendName,
+                             @Context SecurityContext security) throws Exception
    {
       client.deleteBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -123,7 +127,8 @@ public class AppEngineService
    @Path("resource_limits")
    @Produces(MediaType.APPLICATION_JSON)
    public Map<String, Long> getResourceLimits(@QueryParam("vfsid") String vfsId,
-                                              @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
+                                              @QueryParam("projectid") String projectId,
+                                              @Context SecurityContext security) throws Exception
    {
       return client.getResourceLimits(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -133,7 +138,8 @@ public class AppEngineService
    @Path("backends/list")
    @Produces(MediaType.APPLICATION_JSON)
    public List<BackendsXml.Entry> listBackends(@QueryParam("vfsid") String vfsId,
-                                               @QueryParam("projectid") String projectId, @Context SecurityContext security) throws Exception
+                                               @QueryParam("projectid") String projectId,
+                                               @Context SecurityContext security) throws Exception
    {
       return client.listBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
          projectId, getUserId(/*security*/));
@@ -162,10 +168,11 @@ public class AppEngineService
    @GET
    @Path("backend/rollback")
    public void rollbackBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                               @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                               @QueryParam("backend_name") String backendName,
+                               @Context SecurityContext security) throws Exception
    {
-      client.rollbackBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, getUserId(/*security*/));
+      client.rollbackBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+         projectId, backendName, getUserId(/*security*/));
    }
 
    @GET
@@ -180,11 +187,12 @@ public class AppEngineService
    @GET
    @Path("backend/set_state")
    public void setBackendState(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                               @QueryParam("backend_name") String backendName, @QueryParam("backend_state") String backendState,
+                               @QueryParam("backend_name") String backendName,
+                               @QueryParam("backend_state") String backendState,
                                @Context SecurityContext security) throws Exception
    {
-      client.setBackendState(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-         backendName, backendState, getUserId(/*security*/));
+      client.setBackendState(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+         projectId, backendName, backendState, getUserId(/*security*/));
    }
 
    @GET
@@ -209,7 +217,8 @@ public class AppEngineService
    @GET
    @Path("backend/update")
    public void updateBackend(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                             @QueryParam("backend_name") String backendName, @Context SecurityContext security) throws Exception
+                             @QueryParam("backend_name") String backendName,
+                             @Context SecurityContext security) throws Exception
    {
       client.updateBackend(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendName, getUserId(/*security*/));
@@ -218,7 +227,8 @@ public class AppEngineService
    @GET
    @Path("backends/update")
    public void updateBackends(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-                              @QueryParam("backends_name") List<String> backendNames, @Context SecurityContext security) throws Exception
+                              @QueryParam("backends_name") List<String> backendNames,
+                              @Context SecurityContext security) throws Exception
    {
       client.updateBackends(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
          backendNames, getUserId(/*security*/));
@@ -251,14 +261,15 @@ public class AppEngineService
          getUserId(/*security*/));
    }
 
-//   @GET
-//   @Path("pagespeed/update")
-//   public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
-//                               @Context SecurityContext security) throws Exception
-//   {
-//      client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId,
-//         getUserId(/*security*/));
-//   }
+   //   @GET
+   //   @Path("pagespeed/update")
+   //   public void updatePagespeed(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
+   //                               @Context SecurityContext security) throws Exception
+   //   {
+   //      client.updatePagespeed(vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null,
+   // projectId,
+   //         getUserId(/*security*/));
+   //   }
 
    @GET
    @Path("queues/update")
@@ -283,7 +294,6 @@ public class AppEngineService
       return ConversationState.getCurrent().getIdentity().getUserId();
    }
 
-
    @GET
    @Path("change-appid/{vfsid}/{projectid}")
    public Response changeApplicationId(@PathParam("vfsid") String vfsId, //
@@ -293,8 +303,8 @@ public class AppEngineService
    {
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       Item item = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
-      String path =
-         item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item.getPath();
+      String path = item.getPath().endsWith("/") ? item.getPath().substring(0, item.getPath().length() - 1) : item
+         .getPath();
       appId = StringUtils.removeStart(appId, "s~");
 
       try
@@ -309,19 +319,17 @@ public class AppEngineService
          }
          catch (Exception e1)
          {
-            return Response.serverError().entity("Unable to modify App Engine application settings.")
-               .type(MediaType.TEXT_PLAIN).build();
+            return Response.serverError().entity("Unable to modify App Engine application settings.").type(MediaType
+               .TEXT_PLAIN).build();
          }
       }
-      URL uri =
-         new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(), uriInfo.getBaseUri().getPort(),
-            "/IDE/images/logo/exo_logo.png");
-      return Response
-         .ok(
-            "<html><body style=\"font-family: Verdana, Bitstream Vera Sans, sans-serif; font-size: 13px; font-weight: bold;\">"
-               + "<div align=\"center\" style=\"margin: 100 auto; border: dashed 1px #CACACA; width: 450px;\">"
-               + "<p>Your application has been created.<br>Close this tab and use the Deploy button in Cloud IDE.</p>"
-               + "<img src=\"" + uri.toString() + "\"></div></body></html>").type(MediaType.TEXT_HTML).build();
+      URL uri = new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(),
+         uriInfo.getBaseUri().getPort(), "/IDE/images/logo/exo_logo.png");
+      return Response.ok("<html><body style=\"font-family: Verdana, Bitstream Vera Sans, " +
+         "sans-serif; font-size: 13px; font-weight: bold;\">" + "<div align=\"center\" style=\"margin: 100 auto; " +
+         "border: dashed 1px #CACACA; width: 450px;\">" + "<p>Your application has been created.<br>Close this tab " +
+         "and use the Deploy button in Cloud IDE.</p>" + "<img src=\"" + uri.toString() + "\"></div></body></html>")
+         .type(MediaType.TEXT_HTML).build();
    }
 
    /**
@@ -334,8 +342,8 @@ public class AppEngineService
     * @param appId
     *    application's id
     */
-   private void changeAppEngXml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
-      IOException
+   private void changeAppEngXml(VirtualFileSystem vfs, String path,
+                                String appId) throws VirtualFileSystemException, IOException
    {
       String path2appengineXml = path + "/src/main/webapp/WEB-INF/appengine-web.xml";
       File fileAppEngXml = (File)vfs.getItemByPath(path2appengineXml, null, PropertyFilter.NONE_FILTER);
@@ -355,15 +363,14 @@ public class AppEngineService
     * @param appId
     *    application's id
     */
-   private void changeAppEngYaml(VirtualFileSystem vfs, String path, String appId) throws VirtualFileSystemException,
-      IOException
+   private void changeAppEngYaml(VirtualFileSystem vfs, String path,
+                                 String appId) throws VirtualFileSystemException, IOException
    {
       String path2appengineYaml = path + "/app.yaml";
       File fileAppEngYaml = (File)vfs.getItemByPath(path2appengineYaml, null, PropertyFilter.NONE_FILTER);
       String content = IOUtils.toString(vfs.getContent(fileAppEngYaml.getId()).getStream());
       String newContent = PATTERN_YAML.matcher(content).replaceFirst("application: " + appId);
-      vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()),
-         new ByteArrayInputStream(newContent.getBytes()), null);
+      vfs.updateContent(fileAppEngYaml.getId(), MediaType.valueOf(fileAppEngYaml.getMimeType()), new ByteArrayInputStream(newContent.getBytes()), null);
    }
 
 }

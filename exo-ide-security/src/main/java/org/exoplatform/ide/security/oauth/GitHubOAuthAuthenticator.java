@@ -40,7 +40,7 @@ import javax.mail.internet.InternetAddress;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
+public class GitHubOAuthAuthenticator extends OAuthAuthenticator
 {
    protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {

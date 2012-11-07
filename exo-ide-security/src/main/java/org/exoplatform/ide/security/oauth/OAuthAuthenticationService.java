@@ -46,7 +46,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 /**
- * RESTful wrapper for BaseOAuthAuthenticator.
+ * RESTful wrapper for OAuthAuthenticator.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -111,7 +111,7 @@ public class OAuthAuthenticationService
       URL requestUrl = getRequestUrl(uriInfo);
       Map<String, List<String>> params = getRequestParameters(getState(requestUrl));
       final String providerName = getParameter(params, "oauth_provider");
-      OAuthAuthenticator oauth = providers.getAuthenticator(providerName);
+      OAuthAuthenticator oauth = getAuthenticator(providerName);
       final List<String> scopes = params.get("scope");
       final String userId = oauth.callback(requestUrl, scopes == null ? Collections.<String> emptyList() : scopes);
       final String redirectAfterLogin = getParameter(params, "redirect_after_login");
