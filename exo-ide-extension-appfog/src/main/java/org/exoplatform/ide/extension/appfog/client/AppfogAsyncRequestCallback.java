@@ -92,25 +92,18 @@ public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback
             if (serverException.isErrorMessageProvided())
             {
                msg = serverException.getLocalizedMessage();
+               if (RegExp.compile("Application '.+' already exists. Use update or delete.").exec(msg) != null)
+               {
+                  msg = "Application already exist on appfog";
+               }
+               else if (RegExp.compile("Unexpected response from service gateway").exec(msg) != null)
+               {
+                  msg = "Appfog error: " + msg;
+               }
             }
             else
             {
                msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
-            }
-
-            //TODO write normaly it
-            final RegExp duplicateAppNamePattern = RegExp.compile("Application '(.+)' already exists. Use update or delete.");
-            final RegExp appfogUnexRespPattern = RegExp.compile("Unexpected response from service gateway");
-            final MatchResult matcherDuplicate = duplicateAppNamePattern.exec(msg);
-            final MatchResult matchUnexResp = appfogUnexRespPattern.exec(msg);
-            if (matcherDuplicate != null)
-            {
-               msg = "Application '" + matcherDuplicate.getGroup(1) + "' already exist on appfog.";
-            }
-
-            if (matchUnexResp != null)
-            {
-               msg = "Appfog Error: " + matchUnexResp.getGroup(0);
             }
 
             Dialogs.getInstance().showError(msg);

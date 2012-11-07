@@ -308,19 +308,7 @@ public class Appfog
       SystemResources usage = systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
-
-      try
-      {
-         checkApplicationName(credential, app);
-      }
-      catch (AppfogException e)
-      {
-         if (!"Not Found".equals(e.getMessage()))
-         {
-            throw e;
-         }
-         //"Not Found" - means that it's all good, application doesn't exist, continue creating.
-      }
+      checkApplicationName(credential, app);
 
       AppfogApplication appInfo;
       java.io.File path = null;
@@ -1325,19 +1313,7 @@ public class Appfog
          SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
-
-         try
-         {
-            checkApplicationName(credential, app);
-         }
-         catch (AppfogException e)
-         {
-            if (!"Not Found".equals(e.getMessage()))
-            {
-               throw e;
-            }
-            //"Not Found" - means that it's all good, application doesn't exist, continue creating.
-         }
+         checkApplicationName(credential, app);
 
          Framework cfg = null;
          if (frameworkName != null)
@@ -1465,13 +1441,11 @@ public class Appfog
       }
       catch (AppfogException e)
       {
-         // If application does not exists then expected code is 301.
-         // NOTE this is not HTTP status but status of Cloudfoundry action.
-         if (301 != e.getExitCode())
+         if (!"Not Found".equals(e.getMessage()))
          {
             throw e;
          }
-         // 301 - Good, application name is not used yet.
+         //"Not Found" - means that it's all good, application doesn't exist, continue creating.
       }
    }
 
