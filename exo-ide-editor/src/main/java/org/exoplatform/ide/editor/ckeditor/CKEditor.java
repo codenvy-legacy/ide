@@ -842,10 +842,11 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    @Override
-   public boolean hasUndoChanges()
-   {
+   public native boolean hasUndoChanges()
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
       return false;
-   }
+   }-*/;
 
    @Override
    public boolean hasRedoChanges()

@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public final class AppfogCredentials

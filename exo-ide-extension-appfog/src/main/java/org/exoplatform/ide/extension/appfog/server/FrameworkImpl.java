@@ -23,7 +23,7 @@ import org.exoplatform.ide.extension.appfog.shared.Runtime;
 import java.util.List;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class FrameworkImpl implements Framework

@@ -45,6 +45,7 @@ import org.exoplatform.ide.extension.appfog.client.update.UpdateApplicationPrese
 import org.exoplatform.ide.extension.appfog.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.appfog.client.url.UnmapUrlPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -110,32 +111,17 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
       return (targets != null && targets.contains(ID));
    }
 
-   public static void updateProperty(ProjectModel project, List<Property> toAdd, List<String> toDelete)
+   public static void writeProperty(ProjectModel project, String propertyName, String propertyValue)
    {
-      if (toAdd != null)
-      {
-         project.getProperties().addAll(toAdd);
-      }
+      Property p = new Property(propertyName, propertyValue);
 
-      if (toDelete != null)
-      {
-         List<Property> tempToDelete = new ArrayList<Property>();
-         for (Property prop : project.getProperties())
-         {
-            for (String propToDelete : toDelete)
-            {
-               if (prop.getName().equals(propToDelete))
-               {
-                  tempToDelete.add(prop);
-               }
-            }
-         }
-         project.getProperties().removeAll(tempToDelete);
-      }
+      project.getProperties().add(p);
 
+      ItemWrapper item = new ItemWrapper(project);
+      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
       try
       {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
+         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
          {
 
             @Override
@@ -147,13 +133,13 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
             @Override
             protected void onFailure(Throwable e)
             {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
+               //IDE.fireEvent(new ExceptionThrownEvent(e));
             }
          });
       }
       catch (RequestException e)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
+         //IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 }

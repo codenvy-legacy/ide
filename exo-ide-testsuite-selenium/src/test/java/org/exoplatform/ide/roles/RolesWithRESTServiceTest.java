@@ -148,9 +148,17 @@ public class RolesWithRESTServiceTest extends BaseTest
 
       //Logout and login as developer
       IDE.LOGIN.logout();
-      IDE.LOGIN.waitStandaloneLogin();
-      IDE.LOGIN.standaloneLogin(TestConstants.Users.DEV, TestConstants.Users.DEV_PASS);
-
+      if (isRunIdeAsTenant())
+      {
+         IDE.LOGIN.waitTenantLoginPage();
+         IDE.LOGIN.loginAsTenantUser();
+      }
+      else
+      {
+         IDE.LOGIN.waitStandaloneLoginPage();
+         IDE.LOGIN.loginAsStandaloneUser();
+      }
+      
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);

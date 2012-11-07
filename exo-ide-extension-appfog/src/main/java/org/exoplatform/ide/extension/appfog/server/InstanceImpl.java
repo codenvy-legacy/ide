@@ -22,7 +22,7 @@ package org.exoplatform.ide.extension.appfog.server;
 import org.exoplatform.ide.extension.appfog.shared.Instance;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class InstanceImpl implements Instance

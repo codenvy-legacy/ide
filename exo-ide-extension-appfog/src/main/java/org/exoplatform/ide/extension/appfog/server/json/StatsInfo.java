@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.appfog.server.json;
 import java.util.Arrays;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class StatsInfo
