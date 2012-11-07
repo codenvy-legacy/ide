@@ -72,7 +72,13 @@
                <b>Editor API : </b>
                Code Assistant API (demo with CSS Code Completion)
             </li>
-            
+            <li>
+              <b>Java Extension : </b>
+              <br/>
+              Java code assistant<br/>
+              Errors and Wanrnings highlighting<br/>
+              Quick Assistant(Ctrl+1) for Java errors and warnings<br/>
+            </li>
          </ul>
       </div>
       <div class="{style.botleft}">
