@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -54,115 +54,6 @@ public class AppfogApplicationStatisticsImpl implements AppfogApplicationStatist
    private int memLimit = -1;
    /** Disk limit (in MB). */
    private int diskLimit = -1;
-
-   static class Builder
-   {
-      private String name;
-      private String state;
-      private String host;
-      private int port;
-      private String[] uris;
-      private String uptime;
-      private int cpuCores;
-      private double cpu;
-      private int mem;
-      private int disk;
-      private int memLimit;
-      private int diskLimit;
-
-      public Builder setName(String name)
-      {
-         this.name = name;
-         return this;
-      }
-
-      public Builder setState(String state)
-      {
-         this.state = state;
-         return this;
-      }
-
-      public Builder setHost(String host)
-      {
-         this.host = host;
-         return this;
-      }
-
-      public Builder setPort(int port)
-      {
-         this.port = port;
-         return this;
-      }
-
-      public Builder setUris(String[] uris)
-      {
-         this.uris = uris;
-         return this;
-      }
-
-      public Builder setUptime(String uptime)
-      {
-         this.uptime = uptime;
-         return this;
-      }
-
-      public Builder setCpuCores(int cpuCores)
-      {
-         this.cpuCores = cpuCores;
-         return this;
-      }
-
-      public Builder setCpu(double cpu)
-      {
-         this.cpu = cpu;
-         return this;
-      }
-
-      public Builder setMem(int mem)
-      {
-         this.mem = mem;
-         return this;
-      }
-
-      public Builder setDisk(int disk)
-      {
-         this.disk = disk;
-         return this;
-      }
-
-      public Builder setMemLimit(int memLimit)
-      {
-         this.memLimit = memLimit;
-         return this;
-      }
-
-      public Builder setDiskLimit(int diskLimit)
-      {
-         this.diskLimit = diskLimit;
-         return this;
-      }
-
-      public AppfogApplicationStatistics build()
-      {
-         return new AppfogApplicationStatisticsImpl(this);
-      }
-   }
-
-   private AppfogApplicationStatisticsImpl(Builder builder)
-   {
-      this.name = builder.name;
-      this.state = builder.state;
-      this.host = builder.host;
-      this.port = builder.port;
-      this.uris = builder.uris;
-      this.uptime = builder.uptime;
-      this.cpuCores = builder.cpuCores;
-      this.cpu = builder.cpu;
-      this.mem = builder.mem;
-      this.disk = builder.disk;
-      this.memLimit = builder.memLimit;
-      this.diskLimit = builder.diskLimit;
-   }
 
    @Override
    public String getName()
@@ -311,7 +202,7 @@ public class AppfogApplicationStatisticsImpl implements AppfogApplicationStatist
    @Override
    public String toString()
    {
-      return "CloudfoundryApplicationStatisticsImpl{" +
+      return "AppfogApplicationStatisticsImpl{" +
          "name='" + name + '\'' +
          ", state='" + state + '\'' +
          ", host='" + host + '\'' +

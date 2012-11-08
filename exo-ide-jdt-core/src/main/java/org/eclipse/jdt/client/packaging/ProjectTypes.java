@@ -40,6 +40,7 @@ public class ProjectTypes
       projects.add(ProjectResolver.SERVLET_JSP);
       projects.add(ProjectResolver.SPRING);
       projects.add(ProjectType.JAVA.value());
+      projects.add(ProjectType.JAR.value());
       projects.add(ProjectType.JSP.value());
       projects.add(ProjectType.AWS.value());
    }

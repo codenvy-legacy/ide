@@ -22,9 +22,6 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.exoplatform.ide.commons.ParsingResponseException;
-import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
@@ -41,7 +38,7 @@ import java.net.UnknownHostException;
 public abstract class BaseAppfogAuthenticator
 {
    /**
-    * Obtain cloudfoundry API token and store it somewhere (it is dependent to implementation) for next usage. Token
+    * Obtain appfog API token and store it somewhere (it is dependent to implementation) for next usage. Token
     * should be used instead of username/password for any request to cloudfoundry service.
     *
     * @param target
@@ -50,15 +47,15 @@ public abstract class BaseAppfogAuthenticator
     *    email address that used when signup to appfog.com
     * @param password
     *    password
-    * @throws org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException
-    *    if cloudfoundry server return unexpected or error status for request
+    * @throws org.exoplatform.ide.extension.appfog.server.AppfogException
+    *    if appfog server return unexpected or error status for request
     * @throws ParsingResponseException
     *    if any error occurs when parse response body
     * @throws VirtualFileSystemException
     * @throws IOException
     *    if any i/o errors occurs
     */
-   public final void login(String target, String email, String password) throws CloudfoundryException,
+   public final void login(String target, String email, String password) throws AppfogException,
       ParsingResponseException, VirtualFileSystemException, IOException
    {
       HttpURLConnection http = null;
@@ -83,7 +80,7 @@ public abstract class BaseAppfogAuthenticator
 
          if (http.getResponseCode() != 200)
          {
-            throw Cloudfoundry.fault(http);
+            throw Appfog.fault(http);
          }
 
          InputStream input = http.getInputStream();
@@ -99,7 +96,7 @@ public abstract class BaseAppfogAuthenticator
             input.close();
          }
 
-         CloudfoundryCredentials credentials = readCredentials();
+         AppfogCredentials credentials = readCredentials();
          credentials.addToken(target, jsonValue.getElement("token").getStringValue());
          writeCredentials(credentials);
       }
@@ -109,7 +106,7 @@ public abstract class BaseAppfogAuthenticator
       }
       catch (UnknownHostException exc)
       {
-         throw new CloudfoundryException(500, "Can't access target.\n", "text/plain");
+         throw new AppfogException(500, "Can't access target.\n", "text/plain");
       }
       finally
       {
@@ -120,23 +117,23 @@ public abstract class BaseAppfogAuthenticator
       }
    }
 
-   public final void login() throws CloudfoundryException, ParsingResponseException, VirtualFileSystemException, IOException
+   public final void login() throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
    {
       login(getTarget(), getUsername(), getPassword());
    }
 
    /**
-    * Remove local saved credentials for remote Cloud Foundry server. After logout need login again to be able work
+    * Remove local saved credentials for remote Appfog server. After logout need login again to be able work
     * with
     * remote server.
     *
     * @param target
-    *    location of Cloud Foundry REST API, e.g. http://cloudfoundry.com
+    *    location of Appfog REST API, e.g. http://api.appfog.com
     * @see #login(String, String, String)
     */
    public final void logout(String target) throws VirtualFileSystemException, IOException
    {
-      CloudfoundryCredentials credentials = readCredentials();
+      AppfogCredentials credentials = readCredentials();
       if (credentials.removeToken(target))
       {
          writeCredentials(credentials);
@@ -155,9 +152,9 @@ public abstract class BaseAppfogAuthenticator
 
    public abstract String getTarget() throws VirtualFileSystemException, IOException;
 
-   public abstract CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException;
+   public abstract AppfogCredentials readCredentials() throws VirtualFileSystemException, IOException;
 
    public abstract void writeTarget(String target) throws VirtualFileSystemException, IOException;
 
-   public abstract void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException;
+   public abstract void writeCredentials(AppfogCredentials credentials) throws VirtualFileSystemException, IOException;
 }

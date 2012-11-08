@@ -43,7 +43,6 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import java.util.Collections;
 
 /**
  * Presenter for delete application operation.
@@ -213,13 +212,6 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
                IDE.fireEvent(new OutputEvent(AppfogExtension.LOCALIZATION_CONSTANT
                   .applicationDeletedMsg(appName), Type.INFO));
                IDE.fireEvent(new ApplicationDeletedEvent(appName));
-
-               //Infra property doesn't need by us now
-               AppfogExtension.updateProperty(
-                  ((ItemContext)selectedItems.get(0)).getProject(),
-                  null,
-                  Collections.singletonList("appfog-infra")
-               );
             }
          });
       }

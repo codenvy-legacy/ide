@@ -61,8 +61,6 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
 
    }
    
-   
-   
    @Test
    public void testGroovyAnnotation() throws Exception
    {

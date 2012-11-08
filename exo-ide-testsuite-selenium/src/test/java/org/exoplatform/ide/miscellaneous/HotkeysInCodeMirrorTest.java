@@ -58,9 +58,9 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
    }
 
    @After
-   public void after()
+   public void after() throws Exception
    {
-      deleteCookies();
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    @AfterClass
@@ -114,7 +114,7 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       //check go to line window dialog appeared
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.clickCancelButton();
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+     
    }
 
    @Test
@@ -173,8 +173,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "v");
       Thread.sleep(500);
       assertEquals(textToCut, IDE.EDITOR.getTextFromCodeEditor(0));
-
-      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
   @Test
@@ -206,8 +204,6 @@ public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
       // press Ctrl+Y
       IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
       assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor(0));
-
-      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
 }

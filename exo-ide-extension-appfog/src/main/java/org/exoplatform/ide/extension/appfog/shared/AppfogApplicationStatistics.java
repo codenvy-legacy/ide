@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.shared;
 
-import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryApplicationStatistics;
-
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public interface AppfogApplicationStatistics

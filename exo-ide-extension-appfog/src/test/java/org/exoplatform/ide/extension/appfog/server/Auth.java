@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.appfog.server;
 
-import org.exoplatform.ide.extension.cloudfoundry.server.BaseCloudfoundryAuthenticator;
-import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryCredentials;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
@@ -30,7 +28,7 @@ import java.io.IOException;
  */
 class Auth extends BaseAppfogAuthenticator
 {
-   private CloudfoundryCredentials credentials;
+   private AppfogCredentials credentials;
    private String target;
 
    private String username;
@@ -43,7 +41,7 @@ class Auth extends BaseAppfogAuthenticator
    }
 
    @Override
-   public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
+   public AppfogCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
       return credentials;
    }
@@ -55,9 +53,9 @@ class Auth extends BaseAppfogAuthenticator
    }
 
    @Override
-   public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
+   public void writeCredentials(AppfogCredentials credentials) throws VirtualFileSystemException, IOException
    {
-      this.credentials = new CloudfoundryCredentials();
+      this.credentials = new AppfogCredentials();
       for (String t : credentials.getTargets())
       {
          this.credentials.addToken(t, credentials.getToken(t));
@@ -88,7 +86,7 @@ class Auth extends BaseAppfogAuthenticator
       this.password = password;
    }
 
-   public void setCredentials(CloudfoundryCredentials credentials)
+   public void setCredentials(AppfogCredentials credentials)
    {
       this.credentials = credentials;
    }

@@ -5,7 +5,7 @@ html {
 .editbox {
   margin: .4em;
   padding: 0;
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
   font-size: 10pt;
   color: black;
 }
