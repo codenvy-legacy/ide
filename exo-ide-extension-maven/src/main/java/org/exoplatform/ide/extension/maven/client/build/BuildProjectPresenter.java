@@ -66,6 +66,8 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -78,13 +80,13 @@ import java.util.List;
 
 /**
  * Presenter for created builder view. The view must be pointed in Views.gwt.xml.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectPresenter.java Feb 17, 2012 5:39:10 PM azatsarynnyy $
- * 
+ *
  */
 public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelectedHandler, ViewClosedHandler,
-   VfsChangedHandler
+   VfsChangedHandler, ItemDeletedHandler
 {
    public interface Display extends IsView
    {
@@ -164,11 +166,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       IDE.getInstance().addControl(new BuildProjectControl());
       IDE.getInstance().addControl(new BuildAndPublishProjectControl());
-      
+
       IDE.addHandler(BuildProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    /**
@@ -385,7 +388,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
       Property lastUpdateTimeProp = item.getItem().getProperty("vfs:lastUpdateTime");
       if (lastUpdateTimeProp == null)
+      {
          return false;
+      }
       lastUpdateTime = Long.parseLong(lastUpdateTimeProp.getValue().get(0));
       return buildTime > lastUpdateTime;
    }
@@ -462,7 +467,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   setBuildInProgress(false);
                   display.stopAnimation();
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
-               };
+               }
+
+               ;
 
             });
          }
@@ -506,7 +513,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    /**
     * Check for status and display necessary messages.
-    * 
+    *
     * @param buildStatus status of build
     */
    private void updateBuildStatus(BuildStatus buildStatus)
@@ -529,7 +536,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    /**
     * Perform actions after build is finished.
-    * 
+    *
     * @param buildStatus status of build job
     */
    private void afterBuildFinished(BuildStatus buildStatus)
@@ -546,9 +553,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
 
          statusHandler.requestFinished(projectId);
-
-         writeBuildInfo(buildStatus);
-         startWatchingProjectChanges();
+         if (projectId != null)
+         {
+            writeBuildInfo(buildStatus);
+            startWatchingProjectChanges();
+         }
          message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
             .append("\">here</a>");
 
@@ -583,9 +592,19 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
+   @Override
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      //Erase projectId variable if user deletes project while it builds.
+      if (event.getItem().getId().equals(projectId))
+      {
+         projectId = null;
+      }
+   }
+
    /**
     * Getting information about publish artifact process for its only suggest dependency
-    * 
+    *
     */
    private void getPublisArtifactResult()
    {
@@ -685,7 +704,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    /**
     * Output the message and activate view if necessary.
-    * 
+    *
     * @param message message for output
     */
    private void showBuildMessage(String message)
@@ -814,13 +833,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private String formatDepXml(String dep)
    {
-      
+
       String formatStr = SafeHtmlUtils.htmlEscape(dep)//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
       if (formatStr.contains("&lt;type&gt;"))
+      {
          formatStr = formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;");
+      }
       return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
    }
 
