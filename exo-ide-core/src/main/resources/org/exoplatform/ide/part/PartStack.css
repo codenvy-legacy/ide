@@ -56,7 +56,7 @@
 	cursor: default;
 	font-weight: bold;
 	padding: 3px 6px 3px 6px;
-	border-bottom: 1px solid activeTabBackground;
+	border-bottom: 2px solid activeTabBackground;
 	background: activeTabBackground;
 }
 
@@ -70,5 +70,5 @@
 
 .ide-PartStack-focused .ide-PartStack-Tab-selected {
 	background: highlightFocus;
-	border-bottom: 1px solid highlightFocus;
+	border-bottom: 2px solid highlightFocus;
 }

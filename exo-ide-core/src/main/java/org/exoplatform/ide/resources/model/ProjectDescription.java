@@ -71,8 +71,7 @@ public class ProjectDescription
     */
    private JsonStringSet asStringSet(String propertyName)
    {
-      @SuppressWarnings("unchecked")
-      Property<String> property = project.getProperty(propertyName);
+      Property property = project.getProperty(propertyName);
       JsonStringSet natures = JsonCollections.createStringSet();
       if (property!=null)
       {

@@ -70,7 +70,6 @@ public interface ResourceProvider extends Component
     * @param properties
     * @param callback
     */
-   @SuppressWarnings("rawtypes")
    public void createProject(String name, JsonArray<Property> properties, AsyncCallback<Project> callback);
 
    /**

@@ -198,7 +198,6 @@ public class ResourceProviderComponent implements ResourceProvider
    /**
     * {@inheritDoc}
     */
-   @SuppressWarnings("rawtypes")
    @Override
    public void createProject(String name, JsonArray<Property> properties, final AsyncCallback<Project> callback)
    {
@@ -308,7 +307,6 @@ public class ResourceProviderComponent implements ResourceProvider
    /**
    * {@inheritDoc}
    */
-   @SuppressWarnings("unchecked")
    @Override
    public void applyNature(final Project project, final String natureId, final AsyncCallback<Project> callback)
    {

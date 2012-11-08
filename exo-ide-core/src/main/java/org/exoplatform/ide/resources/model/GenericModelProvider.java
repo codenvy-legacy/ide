@@ -43,8 +43,8 @@ public class GenericModelProvider implements ModelProvider
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public Project createProjectInstance()
    {

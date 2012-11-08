@@ -20,7 +20,6 @@ import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 
 /**
@@ -36,60 +35,23 @@ public class Folder extends Resource
 
    private JsonArray<Resource> children = JsonCollections.<Resource> createArray();
 
-   /**
-    * 
-    * @param id
-    * @param name
-    * @param resourceType
-    * @param mimeType
-    * @param path
-    * @param parent
-    * @param creationDate
-    * @param links
+   /** 
+    * Empty instance of Folder.
+    * Not intended to be used by clients.
     */
-   public Folder(String id, String name, String mimeType,// String path, 
-      Folder parent, long creationDate, JsonStringMap<Link> links)
+   protected Folder()
    {
-      this(id, name, TYPE, mimeType, parent, creationDate, links);
+      this(TYPE, FOLDER_MIME_TYPE);
    }
 
-   /**
-    * Full protected constructor used for sub-classing 
-    * 
-    * @param id
-    * @param name
-    * @param type
-    * @param mimeType
-    * @param parent
-    * @param creationDate
-    * @param links
-    */
-   protected Folder(String id, String name, String type, String mimeType,//String path, 
-      Folder parent, long creationDate, JsonStringMap<Link> links)
-   {
-      super(id, name, type, mimeType, parent, creationDate, links);
-      this.persisted = false;
-   }
-
-   /** Empty instance of Folder. */
-   public Folder()
-   {
-      this(TYPE);
-      mimeType = FOLDER_MIME_TYPE;
-   }
-
-   /** For extending classes */
-   protected Folder(String itemType)
+   /** For subclassing */
+   protected Folder(String itemType, String mimeType)
    {
       super(itemType);
+      this.mimeType = mimeType;
    }
 
-   public String createPath(String childName)
-   {
-      return getPath() + "/" + childName;
-   }
-
-   public Folder(JSONObject itemObject)
+   protected Folder(JSONObject itemObject)
    {
       this();
       init(itemObject);
@@ -109,7 +71,11 @@ public class Folder extends Resource
       //         (itemObject.get("parentId").isNull() != null) ? null : itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
-      this.persisted = true;
+   }
+
+   public String createPath(String childName)
+   {
+      return getPath() + "/" + childName;
    }
 
    /**

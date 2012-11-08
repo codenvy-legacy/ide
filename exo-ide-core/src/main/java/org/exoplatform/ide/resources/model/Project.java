@@ -29,7 +29,6 @@ import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.resources.marshal.FileContentUnmarshaller;
@@ -42,8 +41,6 @@ import org.exoplatform.ide.rest.AsyncRequest;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.HTTPHeader;
 import org.exoplatform.ide.rest.MimeType;
-
-import java.util.Date;
 
 /**
  * Represents Project  model. Responsinble for deserialization of JSon String to generate it' own project model
@@ -59,7 +56,6 @@ public class Project extends Folder
    protected ProjectDescription description = new ProjectDescription(this);
 
    /** Properties. */
-   @SuppressWarnings("rawtypes")
    protected JsonArray<Property> properties;
 
    protected ResourceProvider provider;
@@ -75,40 +71,14 @@ public class Project extends Folder
     */
    public Project(EventBus eventBus)
    {
-      this(null, null, PROJECT_MIME_TYPE, null, new Date().getTime(), null, JsonCollections.<Link> createStringMap(),
-         eventBus);
-   }
-
-   /**
-    * Not intended to be used by client.
-    * 
-    * @param name
-    * @param parentId
-    * @param properties
-    */
-   @SuppressWarnings("rawtypes")
-   public Project(String name, Folder parent, JsonArray<Property> properties, EventBus eventBus)
-   {
-      this(null, name, PROJECT_MIME_TYPE, parent, 0, properties, JsonCollections.<Link> createStringMap(), eventBus);
-   }
-
-   /**
-    * Internal constructor for sub-classing
-    * 
-    */
-   @SuppressWarnings("rawtypes")
-   protected Project(String id, String name, String mimeType, //String path, 
-      Folder parent, long creationDate, JsonArray<Property> properties, JsonStringMap<Link> links, EventBus eventBus)
-   {
-      super(id, name, TYPE, mimeType, parent, creationDate, links);
-      this.properties = properties;
+      super(TYPE, PROJECT_MIME_TYPE);
+      this.properties = JsonCollections.<Property> createArray();
       this.eventBus = eventBus;
       // TODO : receive it in some way
       this.loader = new EmptyLoader();
    }
 
    @Override
-   @SuppressWarnings({"unchecked", "rawtypes"})
    public void init(JSONObject itemObject)
    {
       id = itemObject.get("id").isString().stringValue();
@@ -117,11 +87,10 @@ public class Project extends Folder
       //path = itemObject.get("path").isString().stringValue();
       //parentId = itemObject.get("parentId").isString().stringValue();
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
-      properties = (JsonArray)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+      properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
       //projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
       // TODO Unmarshall children 
-      this.persisted = true;
    }
 
    public ProjectDescription getDescription()
@@ -134,7 +103,6 @@ public class Project extends Folder
     *
     * @return properties. If there is no properties then empty list returned, never <code>null</code>
     */
-   @SuppressWarnings("rawtypes")
    public JsonArray<Property> getProperties()
    {
       if (properties == null)
@@ -150,7 +118,6 @@ public class Project extends Folder
     * @param name name of property
     * @return property or <code>null</code> if there is not property with specified name
     */
-   @SuppressWarnings("rawtypes")
    public Property getProperty(String name)
    {
       JsonArray<Property> props = getProperties();
@@ -192,7 +159,6 @@ public class Project extends Folder
     * @param name property name
     * @return value of property with specified name or <code>null</code>
     */
-   @SuppressWarnings("rawtypes")
    public Object getPropertyValue(String name)
    {
       Property p = getProperty(name);
@@ -210,15 +176,12 @@ public class Project extends Folder
     * @return set of property values or <code>null</code> if property does not exists
     * @see #getPropertyValue(String)
     */
-   @SuppressWarnings({"rawtypes", "unchecked"})
-   public JsonArray getPropertyValues(String name)
+   public JsonArray<String> getPropertyValues(String name)
    {
       Property p = getProperty(name);
       if (p != null)
       {
-         JsonArray values = JsonCollections.createArray();
-         values.addAll(p.getValue());
-         return values;
+         return p.getValue().copy();
       }
       return null;
    }
@@ -291,7 +254,6 @@ public class Project extends Folder
    {
       try
       {
-
          checkItemValid(parent);
 
          // create internal wrapping Request Callback with proper Unmarshaller

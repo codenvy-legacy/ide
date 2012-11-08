@@ -20,7 +20,6 @@ import com.google.gwt.json.client.JSONObject;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 
 /**
@@ -54,57 +53,8 @@ public class File extends Resource
 
    private Lock lock = null;
 
-   /**
-    * Instance of file with specified attributes.
-    * 
-    * @param id internal VFS id of the file.
-    * @param name display name
-    * @param mimeType mimetype of the resource
-    * @param parent parent folder
-    * @param creationDate creation date
-    * @param links REST-aware links
-    * @param versionId id of the version
-    * @param length content length if known
-    * @param locked locking flag
-    * @param lastModificationDate last modification date
-    */
-   public File(String id, String name,
-      String mimeType, //String path, 
-      Folder parent, long creationDate, JsonStringMap<Link> links, String versionId, long length, boolean locked,
-      long lastModificationDate)
-   {
-      this(id, name, TYPE, mimeType, parent, creationDate, links, versionId, length, locked, lastModificationDate);
-   }
-
-   /**
-    * Full protected constructor for sub-classing
-    * 
-    * @param id internal VFS id of the file.
-    * @param name display name
-    * @param type type, {@link File#TYPE} by default
-    * @param mimeType mimetype of the resource
-    * @param parent parent folder
-    * @param creationDate creation date
-    * @param links REST-aware links
-    * @param versionId id of the version
-    * @param length content length if known
-    * @param locked locking flag
-    * @param lastModificationDate last modification date
-    */
-   protected File(String id, String name, String type,
-      String mimeType, //String path, 
-      Folder parent, long creationDate, JsonStringMap<Link> links, String versionId, long length, boolean locked,
-      long lastModificationDate)
-   {
-      super(id, name, type, mimeType, parent, creationDate, links);
-      this.lastModificationDate = lastModificationDate;
-      this.locked = locked;
-      this.versionId = versionId;
-      this.length = length;
-   }
-
    /** Empty instance of file. */
-   public File()
+   protected File()
    {
       super(TYPE);
    }
@@ -115,7 +65,7 @@ public class File extends Resource
       super(itemType);
    }
 
-   public File(JSONObject itemObject)
+   protected File(JSONObject itemObject)
    {
       this();
       init(itemObject);
@@ -201,7 +151,6 @@ public class File extends Resource
       length = (long)itemObject.get("length").isNumber().doubleValue();
       lastModificationDate = (long)itemObject.get("lastModificationDate").isNumber().doubleValue();
       locked = itemObject.get("locked").isBoolean().booleanValue();
-      this.persisted = true;
       this.contentChanged = false;
       fixMimeType();
    }

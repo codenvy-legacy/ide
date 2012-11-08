@@ -56,7 +56,7 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
          // Read Primary nature of the project
          JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
          JsonArray<Property> properties =
-            (JsonArray)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
+            (JsonArray)JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
          // Create project instance using ModelProvider
          modelProviderAdapter.init(properties).init(jsonObject);
       }

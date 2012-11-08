@@ -25,7 +25,7 @@ import org.exoplatform.ide.json.JsonStringMap;
  * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public abstract class Resource implements ItemContext
+public abstract class Resource
 {
    /** Id of object. */
    protected String id;
@@ -52,41 +52,11 @@ public abstract class Resource implements ItemContext
 
    protected Folder parent;
 
-   protected boolean persisted;
-
    /**
-    * Adds resource as child to the parent resource
-    * 
-    * @param id id of item
-    * @param name name of item
-    * @param resourceType type of item
-    * @param mimeType the media type
-    * @param path path of item
-    * @param parentId id of parent folder. May be <code>null</code> if current item is root folder
-    * @param creationDate creation date in long format
-    * @param links hyper-links for retrieved or(and) manage item
+    * Create a Resource of given Type.
+    * Not intended to be used by clients.
     */
-   public Resource(String id, String name, String resourceType, String mimeType, //String path, 
-      Folder parent, long creationDate, JsonStringMap<Link> links)
-   {
-      this.id = id;
-      this.name = name;
-      this.resourceType = resourceType;
-      this.mimeType = mimeType;
-      //      this.path = path;
-      this.parent = parent;
-      if (parent != null)
-      {
-         parent.addChild(this);
-      }
-      this.creationDate = creationDate;
-      this.links = links;
-   }
-
-   /**
-    * 
-    */
-   public Resource(String itemType)
+   protected Resource(String itemType)
    {
       this.resourceType = itemType;
    }
@@ -188,28 +158,42 @@ public abstract class Resource implements ItemContext
       return "Resourece [id=" + id + ", name=" + name + ", type=" + resourceType + ']';
    }
 
-   // item context
-
-   @Override
+   /**
+    * Get parent Project
+    * 
+    * @return
+    */
    public Project getProject()
    {
       return project;
    }
 
-   @Override
+   /**
+    * Set parent Project 
+    * 
+    * @param proj
+    */
    public void setProject(Project proj)
    {
       this.project = proj;
 
    }
 
-   @Override
+   /**
+    * Get parent Folder 
+    * 
+    * @return
+    */
    public final Folder getParent()
    {
       return parent;
    }
 
-   @Override
+   /**
+    * Set parent Folder
+    * 
+    * @param parent
+    */
    public void setParent(Folder parent)
    {
       if (this.parent != null)
@@ -220,14 +204,10 @@ public abstract class Resource implements ItemContext
       parent.addChild(this);
    }
 
-   @Override
-   public boolean isPersisted()
-   {
-      return persisted;
-   }
-
    /**
     * Generic object tag. Can be used by UI components
+    * TODO : REMOVE
+    * 
     * @param tag
     */
    public void setTag(Object tag)
@@ -237,6 +217,8 @@ public abstract class Resource implements ItemContext
 
    /**
     * Generic object tag. Can be used by UI components
+    * TODO : REMOVE
+    * 
     * @return
     */
    public Object getTag()

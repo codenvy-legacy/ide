@@ -53,7 +53,6 @@ public class ProjectModelProviderAdapter
     * @param props
     * @return
     */
-   @SuppressWarnings("rawtypes")
    public Project init(JsonArray<Property> props)
    {
       // find primary nature

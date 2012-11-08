@@ -20,7 +20,6 @@ package org.exoplatform.ide.resources.marshal;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
-import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -30,10 +29,7 @@ import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.resources.model.AccessControlEntry;
-import org.exoplatform.ide.resources.model.BooleanProperty;
-import org.exoplatform.ide.resources.model.NumberProperty;
 import org.exoplatform.ide.resources.model.Property;
-import org.exoplatform.ide.resources.model.StringProperty;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -82,7 +78,6 @@ public abstract class JSONSerializer<O>
    };
 
    // --------- Customized serializers. -------------
-   @SuppressWarnings({"unchecked", "rawtypes"})
    public static final JSONSerializer<Property> PROPERTY_SERIALIZER = new JSONSerializer<Property>()
    {
       @Override
@@ -92,30 +87,10 @@ public abstract class JSONSerializer<O>
          {
             return JSONNull.getInstance();
          }
-         String typename = source.getClass().getName();
-         if (typename.equals(BooleanProperty.class.getName()))
-         {
-            JSONObject target = new JSONObject();
-            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
-            target.put("value", BOLEAN_SERIALIZER.fromCollection(source.getValue()));
-            return target;
-         }
-         if (typename.equals(StringProperty.class.getName()))
-         {
-            JSONObject target = new JSONObject();
-            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
-            target.put("value", STRING_SERIALIZER.fromCollection(source.getValue()));
-            return target;
-
-         }
-         if (typename.equals(NumberProperty.class.getName()))
-         {
-            JSONObject target = new JSONObject();
-            target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
-            target.put("value", NUMBER_SERIALIZER.fromCollection(source.getValue()));
-            return target;
-         }
-         throw new JSONException("Not found JSONSerializer for type " + typename);
+         JSONObject target = new JSONObject();
+         target.put("name", STRING_SERIALIZER.fromObject(source.getName()));
+         target.put("value", STRING_SERIALIZER.fromCollection(source.getValue()));
+         return target;
       }
    };
 
