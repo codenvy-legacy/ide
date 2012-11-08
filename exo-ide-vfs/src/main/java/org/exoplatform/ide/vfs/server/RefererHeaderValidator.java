@@ -42,8 +42,7 @@ public final class RefererHeaderValidator implements RequestValidator
       String referer = request.getHeader("Referer");
       if (referer == null || !referer.startsWith(requestURL))
       {
-         throw new VirtualFileSystemRuntimeException(
-            "Access to Virtual File System API forbidden from outside of IDE. ");
+         throw new VirtualFileSystemRuntimeException("Access forbidden from outside of IDE. ");
       }
    }
 }
