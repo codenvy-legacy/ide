@@ -45,7 +45,7 @@ import javax.ws.rs.core.MediaType;
 public class GoogleContactsRestService
 {
    @Inject
-   private GoogleOAuthAuthenticator oauth;
+   private GoogleContactsClient client;
 
    /**
     * Fetch all user's contacts.
@@ -61,7 +61,6 @@ public class GoogleContactsRestService
    @Produces(MediaType.APPLICATION_JSON)
    public List<GoogleContact> getContactList() throws IOException, ServiceException
    {
-      GoogleContactsClient client = GoogleContactsClient.getInstance(oauth);
 
       List<GoogleContact> contactList = new ArrayList<GoogleContact>();
       for (ContactEntry contactEntry : client.getAllContacts())

@@ -24,13 +24,12 @@ import org.exoplatform.ide.git.server.github.GitHubException;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.IOException;
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -43,7 +42,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * REST service to get the list of repositories from GitHub (where sample projects are located).
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesService.java Aug 29, 2011 9:59:02 AM vereshchaka $
  */
@@ -51,7 +50,7 @@ import javax.ws.rs.core.MediaType;
 public class GitHubService
 {
    @Inject
-   GitHubOAuthAuthenticator oauth;
+   OAuthTokenProvider oauthTokenProvider;
 
    @Inject
    GitHub github;
@@ -68,8 +67,9 @@ public class GitHubService
    @Path("list/user")
    @GET
    @Produces(MediaType.APPLICATION_JSON)
-   public GitHubRepository[] listRepositoriesByUser(@QueryParam("username") String userName) throws IOException,
-      GitHubException, ParsingResponseException, InvalidArgumentException
+   public GitHubRepository[] listRepositoriesByUser(
+      @QueryParam("username") String userName) throws IOException, GitHubException, ParsingResponseException,
+      InvalidArgumentException
    {
       return github.listRepositories(userName);
    }
@@ -77,7 +77,8 @@ public class GitHubService
    @Path("login")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void login(Map<String, String> credentials) throws IOException, GitHubException, ParsingResponseException,
+   public void login(
+      Map<String, String> credentials) throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
       github.login(new GitHubCredentials(credentials.get("login"), credentials.get("password")));
@@ -95,8 +96,9 @@ public class GitHubService
    @GET
    @Path("collaborators/{user}/{repository}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Collaborators collaborators(@PathParam("user") String user, @PathParam("repository") String repository)
-      throws IOException, GitHubException, ParsingResponseException, VirtualFileSystemException
+   public Collaborators collaborators(@PathParam("user") String user,
+                                      @PathParam("repository") String repository) throws IOException,
+      GitHubException, ParsingResponseException, VirtualFileSystemException
    {
       return github.getCollaborators(user, repository);
    }
@@ -104,9 +106,10 @@ public class GitHubService
    @GET
    @Path("token/{userid}")
    @Produces(MediaType.TEXT_PLAIN)
-   public String getToken(@PathParam("userid") String userId) throws IOException, GitHubException,
-      ParsingResponseException, VirtualFileSystemException
+   public String getToken(
+      @PathParam("userid") String userId) throws IOException, GitHubException, ParsingResponseException,
+      VirtualFileSystemException
    {
-      return oauth.getToken(userId);
+      return oauthTokenProvider.getToken("github", userId);
    }
 }
