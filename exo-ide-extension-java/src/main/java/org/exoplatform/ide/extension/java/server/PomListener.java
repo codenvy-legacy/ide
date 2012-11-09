@@ -35,6 +35,8 @@ import org.exoplatform.ide.vfs.server.observation.PathFilter;
 import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -85,12 +87,17 @@ public class PomListener implements Startable
          final VirtualFileSystem vfs = event.getVirtualFileSystem();
          Item item = vfs.getItem(event.getItemId(), PropertyFilter.ALL_FILTER);
          final Item parent = vfs.getItem(item.getParentId(), PropertyFilter.ALL_FILTER);
-         //TODO if project create from zip archive, pom.xml file created before parent folder become project, so remove check for now 
-         //         if (!Project.PROJECT_MIME_TYPE.equals(parent.getMimeType()))
-         //         {
-         //            LOG.debug("Pom file '" + item.getPath() + "' not children of project");
-         //            return;
-         //         }
+         if (parent.getItemType().equals(ItemType.PROJECT))
+         {
+            if (((Project)parent).getProjectType().equals("MultiModule"))
+               return;
+         }
+         //         TODO if project create from zip archive, pom.xml file created before parent folder become project, so remove check for now 
+         //                  if (!Project.PROJECT_MIME_TYPE.equals(parent.getMimeType()))
+         //                  {
+         //                     LOG.debug("Pom file '" + item.getPath() + "' not children of project");
+         //                     return;
+         //                  }
          try
          {
             final String buildId = client.dependenciesList(vfs, parent.getId());

@@ -32,7 +32,7 @@ div.border {
 }
 
 code {
-  font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
+  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
   font-size: 90%;
   color: #144;
 }
@@ -42,7 +42,7 @@ pre.code {
   border: 1px solid #CCCCCC;
   color: black;
   padding: .4em;
-  font-family: 'Menlo', 'Monaco', 'Ubuntu Mono', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
+  font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
 }
 
 .warn {

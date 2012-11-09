@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -16,27 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-.exo-autocomplete-panel {
-	background-color: #FFFFFF;
-	border: #A7ABB4 1px solid;
-}
+package org.exoplatform.ide.vfs.client;
 
-.exo-autocomplete-list {
-	border: 0 none;
-	background: white;
-}
+public interface Link
+{
 
-.exo-autocomplete-description {
-	border: #A7ABB4 1px solid;
-	background-color: #e0e9ee;
-	font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-	font-size: 10pt;
-	overflow: scroll;
-}
+  
 
-.exo-autocomplete-edit {
-	height: 20px;
-	border-width: 1px;
-	border-style: solid;
-	border-bottom: #A7ABB4 1px solid;
+      String getHref();
+
+      void setHref(String href);
+
+      String getRel();
+
+      void setRel(String rel);
+
+      String getType();
+
+      void setType(String type);
+
 }

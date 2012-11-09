@@ -27,6 +27,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,8 @@ import java.util.List;
 public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project implements ItemContext
 {
    private ItemList<Item> children = new ItemList<Item>();
+   
+   private List<ProjectModel> modules = new ArrayList<ProjectModel>();
 
    private FolderModel parent;
 
@@ -76,7 +79,11 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
       mimeType = itemObject.get("mimeType").isString().stringValue();
       path = itemObject.get("path").isString().stringValue();
       parentId = itemObject.get("parentId").isString().stringValue();
+      try {
       creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
       properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
       projectType =
@@ -128,5 +135,15 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
    public void setChildren(ItemList<Item> children)
    {
       this.children = children;
+   }
+   
+   public List<ProjectModel> getModules()
+   {
+      return modules;
+   }
+   
+   public void setModules(List<ProjectModel> modules)
+   {
+      this.modules = modules;
    }
 }

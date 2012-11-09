@@ -33,16 +33,15 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class provide communication with server side of VirtualFileSystem via REST.
@@ -168,6 +167,22 @@ public class VirtualFileSystem
    {
       String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
       url = URL.decode(url).replace("[id]", project.getId());
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
+   }
+   
+   
+   /**
+    * Get project tree.
+    * 
+    * @param project
+    * @param callback
+    * @throws RequestException
+    */
+   public void getProjectTree(String id, AsyncRequestCallback<ItemNode> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", id);
       url += "?" + "propertyFilter=" + PropertyFilter.ALL;
       AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
    }
