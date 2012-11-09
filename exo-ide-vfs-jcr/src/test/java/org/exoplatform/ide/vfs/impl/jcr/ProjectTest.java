@@ -111,9 +111,11 @@ public class ProjectTest extends JcrFileSystemTest
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, null, null);
       log.info(response.getEntity());
-      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
-      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
-         response.getHttpHeaders().getFirst("x-exit-code"));
+      assertEquals("Unexpected status " + response.getStatus(), 200, response.getStatus());
+      String expectedPath = parentProject.getPath() + "/childProject";
+      Node project = (Node)session.getItem(expectedPath);
+      assertEquals("java", project.getProperty(".project/vfs:projectType").getString());
+      assertEquals("text/vnd.ideproject+directory", project.getProperty(".project/vfs:mimeType").getString());
    }
 
    public void testCopyProjectToProject() throws Exception

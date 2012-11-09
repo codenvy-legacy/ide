@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,8 +52,8 @@ public class TypeInfoStorage
 
    private Storage storage;
    
-   private JsonStringSet packages;
-
+   private HashMap<String, JsonStringSet> packages = new HashMap<String, JsonStringSet>();
+   
    protected TypeInfoStorage()
    {
       storage = Storage.getSessionStorageIfSupported();
@@ -169,11 +170,11 @@ public class TypeInfoStorage
     */
    public void setPackages(String projectId, JsonStringSet packages)
    {
-      this.packages = packages;
+      this.packages.put(projectId, packages);
    }
    
    public JsonStringSet getPackages(String projectId)
    {
-      return packages;
+      return packages.get(projectId);
    }
 }

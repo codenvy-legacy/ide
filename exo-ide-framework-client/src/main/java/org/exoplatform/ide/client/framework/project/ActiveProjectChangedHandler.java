@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -16,27 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-.exo-autocomplete-panel {
-	background-color: #FFFFFF;
-	border: #A7ABB4 1px solid;
-}
 
-.exo-autocomplete-list {
-	border: 0 none;
-	background: white;
-}
+package org.exoplatform.ide.client.framework.project;
 
-.exo-autocomplete-description {
-	border: #A7ABB4 1px solid;
-	background-color: #e0e9ee;
-	font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-	font-size: 10pt;
-	overflow: scroll;
-}
+import com.google.gwt.event.shared.EventHandler;
 
-.exo-autocomplete-edit {
-	height: 20px;
-	border-width: 1px;
-	border-style: solid;
-	border-bottom: #A7ABB4 1px solid;
+
+
+/**
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: CurrentProjectHandler.java Nov 7, 2012 vetal $
+ *
+ */
+public interface ActiveProjectChangedHandler extends EventHandler
+{
+
+   void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent);
+
 }

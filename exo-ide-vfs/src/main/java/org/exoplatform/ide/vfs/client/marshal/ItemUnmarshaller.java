@@ -77,10 +77,7 @@ public class ItemUnmarshaller implements Unmarshallable<ItemWrapper>
 
          if (type == ItemType.PROJECT)
          {
-//            if (Project.PROJECT_MIME_TYPE.equals(mimeType))
-//            {
-               wrapper.setItem(new ProjectModel(object));
-//            }
+            wrapper.setItem(new ProjectModel(object));
          }
          else if (type == ItemType.FOLDER)
          {

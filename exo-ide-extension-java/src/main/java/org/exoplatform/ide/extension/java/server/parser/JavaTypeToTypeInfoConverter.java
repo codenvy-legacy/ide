@@ -365,7 +365,7 @@ public class JavaTypeToTypeInfoConverter
       {
          MethodInfo info = new MethodInfoBean();
          info.setExceptionTypes(toListFqn(m.getExceptions()));
-         info.setModifiers(modifiersToInteger(m.getModifiers()));
+         info.setModifiers(clazz.isInterface() ? Modifier.ABSTRACT.value() : modifiersToInteger(m.getModifiers()));
          Type[] parameterTypes = m.getParameterTypes(true);
          info.setParameterTypes(toParameters(parameterTypes));
          info.setParameterNames(toParametersName(m.getParameters()));

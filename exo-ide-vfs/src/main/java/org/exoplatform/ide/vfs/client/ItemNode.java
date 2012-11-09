@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
@@ -16,27 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-.exo-autocomplete-panel {
-	background-color: #FFFFFF;
-	border: #A7ABB4 1px solid;
-}
+package org.exoplatform.ide.vfs.client;
 
-.exo-autocomplete-list {
-	border: 0 none;
-	background: white;
-}
 
-.exo-autocomplete-description {
-	border: #A7ABB4 1px solid;
-	background-color: #e0e9ee;
-	font-family: 'Menlo', 'Monaco', 'DejaVu Sans Mono', 'Consolas', 'source-code-pro',monospace;
-	font-size: 10pt;
-	overflow: scroll;
-}
+import java.util.List;
 
-.exo-autocomplete-edit {
-	height: 20px;
-	border-width: 1px;
-	border-style: solid;
-	border-bottom: #A7ABB4 1px solid;
+/**
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public interface ItemNode
+{
+   Item getItem();
+
+   void setItem(Item item);
+
+   /**
+    * Get children of item.
+    *
+    * @return children of item. Always return <code>null</code> for files
+    */
+   List<ItemNode> getChildren();
+
+   /**
+    * Set children of item.
+    *
+    * @param children
+    *    of item. Always must be <code>null</code> for files
+    */
+   void setChildren(List<ItemNode> children);
 }
