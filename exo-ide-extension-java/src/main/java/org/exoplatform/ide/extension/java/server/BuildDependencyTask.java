@@ -22,6 +22,7 @@ import org.exoplatform.ide.codeassistant.jvm.CodeAssistantStorageClient;
 import org.exoplatform.ide.extension.maven.server.BuilderClient;
 import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.services.log.ExoLogger;
@@ -54,7 +55,7 @@ public class BuildDependencyTask extends BuildTask
     * @param copyId
     */
    BuildDependencyTask(BuilderClient client, CodeAssistantStorageClient storageClient, VirtualFileSystem vfs,
-      Timer timer, String dependencyList, Item project, String copyId, int delay)
+                       Timer timer, String dependencyList, Item project, String copyId, int delay)
    {
       super(dependencyList, project, copyId, client, storageClient);
       this.vfs = vfs;
@@ -63,7 +64,7 @@ public class BuildDependencyTask extends BuildTask
    }
 
    /**
-    * @throws IOException 
+    * @throws IOException
     * @see org.exoplatform.ide.extension.java.server.BuildTask#buildSuccess(java.lang.String)
     */
    @Override
@@ -75,6 +76,10 @@ public class BuildDependencyTask extends BuildTask
          ConversationState.setCurrent(new ConversationState(new Identity("__system")));
          String copyId = client.dependenciesCopy(vfs, project.getId(), "sources");
          timer.schedule(new BuildSourcesTask(dependencyList, project, copyId, client, storageClient), delay, delay);
+      }
+      catch (ItemNotFoundException e)
+      {
+         LOG.info(e.getMessage());
       }
       catch (BuilderException e)
       {

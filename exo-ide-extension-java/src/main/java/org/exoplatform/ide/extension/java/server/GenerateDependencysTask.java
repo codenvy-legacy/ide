@@ -26,6 +26,7 @@ import org.exoplatform.ide.extension.maven.server.BuilderException;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus;
 import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -57,17 +58,17 @@ public class GenerateDependencysTask extends TimerTask
    private static final Log LOG = ExoLogger.getLogger(GenerateDependencysTask.class);
 
    /**
-    * 
+    *
     */
    private final Item parent;
 
    /**
-    * 
+    *
     */
    private final VirtualFileSystem vfs;
 
    /**
-    * 
+    *
     */
    private final String buildId;
 
@@ -80,7 +81,7 @@ public class GenerateDependencysTask extends TimerTask
    private final int delay;
 
    public GenerateDependencysTask(Item parent, VirtualFileSystem vfs, String buildId, BuilderClient client,
-      CodeAssistantStorageClient storageClient, Timer timer, int delay)
+                                  CodeAssistantStorageClient storageClient, Timer timer, int delay)
    {
       this.parent = parent;
       this.vfs = vfs;
@@ -107,6 +108,10 @@ public class GenerateDependencysTask extends TimerTask
          }
 
       }
+      catch (ItemNotFoundException e)
+      {
+         LOG.info(e.getMessage());
+      }
       catch (Exception e)
       {
          cancel();
@@ -114,7 +119,7 @@ public class GenerateDependencysTask extends TimerTask
       }
    }
 
-   private void buildFinished(BuildStatus buildStatus, VirtualFileSystem vfs, Item project)
+   private void buildFinished(BuildStatus buildStatus, VirtualFileSystem vfs, Item project) throws VirtualFileSystemException, BuilderException
    {
       if (buildStatus.getStatus() == Status.FAILED)
       {
@@ -127,11 +132,6 @@ public class GenerateDependencysTask extends TimerTask
          {
             ConversationState.setCurrent(new ConversationState(new Identity("__system")));
             vfs.updateItem(project.getId(), properties, null);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            if (LOG.isDebugEnabled())
-               LOG.debug("Error while write build error message to project: " + project.getPath(), e);
          }
          finally
          {
@@ -157,18 +157,10 @@ public class GenerateDependencysTask extends TimerTask
             ConversationState.setCurrent(new ConversationState(new Identity("__system")));
             String dependencys = readBody(data, http.getContentLength());
             List<Property> properties = Arrays.asList(new Property("exoide:classpath", dependencys),
-                  new Property("exoide:build_error", (String)null));
+               new Property("exoide:build_error", (String)null));
 
             vfs.updateItem(project.getId(), properties, null);
             copyDependencys(project, vfs, dependencys);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            LOG.error("Can't set classpath property, for project: " + project.getPath(), e);
-         }
-         catch (Exception e)
-         {
-            LOG.error("Error", e);
          }
          finally
          {
@@ -195,26 +187,11 @@ public class GenerateDependencysTask extends TimerTask
    }
 
    private void copyDependencys(final Item project, final VirtualFileSystem vfs, final String dependencyList)
+      throws BuilderException, IOException, VirtualFileSystemException
    {
-      try
-      {
-         final String copyId = builderClient.dependenciesCopy(vfs, project.getId(), null);
-         timer.schedule(new BuildDependencyTask(builderClient, storageClient, vfs, timer, dependencyList, project,
-            copyId, delay), delay, delay);
-
-      }
-      catch (IOException e)
-      {
-         LOG.error("Error with project " + project.getPath(), e);
-      }
-      catch (BuilderException e)
-      {
-         LOG.error("Error when build project: " + project.getPath(), e);
-      }
-      catch (VirtualFileSystemException e)
-      {
-         LOG.error("Error when build project: " + project.getPath(), e);
-      }
+      final String copyId = builderClient.dependenciesCopy(vfs, project.getId(), null);
+      timer.schedule(new BuildDependencyTask(builderClient, storageClient, vfs, timer, dependencyList, project,
+         copyId, delay), delay, delay);
    }
 
    private String readBody(InputStream input, int contentLength) throws IOException
