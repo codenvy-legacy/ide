@@ -321,6 +321,10 @@ public class UpdateServlet extends HttpServlet
 
    public static void copy(File source, File target, FilenameFilter filter) throws IOException
    {
+      if (!source.exists())
+      {
+         return;
+      }
       if (source.isDirectory())
       {
          String sourceRoot = source.getAbsolutePath();
