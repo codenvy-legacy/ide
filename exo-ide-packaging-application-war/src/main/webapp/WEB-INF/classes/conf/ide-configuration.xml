@@ -627,15 +627,15 @@
 -->
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
+      <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+      <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
+      <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
    </component>
 
 </configuration>

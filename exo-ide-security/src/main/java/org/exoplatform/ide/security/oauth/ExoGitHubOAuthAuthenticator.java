@@ -18,18 +18,25 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-/**
- * Allow store and provide services which implementations of OAuthAuthenticator.
- */
-public interface OAuthAuthenticatorProvider
-{
+import static org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator.createClientSecrets;
 
-   /**
-    * Get authentication service by name.
-    *
-    * @param oauthProviderName
-    *    name of OAuth provider
-    * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
-    */
-   OAuthAuthenticator getAuthenticator(String oauthProviderName);
+import com.google.api.client.auth.oauth2.CredentialStore;
+import com.google.api.client.auth.oauth2.MemoryCredentialStore;
+
+import org.exoplatform.container.xml.InitParams;
+
+/**
+ * GitHubOAuthAuthenticator configured over eXo container.
+ */
+public class ExoGitHubOAuthAuthenticator extends GitHubOAuthAuthenticator
+{
+   public ExoGitHubOAuthAuthenticator(InitParams initParams)
+   {
+      super(new MemoryCredentialStore(), createClientSecrets(initParams));
+   }
+
+   public ExoGitHubOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
+   {
+      super(credentialStore, createClientSecrets(initParams));
+   }
 }

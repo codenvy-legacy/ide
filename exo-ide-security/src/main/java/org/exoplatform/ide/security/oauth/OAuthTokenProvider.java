@@ -18,18 +18,23 @@
  */
 package org.exoplatform.ide.security.oauth;
 
-/**
- * Allow store and provide services which implementations of OAuthAuthenticator.
- */
-public interface OAuthAuthenticatorProvider
-{
+import java.io.IOException;
 
+/**
+ * Retrieves user token from OAuth providers.
+ */
+public interface OAuthTokenProvider
+{
    /**
-    * Get authentication service by name.
+    * Get oauth token.
     *
     * @param oauthProviderName
-    *    name of OAuth provider
-    * @return OAuthAuthenticator instance or <code>null</code> if specified OAuth provider is not supported
+    *    - name of provider.
+    * @param userId
+    *    user
+    * @return oauth token or <code>null</code>
+    * @throws java.io.IOException
+    *    if i/o error occurs when try to refresh expired oauth token
     */
-   OAuthAuthenticator getAuthenticator(String oauthProviderName);
+   String getToken(String oauthProviderName, String userId) throws IOException;
 }
