@@ -74,6 +74,11 @@
          <artifactId>ide-codeassistant-lucene-index</artifactId>
          <type>zip</type>
       </dependency>
+      <dependency>
+         <groupId>org.apache.tomcat</groupId>
+         <artifactId>tomcat-catalina-jmx-remote</artifactId>
+         <version>${tomcat.version}</version>
+      </dependency>
    </dependencies>
    <build>
       <plugins>
@@ -103,6 +108,18 @@
                      <includeTypes>jar</includeTypes>
                      <stripVersion>false</stripVersion>
                      <outputDirectory>${project.build.directory}/packager-conf/jar</outputDirectory>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>tomcat-catalina-jmx-remote</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>copy-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <includeTypes>jar</includeTypes>
+                     <stripVersion>false</stripVersion>
+                     <outputDirectory>${project.build.directory}/tomcat-ide-codeassistant-storage/lib</outputDirectory>
                   </configuration>
                </execution>
 	        <execution>
