@@ -145,20 +145,16 @@
                               your applications servers</message>
                         </requireProperty>
                         <requireProperty>
-                           <property>exo.projects.app.tomcat.version</property>
-                           <message>You must define the property exo.projects.app.tomcat.version to
-                              give the name of the
-                              directory where is stored
-                              tomcat</message>
-                           <regex>.*-${tomcat.version}</regex>
+                           <property>tomcat.version</property>
+                           <message>You must define the property tomcat.version to give the name of the directory where is stored tomcat</message>
+                           <regex>${tomcat.version}</regex>
                            <regexMessage>Tomcat version must be: ${tomcat.version}</regexMessage>
                         </requireProperty>
                         <requireFilesExist>
                            <files>
-                              <file>${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/</file>
-                           </files>
-                           <message>The following Tomcat directory doesn't exist :
-                              ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}</message>
+                              <file>${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/</file>
+                            </files>
+                           <message>The following Tomcat directory doesn't exist : ${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}</message>
                         </requireFilesExist>
                      </rules>
                      <fail>true</fail>
@@ -175,7 +171,7 @@
                   <configuration>
                      <tasks>
                         <copy todir="${project.build.directory}/tomcat-ide-codeassistant-storage">
-                           <fileset dir="${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/"/>
+                           <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/"/>
                         </copy>
                      </tasks>
                   </configuration>
