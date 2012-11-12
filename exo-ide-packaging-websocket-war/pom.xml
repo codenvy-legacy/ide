@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-websocket-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: WebSocket Web Application</name>
+   <name>eXo IDE :: WebSocket to REST Web Application</name>
 
    <dependencies>
       <dependency>

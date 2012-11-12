@@ -21,13 +21,13 @@ package org.exoplatform.ide.client.framework.websocket;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallResultMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessageException;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketPublishMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketSubscribeMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketWelcomeMessage;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventMessage;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventMessageException;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSPublishMessage;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSSubscribeMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.Pair;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
 
 /**
  * 
@@ -38,67 +38,59 @@ import org.exoplatform.ide.client.framework.websocket.messages.WebSocketWelcomeM
 public interface WebSocketAutoBeanFactory extends AutoBeanFactory
 {
    /**
-    * A factory method for a {@link WebSocketWelcomeMessage} bean.
+    * A factory method for a {@link Pair} bean.
     * 
-    * @return an {@link AutoBean} of type {@link WebSocketWelcomeMessage}
+    * @return an {@link AutoBean} of type {@link Pair}
     */
-   AutoBean<WebSocketWelcomeMessage> webSocketWelcomeMessage();
+   AutoBean<Pair> pair();
 
    /**
-    * A factory method for a {@link WebSocketSubscribeMessage} bean.
+    * A factory method for a {@link RESTfulRequestMessage} bean.
     * 
-    * @return an {@link AutoBean} of type {@link WebSocketSubscribeMessage}
+    * @return an {@link AutoBean} of type {@link RESTfulRequestMessage}
     */
-   AutoBean<WebSocketSubscribeMessage> webSocketSubscribeMessage();
+   AutoBean<RESTfulRequestMessage> restFulRequestMessage();
 
    /**
-    * A factory method for a {@link WebSocketSubscribeMessage} bean.
+    * A factory method for a {@link RESTfulResponseMessage} bean.
+    * 
+    * @return an {@link AutoBean} of type {@link RESTfulResponseMessage}
+    */
+   AutoBean<RESTfulResponseMessage> restFulResponseMessage();
+
+   /**
+    * A factory method for a {@link WSSubscribeMessage} bean.
+    * 
+    * @return an {@link AutoBean} of type {@link WSSubscribeMessage}
+    */
+   AutoBean<WSSubscribeMessage> webSocketSubscribeMessage();
+
+   /**
+    * A factory method for a {@link WSSubscribeMessage} bean.
     * 
     * @param webSocketCallMessage the delegate of type {@link WebSocketCallMessage}
-    * @return an {@link AutoBean} of type {@link WebSocketSubscribeMessage}
+    * @return an {@link AutoBean} of type {@link WSSubscribeMessage}
     */
-   AutoBean<WebSocketSubscribeMessage> webSocketSubscribeMessage(WebSocketSubscribeMessage webSocketSubscribeMessage);
+   AutoBean<WSSubscribeMessage> webSocketSubscribeMessage(WSSubscribeMessage webSocketSubscribeMessage);
 
    /**
-    * A factory method for a {@link WebSocketPublishMessage} bean.
+    * A factory method for a {@link WSPublishMessage} bean.
     * 
-    * @return an {@link AutoBean} of type {@link WebSocketPublishMessage}
+    * @return an {@link AutoBean} of type {@link WSPublishMessage}
     */
-   AutoBean<WebSocketPublishMessage> webSocketPublishMessage();
+   AutoBean<WSPublishMessage> webSocketPublishMessage();
 
    /**
-    * A factory method for a {@link WebSocketEventMessage} bean.
+    * A factory method for a {@link WSEventMessage} bean.
     * 
-    * @return an {@link AutoBean} of type {@link WebSocketEventMessage}
+    * @return an {@link AutoBean} of type {@link WSEventMessage}
     */
-   AutoBean<WebSocketEventMessage> webSocketEventMessage();
+   AutoBean<WSEventMessage> webSocketEventMessage();
 
    /**
-    * A factory method for a {@link WebSocketEventMessageException} bean.
+    * A factory method for a {@link WSEventMessageException} bean.
     * 
-    * @return an {@link AutoBean} of type {@link WebSocketEventMessageException}
+    * @return an {@link AutoBean} of type {@link WSEventMessageException}
     */
-   AutoBean<WebSocketEventMessageException> webSocketEventMessageException();
-
-   /**
-    * A factory method for a {@link WebSocketCallMessage} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link WebSocketCallMessage}
-    */
-   AutoBean<WebSocketCallMessage> webSocketCallMessage();
-
-   /**
-    * A factory method for a {@link WebSocketCallMessage} bean.
-    * 
-    * @param webSocketCallMessage the delegate of type {@link WebSocketCallMessage}
-    * @return an {@link AutoBean} of type {@link WebSocketCallMessage}
-    */
-   AutoBean<WebSocketCallMessage> webSocketCallMessage(WebSocketCallMessage webSocketCallMessage);
-
-   /**
-    * A factory method for a {@link WebSocketCallResultMessage} bean.
-    * 
-    * @return an {@link AutoBean} of type {@link WebSocketCallResultMessage}
-    */
-   AutoBean<WebSocketCallResultMessage> webSocketCallResultMessage();
+   AutoBean<WSEventMessageException> webSocketEventMessageException();
 }

@@ -135,7 +135,7 @@ public class SessionManager
          sessionToConnections.put(sessionId, connectionsSet);
       }
 
-      messageBroker.send(sessionId, new WebSocketWelcomeMessage(sessionId));
+      //messageBroker.send(sessionId, new WebSocketWelcomeMessage(sessionId));
       messageBroker.checkNotSendedMessages(sessionId);
    }
 
@@ -143,7 +143,7 @@ public class SessionManager
     * Remove WebSocket connection from connections registry.
     * 
     * @param sessionId identifier of the WebSocket session
-    * @param inbound the inbound WebSocket connection
+    * @param inbound an inbound WebSocket connection
     */
    public void unregisterConnection(final String sessionId, MessageInbound inbound)
    {

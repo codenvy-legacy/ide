@@ -16,28 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
+
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 
 /**
- * Interface represents the WebSocket message.
+ * Interface represents an exception describing failure.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketSubscribeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WSEventMessageException.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketSubscribeMessage extends WebSocketMessage
+public interface WSEventMessageException extends WebSocketMessage
 {
    /**
-    * Returns a channel for publishing message.
+    * Returns an exception name.
     * 
-    * @return channel identifier
+    * @return name of the exception
     */
-   String getChannel();
+   String getName();
 
    /**
-    * Sets a channel for publishing message.
+    * Sets an exception name.
     * 
-    * @param channel channel identifier
+    * @param name name of the exception
     */
-   void setChannel(String channel);
+   void setName(String name);
+
+   /**
+    * Returns a detail message that represents an exception.
+    * 
+    * @return error message
+    */
+   String getMessage();
+
+   /**
+    * Sets a detail message that represents an exception.
+    * 
+    * @param message error message
+    */
+   void setMessage(String message);
 }

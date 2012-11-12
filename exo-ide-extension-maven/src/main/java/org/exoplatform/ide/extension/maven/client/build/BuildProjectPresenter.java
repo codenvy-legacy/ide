@@ -18,21 +18,17 @@
  */
 package org.exoplatform.ide.extension.maven.client.build;
 
-import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.json.client.JSONObject;
-
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
@@ -51,11 +47,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
@@ -164,7 +155,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    {
       IDE.getInstance().addControl(new BuildProjectControl());
       IDE.getInstance().addControl(new BuildAndPublishProjectControl());
-      
+
       IDE.addHandler(BuildProjectEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -213,16 +204,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       try
       {
-         boolean useWebSocketForCallback = false;
-         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
-         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
-         {
-            useWebSocketForCallback = true;
-            ws.messageBus().subscribe(Channels.MAVEN_BUILD_STATUS, projectBuiltHandler);
-         }
-         final boolean useWebSocket = useWebSocketForCallback;
-
-         BuilderClientService.getInstance().build(projectId, vfs.getId(), useWebSocket,
+         BuilderClientService.getInstance().build(projectId, vfs.getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -233,11 +215,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-
-                  if (!useWebSocket)
-                  {
-                     refreshBuildStatusTimer.schedule(delay);
-                  }
+                  refreshBuildStatusTimer.schedule(delay);
                }
 
                @Override
@@ -254,10 +232,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   {
                      IDE.fireEvent(new ExceptionThrownEvent(exception));
                   }
-                  if (useWebSocket)
-                  {
-                     ws.messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, projectBuiltHandler);
-                  }
                }
             });
       }
@@ -266,9 +240,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          setBuildInProgress(false);
          display.stopAnimation();
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
-      }
-      catch (WebSocketException e)
-      {
       }
    }
 
@@ -282,7 +253,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       try
       {
-         BuilderClientService.getInstance().buildAndPublish(projectId, vfs.getId(), false,
+         BuilderClientService.getInstance().buildAndPublish(projectId, vfs.getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -602,15 +573,16 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   if (json.containsKey("artifactDownloadUrl"))
                   {
                      String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
-                     IDE.fireEvent(new OutputEvent("You can download your artifact :<a href=" + artifactUrl + " target=\"_blank\">" + artifactUrl + "</a>", Type.INFO));
+                     IDE.fireEvent(new OutputEvent("You can download your artifact :<a href=" + artifactUrl
+                        + " target=\"_blank\">" + artifactUrl + "</a>", Type.INFO));
                   }
                   if (json.containsKey("suggestDependency"))
                   {
                      String dep = json.get("suggestDependency").isString().stringValue();
                      //format XML
                      String res = formatDepXml(dep);
-                     IDE.fireEvent(new OutputEvent("Dependency for your pom:<br><span style=\"color:black;\">"
-                        + res + "</span>", Type.INFO));
+                     IDE.fireEvent(new OutputEvent("Dependency for your pom:<br><span style=\"color:black;\">" + res
+                        + "</span>", Type.INFO));
                   }
                }
 
@@ -775,46 +747,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    }
 
    /**
-    * Performs actions after the project was built.
-    */
-   private WebSocketEventHandler projectBuiltHandler = new WebSocketEventHandler()
-   {
-      @Override
-      public void onMessage(WebSocketEventMessage event)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, this);
-
-         AutoBean<BuildStatus> buildStatusBean =
-            AutoBeanCodex.decode(BuilderExtension.AUTO_BEAN_FACTORY, BuildStatus.class, event.getPayload());
-         afterBuildFinished(buildStatusBean.as());
-      }
-
-      @Override
-      public void onError(Exception exception)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.MAVEN_BUILD_STATUS, this);
-
-         statusHandler.requestError(projectId, exception);
-         setBuildInProgress(false);
-         display.stopAnimation();
-         if (exception.getMessage() != null)
-         {
-            IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
-         }
-         else
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(exception));
-         }
-      }
-   };
-
-   /**
     * @param dep
     * @return
     */
    private String formatDepXml(String dep)
    {
-      
+
       String formatStr = SafeHtmlUtils.htmlEscape(dep)//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//
          .replaceFirst("&gt;&lt;", "&gt;<br>&nbsp;&nbsp;&lt;")//

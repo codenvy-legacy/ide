@@ -28,7 +28,6 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.heroku.shared.Credentials;
 
@@ -116,29 +115,21 @@ public class HerokuClientServiceImpl extends HerokuClientService
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String,
-    *      java.lang.String, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      boolean useWebSocket, HerokuAsyncRequestCallback callback) throws RequestException
+      HerokuAsyncRequestCallback callback) throws RequestException
    {
-      boolean async = true;
-      RequestStatusHandler statusHandler = new CreateRequestHandler();
       String url = restServiceContext + CREATE_APPLICATION;
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
       params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
-      params += (useWebSocket) ? "usewebsocket=" + useWebSocket : "";
-      if (useWebSocket)
-      {
-         async = false;
-         statusHandler = null;
-      }
 
-      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, async).loader(loader)
+      AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(statusHandler)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
          .send(callback);
    }
 

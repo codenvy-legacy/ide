@@ -73,11 +73,10 @@ public abstract class HerokuClientService
     * @param vfsId virtual file system id
     * @param projectid GIT workdir's projectid
     * @param remoteName name of Git remote repository
-    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     */
    public abstract void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
-      boolean useWebSocket, HerokuAsyncRequestCallback callback) throws RequestException;
+      HerokuAsyncRequestCallback callback) throws RequestException;
 
    /**
     * Deletes application pointed by it's name or Git location.

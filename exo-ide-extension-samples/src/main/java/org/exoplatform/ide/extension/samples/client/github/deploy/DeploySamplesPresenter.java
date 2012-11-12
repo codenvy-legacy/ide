@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -47,15 +46,9 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -116,8 +109,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private VirtualFileSystemInfo vfs;
 
    private PaaS selectedPaaS;
-
-   private RequestStatusHandler cloneStatusHandler;
 
    private FolderModel PROJECT_ROOT_FOLDER;
 
@@ -360,47 +351,23 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       try
       {
          JobManager.get().showJobSeparated();
-
-         boolean useWebSocketForCallback = false;
-         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
-         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
-         {
-            useWebSocketForCallback = true;
-            cloneStatusHandler = new CloneRequestStatusHandler(data.getName(), remoteUri);
-            cloneStatusHandler.requestInProgress(data.getName());
-            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-         }
-         final boolean useWebSocket = useWebSocketForCallback;
-
-         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null, useWebSocket,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
             new AsyncRequestCallback<RepoInfo>()
             {
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  if (!useWebSocket)
-                  {
-                     onRepositoryCloned();
-                  }
+                  onRepositoryCloned();
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
                   handleError(exception);
-                  if (useWebSocket)
-                  {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-                     cloneStatusHandler.requestError(data.getName(), exception);
-                  }
                }
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }
@@ -475,27 +442,4 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       this.vfs = event.getVfsInfo();
    }
 
-   /**
-    * Performs actions after the Git-repository was cloned.
-    */
-   private WebSocketEventHandler repoClonedHandler = new WebSocketEventHandler()
-   {
-      @Override
-      public void onMessage(WebSocketEventMessage event)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
-
-         cloneStatusHandler.requestFinished(data.getName());
-         onRepositoryCloned();
-      }
-
-      @Override
-      public void onError(Exception exception)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
-
-         cloneStatusHandler.requestError(data.getName(), exception);
-         handleError(exception);
-      }
-   };
 }

@@ -16,26 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
 
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 
 /**
  * Class that implements this interface will receive all
- * messages published to the channels to which this class subscribe,
+ * messages published to the channels to which class subscribed,
  * and all subscribers to a channel will receive the same messages.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
+ * @version $Id: WSEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
-public abstract class WebSocketEventHandler
+public abstract class WSEventHandler
 {
    /**
     * Called when event message is received.
     * 
-    * @param event {@link WebSocketEventMessage}
+    * @param event {@link WSEventMessage}
     */
-   public void onWebSocketEvent(WebSocketEventMessage event)
+   public void onWebSocketEvent(WSEventMessage event)
    {
       if (event.getException() == null)
       {
@@ -50,9 +49,9 @@ public abstract class WebSocketEventHandler
    /**
     * Called if a success result received from the server.
     * 
-    * @param message {@link WebSocketEventMessage}
+    * @param message {@link WSEventMessage}
     */
-   public abstract void onMessage(WebSocketEventMessage message);
+   public abstract void onMessage(WSEventMessage message);
 
    /**
     * Called if an error received from the server.

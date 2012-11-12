@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for {@link WebSocketOpenedEvent} event.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
+ * @version $Id: WebSocketOpenedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
  * 
  */
 public interface WebSocketOpenedHandler extends EventHandler

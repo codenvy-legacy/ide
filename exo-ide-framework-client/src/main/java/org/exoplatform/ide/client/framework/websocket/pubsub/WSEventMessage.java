@@ -16,47 +16,61 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
+
+
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 
 import com.google.web.bindery.autobean.shared.Splittable;
 
 /**
- * Interface represents the WebSocket message which is returned
- * for a Remote Procedure Call and contains the result of call.
+ * Interface represents the WebSocket event message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketCallResultMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WSEventMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketCallResultMessage extends WebSocketMessage
+public interface WSEventMessage extends WebSocketMessage
 {
    /**
-    * Returns the call identifier which allow the client to assign
-    * a certain result to a corresponding previous request.
+    * Returns a channel for publishing message.
     * 
-    * @return call identifier
+    * @return channel identifier
     */
-   String getCallId();
+   String getChannel();
 
    /**
-    * Sets the call identifier which allow the client to assign
-    * a certain result to a corresponding previous request.
+    * Sets a channel for publishing message.
     * 
-    * @param callId call identifier
+    * @param channel channel identifier
     */
-   void setCallId(String callId);
+   void setChannel(String channel);
 
    /**
-    * Returns a result of a request.
+    * Returns a payload.
     * 
-    * @return result of request
+    * @return payload
     */
    Splittable getPayload();
 
    /**
-    * Sets a result of a request.
+    * Sets a payload.
     * 
-    * @param payload result of request
+    * @param payload payload
     */
    void setPayload(Splittable payload);
+
+   /**
+    * Returns an exception describing failure.
+    * 
+    * @return an exception describing failure. This will be <code>null</code> if the operation succeeded.
+    */
+   WSEventMessageException getException();
+
+   /**
+    * Sets an exception describing failure.
+    * 
+    * @param exception an exception
+    */
+   void setException(WSEventMessageException exception);
 }

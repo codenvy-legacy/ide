@@ -16,22 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
-
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallResultMessage;
+package org.exoplatform.ide.client.framework.websocket.exceptions;
 
 /**
- * Class must implement this interface to receive a result message to a RPC.
+ * Thrown when there was a problem with WebSocket connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketRPCResultCallback.java Jul 31, 2012 3:40:39 PM azatsarynnyy $
+ * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
  */
-public interface WebSocketRPCResultCallback
+@SuppressWarnings("serial")
+public class WebSocketException extends Exception
 {
-   /**
-    * Called when the sended call completes normally.
-    * 
-    * @param webSocketEventMessage {@link WebSocketCallResultMessage} 
-    */
-   void onResult(WebSocketCallResultMessage webSocketCallResultMessage);
+
+   public WebSocketException()
+   {
+      super();
+   }
+
+   public WebSocketException(String message)
+   {
+      super(message);
+   }
+
+   public WebSocketException(Throwable cause)
+   {
+      super(cause);
+   }
+
+   public WebSocketException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

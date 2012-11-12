@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
-
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.ClassNotPreparedException;
@@ -38,12 +36,10 @@ import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
-import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerEventListImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.LocationImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
@@ -56,7 +52,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
-import org.exoplatform.ide.websocket.MessageBroker;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -67,8 +62,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -86,16 +79,6 @@ public class Debugger implements EventsHandler
    private static final Log LOG = ExoLogger.getLogger(Debugger.class);
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
-
-   /** Component for sending messages to client over WebSocket connection. */
-   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(MessageBroker.class);
-
-   /** Period (in milliseconds) for checking new debugger events. */
-   private static final int CHECKING_EVENTS_PERIOD = 1000;
-
-   /** Timer for checking new debugger events and send it over WebSocket connection. */
-   private Timer checkEventsTimer = new Timer();
 
    public static Debugger newInstance(String host, int port) throws VMConnectException
    {
@@ -200,7 +183,6 @@ public class Debugger implements EventsHandler
    {
       resume();
       vm.dispose();
-      checkEventsTimer.cancel();
       LOG.debug("Close connection to {}:{}", host, port);
    }
 
@@ -841,57 +823,5 @@ public class Debugger implements EventsHandler
       {
          throw new DebuggerException(e.getMessage(), e);
       }
-   }
-
-   /**
-    * Periodically checks for the new debugger events and publishes it
-    * over the WebSocket connection.
-    * 
-    * @param debuggerId
-    *    ID of debugger instance
-    */
-   public void startCheckingEvents(final String debuggerId)
-   {
-      checkEventsTimer.schedule(new TimerTask()
-      {
-         @Override
-         public void run()
-         {
-            try
-            {
-               List<DebuggerEvent> eventsList = getInstance(debuggerId).getEvents();
-               if (!eventsList.isEmpty())
-               {
-                  DebuggerEventListImpl debuggerEvents = new DebuggerEventListImpl(eventsList);
-                  publishWebSocketMessage(toJson(debuggerEvents), null);
-               }
-            }
-            catch (DebuggerException e)
-            {
-               cancel();
-               LOG.error("JDI error occurs when try to get events" + e.getMessage(), e);
-               publishWebSocketMessage(null, e);
-            }
-            catch (IllegalArgumentException e)
-            {
-               // debugger not found
-               cancel();
-               publishWebSocketMessage(null, new DebuggerException(e.getMessage(), e));
-            }
-         }
-      }, 0, CHECKING_EVENTS_PERIOD);
-   }
-
-   /**
-    * Publishes the message over WebSocket connection.
-    * 
-    * @param data
-    *    the data to be sent to the client
-    * @param e
-    *    an exception to be sent to the client
-    */
-   private void publishWebSocketMessage(String data, Exception e)
-   {
-      messageBroker.publish(MessageBroker.Channels.DEBUGGER_EVENT.toString(), data, e, null);
    }
 }

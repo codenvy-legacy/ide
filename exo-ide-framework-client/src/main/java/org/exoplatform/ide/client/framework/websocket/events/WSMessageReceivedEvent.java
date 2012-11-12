@@ -24,17 +24,17 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event is fired, when WebSocket message was received.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
+ * @version $Id: WSMessageReceivedEvent.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
  * 
  */
-public class WebSocketMessageEvent extends GwtEvent<WebSocketMessageHandler>
+public class WSMessageReceivedEvent extends GwtEvent<WSMessageReceivedHandler>
 {
    /**
     * Received message.
     */
    private String message;
 
-   public WebSocketMessageEvent(String message)
+   public WSMessageReceivedEvent(String message)
    {
       this.message = message;
    }
@@ -42,13 +42,13 @@ public class WebSocketMessageEvent extends GwtEvent<WebSocketMessageHandler>
    /**
     * Type, used to register event.
     */
-   public static final GwtEvent.Type<WebSocketMessageHandler> TYPE = new GwtEvent.Type<WebSocketMessageHandler>();
+   public static final GwtEvent.Type<WSMessageReceivedHandler> TYPE = new GwtEvent.Type<WSMessageReceivedHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketMessageHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<WSMessageReceivedHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -57,9 +57,9 @@ public class WebSocketMessageEvent extends GwtEvent<WebSocketMessageHandler>
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(WebSocketMessageHandler handler)
+   protected void dispatch(WSMessageReceivedHandler handler)
    {
-      handler.onWebSocketMessage(this);
+      handler.onWSMessageReceived(this);
    }
 
    /**

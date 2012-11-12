@@ -16,31 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
+
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 
 /**
- * The WELCOME message is send from the server to a client,
- * when the connection has successfully been established.
- * The WELCOME message is the only message that contains
- * the session identifier for the client.
+ * Interface represents the WebSocket publish message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketWelcomeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WSPublishMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketWelcomeMessage extends WebSocketMessage
+public interface WSPublishMessage extends WebSocketMessage
 {
    /**
-    * REturns a WebSocket session identifier.
+    * Returns a channel for publishing message.
     * 
-    * @return WebSocket session identifier
+    * @return channel identifier
     */
-   String getSessionId();
+   String getChannel();
 
    /**
-    * Sets a WebSocket session identifier.
+    * Sets a channel for publishing message.
     * 
-    * @param sessionId WebSocket session identifier
+    * @param channel channel identifier
     */
-   void setSessionId(String sessionId);
+   void setChannel(String channel);
+
+   /**
+    * Returns payload.
+    * 
+    * @return payload
+    */
+   String getPayload();
+
+   /**
+    * Sets a payload.
+    * 
+    * @param payload payload
+    */
+   void setPayload(String payload);
 }

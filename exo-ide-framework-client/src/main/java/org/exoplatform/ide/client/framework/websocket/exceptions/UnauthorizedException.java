@@ -16,42 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.exceptions;
+
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
 
 /**
- * Interface represents the WebSocket message for RPC.
+ * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketPublishMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: UnauthorizedException.java Nov 9, 2012 5:09:29 PM azatsarynnyy $
  *
  */
-public interface WebSocketPublishMessage extends WebSocketMessage
+@SuppressWarnings("serial")
+public class UnauthorizedException extends Exception
 {
-   /**
-    * Returns a channel for publishing message.
-    * 
-    * @return channel identifier
-    */
-   String getChannel();
+   private RESTfulResponseMessage response;
 
-   /**
-    * Sets a channel for publishing message.
-    * 
-    * @param channel channel identifier
-    */
-   void setChannel(String channel);
+   public UnauthorizedException(RESTfulResponseMessage response)
+   {
+      this.response = response;
+   }
 
-   /**
-    * Returns payload.
-    * 
-    * @return payload
-    */
-   String getPayload();
-
-   /**
-    * Sets a payload.
-    * 
-    * @param payload payload
-    */
-   void setPayload(String payload);
+   public int getHTTPStatus()
+   {
+      return response.getResponseCode();
+   }
 }

@@ -64,13 +64,11 @@ public class BuilderClientServiceImpl extends BuilderClientService
     */
    private static final String STATUS = BASE_URL + "/status";
 
-   
    /**
     * Get result of build method's path.
     */
    private static final String RESULT = BASE_URL + "/result";
 
-   
    /**
     * Get build log method's path.
     */
@@ -100,26 +98,26 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * Start new build.
     * 
     * @throws RequestException
-    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, boolean, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void build(String projectId, String vfsId, boolean useWebSocket,
-      AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&usewebsocket=" + useWebSocket;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    @Override
-   public void buildAndPublish(String projectId, String vfsId, boolean useWebSocket, AsyncRequestCallback<StringBuilder> callback)
+   public void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException
    {
       final String requesrUrl = restServiceContext + DEPLOY;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&usewebsocket=" + useWebSocket;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
@@ -180,7 +178,6 @@ public class BuilderClientServiceImpl extends BuilderClientService
       AsyncRequest.build(RequestBuilder.GET, requestUrl).header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON)
          .send(callback);
    }
-
 
    /**
     * Check is URL for download artifact is valid.

@@ -23,7 +23,6 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.websocket.MessageBroker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -32,8 +31,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Client to remote build server.
@@ -47,17 +44,9 @@ public class BuilderClient
 
    private final String baseURL;
 
-   /**
-    * Component for sending message to client over WebSocket connection.
-    */
-   private final MessageBroker messageBroker;
-
-   private static final int CHECKING_STATUS_PERIOD = 1000;
-
-   public BuilderClient(InitParams initParams, MessageBroker messageBroker)
+   public BuilderClient(InitParams initParams)
    {
-      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)),
-         messageBroker);
+      this(readValueParam(initParams, "build-server-base-url", System.getProperty(BUILD_SERVER_BASE_URL)));
    }
 
    private static String readValueParam(InitParams initParams, String paramName, String defaultValue)
@@ -73,14 +62,13 @@ public class BuilderClient
       return defaultValue;
    }
 
-   protected BuilderClient(String baseURL, MessageBroker messageBroker)
+   protected BuilderClient(String baseURL)
    {
       if (baseURL == null || baseURL.isEmpty())
       {
          throw new IllegalArgumentException("Base URL of build server may not be null or empty string. ");
       }
       this.baseURL = baseURL;
-      this.messageBroker = messageBroker;
    }
 
    /**
@@ -278,44 +266,6 @@ public class BuilderClient
       }
    }
 
-   /**
-    * Periodically checks the status of previously launched job and publishes
-    * the status over the WebSocket connection when build job will be finished.
-    * 
-    * @param buildId
-    *    identifier of the build job need to check
-    */
-   public void startCheckingBuildStatus(final String buildId)
-   {
-      new Timer().schedule(new TimerTask()
-      {
-         @Override
-         public void run()
-         {
-            try
-            {
-               String status = status(buildId);
-               if (!status.contains("\"status\":\"IN_PROGRESS\""))
-               {
-                  cancel();
-                  publishWebSocketMessage(status, null);
-               }
-            }
-            catch (IOException e)
-            {
-               cancel();
-               publishWebSocketMessage(null, e);
-            }
-            catch (BuilderException e)
-            {
-               cancel();
-               publishWebSocketMessage(null, e);
-            }
-         }
-      }, 0, CHECKING_STATUS_PERIOD);
-   }
-   
-   
    /**
     * Check status of build.
     *
@@ -545,19 +495,6 @@ public class BuilderClient
          body = bout.toString();
       }
       return body;
-   }
-
-   /**
-    * Publishes the message over WebSocket connection.
-    * 
-    * @param data
-    *    the data to be sent to the client
-    * @param e
-    *    an exception to be sent to the client
-    */
-   private void publishWebSocketMessage(String data, Exception e)
-   {
-      messageBroker.publish(MessageBroker.Channels.MAVEN_BUILD_STATUS.toString(), data, e, null);
    }
 
    /** Stream that automatically close HTTP connection when all data ends. */
