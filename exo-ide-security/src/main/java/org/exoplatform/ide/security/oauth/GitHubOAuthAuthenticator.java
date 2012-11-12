@@ -22,17 +22,15 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.CredentialStore;
-import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
-import org.exoplatform.container.xml.InitParams;
+
 import org.exoplatform.ide.security.shared.User;
 
 import java.util.Collections;
 import java.util.HashSet;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -42,18 +40,8 @@ import javax.mail.internet.InternetAddress;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GitHubOAuthAuthenticator extends BaseOAuthAuthenticator
+public class GitHubOAuthAuthenticator extends OAuthAuthenticator
 {
-   public GitHubOAuthAuthenticator(InitParams initParams)
-   {
-      this(new MemoryCredentialStore(), createClientSecrets(initParams));
-   }
-
-   public GitHubOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
-   {
-      this(credentialStore, createClientSecrets(initParams));
-   }
-
    protected GitHubOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
       super(

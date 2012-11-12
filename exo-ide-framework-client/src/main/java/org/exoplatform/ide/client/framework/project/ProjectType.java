@@ -39,7 +39,8 @@ public enum ProjectType {
    SPRING("Spring"), //
    EXO("eXo"), //
    UNDEFINED("Undefined"), //
-   AWS("Amazon Web Services");
+   AWS("Amazon Web Services"),//
+   MultiModule("MultiModule");
 
    /**
     * Project's type name.

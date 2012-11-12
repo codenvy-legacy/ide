@@ -120,5 +120,10 @@ public interface JavaConstants extends Messages
    @Key("create.package.title")
    String createPackageTitle();
    
+   @Key("create.package.button.create")
+   String createPackageButtonCreate();
+
+   @Key("create.package.button.cancel")
+   String createPackageButtonCancel();
 
 }

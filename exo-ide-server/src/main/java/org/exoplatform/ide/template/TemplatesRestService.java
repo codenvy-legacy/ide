@@ -97,6 +97,9 @@ public class TemplatesRestService
 
    private static final Pattern PATTERN_ARTIFACT_ID = Pattern.compile(".*<artifactId>artifactId</artifactId>.*");
 
+   private static final Pattern PATTERN_GROUP_ID_OF_PARENT = Pattern.compile(".*<groupId>parent-groupId</groupId>.*");
+   
+   private static final Pattern PATTERN_ARTIFACT_ID_OF_PARENT = Pattern.compile(".*<artifactId>parent-artifactId</artifactId>.*");
    /**
     * File name filter. Need to filter non "zip" files.
     */
@@ -388,9 +391,31 @@ public class TemplatesRestService
                groupId = host;
             }
             String newContent = PATTERN_GROUP_ID.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+            newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");
             newContent = PATTERN_ARTIFACT_ID.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
             vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
                new ByteArrayInputStream(newContent.getBytes()), null);
+            
+            //Goto change groupId & artifactId for child project for MultiModule project IDE-2025
+            //TODO: need fix it remove hardcode
+            pom =
+               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
+            content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+            newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+            newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+               new ByteArrayInputStream(newContent.getBytes()), null);
+            
+             //TODO: need fix it remove hardcode
+            pom =
+               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
+            content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
+            newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
+            newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");//change dependency
+            newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
+            vfs.updateContent(pom.getId(), MediaType.valueOf(pom.getMimeType()),
+               new ByteArrayInputStream(newContent.getBytes()), null);
+            
          }
          catch (ItemNotFoundException e)
          {

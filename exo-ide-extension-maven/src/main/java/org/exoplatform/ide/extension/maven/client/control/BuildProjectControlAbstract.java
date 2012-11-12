@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.maven.client.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -36,7 +38,7 @@ import org.exoplatform.ide.client.framework.util.ProjectResolver;
  * 
  */
 public abstract class BuildProjectControlAbstract extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler
+   ProjectOpenedHandler, ActiveProjectChangedHandler
 {
  
    public BuildProjectControlAbstract(String id)
@@ -55,6 +57,7 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
 
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -73,9 +76,28 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      if (ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
-         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType) || ProjectType.JAR.value().equals(projectType))
+      if (chekProjectType(projectType))
          setEnabled(true);
+   }
+
+   /**
+    * @param projectType
+    * @return
+    */
+   private boolean chekProjectType(String projectType)
+   {
+      return ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
+         || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
+         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType) || ProjectType.JAR.value().equals(projectType) || ProjectType.MultiModule.value().equals(projectType);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent)
+   {
+      String projectType = currentProjectEvent.getProject().getProjectType();
+      if (chekProjectType(projectType))
+         setEnabled(true);
+      else
+         setEnabled(false);
    }
 }

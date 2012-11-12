@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 
 public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler
+   AppStartedHandler, AppStopedHandler, ActiveProjectChangedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
@@ -66,6 +68,7 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -85,6 +88,14 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
+      updateStatus(projectType);
+   }
+
+   /**
+    * @param projectType
+    */
+   private void updateStatus(String projectType)
+   {
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
@@ -92,6 +103,13 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       setVisible(isJavaProject);
       setEnabled(isJavaProject);
       setShowInContextMenu(isJavaProject);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   {
+      String projectType = event.getProject().getProjectType();
+      updateStatus(projectType);
    }
 
    @Override

@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -43,7 +45,7 @@ import org.exoplatform.ide.extension.python.client.run.event.RunApplicationEvent
  * 
  */
 public class RunApplicationControl extends SimpleControl implements IDEControl, ProjectClosedHandler,
-   ProjectOpenedHandler, ApplicationStartedHandler, ApplicationStoppedHandler
+   ProjectOpenedHandler, ApplicationStartedHandler, ApplicationStoppedHandler, ActiveProjectChangedHandler
 {
    public static final String ID = "Run/Run Python Application";
 
@@ -71,6 +73,7 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ApplicationStartedEvent.TYPE, this);
       IDE.addHandler(ApplicationStoppedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -90,10 +93,25 @@ public class RunApplicationControl extends SimpleControl implements IDEControl, 
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
+      updateStatus(projectType);
+   }
+
+   /**
+    * @param projectType
+    */
+   private void updateStatus(String projectType)
+   {
       boolean isPythonProject = (ProjectResolver.APP_ENGINE_PYTHON.equals(projectType));
       setVisible(isPythonProject);
       setEnabled(isPythonProject);
       setShowInContextMenu(isPythonProject);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   {
+      String projectType = event.getProject().getProjectType();
+      updateStatus(projectType);
    }
 
    /**

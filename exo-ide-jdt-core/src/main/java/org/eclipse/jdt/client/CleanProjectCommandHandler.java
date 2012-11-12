@@ -35,6 +35,8 @@ import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -45,7 +47,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id:  10:51:51 AM Mar 5, 2012 evgen $
  *
  */
-public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectOpenedHandler, VfsChangedHandler
+public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectOpenedHandler, VfsChangedHandler,
+   ActiveProjectChangedHandler
 {
 
    private String vfsId;
@@ -60,6 +63,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectO
       IDE.addHandler(CleanProjectEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -70,12 +74,13 @@ public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectO
    {
       if (vfsId != null && project != null)
       {
-         final UpdateDependencyStatusHandler updateDependencyStatusHandler = new UpdateDependencyStatusHandler(project.getName());
+         final UpdateDependencyStatusHandler updateDependencyStatusHandler =
+            new UpdateDependencyStatusHandler(project.getName());
          final String projectId = project.getId();
          updateDependencyStatusHandler.requestInProgress(projectId);
          String url =
-            Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId
-               + "&vfsid=" + vfsId;
+            Utils.getRestContext() + "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid="
+               + vfsId;
          try
          {
             AsyncRequest.build(RequestBuilder.GET, url, true).send(new AsyncRequestCallback<String>()
@@ -92,7 +97,7 @@ public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectO
                protected void onFailure(Throwable exception)
                {
                   updateDependencyStatusHandler.requestError(projectId, exception);
-                  IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage()+ "</pre>", Type.ERROR));
+                  IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                   exception.printStackTrace();
                }
             });
@@ -123,6 +128,12 @@ public class CleanProjectCommandHandler implements CleanProjectHandler, ProjectO
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       project = event.getProject();
    }

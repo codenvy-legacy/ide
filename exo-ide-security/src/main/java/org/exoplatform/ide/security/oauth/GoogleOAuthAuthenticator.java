@@ -19,12 +19,11 @@
 package org.exoplatform.ide.security.oauth;
 
 import com.google.api.client.auth.oauth2.CredentialStore;
-import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson.JacksonFactory;
-import org.exoplatform.container.xml.InitParams;
+
 import org.exoplatform.ide.security.shared.User;
 
 import java.util.Collections;
@@ -36,29 +35,14 @@ import java.util.HashSet;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladyslav Zhukovskii</a>
  * @version $Id: $
  */
-public class GoogleOAuthAuthenticator extends BaseOAuthAuthenticator
+public class GoogleOAuthAuthenticator extends OAuthAuthenticator
 {
-   public GoogleOAuthAuthenticator(InitParams initParams)
-   {
-      this(new MemoryCredentialStore(), createClientSecrets(initParams));
-   }
-
-   public GoogleOAuthAuthenticator(CredentialStore credentialStore, InitParams initParams)
-   {
-      this(credentialStore, createClientSecrets(initParams));
-   }
 
    protected GoogleOAuthAuthenticator(CredentialStore credentialStore, GoogleClientSecrets clientSecrets)
    {
-      super(
-         new GoogleAuthorizationCodeFlow.Builder(
-            new NetHttpTransport(),
-            new JacksonFactory(),
-            clientSecrets, Collections.<String>emptyList())
-            .setCredentialStore(credentialStore)
-            .setApprovalPrompt("auto")
-            .setAccessType("online").build(),
-         new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
+      super(new GoogleAuthorizationCodeFlow.Builder(new NetHttpTransport(), new JacksonFactory(), clientSecrets,
+         Collections.<String>emptyList()).setCredentialStore(credentialStore).setApprovalPrompt("auto").setAccessType
+         ("online").build(), new HashSet<String>(clientSecrets.getDetails().getRedirectUris()));
    }
 
    @Override

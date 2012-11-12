@@ -65,7 +65,7 @@ public class CreatePackageView extends ViewImpl implements Display
 
    public CreatePackageView()
    {
-      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 340, 130, false);
+      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 400, 128, false);
       add(uiBinder.createAndBindUi(this));
    }
 

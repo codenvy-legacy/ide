@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -36,7 +38,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * 
  */
 public class CleanProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, EditorActiveFileChangedHandler
+   ProjectClosedHandler, EditorActiveFileChangedHandler, ActiveProjectChangedHandler
 {
 
    private boolean isJavaProject = false;
@@ -64,6 +66,7 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setVisible(false);
       setEnabled(false);
    }
@@ -83,6 +86,13 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      isJavaProject = JdtExtension.get().isProjectSupported(event.getProject().getProjectType());
+      updateEnabling();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       isJavaProject = JdtExtension.get().isProjectSupported(event.getProject().getProjectType());
       updateEnabling();

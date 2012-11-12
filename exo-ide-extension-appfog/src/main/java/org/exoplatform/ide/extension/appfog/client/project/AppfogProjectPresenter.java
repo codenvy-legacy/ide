@@ -33,6 +33,8 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -68,7 +70,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: $
  */
 public class AppfogProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
+   ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
 {
    interface Display extends IsView
    {
@@ -141,6 +143,7 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -322,6 +325,12 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       openedProject = event.getProject();
    }

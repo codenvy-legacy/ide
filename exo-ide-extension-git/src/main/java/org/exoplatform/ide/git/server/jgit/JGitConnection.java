@@ -515,10 +515,16 @@ public class JGitConnection implements GitConnection
          CommitCommand commitCommand =
             new Git(repository).commit().setMessage(request.getMessage()).setAll(request.isAll());
 
+         String configName = repository.getConfig().getString("user", null, "name");
+         String configEmail = repository.getConfig().getString("user", null, "email");
+
          GitUser committer = getUser();
-         if (committer != null)
+         if (configName != null || configEmail != null || committer != null)
          {
-            commitCommand.setCommitter(committer.getName(), committer.getEmail());
+            commitCommand.setCommitter(
+               (configName != null) ? configName : committer.getName(),
+               (configEmail != null) ? configEmail : committer.getEmail()
+            );
          }
 
          RevCommit commit = commitCommand.call();
@@ -529,7 +535,7 @@ public class JGitConnection implements GitConnection
 
          return new Revision(branch, commit.getId().getName(), commit.getFullMessage(),
             (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
-               committerIdentity.getEmailAddress()));
+            committerIdentity.getEmailAddress()));
       }
       catch (NoHeadException e)
       {
@@ -715,7 +721,7 @@ public class JGitConnection implements GitConnection
             PersonIdent committerIdentity = commit.getCommitterIdent();
             commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
                (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
-                  .getEmailAddress())));
+               .getEmailAddress())));
          }
          return new LogPage(commits);
       }
@@ -758,7 +764,7 @@ public class JGitConnection implements GitConnection
       {
          throw new GitException(e.getMessage(), e);
       }
-      
+
       return gitUsers;
    }
 

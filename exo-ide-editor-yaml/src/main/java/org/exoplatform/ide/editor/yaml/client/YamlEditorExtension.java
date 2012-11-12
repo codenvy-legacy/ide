@@ -32,7 +32,7 @@ import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 /**
  * Provides a text editing area.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: YamlEditorExtension.java May 29, 2012 3:07:18 PM azatsarynnyy $
  *
@@ -60,7 +60,7 @@ public class YamlEditorExtension extends Extension implements InitializeServices
    public void onInitializeServices(InitializeServicesEvent event)
    {
       IDE.getInstance().getFileTypeRegistry().addFileType(
-         new FileType(MimeType.TEXT_YAML, "yml", Images.INSTANCE.yamlImage()),
+         new FileType(MimeType.TEXT_YAML, "yaml", Images.INSTANCE.yamlImage()),
          new EditorCreator()
          {
             @Override
@@ -69,11 +69,11 @@ public class YamlEditorExtension extends Extension implements InitializeServices
                return new CodeMirror(MimeType.TEXT_YAML);
             }
          });
-      
+
 //      IDE.getInstance().addEditor(new CodeMirror(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml",
 //         new CodeMirrorConfiguration()
 //      ));
-      
+
 //      IDE.getInstance().addEditor(
 //         new CodeMirrorProducer(MimeType.TEXT_YAML, "CodeMirror YAML editor", "yml", Images.INSTANCE.yamlImage(), true,
 //            new CodeMirrorConfiguration()));

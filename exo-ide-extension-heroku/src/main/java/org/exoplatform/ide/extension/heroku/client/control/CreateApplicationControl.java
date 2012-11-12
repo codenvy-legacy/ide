@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.heroku.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.heroku.client.create.CreateApplicationEvent
  * 
  */
 public class CreateApplicationControl extends AbstractHerokuControl implements ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
    public CreateApplicationControl()
    {
@@ -55,6 +57,7 @@ public class CreateApplicationControl extends AbstractHerokuControl implements P
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setVisible(true);
    }
 
@@ -72,6 +75,12 @@ public class CreateApplicationControl extends AbstractHerokuControl implements P
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       setEnabled(event.getProject() != null && HerokuExtension.canBeDeployedToHeroku(event.getProject()));
    }
