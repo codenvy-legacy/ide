@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -41,7 +43,7 @@ import java.util.List;
  *
  */
 public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler
+   ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler
 {
 
    public static final String ID = "Project/PaaS";
@@ -71,6 +73,7 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -87,6 +90,13 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      boolean enabled = isDeployed(event.getProject());
+      setEnabled(enabled);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       boolean enabled = isDeployed(event.getProject());
       setEnabled(enabled);

@@ -34,6 +34,8 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -68,7 +70,7 @@ import com.google.gwt.user.client.ui.HasValue;
  *
  */
 public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClosedHandler, ItemsSelectedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, EditorActiveFileChangedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, EditorActiveFileChangedHandler, ActiveProjectChangedHandler
 {
 
    /**
@@ -146,6 +148,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
       eventBus.addHandler(ProjectClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -341,6 +344,13 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       project = event.getProject();
    }

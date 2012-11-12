@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.googleappengine.client.rollback;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -32,7 +34,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * @version $Id: May 21, 2012 11:36:05 AM anya $
  * 
  */
-public class RollbackControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class RollbackControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
 {
    private static final String ID = "PaaS/Google App Engine/Rollback";
 
@@ -56,6 +58,7 @@ public class RollbackControl extends SimpleControl implements IDEControl, Projec
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
       setVisible(true);
       setEnabled(false);
@@ -75,6 +78,13 @@ public class RollbackControl extends SimpleControl implements IDEControl, Projec
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      boolean enabled = event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+      setEnabled(enabled);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       boolean enabled = event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
       setEnabled(enabled);

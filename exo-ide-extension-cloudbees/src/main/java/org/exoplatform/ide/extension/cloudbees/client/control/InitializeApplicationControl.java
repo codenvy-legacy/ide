@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.cloudbees.client.control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.cloudbees.client.initialize.InitializeAppli
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: InitializeApplicationControl.java Jun 23, 2011 12:00:53 PM vereshchaka $
  */
-public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
+public class InitializeApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
 {
 
    private static final String ID = CloudBeesExtension.LOCALIZATION_CONSTANT.initializeAppControlId();
@@ -61,6 +63,7 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
       setVisible(true);
    }
@@ -79,6 +82,12 @@ public class InitializeApplicationControl extends SimpleControl implements IDECo
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       setEnabled(event.getProject() != null && CloudBeesExtension.canBeDeployedToCB(event.getProject()));
    }

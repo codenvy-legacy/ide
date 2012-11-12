@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.create;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -34,7 +36,7 @@ import org.exoplatform.ide.extension.aws.client.AWSExtension;
  * 
  */
 public class CreateApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
    private static final String ID = AWSExtension.LOCALIZATION_CONSTANT.createApplicationControlId();
 
@@ -59,6 +61,7 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
       setVisible(true);
    }
@@ -77,6 +80,12 @@ public class CreateApplicationControl extends SimpleControl implements IDEContro
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && AWSExtension.canBeDeployedToBeanstalk(event.getProject()));
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       setEnabled(event.getProject() != null && AWSExtension.canBeDeployedToBeanstalk(event.getProject()));
    }
