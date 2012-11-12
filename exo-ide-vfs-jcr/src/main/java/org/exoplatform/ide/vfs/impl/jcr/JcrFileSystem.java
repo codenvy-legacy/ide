@@ -325,15 +325,15 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-         if (ItemType.PROJECT == parentData.getType())
-         {
-            throw new ConstraintException("Unable create project. Item specified as parent is a project. "
-               + "Project cannot contains another project.");
-         }
-         if (ItemType.FOLDER != parentData.getType())
-         {
-            throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
-         }
+//         if (ItemType.PROJECT == parentData.getType())
+//         {
+//            throw new ConstraintException("Unable create project. Item specified as parent is a project. "
+//               + "Project cannot contains another project.");
+//         }
+//         if (ItemType.FOLDER != parentData.getType())
+//         {
+//            throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
+//         }
          if (properties == null)
          {
             properties = new ArrayList<Property>(2);

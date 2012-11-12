@@ -41,6 +41,8 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.Language;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -78,7 +80,7 @@ import java.util.List;
  * 
  */
 public class CreateApplicationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler
+   CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler, ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -147,6 +149,7 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(CreateApplicationEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -271,6 +274,13 @@ public class CreateApplicationPresenter implements ProjectOpenedHandler, Project
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      this.openedProject = event.getProject();
+   }
+   
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       this.openedProject = event.getProject();
    }

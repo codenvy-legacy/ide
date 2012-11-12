@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
  * 
  */
 public class CreateApplicationControl extends AbstractCloudFoundryControl implements ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler,  ActiveProjectChangedHandler
 {
 
    private static final String ID = CloudFoundryExtension.LOCALIZATION_CONSTANT.createAppControlId();
@@ -61,6 +63,7 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setVisible(true);
    }
 
@@ -78,6 +81,12 @@ public class CreateApplicationControl extends AbstractCloudFoundryControl implem
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       setEnabled(event.getProject() != null && CloudFoundryExtension.canBeDeployedToCF(event.getProject()));
    }

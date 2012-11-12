@@ -42,6 +42,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -94,7 +96,7 @@ import java.util.List;
  * 
  */
 public class ManageApplicationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   ManageApplicationHandler, ViewClosedHandler, EnvironmentInfoChangedHandler
+   ManageApplicationHandler, ViewClosedHandler, EnvironmentInfoChangedHandler, ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -329,6 +331,7 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
       IDE.addHandler(ManageApplicationEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EnvironmentInfoChangedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -815,6 +818,12 @@ public class ManageApplicationPresenter implements ProjectOpenedHandler, Project
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       project = event.getProject();
    }

@@ -30,6 +30,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -58,7 +60,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  */
 public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOpenedHandler,
-   ManageCloudBeesProjectHandler, ViewClosedHandler, ProjectClosedHandler, ApplicationDeletedHandler
+   ManageCloudBeesProjectHandler, ViewClosedHandler, ProjectClosedHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler
 {
    interface Display extends IsView
    {
@@ -98,6 +100,7 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
       IDE.addHandler(ManageCloudBeesProjectEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -147,6 +150,12 @@ public class CloudBeesProjectPresenter extends GitPresenter implements ProjectOp
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       openedProject = event.getProject();
    }

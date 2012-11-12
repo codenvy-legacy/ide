@@ -33,7 +33,7 @@ import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
-import org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
@@ -58,18 +58,18 @@ public class GitHub
 
    private final GitHubAuthenticator authenticator;
 
-   private final GitHubOAuthAuthenticator oauth;
+   private final OAuthTokenProvider oauthTokenProvider;;
 
-   public GitHub(InitParams initParams, GitHubAuthenticator authenticator, GitHubOAuthAuthenticator oauth)
+   public GitHub(InitParams initParams, GitHubAuthenticator authenticator, OAuthTokenProvider oauthTokenProvider)
    {
-      this(readValueParam(initParams, "github-user"), authenticator, oauth);
+      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider);
    }
 
-   public GitHub(String userName, GitHubAuthenticator authenticator, GitHubOAuthAuthenticator oauth)
+   public GitHub(String userName, GitHubAuthenticator authenticator, OAuthTokenProvider oauthTokenProvider)
    {
       this.userName = userName;
       this.authenticator = authenticator;
-      this.oauth = oauth;
+      this.oauthTokenProvider = oauthTokenProvider;
    }
 
    private static String readValueParam(InitParams initParams, String paramName)
@@ -195,7 +195,7 @@ public class GitHub
    public GitHubRepository[] listRepositories() throws IOException, GitHubException, ParsingResponseException,
       VirtualFileSystemException
    {
-      String oauthToken = oauth.getToken(getUserId());
+      String oauthToken = oauthTokenProvider.getToken("github", getUserId());
       GitHubCredentials credentials = authenticator.readCredentials();
 
       if (credentials == null && (oauthToken == null || oauthToken.isEmpty()))
@@ -315,7 +315,6 @@ public class GitHub
     * 
     * @param url the request url
     * @param method the request method
-    * @param body body of request
     * @param success expected success code of request
     * @return response
     * @throws IOException
@@ -408,7 +407,7 @@ public class GitHub
    /**
     * Add Basic authentication headers to HttpURLConnection.
     * 
-    * @param gitHubCredentials GitHub account credentials
+    * @param credentials GitHub account credentials
     * @param http HttpURLConnection
     * @throws IOException if any i/o errors occurs
     */
