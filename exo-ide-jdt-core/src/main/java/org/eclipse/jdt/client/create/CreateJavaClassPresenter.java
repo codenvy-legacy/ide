@@ -24,6 +24,10 @@ import java.util.List;
 
 import org.eclipse.jdt.client.event.CreateJavaClassEvent;
 import org.eclipse.jdt.client.event.CreateJavaClassHandler;
+import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.packaging.model.PackageItem;
+import org.eclipse.jdt.client.packaging.model.ProjectItem;
+import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -34,6 +38,8 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -43,8 +49,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -68,29 +76,38 @@ import com.google.gwt.user.client.ui.HasValue;
  *
  */
 public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClosedHandler, ItemsSelectedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, EditorActiveFileChangedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, EditorActiveFileChangedHandler, ActiveProjectChangedHandler
 {
 
    /**
     * 
     */
    private static final String TYPE_CONTENT = "\n{\n}";
+   
+   private static final String DEFAULT_PACKAGE = "(default package)";
 
    public interface Display extends IsView
    {
-      String ID = "ideCreateJavaClass";
+      HasValue<String> sourceFolderField();
+      
+      void setSourceFolders(Collection<String> sourceFolders);
 
-      HasClickHandlers getCancelButton();
+      HasValue<String> packageField();
+      
+      void setPackages(Collection<String> packages);
 
-      HasClickHandlers getCreateButton();
+      HasValue<String> classNameField();
+      
+      HasValue<String> classTypeField();
+      
+      void setClassTypes(Collection<String> types);
+      
+      HasClickHandlers createButton();
 
-      HasValue<String> getNameField();
+      void enableCreateButton(boolean enabled);
 
-      HasValue<String> getTypeSelect();
+      HasClickHandlers cancelButton();
 
-      void setTypes(Collection<String> types);
-
-      void setCreateButtonEnabled(boolean enabled);
    }
 
    private enum JavaTypes {
@@ -146,6 +163,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
       eventBus.addHandler(ProjectClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -158,28 +176,27 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       {
          display = GWT.create(Display.class);
       }
+      
       ide.openView(display.asView());
-      bind();
+      bindDisplay();
    }
 
    /**
     * 
     */
-   private void bind()
+   private void bindDisplay()
    {
-      display.getCancelButton().addClickHandler(new ClickHandler()
+      display.cancelButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
-            ide.closeView(Display.ID);
+            ide.closeView(display.asView().getId());
          }
       });
 
-      display.getCreateButton().addClickHandler(new ClickHandler()
+      display.createButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -187,29 +204,90 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          }
       });
 
-      display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      display.classNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
-
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
             if (event.getValue() != null && !event.getValue().isEmpty())
             {
-               display.setCreateButtonEnabled(true);
+               display.enableCreateButton(true);
             }
             else
-               display.setCreateButtonEnabled(false);
+               display.enableCreateButton(false);
          }
       });
-
-      display.setCreateButtonEnabled(false);
+      
       List<String> types = new ArrayList<String>();
       for (JavaTypes t : JavaTypes.values())
       {
          types.add(t.toString());
 
       }
-      display.setTypes(types);
+      display.setClassTypes(types);
+      display.enableCreateButton(false);
+      
+           
+      display.sourceFolderField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            List<String> packages = getPackagesInSourceFolder(event.getValue());
+            display.setPackages(packages);
+         }
+      });
+
+      
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      if (projectItem != null)
+      {
+         List<String> sourceFolders = new ArrayList<String>();
+         for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
+         {
+            sourceFolders.add(resourceDirectory.getName());
+         }
+         display.setSourceFolders(sourceFolders);
+         
+         List<String> packages = getPackagesInSourceFolder(sourceFolders.get(0));
+         if (packages.size() > 0)
+         {
+            display.setPackages(packages);            
+         }
+      }      
+   }
+   
+   private List<String> getPackagesInSourceFolder(String sourceFolder)
+   {
+      List<String> packages = new ArrayList<String>();
+      packages.add(0, DEFAULT_PACKAGE);      
+      
+      List<PackageItem> packageItems = new ArrayList<PackageItem>();
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
+      {
+         if (sourceFolder.equals(resourceDirectoryItem.getName()))
+         {
+            packageItems.addAll(resourceDirectoryItem.getPackages());            
+         }
+      }
+
+      for (PackageItem pi : packageItems)
+      {
+         String []parts = pi.getPackageName().split("\\.");
+         String packageName = "";
+         for (String part : parts)
+         {
+            packageName += (packageName.isEmpty() ? "" : ".") + part;
+            
+            if (!packages.contains(packageName))
+            {
+               packages.add(packageName);
+            }
+         }
+      }
+      
+      return packages;
    }
 
    /**
@@ -219,22 +297,22 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       try
       {
-         switch (JavaTypes.valueOf(display.getTypeSelect().getValue().toUpperCase()))
+         switch (JavaTypes.valueOf(display.classTypeField().getValue().toUpperCase()))
          {
             case CLASS :
-               createClass(display.getNameField().getValue());
+               createClass(display.classNameField().getValue());
                break;
 
             case INTERFACE :
-               createInterface(display.getNameField().getValue());
+               createInterface(display.classNameField().getValue());
                break;
 
             case ENUM :
-               createEnum(display.getNameField().getValue());
+               createEnum(display.classNameField().getValue());
                break;
 
             case ANNOTATION :
-               createAnnotation(display.getNameField().getValue());
+               createAnnotation(display.classNameField().getValue());
                break;
          }
       }
@@ -251,7 +329,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       StringBuilder content = new StringBuilder(getPackage());
       content.append("public @interface ").append(name).append(TYPE_CONTENT);
-      createFile(name, content.toString());
+      createClassFile(name, content.toString());
    }
 
    /**
@@ -261,7 +339,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       StringBuilder content = new StringBuilder(getPackage());
       content.append("public enum ").append(name).append(TYPE_CONTENT);
-      createFile(name, content.toString());
+      createClassFile(name, content.toString());
 
    }
 
@@ -272,7 +350,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       StringBuilder content = new StringBuilder(getPackage());
       content.append("public interface ").append(name).append(TYPE_CONTENT);
-      createFile(name, content.toString());
+      createClassFile(name, content.toString());
    }
 
    /**
@@ -282,58 +360,97 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       StringBuilder content = new StringBuilder(getPackage());
       content.append("public class ").append(name).append(TYPE_CONTENT);
-      createFile(name, content.toString());
+      createClassFile(name, content.toString());
    }
-
-   /**
-    * @param string
-    */
-   private void createFile(String name, String content)
+   
+   private void createClassFile(final String fileName, final String fileContent)
    {
-      FileModel newFile = new FileModel(name + ".java", MimeType.APPLICATION_JAVA, content, parentFolder);
+      String sourceFolder = display.sourceFolderField().getValue();
+      String packageName = display.packageField().getValue();
+      
+      String path = null;      
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
+      {
+         if (sourceFolder.equals(resourceDirectoryItem.getName()))
+         {
+            path = resourceDirectoryItem.getFolder().getPath();
+            break;     
+         }
+      }
+      
+      if (path == null)
+      {
+         return;
+      }
+      
+      if (!DEFAULT_PACKAGE.equals(packageName))
+      {
+         String packagePath = packageName.replaceAll("\\.", "/");
+         path += "/" + packagePath;
+      }
+      
       try
       {
-         vfs.createFile(parentFolder, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
-         {
-
-            @Override
-            protected void onSuccess(FileModel result)
+         VirtualFileSystem.getInstance().getItemByPath(path,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FolderModel())))
             {
-               ide.closeView(Display.ID);
-               result.setProject(project);
-               fileOpenedHandler = eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
-               eventBus.fireEvent(new OpenFileEvent(result));
-            }
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  FolderModel classParentFolder = (FolderModel)result.getItem();
+                  FileModel newFile = new FileModel(fileName + ".java", MimeType.APPLICATION_JAVA, fileContent, parentFolder);
+                  try
+                  {
+                     vfs.createFile(classParentFolder, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
+                     {
+                        @Override
+                        protected void onSuccess(FileModel result)
+                        {
+                           ide.closeView(display.asView().getId());
+                           result.setProject(project);
+                           fileOpenedHandler = eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
+                           eventBus.fireEvent(new OpenFileEvent(result));
+                        }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+                        @Override
+                        protected void onFailure(Throwable exception)
+                        {
+                           eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                        }
+                     });
+                  }
+                  catch (RequestException e)
+                  {
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-
+   
    /**
     * @return
     */
    private String getPackage()
    {
-      String sourcePath =
-         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
-      String parentPath = parentFolder.getPath().endsWith("/") ? parentFolder.getPath() : parentFolder.getPath() + "/";
-      String packageText = parentPath.substring((project.getPath() + "/" + sourcePath + "/").length());
-      if (packageText.isEmpty())
+      if (DEFAULT_PACKAGE.equals(display.packageField().getValue()))
+      {
          return "";
-      if (packageText.endsWith("/"))
-         packageText = packageText.substring(0, packageText.length() - 1);
-      packageText = packageText.replaceAll("/", ".");;
-      return "package " + packageText + ";\n\n";
-
+      }
+      
+      String packageName = display.packageField().getValue();
+      return "package " + packageName + ";\n\n";
    }
 
    /**
@@ -341,6 +458,13 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       project = event.getProject();
    }
@@ -372,8 +496,10 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView().getId().equals(Display.ID))
+      if (event.getView() instanceof Display)
+      {
          display = null;
+      }
    }
 
    /**
@@ -389,16 +515,15 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
    @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   public void onEditorActiveFileChanged(final EditorActiveFileChangedEvent event)
    {
       fileOpenedHandler.removeHandler();
-      //eventBus.fireEvent(new GoToFolderEvent());
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
          public void execute()
          {
-            IDE.fireEvent(new RefreshBrowserEvent(parentFolder));
+            IDE.fireEvent(new RefreshBrowserEvent(parentFolder, event.getFile()));
          }
       });
    }

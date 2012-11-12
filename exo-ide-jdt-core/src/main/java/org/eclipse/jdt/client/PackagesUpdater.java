@@ -42,9 +42,15 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -56,7 +62,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
 {
 
    private static final int DALAY = 5000;
-   
+
    private static final int DALAY_LONG = 1000 * 60;
 
    private static final int MAX_REQUEST = 10;
@@ -71,10 +77,10 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
 
    private int requestCount = 0;
 
-   private String projectId;
-   
+   //   private String projectId;
+
    private boolean canSchedule = false;
-   
+
    private int delay = DALAY_LONG;
 
    public PackagesUpdater(HandlerManager eventBus, SupportedProjectResolver projectResolver, TypeInfoStorage storage)
@@ -107,9 +113,11 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       @Override
       public void run()
       {
-         updatePackages(projectId);
+         updatePackages(ids);
       }
    };
+
+   private ArrayList<String> ids;
 
    /**
     * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
@@ -117,16 +125,38 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      if (projectResolver.isProjectSupported(event.getProject().getProjectType()))
+      ProjectModel project = event.getProject();
+      requestCount = 0;
+      ids = new ArrayList<String>();
+      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
-         timer.cancel();
-         saveFileHandler = eventBus.addHandler(FileSavedEvent.TYPE, this);
-         projectId = event.getProject().getId();
-         requestCount = 0;
-         delay = DALAY;
-         updatePackages(projectId);
-         timer.schedule(delay);
+         List<ProjectModel> children = project.getModules();
+         for (ProjectModel item : children)
+         {
+            if (projectResolver.isProjectSupported(item.getProjectType()))
+            {
+               ids.add(item.getId());
+            }
+         }
       }
+      else if (projectResolver.isProjectSupported(project.getProjectType()))
+      {
+         ids.add(project.getId());
+      }
+      updatePackages(ids);
+   }
+
+   private void updatePackages(ArrayList<String> ids)
+   {
+      timer.cancel();
+      saveFileHandler = eventBus.addHandler(FileSavedEvent.TYPE, this);
+      for (String id : ids)
+      {
+         updatePackages(id);
+      }
+      delay = DALAY;
+//      timer.schedule(delay);
+      schedule();
    }
 
    private void schedule()
@@ -137,6 +167,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
          timer.schedule(delay);
       }
    }
+
    /**
     * @param projectId
     */
@@ -161,16 +192,13 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
                      stringSet.add(arr.get(i).isString().stringValue());
                   }
                   storage.setPackages(projectId, stringSet);
-                  schedule();
                }
-
-               
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
-                  schedule();
+                  timer.cancel();
+//                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
                }
             });
       }
@@ -220,11 +248,11 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
             if (builder.length() != 0)
                builder.append('.');
             builder.append(fragment);
-            storage.getPackages(projectId).add(builder.toString());
+            storage.getPackages(project.getId()).add(builder.toString());
          }
       }
       else
-         storage.getPackages(projectId).add(pack + '.' + newPackage);
+         storage.getPackages(project.getId()).add(pack + '.' + newPackage);
 
    }
 
