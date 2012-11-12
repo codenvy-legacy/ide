@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -62,7 +64,7 @@ import java.util.List;
  * 
  */
 public class HerokuProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler
+   ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -108,6 +110,7 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
       IDE.addHandler(ApplicationRenamedEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -222,6 +225,12 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       openedProject = event.getProject();
    }

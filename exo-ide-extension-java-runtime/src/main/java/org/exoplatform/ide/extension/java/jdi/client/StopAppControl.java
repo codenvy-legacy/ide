@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.StopAppEvent;
 
 public class StopAppControl extends SimpleControl implements IDEControl, AppStartedHandler, AppStopedHandler,
-   ProjectClosedHandler, ProjectOpenedHandler
+   ProjectClosedHandler, ProjectOpenedHandler, ActiveProjectChangedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.stopAppControlId();
 
@@ -66,6 +68,7 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
       IDE.addHandler(AppStopedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    @Override
@@ -87,6 +90,14 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
+      updateState(projectType);
+   }
+
+   /**
+    * @param projectType
+    */
+   private void updateState(String projectType)
+   {
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
@@ -94,6 +105,13 @@ public class StopAppControl extends SimpleControl implements IDEControl, AppStar
       setVisible(isJavaProject);
       setEnabled(false);
       setShowInContextMenu(isJavaProject);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   {
+      String projectType = event.getProject().getProjectType();
+      updateState(projectType);
    }
 
    /**

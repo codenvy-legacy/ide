@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server.python;
 
+import com.google.appengine.repackaged.net.sourceforge.yamlbeans.YamlException;
+import com.google.appengine.repackaged.net.sourceforge.yamlbeans.YamlReader;
 import com.google.appengine.tools.admin.Application;
 import com.google.appengine.tools.admin.GenericApplication;
 import com.google.appengine.tools.admin.ResourceLimits;
@@ -103,7 +105,24 @@ public class PythonApplication implements GenericApplication
       try
       {
          fileReader = new FileReader(indexFile);
-         return IndexYamlReader.parse(fileReader, null);
+         YamlReader reader = new YamlReader(fileReader);
+         reader.getConfig().setPropertyElementType(IndexYamlReader.IndexYaml.class, "indexes",
+            IndexYamlReader.IndexYaml.Index.class);
+         reader.getConfig().setPropertyElementType(IndexYamlReader.IndexYaml.Index.class, "properties",
+            IndexYamlReader.IndexYaml.Property.class);
+         IndexYamlReader.IndexYaml indexYaml = reader.read(IndexYamlReader.IndexYaml.class);
+         if (indexYaml == null || indexYaml.getIndexes() == null || indexYaml.getIndexes().isEmpty())
+         {
+            // No index configured but file exists.
+            // It looks like legal for python sdk but java sdk fails for the same situation.
+            // Return null instead of empty index if index is not configured at all.
+            return null;
+         }
+         return indexYaml.toXml(null);
+      }
+      catch (YamlException e)
+      {
+         throw new AppEngineConfigException(e.getMessage(), e);
       }
       catch (IOException ioe)
       {

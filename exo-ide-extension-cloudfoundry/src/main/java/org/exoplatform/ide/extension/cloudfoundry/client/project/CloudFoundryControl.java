@@ -23,6 +23,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -39,7 +41,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  *
  */
 public class CloudFoundryControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler
+   ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler
 {
    private static final String ID = "Project/PaaS/CloudFoundry";
 
@@ -83,6 +85,12 @@ public class CloudFoundryControl extends SimpleControl implements IDEControl, Pr
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      update(event.getProject());
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       update(event.getProject());
    }

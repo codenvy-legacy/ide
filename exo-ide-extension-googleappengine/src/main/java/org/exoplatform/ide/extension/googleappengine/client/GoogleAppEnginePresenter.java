@@ -23,6 +23,8 @@ import com.google.gwt.user.client.Window;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: May 17, 2012 11:49:18 AM anya $
  * 
  */
-public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
 {
    /**
     * Current virtual file system.
@@ -52,6 +54,7 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -68,6 +71,12 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       currentProject = event.getProject();
    }

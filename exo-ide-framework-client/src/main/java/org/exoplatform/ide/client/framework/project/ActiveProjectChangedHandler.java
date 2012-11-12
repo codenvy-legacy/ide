@@ -31,6 +31,6 @@ import com.google.gwt.event.shared.EventHandler;
 public interface ActiveProjectChangedHandler extends EventHandler
 {
 
-   void onActiveProjectChanged(ActiveProjectChangedEvent currentProjectEvent);
+   void onActiveProjectChanged(ActiveProjectChangedEvent event);
 
 }

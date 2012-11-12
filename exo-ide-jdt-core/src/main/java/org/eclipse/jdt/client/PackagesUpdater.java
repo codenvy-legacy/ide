@@ -126,6 +126,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       ProjectModel project = event.getProject();
+      requestCount = 0;
       ids = new ArrayList<String>();
       if (project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
@@ -153,7 +154,6 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       {
          updatePackages(id);
       }
-      requestCount = 0;
       delay = DALAY;
 //      timer.schedule(delay);
       schedule();
@@ -197,7 +197,8 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
+                  timer.cancel();
+//                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
                }
             });
       }

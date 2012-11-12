@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -46,7 +48,7 @@ import java.util.List;
  *
  */
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler
+   AppStartedHandler, AppStopedHandler, ActiveProjectChangedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
@@ -79,6 +81,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -97,17 +100,32 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      String projectType = event.getProject().getProjectType();
+      updateState(event.getProject());
+   }
+   
+
+   /**
+    * @param project
+    */
+   private void updateState(ProjectModel project)
+   {
+      String projectType = project.getProjectType();
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
             || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType);
 
-      boolean useJRebel = isUseJRebel(event.getProject());
+      boolean useJRebel = isUseJRebel(project);
 
       setVisible(isJavaProject && useJRebel);
       setEnabled(false);
       setShowInContextMenu(isJavaProject && useJRebel);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   {
+      updateState(event.getProject());
    }
 
    @Override

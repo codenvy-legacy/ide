@@ -47,6 +47,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -120,7 +122,7 @@ import java.util.Set;
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, UpdateAppHandler,
    AppStopedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler,
-   UpdateVariableValueInTreeHandler
+   UpdateVariableValueInTreeHandler, ActiveProjectChangedHandler
 {
 
    private Display display;
@@ -194,6 +196,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
    {
       this.breakpointsManager = breakpointsManager;
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    void bindDisplay(Display d)
@@ -1063,6 +1066,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      project = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       project = event.getProject();
    }
